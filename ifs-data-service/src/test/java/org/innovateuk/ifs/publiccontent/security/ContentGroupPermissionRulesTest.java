@@ -5,7 +5,7 @@ import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupBuilder.newContentGroup;
 import static org.innovateuk.ifs.publiccontent.builder.ContentSectionBuilder.newContentSection;
@@ -45,7 +45,7 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
         Long publishedContentGroupId = 2L;
         when(contentGroupRepository.findOne(publishedContentGroupId)).thenReturn(
                 newContentGroup().withContentSection(newContentSection()
-                        .withPublicContent(newPublicContent().withPublishDate(LocalDateTime.now()).build()).build()).build());
+                        .withPublicContent(newPublicContent().withPublishDate(ZonedDateTime.now()).build()).build()).build());
 
 
         assertFalse(rules.externalUsersCanViewPublishedContentGroupFiles(unpublishedContentGroupId, systemRegistrationUser()));

@@ -14,7 +14,7 @@
   <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" th:remove="tag"></div>
 
   <div class="page-title">
-      <th:block th:insert="fragments/elements :: project-title (projectId=${applicationId}, projectName=${project.name})" />
+      <th:block th:insert="fragments/elements :: project-title (projectName=${project.name})" />
       <h1 class="heading-xlarge">Bank account</h1>
   </div>
   <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">

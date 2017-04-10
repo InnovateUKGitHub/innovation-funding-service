@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -63,8 +63,7 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -744,11 +743,11 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     private CompetitionResource setupCompetitionResource() {
-        LocalDate now = LocalDate.now();
+        ZonedDateTime now = ZonedDateTime.now();
 
         CompetitionResource competitionResource = newCompetitionResource()
-                .withAssessorAcceptsDate(now.atStartOfDay().minusDays(2))
-                .withAssessorDeadlineDate(LocalDateTime.now().plusDays(4))
+                .withAssessorAcceptsDate(now.minusDays(2))
+                .withAssessorDeadlineDate(now.plusDays(4))
                 .build();
 
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);

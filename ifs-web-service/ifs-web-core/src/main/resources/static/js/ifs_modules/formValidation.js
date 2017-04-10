@@ -421,13 +421,21 @@ IFS.core.formValidation = (function () {
       var d = dateGroup.find('.day input')
       var m = dateGroup.find('.month input')
       var y = dateGroup.find('.year input')
+      var h
+      if (field.closest('tr').find('.time select').length > 0) {
+        h = dateGroup.find('.time option[data-time]:selected').attr('data-time')
+      } else {
+        h = dateGroup.find('.time [data-time]').attr('data-time')
+      }
       var addWeekDay = dateGroup.find('.js-addWeekDay')
 
       var allFields = d.add(m).add(y)
       var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'))
       var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0))
       var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]')
-      var validNumbers = IFS.core.formValidation.checkNumber(d, false) && IFS.core.formValidation.checkNumber(m, false) && IFS.core.formValidation.checkNumber(y, false)
+      var validNumbers = IFS.core.formValidation.checkNumber(d, false) && IFS.core.formValidation.checkNumber(m, false) &&
+        IFS.core.formValidation.checkNumber(y, false) && IFS.core.formValidation.checkMin(y, false) &&
+        IFS.core.formValidation.checkMax(y, false)
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-invalid')
 
       if (validNumbers && filledOut) {
@@ -435,6 +443,11 @@ IFS.core.formValidation = (function () {
         var day = parseInt(d.val(), 10)
         var year = parseInt(y.val(), 10)
         var date = new Date(year, month - 1, day) // parse as date to check if it is a valid date
+        if (h !== undefined) {
+          date.setHours(h, 0, 0, 0)
+        } else {
+          date.setHours(0, 0, 0, 0)
+        }
 
         if ((date.getDate() === day) && (date.getMonth() + 1 === month) && (date.getFullYear() === year)) {
           valid = true
@@ -443,7 +456,7 @@ IFS.core.formValidation = (function () {
 
           allFields.attr('data-date', day + '-' + month + '-' + year)
           // adding day of week which is not really validation
-          // so could be better of somehwere else
+          // so could be better of somewhere else
           if (addWeekDay.length) {
             var days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat']
             var weekday = days[date.getDay()]
@@ -485,16 +498,24 @@ IFS.core.formValidation = (function () {
       var allFields = dateGroup.find('.day input, .month input, .year input')
       var futureDate
       if (jQuery.trim(dateGroup.attr('data-future-date')).length === 0) {
-        // if no future date is set we assume today
+        // if no future date is set we assume tomorrow
         futureDate = new Date()
+        futureDate.setDate(futureDate.getDate() + 1)
       } else {
         var futureDateString = dateGroup.attr('data-future-date').split('-')
         var futureDay = parseInt(futureDateString[0], 10)
         var futureMonth = parseInt(futureDateString[1], 10) - 1
         var futureYear = parseInt(futureDateString[2], 10)
+        var futureHour = futureDateString.length > 2 ? parseInt(futureDateString[3], 10) : false
         futureDate = new Date(futureYear, futureMonth, futureDay)
       }
-      if (futureDate.setHours(0, 0, 0, 0) <= date.setHours(0, 0, 0, 0)) {
+      if (futureHour) {
+        futureDate.setHours(futureHour, 0, 0, 0)
+      } else {
+        futureDate.setHours(0, 0, 0, 0)
+      }
+
+      if (futureDate <= date) {
         if (showMessage) { IFS.core.formValidation.setValid(allFields, futureErrorMessage) }
         return true
       } else {

@@ -7,7 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * This class serves as a Wrapper around a {@link FileEntry}, adding attributes such as the User who
@@ -28,7 +28,7 @@ public class Attachment {
     private FileEntry fileEntry;
 
     @CreatedDate
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     public Attachment() {}
 

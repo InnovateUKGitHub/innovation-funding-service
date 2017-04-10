@@ -1,18 +1,9 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -22,9 +13,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -101,7 +90,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(5, resource.getApplicationsSubmitted());
 
         ApplicationResource application = applicationService.findAll().getSuccessObject().get(0);
-        applicationService.updateApplicationStatus(application.getId(), ApplicationStatusConstants.SUBMITTED.getId());
+        applicationService.updateApplicationStatus(application.getId(), ApplicationStatus.SUBMITTED);
 
         result = controller.getCompetitionSummary(COMPETITION_ID);
         assertTrue(result.isSuccess());

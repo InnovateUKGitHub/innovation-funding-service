@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -17,13 +16,13 @@ import org.springframework.ui.Model;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+
 @Component
 public class ApplicationNavigationPopulator {
-    public static final String SECTION_URL = "/section/";
-    public static final String QUESTION_URL = "/question/";
-    public static final String APPLICATION_BASE_URL = "/application/";
-
-    private static final String REFERER = "referer";
+    private static final String SECTION_URL = "/section/";
+    private static final String QUESTION_URL = "/question/";
+    private static final String APPLICATION_BASE_URL = "/application/";
 
     @Autowired
     private QuestionService questionService;
@@ -35,7 +34,6 @@ public class ApplicationNavigationPopulator {
     private ApplicationService applicationService;
 
     public NavigationViewModel addNavigation(SectionResource section, Long applicationId) {
-
         return addNavigation(section, applicationId, null);
     }
 
@@ -68,8 +66,8 @@ public class ApplicationNavigationPopulator {
         return navigationViewModel;
     }
 
-    protected void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId,
-                                              NavigationViewModel navigationViewModel, List<SectionType> sectionTypesToSkip) {
+    private void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId,
+                                            NavigationViewModel navigationViewModel, List<SectionType> sectionTypesToSkip) {
         while (previousQuestionOptional.isPresent()) {
             String previousUrl;
             String previousText;
@@ -96,8 +94,8 @@ public class ApplicationNavigationPopulator {
         }
     }
 
-    protected void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId,
-                                          NavigationViewModel navigationViewModel,  List<SectionType> sectionTypesToSkip) {
+    private void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId,
+                                        NavigationViewModel navigationViewModel, List<SectionType> sectionTypesToSkip) {
         while (nextQuestionOptional.isPresent()) {
             String nextUrl;
             String nextText;
@@ -129,7 +127,7 @@ public class ApplicationNavigationPopulator {
      * This method creates a URL looking at referer in request.  Because 'back' will be different depending on
      * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892)
      */
-    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section){
+    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section) {
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
             model.addAttribute("backTitle", "Your finances");
             model.addAttribute("backURL", "/application/" + applicationId + "/form/" + SectionType.FINANCE.name());
@@ -137,14 +135,19 @@ public class ApplicationNavigationPopulator {
             ApplicationResource application = applicationService.getById(applicationId);
             String backURL = "/application/" + applicationId;
 
-            if(!application.isOpen() || !application.getCompetitionStatus().equals(CompetitionStatus.OPEN)){
-                model.addAttribute("backTitle", "Application Summary");
+            if (eitherApplicationOrCompetitionAreNotOpen(application)) {
+                model.addAttribute("backTitle", "Application summary");
                 backURL += "/summary";
             } else {
-                model.addAttribute("backTitle", "Application Overview");
+                model.addAttribute("backTitle", "Application overview");
             }
 
             model.addAttribute("backURL", backURL);
         }
+    }
+
+
+    private boolean eitherApplicationOrCompetitionAreNotOpen(ApplicationResource application) {
+        return !application.isOpen() || !application.getCompetitionStatus().equals(OPEN);
     }
 }

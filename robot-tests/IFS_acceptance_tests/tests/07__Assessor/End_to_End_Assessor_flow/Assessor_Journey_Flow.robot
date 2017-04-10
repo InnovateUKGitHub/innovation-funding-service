@@ -52,6 +52,11 @@ New assessor should have the correct innovation area
     When The user clicks the button/link    link=your skills
     And The user should see the text in the page    Emerging technology
 
+New assessor has no assements
+    [Documentation]  INFUND-9007
+    When The user navigates to the page    ${assessor_dashboard_url}
+    And the user should see the text in the page    There are currently no assessments for you to review.
+
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
@@ -75,6 +80,12 @@ CompAdmin Invites assessor to assess an application
     And the element should be disabled    jQuery=button:contains("Notify assessors")
     [Teardown]    The user closes the browser
 
+New assessor has one assessment to accept
+    [Documentation]  INFUND-9007
+    [Setup]   Guest user log-in    ${test_mailbox_one}+AJE2E@gmail.com    Passw0rd123
+    Then The user navigates to the page    ${assessor_dashboard_url}
+    And the user should see the text in the page    1 applications awaiting acceptance
+
 Assessor is notified by Email
     [Setup]    The guest user opens the browser
     Given the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Your applications for the competition    You have been allocated some applications
@@ -86,6 +97,11 @@ Assessor accepts the invite for the Application
     When The user clicks the button/link    Link=Park living
     And The user clicks the button/link    jQuery=button:contains("Accept")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
+
+New assessor has one assessment
+    [Documentation]  INFUND-9007
+    When The user navigates to the page    ${assessor_dashboard_url}
+    And the user should see the text in the page    1 applications to assess
 
 *** Keywords ***
 User reads the email and clicks the link to accept the assessment

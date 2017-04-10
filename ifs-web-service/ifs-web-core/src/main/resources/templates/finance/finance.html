@@ -293,7 +293,7 @@
             <div th:attr="data-repeatable-container=${question.id}" th:if="${costCategory!=null}">
                 <div class="form-group inline"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'error' : ''">
                     <label th:for="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}">
-                        <span>Working days per Year</span>
+                        <span>Working days per year</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" />
                     </label>
@@ -645,18 +645,16 @@
                     <div class="upload-section extra-margin">
                         <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
                         <div class="form-group">
-                        <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
-                            <th:block th:if="${#strings.isEmpty(overheadCosts?.getCalculationFile())}">
-                                <p class="uploaded-file">No file currently uploaded</p>
-                                <input name="overheadfile" type="file" id="overheadfile" class="inputfile"/>
-                                <label for="overheadfile" class="button-secondary extra-margin">+ Upload</label>
-                                <button name="overheadfilesubmit" class="button-secondary" type="submit" data-for-file-upload="overheadfile">Save</button>
-                            </th:block>
-                            <th:block th:unless="${#strings.isEmpty(overheadCosts?.calculationFile)}">
-                                <a th:href="@{${'/application/download/overheadfile/'+overheadCosts?.id}}" class="uploaded-file" th:text="${overheadCosts?.calculationFile?.get()?.name}">The-uploaded-file-example.pdf</a>
-                                <div th:unless="${viewmode=='readonly'}" class="alignright">
-                                    <button class="button-secondary no-margin-right" type="submit" th:name="overheadfiledelete">Remove</button>
-                                </div>
+                            <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
+                            <th:block th:with="uploadViewmode=${viewmode == 'readonly'} ? 'readonly' : 'edit',
+                                               downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
+                                               filename=${overheadCosts?.calculationFile?.get()?.name},
+                                               inputField='overheadfile',
+                                               validationField='',
+                                               mayRemove=${viewmode == 'readonly'},
+                                               removeName='overheadfiledelete',
+                                               saveName='overheadfilesubmit'">
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                             </th:block>
                         </div>
                     </div>
@@ -1050,7 +1048,7 @@
             <table id="subcontracting-table">
                 <thead>
                     <tr>
-                        <th scope="col" id="subcontracting-name">Suncontractor name</th>
+                        <th scope="col" id="subcontracting-name">Subcontractor name</th>
                         <th scope="col" id="subcontracting-country">Country</th>
                         <th scope="col" id="subcontracting-role">Role</th>
                         <th scope="col" class="numeric" id="subcontracting-cost">Cost</th>

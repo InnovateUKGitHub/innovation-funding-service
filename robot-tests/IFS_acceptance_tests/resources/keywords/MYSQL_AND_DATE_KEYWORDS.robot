@@ -1,9 +1,5 @@
 *** Settings ***
-Resource          ../GLOBAL_LIBRARIES.robot
-Resource          ../variables/GLOBAL_VARIABLES.robot
-Resource          ../variables/User_credentials.robot
-Resource          Login_actions.robot
-Resource          User_actions.robot
+Resource  ../defaultResources.robot
 
 *** Variables ***
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
@@ -81,6 +77,11 @@ get the day after tomorrow
     ${aftertomorrow} =    Add time To Date  ${today}  2 days  result_format=%d  exclude_millis=true
     [Return]  ${aftertomorrow}
 
+get two days after tomorrow
+    ${today}=    get time
+    ${twoaftertomorrow} =    Add time To Date  ${today}  3 days  result_format=%d  exclude_millis=true
+    [Return]  ${twoaftertomorrow}
+
 get the day after tomorrow full next year
     ${today} =    get time
     ${tommorow} =  Add time To Date  ${today}  2 days  result_format=%-d %B  exclude_millis=true
@@ -104,6 +105,7 @@ get next year
 
 get comp id from comp title
     [Arguments]  ${title}
+    Connect to Database     @{database}
     ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
     Log  ${result}
     # the result of this query looks like ((13,),) so you need get the value array[0][0]

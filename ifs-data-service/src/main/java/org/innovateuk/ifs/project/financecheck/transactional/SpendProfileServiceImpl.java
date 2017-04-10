@@ -21,11 +21,9 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financecheck.domain.*;
 import org.innovateuk.ifs.project.financecheck.repository.CostCategoryRepository;
+import org.innovateuk.ifs.project.financecheck.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financecheck.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financecheck.repository.CostCategoryTypeRepository;
-import org.innovateuk.ifs.project.financecheck.repository.FinanceCheckProcessRepository;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -52,7 +50,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -108,9 +106,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private CostCategoryRepository costCategoryRepository;
 
     @Autowired
-    private FinanceCheckProcessRepository financeCheckProcessRepository;
-
-    @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
@@ -133,9 +128,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ProjectGrantOfferService projectGrantOfferService;
-
-    @Autowired
-    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
@@ -173,24 +165,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
-        return areFinanceChecksApproved(project)
-                .andOnSuccess(() -> isViabilityApprovedOrNotApplicable(project))
+        return (isViabilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
-    }
-
-    private ServiceResult<Void> areFinanceChecksApproved(Project project) {
-        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(),
-                po -> financeCheckProcessRepository.findOneByTargetId(po.getId()));
-
-        Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
-                !FinanceCheckState.APPROVED.equals(process.getActivityState()));
-
-        if (!existingNonApprovedFinanceCheck.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED_OR_NOT_APPLICABLE);
-        }
     }
 
     private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
@@ -503,7 +480,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 return serviceFailure(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION);
             }
 
-            project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            project.setSpendProfileSubmittedDate(ZonedDateTime.now());
             updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
             return serviceSuccess();
         });
@@ -572,7 +549,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getActivityState()), projectFinance.getViabilityStatus());
 
         if (viabilityProcess.getLastModified() != null) {
-            viabilityResource.setViabilityApprovalDate(LocalDateTime.ofInstant(viabilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+            viabilityResource.setViabilityApprovalDate(ZonedDateTime.ofInstant(viabilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
         }
 
         setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
@@ -632,7 +609,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityProcess.getActivityState()), projectFinance.getEligibilityStatus());
 
         if (eligibilityProcess.getLastModified() != null) {
-            eligibilityResource.setEligibilityApprovalDate(LocalDateTime.ofInstant(eligibilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+            eligibilityResource.setEligibilityApprovalDate(ZonedDateTime.ofInstant(eligibilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
         }
 
         setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
@@ -729,10 +706,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                         .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getActivityState(), eligibility, eligibilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
                         .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
-                                .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
-                )
-                        //saving eligibility is now linked with saving the finance check as approved
-                        .andOnSuccess(() -> approveFinanceCheck(currentUser, partnerOrganisation, eligibility))));
+                                .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus)))));
     }
 
     private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
@@ -762,13 +736,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         projectFinanceRepository.save(projectFinance);
 
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> approveFinanceCheck(User currentUser, PartnerOrganisation partnerOrg, Eligibility eligibility) {
-        if(eligibility.equals(Eligibility.APPROVED)) {
-            return financeCheckWorkflowHandler.approveFinanceCheck(partnerOrg, currentUser) ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW);
-        }
         return serviceSuccess();
     }
 

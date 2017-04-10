@@ -53,29 +53,15 @@ public class AssessmentFeedbackModelPopulator {
         AssessmentResource assessment = getAssessment(assessmentId);
         CompetitionResource competition = getCompetition(assessment.getCompetition());
         List<FormInputResource> applicationFormInputs = getApplicationFormInputs(question.getId());
-        FormInputResource applicationFormInput = applicationFormInputs.get(0);
         Map<Long, FormInputResponseResource> applicantResponses = getApplicantResponses(assessment.getApplication(),
                 applicationFormInputs);
-        FormInputResponseResource applicantResponse = applicantResponses.get(applicationFormInput.getId());
-        String applicantResponseValue = applicantResponse != null ? applicantResponse.getValue() : null;
         List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(question.getId());
-        boolean appendixFormInputExists = hasFormInputWithType(applicationFormInputs, FILEUPLOAD);
-        boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_SCORE);
-        boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_APPLICATION_IN_SCOPE);
-        boolean researchCategoryFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_RESEARCH_CATEGORY);
-        List<ResearchCategoryResource> researchCategories = researchCategoryFormInputExists ? categoryService.getResearchCategories() : null;
+        List<ResearchCategoryResource> researchCategories = hasFormInputWithType(assessmentFormInputs, ASSESSOR_RESEARCH_CATEGORY)
+                ? categoryService.getResearchCategories()
+                : null;
 
-        FileDetailsViewModel appendixDetails = null;
-        if (appendixFormInputExists) {
-            FormInputResource appendixFormInput = applicationFormInputs.get(1);
-            FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
-            boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
-            if (applicantAppendixResponseExists) {
-                appendixDetails = new FileDetailsViewModel(appendixFormInput.getId(),
-                        applicantAppendixResponse.getFilename(),
-                        applicantAppendixResponse.getFilesizeBytes());
-            }
-        }
+        String applicantResponseValue = getApplicantResponseValue(applicationFormInputs, applicantResponses);
+        FileDetailsViewModel appendixDetails = getAppendixDetails(applicationFormInputs, applicantResponses);
 
         return new AssessmentFeedbackViewModel(assessment.getId(),
                 competition.getAssessmentDaysLeft(),
@@ -89,12 +75,13 @@ public class AssessmentFeedbackModelPopulator {
                 question.getAssessorMaximumScore(),
                 applicantResponseValue,
                 formatGuidanceScores(assessmentFormInputs),
-                scoreFormInputExists,
-                scopeFormInputExists,
+                hasFormInputWithType(assessmentFormInputs, ASSESSOR_SCORE),
+                hasFormInputWithType(assessmentFormInputs, ASSESSOR_APPLICATION_IN_SCOPE),
                 appendixDetails != null,
                 appendixDetails,
                 researchCategories);
     }
+
 
     private AssessmentResource getAssessment(Long assessmentId) {
         return assessmentService.getById(assessmentId);
@@ -102,6 +89,28 @@ public class AssessmentFeedbackModelPopulator {
 
     private CompetitionResource getCompetition(Long competitionId) {
         return competitionService.getById(competitionId);
+    }
+
+    private FileDetailsViewModel getAppendixDetails(List<FormInputResource> applicationFormInputs,
+                                                    Map<Long, FormInputResponseResource> applicantResponses) {
+        FileDetailsViewModel appendixDetails = null;
+        if (hasFormInputWithType(applicationFormInputs, FILEUPLOAD)) {
+
+            FormInputResource appendixFormInput = applicationFormInputs.get(1);
+            FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
+            boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
+            if (applicantAppendixResponseExists) {
+                appendixDetails = new FileDetailsViewModel(appendixFormInput.getId(),
+                        applicantAppendixResponse.getFilename(),
+                        applicantAppendixResponse.getFilesizeBytes());
+            }
+        }
+        return appendixDetails;
+    }
+
+    private String getApplicantResponseValue(List<FormInputResource> applicationFormInputs, Map<Long, FormInputResponseResource> applicantResponses) {
+        FormInputResponseResource applicantResponse = applicantResponses.get(applicationFormInputs.get(0).getId());
+        return applicantResponse != null ? applicantResponse.getValue() : null;
     }
 
     private List<FormInputResource> getApplicationFormInputs(Long questionId) {
@@ -130,7 +139,7 @@ public class AssessmentFeedbackModelPopulator {
     private List<FormInputResource> formatGuidanceScores(List<FormInputResource> assessorInputs) {
         if (assessorInputs != null) {
             for (FormInputResource input : assessorInputs) {
-                if (ASSESSOR_SCORE.equals(input.getType()) && input.getGuidanceRows() != null) {
+                if (TEXTAREA.equals(input.getType()) && input.getGuidanceRows() != null) {
                     for (GuidanceRowResource row : input.getGuidanceRows()) {
                         row.setSubject(row.getSubject().replace(",", " to "));
                     }

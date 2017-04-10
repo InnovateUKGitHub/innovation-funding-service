@@ -49,7 +49,7 @@ items:
             limits:
               memory: 1500M
           volumeMounts:
-          - mountPath: /tmp/uploads
+          - mountPath: /mnt/ifs_storage
             name: dir-1
         volumes:
           - name: dir-1

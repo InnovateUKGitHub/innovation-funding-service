@@ -7,7 +7,7 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
@@ -20,7 +20,7 @@ public class FormInputResponse {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private LocalDateTime updateDate;
+    private ZonedDateTime updateDate;
 
     @Column(length=5000)
     private String value;
@@ -47,7 +47,7 @@ public class FormInputResponse {
     	// no-arg constructor
     }
 
-    public FormInputResponse(LocalDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {
+    public FormInputResponse(ZonedDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
         this.value = value;
         this.updatedBy = updatedBy;
@@ -55,7 +55,7 @@ public class FormInputResponse {
         this.application = application;
     }
 
-    public FormInputResponse(LocalDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
+    public FormInputResponse(ZonedDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
         this.fileEntry = fileEntry;
         this.updatedBy = updatedBy;
@@ -71,7 +71,7 @@ public class FormInputResponse {
         this.id = id;
     }
 
-    public LocalDateTime getUpdateDate() {
+    public ZonedDateTime getUpdateDate() {
         return updateDate;
     }
 
@@ -109,7 +109,7 @@ public class FormInputResponse {
         this.value = value;
     }
 
-    public void setUpdateDate(LocalDateTime updateDate) {
+    public void setUpdateDate(ZonedDateTime updateDate) {
         this.updateDate = updateDate;
     }
 

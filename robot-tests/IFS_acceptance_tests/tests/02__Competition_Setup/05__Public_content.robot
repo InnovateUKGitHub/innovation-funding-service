@@ -17,7 +17,7 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin  MySQL
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
@@ -112,7 +112,7 @@ Summary: User enters valid values and saves
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
     When the user enters text to a text field  css=#heading-0  A nice new Heading
     Then the user enters text to a text field   jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
-    And the user uploads the file              css=#file-upload-0  ${valid_pdf}
+    And the user uploads the file              id=contentGroups-0.attachment  ${valid_pdf}
     When the user clicks the button/link       jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element      link=Summary
@@ -151,11 +151,11 @@ Eligibility: User enters valid values and saves
     And the user enters valid data in the eligibility details
     Then the user enters text to a text field               jQuery=.contentGroup:first-of-type input[id^="heading"]   Nationality Eligibility Heading
     And the user enters text to a text field                jQuery=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
-    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="file"]     ${valid_pdf}
+    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) input[id^="heading"]   Minimum Eligibility Threshold
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
-    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
+    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]   ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                     link=Eligibility
@@ -174,13 +174,13 @@ Eligibility: Contains the correct values when viewed, Edit sections
     Then the user clicks the button/link                        jQuery=button:contains("+ add new section")
     And The user enters text to a text field                    jQuery=.contentGroup:nth-of-type(3) input[id^="heading"]    Draft Care and Support - Eligibility Criteria
     And the user enters text to a text field                    jQuery=.contentGroup:nth-of-type(3) .editor   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
-    And the user clicks the button/link                         jQuery=.contentGroup:first-of-type button:contains("remove")
-    And the user clicks the button/link                         jQuery=.contentGroup:nth-of-type(2) button:contains("remove")
-    Then the user uploads the file                              jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
-    And the user uploads the file                               jQuery=.contentGroup:first-of-type input[id^="file"]     ${valid_pdf}
-    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
-    Then the user clicks the button/link                        jQuery=.contentGroup:nth-of-type(3) button:contains("remove")
-    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
+    And the user clicks the button/link                         jQuery=.contentGroup:first-of-type button:contains("Remove")
+    And the user clicks the button/link                         jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
+    Then the user uploads the file                              jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file                               jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user clicks the button/link                        jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
+    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
 
@@ -230,11 +230,11 @@ How to apply: User enters valid values and saves
     And the user enters valid data in How-to-apply details
     Then the user enters text to a text field               jQuery=.contentGroup:first-of-type input[id^="heading"]   The application process
     And the user enters text to a text field                jQuery=.contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
-    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="file"]     ${valid_pdf}
+    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) input[id^="heading"]   Application questions
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
-    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
+    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                     link=How to apply
@@ -257,18 +257,18 @@ How to apply: Contains the correct values when viewed, Edit sections
     Then the user clicks the button/link            jQuery=button:contains("+ add new section")
     And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(4) input[id^="heading"]    Competition Officers Contact
     And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(4) input[id^="file"]    ${valid_pdf}
-    And the user clicks the button/link             jQuery=.contentGroup:first-of-type button:contains("remove")
-    And the user clicks the button/link             jQuery=.contentGroup:nth-of-type(2) button:contains("remove")
+    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user clicks the button/link             jQuery=.contentGroup:first-of-type button:contains("Remove")
+    And the user clicks the button/link             jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
     Then the user clicks the button/link            jQuery=button:contains("+ add new section")
     And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(5) input[id^="heading"]    Confidentiality and Conflicts
     And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
-    Then the user uploads the file                  jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:first-of-type input[id^="file"]     ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
-    Then the user clicks the button/link            jQuery=.contentGroup:nth-of-type(3) button:contains("remove")
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(5) input[id^="file"]    ${valid_pdf}
+    Then the user uploads the file                  jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file                   jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user clicks the button/link            jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
+    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link            jQuery=button:contains("Save and return")
     And the user should see the element             css=img[title='The "How to apply" section is marked as done']
 
@@ -357,7 +357,7 @@ The guest user can see updated date information
    Given the user clicks the button/link    link=Dates
    And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition opens")
    And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition closes")
-   And the user should see the element    jQuery=dt:contains("2 February ${nextyear}") + dd:contains("Applicants notified")
+   And the user should see the element    jQuery=dt:contains("3 February ${nextyear}") + dd:contains("Applicants notified")
    And the user should see the element    jQuery=dt:contains("12 December ${nextyear}") + dd:contains("Content 1")
    And the user should see the element    jQuery=dt:contains("20 December ${nextyear}") + dd:contains("Content 2")
 
@@ -373,7 +373,6 @@ Guest user can see the updated How-to-apply information
 
 *** Keywords ***
 Custom suite setup
-    Connect to Database  @{database}
     Guest user log-in    &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
@@ -394,7 +393,7 @@ User creates a new competition
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     When the user fills in the CS Initial details      ${competition_name}  01  02  ${nextyear}
-    And the user fills in the CS Milestones    01  02  02  ${nextyear}
+    And the user fills in the CS Milestones    01  02  03  02  ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
@@ -412,19 +411,19 @@ the user enters valid data in How-to-apply details
 the user can add and remove multiple content groups
     When the user enters text to a text field   id=heading-0    Heading 1
     And the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
-    And the user uploads the file               id=file-upload-0  ${valid_pdf}
+    And the user uploads the file               id=contentGroups-0.attachment  ${valid_pdf}
     Then the user should see the element        jQuery=.uploaded-file:contains("testing.pdf")
-    And the user clicks the button/link         jQuery=button:contains("remove")
+    And the user clicks the button/link         jQuery=button:contains("Remove")
     And the user clicks the button/link         jQuery=button:contains("+ add new section")
     And the user enters text to a text field    id=heading-1    Heading 2
     And the user enters text to a text field    jQuery=.editor:eq(1)     Content 2
-    And the user uploads the file               id=file-upload-1  ${valid_pdf}
+    And the user uploads the file               id=contentGroups-1.attachment  ${valid_pdf}
     And the user clicks the button/link         jQuery=button:contains("+ add new section")
     And the user enters text to a text field    id=heading-2    Heading 3
     And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
-    When the user uploads the file              id=file-upload-2  ${text_file}
+    When the user uploads the file              id=contentGroups-2.attachment  ${text_file}
     Then the user should see the element        jQuery=.error-summary-list:contains("Please upload a file in .pdf format only.")
-    #    And the user uploads the file               id=file-upload-2  ${too_large_pdf}
+    #    And the user uploads the file               id=contentGroups-2.attachment  ${too_large_pdf}
     #    Then the user should see the element        jQuery=h1:contains("Attempt to upload a large file")
     #    and the user goes back to the previous page
     #    And the user should not see an error in the page

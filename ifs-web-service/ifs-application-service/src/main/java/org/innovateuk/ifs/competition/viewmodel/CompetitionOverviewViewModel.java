@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.viewmodel;
 
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -10,15 +10,15 @@ import java.util.List;
  */
 public class CompetitionOverviewViewModel {
     private String competitionTitle;
-    private LocalDateTime competitionOpenDate;
-    private LocalDateTime registrationCloseDate;
-    private LocalDateTime competitionCloseDate;
+    private ZonedDateTime competitionOpenDate;
+    private ZonedDateTime competitionCloseDate;
     private Long competitionId;
     private String shortDescription;
     private String nonIfsUrl;
     private Boolean nonIfs;
     private List<AbstractPublicSectionContentViewModel> allSections;
     private boolean userIsLoggedIn = false;
+    private boolean competitionSetupComplete;
 
     public String getCompetitionTitle() {
         return competitionTitle;
@@ -28,27 +28,23 @@ public class CompetitionOverviewViewModel {
         this.competitionTitle = competitionTitle;
     }
 
-    public LocalDateTime getCompetitionOpenDate() {
+    public ZonedDateTime getCompetitionOpenDate() {
         return competitionOpenDate;
     }
 
-    public void setCompetitionOpenDate(LocalDateTime competitionOpenDate) {
+    public void setCompetitionOpenDate(ZonedDateTime competitionOpenDate) {
         this.competitionOpenDate = competitionOpenDate;
     }
 
-    public LocalDateTime getRegistrationCloseDate() {
-        return registrationCloseDate;
+    public ZonedDateTime getRegistrationCloseDate() {
+        return competitionCloseDate.minusDays(7);
     }
 
-    public void setRegistrationCloseDate(LocalDateTime registrationCloseDate) {
-        this.registrationCloseDate = registrationCloseDate;
-    }
-
-    public LocalDateTime getCompetitionCloseDate() {
+    public ZonedDateTime getCompetitionCloseDate() {
         return competitionCloseDate;
     }
 
-    public void setCompetitionCloseDate(LocalDateTime competitionCloseDate) {
+    public void setCompetitionCloseDate(ZonedDateTime competitionCloseDate) {
         this.competitionCloseDate = competitionCloseDate;
     }
 
@@ -101,12 +97,16 @@ public class CompetitionOverviewViewModel {
     }
 
     public boolean isShowNotOpenYetMessage() {
-        return getCompetitionOpenDate().isAfter(LocalDateTime.now());
+        if (nonIfs) {
+            return getCompetitionOpenDate().isAfter(ZonedDateTime.now());
+        } else {
+            return !isCompetitionSetupComplete() || getCompetitionOpenDate().isAfter(ZonedDateTime.now());
+        }
     }
 
     public boolean isShowClosedMessage() {
-        return nonIfs ?  getRegistrationCloseDate().isBefore(LocalDateTime.now()) :
-                getCompetitionCloseDate().isBefore(LocalDateTime.now());
+        return nonIfs ?  getRegistrationCloseDate().isBefore(ZonedDateTime.now()) :
+                competitionCloseDate.isBefore(ZonedDateTime.now());
     }
 
     public boolean isDisableApplyButton() {
@@ -129,5 +129,13 @@ public class CompetitionOverviewViewModel {
 
     public boolean isShowSignInText() {
         return !nonIfs && !isDisableApplyButton();
+    }
+
+    public boolean isCompetitionSetupComplete() {
+        return competitionSetupComplete;
+    }
+
+    public void setCompetitionSetupComplete(boolean competitionSetupComplete) {
+        this.competitionSetupComplete = competitionSetupComplete;
     }
 }

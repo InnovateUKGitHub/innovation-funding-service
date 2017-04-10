@@ -50,40 +50,40 @@ the user marks every section but one as complete
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
     the user marks the section as complete    1039
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=Public description
     the user marks the section as complete    1040
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=Scope
     the user marks the section as complete    1041
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=1. Business opportunity
     the user marks the section as complete    1045
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=2. Potential market
     the user marks the section as complete    1049
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=3. Project exploitation
     the user marks the section as complete    1053
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=4. Economic benefit
     the user marks the section as complete    1057
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=5. Technical approach
     the user marks the section as complete    1061
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=6. Innovation
     the user marks the section as complete    1065
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=7. Risks
     the user marks the section as complete    1069
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=8. Project team
     the user marks the section as complete    1073
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=9. Funding
     the user marks the section as complete    1077
-    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Application overview
     the user clicks the button/link    link=10. Adding value
     the user marks the section as complete    1081
 
@@ -100,7 +100,7 @@ Create new application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -114,7 +114,7 @@ create new submit application
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -125,7 +125,7 @@ Create new invite application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -136,7 +136,7 @@ Create new academic application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details

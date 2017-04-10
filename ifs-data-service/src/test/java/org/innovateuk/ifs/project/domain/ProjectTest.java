@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -30,7 +30,7 @@ public class ProjectTest {
     Address address;
     Long durationInMonths;
     String name;
-    LocalDateTime documentsSubmittedDate;
+    ZonedDateTime documentsSubmittedDate;
 
     @Before
     public void setUp() throws Exception {

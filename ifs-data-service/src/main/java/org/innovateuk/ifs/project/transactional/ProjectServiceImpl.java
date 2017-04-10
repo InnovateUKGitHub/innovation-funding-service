@@ -26,7 +26,9 @@ import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
@@ -40,7 +42,6 @@ import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
 import org.innovateuk.ifs.project.financecheck.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.financecheck.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
@@ -68,7 +69,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -145,9 +146,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
-
-    @Autowired
-    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
@@ -282,7 +280,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> submitProjectDetails(final Long projectId, LocalDateTime date) {
+    public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
                 getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
@@ -305,7 +303,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
                 retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
@@ -313,7 +311,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         success -> setDocumentsSubmittedDate(project, date)));
     }
 
-    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
+    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, ZonedDateTime date) {
         project.setDocumentsSubmittedDate(date);
         return serviceSuccess();
     }
@@ -791,7 +789,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private boolean handleInviteSuccess(ProjectInvite projectInvite) {
-        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), LocalDateTime.now()));
+        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return true;
     }
 
@@ -961,23 +959,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
 
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
-        ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> viabilityProcesses = createViabilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> eligibilityProcesses = createEligibilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, viabilityProcesses, eligibilityProcesses, golProcess, projectProcess);
-    }
-
-    private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
-
-        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
-                financeCheckWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
-                        serviceSuccess() :
-                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
-
-        return aggregate(results).andOnSuccessReturnVoid();
+        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, golProcess, projectProcess);
     }
 
     private ServiceResult<Void> createViabilityProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
@@ -1045,10 +1032,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private List<ProjectResource> projectsToResources(List<Project> filtered) {
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
-    }
-
-    private ServiceResult<Project> getProject(long projectId) {
-        return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 
     private ServiceResult<Project> getProjectByApplication(long applicationId) {

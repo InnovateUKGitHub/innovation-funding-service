@@ -47,7 +47,7 @@ Already submitted application should not show error when the competition is clos
     [Documentation]    INFUND-3175
     [Tags]
     When the user navigates to the page    ${dashboard_url}
-    And the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_3_TITLE}
+    And the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_3_NAME}
     Then the user should not see the text in the page    Application not submitted
 
 *** Keywords ***

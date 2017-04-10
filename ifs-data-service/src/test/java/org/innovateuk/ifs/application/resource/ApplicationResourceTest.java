@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.resource;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -19,7 +18,7 @@ public class ApplicationResourceTest {
     Competition competition;
     String name;
     List<ProcessRole> processRoles;
-    ApplicationStatusConstants applicationStatus;
+    ApplicationStatus applicationStatus;
     Long id;
     List<ApplicationFinance> applicationFinances;
 
@@ -27,7 +26,7 @@ public class ApplicationResourceTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "testApplicationName";
-        applicationStatus = ApplicationStatusConstants.OPEN;
+        applicationStatus = ApplicationStatus.OPEN;
         competition = new Competition();
         competition.setId(1L);
 
@@ -53,7 +52,7 @@ public class ApplicationResourceTest {
     public void applicationShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(applicationResource.getId(), id);
         Assert.assertEquals(applicationResource.getName(), name);
-        Assert.assertEquals(applicationResource.getApplicationStatus(), applicationStatus.getId());
+        Assert.assertEquals(applicationResource.getApplicationStatus(), applicationStatus);
         Assert.assertEquals(applicationResource.getCompetition(), competition.getId());
     }
 

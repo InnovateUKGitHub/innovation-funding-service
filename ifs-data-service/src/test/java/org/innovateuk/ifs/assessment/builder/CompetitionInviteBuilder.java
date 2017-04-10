@@ -10,7 +10,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.user.domain.User;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -88,7 +88,7 @@ public class CompetitionInviteBuilder extends BaseBuilder<CompetitionInvite, Com
         return  withArraySetFieldByReflection("sentBy", users);
     }
 
-    public CompetitionInviteBuilder withSentOn(LocalDateTime... dates) {
+    public CompetitionInviteBuilder withSentOn(ZonedDateTime... dates) {
         return  withArraySetFieldByReflection("sentOn", dates);
     }
 }

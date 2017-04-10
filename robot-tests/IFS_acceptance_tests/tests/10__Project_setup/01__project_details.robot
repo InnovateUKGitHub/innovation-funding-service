@@ -204,7 +204,7 @@ Lead partner is able to see finances without an error
     When the user clicks the button/link   link=Detailed Organisation Finances
     Then the user should not see an error in the page
     And the user should see the element    jQuery=h2:contains("Finance summary")
-    Then the user clicks the button/link   link=Application Summary
+    Then the user clicks the button/link   link=Application summary
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
@@ -416,7 +416,7 @@ Other partners can see who needs to provide Bank Details
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
     Then the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
-    And the user should see the element     jQuery=#table-project-status tr:nth-child(2) td:nth-child(4):contains("-")
+    And the user should see the element     jQuery=#table-project-status tr:nth-child(2) td:nth-child(4):contains("")
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579

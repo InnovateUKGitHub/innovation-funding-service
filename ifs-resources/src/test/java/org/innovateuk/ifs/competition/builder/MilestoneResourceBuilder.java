@@ -5,12 +5,12 @@ import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class MilestoneResourceBuilder extends BaseBuilder<MilestoneResource, MilestoneResourceBuilder> {
 
@@ -30,7 +30,7 @@ public class MilestoneResourceBuilder extends BaseBuilder<MilestoneResource, Mil
         return withArray((type, object) -> BaseBuilderAmendFunctions.setField("type", type, object), types);
     }
 
-    public MilestoneResourceBuilder withDate(LocalDateTime... dates) {
+    public MilestoneResourceBuilder withDate(ZonedDateTime... dates) {
         return withArray((date, object) -> BaseBuilderAmendFunctions.setField("date", date, object), dates);
     }
 

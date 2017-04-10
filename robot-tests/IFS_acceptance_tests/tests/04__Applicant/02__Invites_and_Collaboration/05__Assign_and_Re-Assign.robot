@@ -70,7 +70,7 @@ Collaborator should see the terms and conditions from the overview page
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
-    Given the user clicks the button/link    link=Application Overview
+    Given the user clicks the button/link    link=Application overview
     When The user clicks the button/link    link= view the grant terms and conditions
     Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
     And the user should see the text in the page    Entire agreement
@@ -254,7 +254,7 @@ Lead applicant should be able to remove the partner organisation
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
-    When the user clicks the button/link    jQuery=button:contains("Delete organisation"):first
+    When the user clicks the button/link    jQuery=a:contains("Delete organisation"):first
     And the user clicks the button/link    jQuery=.modal-delete-organisation button:contains("Delete organisation")
     Then the user should see the text in the page    Application team
     And the user should not see the text in the page    Dennis Bergkamp

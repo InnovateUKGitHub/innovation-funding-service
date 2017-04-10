@@ -26,7 +26,7 @@ Guest user can see Competitions and their information
     Given the user should see the element    link=Home and industrial efficiency programme
     Then the user should see the element     jQuery=dt:contains("Eligibility") + dd:contains("UK based business of any size. Must involve at least one SME")
     And the user should see the element      jQuery=dt:contains("Opens") + dd:contains("15 April 2016")
-    And the user should see the element      jQuery=dt:contains("Closes") + dd:contains("09 September 2067")
+    And the user should see the element      jQuery=dt:contains("Closes") + dd:contains("9 September 2067")
 
 #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
 
@@ -41,6 +41,19 @@ Guest user can filter competitions by Innovation area
     When the user selects the option from the drop-down menu  Any  id=innovation-area
     And the user clicks the button/link                       jQuery=button:contains("Update results")
     Then the user should see the element                      jQuery=a:contains("Home and industrial efficiency programme")
+
+Guest user can see the public information of an unopened competition
+    [Documentation]  INFUND-8714
+    [Tags]
+    [Setup]  the user navigates to the page  ${frontDoor}
+    Given the user clicks the button/link    link=Photonics for health
+    Then the user should see the element     jQuery=h1:contains("Photonics for health")
+    And the user should see the element      jQuery=strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
+    And the user should see the element      jQuery=li:contains("Competition closes")
+    And the user should see the element      jQuery=li:contains("Friday 16 March 2018")
+    And the user should see the text in the page      This competition has not yet opened.
+    And the user should not see the text in the page  Or sign in to continue an existing application
+    And the user should see the element      jQuery=.button:contains("Start new application")
 
 Guest user can see the public information of a competition
     [Documentation]  INFUND-6923

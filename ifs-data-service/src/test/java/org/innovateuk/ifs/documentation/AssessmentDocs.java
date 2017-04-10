@@ -6,7 +6,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
-import java.util.GregorianCalendar;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -41,7 +41,7 @@ public class AssessmentDocs {
             .withRejection(assessmentRejectOutcomeResourceBuilder)
             .withActivityState(OPEN)
             .withProcessEvent(ProcessEvent.ASSESSMENT)
-            .withLastModifiedDate(GregorianCalendar.getInstance())
+            .withLastModifiedDate(ZonedDateTime.now())
             .withProcessRole(1L)
             .withApplication(2L);
 

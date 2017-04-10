@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 
@@ -25,7 +25,7 @@ public interface CompetitionsRestService {
     RestResult<CompetitionResource> create();
     RestResult<Void> markSectionComplete(long competitionId, CompetitionSetupSection section);
     RestResult<Void> markSectionInComplete(long competitionId, CompetitionSetupSection section);
-    RestResult<String> generateCompetitionCode(long competitionId, LocalDateTime openingDate);
+    RestResult<String> generateCompetitionCode(long competitionId, ZonedDateTime openingDate);
     RestResult<Void> initApplicationForm(long competitionId, long competitionTypeId);
     RestResult<Void> markAsSetup(long competitionId);
     RestResult<Void> returnToSetup(long competitionId);

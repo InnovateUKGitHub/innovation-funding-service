@@ -7,7 +7,6 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -41,11 +40,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     @Test
     public void testGetFinanceCheckByProjectAndOrganisation() {
         assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE);
-    }
-
-    @Test
-    public void testGetFinanceCheckApprovalStatus(){
-        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckApprovalStatus(1L, 2L), PROJECT_FINANCE);
     }
 
     @Test
@@ -104,9 +98,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
             return null;
         }
-
-        @Override
-        public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) { return null; }
 
         @Override
         public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {

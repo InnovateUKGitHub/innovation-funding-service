@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -176,7 +176,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Id of the project"),
-                                parameterWithName("projectManagerId").description("User id of the project manager being assigned")
+                                parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
                         )
                 ));
     }
@@ -193,7 +193,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Id of the project"),
-                                parameterWithName("projectManagerId").description("User id of the project manager being assigned")
+                                parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
                         )
                 ));
     }
@@ -371,7 +371,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void setApplicationDetailsSubmittedDateButDetailsNotFilledIn() throws Exception {
-        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isBadRequest())
                 .andDo(this.document.snippets(
@@ -382,7 +382,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void setApplicationDetailsSubmittedDate() throws Exception {
-        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
@@ -457,7 +457,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void setPartnerDocumentsSubmittedDate() throws Exception {
-        when(projectServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        when(projectServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(

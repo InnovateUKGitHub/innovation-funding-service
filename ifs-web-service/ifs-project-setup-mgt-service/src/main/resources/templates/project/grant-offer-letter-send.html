@@ -42,114 +42,60 @@
         </th:block>
     </th:block>
 
-    <h2 th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
+    <h2 th:insert="fragments/elements :: project-title (projectName=${model.projectName})" th:remove="tag" />
 
     <h2 class="heading-medium">Grant offer letter</h2>
 
-    <div class="upload-section unstyled-view">
+    <div class="upload-section">
     <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
           th:object="${form}" method="post" enctype="multipart/form-data">
 
         <p th:unless="${model.grantOfferLetterFile}">The grant offer letter has not yet been generated or uploaded. You are able to manually upload the GOL from this page.</p>
 
-        <!-- /* file is not uploaded */-->
-        <div th:classappend="${#fields.hasErrors('grantOfferLetter') ? 'error' : ''}"
-             th:unless="${model.grantOfferLetterFile}">
-            <th:block th:if="${#fields.hasErrors('grantOfferLetter')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('grantOfferLetter')}"
-                          th:text="${err}"/>
-            </th:block>
-            <input th:field="*{grantOfferLetter}" type="file" id="grantOfferLetter" class="inputfile"/>
-            <label for="grantOfferLetter" class="button-secondary extra-margin">+ Upload</label>
-            <button name="uploadGrantOfferLetterClicked" class="button-secondary" type="submit"
-                    data-for-file-upload="grantOfferLetter">Save
-            </button>
-            <details>
-                <summary><span class="summary">What are the requirements for upload?</span></summary>
-                <div class="panel-indent">
-                    <p>The grant offer letter should:</p>
-                    <ul class="list-bullet">
-                        <li>be in a portable document format (.pdf)</li>
-                        <li>be less than 1mb in size</li>
-                    </ul>
-                </div>
-            </details>
-        </div>
-
-        <!--/* file is uploaded */-->
-        <th:block th:if="${model.grantOfferLetterFile}">
-            <a th:href="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
-               class="uploaded-file" th:text="${model.grantOfferLetterFile.filename}">The-uploaded-file-example.pdf</a>
-            <button th:if="${model.showRemoveOfferLetterButton}" name="removeGrantOfferLetterClicked" class="button-secondary no-margin-right"
-                    type="submit">Remove
-            </button>
+        <th:block th:with="uploadViewmode='edit',
+                       downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
+                       filename=${model.grantOfferLetterFile?.filename},
+                       inputField='grantOfferLetter',
+                       validationField=${inputField},
+                       mayRemove=${model.showRemoveOfferLetterButton},
+                       removeName='removeGrantOfferLetterClicked',
+                       saveName='uploadGrantOfferLetterClicked'">
+            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
         </th:block>
-
     </form>
     </div>
 
     <h2 class="heading-medium">Annex</h2>
     <p th:unless="${model.additionalContractFile}">The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
-    <th:block th:if="${!model.isSentToProjectTeam()}">
 
-        <th:block th:if="${model.additionalContractFile}">
-            <th:block th:if="${model.getAdditionalContractFileContentAvailable()}">
-                <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
-            </th:block>
-            <th:block th:unless="${model.getAdditionalContractFileContentAvailable()}">
-                <p th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</p>
-            </th:block>
-        </th:block>
-        <th:block th:unless="${model.additionalContractFile}">
-            <th:block th:if="${model.isSentToProjectTeam()}">
-                None specified.
-            </th:block>
-            <th:block th:unless="${model.isSentToProjectTeam()}">
-                <div class="upload-section unstyled-view">
-                    <th:block th:if="${model.isSentToProjectTeam()}">
-                        <p>None specified.</p>
-                    </th:block>
-                    <th:block th:unless="${model.isSentToProjectTeam()}">
-                        <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"
-                              th:object="${form}" method="post" enctype="multipart/form-data">
-                            <p>Any additional supporting materials should be uploaded to the Annex.</p>
 
-                            <div th:classappend="${#fields.hasErrors('annex') ? 'error' : ''}">
-                                <th:block th:if="${#fields.hasErrors('annex')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('annex')}"
-                                          th:text="${err}"/>
-                                </th:block>
-                                <input th:field="*{annex}" type="file" id="annex" class="inputfile"/>
-                                <label for="annex" class="button-secondary extra-margin">+ Upload</label>
-                                <button name="uploadAnnexClicked" class="button-secondary" type="submit"
-                                        data-for-file-upload="annex">Save
-                                </button>
-                                <details>
-                                    <summary><span class="summary">What are the requirements for upload?</span></summary>
-                                    <div class="panel">
-                                        <p>The Annex should:</p>
-                                        <ul class="list list-bullet">
-                                            <li>be in a portable document format (.pdf)</li>
-                                            <li>be less than 1mb in size</li>
-                                        </ul>
-                                    </div>
-                                </details>
-                            </div>
-                        </form>
-                    </th:block>
+
+    <div class="upload-section">
+
+        <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"   th:object="${form}" method="post" enctype="multipart/form-data">
+            <p>Any additional supporting materials should be uploaded to the Annex.</p>
+            <details th:unless="${model.isSentToProjectTeam()}">
+                <summary><span class="summary">What are the requirements for upload?</span></summary>
+                <div class="panel">
+                    <p>The Annex should:</p>
+                    <ul class="list list-bullet">
+                        <li>be in a portable document format (.pdf)</li>
+                        <li>be less than 1mb in size</li>
+                    </ul>
                 </div>
+            </details>
+            <th:block th:with="uploadViewmode=${model.isSentToProjectTeam()} ? 'readonly' : 'edit',
+                           downloadUrl=@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})},
+                           filename=${model.additionalContractFile?.filename},
+                           inputField='annex',
+                           validationField=${inputField},
+                           mayRemove=false,
+                           removeName='',
+                           saveName='uploadAnnexClicked'">
+                <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
             </th:block>
-        </th:block>
-    </th:block>
-    <th:block th:unless="${!model.isSentToProjectTeam()}">
-        <th:block th:if="${model.additionalContractFile != null}">
-            <p><a th:href="@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
-        </th:block>
-        <th:block th:unless="${model.additionalContractFile != null}">
-            None specified.
-        </th:block>
-    </th:block>
-
+        </form>
+    </div>
     <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
         <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button large">
             Publish to project team
@@ -158,12 +104,14 @@
 
     <th:block th:if="${model.isSentToProjectTeam()}">
         <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
-        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-            <p><a th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename}">signed-offer-letter.PDF</a></p>
-        </th:block>
-        <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
-            <p>Awaiting upload by the Project Manager</p>
-        </th:block>
+        <div class="upload-section">
+            <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
+                <p><a class="uploaded-file" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename}">signed-offer-letter.PDF</a></p>
+            </th:block>
+            <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+                <p>Awaiting upload by the Project Manager</p>
+            </th:block>
+        </div>
     </th:block>
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}" th:remove="tag">
         <h2 class="heading-medium">Confirm receipt of signed grant offer letter</h2>

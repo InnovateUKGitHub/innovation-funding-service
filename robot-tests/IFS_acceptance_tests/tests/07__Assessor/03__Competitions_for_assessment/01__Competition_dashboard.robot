@@ -27,7 +27,7 @@ Resource          ../../../resources/defaultResources.robot
 User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
-    When the user navigates to the page    ${server}/assessment/134/assignment
+    When the user navigates to the page    ${server}/assessment/109/assignment
     Then the user should see the text in the page    Invitation withdrawn
     [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
 
@@ -49,7 +49,7 @@ Details of the competition are visible
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
-    And the user should see the text in the page    12:00am Thursday 12 January 2068
+    And the user should see the text in the page    12:00pm Thursday 12 January 2068
     And the user should see the text in the page    12:00am Saturday 28 January 2068
 
 Competition brief link can be seen

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Where;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -33,8 +33,8 @@ public class ApplicationStatistics {
 
     private Long competition;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applicationStatusId", referencedColumnName = "id")
+    @Column(name="status")
+    @Enumerated(EnumType.STRING)
     private ApplicationStatus applicationStatus;
 
     @OneToMany(mappedBy = "applicationId")
