@@ -476,7 +476,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
-        List<ProcessRole> applicants = applicationRepository.findByCompetitionId(competitionId)
+        List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))
                 .stream()
                 .flatMap(x -> x.getProcessRoles().stream())
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)

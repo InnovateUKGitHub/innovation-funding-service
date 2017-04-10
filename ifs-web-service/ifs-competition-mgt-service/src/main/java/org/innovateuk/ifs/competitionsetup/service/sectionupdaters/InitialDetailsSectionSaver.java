@@ -73,8 +73,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setName(initialDetailsForm.getTitle());
 
                 if (shouldTryToSaveStartDate(initialDetailsForm)) {
-                    ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(initialDetailsForm.getOpeningDateYear(),
-                            initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay());
+                    ZonedDateTime startDate = initialDetailsForm.getOpeningDate();
                     competition.setStartDate(startDate);
 
                     List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
