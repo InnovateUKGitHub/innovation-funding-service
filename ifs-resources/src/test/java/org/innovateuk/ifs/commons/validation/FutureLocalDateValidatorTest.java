@@ -12,9 +12,7 @@ import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class FutureLocalDateValidatorTest {
 
@@ -32,6 +30,7 @@ public class FutureLocalDateValidatorTest {
     }
 
     private Validator validator;
+
     @Before
     public void setup() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -58,7 +57,7 @@ public class FutureLocalDateValidatorTest {
         Set<ConstraintViolation<TestLocalDateForm>> violations = validator.validate(futureLocalDateForm);
 
         assertFalse(violations.isEmpty());
-        assertEquals(violations.iterator().next().getMessageTemplate(), "{validation.project.start.date.not.in.future}");
+        assertEquals(violations.iterator().next().getMessageTemplate(), "{validation.standard.date.future}");
     }
 
     @Test
@@ -73,7 +72,7 @@ public class FutureLocalDateValidatorTest {
         ConstraintViolation<TestLocalDateForm> first = iter.next();
 
         assertTrue(!violations.isEmpty());
-        assertEquals(first.getMessageTemplate(), "{validation.project.start.date.not.in.future}");
+        assertEquals(first.getMessageTemplate(), "{validation.standard.date.future}");
     }
 
     @Test
@@ -88,7 +87,7 @@ public class FutureLocalDateValidatorTest {
         ConstraintViolation<TestLocalDateForm> first = iter.next();
 
         assertTrue(!violations.isEmpty());
-        assertEquals(first.getMessageTemplate(), "{validation.project.start.date.not.in.future}");
+        assertEquals(first.getMessageTemplate(), "{validation.standard.date.future}");
     }
 
     @Test
@@ -103,6 +102,6 @@ public class FutureLocalDateValidatorTest {
         ConstraintViolation<TestLocalDateForm> first = iter.next();
 
         assertTrue(!violations.isEmpty());
-        assertEquals(first.getMessageTemplate(), "{validation.project.start.date.not.in.future}");
+        assertEquals(first.getMessageTemplate(), "{validation.standard.date.future}");
     }
 }
