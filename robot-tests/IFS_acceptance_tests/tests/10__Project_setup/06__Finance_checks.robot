@@ -1539,7 +1539,7 @@ Project finance user can view Partner's Section changes in Changes-to-finances p
     [Tags]
     When the user verifies the table heading for Section changes
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
-    Then the categories are verified for Section changes    1   £ 55,980     £ 1,954      £ -98,200    £ 9,548      £ -70,000       £ -3,970        £ 10,200
+    Then the categories are verified for Section changes    1   £ 56,697     £ 9,078      £ -98,200    £ 9,548      £ -70,000       £ -3,970        £ 10,200
 
 Project finance user can view Partner's Changes-from-submitted-finances in Changes-to-finances page
     [Documentation]    INFUND-4837
@@ -1569,7 +1569,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Over
     Then the user verifies the Action and Section for Changes-from-submitted-finances       13  Change  Overheads
     And the user verifies the table heading for Overheads Section
     And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
-    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) td:nth-of-type(2)  1954
+    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) td:nth-of-type(2)  9078
     Then the revised cost is verified for the specified section     15  0
 
 #3.capital usage section
@@ -1653,10 +1653,8 @@ Project finance user can view Partner's Overall cost difference after Changes-fr
     [Documentation]    INFUND-4837
     [Tags]
     Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   -94,488
+    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   -86,647
     And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
-
-
 
 
 
@@ -2325,4 +2323,3 @@ the revised categories are verified for specified Section
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${detail}
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
-
