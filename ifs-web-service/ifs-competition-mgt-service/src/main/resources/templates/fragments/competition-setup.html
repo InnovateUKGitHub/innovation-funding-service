@@ -1,38 +1,33 @@
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
 
-<div th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)"
-     xmlns:th="http://www.w3.org/1999/html">
-    <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
-        <ul class="list-overview">
-            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}" class="grid-row section">
-                <div class="column-two-thirds">
-                    <img width="30" height="30" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" th:title="'The &quot;'+${section.name}+'&quot; section is done'" th:alt="'The &quot;'+${section.name}+'&quot; section is done'"
-                         th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="section-status" />
-                    <h3 class="heading-small">
+<th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:unless="${(param.section != null)}">
+        <ul class="task-list">
+            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}">
+                <div class="task">
+                    <h2 class="heading-small">
                         <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'})"
                            th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
                            th:text="${section.name}">Section Name</a>
                         <th:block th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
-                           th:text="${section.name}">Section Name</th:block>
-                    </h3>
+                                  th:text="${section.name}">Section Name</th:block>
+                    </h2>
                 </div>
-                <div th:if="${isPublicContentPublished and section.toString() == 'CONTENT'}" class="column-third">
-                    <p class="form-hint font-small"
-                       th:if="${isPublicContentPublished}"
-                       th:with="publishDay=${#temporals.format(publishDate, 'd MMMM yyyy')},
+                <span th:if="${isPublicContentPublished and section.toString() == 'CONTENT'}"
+                      th:with="publishDay=${#temporals.format(publishDate, 'd MMMM yyyy')},
                          publishTime=${#strings.toLowerCase(#temporals.format(publishDate, ' h:mma'))}"
-                       th:text="${'Last published ' + publishDay + ' ' + publishTime}">Last published</p>
-                </div>
+                      th:text="${'Last published ' + publishDay + ' ' + publishTime}"
+                      class="notification">Last published</span>
+                <div th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="task-status-complete"><span>Complete</span></div>
             </li>
         </ul>
-
         <div th:if="${readyToOpen}" class="extra-margin">
             <p>Once you save, this competition will be ready to open but will not be published.</p>
             <a th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${competition.id})}"
                class="button no-margin-right" id="compCTA">Save</a>
         </div>
-    </div>
-</div>
+    </th:block>
+</th:block>
 
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="comp-admin-page-title-subheading(subtitle, heading, subheading)">
