@@ -4,7 +4,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.publiccontent.domain.ContentEvent;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -14,7 +14,7 @@ import java.util.function.BiConsumer;
  */
 public class PublicContentDateDataBuilder extends BaseDataBuilder<Void, PublicContentDateDataBuilder>{
 
-    public PublicContentDateDataBuilder withPublicContentDate(String competitionName, LocalDateTime date, String content) {
+    public PublicContentDateDataBuilder withPublicContentDate(String competitionName, ZonedDateTime date, String content) {
         return with(data -> {
             if (competitionName != null) {
                 Competition competition = retrieveCompetitionByName(competitionName);

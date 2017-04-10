@@ -21,6 +21,5 @@ public class ApplicationQuestionModelPopulator implements CompetitionSetupSubsec
 
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
-
     }
 }

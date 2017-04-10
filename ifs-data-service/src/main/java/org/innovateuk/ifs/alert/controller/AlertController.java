@@ -39,12 +39,12 @@ public class AlertController {
         return alertService.create(alertResource).toPostCreateResponse();
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable("id") Long id) {
         return alertService.delete(id).toDeleteResponse();
     }
 
-    @DeleteMapping(value = "/delete/{type}")
+    @DeleteMapping("/delete/{type}")
     public RestResult<Void> deleteAllByType(@PathVariable("type") AlertType type) {
         return alertService.deleteAllByType(type).toDeleteResponse();
     }

@@ -180,7 +180,7 @@
                 <tbody>
                 <tr th:if="${hasOrganisationFinance}" th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}">
                     <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /></strong></td>
-                    <td class="numeric">&pound;<th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
+                    <td class="numeric"><th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}" /></td>

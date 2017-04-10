@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class QuestionStatusResource {
     private Long id;
@@ -11,7 +11,7 @@ public class QuestionStatusResource {
     private Long markedAsCompleteBy;
     private Long question;
     private Long assignee;
-    private LocalDateTime assignedDate;
+    private ZonedDateTime assignedDate;
     private Long application;
     private Long assignedBy;
     private Boolean notified;
@@ -34,7 +34,7 @@ public class QuestionStatusResource {
         this.question = question.getId();
     }
 
-    public QuestionStatusResource(QuestionResource question, ApplicationResource application, ProcessRoleResource assignee, ProcessRoleResource assignedBy, LocalDateTime assignedDate) {
+    public QuestionStatusResource(QuestionResource question, ApplicationResource application, ProcessRoleResource assignee, ProcessRoleResource assignedBy, ZonedDateTime assignedDate) {
         this.question = question.getId();
         this.application = application.getId();
         this.assignee = assignee.getId();
@@ -63,7 +63,7 @@ public class QuestionStatusResource {
         return assignedBy;
     }
 
-    public LocalDateTime getAssignedDate() {
+    public ZonedDateTime getAssignedDate() {
         return assignedDate;
     }
 
@@ -79,7 +79,7 @@ public class QuestionStatusResource {
         this.assignedBy = assignedBy;
     }
 
-    public void setAssignee(ProcessRoleResource assignee, ProcessRoleResource assignedBy, LocalDateTime assignedDate) {
+    public void setAssignee(ProcessRoleResource assignee, ProcessRoleResource assignedBy, ZonedDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee.getId();
         this.assignedBy = assignedBy.getId();
@@ -138,7 +138,7 @@ public class QuestionStatusResource {
         this.assignee = assignee;
     }
 
-    public void setAssignedDate(LocalDateTime assignedDate) {
+    public void setAssignedDate(ZonedDateTime assignedDate) {
         this.assignedDate = assignedDate;
     }
 

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -96,24 +96,12 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Override
     public ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId) {
         List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetId(applicationId);
+
+        Map<Long, BigDecimal> avgScores = calculateAverageScorePerQuestion(responses);
+        long averagePercentage = getAveragePercentage(responses);
+
         int totalScope = 0;
         int totalInScope = 0;
-        Map<Long, BigDecimal> avgScores = responses.stream()
-                .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
-                .collect(
-                        Collectors.groupingBy(
-                                x -> x.getFormInput().getQuestion().getId(),
-                                Collectors.mapping(
-                                        AssessorFormInputResponse::getValue,
-                                        new AssessorScoreAverageCollector())));
-
-        long averagePercentage = Math.round(responses.stream()
-                .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
-                .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
-                .average()
-                .orElse(0.0));
-
-
         for (AssessorFormInputResponse response : responses) {
             if (response.getFormInput().getType() == FormInputType.ASSESSOR_APPLICATION_IN_SCOPE) {
                 totalScope++;
@@ -123,6 +111,25 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
             }
         }
         return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope,avgScores,averagePercentage));
+    }
+
+    private long getAveragePercentage(List<AssessorFormInputResponse> responses) {
+        return Math.round(responses.stream()
+                    .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                    .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
+                    .average()
+                    .orElse(0.0));
+    }
+
+    private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {
+        return responses.stream()
+                    .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                    .collect(
+                            Collectors.groupingBy(
+                                    x -> x.getFormInput().getQuestion().getId(),
+                                    Collectors.mapping(
+                                            AssessorFormInputResponse::getValue,
+                                            new AssessorScoreAverageCollector())));
     }
 
     @Override

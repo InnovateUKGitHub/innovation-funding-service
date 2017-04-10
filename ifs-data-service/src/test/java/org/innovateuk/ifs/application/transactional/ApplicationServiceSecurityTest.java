@@ -3,10 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
@@ -23,21 +20,21 @@ import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static java.util.Collections.singletonList;
-import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.of;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -352,7 +349,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") Long id, LocalDateTime date) {
+        public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") Long id, ZonedDateTime date) {
             return null;
         }
 
@@ -362,7 +359,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<ApplicationResource> updateApplicationStatus(Long id, Long statusId) {
+        public ServiceResult<ApplicationResource> updateApplicationStatus(Long id, ApplicationStatus status) {
             return null;
         }
 
@@ -388,7 +385,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId,
-                                                                                        Collection<Long> applicationStatusId) {
+                                                                                        Collection<ApplicationStatus> applicationStatusId) {
             return null;
         }
 
@@ -401,7 +398,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
-        @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final LocalDateTime fundingEmailDate) {
+        @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final ZonedDateTime fundingEmailDate) {
             return null;
         }
     }

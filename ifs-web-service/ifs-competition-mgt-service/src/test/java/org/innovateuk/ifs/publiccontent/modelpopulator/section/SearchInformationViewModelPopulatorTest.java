@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -48,7 +48,7 @@ public class SearchInformationViewModelPopulatorTest {
                 .withEligibilitySummary(ELIGIBILITY_SUMMARY)
                 .withKeywords(KEYWORDS)
                 .withShortDescription(SHORT_DESCRIPTION)
-                .withPublishDate(LocalDateTime.now())
+                .withPublishDate(ZonedDateTime.now())
                 .withCompetitionId(COMPETITION_ID)
                 .withContentSections(asList(section)).build();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();

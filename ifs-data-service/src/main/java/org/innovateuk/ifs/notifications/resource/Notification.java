@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.util.MapFunctions.combineMaps;
 import static java.util.Collections.emptyMap;
+import static org.innovateuk.ifs.util.MapFunctions.combineMaps;
 
 /**
  * A DTO reporesenting a message that we wish to send out via one or more mediums.  The Notification itself holds the

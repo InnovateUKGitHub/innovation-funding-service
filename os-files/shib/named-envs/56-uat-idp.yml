@@ -21,7 +21,7 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-idp:0.4.6.1
+        - image: innovateuk/ifs-shib-idp:0.5.5
           name: idp
           imagePullPolicy: IfNotPresent
           env:
@@ -74,7 +74,7 @@ items:
           - containerPort: 9080
           resources:
             limits:
-              memory: 500M
+              memory: 1024M
           test: false
   triggers:
   - type: ConfigChange

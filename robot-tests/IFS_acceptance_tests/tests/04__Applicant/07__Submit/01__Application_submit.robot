@@ -27,7 +27,7 @@ Submit button disabled when application is incomplete
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=${application_name}
     And the user clicks the button/link    link=Your finances
-    And the user clicks the button/link    link= Application Overview
+    And the user clicks the button/link    link= Application overview
     And the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
 
@@ -95,8 +95,8 @@ Status of the submitted application
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=${application_name}
     And the user should see the element    Link=View application
-    And the user should see the element    Link=Print Application
-    When the user clicks the button/link    Link=Print Application
+    And the user should see the element    Link=Print application
+    When the user clicks the button/link    Link=Print application
     Then the user should be redirected to the correct page without the usual headers    print
 
 *** Keywords ***

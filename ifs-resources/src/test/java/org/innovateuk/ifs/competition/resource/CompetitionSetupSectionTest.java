@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -74,7 +74,7 @@ public class CompetitionSetupSectionTest {
 		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.INITIAL_DETAILS;
 		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
 
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withSetupComplete(true)
@@ -96,8 +96,8 @@ public class CompetitionSetupSectionTest {
 		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.INITIAL_DETAILS;
 		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
+		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withSetupComplete(true)
@@ -119,7 +119,7 @@ public class CompetitionSetupSectionTest {
 		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.INITIAL_DETAILS;
 		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withSetupComplete(true)

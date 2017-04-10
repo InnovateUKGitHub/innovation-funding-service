@@ -6,9 +6,10 @@ import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.time.DateTimeException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
@@ -22,7 +23,7 @@ public class MilestoneRowForm {
 	private static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE);
     private static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
-    @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
+    @Range(min=2000, max = 9999, message = "{validation.standard.date.format}")
     private Integer year;
     private Integer month;
     private Integer day;
@@ -31,13 +32,13 @@ public class MilestoneRowForm {
 
     private MilestoneType milestoneType;
     private String dayOfWeek;
-    private LocalDateTime date;
+    private ZonedDateTime date;
 
     public MilestoneRowForm() {
 
     }
 
-    public MilestoneRowForm(MilestoneType milestoneType, LocalDateTime dateTime) {
+    public MilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime) {
         this.setMilestoneType(milestoneType);
         if(dateTime != null) {
             this.setDay(dateTime.getDayOfMonth());
@@ -45,12 +46,13 @@ public class MilestoneRowForm {
             this.setYear(dateTime.getYear());
             this.setDate(dateTime);
             if (isTimeOption()) {
-                this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
+                this.setTime(MilestoneTime.fromZonedDateTime(dateTime));
             }
         } else if (isTimeOption() || isMiddayTime()) {
             this.setTime(MilestoneTime.TWELVE_PM);
         }
     }
+
 
     public Integer getDay() {
         return day;
@@ -98,22 +100,26 @@ public class MilestoneRowForm {
 
     public boolean editableForCompetition(CompetitionResource competitionResource) {
         return competitionResource.isNonIfs() ||
-                !(competitionResource.isSetupAndLive() && date.isBefore(LocalDateTime.now()));
+                !(competitionResource.isSetupAndLive() && date.isBefore(ZonedDateTime.now()));
     }
 
     public boolean isTimeOption() {
         return WITH_TIME_TYPES.contains(milestoneType);
     }
 
+    public boolean isFirstMilestone() {
+        return MilestoneType.OPEN_DATE.equals(milestoneType);
+    }
+
+    public ZonedDateTime getDate() {
+        return date;
+    }
+
     public boolean isMiddayTime() {
         return WITH_MIDDAY_TIME.contains(milestoneType);
     }
 
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
@@ -143,7 +149,7 @@ public class MilestoneRowForm {
     private String getMilestoneDate (Integer day, Integer month, Integer year) {
         if (day != null && month != null && year != null) {
             try {
-                return LocalDateTime.of(year, month, day, 0, 0).getDayOfWeek().name();
+                return TimeZoneUtil.fromUkTimeZone(year, month, day).getDayOfWeek().name();
             } catch (DateTimeException ex) {
                 LOG.error("Invalid date");
                 LOG.debug(ex.getMessage());
@@ -153,12 +159,13 @@ public class MilestoneRowForm {
         return null;
     }
 
-    public LocalDateTime getMilestoneAsDateTime() {
+    public ZonedDateTime getMilestoneAsZonedDateTime() {
+
         if (day != null && month != null && year != null){
-            if (time != null && (isTimeOption() || isMiddayTime())) {
-                return LocalDateTime.of(year, month, day, time.getHour(), 0);
+            if ( time != null && (isTimeOption() || isMiddayTime())) {
+                return TimeZoneUtil.fromUkTimeZone(year, month, day, time.getHour());
             } else {
-                return LocalDateTime.of(year, month, day, 0, 0);
+                return TimeZoneUtil.fromUkTimeZone(year, month, day);
             }
         } else {
             return null;

@@ -27,21 +27,14 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	@Autowired
 	private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
 
+	@Autowired
+	private ApplicationSummaryRestService applicationSummaryRestService;
+
 	@Override
 	public ServiceResult<Void> sendFundingNotifications(NotificationResource notificationResource) {
 		return applicationFundingDecisionRestService.sendApplicationFundingDecisions(notificationResource).toServiceResult();
 	}
 
-	//TODO: remove this and subsequent methods after implementation of INFUND-7378
-	/*
-	@Override
-	public void makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
-		applicationFundingDecisionRestService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
-	}*/
-
-	@Autowired
-	private ApplicationSummaryService applicationSummaryService;
-	
 	@Override
 	public ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, FundingDecision fundingDecision, List<Long> applicationIds) {
 
@@ -79,7 +72,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
-		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE, null, Optional.empty()).getContent()
+		return applicationSummaryRestService.getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, null, Optional.empty()).getSuccessObjectOrThrowException().getContent()
 				.stream().map(summaryResource -> summaryResource.getId()).collect(Collectors.toList());
 	}
 

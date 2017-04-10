@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -52,7 +52,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
     @Test
     @Rollback
     public void testPublishByCompetitionId() throws Exception {
-        LocalDateTime oldPublishDate = LocalDateTime.now().minusYears(1);
+        ZonedDateTime oldPublishDate = ZonedDateTime.now().minusYears(1);
         publicContentRepository.save(PublicContentBuilder.newPublicContent()
                 .withPublishDate(oldPublishDate)
                 .withCompetitionId(COMPETITION_ID).build());

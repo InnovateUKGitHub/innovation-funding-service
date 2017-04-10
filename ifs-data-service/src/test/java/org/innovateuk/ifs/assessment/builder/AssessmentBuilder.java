@@ -10,6 +10,7 @@ import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -50,7 +51,7 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentBuilder withLastModifiedDate(Calendar... lastModifiedDates) {
+    public AssessmentBuilder withLastModifiedDate(ZonedDateTime... lastModifiedDates) {
         return withArray((lastModifiedDate, object) -> setField("lastModified", lastModifiedDate, object), lastModifiedDates);
     }
 

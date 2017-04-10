@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.domain;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Entity that represents the public content associated to a dated event.
@@ -17,7 +17,7 @@ public class ContentEvent {
     @JoinColumn(name = "public_content_id", referencedColumnName = "id")
     private PublicContent publicContent;
 
-    private LocalDateTime date;
+    private ZonedDateTime date;
 
     @Column(length=5000)
     private String content;
@@ -38,11 +38,11 @@ public class ContentEvent {
         this.publicContent = publicContent;
     }
 
-    public LocalDateTime getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 

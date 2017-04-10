@@ -42,7 +42,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -142,7 +142,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private void handleInviteSuccess(ApplicationInvite invite) {
-        applicationInviteRepository.save(invite.send(loggedInUserSupplier.get(), LocalDateTime.now()));
+        applicationInviteRepository.save(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
     }
 
     private Consumer<ServiceFailure> logInviteError(ApplicationInvite i) {
@@ -563,7 +563,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             ProcessRole assignedBy =
                     convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignedBy(), reassignTo, leadApplicantRole);
 
-            questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
+            questionStatus.setAssignee(assignee, assignedBy, ZonedDateTime.now());
         }
 
         if (questionStatus.getMarkedAsCompleteBy() != null) {

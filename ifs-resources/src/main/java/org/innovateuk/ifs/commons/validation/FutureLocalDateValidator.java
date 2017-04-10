@@ -26,6 +26,6 @@ public class FutureLocalDateValidator implements ConstraintValidator<FutureLocal
 
         LocalDate today = LocalDate.now();
 
-        return value.isEqual(today) || value.isAfter(today);
+        return value.isAfter(today);
     }
 }

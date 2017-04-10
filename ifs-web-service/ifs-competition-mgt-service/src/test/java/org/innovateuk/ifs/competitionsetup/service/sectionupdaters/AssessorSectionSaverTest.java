@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -59,8 +59,8 @@ public class AssessorSectionSaverTest {
 		Integer oldAssessorCount = 3;
 		BigDecimal oldAssessorPay = new BigDecimal("15000");
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
+		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
 		AssessorsForm assessorsForm = new AssessorsForm();
 		assessorsForm.setAssessorCount(newAssessorCount);
@@ -92,7 +92,7 @@ public class AssessorSectionSaverTest {
 		Integer newAssessorCount = 5;
 		BigDecimal newAssessorPay = new BigDecimal("10000");
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 
 		AssessorsForm assessorsForm = new AssessorsForm();
 		assessorsForm.setAssessorCount(newAssessorCount);
