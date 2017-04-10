@@ -135,6 +135,7 @@
                     </div>
                 </div>
             </fieldset>
+
             <fieldset>
                 <div id="closeDate" th:class="${#fields.hasErrors('closeDate*')}? 'form-group error':'form-group'">
                     <h3 class="heading-small no-margin">Competition close date / submission deadline</h3>
@@ -203,10 +204,10 @@
                                         th:text="${time.display}" th:value="${time}" th:selected="${time == form.closeDate.time}"></option>
                             </select>
                         </div>
-
                     </div>
                 </div>
             </fieldset>
+
             <fieldset>
                 <div id="applicantNotifiedDate" th:class="${#fields.hasErrors('applicantNotifiedDate*')}? 'form-group error':'form-group'">
                     <h3 class="heading-small no-margin">Applicants notified date</h3>
