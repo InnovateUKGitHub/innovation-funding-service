@@ -823,6 +823,74 @@ Project finance can see finance breakdown for different categories
        And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 503,248
        [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
+Project finance user can review Lead-partner's Changes to finances during the Finance Checks eligibility before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    #Given the user clicks the button/link       link=Finance checks
+    Given the user clicks the button/link        css=a.eligibility-0
+    When the user clicks the button/link         link=Review all changes to project finances
+    Then the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
+    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+
+Project finance user can review Lead-partner's Project finances in Changes-to-finances page before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Project finances section
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    Then the categories are verified for Project finances section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
+
+Project finance user can review Lead-partner's Section changes in Changes-to-finances page before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Section changes
+    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+    Then the categories are verified for Section changes    1   £ 0     £ 0      £ 0    £ 0      £ 0       £ 0        £ 0
+    And the user verifies the table heading for Changes-from-submitted-finances
+
+Project finance user can review Lead-partner's Overall cost for Changes-from-submitted-finances before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
+    And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
+
+Project finance user can review Partner's Changes to finances during the Finance Checks eligibility before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Finance checks
+    When the user clicks the button/link        css=a.eligibility-2
+    Then the user clicks the button/link        link=Review all changes to project finances
+    And the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
+    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+
+Project finance user can review Partner's Project finances in Changes-to-finances page before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Project finances section
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    Then the categories are verified for Project finances section   1   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
+
+Project finance user can review Partner's Section changes in Changes-to-finances page before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Section changes
+    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+    Then the categories are verified for Section changes    1   £ 0     £ 0      £ 0    £ 0      £ 0       £ 0        £ 0
+    And the user verifies the table heading for Changes-from-submitted-finances
+
+Project finance user can review Partner's Overall cost for Changes-from-submitted-finances before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
+    And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
+    And the user clicks the button/link     link=Finance checks
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095
     [Tags]
