@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  */
 
 public class ResearchCategoryForm extends BaseBindingResultTarget {
-    @NotNull(message = "{validation.application.research.category.required}")
+    @NotNull(message = "{validation.field.must.not.be.blank}")
     private String researchCategoryChoice;
 
     public String getResearchCategoryChoice() {

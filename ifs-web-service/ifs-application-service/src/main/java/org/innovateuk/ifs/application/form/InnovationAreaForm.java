@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  */
 
 public class InnovationAreaForm extends BaseBindingResultTarget {
-    @NotNull(message = "{validation.application.innovationarea.category.required}")
+    @NotNull(message = "{validation.field.must.not.be.blank}")
     private String innovationAreaChoice;
 
     public String getInnovationAreaChoice() {
