@@ -855,7 +855,6 @@ Project finance can see finance breakdown for different categories
 Project finance user can review Lead-partner's Changes to finances during the Finance Checks eligibility before the revisions made
     [Documentation]    INFUND-4837
     [Tags]
-    #Given the user clicks the button/link       link=Finance checks
     Given the user clicks the button/link        css=a.eligibility-0
     When the user clicks the button/link         link=Review all changes to project finances
     Then the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
