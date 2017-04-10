@@ -219,7 +219,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(result.isSuccess());
 
         verify(inviteOrganisationRepositoryMock).save(isA(InviteOrganisation.class));
-        verify(applicationInviteRepositoryMock).save(isA(List.class));
+        verify(applicationInviteRepositoryMock, times(5)).save(isA(ApplicationInvite.class));
     }
 
     @Test
