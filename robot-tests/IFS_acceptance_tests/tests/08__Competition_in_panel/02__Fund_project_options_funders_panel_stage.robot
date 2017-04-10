@@ -8,7 +8,7 @@ Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
+${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
 
 *** Test Cases ***
 Funding decision buttons should be disabled

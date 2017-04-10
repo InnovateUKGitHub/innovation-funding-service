@@ -52,7 +52,7 @@ ${COMP_SETUP_COMPETITION}                 ${competition_ids['none']}
 ${NOT_EDITABLE_COMPETITION_NAME}          Integrated delivery programme - low carbon vehicles
 ${NOT_EDITABLE_COMPETITION}               ${competition_ids['${NOT_EDITABLE_COMPETITION_NAME}']}
 ${FUNDERS_PANEL_COMPETITION_NAME}         Internet of Things
-${FUNDERS_PANEL_COMPETITION}              ${competition_ids['${FUNDERS_PANEL_COMPETITION_NAME}']}
+${FUNDERS_PANEL_COMPETITION_NUMBER}       ${competition_ids['${FUNDERS_PANEL_COMPETITION_NAME}']}
 ${FUNDERS_PANEL_APPLICATION_1_TITLE}      Sensing & Control network using the lighting infrastructure
 ${FUNDERS_PANEL_APPLICATION_1}            ${application_ids['${FUNDERS_PANEL_APPLICATION_1_TITLE}']}
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_1_TITLE}']}
