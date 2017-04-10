@@ -126,7 +126,9 @@
                 </div>
             </th:block>
             <input type="hidden" name="autosaveInnovationAreaIds" />
-            <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
+            <div class="form-group">
+                <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
+            </div>
 
             <div id="openingDate" th:class="${#fields.hasErrors('openingDate*')}? 'form-group error':'form-group'">
                 <fieldset>
@@ -233,7 +235,11 @@
                 </p>
             </div>
 
-            <button class="button">Done</button>
+            <input type="hidden" name="unrestricted" value="1" th:if="${#strings.isEmpty(restrictInitialDetailsEdit)}" />
+
+            <button class="button">
+                Done
+            </button>
         </th:block>
 
         <th:block th:if="${!editable}" id="section-1-">
@@ -790,8 +796,8 @@
                       th:if="${milestoneEntry.value.milestoneType.presetDate}"
                       class="date-group form-group-row"
                       data-future-date=""
-                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date'},
-                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date that is after the previous milestone'}">
+                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': Please enter a valid date.'},
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
 
                       <th scope="row" th:id="${'milestone-' + milestoneEntry.key}">
                         <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />

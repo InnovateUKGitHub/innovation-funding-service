@@ -22,7 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -54,8 +54,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     private static final CompetitionResource UNEDITABLE_COMPETITION = newCompetitionResource()
             .withCompetitionStatus(CompetitionStatus.OPEN)
             .withSetupComplete(true)
-            .withStartDate(LocalDateTime.now().minusDays(1))
-            .withFundersPanelDate(LocalDateTime.now().plusDays(1)).build();
+            .withStartDate(ZonedDateTime.now().minusDays(1))
+            .withFundersPanelDate(ZonedDateTime.now().plusDays(1)).build();
 
     @Mock
     private CategoryService categoryService;
@@ -283,7 +283,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId.toString() + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")

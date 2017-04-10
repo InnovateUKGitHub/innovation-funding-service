@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface FutureLocalDate {
 
-    String message() default "{validation.project.start.date.not.in.future}";
+    String message() default "{validation.standard.date.future}";
 
     Class<?>[] groups() default {};
 

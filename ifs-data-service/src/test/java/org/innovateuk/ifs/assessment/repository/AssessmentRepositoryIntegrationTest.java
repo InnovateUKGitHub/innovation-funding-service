@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.LongAccumulator;
 import java.util.stream.Collectors;
@@ -280,7 +280,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                                 .withAssessment(assessment)
                                 .withFormInput(formInput)
                                 .withValue("Value")
-                                .withUpdatedDate(LocalDateTime.now())
+                                .withUpdatedDate(ZonedDateTime.now())
                                 .build())).collect(toList()));
         assertTrue(repository.isFeedbackComplete(assessment.getId()));
 
@@ -327,7 +327,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                                             .withAssessment(assessment)
                                             .withFormInput(formInput)
                                             .withValue(String.valueOf(randomScore))
-                                            .withUpdatedDate(LocalDateTime.now())
+                                            .withUpdatedDate(ZonedDateTime.now())
                                             .build();
                                 }
                         )

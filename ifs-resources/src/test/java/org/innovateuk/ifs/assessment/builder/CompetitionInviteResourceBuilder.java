@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -34,15 +34,15 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
         return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
-    public CompetitionInviteResourceBuilder withAcceptsDate(LocalDateTime... acceptsDates) {
+    public CompetitionInviteResourceBuilder withAcceptsDate(ZonedDateTime... acceptsDates) {
         return withArraySetFieldByReflection("acceptsDate", acceptsDates);
     }
 
-    public CompetitionInviteResourceBuilder withDeadlineDate(LocalDateTime... deadlineDates) {
+    public CompetitionInviteResourceBuilder withDeadlineDate(ZonedDateTime... deadlineDates) {
         return withArraySetFieldByReflection("deadlineDate", deadlineDates);
     }
 
-    public CompetitionInviteResourceBuilder withBriefingDate(LocalDateTime... briefingDates) {
+    public CompetitionInviteResourceBuilder withBriefingDate(ZonedDateTime... briefingDates) {
         return withArraySetFieldByReflection("briefingDate", briefingDates);
     }
 

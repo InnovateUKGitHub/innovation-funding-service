@@ -13,12 +13,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.Cookie;
+import java.time.ZonedDateTime;
 
-import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -55,8 +55,8 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     public void checkEligibility() throws Exception {
         long competitionId = 1L;
         PublicContentItemResource publicContentItem = newPublicContentItemResource()
-                .withCompetitionOpenDate(now().minusDays(1))
-                .withCompetitionCloseDate(now().plusDays(1))
+                .withCompetitionOpenDate(ZonedDateTime.now().minusDays(1))
+                .withCompetitionCloseDate(ZonedDateTime.now().plusDays(1))
                 .withNonIfs(false)
                 .build();
         when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
@@ -76,8 +76,8 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     public void checkEligibility_nonIfs() throws Exception {
         long competitionId = 1L;
         PublicContentItemResource publicContentItem = newPublicContentItemResource()
-                .withCompetitionOpenDate(now().minusDays(1))
-                .withCompetitionCloseDate(now().plusDays(1))
+                .withCompetitionOpenDate(ZonedDateTime.now().minusDays(1))
+                .withCompetitionCloseDate(ZonedDateTime.now().plusDays(1))
                 .withNonIfs(true)
                 .build();
         when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
@@ -92,8 +92,8 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     public void checkEligibility_early() throws Exception {
         long competitionId = 1L;
         PublicContentItemResource publicContentItem = newPublicContentItemResource()
-                .withCompetitionOpenDate(now().plusDays(1))
-                .withCompetitionCloseDate(now().plusDays(2))
+                .withCompetitionOpenDate(ZonedDateTime.now().plusDays(1))
+                .withCompetitionCloseDate(ZonedDateTime.now().plusDays(2))
                 .withNonIfs(false)
                 .build();
         when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
@@ -107,8 +107,8 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     public void checkEligibility_late() throws Exception {
         long competitionId = 1L;
         PublicContentItemResource publicContentItem = newPublicContentItemResource()
-                .withCompetitionOpenDate(now().minusDays(2))
-                .withCompetitionCloseDate(now().minusDays(1))
+                .withCompetitionOpenDate(ZonedDateTime.now().minusDays(2))
+                .withCompetitionCloseDate(ZonedDateTime.now().minusDays(1))
                 .withNonIfs(false)
                 .build();
         when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);

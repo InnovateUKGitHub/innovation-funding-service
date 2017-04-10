@@ -10,7 +10,7 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -77,7 +77,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                                                              Optional<User> existingUser,
                                                              String innovationAreaName,
                                                              Optional<User> sentBy,
-                                                             Optional<LocalDateTime> sentOn
+                                                             Optional<ZonedDateTime> sentOn
     ) {
         return with(data -> {
             newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(

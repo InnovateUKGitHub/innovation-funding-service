@@ -22,6 +22,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-7979 As an lead applicant I want to add a new organisation
 ...
 ...               INFUND-7977 As a non lead applicant I want to edit my application team
+...
+...               INFUND-8590 Lead applicant can Delete a partner Organisation
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -29,7 +31,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
-${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3}/contributors/invite?newApplication
+${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3_NUMBER}/contributors/invite?newApplication
 
 *** Test Cases ***
 Application team page
@@ -49,9 +51,12 @@ Lead Adds/Removes rows
     [Documentation]    INFUND-901
     ...
     ...    INFUND-7974
+    ...
+    ...    INFUND-8590
     [Tags]    HappyPath
     When The user clicks the button/link    jquery=a:contains("Update Empire Ltd")
     And the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    And The user should not see the element    jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should see the element    jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
     And The user clicks the button/link    jQuery=button:contains('Remove')
     Then The user should not see the element    jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
@@ -92,6 +97,8 @@ Lead Adds/Removes partner organisation
     ...    INFUND-7973
     ...
     ...    INFUND-7979
+    ...
+    ...    INFUND-8590
     [Tags]    HappyPath
     When The user clicks the button/link    jQuery=a:contains('Add partner organisation')
     And The user enters text to a text field    name=organisationName    Fannie May
@@ -99,7 +106,7 @@ Lead Adds/Removes partner organisation
     And The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
     And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
-    Then The user clicks the button/link    jQuery=button:contains('Delete organisation')
+    Then The user clicks the button/link    jQuery=a:contains('Delete organisation')
     And The user clicks the button/link     jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should not see the text in the page    Fannie May
     And the user should see the text in the page    Application team

@@ -18,10 +18,11 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -72,8 +73,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setName(initialDetailsForm.getTitle());
 
                 if (shouldTryToSaveStartDate(initialDetailsForm)) {
-                    LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
-                            initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
+                    ZonedDateTime startDate = initialDetailsForm.getOpeningDate();
                     competition.setStartDate(startDate);
 
                     List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
@@ -122,19 +122,19 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                initialDetailsForm.getOpeningDateDay() != null);
    }
 
-	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
+	private List<Error> validateOpeningDate(ZonedDateTime openingDate) {
 	    if(openingDate.getYear() > 9999) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "validation.initialdetailsform.openingdateyear.range"));
         }
 
-        if (openingDate.isBefore(LocalDateTime.now())) {
+        if (openingDate.isBefore(ZonedDateTime.now())) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "competition.setup.opening.date.not.in.future"));
         }
 
         return Collections.emptyList();
     }
 
-	private List<Error> saveOpeningDateAsMilestone(LocalDateTime openingDate, Long competitionId, boolean isMarkAsCompleteAction) {
+	private List<Error> saveOpeningDateAsMilestone(ZonedDateTime openingDate, Long competitionId, boolean isMarkAsCompleteAction) {
 		if (isMarkAsCompleteAction) {
 			List<Error> errors = validateOpeningDate(openingDate);
 			if (!errors.isEmpty()) {
@@ -166,11 +166,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         if("openingDate".equals(fieldName)) {
             try {
                 String[] dateParts = value.split("-");
-                LocalDateTime startDate = LocalDateTime.of(
+                ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(
                         Integer.parseInt(dateParts[2]),
                         Integer.parseInt(dateParts[1]),
-                        Integer.parseInt(dateParts[0]),
-                        0, 0, 0);
+                        Integer.parseInt(dateParts[0]));
                 competitionResource.setStartDate(startDate);
 
 

@@ -99,8 +99,10 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     }
 
     private List<String> getPartnerOrganisationNames(Application application) {
+        Optional<Long> leadOrgId = getLeadOrganisationId(application);
         return application.getProcessRoles().stream()
                 .filter(ProcessRole::isCollaborator)
+                .filter(processRole -> !isLeadOrgId(leadOrgId, processRole))
                 .map(ProcessRole::getOrganisationId)
                 .distinct()
                 .map(orgId -> organisationRepository.findOne(orgId).getName())
@@ -108,11 +110,20 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                 .collect(toList());
     }
 
-    private String getLeadOrganisationName(Application application) {
+    private boolean isLeadOrgId(Optional<Long> leadOrgId, ProcessRole processRole) {
+        return leadOrgId.map(idValue -> idValue.equals(processRole.getOrganisationId())).orElse(false);
+    }
+
+    private Optional<Long> getLeadOrganisationId(Application application){
         return application.getProcessRoles().stream()
                 .filter(ProcessRole::isLeadApplicant)
                 .findFirst()
-                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
+                .map(ProcessRole::getOrganisationId);
+    }
+
+    private String getLeadOrganisationName(Application application) {
+        return getLeadOrganisationId(application)
+                .map(orgId -> organisationRepository.findOne(orgId).getName())
                 .orElse("");
     }
 

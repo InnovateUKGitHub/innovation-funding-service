@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
@@ -78,7 +78,7 @@ public class ApplicationNavigationPopulatorTest {
 
         target.addAppropriateBackURLToModel(applicationId, model, null);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
-        verify(model).addAttribute(eq("backTitle"), contains("Application Overview"));
+        verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ApplicationNavigationPopulatorTest {
         target.addAppropriateBackURLToModel(applicationId, model, section);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
-        verify(model).addAttribute(eq("backTitle"), contains("Application Overview"));
+        verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
 
     @Test
@@ -201,21 +201,21 @@ public class ApplicationNavigationPopulatorTest {
 
     private void setupApplicationOpen(Long applicationId) {
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
-                .withApplicationStatus(ApplicationStatusConstants.OPEN)
+                .withApplicationStatus(ApplicationStatus.OPEN)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build());
     }
 
     private void setupApplicationClosed(Long applicationId) {
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
-                .withApplicationStatus(ApplicationStatusConstants.SUBMITTED)
+                .withApplicationStatus(ApplicationStatus.SUBMITTED)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build());
     }
 
     private void setupApplicationCompetitionClosed(Long applicationId) {
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
-                .withApplicationStatus(ApplicationStatusConstants.OPEN)
+                .withApplicationStatus(ApplicationStatus.OPEN)
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .build());
     }

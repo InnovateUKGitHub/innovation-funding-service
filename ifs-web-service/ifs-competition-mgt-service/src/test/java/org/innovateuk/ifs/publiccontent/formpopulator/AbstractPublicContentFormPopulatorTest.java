@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -50,7 +50,7 @@ public class AbstractPublicContentFormPopulatorTest {
                 .withContentGroups(asList(contentGroup)).build();
         PublicContentResource contentResource = newPublicContentResource()
                 .withCompetitionId(competitionId)
-                .withPublishDate(LocalDateTime.now())
+                .withPublishDate(ZonedDateTime.now())
                 .withContentSections(asList(contentSection)).build();
 
 

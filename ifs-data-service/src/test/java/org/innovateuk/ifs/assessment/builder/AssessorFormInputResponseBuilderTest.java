@@ -6,12 +6,14 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class AssessorFormInputResponseBuilderTest {
 
@@ -21,7 +23,7 @@ public class AssessorFormInputResponseBuilderTest {
         Assessment expectedAssessment = newAssessment().build();
         FormInput expectedFormInput = newFormInput().build();
         String expectedValue = "Blah";
-        LocalDateTime expectedUpdatedDate = LocalDateTime.parse("2016-07-12T16:10:50.21");
+        ZonedDateTime expectedUpdatedDate = LocalDateTime.parse("2016-07-12T16:10:50.21").atZone(ZoneId.systemDefault());
 
         AssessorFormInputResponse assessorFormInputResponse = newAssessorFormInputResponse()
                 .withId(expectedId)
@@ -44,7 +46,7 @@ public class AssessorFormInputResponseBuilderTest {
         Assessment[] expectedAssessments = newAssessment().buildArray(2, Assessment.class);
         FormInput[] expectedFormInputs = newFormInput().buildArray(2, FormInput.class);
         String[] expectedValues = {"Sample message 1", "Sample message 2"};
-        LocalDateTime[] expectedUpdatedDates = {LocalDateTime.parse("2016-07-12T16:10:50.21"), LocalDateTime.parse("2016-07-12T16:15:25.42")};
+        ZonedDateTime[] expectedUpdatedDates = {LocalDateTime.parse("2016-07-12T16:10:50.21").atZone(ZoneId.systemDefault()), LocalDateTime.parse("2016-07-12T16:15:25.42").atZone(ZoneId.systemDefault())};
 
         List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse()
                 .withId(expectedIds)

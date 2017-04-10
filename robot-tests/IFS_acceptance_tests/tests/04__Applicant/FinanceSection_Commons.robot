@@ -93,7 +93,7 @@ the user marks the finances as complete
     the user fills in the organisation information  ${Application}
     the user checks Your Funding section     ${Application}
     the user should see all finance subsections complete
-    the user clicks the button/link  link=Application Overview
+    the user clicks the button/link  link=Application overview
     the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs
@@ -126,9 +126,10 @@ the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-1085 button:contains("Labour")
 
 the user fills in Overhead costs
-    [Arguments]     ${Application_name}
-    Run Keyword If  '${Application_name}'=='Evolution of the global phosphorus cycle'    the user chooses Calculate overheads option
-    Run Keyword If  '${Application_name}'!= 'Evolution of the global phosphorus cycle'     the user chooses 20% overheads option
+    [Arguments]  ${Application_name}
+    ${STATUS}  ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  Should Be Equal As Strings  Evolution of the global phosphorus cycle  ${Application_name}
+    run keyword if  '${status}'=='PASS'  the user chooses Calculate overheads option
+    run keyword if  '${status}'=='FAIL'  the user chooses 20% overheads option
 
 the user chooses Calculate overheads option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")

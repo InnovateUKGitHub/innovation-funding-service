@@ -3,7 +3,7 @@ package org.innovateuk.ifs.documentation;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singleton;
@@ -62,14 +62,14 @@ public class CompetitionResourceDocs {
             .withId(1L)
             .withName("competition name")
             .withDescription("competition description")
-            .withStartDate(LocalDateTime.now())
-            .withEndDate(LocalDateTime.now().plusDays(30))
-            .withAssessorAcceptsDate(LocalDateTime.now().plusDays(35))
-            .withAssessorDeadlineDate(LocalDateTime.now().plusDays(40))
-            .withFundersPanelDate(LocalDateTime.now().plusDays(42))
-            .withFundersPanelEndDate(LocalDateTime.now().plusDays(44))
-            .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
-            .withReleaseFeedbackDate(LocalDateTime.now().plusDays(62))
+            .withStartDate(ZonedDateTime.now())
+            .withEndDate(ZonedDateTime.now().plusDays(30))
+            .withAssessorAcceptsDate(ZonedDateTime.now().plusDays(35))
+            .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(40))
+            .withFundersPanelDate(ZonedDateTime.now().plusDays(42))
+            .withFundersPanelEndDate(ZonedDateTime.now().plusDays(44))
+            .withAssessorFeedbackDate(ZonedDateTime.now().plusDays(56))
+            .withReleaseFeedbackDate(ZonedDateTime.now().plusDays(62))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100)
             .withCompetitionCode("COMP-1")

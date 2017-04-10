@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class NoteTest {
     private String className;
     private List<Post> posts;
     private String title;
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +29,7 @@ public class NoteTest {
         className = "org.innovateuk.ifs.class";
         posts = new ArrayList<>();
         title = "Test Note Title";
-        createdOn = LocalDateTime.now();
+        createdOn = ZonedDateTime.now();
 
         note = new Note(id, classPk, className, posts, title, createdOn);
     }

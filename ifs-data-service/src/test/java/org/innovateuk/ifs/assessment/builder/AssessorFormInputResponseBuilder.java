@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.form.domain.FormInput;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -53,7 +53,7 @@ public class AssessorFormInputResponseBuilder extends BaseBuilder<AssessorFormIn
         return withArray(BaseBuilderAmendFunctions::setValue, values);
     }
 
-    public AssessorFormInputResponseBuilder withUpdatedDate(LocalDateTime... updatedDates) {
+    public AssessorFormInputResponseBuilder withUpdatedDate(ZonedDateTime... updatedDates) {
         return withArray((updatedDate, assessorFormInputResponse) -> setField("updatedDate", updatedDate, assessorFormInputResponse), updatedDates);
     }
 }

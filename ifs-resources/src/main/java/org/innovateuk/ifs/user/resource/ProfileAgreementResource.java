@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Profile Agreement Data Transfer Object
@@ -13,7 +13,7 @@ public class ProfileAgreementResource {
     private Long user;
     private AgreementResource agreement;
     private boolean currentAgreement;
-    private LocalDateTime agreementSignedDate;
+    private ZonedDateTime agreementSignedDate;
 
     public Long getUser() {
         return user;
@@ -39,11 +39,11 @@ public class ProfileAgreementResource {
         this.currentAgreement = currentAgreement;
     }
 
-    public LocalDateTime getAgreementSignedDate() {
+    public ZonedDateTime getAgreementSignedDate() {
         return agreementSignedDate;
     }
 
-    public void setAgreementSignedDate(LocalDateTime agreementSignedDate) {
+    public void setAgreementSignedDate(ZonedDateTime agreementSignedDate) {
         this.agreementSignedDate = agreementSignedDate;
     }
 

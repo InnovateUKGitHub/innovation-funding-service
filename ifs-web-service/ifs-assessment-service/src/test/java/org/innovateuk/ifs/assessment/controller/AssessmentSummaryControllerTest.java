@@ -25,8 +25,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -371,11 +370,11 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     }
 
     private CompetitionResource setupCompetitionResource() {
-        LocalDate now = LocalDate.now();
+        ZonedDateTime now = ZonedDateTime.now();
 
         CompetitionResource competitionResource = newCompetitionResource()
-                .withAssessorAcceptsDate(now.atStartOfDay().minusDays(2))
-                .withAssessorDeadlineDate(LocalDateTime.now().plusDays(4))
+                .withAssessorAcceptsDate(now.minusDays(2))
+                .withAssessorDeadlineDate(now.plusDays(4))
                 .build();
 
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private ApprovalType approved;
     private boolean projectManager;
     private boolean submitAllowed;
-    private LocalDateTime submitDate;
+    private ZonedDateTime submitDate;
 
     public ProjectOtherDocumentsViewModel(Long projectId,
                                           Long applicationId, String projectName,
@@ -36,7 +36,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
                                           boolean otherDocumentsSubmitted,
                                           ApprovalType otherDocumentsApproved,
                                           boolean submitAllowed,
-                                          LocalDateTime submitDate) {
+                                          ZonedDateTime submitDate) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -117,7 +117,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         return submitAllowed;
     }
 
-    public LocalDateTime getSubmitDate() {
+    public ZonedDateTime getSubmitDate() {
         return submitDate;
     }
 
