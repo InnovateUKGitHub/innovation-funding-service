@@ -251,6 +251,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <th:block th:fragment="labour (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},formInputIndex=${status.index}">
+        <p th:text="${question.getDescription()}"></p>
         <th:block th:if="${viewmode == 'approved'}">
 
             <dl class="standard-definition-list">
