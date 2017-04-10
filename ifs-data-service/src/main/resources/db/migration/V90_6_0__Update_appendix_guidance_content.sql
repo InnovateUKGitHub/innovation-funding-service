@@ -2,7 +2,7 @@
 
 -- Approach and innovation
 UPDATE form_input
-SET guidance_answer='<p>You can submit up to 2 pages in pdf format no larger than 1MB. This can provide graphics, diagrams or an image to explain your innovation.</p>'
+SET guidance_answer='<p>You can submit up to 2 pages in PDF format no larger than 1MB. This can provide graphics, diagrams or an image to explain your innovation.</p>'
 WHERE guidance_answer='<p>you may submit in pdf format up to 2 pages to provide graphics/diagrams/an image to explain the technology/product/service innovation.</p>';
 
 -- Team and resources
