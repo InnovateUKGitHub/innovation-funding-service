@@ -289,9 +289,9 @@
          removeName='remove_finance_document',
          saveName='upload_file'">
     <div class="upload-section">
-         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
-         <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+        <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
+        <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system">How do I create my Je-S output?</a>
+        <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
     </div>
 </th:block>
 </html>
