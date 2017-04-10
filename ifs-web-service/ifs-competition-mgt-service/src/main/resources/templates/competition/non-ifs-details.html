@@ -190,19 +190,20 @@
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                    th:field="${form.closeDate.year}" />
                         </div>
-                    </div>
-                    <div class="date-group">
-                        <label class="form-label" for="closeDate-time">
-                            <span>Time</span>
-                        </label>
-                        <select th:class="${#fields.hasErrors('closeDate.time') ? 'form-control field-error' : 'form-control'}"
-                                id="closeDate-time"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
-                                th:field="${form.closeDate.time}" >
-                            <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
-                                    th:text="${time.display}" th:value="${time}" th:selected="${time == form.closeDate.time}"></option>
-                        </select>
+                        <div class="time">
+                            <label class="form-label" for="closeDate-time">
+                                <span>Time</span>
+                            </label>
+                            <select th:class="${#fields.hasErrors('closeDate.time') ? 'form-control field-error' : 'form-control'}"
+                                    id="closeDate-time"
+                                    required="required"
+                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                    th:field="${form.closeDate.time}" >
+                                <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
+                                        th:text="${time.display}" th:value="${time}" th:selected="${time == form.closeDate.time}"></option>
+                            </select>
+                        </div>
+
                     </div>
                 </div>
             </fieldset>
