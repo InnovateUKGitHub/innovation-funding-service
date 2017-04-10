@@ -2,13 +2,12 @@ package org.innovateuk.ifs.assessment.assignment.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.assignment.controller.AssessmentAssignmentController;
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.service.AssessmentService;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
 import org.innovateuk.ifs.assessment.overview.viewmodel.RejectAssessmentViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;

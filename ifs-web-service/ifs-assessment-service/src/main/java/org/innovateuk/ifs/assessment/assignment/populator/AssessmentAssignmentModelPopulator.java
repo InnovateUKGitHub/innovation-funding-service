@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.assignment.populator;
 
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.service.AssessmentService;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
+import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentNavigationViewModel;

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.service.AssessmentService;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;

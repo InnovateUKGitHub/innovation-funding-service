@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
+import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryQuestionViewModel;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

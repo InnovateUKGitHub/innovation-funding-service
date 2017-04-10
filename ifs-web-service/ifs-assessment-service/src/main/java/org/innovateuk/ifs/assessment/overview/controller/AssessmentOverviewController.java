@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummar
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.service.AssessmentService;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;

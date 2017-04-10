@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
+import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseServiceImpl;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;

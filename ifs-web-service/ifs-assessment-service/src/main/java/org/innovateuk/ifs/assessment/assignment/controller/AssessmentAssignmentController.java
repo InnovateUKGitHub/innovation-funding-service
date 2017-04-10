@@ -5,7 +5,7 @@ import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.service.AssessmentService;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;

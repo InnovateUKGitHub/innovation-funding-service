@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.service;
+package org.innovateuk.ifs.assessment.common.service;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
