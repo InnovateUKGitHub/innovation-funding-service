@@ -3,13 +3,11 @@ package org.innovateuk.ifs.commons.security;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +16,15 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 
@@ -32,8 +32,6 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private static final Log LOG = LogFactory.getLog(CustomPermissionEvaluator.class);
-
-    private static final UserResource ANONYMOUS_USER = new UserResource();
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -44,21 +42,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     private CustomPermissionEvaluatorTransactionManager transactionManager;
 
-    private PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap;
-
     private PermissionedObjectClassesToListOfLookup lookupStrategyMap;
 
-    private Map<Pair<Class<?>, Object>, ListOfOwnerAndMethod> securingMethodsPerClass = new HashMap<>();
-
-    private Map<Pair<Object, Method>, Pair<Long, Long>> averageResponseTimesPerPermissionCheck = new HashMap<>();
-
-    public static boolean isAnonymous(UserResource user) {
-        return user == ANONYMOUS_USER;
-    }
-
-    public static UserResource getAnonymous() {
-        return ANONYMOUS_USER;
-    }
+    private PermissionMethodHandler permissionMethodSupplier;
 
     @PostConstruct
     void generateRules() {
@@ -73,7 +59,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
         PermissionedObjectClassToPermissionsMethods collectedRulesMethods = dtoClassToMethods(allRulesMethods);
-        rulesMap = dtoClassToPermissionToMethods(collectedRulesMethods);
+        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = dtoClassToPermissionToMethods(collectedRulesMethods);
 
         if (LOG.isDebugEnabled()) {
             rulesMap.values().forEach(permission -> permission.values().forEach(pairs -> pairs.forEach(pair -> {
@@ -82,6 +68,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 LOG.debug("Registered PermissionRule: " + permissionAnnotation.description());
             })));
         }
+
+        permissionMethodSupplier = new PermissionMethodHandler(rulesMap);
     }
 
     @PostConstruct
@@ -242,117 +230,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             return true;
         }
 
-        final Class<?> targetClass = targetObject.getClass();
-        ListOfOwnerAndMethod securingMethods = getSecuringMethodsForClass(permission, targetClass);
+        Class<?> targetClass = targetObject.getClass();
 
-        return transactionManager.doWithinTransaction(() -> {
-
-            for (Pair<Object, Method> methodAndBean : securingMethods) {
-
-                Pair<Boolean, Long> hasPermissionWithTiming = hasPermissionWithTiming(authentication, targetObject, methodAndBean);
-                Boolean hasPermission = hasPermissionWithTiming.getLeft();
-                Long time = hasPermissionWithTiming.getRight();
-
-                if (Math.random() < 0.05) {
-                    updateAverageAndCount(methodAndBean, time);
-                    ListOfOwnerAndMethod sortedMethods = sortSecuringMethodsByAverageTime(securingMethods);
-                    securingMethodsPerClass.put(Pair.of(targetClass, permission), sortedMethods);
-                }
-
-                if (hasPermission) {
-                    return true;
-                }
-            }
-
-            return false;
-        });
-    }
-
-    private void updateAverageAndCount(Pair<Object, Method> methodAndBean, Long time) {
-
-        Pair<Long, Long> averageAndCount = averageResponseTimesPerPermissionCheck.get(methodAndBean);
-
-        if (averageAndCount == null) {
-            averageAndCount = Pair.of(0L, 0L);
-        }
-
-        Long currentAverage = averageAndCount.getLeft();
-        Long currentCount = averageAndCount.getRight();
-        long newCount = currentCount + 1;
-        long totalSoFar = (currentAverage * currentCount) + time;
-
-        final Pair<Long, Long> newAverageAndCount;
-
-        if (totalSoFar >= 0 && newCount >= 0) {
-            long newAverage = totalSoFar / newCount;
-            newAverageAndCount = Pair.of(newAverage, newCount);
-        } else {
-            newAverageAndCount = Pair.of(time, 1L);
-        }
-        averageResponseTimesPerPermissionCheck.put(methodAndBean, newAverageAndCount);
-    }
-
-    private Pair<Boolean, Long> hasPermissionWithTiming(Authentication authentication, Object targetObject, Pair<Object, Method> methodAndBean) {
-
-        long before = System.currentTimeMillis();
-        boolean hasPermission = callHasPermissionMethod(methodAndBean, targetObject, authentication);
-        long after = System.currentTimeMillis();
-        long time = after - before;
-
-        return Pair.of(hasPermission, time);
-    }
-
-    private ListOfOwnerAndMethod sortSecuringMethodsByAverageTime(ListOfOwnerAndMethod unsorted) {
-
-        List<Pair<Object, Method>> toSort = new ArrayList<>(unsorted);
-        toSort.sort((o1, o2) -> {
-
-            Pair<Long, Long> o1Average = averageResponseTimesPerPermissionCheck.get(o1);
-            Pair<Long, Long> o2Average = averageResponseTimesPerPermissionCheck.get(o2);
-
-            if (o1Average == null && o2Average == null) {
-                return 0;
-            }
-
-            if (o1Average == null) {
-                return -1;
-            }
-
-            if (o2Average == null) {
-                return 1;
-            }
-
-            return o1Average.getLeft().compareTo(o2Average.getLeft());
-        });
-        return ListOfOwnerAndMethod.from(toSort);
-    }
-
-    private ListOfOwnerAndMethod getSecuringMethodsForClass(Object permission, Class<?> targetClass) {
-
-        if (securingMethodsPerClass.get(targetClass) != null) {
-            return securingMethodsPerClass.get(targetClass);
-        }
-
-        ListOfOwnerAndMethod permissionMethodsForPermissionAggregate = findSecuringMethodsPerClass(permission, targetClass);
-        securingMethodsPerClass.put(Pair.of(targetClass, permission), permissionMethodsForPermissionAggregate);
-        return permissionMethodsForPermissionAggregate;
-    }
-
-    private ListOfOwnerAndMethod findSecuringMethodsPerClass(Object permission, Class<?> targetClass) {
-
-        final List<PermissionsToPermissionsMethods> permissionsWithPermissionsMethodsForTargetClassList
-                = rulesMap.entrySet().stream().
-                filter(e -> e.getKey().isAssignableFrom(targetClass)). // Any super class of the target class will do.
-                map(Entry::getValue).collect(toList());
-
-        final List<ListOfOwnerAndMethod> permissionMethodsForPermissionList
-                = permissionsWithPermissionsMethodsForTargetClassList.stream().
-                map(permissionsToPermissionsMethods -> permissionsToPermissionsMethods.get(permission)).
-                filter(Objects::nonNull). // Filter any nulls
-                collect(toList());
-
-        return permissionMethodsForPermissionList.stream().
-                reduce(new ListOfOwnerAndMethod(), (f1, f2) -> ListOfOwnerAndMethod.from(combineLists(f1, f2)));
+        return transactionManager.doWithinTransaction(() ->
+                permissionMethodSupplier.hasPermission(authentication, targetObject, permission, targetClass));
     }
 
     private boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
@@ -415,80 +296,5 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
         return hasPermission(authentication, targetId, clazz, permission);
     }
-
-    private boolean callHasPermissionMethod(Pair<Object, Method> methodAndBean, Object dto, Authentication authentication) {
-
-        final Object finalAuthentication;
-
-        Method method = methodAndBean.getValue();
-        Class<?> secondParameter = method.getParameterTypes()[1];
-
-        if (secondParameter.equals(UserResource.class)) {
-            if (authentication instanceof UserAuthentication) {
-                finalAuthentication = ((UserAuthentication) authentication).getDetails();
-            } else if (authentication instanceof AnonymousAuthenticationToken) {
-                finalAuthentication = ANONYMOUS_USER;
-            } else {
-                throw new IllegalArgumentException("Unable to determine the authentication token for Spring Security");
-            }
-        } else if (Authentication.class.isAssignableFrom(secondParameter)) {
-            finalAuthentication = authentication;
-        } else {
-            throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated method " + method.getName() + " should be " +
-                    "either an instance of " + UserResource.class.getName() + " or an org.springframework.security.core.Authentication implementation, " +
-                    "but was " + secondParameter.getName());
-        }
-
-        try {
-            return (Boolean) method.invoke(methodAndBean.getLeft(), dto, finalAuthentication);
-        } catch (Exception e) {
-            LOG.error("Error whilst processing a permissions method", e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
-        return rulesMap.getOrDefault(targetDomainObject.getClass(), emptyPermissions()).keySet().stream().filter(
-                permission -> hasPermission(authentication, targetDomainObject, permission)
-        ).sorted().collect(toList());
-    }
-
-    private static PermissionsToPermissionsMethods emptyPermissions() {
-        return new PermissionsToPermissionsMethods();
-    }
-
-
-    /**
-     * An Alias for a List of owning Objects and a single Method on the owning Object.
-     * Thus representing a List of callable functions.
-     */
-    public static class ListOfOwnerAndMethod extends ArrayList<Pair<Object, Method>> {
-        public static ListOfOwnerAndMethod from(List<Pair<Object, Method>> list) {
-            ListOfOwnerAndMethod listOfMethods = new ListOfOwnerAndMethod();
-            listOfMethods.addAll(list);
-            return listOfMethods;
-        }
-    }
-
-    public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfOwnerAndMethod> {
-    }
-
-    public static class PermissionedObjectClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
-    }
-
-    public static class PermissionedObjectClassToPermissionsMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
-    }
-
-    public static class PermissionedObjectClassToLookupMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
-    }
-
-    public static class PermissionedObjectClassesToListOfLookup extends HashMap<Class<?>, ListOfOwnerAndMethod> {
-        public static PermissionedObjectClassesToListOfLookup from(Map<Class<?>, ListOfOwnerAndMethod> map) {
-            final PermissionedObjectClassesToListOfLookup dtoClassToLookupMethod = new PermissionedObjectClassesToListOfLookup();
-            dtoClassToLookupMethod.putAll(map);
-            return dtoClassToLookupMethod;
-        }
-    }
-
 }
 

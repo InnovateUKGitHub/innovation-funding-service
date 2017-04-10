@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.PermissionMethodHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 public class SecurityRuleUtil {
@@ -63,11 +64,11 @@ public class SecurityRuleUtil {
     }
 
     public static boolean isAnonymous(final UserResource user) {
-        return CustomPermissionEvaluator.isAnonymous(user);
+        return PermissionMethodHandler.isAnonymous(user);
     }
 
     public static UserResource getAnonymous() {
-        return CustomPermissionEvaluator.getAnonymous();
+        return PermissionMethodHandler.getAnonymous();
     }
 
 }
