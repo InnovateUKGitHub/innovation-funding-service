@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.token;
+package org.innovateuk.ifs.commons.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,8 +11,8 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 
-public class JpaConverterJson implements AttributeConverter<JsonNode, String> {
-	private static final Log LOG = LogFactory.getLog(JpaConverterJson.class);
+public class JpaJsonConverter implements AttributeConverter<JsonNode, String> {
+	private static final Log LOG = LogFactory.getLog(JpaJsonConverter.class);
     private final static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

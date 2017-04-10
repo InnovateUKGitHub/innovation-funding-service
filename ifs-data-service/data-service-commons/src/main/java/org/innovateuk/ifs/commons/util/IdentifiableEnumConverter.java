@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.commons.util.enums;
+package org.innovateuk.ifs.commons.util;
 
 
 import org.innovateuk.ifs.util.enums.Identifiable;
