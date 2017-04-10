@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.assessment.form.registration.AssessorRegistrationForm;
+import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
+import org.innovateuk.ifs.assessment.registration.service.AssessorService;
+import org.innovateuk.ifs.assessment.registration.service.AssessorServiceImpl;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.resource.Disability;
