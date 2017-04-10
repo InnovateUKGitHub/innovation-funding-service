@@ -2299,4 +2299,3 @@ the revised categories are verified for specified Section
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
 
-
