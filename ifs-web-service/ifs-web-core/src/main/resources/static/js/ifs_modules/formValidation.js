@@ -433,7 +433,9 @@ IFS.core.formValidation = (function () {
       var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'))
       var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0))
       var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]')
-      var validNumbers = IFS.core.formValidation.checkNumber(d, false) && IFS.core.formValidation.checkNumber(m, false) && IFS.core.formValidation.checkNumber(y, false)
+      var validNumbers = IFS.core.formValidation.checkNumber(d, false) && IFS.core.formValidation.checkNumber(m, false) &&
+        IFS.core.formValidation.checkNumber(y, false) && IFS.core.formValidation.checkMin(y, false) &&
+        IFS.core.formValidation.checkMax(y, false)
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-invalid')
 
       if (validNumbers && filledOut) {
