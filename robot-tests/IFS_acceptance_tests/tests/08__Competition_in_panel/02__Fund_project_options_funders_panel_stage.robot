@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
 ...
+...               INFUND-7377 INFUND-7377 Create a 'Manage funding applications' page to view and manage funding decision notifications
+...
 ...               INFUND-8065 Filter on 'Funding decision' dashboard
 Suite Setup       guest user log-in  &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
