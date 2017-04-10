@@ -292,7 +292,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
                                         getProjectCostChangesByType(List<ImmutablePair<Optional<ApplicationFinanceRow>,
                                                                     Optional<ApplicationFinanceRow>>> costs) {
 
-        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs = new HashMap<>();
+        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs = new LinkedHashMap<>();
 
         for(ImmutablePair<Optional<ApplicationFinanceRow>, Optional<ApplicationFinanceRow>> pair : costs) {
             Optional<ApplicationFinanceRow> applicationCost = pair.getLeft();
