@@ -75,8 +75,8 @@ User can view the competition brief
     And the user should see the text in the page    Or go to your dashboard to continue an existing application.
     And the user should see the element    jQuery=.button:contains("Start new application")
     And The user closes the competition brief
-    [Teardown]
     And the user clicks the button/link    link=Assessor dashboard
+    [Teardown]
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107
@@ -177,7 +177,8 @@ Milestone date for assessment submission is visible
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    MySQL
+    [Tags]    MySQL    Pending
+    #TODO Pending INFUND-8925
     Then the assessor should see the number of days remaining
     And the calculation of the remaining days should be correct    2068-01-28
 
@@ -255,7 +256,7 @@ Close the competition in assessment
     The user clicks the button/link    jQuery=.button:contains("Close assessment")
 
 The user should get a competition brief window
-    Select Window   title=Competition Overview - Innovation Funding Service
+    Select Window    title=Competition Overview - Innovation Funding Service
 
 The user closes the competition brief
     Close Window
