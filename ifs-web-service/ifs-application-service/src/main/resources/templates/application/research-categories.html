@@ -41,7 +41,7 @@
                                th:id="${'researchCategoryChoice-'+researchCategory.id}"
                                th:value="${researchCategory.id}"
                                th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}"
-                               th:attr="data-required-errormessage=#{validation.application.research.category.required}">
+                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}">
                         <th:block th:text="${researchCategory.name}" />
                         <span class="form-hint" th:text="${researchCategory.description}">description</span>
                     </label>

@@ -36,7 +36,7 @@
                                        th:id="${'innovationAreaChoice-'+innovationArea.id}"
                                        th:value="${innovationArea.id}"
                                        th:checked="${model.selectedInnovationAreaId} == ${innovationArea.id}"
-                                       th:attr="data-required-errormessage=#{validation.application.innovationarea.category.required}">
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}">
                                 <th:block th:text="${innovationArea.name}" />
                                 <span class="form-hint" th:text="${innovationArea.description}">description</span>
                             </label>
