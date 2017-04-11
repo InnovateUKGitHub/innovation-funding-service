@@ -12,10 +12,10 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl=@{/dashboard}" />
 
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors('${form.*}')}">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}">
         <h2 class="heading-medium error-summary-heading">There was a problem on this page</h2>
         <ul class="error-summary-list">
-            <li th:each="err : ${#fields.allErrors('${form.*}')}" th:text="${err}"></li>
+            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
         </ul>
     </div>
 

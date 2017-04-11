@@ -1,10 +1,10 @@
 
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
 <th:block th:fragment="section-initial">
-    <div class="error-summary" th:if="${#fields.hasGlobalErrors('${competitionSetupForm.*}')}">
+    <div class="error-summary" th:if="${#fields.hasErrors('${competitionSetupForm.*}')}">
       <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
       <ul class="error-summary-list">
-          <li th:each="err : ${#fields.globalErrors('${competitionSetupForm.*}')}" th:text="${err}"></li>
+          <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
       </ul>
     </div>
 
@@ -290,10 +290,10 @@
 
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
 <th:block th:fragment="section-additional">
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors('${competitionSetupForm.*}')}">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
       <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
       <ul class="error-summary-list">
-          <li th:each="err : ${#fields.allErrors('${competitionSetupForm.*}')}" th:text="${err}"></li>
+          <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
       </ul>
     </div>
 
@@ -745,10 +745,10 @@
 
 <!-- =================Section: Milestones (4) =========================== -->
 <th:block th:fragment="section-milestones">
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors('${competitionSetupForm.*}')}">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
         <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
         <ul class="error-summary-list">
-            <li th:each="err : ${#fields.allErrors('${competitionSetupForm.*}')}" th:text="${err}"></li>
+            <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
         </ul>
     </div>
 
@@ -907,8 +907,8 @@
 
 <!-- =================== Comp setup section - Application questions (5) ============================== -->
 <th:block th:fragment="section-application">
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors('${competitionSetupForm.*}')}">
-        <h2 class="heading-medium error-summary-heading">Unable to mark as complete</h2>
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
+        <h2 class="heading-medium error-summary-heading">Unable to mark as complete.</h2>
         <ul class="error-summary-list">
             <li>view the application section(s) to resolve the error.</li>
         </ul>

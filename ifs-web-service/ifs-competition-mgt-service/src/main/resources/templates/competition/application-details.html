@@ -12,10 +12,10 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}" />
 
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors('${competitionSetupForm.*}')}">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
         <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
         <ul class="error-summary-list">
-            <li th:each="err : ${#fields.allErrors('${competitionSetupForm.*}')}" th:text="${err}"></li>
+            <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
         </ul>
     </div>
 
