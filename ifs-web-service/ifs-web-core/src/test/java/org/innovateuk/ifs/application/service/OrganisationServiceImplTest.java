@@ -4,20 +4,30 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
+import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class OrganisationServiceImplTest extends BaseServiceUnitTest<OrganisationService> {
@@ -146,4 +156,76 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         assertEquals(organisation, result.get());
     }
 
+    @Test
+    public void testUserIsPartnerInOrganisationForProject(){
+        Long projectId = 1L;
+        Long userId = 2L;
+        Long expectedOrgId = 3L;
+
+        UserResource userResource = newUserResource().withId(userId).build();
+
+        setLoggedInUser(userResource);
+
+        when(projectServiceMock.getProjectUsersForProject(projectId)).
+                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(expectedOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+
+        boolean result = service.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testUserIsNotPartnerInOrganisationForProject(){
+        Long projectId = 1L;
+        Long userId = 2L;
+        Long expectedOrgId = 3L;
+        Long anotherOrgId = 4L;
+
+        UserResource userResource = newUserResource().withId(userId).build();
+
+        setLoggedInUser(userResource);
+
+        when(projectServiceMock.getProjectUsersForProject(projectId)).
+                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(anotherOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+
+        boolean result = service.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
+
+        assertFalse(result);
+    }
+
+
+    @Test
+    public void testGetOrganisationIdFromUser() {
+        Long projectId = 1L;
+        Long userId = 2L;
+        Long expectedOrgId = 3L;
+
+        UserResource userResource = newUserResource().withId(userId).build();
+
+        setLoggedInUser(userResource);
+
+        when(projectServiceMock.getProjectUsersForProject(projectId)).
+                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(expectedOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+
+        Long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
+
+        assertEquals(expectedOrgId, organisationId);
+    }
+
+    @Test(expected = ForbiddenActionException.class)
+    public void testGetOrganisationIdFromUserThrowsForbiddenException() {
+        Long projectId = 1L;
+        Long userId = 2L;
+        Long expectedOrgId = 3L;
+
+        UserResource userResource = newUserResource().withId(userId).build();
+
+        setLoggedInUser(userResource);
+
+        when(projectServiceMock.getProjectUsersForProject(projectId)).thenReturn(emptyList());
+
+        Long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
+
+        assertEquals(expectedOrgId, organisationId);
+    }
 }
