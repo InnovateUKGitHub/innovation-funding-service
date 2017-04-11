@@ -12,10 +12,10 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
                 <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
                 <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
+                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
                 </ul>
             </div>
 
