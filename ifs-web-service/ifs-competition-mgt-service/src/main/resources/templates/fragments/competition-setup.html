@@ -13,11 +13,11 @@
                                   th:text="${section.name}">Section Name</th:block>
                     </h2>
                 </div>
-                <span th:if="${isPublicContentPublished and section.toString() == 'CONTENT'}"
+                <div th:if="${isPublicContentPublished and section.toString() == 'CONTENT'}"
                       th:with="publishDay=${#temporals.format(publishDate, 'd MMMM yyyy')},
                          publishTime=${#strings.toLowerCase(#temporals.format(publishDate, ' h:mma'))}"
                       th:text="${'Last published ' + publishDay + ' ' + publishTime}"
-                      class="notification">Last published</span>
+                      class="notification">Last published</div>
                 <div th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="task-status-complete"><span>Complete</span></div>
             </li>
         </ul>
