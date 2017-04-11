@@ -1,20 +1,10 @@
 <th:block th:fragment="bankDetailsStatus(statusName)">
   <th:block th:switch="${statusName}">
-      <th:block th:case="'NOT_REQUIRED'">
-        <div class="task-status"><span>No action required</span></div>
-      </th:block>
-      <th:block th:case="'NOT_STARTED'">
-        <span class="notification">Not yet submitted</span>
-      </th:block>
-      <th:block th:case="'ACTION_REQUIRED'">
-        <span class="action-required"><strong>Review required</strong></span>
-      </th:block>
-      <th:block th:case="'PENDING'">
-        <span class="notification">Pending</span>
-      </th:block>
-      <th:block th:case="'COMPLETE'">
-        <div class="task-status-complete"><span>Complete</span></div>
-      </th:block>
+    <div th:case="'NOT_REQUIRED'" class="task-status"><span>No action required</span></div>
+    <div th:case="'NOT_STARTED'" class="notification">Not yet submitted</div>
+    <div th:case="'ACTION_REQUIRED'" class="action-required"><strong>Review required</strong></div>
+    <div th:case="'PENDING'" class="notification">Pending</div>
+    <div th:case="'COMPLETE'" class="task-status-complete"><span>Complete</span></div>
   </th:block>
 </th:block>
 
