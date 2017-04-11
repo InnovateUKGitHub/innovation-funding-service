@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteStatus.EXISTING;
@@ -189,7 +190,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         if (loggedInUser.getEmail().equals(financeContactForm.getEmail())) {
 
-            validationHandler.addAnyErrors(ServiceResult.serviceFailure(CommonFailureKeys.PROJECT_SETUP_INVITE_CANNOT_INVITE_SELF));
+            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
         }
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -252,6 +253,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
         Supplier<String> successView = () -> redirectToProjectManager(projectId);
+
+        if (loggedInUser.getEmail().equals(projectManagerForm.getEmail())) {
+
+            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
+        }
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
