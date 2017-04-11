@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.model;
 import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -61,12 +62,8 @@ public class AssessmentOverviewModelPopulator {
     public AssessmentOverviewViewModel populateModel(long assessmentId) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionService.getById(assessment.getCompetition());
-        List<SectionResource> sections = sectionService.filterParentSections(
-                sectionService.getAllByCompetitionId(assessment.getCompetition())
-        );
         List<QuestionResource> questions = questionService.findByCompetition(assessment.getCompetition());
-        Map<Long, List<FormInputResource>> formInputs = getFormInputsByQuestion(assessment.getCompetition());
-        Map<Long, AssessorFormInputResponseResource> responses = getResponsesByFormInput(assessmentId);
+
 
         return new AssessmentOverviewViewModel(assessmentId,
                 assessment.getApplication(),
@@ -74,15 +71,19 @@ public class AssessmentOverviewModelPopulator {
                 assessment.getCompetition(),
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
-                getSections(sections, questions, formInputs, responses),
+                getSections(assessment, questions),
                 getAppendices(assessment.getApplication(), questions)
         );
     }
 
-    private List<AssessmentOverviewSectionViewModel> getSections(List<SectionResource> sections,
-                                                                 List<QuestionResource> questions,
-                                                                 Map<Long, List<FormInputResource>> formInputs,
-                                                                 Map<Long, AssessorFormInputResponseResource> responses) {
+    private List<AssessmentOverviewSectionViewModel> getSections(AssessmentResource assessment,
+                                                                 List<QuestionResource> questions) {
+        List<SectionResource> sections = sectionService.filterParentSections(
+                sectionService.getSectionsForCompetitionByType(assessment.getCompetition(), SectionType.GENERAL));
+
+        Map<Long, List<FormInputResource>> formInputs = getFormInputsByQuestion(assessment.getCompetition());
+        Map<Long, AssessorFormInputResponseResource> responses = getResponsesByFormInput(assessment.getId());
+
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
         return simpleMap(sections, sectionResource -> {
             List<QuestionResource> sectionQuestions = sectionResource.getQuestions().stream()
@@ -92,7 +93,8 @@ public class AssessmentOverviewModelPopulator {
             return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
                     sectionResource.getName(),
                     sectionResource.getAssessorGuidanceDescription(),
-                    getQuestions(sectionQuestions, formInputs, responses)
+                    getQuestions(sectionQuestions, formInputs, responses),
+                    "Finance".equals(sectionResource.getName())
             );
         });
     }
@@ -139,11 +141,9 @@ public class AssessmentOverviewModelPopulator {
 
     private boolean isAssessed(List<FormInputResource> formInputs,
                                Map<Long, AssessorFormInputResponseResource> responses) {
-        if (formInputs.isEmpty()) {
-            return false;
-        }
-        return formInputs.stream().allMatch(formInputResource ->
-                isNotBlank(getResponseValue(formInputResource, responses).orElse(null)));
+        return !formInputs.isEmpty() &&
+                formInputs.stream().allMatch(formInputResource ->
+                        isNotBlank(getResponseValue(formInputResource, responses).orElse(null)));
     }
 
     private Optional<FormInputResource> findScopeInput(List<FormInputResource> formInputs) {

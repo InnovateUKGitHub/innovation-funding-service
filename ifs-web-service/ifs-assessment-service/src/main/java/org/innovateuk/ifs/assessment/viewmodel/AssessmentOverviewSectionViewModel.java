@@ -14,12 +14,14 @@ public class AssessmentOverviewSectionViewModel {
     private String name;
     private String guidance;
     private List<AssessmentOverviewQuestionViewModel> questions;
+    private boolean finance;
 
-    public AssessmentOverviewSectionViewModel(long id, String name, String guidance, List<AssessmentOverviewQuestionViewModel> questions) {
+    public AssessmentOverviewSectionViewModel(long id, String name, String guidance, List<AssessmentOverviewQuestionViewModel> questions, boolean finance) {
         this.id = id;
         this.name = name;
         this.guidance = guidance;
         this.questions = questions;
+        this.finance = finance;
     }
 
     public long getId() {
@@ -36,6 +38,10 @@ public class AssessmentOverviewSectionViewModel {
 
     public List<AssessmentOverviewQuestionViewModel> getQuestions() {
         return questions;
+    }
+
+    public boolean isFinance() {
+        return finance;
     }
 
     @Override
