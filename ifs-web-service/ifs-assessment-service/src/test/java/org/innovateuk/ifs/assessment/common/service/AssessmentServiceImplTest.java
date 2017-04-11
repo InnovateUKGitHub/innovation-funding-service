@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.assessment.service;
+package org.innovateuk.ifs.assessment.common.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentServiceImpl;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Before;
 import org.junit.Test;
