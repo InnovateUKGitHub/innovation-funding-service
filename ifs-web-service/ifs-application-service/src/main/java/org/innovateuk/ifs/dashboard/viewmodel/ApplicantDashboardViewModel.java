@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -136,8 +137,9 @@ public class ApplicantDashboardViewModel {
 
     public boolean isClosingToday(Long applicationId) {
         ZonedDateTime endDate = competitions.get(applicationId).getEndDate();
+        LocalDate endDay = TimeZoneUtil.toUkTimeZone(endDate).toLocalDate();
+        LocalDate today = TimeZoneUtil.toUkTimeZone(ZonedDateTime.now()).toLocalDate();
 
-        return TimeZoneUtil.toUkTimeZone(ZonedDateTime.now()).toLocalDate()
-                .equals(TimeZoneUtil.toUkTimeZone(endDate).toLocalDate());
+        return today.equals(endDay);
     }
 }
