@@ -13,7 +13,7 @@ the assessment start period changes in the db in the past
 
 the calculation of the remaining days should be correct
     [Arguments]    ${END_DATE}
-    ${GET_TIME}=    get time    hour
+    ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
     ${STARTING_DATE}=    Run keyword if    ${TIME} >= 12    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
@@ -49,7 +49,7 @@ the days remaining should be correct (Top of the page)
 
 the days remaining should be correct (Applicant's dashboard)
     [Arguments]    ${END_DATE}
-    ${GET_TIME}=    get time    hour
+    ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
     ${STARTING_DATE}=    Run keyword if    ${TIME} >= 11    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
