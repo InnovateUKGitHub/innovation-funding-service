@@ -46,6 +46,7 @@ Application details: Research category
 Research Category : Autosave not applicable
     [Documentation]    INFUND-6823, INFUND-8251
     the user clicks the button/link      jQuery=button:contains("Change your research category")
+    #  TODO commented due to INFUND-9212
     # and the user should see the text in the page     Changing the research category will reset the funding level for all business participants.
     the user should see the element      jQuery=label:contains("Industrial research")
     and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
@@ -140,12 +141,12 @@ Review and submit button
 Collaborator: read only view of Application details
     [Documentation]    INFUND-8251 , INFUND-8260
     [Tags]
-    [Setup] log in as a different user     ${collaborator1_credentials}
+    [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    And the user clicks the button/link    link=${Competition_E2E}
     When the user clicks the button/link    link=Application details
     then the user should not see the element      css=input
-    and the user shouild see the the element      jQuery=button:contains("Save and return to application overview")
+    and the user should see the element      jQuery=button:contains("Save and return to application overview")
 
 *** Keywords ***
 the text should be visible
