@@ -61,7 +61,7 @@ Application details: Innovation Area - Materials and manufacturing
 Application details: Innovation Area - Infrastructe
     [Documentation]    INFUND-8443
     [Tags]  MySQL
-    [Setup]  Set the competition innovation sector to Infrastructure
+    [Setup]  Set the competition igit nnovation sector to Infrastructure
     Given the user clicks the button/link   jQuery=button:contains("Change your innovation area")
     Then the user should see the element    jQuery=label:contains("Energy efficiency"):contains("Improve energy end-use efficiency, for example, in buildings, domestic appliances, industrial processes or vehicles.")
     And the user should see the element    jQuery=label:contains("My innovation area is not listed")
