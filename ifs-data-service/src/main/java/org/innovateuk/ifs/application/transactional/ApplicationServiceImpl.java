@@ -36,6 +36,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -101,6 +102,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationMapper applicationMapper;
     @Autowired
     private NotificationSender notificationSender;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -394,6 +398,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
+            notificationArguments.put("webBaseUrl", webBaseUrl);
             LocalDateTime assesmentEndDate = null;
             if (competition.getFundersPanelDate() != null) {
                 assesmentEndDate = TimeZoneUtil.toUkTimeZone(competition.getFundersPanelDate()).toLocalDateTime();
