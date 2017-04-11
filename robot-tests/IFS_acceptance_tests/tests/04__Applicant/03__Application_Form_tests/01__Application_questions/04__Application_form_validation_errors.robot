@@ -104,7 +104,6 @@ Application details server side
     And the user should see an error    Please enter a future date.
     And the user should see an error    This field cannot be left blank.
     And the user should see an error    Please enter the previous application number.
-    #And the user should see an error    Please select a research category.
     And the user should see an error    Please enter the previous application title.
     And the user should see an error    Please enter the full title of the project.
     # TODO commented due to INFUND-9066
