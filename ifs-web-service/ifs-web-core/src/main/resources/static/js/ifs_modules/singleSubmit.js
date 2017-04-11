@@ -7,8 +7,9 @@ IFS.core.singleSubmit = (function () {
         if (form.is('[data-submitting]')) {
           e.preventDefault()
         } else {
-          var submitButton = form.attr('data-submitting', '').find('button[data-content-on-submit]')
-          submitButton.prop('disabled', true)
+          form.attr('data-submitting', '')
+          var submitButton = form.find('button[data-content-on-submit]')
+          submitButton.attr('disabled', 'disabled')
           submitButton.html(submitButton.attr('data-content-on-submit'))
         }
       })
