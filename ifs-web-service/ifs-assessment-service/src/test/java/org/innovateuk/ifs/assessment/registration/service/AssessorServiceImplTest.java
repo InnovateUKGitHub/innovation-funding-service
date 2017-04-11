@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.common.service;
+package org.innovateuk.ifs.assessment.registration.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
