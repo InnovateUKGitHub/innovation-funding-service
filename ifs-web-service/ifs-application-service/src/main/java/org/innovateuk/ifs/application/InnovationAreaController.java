@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.form.InnovationAreaForm;
 import org.innovateuk.ifs.application.populator.ApplicationInnovationAreaPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -40,14 +40,14 @@ public class InnovationAreaController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    private ApplicationRestService applicationRestService;
+    private ApplicationService applicationService;
 
     @Autowired
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
 
     @GetMapping
     public String getInnovationAreas(Model model, @PathVariable("applicationId") Long applicationId, @PathVariable("questionId") Long questionId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
 
         checkIfAllowed(questionId, applicationResource);
 
@@ -62,7 +62,7 @@ public class InnovationAreaController {
     @PostMapping
     public String submitInnovationAreaChoice(@Valid @ModelAttribute("form") InnovationAreaForm innovationAreaForm, BindingResult bindingResult, HttpServletResponse response,
                                              ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
 
         checkIfAllowed(questionId, applicationResource);
 

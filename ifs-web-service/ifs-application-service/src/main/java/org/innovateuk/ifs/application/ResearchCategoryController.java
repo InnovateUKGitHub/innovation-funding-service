@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.populator.ApplicationResearchCategoryPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -45,7 +45,7 @@ public class ResearchCategoryController {
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
 
     @Autowired
-    private ApplicationRestService applicationRestService;
+    private ApplicationService applicationService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -53,7 +53,7 @@ public class ResearchCategoryController {
     @GetMapping
     public String getResearchCategories(Model model, @PathVariable Long applicationId, @PathVariable Long questionId,
                                         HttpServletRequest request) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
 
         checkIfAllowed(questionId, applicationResource);
 
@@ -75,7 +75,7 @@ public class ResearchCategoryController {
                                                HttpServletResponse response,
                                                ValidationHandler validationHandler,
                                                Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
 
         checkIfAllowed(questionId, applicationResource);
 
