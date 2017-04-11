@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -185,6 +186,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false, true);
         Supplier<String> successView = () -> redirectToFinanceContact(projectId, organisation);
+
+        if (loggedInUser.getEmail().equals(financeContactForm.getEmail())) {
+
+            validationHandler.addAnyErrors(ServiceResult.serviceFailure(CommonFailureKeys.PROJECT_SETUP_INVITE_CANNOT_INVITE_SELF));
+        }
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
