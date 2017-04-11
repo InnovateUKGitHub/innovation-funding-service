@@ -28,15 +28,17 @@
 
   <ul class="task-list">
     <li th:each="partner : ${model.bankDetailsStatusResources}" th:class="${partner.bankDetailsStatus.name() == 'NOT_REQUIRED' ? 'read-only' : ''}">
-      <div class="task"><h4 class="heading-small">
-        <th:block th:if="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
-          <span th:text="${partner.organisationName}"/>
-        </th:block>
-        <th:block th:unless="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
-          <a th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
-        </th:block>
-        <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
-      </h4></div>
+      <div class="task">
+        <h3 class="heading-small">
+          <th:block th:if="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
+            <span th:text="${partner.organisationName}"/>
+          </th:block>
+          <th:block th:unless="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
+            <a th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
+          </th:block>
+          <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
+        </h3>
+      </div>
       <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
     </li>
   </ul>
