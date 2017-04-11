@@ -13,7 +13,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})},currentCompetition=null" />
+    <div th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null" />
     <div th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <div class="page-title">
@@ -70,7 +70,7 @@
         <th:block th:if="${summaryModel.isExternalView()}">
             <h2 class="heading-medium">Detailed finances</h2>
             <p>These are your project finances. Changes that result from discussions with Innovate UK will be reflected here. Substantial changes to your project costs should be discussed with your Project Manager.</p>
-            <p><a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a></p>
+            <p><a th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}">View changes to finances</a></p>
         </th:block>
 
         <th:block th:unless="${summaryModel.isExternalView()}">

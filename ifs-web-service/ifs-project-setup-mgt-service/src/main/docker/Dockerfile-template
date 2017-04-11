@@ -6,9 +6,11 @@ EXPOSE 8000
 EXPOSE 8080
 ENV JAVA_OPTS -Xmx300m
 VOLUME /tmp
-RUN sh -c 'touch /app.jar'
+
 ADD project-setup-management-@version@.jar app.jar
+ADD coscale-monitoring.sh /root/coscale-monitoring.sh
+
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
+
 HEALTHCHECK --interval=15s --timeout=8s \
   CMD curl -f --connect-timeout 5 -m 5  http://localhost:8080/project-setup-management/health || exit 1
-

@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.*;
+import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -30,10 +31,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -230,12 +233,31 @@ public class CompetitionSetupController {
         return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
+    @PostMapping(value = "/{competitionId}/section/initial", params = "unrestricted")
+    public String submitUnrestrictedInitialSectionDetails(
+            @Validated({Unrestricted.class, Default.class}) @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) InitialDetailsForm competitionSetupForm,
+            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+            Model model
+    ) {
+        return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
+    }
+
+
     @PostMapping("/{competitionId}/section/initial")
     public String submitInitialSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) InitialDetailsForm competitionSetupForm,
                                               @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                               ValidationHandler validationHandler,
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               Model model) {
+        return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
+    }
+
+    private String doSubmitInitialSectionDetails(InitialDetailsForm competitionSetupForm,
+                                                 ValidationHandler validationHandler,
+                                                 @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                 Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competitionResource, model);
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);

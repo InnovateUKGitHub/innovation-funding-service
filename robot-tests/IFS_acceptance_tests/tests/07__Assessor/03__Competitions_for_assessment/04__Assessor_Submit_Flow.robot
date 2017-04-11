@@ -280,7 +280,7 @@ Submit Assessments
     And The user should not see the element    link=Intelligent Building
 
 Progress of the applications in Dashboard
-    [Documentation]    INFUND-3719
+    [Documentation]    INFUND-3719, INFUND-9007
     [Tags]    HappyPath
     ${ACCEPTED_LIST}=    Get Webelements    jQuery=.my-applications .in-progress li:not(:contains("Pending"))
     ${EXPECTED_TOTAL_ACCEPTED}=    Get Length    ${ACCEPTED_LIST}
@@ -288,6 +288,7 @@ Progress of the applications in Dashboard
     ${EXPECTED_TOTAL_PENDING}=    Get Length    ${PENDING_LIST}
     When The user navigates to the page    ${assessor_dashboard_url}
     Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
+    And the user should see the text in the page    ${EXPECTED_TOTAL_PENDING} applications awaiting acceptance | ${EXPECTED_TOTAL_ACCEPTED} applications to assess
 
 *** Keywords ***
 the collapsible button should contain
