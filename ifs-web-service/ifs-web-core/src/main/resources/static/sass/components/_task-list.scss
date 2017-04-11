@@ -16,10 +16,9 @@
                 display: block;
                 width: 100%;
             }
-        }
-        .task-full-width{
-            @extend  .task;
-            width: 80%;
+            &.full-width {
+                width:100%;
+            }
         }
         .notification{
             display: inline-block;

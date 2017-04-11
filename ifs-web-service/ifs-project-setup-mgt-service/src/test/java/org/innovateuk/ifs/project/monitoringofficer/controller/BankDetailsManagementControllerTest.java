@@ -130,6 +130,25 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
+    public void canViewBankDetailsWhenBankDetailsReSubmitted() throws Exception {
+        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        //The manualApproval flag will be 'true' in case of re-submission
+        bankDetailsResource.setManualApproval(true);
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details")).
+                andExpect(view().name("project/review-bank-details")).
+                andExpect(status().isOk()).
+                andReturn();
+
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        BankDetailsReviewViewModel model = (BankDetailsReviewViewModel) modelMap.get("model");
+        assertEquals(bankDetailsReviewViewModel.getBankAccountNumber(), model.getBankAccountNumber());
+        assertEquals(true, model.getApprovedManually());
+    }
+
+    @Test
     public void canViewBankDetailsChangeForm() throws Exception {
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
         when(projectService.getById(project.getId())).thenReturn(project);

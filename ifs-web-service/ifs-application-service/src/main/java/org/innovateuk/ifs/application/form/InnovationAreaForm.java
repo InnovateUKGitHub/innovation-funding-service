@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.application.form;
 
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
+
 import javax.validation.constraints.NotNull;
 
 /**
- * Beam serves as a container for form parameters.
+ * Bean serves as a container for form parameters.
  */
 
-public class InnovationAreaForm {
-    @NotNull(message = "{validation.application.innovationarea.category.required}")
-    String innovationAreaChoice;
+public class InnovationAreaForm extends BaseBindingResultTarget {
+    @NotNull(message = "{validation.field.must.not.be.blank}")
+    private String innovationAreaChoice;
 
     public String getInnovationAreaChoice() {
         return innovationAreaChoice;
