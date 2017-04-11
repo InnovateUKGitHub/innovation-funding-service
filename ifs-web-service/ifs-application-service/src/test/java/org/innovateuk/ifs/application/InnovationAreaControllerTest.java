@@ -49,7 +49,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
 
         MvcResult result = mockMvc.perform(get(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
@@ -71,7 +71,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
         when(applicationInnovationAreaRestService.saveApplicationInnovationAreaChoice(applicationId, innovationAreaId)).thenReturn(restSuccess(newApplicationResource().build()));
 
@@ -96,7 +96,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
         when(applicationInnovationAreaRestService.setApplicationInnovationAreaToNotApplicable(applicationId)).thenReturn(restSuccess(newApplicationResource().build()));
 
@@ -125,7 +125,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         RestResult<ApplicationResource> result = restFailure(new Error("", HttpStatus.NOT_FOUND));
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
         when(applicationInnovationAreaRestService.saveApplicationInnovationAreaChoice(applicationId, nonExistentInnovationAreaId)).thenReturn(result);
 
@@ -150,7 +150,7 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
         when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
 
         MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
@@ -175,11 +175,11 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(false);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).build());
 
         MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
                 .andExpect(view().name("forbidden"))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().is4xxClientError())
                 .andReturn();
 
         verifyZeroInteractions(applicationInnovationAreaPopulator);

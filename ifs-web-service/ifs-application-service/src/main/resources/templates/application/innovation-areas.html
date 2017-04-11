@@ -26,9 +26,9 @@
                             <span class="visuallyhidden">
                                 Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.
                             </span>
-                            <span th:if="${#fields.hasErrors('innovationAreaChoice')}" th:remove="tag">
+                            <th:block th:if="${#fields.hasErrors('innovationAreaChoice')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaChoice')}" th:text="${err}" />
-                            </span>
+                            </th:block>
                         </legend>
                         <th:block th:each="innovationArea : ${model.availableInnovationAreas}">
                             <label class="block-label selection-button-radio" th:for="${'innovationAreaChoice-'+innovationArea.id}">

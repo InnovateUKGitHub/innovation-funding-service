@@ -31,9 +31,9 @@
                     <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
                         href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                         target="_blank">Innovate UK funding rules</a>.</span>
-                    <span th:if="${#fields.hasErrors('researchCategoryChoice')}" th:remove="tag">
+                    <th:block th:if="${#fields.hasErrors('researchCategoryChoice')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}" />
-                    </span>
+                    </th:block>
                 </legend>
                 <th:block th:each="researchCategory : ${model.availableResearchCategories}">
                     <label class="block-label selection-button-radio" th:for="${'researchCategoryChoice-'+researchCategory.id}">

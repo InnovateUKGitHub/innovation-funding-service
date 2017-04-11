@@ -23,6 +23,6 @@ public class ApplicationDetailsEditableValidator {
 
     private boolean applicationDetailsIsMarkedAsComplete(Long questionId, Long applicationId) {
         List<QuestionStatusResource> statusResourceList = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
-        return statusResourceList.stream().allMatch(status -> status.getMarkedAsComplete() == true);
+        return statusResourceList.stream().anyMatch(status -> status.getMarkedAsComplete() == true);
     }
 }
