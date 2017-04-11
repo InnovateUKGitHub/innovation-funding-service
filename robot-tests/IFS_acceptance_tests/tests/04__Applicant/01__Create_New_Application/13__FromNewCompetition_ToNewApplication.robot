@@ -493,7 +493,7 @@ the user completes the new account creation
     wait for autosave
     the user clicks the button/link     jQuery=button:contains("Save organisation and continue")
     then the user should not see an error in the page
-    the user clicks the button/link     jQuery=a:contains("Confirm")
+    the user clicks the button/link     jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
     the user enters text to a text field     jQuery=input[id="firstName"]   liam
     the user enters text to a text field     JQuery=input[id="lastName"]   smithson
