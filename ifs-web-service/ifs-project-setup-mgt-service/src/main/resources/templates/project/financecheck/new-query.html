@@ -34,7 +34,8 @@
         You must confirm any finance changes with the contact before you approve.
     </p>
 
-    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
+          th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate" onsubmit="IFS.core.atomicSubmission(this)">
         <fieldset>
             <legend class="heading-medium">Post new query</legend>
             <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group error':'form-group'">
@@ -140,7 +141,7 @@
         <input type="hidden" id="action" value="postQuery">
         <div class="grid-row">
             <div class="column-half">
-                <button class="button button-large no-margin">Post Query</button>
+                <input type="submit" name="submitButton" class="button button-large no-margin" value="Post Query">
             </div>
             <div class="column-half alignright">
                 <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>
