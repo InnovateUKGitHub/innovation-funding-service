@@ -246,9 +246,9 @@ Project Finance can see the progress of partners bank details
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(2) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
-    Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
-    And the user should see the element             jQuery=tr:nth-child(2) td:nth-child(2):contains("Review required")
-    And the user should see the element             jQuery=tr:nth-child(3) td:nth-child(2):contains("Review required")
+    Then the user should see the element            jQuery=li:nth-child(1):contains("Review required")
+    And the user should see the element             jQuery=li:nth-child(2):contains("Review required")
+    And the user should see the element             jQuery=li:nth-child(3):contains("Review required")
     When the user clicks the button/link            link=${Eadel_Name}
     Then the user should see the text in the page   ${Eadel_Name} - Account details
     And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_FINANCE}
@@ -278,10 +278,10 @@ Project Finance can see Bank Details
     When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3) a
     Then the user navigates to the page           ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page  each partner has submitted their bank details
-    Then the user should see the element          jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
-    And the user should see the element           jQuery=tr:nth-child(1) td:nth-child(1) a:contains("${Eadel_Name}")
-    And the user should see the element           jQuery=tr:nth-child(2) td:nth-child(2):contains("Review required")
-    And the user should see the element           jQuery=tr:nth-child(3) td:nth-child(2):contains("Review required")
+    Then the user should see the element          jQuery=li:nth-child(1):contains("Review required")
+    And the user should see the element           jQuery=li:nth-child(2):contains("Review required")
+    And the user should see the element           jQuery=li:nth-child(1) a:contains("${Eadel_Name}")
+    And the user should see the element           jQuery=li:nth-child(3):contains("Review required")
     When the user clicks the button/link          link=${Eadel_Name}
     Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
