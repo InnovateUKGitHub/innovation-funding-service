@@ -12,20 +12,18 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
+            <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+                <h2 class="heading-medium error-summary-heading">We were unable to create your account</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+                </ul>
+            </div>
+
             <div class="hgroup">
                 <h1 class="heading-xlarge">Create assessor account</h1>
             </div>
 
             <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
-                <div class="error-summary" th:if="${#fields.hasErrors('global')}">
-                    <h1 class="heading-medium error-summary-heading">
-                        We were unable to create your account
-                    </h1>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
-                    </ul>
-                </div>
-
                 <h2 class="heading-medium">Your details</h2>
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
                     <label class="form-label" th:for="firstName">

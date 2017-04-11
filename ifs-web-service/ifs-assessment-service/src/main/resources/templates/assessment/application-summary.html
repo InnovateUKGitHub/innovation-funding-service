@@ -12,6 +12,13 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
+            <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
             <div class="page-title">
                 <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="${'Assessment summary'}" />
@@ -28,13 +35,6 @@
 
             <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-
-                <div class="error-summary" th:if="${#fields.hasErrors('global')}">
-                    <h2 class="heading-medium error-summary-heading">We were unable to save your changes:</h2>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
-                    </ul>
-                </div>
 
                 <div class="question" th:id="form-input-fundingConfirmation">
                     <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')}? error">
