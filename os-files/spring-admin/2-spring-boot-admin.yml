@@ -20,11 +20,19 @@ items:
       spec:
         containers:
         - image: enmobile/docker-spring-boot-admin
+          name: admin
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8123
+            initialDelaySeconds: 60
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /health
               port: 8123
-          name: admin
+            initialDelaySeconds: 60
+            periodSeconds: 10
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8123

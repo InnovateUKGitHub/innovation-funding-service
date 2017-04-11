@@ -24,11 +24,19 @@ items:
       spec:
         containers:
         - image: innovateuk/project-setup-service:1.0-SNAPSHOT
+          name: project-setup-svc
+          livenessProbe:
+            httpGet:
+              path: /project-setup/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /project-setup/health
               port: 8080
-          name: project-setup-svc
+            initialDelaySeconds: 60
+            periodSeconds: 10
           imagePullPolicy: Always
           env:
           - name: SPRING_APPLICATION_JSON
