@@ -1500,6 +1500,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     [Tags]
     # the below figures are listed as:     RowNumber      Action      Section
     Given the user verifies the Action and Section for Changes-from-submitted-finances       16  Change  Materials
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     When the user verifies the table heading for the specified section  16  Item  Generator  test  #Materials
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     Then the revised categories are verified for specified Section      18      Cost per item       5010        100
@@ -1513,6 +1514,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     Given the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(13) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the Action and Section for Changes-from-submitted-finances       13  Change  Overheads
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     And the user verifies the table heading for the specified section  13  Rate Type  None  Custom Amount  #Overheads
     And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
     And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) td:nth-of-type(2)  1954
@@ -1527,6 +1529,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(28) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the Action and Section for Changes-from-submitted-finances       28    Change    Capital usage
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     And the user verifies the table heading for the specified section    28  Item description  Depreciating Stuff  test  #Capital-usage
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     Then the revised categories are verified for specified Section       29     New or existing     Existing    New
@@ -1544,6 +1547,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(79) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     When the user verifies the Action and Section for Changes-from-submitted-finances       79     Change     Other costs
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     Then the user verifies the table heading for the specified section    79  Description and justification of cost  Some more costs  some other costs  #Other-costs
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     And the revised categories are verified for specified Section       80      Total     550     5000
@@ -1559,6 +1563,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(67) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     And the user verifies the Action and Section for Changes-from-submitted-finances      67      Change      Travel and subsistence
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     And the user verifies the table heading for the specified section    67  Purpose of journey  To visit colleagues  test   #Travel-and-subsistence
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     And the revised categories are verified for specified Section       68      Number of times     15      10
@@ -1573,6 +1578,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     # the below figures are listed as:     RowNumber      Action      Section
     Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(52) td:nth-of-type(1)
     When the user verifies the Action and Section for Changes-from-submitted-finances      52      Change      Subcontracting
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     Then the user verifies the table heading for the specified section   52  Subcontractor name  Developers   test  #Subcontracting
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     And the revised categories are verified for specified Section      54      Role      To develop stuff      Develop
@@ -1589,7 +1595,8 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     And the user verifies the Action and Section for Changes-from-submitted-finances      1    Change    Labour
-    Then the user verifies the table heading for the specified section    1  Role  Role1  test  #Labour
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    Then the user verifies the table heading for the specified section    1     Role   Role 1   test  #Labour
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     And the revised categories are verified for specified Section      2      Gross annual salary     100     120000
     And the revised categories are verified for specified Section       3      Days to be spent        200     100
@@ -1640,6 +1647,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Mate
     [Tags]
     # the below figures are listed as:     RowNumber      Action      Section
     Given the user verifies the Action and Section for Changes-from-submitted-finances       16  Change  Materials
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     When the user verifies the table heading for the specified section  16      Item    Generator   test  #Materials
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     Then the revised categories are verified for specified Section      18      Cost per item       5010        100
@@ -1653,6 +1661,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Over
     Given the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(13) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the Action and Section for Changes-from-submitted-finances       13  Change  Overheads
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     And the user verifies the table heading for the specified section   13      Rate Type       None        Custom Amount  #Overheads
     And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
     And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) td:nth-of-type(2)  9078
@@ -1667,6 +1676,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Capi
     Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(28) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the Action and Section for Changes-from-submitted-finances       28    Change    Capital usage
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     And the user verifies the table heading for the specified section    28      Item description       Depreciating Stuff      test  #Capital-usage
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     Then the revised categories are verified for specified Section       29     New or existing     Existing    New
@@ -1684,6 +1694,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Othe
     Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(79) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     When the user verifies the Action and Section for Changes-from-submitted-finances       79     Change     Other costs
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     Then the user verifies the table heading for the specified section    79    Description and justification of cost       Some more costs     some other costs  #Other-costs
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     And the revised categories are verified for specified Section       80      Total     550     5000
@@ -1699,6 +1710,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Trav
     Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(67) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     And the user verifies the Action and Section for Changes-from-submitted-finances      67      Change      Travel and subsistence
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     And the user verifies the table heading for the specified section  67       Purpose of journey      To visit colleagues     test   #Travel-and-subsistence
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     And the revised categories are verified for specified Section       68      Number of times     15      10
@@ -1713,6 +1725,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Subc
     # the below figures are listed as:     RowNumber      Action      Section
     Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(52) td:nth-of-type(1)
     When the user verifies the Action and Section for Changes-from-submitted-finances      52      Change      Subcontracting
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     Then the user verifies the table heading for the specified section   52     Subcontractor name      Developers      test  #Subcontracting
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     And the revised categories are verified for specified Section      54      Role      To develop stuff      Develop
@@ -1729,7 +1742,8 @@ Project finance user can view Partner's Changes-from-submitted-finances for Labo
     Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     And the user verifies the Action and Section for Changes-from-submitted-finances      1    Change    Labour
-    Then the user verifies the table heading for the specified section   1      Role    Role1   test  #Labour
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    Then the user verifies the table heading for the specified section   1      Role    Role 1     test  #Labour
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
     And the revised categories are verified for specified Section      2      Gross annual salary     100     120000
     And the revised categories are verified for specified Section       3      Days to be spent        200     100
