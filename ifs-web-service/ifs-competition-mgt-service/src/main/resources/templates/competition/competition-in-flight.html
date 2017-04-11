@@ -124,10 +124,10 @@
                                 </button>
                                 <th:block th:case="'FUNDERS_PANEL'"
                                           th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">
-                                    <a class="disabled button button-large" aria-disabled="true"
-                                       th:if="${!model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
                                     <a class="button button-large" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
-                                        th:unless="${!model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
+                                        th:if="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
+                                    <a class="disabled button button-large" aria-disabled="true"
+                                       th:unless="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
                                 </th:block>
                                 <button type="submit"
                                         th:case="'RELEASE_FEEDBACK'"
