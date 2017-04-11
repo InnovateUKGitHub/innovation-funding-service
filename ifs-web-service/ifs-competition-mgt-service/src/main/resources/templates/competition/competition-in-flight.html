@@ -122,14 +122,13 @@
                                         th:if="${model.competitionStatus.name() == 'IN_ASSESSMENT'}"
                                         class="button button-large">Close assessment
                                 </button>
-                                <button type="submit"
-                                        th:case="'FUNDERS_PANEL'"
-                                        th:disabled="${!model.keyStatistics.canManageFundingNotifications}"
-                                        th:formaction="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
-                                        th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
-                                        class="button button-large"
-                                        formmethod="get">Manage funding notifications
-                                </button>
+                                <th:block th:case="'FUNDERS_PANEL'"
+                                          th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">
+                                    <a class="disabled button button-large" aria-disabled="true"
+                                       th:if="${!model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
+                                    <a class="button button-large" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
+                                        th:unless="${!model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
+                                </th:block>
                                 <button type="submit"
                                         th:case="'RELEASE_FEEDBACK'"
                                         th:disabled="${!model.keyStatistics.canReleaseFeedback}"
