@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.form.domain;
 
-import org.innovateuk.ifs.commons.util.enums.IdentifiableEnumConverter;
+import org.innovateuk.ifs.commons.util.IdentifiableEnumConverter;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
 import javax.persistence.Converter;

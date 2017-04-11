@@ -126,7 +126,7 @@
                 </div>
             </th:block>
             <input type="hidden" name="autosaveInnovationAreaIds" />
-            <div class="form-group">
+            <div class="form-group" th:unless="${isSetupAndLive}">
                 <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
             </div>
 

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.repository;
 
-import org.innovateuk.ifs.commons.util.enums.IdentifiableEnumConverter;
+import org.innovateuk.ifs.commons.util.IdentifiableEnumConverter;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 
 import javax.persistence.Converter;
