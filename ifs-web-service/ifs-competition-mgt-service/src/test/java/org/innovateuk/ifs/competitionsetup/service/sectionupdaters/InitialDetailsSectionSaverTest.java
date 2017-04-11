@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.util.CollectionFunctions;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,7 +64,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");

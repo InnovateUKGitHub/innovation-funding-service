@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -13,7 +14,6 @@ import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelpe
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +37,9 @@ public class ProjectSetupSectionsPermissionRules {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private OrganisationService organisationService;
+
     private ProjectSetupSectionPartnerAccessorSupplier accessorSupplier = new ProjectSetupSectionPartnerAccessorSupplier();
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
@@ -57,8 +60,8 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessBankDetailsSection);
     }
 
-    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the Bank Details " +
-            "section when their Companies House details are complete or not required, and the Project Details have been submitted")
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the finance details " +
+            " when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(Long projectId, UserResource user) {
             return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
@@ -102,24 +105,14 @@ public class ProjectSetupSectionsPermissionRules {
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
-
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-
-        Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
-                user.getId().equals(pu.getUser()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
-
-        return projectUser.map(pu -> {
+        try {
+            Long organisationId = organisationService.getOrganisationIdFromUser(projectId, user);
 
             ProjectTeamStatusResource teamStatus;
 
-            try {
-                teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
-            } catch (ForbiddenActionException e) {
-                LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
-                return false;
-            }
+            teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
-            ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(pu.getOrganisation()).get();
+            ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(organisationId).get();
 
             ProjectSetupSectionAccessibilityHelper sectionAccessor = accessorSupplier.apply(teamStatus);
             OrganisationResource organisation = new OrganisationResource();
@@ -127,15 +120,13 @@ public class ProjectSetupSectionsPermissionRules {
             organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getOrganisationTypeId());
 
             return sectionCheckFn.apply(sectionAccessor, organisation) == ACCESSIBLE;
-
-        }).orElseGet(() -> {
+        } catch (ForbiddenActionException e) {
             LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
             return false;
-        });
+        }
     }
 
     public class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, ProjectSetupSectionAccessibilityHelper> {
-
         @Override
         public ProjectSetupSectionAccessibilityHelper apply(ProjectTeamStatusResource teamStatus) {
             return new ProjectSetupSectionAccessibilityHelper(teamStatus);
