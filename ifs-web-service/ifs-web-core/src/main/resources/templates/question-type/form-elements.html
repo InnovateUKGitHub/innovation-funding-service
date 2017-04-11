@@ -34,12 +34,13 @@
 <!-- ========================= Form Guidance =========================== -->
 
 <th:block th:fragment="form-guidance (guidable)">
-    <details th:if="${guidable?.getGuidanceTitle()}">
+    <details th:if="${guidable?.getGuidanceTitle() != null and guidable?.getGuidanceAnswer() != null}">
         <summary>
             <span class="summary" th:text="${guidable.getGuidanceTitle()}"/>
         </summary>
         <div class="panel wysiwyg-styles" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
+    <th:block th:if="${guidable?.getGuidanceTitle() != null and guidable?.getGuidanceAnswer() == null}" ifs:utext="${guidable.getGuidanceTitle()}"></th:block>
 </th:block>
 <!-- ========================= input field type text =========================== -->
 
