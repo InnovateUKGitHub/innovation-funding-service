@@ -168,7 +168,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         Notification notification = new Notification(
                 systemNotificationSource,
                 singletonList(recipient),
-                AssessmentServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", user.getName(),
                         "competitionName", competition.getName(),
@@ -207,5 +207,9 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {
         return registrationService.createUser(userRegistrationResource).andOnSuccess(
                 created -> registrationService.activateUser(created.getId()).andOnSuccessReturn(result -> userRepository.findOne(created.getId())));
+    }
+
+    enum Notifications {
+        ASSESSOR_HAS_ASSESSMENTS
     }
 }

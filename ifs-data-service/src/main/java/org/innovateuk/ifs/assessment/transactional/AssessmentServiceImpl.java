@@ -235,8 +235,4 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                 ),
                 notFoundError(ActivityState.class, assessmentState));
     }
-
-    enum Notifications {
-        ASSESSOR_HAS_ASSESSMENTS
-    }
 }
