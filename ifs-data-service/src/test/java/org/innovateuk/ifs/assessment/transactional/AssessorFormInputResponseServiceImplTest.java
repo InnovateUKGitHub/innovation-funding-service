@@ -124,7 +124,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withWordCount(10)
                 .build();
         Assessment assessment = newAssessment().build();
-        BindingResult bindingResult = new DataBinder(updatedAssessorFormInputResponseResource).getBindingResult();
+        BindingResult bindingResult = new DataBinder(formInput).getBindingResult();
 
         ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
         ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
@@ -311,7 +311,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 value,
                 false,
                 null,
-                singletonList((Object) 100).toArray(),
+                new Object[] { "", 100 },
                 "validation.field.max.word.count"));
 
         when(validationUtilMock.validateResponse(any(), anyBoolean())).thenReturn(bindingResult);
@@ -320,7 +320,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(fieldError("value", value, "validation.field.max.word.count", 100)));
+        assertTrue(result.getFailure().is(fieldError("value", value, "validation.field.max.word.count", "", 100)));
     }
 
     @Test
