@@ -3,7 +3,10 @@ package org.innovateuk.ifs.assessment.overview.controller;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
@@ -201,8 +204,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(competitionService.getById(competition.getId())).thenReturn(competition);
         when(sectionRestService.getByCompetitionIdVisibleForAssessment(competition.getId())).thenReturn(restSuccess(sections));
-        when(sectionService.getSectionsForCompetitionByType(competition.getId(), SectionType.GENERAL)).thenReturn(sections);
-        when(sectionService.filterParentSections(sections)).thenReturn(sections);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questions);
         when(formInputService.findAssessmentInputsByCompetition(competition.getId())).thenReturn(assessorFormInputs);
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
@@ -292,13 +293,12 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/application-overview"));
 
-        InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, sectionService, questionService, formInputService,
+        InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService, formInputService,
                 assessorFormInputResponseService, formInputResponseService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
-        inOrder.verify(sectionService).filterParentSections(sections);
         inOrder.verify(formInputService).findAssessmentInputsByCompetition(competition.getId());
         inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseService).getByApplication(applicationId);

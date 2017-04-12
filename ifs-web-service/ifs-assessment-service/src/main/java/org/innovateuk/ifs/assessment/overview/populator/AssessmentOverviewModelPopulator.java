@@ -52,9 +52,6 @@ public class AssessmentOverviewModelPopulator {
     private QuestionService questionService;
 
     @Autowired
-    private SectionService sectionService;
-
-    @Autowired
     private SectionRestService sectionRestService;
 
     @Autowired
@@ -88,8 +85,7 @@ public class AssessmentOverviewModelPopulator {
 
     private List<AssessmentOverviewSectionViewModel> getSections(AssessmentResource assessment,
                                                                  List<QuestionResource> questions) {
-        List<SectionResource> sections = sectionService.filterParentSections(
-                sectionRestService.getByCompetitionIdVisibleForAssessment(assessment.getCompetition()).getSuccessObjectOrThrowException());
+        List<SectionResource> sections = sectionRestService.getByCompetitionIdVisibleForAssessment(assessment.getCompetition()).getSuccessObjectOrThrowException();
 
         Map<Long, List<FormInputResource>> formInputs = getFormInputsByQuestion(assessment.getCompetition());
         Map<Long, AssessorFormInputResponseResource> responses = getResponsesByFormInput(assessment.getId());
@@ -104,7 +100,7 @@ public class AssessmentOverviewModelPopulator {
                     sectionResource.getName(),
                     sectionResource.getAssessorGuidanceDescription(),
                     getQuestions(sectionQuestions, formInputs, responses),
-                    "Finance".equals(sectionResource.getName())
+                    "Finances".equals(sectionResource.getName())
             );
         });
     }

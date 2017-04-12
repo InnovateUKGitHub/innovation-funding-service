@@ -58,6 +58,7 @@ public class AssessmentOverviewSectionViewModel {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(finance, that.finance)
                 .append(name, that.name)
                 .append(guidance, that.guidance)
                 .append(questions, that.questions)
@@ -71,6 +72,7 @@ public class AssessmentOverviewSectionViewModel {
                 .append(name)
                 .append(guidance)
                 .append(questions)
+                .append(finance)
                 .toHashCode();
     }
 }

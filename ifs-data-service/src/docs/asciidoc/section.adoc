@@ -54,7 +54,6 @@ include::{snippets}/section/mark-as-complete/curl-request.adoc[]
 ==== Request
 include::{snippets}/section/mark-as-not-required/http-request.adoc[]
 include::{snippets}/section/mark-as-not-required/path-parameters.adoc[]
-include::{snippets}/section/mark-as-not-required/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/section/mark-as-not-required/http-response.adoc[]
