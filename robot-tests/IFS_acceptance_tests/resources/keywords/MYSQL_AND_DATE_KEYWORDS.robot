@@ -16,7 +16,7 @@ the calculation of the remaining days should be correct
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
-    ${STARTING_DATE}=    Run keyword if    ${TIME} > 12    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
+    ${STARTING_DATE}=    Run keyword if    ${TIME} >= 12    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
     ...    exclude_millis=true
     ...    ELSE    set variable    ${CURRENT_DATE}
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
@@ -52,10 +52,10 @@ the days remaining should be correct (Applicant's dashboard)
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
-    ${STARTING_DATE}=    Run keyword if    ${TIME} > 11    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
+    ${STARTING_DATE}=    Run keyword if    ${TIME} >= 11    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
     ...    exclude_millis=true
     ...    ELSE    set variable    ${CURRENT_DATE}
-    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${END_DATE}    ${CURRENT_DATE}    verbose    exclude_millis=true
+    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${END_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.in-progress li:nth-child(2) .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
