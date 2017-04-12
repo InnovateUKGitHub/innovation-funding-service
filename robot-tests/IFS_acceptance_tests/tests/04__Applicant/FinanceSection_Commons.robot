@@ -85,6 +85,7 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-startdate_month  11
     The user enters text to a text field  id=application_details-duration  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
+    the user should see the element       jQuery=button:contains("Return and edit")
     the user should not see the element     css=input
 
 the user marks the finances as complete
