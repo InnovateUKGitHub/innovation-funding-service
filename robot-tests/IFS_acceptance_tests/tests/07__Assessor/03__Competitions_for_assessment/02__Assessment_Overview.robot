@@ -26,8 +26,7 @@ Assessment overview should show all the questions
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    Pending
-    #TODO INFUND-8925
+    [Tags]
     Then The user should see the text in the page    Days left to submit
     And the days remaining should be correct (Top of the page)    2068-01-28
 
