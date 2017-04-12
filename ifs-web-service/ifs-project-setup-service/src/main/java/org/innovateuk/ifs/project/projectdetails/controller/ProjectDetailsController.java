@@ -251,12 +251,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
         Supplier<String> successView = () -> redirectToProjectManager(projectId);
 
-        validateIfTryingToInviteSelf(loggedInUser.getEmail(), projectManagerForm.getEmail(), validationHandler);
+        validateIfTryingToInviteSelf(loggedInUser.getEmail(), projectManagerForm.getInviteEmail(), validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             Long organisation = projectService.getLeadOrganisation(projectId).getId();
-            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, projectManagerForm.getName(), projectManagerForm.getEmail(), organisation);
+            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, projectManagerForm.getName(), projectManagerForm.getInviteEmail(), organisation);
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
 
@@ -277,7 +277,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private void validateIfTryingToInviteSelf(String loggedInUserEmail, String inviteEmail,
                                               ValidationHandler validationHandler) {
-        if (org.apache.commons.lang3.StringUtils.equals(loggedInUserEmail, inviteEmail)) {
+        if (org.apache.commons.lang3.StringUtils.equalsIgnoreCase(loggedInUserEmail, inviteEmail)) {
 
             validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
         }
