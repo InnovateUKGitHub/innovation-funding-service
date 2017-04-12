@@ -407,7 +407,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param(INVITE_PM, INVITE_PM).
                 param("name", invitedUserName).
-                param("email", invitedUserEmail)
+                param("inviteEmail", invitedUserEmail)
         ).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/details")).
@@ -456,7 +456,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param(INVITE_FC, INVITE_FC).
                 param("name", invitedUserName).
-                param("email", invitedUserEmail).
+                param("inviteEmail", invitedUserEmail).
                 param("organisation", organisationId + "")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/finance-contact")).
