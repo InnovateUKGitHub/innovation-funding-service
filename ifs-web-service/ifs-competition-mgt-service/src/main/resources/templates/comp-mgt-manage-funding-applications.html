@@ -14,15 +14,12 @@
     <div class="error-summary" th:if="${#fields.hasErrors('${manageFundingApplicationsQueryForm.*}')}">
         <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
         <ul class="error-summary-list">
-            <th:block th:each="err : ${#fields.errors('${manageFundingApplicationsQueryForm.*}')}">
-                <li th:classappend="list-header" th:text="${err}"></li>
-            </th:block>
+            <li th:classappend="list-header" th:text="${err}" th:each="err : ${#fields.errors('${manageFundingApplicationsQueryForm.*}')}"></li>
         </ul>
     </div>
 
     <h1 class="heading-xlarge">
-        <span class="heading-secondary"><th:block th:text="${model.competitionId}"/>: <th:block th:text="${model.competitionName}"/></span>
-        <span>Manage funding applications</span>
+        <span class="heading-secondary" th:text="|${model.competitionId}: ${model.competitionName}|">123456: Manage funding applications</span>
     </h1>
 
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
