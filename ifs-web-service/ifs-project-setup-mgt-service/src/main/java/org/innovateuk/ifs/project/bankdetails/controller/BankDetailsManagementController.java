@@ -94,6 +94,9 @@ public class BankDetailsManagementController {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        if(bankDetailsResource.isManualApproval()) {
+            return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
+        }
         bankDetailsResource.setManualApproval(true);
 
         Supplier<String> faliureView = () -> {

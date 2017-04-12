@@ -4,7 +4,9 @@ import org.innovateuk.ifs.application.form.InnovationAreaForm;
 import org.innovateuk.ifs.application.populator.ApplicationInnovationAreaPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.InnovationAreaViewModel;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -37,19 +39,34 @@ public class InnovationAreaController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
+
     @GetMapping
-    public String getInnovationAreas(Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
-        InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationId, questionId);
+    public String getInnovationAreas(Model model, @PathVariable("applicationId") Long applicationId, @PathVariable("questionId") Long questionId) {
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+
+        checkIfAllowed(questionId, applicationResource);
+
+        InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationResource, questionId);
 
         model.addAttribute("model", innovationAreaViewModel);
+        model.addAttribute("form", new InnovationAreaForm());
 
         return "application/innovation-areas";
     }
 
     @PostMapping
-    public String submitInnovationAreaChoice(@ModelAttribute("form") @Valid InnovationAreaForm innovationAreaForm, HttpServletResponse response,
-                                             BindingResult bindingResult, ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
-        InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationId, questionId);
+    public String submitInnovationAreaChoice(@Valid @ModelAttribute("form") InnovationAreaForm innovationAreaForm, BindingResult bindingResult, HttpServletResponse response,
+                                             ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+
+        checkIfAllowed(questionId, applicationResource);
+
+        InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationResource, questionId);
 
         model.addAttribute("model", innovationAreaViewModel);
 
@@ -63,6 +80,7 @@ public class InnovationAreaController {
         });
     }
 
+
     private RestResult<ApplicationResource> saveInnovationAreaChoice(Long applicationId, InnovationAreaForm innovationAreaForm) {
         if(innovationAreaForm.getInnovationAreaChoice().equals("NOT_APPLICABLE")) {
             return applicationInnovationAreaRestService.setApplicationInnovationAreaToNotApplicable(applicationId);
@@ -70,6 +88,12 @@ public class InnovationAreaController {
         else {
             Long innovationAreaId = Long.valueOf(innovationAreaForm.getInnovationAreaChoice());
             return applicationInnovationAreaRestService.saveApplicationInnovationAreaChoice(applicationId, innovationAreaId);
+        }
+    }
+
+    private void checkIfAllowed(Long questionId, ApplicationResource applicationResource) throws ForbiddenActionException {
+        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+            throw new ForbiddenActionException();
         }
     }
 }

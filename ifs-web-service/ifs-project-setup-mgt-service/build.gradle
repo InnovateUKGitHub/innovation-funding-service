@@ -44,9 +44,6 @@ processResources {
     }
 }
 
-
-
-
 task buildDocker( type:Docker, dependsOn: build) {
     push = false
     applicationName = 'project-setup-management-service'
@@ -54,6 +51,10 @@ task buildDocker( type:Docker, dependsOn: build) {
     doFirst {
         copy {
             from jar
+            into stageDir
+        }
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
             into stageDir
         }
     }
