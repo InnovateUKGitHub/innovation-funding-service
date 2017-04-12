@@ -306,7 +306,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         Notification expectedNotification1 = new Notification(
                 systemNotificationSourceMock,
                 singletonList(recipients.get(0)),
-                AssessmentServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", users.get(0).getName(),
                         "competitionName", competition.getName(),
@@ -318,7 +318,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         Notification expectedNotification2 = new Notification(
                 systemNotificationSourceMock,
                 singletonList(recipients.get(1)),
-                AssessmentServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", users.get(1).getName(),
                         "competitionName", competition.getName(),
@@ -391,7 +391,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         Notification expectedNotification = new Notification(
                 systemNotificationSourceMock,
                 singletonList(recipient),
-                AssessmentServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", user.getName(),
                         "competitionName", competition.getName(),
