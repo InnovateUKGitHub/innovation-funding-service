@@ -35,7 +35,7 @@ Comp Admin starts a new Competition
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
     [Tags]
-    Given the user should see the element    jQuery=img[title$="is done"] + h3:contains("Milestones")
+    Given the user should see the element   jQuery=div:contains("Milestones") ~ .task-status-complete
     When the user clicks the button/link    link=Milestones
     Then the user should see the element    jQuery=button:contains("Edit")
     And the user should see the dates in full format
@@ -55,7 +55,7 @@ Comp admin completes ths competition setup
     When the user clicks the button/link  link=Public content
     Then the user fills in the Public content and publishes
     And the user clicks the button/link  link=Return to setup overview
-    And the user should see the element  css=img[title='The "Public content" section is done']
+    And the user should see the element  jQuery=div:contains("Public content") ~ .task-status-complete
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
@@ -120,7 +120,7 @@ Once the project growth table is selected
     When the user clicks the button/link  link=Public content
     Then the user fills in the Public content and publishes
     And the user clicks the button/link  link=Return to setup overview
-    And the user should see the element  css=img[title='The "Public content" section is done']
+    And the user should see the element  jQuery=div:contains("Public content") ~ .task-status-complete
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
