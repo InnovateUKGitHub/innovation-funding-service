@@ -226,10 +226,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
-        return getProject(projectId).
+    public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+        return getProject(composite.getProjectId()).
                 andOnSuccess(this::validateProjectIsInSetup).
-                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
+                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
                             andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                                     andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
