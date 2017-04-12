@@ -14,7 +14,8 @@ WORKDIR /
 VOLUME /tmp
 
 ADD ifs-data-service-@version@.jar app.jar
-RUN sh -c 'touch /app.jar'
+ADD coscale-monitoring.sh /root/coscale-monitoring.sh
+
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
 
 HEALTHCHECK --interval=15s --timeout=8s \

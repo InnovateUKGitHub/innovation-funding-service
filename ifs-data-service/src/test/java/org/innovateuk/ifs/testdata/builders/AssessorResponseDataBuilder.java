@@ -55,10 +55,7 @@ public class AssessorResponseDataBuilder extends BaseDataBuilder<Void, AssessorR
             assessorFormInputResponse.setFormInput(formInput.getId());
             assessorFormInputResponse.setValue(realValue);
 
-            doAs(assessor, () -> assessorFormInputResponseService.saveUpdatedFormInputResponse(
-                    assessorFormInputResponseService
-                            .updateFormInputResponse(assessorFormInputResponse)
-                            .getSuccessObject()));
+            doAs(assessor, () -> assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponse));
         });
     }
 

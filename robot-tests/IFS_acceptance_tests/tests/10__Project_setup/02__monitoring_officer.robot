@@ -272,6 +272,7 @@ the lead partner fills in project details if they are not already filled in
 
 the users fill in project details
     the lead partner fills in project details
+    internal user can see that MO can be assigned
     the academic partner fills in their finance contact
     the industrial partner fills in their finance contact
 
@@ -293,6 +294,10 @@ the lead partner fills in project details
     the user selects the radio button    financeContact    55
     the user clicks the button/link    jQuery=.button:contains("Save")
 
+internal user can see that MO can be assigned
+    log in as a different user   &{internal_finance_credentials}
+    the user navigates to the page   ${Successful_Monitoring_Officer_Page}
+    the user should not see an error in the page
 
 
 the academic partner fills in their finance contact
