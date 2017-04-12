@@ -1,3 +1,4 @@
+import org.apache.tools.ant.filters.ReplaceTokens
 
 configurations {
     providedRuntime
@@ -43,6 +44,15 @@ processResources {
     filesMatching("*.properties") {
         expand project.properties
     }
+}
+
+task prepareDockerFile (type: Copy) {
+    outputs.upToDateWhen { false }
+    from '../docker/'
+    into 'src/main/docker/'
+    include 'Dockerfile-template'
+    rename 'Dockerfile-template', 'Dockerfile'
+    filter(ReplaceTokens, tokens: [version: project.properties['version'], app_name: 'assessment'])
 }
 
 task buildDocker( type:Docker, dependsOn: build) {
