@@ -35,7 +35,7 @@
     </p>
 
     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
-          th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit novalidate="novalidate">
+          th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
         <fieldset>
             <legend class="heading-medium">Post new query</legend>
             <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group error':'form-group'">
