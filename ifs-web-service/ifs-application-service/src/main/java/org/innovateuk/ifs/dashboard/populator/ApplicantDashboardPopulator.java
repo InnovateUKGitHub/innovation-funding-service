@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.dashboard;
+package org.innovateuk.ifs.dashboard.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -13,13 +13,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,13 +22,10 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
- * This controller will handle requests related to the current applicant. So pages that are relative to that user,
- * are implemented here. For example the my-applications page.
+ * Populator for the applicant dashboard, it populates an {@link org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel}
  */
-@Controller
-@RequestMapping("/applicant")
-@PreAuthorize("hasAuthority('applicant')")
-public class ApplicantController {
+@Service
+public class ApplicantDashboardPopulator {
 
     @Autowired
     private ApplicationService applicationService;
@@ -42,19 +34,14 @@ public class ApplicantController {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
+    private ProjectService projectService;
 
     @Autowired
     private CompetitionService competitionService;
 
-    @Autowired
-    private ProjectService projectService;
 
-    @GetMapping("/dashboard")
-    public String dashboard(Model model, HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-
-        model.addAttribute("applicationProgress", applicationService.getProgress(user.getId()));
+    public ApplicantDashboardViewModel populate(UserResource user) {
+        Map<Long, Integer> applicationProgress = applicationService.getProgress(user.getId());
 
         List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
@@ -66,20 +53,13 @@ public class ApplicantController {
         Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished, applicationsForProjectsInSetup);
         Map<Long, ApplicationStatus> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
-        model.addAttribute("applicationsInProgress", inProgress);
-        model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
-        model.addAttribute("applicationsFinished", finished);
-        model.addAttribute("projectsInSetup", projectsInSetup);
-        model.addAttribute("competitions", competitions);
-        model.addAttribute("applicationStatuses", applicationStatusMap);
+        List<Long> applicationsAssigned = getAssignedApplications(inProgress, user);
 
-        return "applicant-dashboard";
+        return new ApplicantDashboardViewModel(applicationProgress, inProgress,
+                applicationsAssigned, finished,
+                projectsInSetup, competitions, applicationStatusMap);
     }
 
-	/**
-     * Get a list of application ids, where one of the questions is assigned to the current user. This is only for the
-     * collaborators, since the leadapplicant is the default assignee.
-     */
     private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, UserResource user){
         return inProgress.stream().filter(applicationResource -> {
                     ProcessRoleResource role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
@@ -116,7 +96,6 @@ public class ApplicantController {
     }
 
     private final List<ApplicationResource> getApplicationsForProjectsInSetup(List<ProjectResource> resources){
-
         return resources.stream().map(project -> applicationService.getById(project.getApplication())).collect(Collectors.toList());
     }
 }
