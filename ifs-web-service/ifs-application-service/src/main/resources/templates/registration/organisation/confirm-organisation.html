@@ -24,7 +24,7 @@
     <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
     <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true" />
 
-    <a th:href="@{/organisation/create/save-organisation}" name="save-organisation" class="button button-large">Confirm</a>
+    <a th:href="@{/organisation/create/save-organisation}" name="save-organisation" class="button extra-margin">Save and continue</a>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

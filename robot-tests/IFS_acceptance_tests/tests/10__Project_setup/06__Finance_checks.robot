@@ -76,6 +76,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-8787 The Finance checks status in the external Project Setup dashboard.
 ...
 ...               INFUND-4846 As a Project finance team member, I want to view Finance overview and Finance summaries for the consortium
+...
+...               INFUND-4837 Project finance team member able to view all originally submitted details of all partners against the revisions made during the Finance Checks eligibility section to make a clear comparison
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -850,6 +852,73 @@ Project finance can see finance breakdown for different categories
        And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 503,248
        [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
+Project finance user can review Lead-partner's Changes to finances during the Finance Checks eligibility before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link        css=a.eligibility-0
+    When the user clicks the button/link         link=Review all changes to project finances
+    Then the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
+    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+
+Project finance user can review Lead-partner's Project finances in Changes-to-finances page before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Project finances section
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    Then the categories are verified for Project finances section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
+
+Project finance user can review Lead-partner's Section changes in Changes-to-finances page before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Section changes
+    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+    Then the categories are verified for Section changes    1   £ 0     £ 0      £ 0    £ 0      £ 0       £ 0        £ 0
+    And the user verifies the table heading for Changes-from-submitted-finances
+
+Project finance user can review Lead-partner's Overall cost for Changes-from-submitted-finances before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
+    And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
+
+Project finance user can review Partner's Changes to finances during the Finance Checks eligibility before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Finance checks
+    When the user clicks the button/link        css=a.eligibility-2
+    Then the user clicks the button/link        link=Review all changes to project finances
+    And the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
+    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+
+Project finance user can review Partner's Project finances in Changes-to-finances page before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Project finances section
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    Then the categories are verified for Project finances section   1   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
+
+Project finance user can review Partner's Section changes in Changes-to-finances page before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Section changes
+    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+    Then the categories are verified for Section changes    1   £ 0     £ 0      £ 0    £ 0      £ 0       £ 0        £ 0
+    And the user verifies the table heading for Changes-from-submitted-finances
+
+Project finance user can review Partner's Overall cost for Changes-from-submitted-finances before the revisions made
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
+    And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
+    And the user clicks the button/link     link=Finance checks
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095
     [Tags]
@@ -1393,6 +1462,300 @@ Project finance user can view Updated Finance summaries for the consortium
     Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
     And the Total calculation for Finance summaries are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
 
+Project finance user can view Lead-partner's Changes to finances during the Finance Checks eligibility
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Finance checks
+    When the user clicks the button/link        css=a.eligibility-0
+    Then the user clicks the button/link        link=View changes to finances
+    And the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
+    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+
+Project finance user can view Lead-partner's Project finances in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Project finances section
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    Then the categories are verified for Project finances section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
+
+Project finance user can view Lead-partner's Section changes in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Section changes
+    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+    Then the categories are verified for Section changes    1   £ 55,980     £ 1,954      £ -98,200    £ 9,548      £ -70,000       £ -3,970        £ 10,200
+
+Project finance user can view Lead-partner's Changes-from-submitted-finances in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user verifies the table heading for Changes-from-submitted-finances
+
+#1.materials section
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Materials Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    # the below figures are listed as:     RowNumber      Action      Section
+    Given the user verifies the Action and Section for Changes-from-submitted-finances       16  Change  Materials
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    When the user verifies the table heading for the specified section  16  Item  Generator  test  #Materials
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    Then the revised categories are verified for specified Section      18      Cost per item       5010        100
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     19  -49,100
+
+#2.overheads section
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Overheads Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(13) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    Then the user verifies the Action and Section for Changes-from-submitted-finances       13  Change  Overheads
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    And the user verifies the table heading for the specified section  13  Rate Type  None  Custom Amount  #Overheads
+    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
+    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) td:nth-of-type(2)  1954
+    Then the revised cost is verified for the specified section     15  0
+
+#3.capital usage section
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Capital-usage Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(28) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    Then the user verifies the Action and Section for Changes-from-submitted-finances       28    Change    Capital usage
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    And the user verifies the table heading for the specified section    28  Item description  Depreciating Stuff  test  #Capital-usage
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    Then the revised categories are verified for specified Section       29     New or existing     Existing    New
+    And the revised categories are verified for specified Section        31     Net present value   1060    10600
+    And the revised categories are verified for specified Section        32     Residual value      600     500
+    And the revised categories are verified for specified Section        33     Utilisation     60      50
+    And the revised categories are verified for specified Section        34     Net cost    276.00      5050.00
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     35      4,774
+
+#4.other costs section
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Other-costs Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(79) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    When the user verifies the Action and Section for Changes-from-submitted-finances       79     Change     Other costs
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    Then the user verifies the table heading for the specified section    79  Description and justification of cost  Some more costs  some other costs  #Other-costs
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    And the revised categories are verified for specified Section       80      Total     550     5000
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     81      4,450
+
+#5.Travel and subsistence section
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Travel-and-subsistence Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(67) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    And the user verifies the Action and Section for Changes-from-submitted-finances      67      Change      Travel and subsistence
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    And the user verifies the table heading for the specified section    67  Purpose of journey  To visit colleagues  test   #Travel-and-subsistence
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    And the revised categories are verified for specified Section       68      Number of times     15      10
+    And the revised categories are verified for specified Section       69      Cost each       199     100
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     70      -1,985
+
+#6.Subcontracting section
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Subcontracting Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    # the below figures are listed as:     RowNumber      Action      Section
+    Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(52) td:nth-of-type(1)
+    When the user verifies the Action and Section for Changes-from-submitted-finances      52      Change      Subcontracting
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    Then the user verifies the table heading for the specified section   52  Subcontractor name  Developers   test  #Subcontracting
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    And the revised categories are verified for specified Section      54      Role      To develop stuff      Develop
+    And the revised categories are verified for specified Section       55      Cost      45000     10600
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     56      -34,400
+
+#7. Labour section
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Labour Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    And the user verifies the Action and Section for Changes-from-submitted-finances      1    Change    Labour
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    Then the user verifies the table heading for the specified section    1     Role   Role 1   test  #Labour
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    And the revised categories are verified for specified Section      2      Gross annual salary     100     120000
+    And the revised categories are verified for specified Section       3      Days to be spent        200     100
+    Then the revised cost is verified for the specified section     4       52,087
+
+Project finance user can view Lead-partner's Overall cost difference after Changes-from-submitted-finances
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   -94,488
+    And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
+
+Project finance user can view Partner's Changes to finances during the Finance Checks eligibility
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Finance checks
+    When the user clicks the button/link        css=a.eligibility-2
+    Then the user clicks the button/link        link=View changes to finances
+    And the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
+    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+
+Project finance user can view Partner's Project finances in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Project finances section
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    Then the categories are verified for Project finances section   1   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
+
+Project finance user can view Partner's Section changes in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Section changes
+    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+    Then the categories are verified for Section changes    1   £ 56,697     £ 9,078      £ -98,200    £ 9,548      £ -70,000       £ -3,970        £ 10,200
+
+Project finance user can view Partner's Changes-from-submitted-finances in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user verifies the table heading for Changes-from-submitted-finances
+
+#1.materials section
+Project finance user can view Partner's Changes-from-submitted-finances for Materials Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    # the below figures are listed as:     RowNumber      Action      Section
+    Given the user verifies the Action and Section for Changes-from-submitted-finances       16  Change  Materials
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    When the user verifies the table heading for the specified section  16      Item    Generator   test  #Materials
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    Then the revised categories are verified for specified Section      18      Cost per item       5010        100
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     19  -49,100
+
+#2.overheads section
+Project finance user can view Partner's Changes-from-submitted-finances for Overheads Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(13) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    Then the user verifies the Action and Section for Changes-from-submitted-finances       13  Change  Overheads
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    And the user verifies the table heading for the specified section   13      Rate Type       None        Custom Amount  #Overheads
+    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
+    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) td:nth-of-type(2)  9078
+    Then the revised cost is verified for the specified section     15  0
+
+#3.capital usage section
+Project finance user can view Partner's Changes-from-submitted-finances for Capital-usage Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(28) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    Then the user verifies the Action and Section for Changes-from-submitted-finances       28    Change    Capital usage
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    And the user verifies the table heading for the specified section    28      Item description       Depreciating Stuff      test  #Capital-usage
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    Then the revised categories are verified for specified Section       29     New or existing     Existing    New
+    And the revised categories are verified for specified Section        31     Net present value   1060    10600
+    And the revised categories are verified for specified Section        32     Residual value      600     500
+    And the revised categories are verified for specified Section        33     Utilisation     60      50
+    And the revised categories are verified for specified Section        34     Net cost    276.00      5050.00
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     35      4,774
+
+#4.other costs section
+Project finance user can view Partner's Changes-from-submitted-finances for Other-costs Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(79) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    When the user verifies the Action and Section for Changes-from-submitted-finances       79     Change     Other costs
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    Then the user verifies the table heading for the specified section    79    Description and justification of cost       Some more costs     some other costs  #Other-costs
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    And the revised categories are verified for specified Section       80      Total     550     5000
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     81      4,450
+
+#5.Travel and subsistence section
+Project finance user can view Partner's Changes-from-submitted-finances for Travel-and-subsistence Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(67) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    And the user verifies the Action and Section for Changes-from-submitted-finances      67      Change      Travel and subsistence
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    And the user verifies the table heading for the specified section  67       Purpose of journey      To visit colleagues     test   #Travel-and-subsistence
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    And the revised categories are verified for specified Section       68      Number of times     15      10
+    And the revised categories are verified for specified Section       69      Cost each       199     100
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     70      -1,985
+
+#6.Subcontracting section
+Project finance user can view Partner's Changes-from-submitted-finances for Subcontracting Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    # the below figures are listed as:     RowNumber      Action      Section
+    Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(52) td:nth-of-type(1)
+    When the user verifies the Action and Section for Changes-from-submitted-finances      52      Change      Subcontracting
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    Then the user verifies the table heading for the specified section   52     Subcontractor name      Developers      test  #Subcontracting
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    And the revised categories are verified for specified Section      54      Role      To develop stuff      Develop
+    And the revised categories are verified for specified Section       55      Cost      45000     10600
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     56      -34,400
+
+#7. Labour section
+Project finance user can view Partner's Changes-from-submitted-finances for Labour Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1)
+    # the below figures are listed as:     RowNumber      Action      Section
+    And the user verifies the Action and Section for Changes-from-submitted-finances      1    Change    Labour
+    # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
+    Then the user verifies the table heading for the specified section   1      Role    Role 1     test  #Labour
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    And the revised categories are verified for specified Section      2      Gross annual salary     100     120000
+    And the revised categories are verified for specified Section       3      Days to be spent        200     100
+    Then the revised cost is verified for the specified section     4       52,087
+
+Project finance user can view Partner's Overall cost difference after Changes-from-submitted-finances
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   -86,647
+    And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
+
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]
@@ -1468,7 +1831,7 @@ Non Lead Partner can view Finance checks page
 
 *** Keywords ***
 
-the table row has expected values   
+the table row has expected values
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 503,248
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(4)    £ 145,497
@@ -1495,7 +1858,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user clicks the button/link     jQuery=button:contains("Successful")
     the user should see the element    jQuery=td:contains("Successful")
     the user clicks the button/link     jQuery=a:contains("Competition")
-    the user clicks the button/link     jQuery=button:contains("Manage funding notifications")
+    the user clicks the button/link     jQuery=a:contains("Manage funding notifications")
     the user selects the checkbox      ids[0]
     the user selects the checkbox      ids[1]
     the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button[1]
@@ -1929,6 +2292,7 @@ the Total calculation for Finance summaries are verified
     the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
     the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
     the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
+
 all the categories are verified
     [Arguments]  ${row_number}  ${total}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${subcontracting}  ${travel}   ${other_costs}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${total}
@@ -1939,3 +2303,79 @@ all the categories are verified
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${subcontracting}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)  ${travel}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}
+
+the user verifies the table heading for Project finances section
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(1)   Total costs
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(2)   % Grant
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(3)   Funding sought
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(4)   Other public sector funding
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(5)   Contribution to project
+
+# the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+the categories are verified for Project finances section
+    [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${total_costs}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${percentage_grant}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${funding_sought}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${other_public_sector_funding}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${contribution_to_project}
+
+the user verifies the table heading for Section changes
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(1)   Labour
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(2)   Overheads
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(3)   Materials
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(4)   Capital usage
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(5)   Subcontracting
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(6)   Travel and subsistence
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(7)   Other costs
+
+# the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+the categories are verified for Section changes
+    [Arguments]  ${row_number}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${labour}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${overheads}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${materials}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${capital_usage}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${sub_contracting}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)   ${travel_and_subsistence}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)   ${other_costs}
+
+the user verifies the table heading for Changes-from-submitted-finances
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(1)   Action
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(2)   Section
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(3)   Detail
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(4)   Submitted
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(5)   Updated
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(6)   Cost
+
+the user verifies the Action and Section for Changes-from-submitted-finances
+    [Arguments]  ${row_number}  ${action}  ${section}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${action}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${section}
+
+the revised cost is verified for the specified section
+    [Arguments]  ${row_number}  ${cost}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${cost}
+
+the user verifies the table heading for the specified section
+    [Arguments]  ${row_number}   ${heading_1}  ${heading_2}  ${heading_3}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${heading_1}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${heading_2}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${heading_3}
+
+the revised categories are verified for Other-costs Section
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) th:nth-of-type(1)   Description and justification of cost
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(3)   Some more costs
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(4)   some other costs
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) th:nth-of-type(1)   Total
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) td:nth-of-type(1)   550
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) td:nth-of-type(2)   5000
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(3) td:nth-of-type(1)   4,450
+
+# the below figures are listed as:     RowNumber    Detail   Submitted    Updated
+the revised categories are verified for specified Section
+    [Arguments]  ${row_number}  ${detail}  ${submitted}  ${updated}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${detail}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
+

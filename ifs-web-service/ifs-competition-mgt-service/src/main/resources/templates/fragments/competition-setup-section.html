@@ -123,7 +123,7 @@
                 </div>
             </th:block>
             <input type="hidden" name="autosaveInnovationAreaIds" />
-            <div class="form-group">
+            <div class="form-group" th:unless="${isSetupAndLive}">
                 <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
             </div>
 
@@ -795,13 +795,16 @@
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
                              th:value="${milestoneEntry.key}" />
+                      <input type="hidden"
+                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
+                             th:value="${milestoneEntry.value.editable}" />
                       <td class="time">
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   class="form-control width-large"
                                   required="required"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                  th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}">
+                                  th:readonly="${!milestoneEntry.value.readonly}">
                               <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
                                       th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
@@ -827,7 +830,7 @@
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
-                                 th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}" />
+                                 th:readonly="${milestoneEntry.value.readonly}" />
                       </td>
                       <td class="month">
                           <input type="number"
@@ -839,7 +842,7 @@
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
-                                th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}"/>
+                                th:readonly="${milestoneEntry.value.readonly}"/>
                       </td>
                       <td class="year" >
                           <input type="number"
@@ -851,7 +854,7 @@
                                  class="form-control width-small"
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
-                                 th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}" />
+                                 th:readonly="${milestoneEntry.value.readonly}" />
                           </td>
                     </tr>
                 </tbody>

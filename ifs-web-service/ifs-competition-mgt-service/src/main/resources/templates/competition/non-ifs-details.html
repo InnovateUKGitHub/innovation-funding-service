@@ -133,6 +133,7 @@
                     </div>
                 </div>
             </fieldset>
+
             <fieldset>
                 <div id="closeDate" th:class="${#fields.hasErrors('closeDate*')}? 'form-group error':'form-group'">
                     <h3 class="heading-small no-margin">Competition close date / submission deadline</h3>
@@ -188,22 +189,23 @@
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                    th:field="${form.closeDate.year}" />
                         </div>
-                    </div>
-                    <div class="date-group">
-                        <label class="form-label" for="closeDate-time">
-                            <span>Time</span>
-                        </label>
-                        <select th:class="${#fields.hasErrors('closeDate.time') ? 'form-control field-error' : 'form-control'}"
-                                id="closeDate-time"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
-                                th:field="${form.closeDate.time}" >
-                            <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
-                                    th:text="${time.display}" th:value="${time}" th:selected="${time == form.closeDate.time}"></option>
-                        </select>
+                        <div class="time">
+                            <label class="form-label" for="closeDate-time">
+                                <span>Time</span>
+                            </label>
+                            <select th:class="${#fields.hasErrors('closeDate.time') ? 'form-control field-error' : 'form-control'}"
+                                    id="closeDate-time"
+                                    required="required"
+                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                    th:field="${form.closeDate.time}" >
+                                <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
+                                        th:text="${time.display}" th:value="${time}" th:selected="${time == form.closeDate.time}"></option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </fieldset>
+
             <fieldset>
                 <div id="applicantNotifiedDate" th:class="${#fields.hasErrors('applicantNotifiedDate*')}? 'form-group error':'form-group'">
                     <h3 class="heading-small no-margin">Applicants notified date</h3>
