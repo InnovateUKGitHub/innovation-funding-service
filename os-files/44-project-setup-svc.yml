@@ -27,13 +27,13 @@ items:
           name: project-setup-svc
           livenessProbe:
             httpGet:
-              path: /project-setup/health
+              path: /project-setup/service-monitoring/live
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /project-setup/health
+              path: /project-setup/service-monitoring/ready
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 10

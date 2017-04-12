@@ -27,13 +27,13 @@ items:
           name: data-service
           livenessProbe:
             httpGet:
-              path: /monitoring/health
+              path: /service-monitoring/live
               port: 8080
             initialDelaySeconds: 120
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /monitoring/health
+              path: /service-monitoring/ready
               port: 8080
             initialDelaySeconds: 120
             periodSeconds: 10

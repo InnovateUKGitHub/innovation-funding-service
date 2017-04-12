@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .anonymous().and()
             .authorizeRequests()
                 .antMatchers("/silstub/**").permitAll()
-                .antMatchers("/monitoring/**").permitAll()
+                .antMatchers("/service-monitoring/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling().and()

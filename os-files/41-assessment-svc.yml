@@ -27,13 +27,13 @@ items:
           name: assessment-svc
           livenessProbe:
             httpGet:
-              path: /assessment/health
+              path: /assessment/service-monitoring/live
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /assessment/health
+              path: /assessment/service-monitoring/ready
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 10

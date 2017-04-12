@@ -41,14 +41,13 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
     private static boolean shouldBeAuthenticated(final HttpServletRequest httpRequest) {
         String uri = httpRequest.getRequestURI();
         return !(
-            uri.equals("/health") ||
+            uri.startsWith("/service-monitoring/") ||
             uri.startsWith("/js/") ||
             uri.startsWith("/css/") ||
             uri.startsWith("/images/") ||
             uri.equals("/favicon.ico") ||
             uri.startsWith("/prototypes") ||
-            uri.startsWith("/error") ||
-            uri.startsWith("/jolokia/")
+            uri.startsWith("/error")
         );
     }
 }
