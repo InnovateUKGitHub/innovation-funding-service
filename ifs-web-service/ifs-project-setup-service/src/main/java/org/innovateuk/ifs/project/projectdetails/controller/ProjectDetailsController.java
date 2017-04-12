@@ -188,11 +188,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false, true);
         Supplier<String> successView = () -> redirectToFinanceContact(projectId, organisation);
 
-        validateIfTryingToInviteSelf(loggedInUser.getEmail(), financeContactForm.getEmail(), validationHandler);
+        validateIfTryingToInviteSelf(loggedInUser.getEmail(), financeContactForm.getInviteEmail(), validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, financeContactForm.getName(), financeContactForm.getEmail(), organisation);
+            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, financeContactForm.getName(), financeContactForm.getInviteEmail(), organisation);
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
 
