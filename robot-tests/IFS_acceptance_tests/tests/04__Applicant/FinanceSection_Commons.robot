@@ -73,7 +73,7 @@ the applicant completes the application details
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains(Save)
     the user clicks the button/link       jQuery=button:contains("innovation area")
-    the user should see the element       jQuery=a:contains("Application details")
+    the user should see the element       jQuery=a:contains("Project details")
     the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
     the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
     the user clicks the button/link       jQuery=button:contains(Save)
