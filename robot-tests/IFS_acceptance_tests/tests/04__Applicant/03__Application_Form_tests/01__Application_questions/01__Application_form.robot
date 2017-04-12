@@ -51,7 +51,7 @@ Research Category : Autosave not applicable
     the user should see the element      jQuery=label:contains("Industrial research")
     and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
     and the user clicks the button/link     jQuery=a:contains("Application details")
-    and the user should see the element     jQuery=span:contains(Chosen research category: Feasibility studies)
+    and the user should see the element     jQuery=span:contains("Chosen research category: Feasibility studies")
     And the finance summary page should show a warning
 
 Application details: Innovation Area - Materials and manufacturing
@@ -92,6 +92,9 @@ Autosave in the form questions
     [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
+    When the user clicks the button/link    link=Application details
+    then the application details need to be autosaved
+    and the user clicks the button/link     link=Application overview
     And the user clicks the button/link    link=Project summary
     When the user edits the project summary question
     And the user reloads the page
@@ -157,6 +160,14 @@ The user clicks the section link and is redirected to the correct section
     The user clicks the button/link    link=${link}
     The user should be redirected to the correct page    ${url}
     The user clicks the button/link    link=Application overview
+
+the application details need to be autosaved
+   the user enters text to a text field      application.durationInMonths   22
+   wait for autosave
+   the user clicks the button/link      link=Application overview
+   the user clicks the button/link      link=Application details
+   the user should not see the text in the element       application.durationInMonths   22
+
 
 the Applicant edits the Project summary
     Clear Element Text    css=#form-input-1039 .editor

@@ -108,7 +108,7 @@ Application details server side
     And the user should see an error    Please enter the full title of the project.
     # TODO commented due to INFUND-9066
     # And the user should see an error    Please select a research category.
-    # And The user should see an error    Please select a innnovation area.
+    # And The user should see an error    Please select an innnovation area.
     And the user should see the element    css=.error-summary-list
     [Teardown]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
