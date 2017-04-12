@@ -1,5 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 bootRun {
     addResources = false
 }
@@ -8,9 +6,11 @@ configurations {
     providedRuntime
 }
 
+
 jar {
     baseName = 'ifs-application-service'
 }
+prepareDockerFile.appName = jar.baseName
 
 //
 // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
@@ -54,17 +54,6 @@ processTestResources {
         expand project.properties
     }
 }
-
-task prepareDockerFile (type: Copy) {
-    outputs.upToDateWhen { false }
-    from '../docker/'
-    into 'src/main/docker/'
-    include 'Dockerfile-template'
-    rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [version: project.properties['version'], app_name: 'ifs-application-service'])
-
-}
-
 
 
 task buildDocker( type:Docker, dependsOn: build) {

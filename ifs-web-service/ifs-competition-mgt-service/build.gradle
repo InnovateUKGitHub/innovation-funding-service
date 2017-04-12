@@ -1,8 +1,7 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 jar {
     baseName = 'management'
 }
+prepareDockerFile.appName = jar.baseName
 
 //
 // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
@@ -43,15 +42,6 @@ processResources {
     if (project.hasProperty("profile") && project.profile == "automated") {
         exclude '**/application.properties'
     }
-}
-
-task prepareDockerFile (type: Copy) {
-    outputs.upToDateWhen { false }
-    from '../docker/'
-    into 'src/main/docker/'
-    include 'Dockerfile-template'
-    rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [version: project.properties['version'], app_name: 'management'])
 }
 
 

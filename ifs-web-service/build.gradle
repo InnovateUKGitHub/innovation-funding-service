@@ -8,6 +8,23 @@ project(':ifs-web-service').bootRepackage {
 
 jar.enabled=false
 
+subprojects {
+
+    task prepareDockerFile (type: Copy) {
+
+        ext.appName = 'default-service-name'
+        outputs.upToDateWhen { false }
+        from '../docker/'
+        into 'src/main/docker/'
+        include 'Dockerfile-template'
+        rename 'Dockerfile-template', 'Dockerfile'
+        filter {
+            it.replaceAll('@version@',  project.properties['version']).replaceAll('@app_name@',  appName)
+        }
+    }
+}
+
+
 task endpointDocumentation(type: Task) {
     dependsOn "ifs-application-service:test"
     dependsOn "ifs-assessment-service:test"
