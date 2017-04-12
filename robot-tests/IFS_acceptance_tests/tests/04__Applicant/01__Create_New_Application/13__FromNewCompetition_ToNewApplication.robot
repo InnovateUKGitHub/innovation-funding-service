@@ -232,7 +232,7 @@ Organisation client side validation when yes
     When the user enters value to field    Research and development spend    6666666666666666666666666666666666666666666
     And the user moves focus to the element    jQuery=label:contains("employees") + input
     Then the user should see an error message in the field    Research and development spend    This field should be 2147483647 or lower.
-    # TODO This error message will be different after INFUND-8080
+    # TODO This error message will be different after INFUND-8819
     And the user enters value to field    Research and development spend    2147483647
     When the user enters text to a text field    jQuery=label:contains("employees") + input    22.4
     Then the user should see a field and summary error      This field can only accept whole numbers.
