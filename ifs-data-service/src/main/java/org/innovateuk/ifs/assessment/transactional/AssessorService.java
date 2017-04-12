@@ -20,4 +20,10 @@ public interface AssessorService {
             securedType = ProfileResource.class,
             description = "Comp Admins can read any Assessor profile")
     ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(
+            value = "NOTIFY_ASSESSORS",
+            description = "Comp admins and execs can notify all assessors of their assignments for a competition")
+    ServiceResult<Void> notifyAssessorsByCompetition(long competitionId);
 }
