@@ -491,7 +491,7 @@ the user completes the new account creation
     the user clicks the button/link        jQuery=a:contains("INNOVATE LTD")
     the user selects the checkbox     address-same
     wait for autosave
-    the user clicks the button/link     jQuery=button:contains("Save organisation and continue")
+    the user clicks the button/link     jQuery=button:contains("Continue")
     then the user should not see an error in the page
     the user clicks the button/link     jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register

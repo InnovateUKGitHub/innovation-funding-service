@@ -21,8 +21,6 @@
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
-    <h2 class="heading-medium">Organisation</h2>
-
     <th:block th:insert="fragments/addresses :: organisation-details" />
 
     <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" class="extra-margin">
