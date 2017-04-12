@@ -391,7 +391,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long loggedInUserId = 1L;
         long projectId = 4L;
-        //long organisationId = 21L;
         long applicationId = 16L;
 
         UserResource loggedInUser = newUserResource().withId(loggedInUserId).withFirstName("Steve").withLastName("Smith").withEmail("Steve.Smith@empire.com").build();
@@ -401,33 +400,15 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         String invitedUserEmail = "Steve.Smith@empire.com";
 
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
-        //OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
-/*        List<ProjectUserResource> availableUsers = newProjectUserResource().
-                withUser(loggedInUser.getId(), loggedInUserId).
-                withOrganisation(organisationId).
-                withRoleName(PARTNER).
-                build(2);*/
-        //ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-
-/*        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
-                .withProject(projectId).withNames("exist test", invitedUserName)
-                .withEmails("existing@test.com", invitedUserEmail)
-                .withOrganisation(organisationId)
-                .withLeadOrganisation(leadOrganisation.getId()).build(2);*/
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.isUserLeadPartner(projectResource.getId(), loggedInUser.getId())).thenReturn(false);
-        //when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
-        //when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
-        //when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
-        //when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
 
         mockMvc.perform(post("/project/{id}/details/project-manager", projectId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param(INVITE_PM, INVITE_PM).
                 param("name", invitedUserName).
                 param("email", invitedUserEmail)
-                //.param("organisation", organisationId + "")
         ).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/details")).
