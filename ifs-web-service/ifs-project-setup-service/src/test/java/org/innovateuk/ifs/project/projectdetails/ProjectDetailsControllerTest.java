@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
@@ -22,6 +23,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -56,6 +58,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,6 +70,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private static final String SAVE_FC = "save_fc";
     private static final String INVITE_FC = "invite_fc";
     private static final String SAVE_PM = "save_pm";
+    private static final String INVITE_PM = "invite_pm";
 
 	@Before
 	public void setUp() {
@@ -380,6 +384,106 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andReturn();
 
         verify(projectService).updateFinanceContact(projectId, organisationId, invitedUserId);
+    }
+
+    @Test
+    public void testInviteSelfToProjectManager() throws Exception {
+
+        long loggedInUserId = 1L;
+        long projectId = 4L;
+        //long organisationId = 21L;
+        long applicationId = 16L;
+
+        UserResource loggedInUser = newUserResource().withId(loggedInUserId).withFirstName("Steve").withLastName("Smith").withEmail("Steve.Smith@empire.com").build();
+        setLoggedInUser(loggedInUser);
+
+        String invitedUserName = "Steve Smith";
+        String invitedUserEmail = "Steve.Smith@empire.com";
+
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+        //OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
+/*        List<ProjectUserResource> availableUsers = newProjectUserResource().
+                withUser(loggedInUser.getId(), loggedInUserId).
+                withOrganisation(organisationId).
+                withRoleName(PARTNER).
+                build(2);*/
+        //ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+
+/*        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+                .withProject(projectId).withNames("exist test", invitedUserName)
+                .withEmails("existing@test.com", invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withLeadOrganisation(leadOrganisation.getId()).build(2);*/
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(projectService.isUserLeadPartner(projectResource.getId(), loggedInUser.getId())).thenReturn(false);
+        //when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        //when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
+        //when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        //when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+
+        mockMvc.perform(post("/project/{id}/details/project-manager", projectId).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param(INVITE_PM, INVITE_PM).
+                param("name", invitedUserName).
+                param("email", invitedUserEmail)
+                //.param("organisation", organisationId + "")
+        ).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/details")).
+                andReturn();
+
+        verify(projectService, never()).saveProjectInvite(any(InviteProjectResource.class));
+        verify(projectService, never()).inviteProjectManager(Mockito.anyLong(), Mockito.any(InviteProjectResource.class));
+    }
+
+    @Test
+    public void testInviteSelfToFinanceContact() throws Exception {
+
+        long loggedInUserId = 1L;
+        long projectId = 4L;
+        long organisationId = 21L;
+        long applicationId = 16L;
+
+        UserResource loggedInUser = newUserResource().withId(loggedInUserId).withFirstName("Steve").withLastName("Smith").withEmail("Steve.Smith@empire.com").build();
+        setLoggedInUser(loggedInUser);
+
+        String invitedUserName = "Steve Smith";
+        String invitedUserEmail = "Steve.Smith@empire.com";
+
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+        OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
+        List<ProjectUserResource> availableUsers = newProjectUserResource().
+                withUser(loggedInUser.getId(), loggedInUserId).
+                withOrganisation(organisationId).
+                withRoleName(PARTNER).
+                build(2);
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+
+        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+                .withProject(projectId).withNames("exist test", invitedUserName)
+                .withEmails("existing@test.com", invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withLeadOrganisation(leadOrganisation.getId()).build(2);
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
+        when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+
+        mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param(INVITE_FC, INVITE_FC).
+                param("name", invitedUserName).
+                param("email", invitedUserEmail).
+                param("organisation", organisationId + "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/finance-contact")).
+                andReturn();
+
+        verify(projectService, never()).saveProjectInvite(any(InviteProjectResource.class));
+        verify(projectService, never()).inviteFinanceContact(Mockito.anyLong(), Mockito.any(InviteProjectResource.class));
     }
 
     @Test
