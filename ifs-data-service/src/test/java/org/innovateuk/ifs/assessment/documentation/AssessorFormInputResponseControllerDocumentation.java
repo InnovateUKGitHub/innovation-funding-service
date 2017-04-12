@@ -6,12 +6,7 @@ import org.innovateuk.ifs.assessment.controller.AssessorFormInputResponseControl
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
 
 import java.util.List;
 
@@ -22,8 +17,6 @@ import static org.innovateuk.ifs.assessment.documentation.AssessmentFeedbackAggr
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseFields;
 import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseResourceBuilder;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -84,25 +77,13 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
         Long formInputId = 2L;
         String value = RandomStringUtils.random(5000);
 
-        FormInput input = newFormInput().build();
-
         AssessorFormInputResponseResource response = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
                 .withValue(value)
                 .build();
 
-        FormInputResponse mappedResponse = newFormInputResponse()
-                .withFormInputs(input)
-                .withValue(value)
-                .build();
-
-        BindingResult bindingResult = new DataBinder(mappedResponse).getBindingResult();
-        ValidationMessages expected = new ValidationMessages(bindingResult);
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess(response));
-        when(assessorFormInputResponseServiceMock.mapToFormInputResponse(response)).thenReturn(mappedResponse);
-        when(validationUtilMock.validateResponse(mappedResponse, true)).thenReturn(bindingResult);
-        when(assessorFormInputResponseServiceMock.saveUpdatedFormInputResponse(response)).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)

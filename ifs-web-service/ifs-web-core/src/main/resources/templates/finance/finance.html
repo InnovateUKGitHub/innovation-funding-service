@@ -659,7 +659,7 @@
                         </div>
                     </div>
                     <div class="form-group alignright inline">
-                        <label th:for="${'section-total-'+subSection.id+'-total'}">
+                        <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-calculate'}">
                             <span>Enter the total cost of overheads as calculated in the spreadsheet £</span>
                         </label>
                         <input type="text"
@@ -1128,7 +1128,7 @@
             </div>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'error' : ''">
-                <label class="form-label" th:for="${'cost-'+ type + '-'+costIdentifier+'-role'}">
+                <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-role'}">
                   <span>Role of the subcontractor in the project and description of the work they’ll do</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
                 </label>
