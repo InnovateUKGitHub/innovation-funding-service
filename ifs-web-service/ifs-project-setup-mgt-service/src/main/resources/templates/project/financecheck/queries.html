@@ -79,7 +79,7 @@
                     <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
                     <legend th:unless="${post.attachments.isEmpty()}" class="heading-small">Supporting documentation</legend>
                     <th:block th:each="attachment : ${post.attachments}">
-                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a><br />
                     </th:block>
                 </th:block>
                 <th:block th:unless="${iteration.index == 0}">
@@ -92,9 +92,9 @@
                             </small>
                         </p>
                         <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
-                        <h3 th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</h3>
+                        <h3 th:unless="${post.attachments.isEmpty()}" class="heading-small">Supporting documentation</h3>
                         <th:block th:each="attachment : ${post.attachments}">
-                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                            <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}">file</a>
                         </th:block>
                     </div>
                 </th:block>
@@ -145,7 +145,7 @@
                         <fieldset>
                             <legend class="heading-small">Supporting documentation</legend>
                             <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
                                 <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                             </th:block>
                         </fieldset>

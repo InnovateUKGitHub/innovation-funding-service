@@ -53,9 +53,9 @@
 
                         <th:block th:if="${post.attachments.size() > 0}">
                             <h3 class="heading-small">Supporting documentation</h3>
-                            <ul class="list-bullet">
+                            <ul>
                                 <li th:each="attachment : ${post.attachments}">
-                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a><br />
                                 </li>
                             </ul>
                         </th:block>
@@ -69,7 +69,7 @@
                             <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}">Content of the comment.</p>
                             <h3 th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</h3>
                             <th:block th:each="attachment : ${post.attachments}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a><br />
                             </th:block>
                         </article>
                     </th:block>
@@ -117,7 +117,7 @@
                             <h3 class="heading-small">Supporting documentation</h3>
                             <ul>
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                    <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                                    <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}">filename</a>
                                     <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                                 </li>
                             </ul>

@@ -134,14 +134,12 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
-    public String viewFinanceChecks(Model model,
-                                    @PathVariable("projectId") final Long projectId,
-                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String viewFinanceChecks(Model model, @PathVariable("projectId") final Long projectId,
+                                    @ModelAttribute("loggedInUser") UserResource loggedInUser)
+    {
 
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
-
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
-
         model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, null, null));
 
         return "project/finance-checks";
@@ -157,17 +155,12 @@ public class ProjectFinanceChecksController {
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
-
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
-
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        attachments.forEach(id -> financeCheckService.deleteFile(id));
+        attachments.forEach(financeCheckService::deleteFile);
         saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId, queryId);
-
-        ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
-        model.addAttribute("model", viewModel);
-        FinanceChecksQueryResponseForm form = new FinanceChecksQueryResponseForm();
-        model.addAttribute(FORM_ATTR, form);
+        model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, attachments, queryId));
+        model.addAttribute(FORM_ATTR, new FinanceChecksQueryResponseForm());
         return "project/finance-checks";
     }
 
@@ -185,7 +178,6 @@ public class ProjectFinanceChecksController {
                                HttpServletResponse response) {
 
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
-
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         Supplier<String> failureView = () -> {
@@ -228,7 +220,7 @@ public class ProjectFinanceChecksController {
                             attachments.forEach(attachment -> financeCheckService.deleteFile(attachment));
                             cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
                         }
-                        return validationHandler.failNowOrSucceedWith( saveFailureView, () -> {
+                        return validationHandler.failNowOrSucceedWith(saveFailureView, () -> {
                             cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
                             return redirectToQueries(projectId);
                         });
@@ -264,7 +256,7 @@ public class ProjectFinanceChecksController {
             MultipartFile file = form.getAttachment();
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-            if(result.isSuccess()) {
+            if (result.isSuccess()) {
                 attachments.add(result.getSuccessObject().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
             }
@@ -360,7 +352,7 @@ public class ProjectFinanceChecksController {
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        attachments.forEach(( id -> financeCheckService.deleteFile(id)));
+        attachments.forEach((id -> financeCheckService.deleteFile(id)));
 
         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
 
@@ -369,7 +361,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility")
-    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser){
+    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
@@ -385,7 +377,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser){
+    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
@@ -397,7 +389,7 @@ public class ProjectFinanceChecksController {
         OrganisationResource organisationResource = organisationService.getOrganisationById(compositeId.getOrganisationId());
 
         Map<Long, String> attachmentLinks = new HashMap<>();
-        if(attachments != null) {
+        if (attachments != null) {
             attachments.forEach(id -> {
                 ServiceResult<FileEntryResource> file = financeCheckService.getAttachmentInfo(id);
                 if (file.isSuccess()) {
@@ -410,7 +402,7 @@ public class ProjectFinanceChecksController {
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
-                getQueriesAndPopulateViewModel(compositeId.getProjectId(),compositeId.getOrganisationId()),
+                getQueriesAndPopulateViewModel(compositeId.getProjectId(), compositeId.getOrganisationId()),
                 approved,
                 attachmentLinks,
                 FinanceChecksQueryConstraints.MAX_QUERY_WORDS,
@@ -445,7 +437,7 @@ public class ProjectFinanceChecksController {
                 for (PostResource p : query.posts) {
                     ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
                     List<Long> projectUserIds = projectService.getProjectUsersForProject(projectId).stream().map(ProjectUserResource::getUser).distinct().collect(Collectors.toList());
-                    if(projectUserIds.contains(p.author.getId())) {
+                    if (projectUserIds.contains(p.author.getId())) {
                         UserResource user = userService.findById(p.author.getId());
                         post.setUsername(user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
 
@@ -487,7 +479,7 @@ public class ProjectFinanceChecksController {
 
     private void saveAttachmentsToCookie(HttpServletResponse response, List<Long> attachmentFileIds, Long projectId, Long organisationId, Long queryId) {
         String jsonState = JsonUtil.getSerializedObject(attachmentFileIds);
-        cookieUtil.saveToCookie(response, getCookieName(projectId,organisationId, queryId), jsonState);
+        cookieUtil.saveToCookie(response, getCookieName(projectId, organisationId, queryId), jsonState);
     }
 
     private List<Long> loadAttachmentsFromCookie(HttpServletRequest request, Long projectId, Long organisationId, Long queryId) {
@@ -496,7 +488,8 @@ public class ProjectFinanceChecksController {
         String json = cookieUtil.getCookieValue(request, getCookieName(projectId, organisationId, queryId));
 
         if (json != null && !"".equals(json)) {
-            TypeReference<List<Long>> listType = new TypeReference<List<Long>>() {};
+            TypeReference<List<Long>> listType = new TypeReference<List<Long>>() {
+            };
             ObjectMapper mapper = new ObjectMapper();
             try {
                 attachments = mapper.readValue(json, listType);
@@ -533,7 +526,7 @@ public class ProjectFinanceChecksController {
         return "project/financecheck/eligibility";
     }
 
-    private void populateProjectFinanceDetails(CompetitionResource competition, ApplicationResource application, ProjectResource project, Long organisationId, List<SectionResource> allSections, UserResource user, ApplicationForm form, BindingResult bindingResult, Model model){
+    private void populateProjectFinanceDetails(CompetitionResource competition, ApplicationResource application, ProjectResource project, Long organisationId, List<SectionResource> allSections, UserResource user, ApplicationForm form, BindingResult bindingResult, Model model) {
 
         SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
 
@@ -558,7 +551,7 @@ public class ProjectFinanceChecksController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler.getProjectFinanceModelManager(organisation.getOrganisationType())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeHandler.getProjectFinanceModelManager(organisation.getOrganisationType())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
     }
