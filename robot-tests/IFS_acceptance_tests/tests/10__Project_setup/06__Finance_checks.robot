@@ -259,6 +259,7 @@ New query can be posted
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
+    Then the user should not see the element  jQuery=.button:contains("Post Query")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
 
 Query sections are no longer editable
@@ -470,6 +471,7 @@ Query response can be posted
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post response")
+    Then the user should not see the element   jQuery=.button:contains("Post response")
 
 Query section now becomes read-only
     [Documentation]    INFUND-4843
@@ -662,6 +664,7 @@ New note can be posted
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save note")
+    Then the user should not see the element  jQuery=.button:contains("Save note")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
 
 Note sections are no longer editable
@@ -691,26 +694,26 @@ Non pdf uploads not allowed for note comments
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
 
-Finance contact can upload a pdf file to note comments
+Project finance can upload a pdf file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file      name=attachment   ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
-Finance contact can remove the file from note comments
+Project finance can remove the file from note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    name=removeAttachment
     Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
     And the user should not see an error in the page
 
-Finance contact can re-upload the file to note comments
+Project finance can re-upload the file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
     Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
 
-Finance contact can view the file in note comments
+Project finance can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
     Given the user should see the element    link=${valid_pdf}
@@ -719,13 +722,13 @@ Finance contact can view the file in note comments
     And the user goes back to the initial page after having checked the attachment
     And the user should see the element    jQuery=button:contains("Save comment")
 
-Finance contact can upload more than one file to note comments
+Project finance can upload more than one file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
 
-Finance contact can still view both files in note comments
+Project finance can still view both files in note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=form li:nth-of-type(1) a:contains("${valid_pdf}")
@@ -763,6 +766,7 @@ Note comment can be posted
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
+    Then the user should not see the element   jQuery=.button:contains("Save comment")
 
 Note comment section now becomes read-only
     [Documentation]    INFUND-7756
@@ -780,7 +784,7 @@ Project Finance user can view academic Jes form
     Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
-Proj finance can see the within limit research participation level
+Project finance can see the within limit research participation level
     [Documentation]    INFUND-7580
     [Tags]
     When the user clicks the button/link  link=Project finance overview

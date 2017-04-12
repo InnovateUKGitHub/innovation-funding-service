@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -96,7 +95,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
                 .withFormInput(formInputId)
                 .withValue(newValue)
                 .build();
-        RestResult<ValidationMessages> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
+        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
         assertTrue(updateResult.isSuccess());
 
         RestResult<List<AssessorFormInputResponseResource>> allResponsesAfterResult = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
@@ -121,7 +120,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
                 .build();
 
         loginSteveSmith();
-        RestResult<ValidationMessages> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
+        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }
