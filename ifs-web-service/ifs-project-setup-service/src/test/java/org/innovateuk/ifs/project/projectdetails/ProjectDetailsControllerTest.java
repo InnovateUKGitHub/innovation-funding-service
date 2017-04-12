@@ -9,8 +9,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -436,6 +436,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.saveProjectInvite(any())).thenReturn(serviceSuccess());
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         InviteStatus testStatus = CREATED;
 
@@ -630,6 +631,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
 
+        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("organisation", String.valueOf(organisationId)))
@@ -676,6 +679,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

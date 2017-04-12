@@ -236,6 +236,8 @@ public class BaseUnitTest {
     public CategoryRestService categoryRestServiceMock;
     @Mock
     public OrganisationDetailsRestService organisationDetailsRestService;
+    @Mock
+    public ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Spy
     @InjectMocks

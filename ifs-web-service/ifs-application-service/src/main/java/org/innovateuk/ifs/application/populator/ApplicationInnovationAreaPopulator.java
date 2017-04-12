@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.viewmodel.InnovationAreaViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,16 +14,14 @@ public class ApplicationInnovationAreaPopulator {
     @Autowired
     private ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
 
-    @Autowired
-    private ApplicationRestService applicationRestService;
 
-    public InnovationAreaViewModel populate(Long applicationId, Long questionId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+    public InnovationAreaViewModel populate(ApplicationResource applicationResource, Long questionId) {
+
 
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
-        innovationAreaViewModel.setAvailableInnovationAreas(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId).getSuccessObject());
+        innovationAreaViewModel.setAvailableInnovationAreas(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationResource.getId()).getSuccessObject());
         innovationAreaViewModel.setQuestionId(questionId);
-        innovationAreaViewModel.setApplicationId(applicationId);
+        innovationAreaViewModel.setApplicationId(applicationResource.getId());
         innovationAreaViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());
 
         setInnovationAreaChoice(applicationResource, innovationAreaViewModel);
