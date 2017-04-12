@@ -19,7 +19,7 @@
             <th:block th:insert="fragments/elements :: competition-title (competition=${model.competition})" />
             <h1 class="heading-xlarge">Public content</h1>
         </div>
-        <div class="panel">
+        <div class="message-alert">
             This information will be publicly viewable by prospective applicants.
         </div>
 
@@ -31,25 +31,15 @@
             </ul>
         </div>
 
-        <ul class="list-overview">
-            <th:block th:each="section : ${model.sections}">
-                <li class="grid-row section">
-                    <div class="column-two-thirds">
-                        <h2 class="heading-small">
-                            <a th:text="${section.type.text}" th:href="@{/competition/setup/public-content/{sectionPath}/{competitionId}{edit}(competitionId=${model.competition.id},sectionPath=${section.type.path},edit=${model.isSectionComplete(section) ? '' : '/edit'})}"></a>
-                        </h2>
-                    </div>
-                    <div th:if="${model.isSectionComplete(section)}">
-                        <img class="section-status complete"
-                             src="/images/field/field-done-right.png"
-                             th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
-                             width="30"
-                             height="30"
-                             th:alt="'The &quot;'+${section.type.text}+'&quot; section is marked as done'"
-                             th:title="'The &quot;'+${section.type.text}+'&quot; section is marked as done'"/>
-                    </div>
-                </li>
-            </th:block>
+        <ul class="task-list extra-margin">
+            <li th:each="section : ${model.sections}">
+                <div class="task">
+                    <h2 class="heading-small">
+                        <a th:text="${section.type.text}" th:href="@{/competition/setup/public-content/{sectionPath}/{competitionId}{edit}(competitionId=${model.competition.id},sectionPath=${section.type.path},edit=${model.isSectionComplete(section) ? '' : '/edit'})}"></a>
+                    </h2>
+                </div>
+                <div th:if="${model.isSectionComplete(section)}" class="task-status-complete"><span>Complete</span></div>
+            </li>
         </ul>
         <div class="extra-margin">
             <p th:if="${model.hasBeenPublished()}"
