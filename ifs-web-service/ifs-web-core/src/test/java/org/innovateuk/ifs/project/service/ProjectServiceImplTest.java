@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -15,9 +15,6 @@ import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.ProjectServiceImpl;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import org.junit.Test;
@@ -78,11 +75,11 @@ public class ProjectServiceImplTest {
         Long organisationId = 2L;
         Long financeContactId = 3L;
 
-        when(projectRestService.updateFinanceContact(projectId, organisationId, financeContactId)).thenReturn(restSuccess());
+        when(projectRestService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactId)).thenReturn(restSuccess());
 
-        service.updateFinanceContact(projectId, organisationId, financeContactId);
+        service.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactId);
 
-        verify(projectRestService).updateFinanceContact(projectId, organisationId, financeContactId);
+        verify(projectRestService).updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactId);
     }
 
     @Test
