@@ -42,7 +42,8 @@ Summary:All the sections are present
 
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #TODO INFUND-8925
     Then The user should see the text in the page    Days left to submit
     And the days remaining should be correct (Top of the page)    2068-01-28
 
