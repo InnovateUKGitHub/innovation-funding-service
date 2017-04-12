@@ -1,5 +1,5 @@
 *** Settings ***
-Resource  ../defaultResources.robot
+Resource          ../defaultResources.robot
 
 *** Variables ***
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
@@ -13,8 +13,12 @@ the assessment start period changes in the db in the past
 
 the calculation of the remaining days should be correct
     [Arguments]    ${END_DATE}
+    ${GET_TIME}=    get time    hour    UTC
+    ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
-    ${STARTING_DATE}=    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d    exclude_millis=true
+    ${STARTING_DATE}=    Run keyword if    ${TIME} > 12    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
+    ...    exclude_millis=true
+    ...    ELSE    set variable    ${CURRENT_DATE}
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
@@ -45,15 +49,19 @@ the days remaining should be correct (Top of the page)
 
 the days remaining should be correct (Applicant's dashboard)
     [Arguments]    ${END_DATE}
+    ${GET_TIME}=    get time    hour    UTC
+    ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
-    ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
-    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${CURRENT_DATE}    verbose    exclude_millis=true
+    ${STARTING_DATE}=    Run keyword if    ${TIME} > 11    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
+    ...    exclude_millis=true
+    ...    ELSE    set variable    ${CURRENT_DATE}
+    ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${END_DATE}    ${CURRENT_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.in-progress li:nth-child(2) .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 get yesterday
-    ${today} =    get time
+    ${today} =    Get Time
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     [Return]    ${yesterday}
 
@@ -64,53 +72,53 @@ get today
 
 get tomorrow full
     ${today}=    get time
-    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%-d %B %Y  exclude_millis=true
+    ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%-d %B %Y    exclude_millis=true
     # This format is like: 4 February 2017
-    [Return]  ${tomorrow}
+    [Return]    ${tomorrow}
 
 get tomorrow day
     ${today}=    get time
-    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%d  exclude_millis=true
-    [Return]  ${tomorrow}
+    ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%d    exclude_millis=true
+    [Return]    ${tomorrow}
 
 get the day after tomorrow
     ${today}=    get time
-    ${aftertomorrow} =    Add time To Date  ${today}  2 days  result_format=%d  exclude_millis=true
-    [Return]  ${aftertomorrow}
+    ${aftertomorrow} =    Add time To Date    ${today}    2 days    result_format=%d    exclude_millis=true
+    [Return]    ${aftertomorrow}
 
 get two days after tomorrow
     ${today}=    get time
-    ${twoaftertomorrow} =    Add time To Date  ${today}  3 days  result_format=%d  exclude_millis=true
-    [Return]  ${twoaftertomorrow}
+    ${twoaftertomorrow} =    Add time To Date    ${today}    3 days    result_format=%d    exclude_millis=true
+    [Return]    ${twoaftertomorrow}
 
 get the day after tomorrow full next year
     ${today} =    get time
-    ${tommorow} =  Add time To Date  ${today}  2 days  result_format=%-d %B  exclude_millis=true
-    ${nextyear} =  get next year
-    ${tomorrow_nextyear} =  Catenate  ${tommorow}  ${nextyear}
-    [Return]  ${tomorrow_nextyear}
+    ${tommorow} =    Add time To Date    ${today}    2 days    result_format=%-d %B    exclude_millis=true
+    ${nextyear} =    get next year
+    ${tomorrow_nextyear} =    Catenate    ${tommorow}    ${nextyear}
+    [Return]    ${tomorrow_nextyear}
 
 get tomorrow month
     ${today}=    get time
-    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%m  exclude_millis=true
-    [Return]  ${tomorrow}
+    ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%m    exclude_millis=true
+    [Return]    ${tomorrow}
 
 get tomorrow year
     ${today}=    get time
-    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%Y  exclude_millis=true
-    [Return]  ${tomorrow}
+    ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%Y    exclude_millis=true
+    [Return]    ${tomorrow}
 
 get next year
-    ${year} =  get time    year    NOW + 370d
-    [Return]  ${year}
+    ${year} =    get time    year    NOW + 370d
+    [Return]    ${year}
 
 get comp id from comp title
-    [Arguments]  ${title}
-    Connect to Database     @{database}
-    ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
-    Log  ${result}
+    [Arguments]    ${title}
+    Connect to Database    @{database}
+    ${result} =    query    SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
+    Log    ${result}
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
-    ${result} =  get from list  ${result}  0
-    ${competitionId} =  get from list  ${result}  0
-    Log  ${competitionId}
-    [Return]  ${competitionId}
+    ${result} =    get from list    ${result}    0
+    ${competitionId} =    get from list    ${result}    0
+    Log    ${competitionId}
+    [Return]    ${competitionId}
