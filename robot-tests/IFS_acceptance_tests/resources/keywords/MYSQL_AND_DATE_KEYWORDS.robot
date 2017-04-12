@@ -59,6 +59,7 @@ get yesterday
 
 get today
     ${today} =    Get Current Date    result_format=%-d %B %Y    exclude_millis=true
+    # This format is like: 4 February 2017
     [Return]    ${today}
 
 get tomorrow full
