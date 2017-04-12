@@ -6,10 +6,15 @@ Documentation     INFUND-2601 As a competition administrator I want a view of al
 ...               INFUND-7377 Create a 'Manage funding applications' page to view and manage funding decision notifications
 ...
 ...               INFUND-8065 Filter on 'Funding decision' dashboard
+...
+...               INFUND-8624 Successful applications moved to 'Project setup' upon receiving funding decision notification email
+...
+...               INFUND-8854 Set competition state to Inform when ALL applications either set to Successful or Unsuccessful and final decision email sent
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  Applicant
 Resource          ../../resources/defaultResources.robot
+Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
@@ -38,7 +43,7 @@ An application is selected and the buttons become enabled
 Internal user puts the application on hold
     [Documentation]  INFUND-7376
     [Tags]  HappyPath
-    Given the internal user marks the application as  On hold
+    Given the internal user marks the application as  On hold  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
 
 Proj Finance user can send Fund Decision notification
     [Documentation]  INFUND-7376 INFUND-7377 INFUND-8813
@@ -80,23 +85,50 @@ Internal user can filter notified applications
 External user reads his email
     [Documentation]  INFUND-7376
     [Tags]  HappyPath
-    Given the external user reads his email and can see the correct status  Awaiting  ${onHoldSubject}  ${onholdmessage}
+    Given the external user reads his email and can see the correct status  Awaiting  ${onHoldSubject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
     Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
     And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
 
 Unsuccessful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377
     [Tags]
-    Given the internal user marks the application as  Unsuccessful
-    And the internal user sends an email notification  Unsuccessful  ${unsuccSubject}  ${unsuccMessage}
-    Then the external user reads his email and can see the correct status  Unsuccessful  ${unsuccSubject}  ${unsuccMessage}
+    Given the internal user marks the application as  Unsuccessful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
+    And the internal user sends an email notification  Unsuccessful  ${unsuccSubject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    Then the external user reads his email and can see the correct status  Unsuccessful  ${unsuccSubject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
 
 Successful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377
+    [Tags]  HappyPath
+    Given the internal user marks the application as  Successful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
+    And the internal user sends an email notification  Successful  ${successSubject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    Then the external user reads his email and can see the correct status  Successful  ${successSubject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
+
+Once Successful and Sent you cannot change your mind
+    [Documentation]  INFUND-8651
     [Tags]
-    Given the internal user marks the application as  Successful
-    And the internal user sends an email notification  Successful  ${successSubject}  ${successMessage}
-    Then the external user reads his email and can see the correct status  Successful  ${successSubject}  ${successMessage}
+    Given log in as a different user          &{internal_finance_credentials}
+    When the user navigates to the page       ${funders_panel_competition_url}/funding
+    Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
+    When the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
+    Then the user should not see the element  jQuery=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
+    # TODO Add a check that button is disabled INFUND-9132
+
+Successful applications are turned into Project
+    [Documentation]  INFUND-8624
+    [Tags]  HappyPath
+    Given log in as a different user      ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
+    Then the user should see the element  jQuery=.projects-in-setup li:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+
+Once all final decisions have been made and emails are sent Comp moves to Inform status
+    [Documentation]  INFUND-8854
+    [Tags]
+    Given the internal user marks the application as  Unsuccessful  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  2
+    And the internal user sends an email notification  Unsuccessful  ${unsuccSubject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}  ${FUNDERS_PANEL_APPLICATION_2_NUMBER}
+    Then the external user reads his email and can see the correct status  Unsuccessful  ${unsuccSubject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_2_TITLE}   worth.email.test.two+fundfailure@gmail.com
+    Given log in as a different user      &{Comp_admin1_credentials}
+    When the user navigates to the page   ${CA_Live}
+    Then the user should see the element  jQuery=section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
+
 
 *** Keywords ***
 Custom Suite Setup
@@ -133,30 +165,30 @@ the user cancels the process needs to re-select the reciepients
     the user clicks the button/link  jQuery=button:contains("Write and send email")
 
 the internal user marks the application as
-    [Arguments]  ${decision}
+    [Arguments]  ${decision}  ${application}  ${tr}
     log in as a different user       &{Comp_admin1_credentials}
     the user navigates to the page   ${funders_panel_competition_url}
     the user clicks the button/link  jQuery=a:contains("Input and review funding decision")
-    the user selects the checkbox    app-row-1
+    the user selects the checkbox    app-row-${tr}
     the user clicks the button/link  jQuery=button:contains("${decision}")
-    the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("${decision}")
+    the user should see the element  jQuery=td:contains("${application}") ~ td:contains("${decision}")
     the user clicks the button/link  jQuery=a:contains("Competition")
 
 the internal user sends an email notification
-    [Arguments]  ${decision}  ${subject}  ${message}
+    [Arguments]  ${decision}  ${subject}  ${message}  ${application}  ${id}
     the user navigates to the page   ${funders_panel_competition_url}
     the user clicks the button/link  jQuery=a:contains("Manage funding notifications")
-    the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("${decision}")
-    the user selects the checkbox    app-row-63
+    the user should see the element  jQuery=td:contains("${application}") ~ td:contains("${decision}")
+    the user selects the checkbox    app-row-${id}
     the user clicks the button/link  jQuery=button:contains("Write and send email")
     the user enters text to a text field  css=#subject  ${subject}
     the user enters text to a text field  css=.editor  ${message}
     the user clicks the button/link       jQuery=button:contains("Send email to all applicants")
-    the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
+    the user should see the element       jQuery=td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 the external user reads his email and can see the correct status
-    [Arguments]  ${decision}  ${subject}  ${message}
-    log in as a different user       ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
-    the user reads his email         ${test_mailbox_one}+fundsuccess@gmail.com  ${subject}  ${message}
+    [Arguments]  ${decision}  ${subject}  ${message}  ${application}  ${mail}
+    log in as a different user       ${mail}  ${short_password}
+    the user reads his email         ${mail}  ${subject}  ${message}
     the user navigates to the page   ${server}/applicant/dashboard
-    the user should see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("${decision}")
+    the user should see the element  jQuery=div:contains("${application}") + div:contains("${decision}")
