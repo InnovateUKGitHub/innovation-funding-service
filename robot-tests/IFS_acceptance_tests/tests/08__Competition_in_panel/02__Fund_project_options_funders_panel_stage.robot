@@ -45,7 +45,7 @@ Proj Finance user can send Fund Decision notification
     [Tags]  HappyPath
     [Setup]  log in as a different user      &{internal_finance_credentials}
     Given the user navigates to the page     ${funders_panel_competition_url}
-    When the user clicks the button/link     jQuery=button:contains("Manage funding notifications")
+    When the user clicks the button/link     jQuery=a:contains("Manage funding notifications")
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     And the user should see the element      jQuery=button.disabled:contains("Write and send email")
     When the user selects the checkbox       app-row-63
@@ -145,7 +145,7 @@ the internal user marks the application as
 the internal user sends an email notification
     [Arguments]  ${decision}  ${subject}  ${message}
     the user navigates to the page   ${funders_panel_competition_url}
-    the user clicks the button/link  jQuery=button:contains("Manage funding notifications")
+    the user clicks the button/link  jQuery=a:contains("Manage funding notifications")
     the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("${decision}")
     the user selects the checkbox    app-row-63
     the user clicks the button/link  jQuery=button:contains("Write and send email")
