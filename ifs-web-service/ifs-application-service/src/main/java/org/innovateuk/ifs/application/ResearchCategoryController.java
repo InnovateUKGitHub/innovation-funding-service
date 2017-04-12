@@ -4,7 +4,9 @@ import org.innovateuk.ifs.application.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.populator.ApplicationResearchCategoryPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -28,7 +30,6 @@ import java.util.function.Supplier;
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/research-category")
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
-
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
@@ -38,29 +39,47 @@ public class ResearchCategoryController {
     private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
+    private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @GetMapping
     public String getResearchCategories(Model model, @PathVariable Long applicationId, @PathVariable Long questionId,
                                         HttpServletRequest request) {
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
 
-        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
+        checkIfAllowed(questionId, applicationResource);
+
+        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+            throw new ForbiddenActionException();
+        }
+
+        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationResource, questionId);
 
         model.addAttribute("model", researchCategoryViewModel);
+        model.addAttribute("form", new ResearchCategoryForm());
 
         return "application/research-categories";
     }
 
     @PostMapping
     public String submitResearchCategoryChoice(@ModelAttribute("form") @Valid ResearchCategoryForm researchCategoryForm,
+                                               BindingResult bindingResult,
                                                HttpServletResponse response,
-                                               BindingResult bindingResult, ValidationHandler validationHandler,
+                                               ValidationHandler validationHandler,
                                                Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
 
-        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
+        checkIfAllowed(questionId, applicationResource);
+
+        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationResource, questionId);
 
         model.addAttribute("model", researchCategoryViewModel);
 
@@ -75,9 +94,14 @@ public class ResearchCategoryController {
     }
 
     private RestResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm researchCategoryForm) {
-
         Long researchCategoryId = Long.valueOf(researchCategoryForm.getResearchCategoryChoice());
 
         return applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, researchCategoryId);
+    }
+
+    private void checkIfAllowed(Long questionId, ApplicationResource applicationResource) throws ForbiddenActionException {
+        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+            throw new ForbiddenActionException();
+        }
     }
 }
