@@ -2,41 +2,64 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.resource.State;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
+import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_NOTIFY_FAILED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -45,6 +68,8 @@ import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -54,6 +79,11 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private AssessorService assessorService = new AssessorServiceImpl();
+
+    @Before
+    public void setUp() throws Exception {
+        ReflectionTestUtils.setField(assessorService, "webBaseUrl", "https://ifs-local-dev");
+    }
 
     @Test
     public void registerAssessorByHash_callCorrectServicesAndHaveSuccessfulOutcome() throws Exception {
@@ -232,5 +262,252 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(userMapperMock).mapToResource(user.get());
         inOrder.verify(assessorProfileMapperMock).mapToResource(profile);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void notifyAssessorsByCompetition() throws Exception {
+        Long competitionId = 1L;
+
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withName("Test Competition")
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().minusDays(1))
+                .build();
+
+        List<User> users = newUser()
+                .withFirstName("Johnny", "Mary")
+                .withLastName("Doe", "Poppins")
+                .build(2);
+        List<Assessment> assessments = newAssessment()
+                .withId(2L, 3L)
+                .withActivityState(activityState)
+                .withApplication(
+                        newApplication().withCompetition(competition).build(),
+                        newApplication().withCompetition(competition).build()
+                )
+                .withParticipant(
+                        newProcessRole().withUser(users.get(0)).build(),
+                        newProcessRole().withUser(users.get(1)).build()
+                )
+                .build(2);
+
+        List<EmailContent> emailContents = newEmailContentResource()
+                .build(2);
+
+        List<NotificationTarget> recipients = asList(
+                new UserNotificationTarget(users.get(0)),
+                new UserNotificationTarget(users.get(1))
+        );
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+
+        Notification expectedNotification1 = new Notification(
+                systemNotificationSourceMock,
+                singletonList(recipients.get(0)),
+                AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                asMap(
+                        "name", users.get(0).getName(),
+                        "competitionName", competition.getName(),
+                        "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
+                        "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
+                        "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
+        );
+
+        Notification expectedNotification2 = new Notification(
+                systemNotificationSourceMock,
+                singletonList(recipients.get(1)),
+                AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                asMap(
+                        "name", users.get(1).getName(),
+                        "competitionName", competition.getName(),
+                        "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
+                        "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
+                        "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
+        );
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId)).thenReturn(assessments);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
+
+        when(notificationSender.renderTemplates(expectedNotification1))
+                .thenReturn(serviceSuccess(asMap(recipients.get(0), emailContents.get(0))));
+        when(notificationSender.renderTemplates(expectedNotification2))
+                .thenReturn(serviceSuccess(asMap(recipients.get(1), emailContents.get(1))));
+        when(notificationSender.sendEmailWithContent(expectedNotification1, recipients.get(0), emailContents.get(0)))
+                .thenReturn(serviceSuccess(emptyList()));
+        when(notificationSender.sendEmailWithContent(expectedNotification2, recipients.get(1), emailContents.get(1)))
+                .thenReturn(serviceSuccess(emptyList()));
+
+        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+        inOrder.verify(competitionRepositoryMock).findOne(competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
+        inOrder.verify(notificationSender).renderTemplates(expectedNotification1);
+        inOrder.verify(notificationSender).sendEmailWithContent(expectedNotification1, recipients.get(0), emailContents.get(0));
+        inOrder.verify(notificationSender).renderTemplates(expectedNotification2);
+        inOrder.verify(notificationSender).sendEmailWithContent(expectedNotification2, recipients.get(1), emailContents.get(1));
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.getErrors().isEmpty());
+    }
+
+    @Test
+    public void notifyAssessorsByCompetition_oneEmailPerUser() throws Exception {
+        Long competitionId = 1L;
+
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withName("Test Competition")
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().minusDays(1))
+                .build();
+        User user = newUser().build();
+
+        List<Assessment> assessments = newAssessment()
+                .withId(2L, 3L)
+                .withActivityState(activityState)
+                .withApplication(
+                        newApplication().withCompetition(competition).build(),
+                        newApplication().withCompetition(competition).build()
+                )
+                .withParticipant(
+                        newProcessRole().withUser(user).build(),
+                        newProcessRole().withUser(user).build()
+                )
+                .build(2);
+
+        EmailContent emailContent = newEmailContentResource().build();
+        NotificationTarget recipient = new UserNotificationTarget(user);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+
+        Notification expectedNotification = new Notification(
+                systemNotificationSourceMock,
+                singletonList(recipient),
+                AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                asMap(
+                        "name", user.getName(),
+                        "competitionName", competition.getName(),
+                        "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
+                        "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
+                        "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
+        );
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId)).thenReturn(assessments);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
+
+        when(notificationSender.renderTemplates(expectedNotification))
+                .thenReturn(serviceSuccess(asMap(recipient, emailContent)));
+        when(notificationSender.sendEmailWithContent(expectedNotification, recipient, emailContent))
+                .thenReturn(serviceSuccess(emptyList()));
+
+        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+        inOrder.verify(competitionRepositoryMock).findOne(competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
+        inOrder.verify(notificationSender).renderTemplates(expectedNotification);
+        inOrder.verify(notificationSender).sendEmailWithContent(expectedNotification, recipient, emailContent);
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.getErrors().isEmpty());
+
+    }
+
+    @Test
+    public void notifyAssessorsByCompetition_competitionNotFound() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
+
+        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
+
+        verify(competitionRepositoryMock).findOne(competitionId);
+        verifyNoMoreInteractions(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+
+        assertTrue(serviceResult.isFailure());
+        assertEquals(1, serviceResult.getErrors().size());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void notifyAssessorsByCompetition_oneTransitionFails() throws Exception {
+        Long competitionId = 1L;
+
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .build();
+        List<Assessment> assessments = newAssessment()
+                .withActivityState(activityState)
+                .withId(2L, 3L)
+                .build(2);
+
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
+                .thenReturn(assessments);
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(false);
+
+        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+        inOrder.verify(competitionRepositoryMock).findOne(competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isFailure());
+        assertEquals(1, serviceResult.getErrors().size());
+        assertEquals(ASSESSMENT_NOTIFY_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void notifyAssessorsByCompetition_allTransitionsFail() throws Exception {
+        Long competitionId = 1L;
+
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .build();
+        List<Assessment> assessments = newAssessment()
+                .withActivityState(activityState)
+                .withId(2L, 3L)
+                .build(2);
+
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
+                .thenReturn(assessments);
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(false);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(false);
+
+        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+        inOrder.verify(competitionRepositoryMock).findOne(competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isFailure());
+        assertEquals(2, serviceResult.getErrors().size());
+        assertEquals(ASSESSMENT_NOTIFY_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+        assertEquals(ASSESSMENT_NOTIFY_FAILED.getErrorKey(), serviceResult.getErrors().get(1).getErrorKey());
     }
 }
