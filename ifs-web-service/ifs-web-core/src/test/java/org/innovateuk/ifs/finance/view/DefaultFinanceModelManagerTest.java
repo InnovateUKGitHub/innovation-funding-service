@@ -53,9 +53,7 @@ public class DefaultFinanceModelManagerTest {
 
 	@InjectMocks
 	private DefaultFinanceModelManager manager;
-	
-    @Mock
-    private QuestionService questionService;
+
     @Mock
     private FinanceService financeService;
     @Mock
@@ -70,8 +68,6 @@ public class DefaultFinanceModelManagerTest {
     private ApplicationService applicationService;
     @Mock
     private CompetitionService competitionService;
-	@Mock
-	private OrganisationSizeService organisationSizeService;
 	
     private Model model;
     private Long applicationId;

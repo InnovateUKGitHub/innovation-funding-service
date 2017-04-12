@@ -8,10 +8,12 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
@@ -58,7 +60,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private CompetitionService competitionService;
 
     @Autowired
-    private OrganisationSizeService organisationSizeService;
+    private OrganisationDetailsRestService organisationDetailsRestService;
 
     //TODO: INFUND-7849 - make sure this function is not going to be used anymore
     @Override
@@ -68,12 +70,13 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
             OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
+            List<OrganisationSizeResource> organisationSizes = organisationDetailsRestService.getOrganisationSizes().getSuccessObjectOrThrowException();
             model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
             model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
             model.addAttribute("organisationType", organisationType);
             model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
             model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
-            model.addAttribute("organisationSizes", organisationSizeService.getOrganisationSizes());
+            model.addAttribute("organisationSizes", organisationSizes);
             model.addAttribute("maximumGrantClaimPercentage", applicationFinanceResource.getMaximumFundingLevel());
             model.addAttribute("financeView", "finance");
             model.addAttribute("financeQuestions", CollectionFunctions.simpleToMap(costsQuestions, this::costTypeForQuestion));
@@ -98,12 +101,13 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
             OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
+            List<OrganisationSizeResource> organisationSizes = organisationDetailsRestService.getOrganisationSizes().getSuccessObjectOrThrowException();
             financeViewModel.setOrganisationFinance(applicationFinanceResource.getFinanceOrganisationDetails());
             financeViewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
             financeViewModel.setOrganisationType(organisationType);
             financeViewModel.setOrganisationFinanceId(applicationFinanceResource.getId());
             financeViewModel.setOrganisationFinanceTotal(applicationFinanceResource.getTotal());
-            financeViewModel.setOrganisationSizes(organisationSizeService.getOrganisationSizes());
+            financeViewModel.setOrganisationSizes(organisationSizes);
             financeViewModel.setMaximumGrantClaimPercentage(applicationFinanceResource.getMaximumFundingLevel());
             financeViewModel.setFinanceView("finance");
             financeViewModel.setFinanceQuestions(CollectionFunctions.simpleToMap(costsQuestions, this::costTypeForQuestion));

@@ -2,7 +2,6 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.agreement.service.AgreementService;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
@@ -142,8 +141,6 @@ public class BaseUnitTest {
     public ApplicationService applicationService;
     @Mock
     public CompetitionsRestService competitionRestService;
-    @Mock
-    public AgreementService agreementService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
