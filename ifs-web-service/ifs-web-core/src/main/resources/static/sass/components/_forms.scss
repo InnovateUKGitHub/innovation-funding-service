@@ -27,10 +27,12 @@ div.readonly,
   border-color: $border-colour;
 }
 
-.form-group{
-  .form-finances-subcontracting-cost{
+.form-group {
+
+  .form-finances-subcontracting-cost {
     text-align: right;
   }
+
   &.inline label {
     display:inline-block;
     margin-right: 1em;
@@ -47,7 +49,7 @@ tr.form-group {
     vertical-align: top;
   }
 
-  &.error  {
+  &.error {
     border-left:none;
   }
 }
@@ -57,7 +59,7 @@ tr.form-group {
   border: 4px solid $error-colour;
 }
 
-table td input[type="number"]{
+table td input[type="number"] {
   text-align: right;
 }
 
@@ -129,6 +131,7 @@ select.form-control.width-x-large,
 input.form-control + button.button,
 select.form-control + button.button {
   line-height:1.15;
+
   @include media (mobile) {
     margin-top:15px;
   }
@@ -164,11 +167,20 @@ table td{
 }
 
 .date-group {
-  overflow: hidden;
-  max-width:300px;
+
   > div {
-    width:33%;
-    float:left;
+    float: left;
+    margin-right: 3.5%;
+    width: auto;
+
+    @include media (tablet) {
+      margin-right: 5%;
+    }
+  }
+
+  select {
+    height: 2em; // fix OSX bug for not supporting padding on select
+    width: auto;
   }
 }
 
@@ -179,6 +191,7 @@ tr.form-group-row.error {
   .error-message {
     display: none;
   }
+
   > *:first-child{
     @extend .warning-alert;
     background-position: 10px 50%;
@@ -266,17 +279,15 @@ tr.form-group-row.error {
     overflow:auto; //needed for resize [contenteditable] div
   }
 
-
   .textarea-footer {
     font-size:16px;
     padding: 10px 0px;
-  }
 
-  .textarea-footer .buttonlink {
-    vertical-align:top;
-    padding: 0 10px 0 0;
+    .buttonlink {
+      vertical-align:top;
+      padding: 0 10px 0 0;
+    }
   }
-
 }
 
 td.autosave-info {
@@ -285,22 +296,28 @@ td.autosave-info {
   min-width:70px;
 }
 
-.textarea-footer .count-label,
-.textarea-footer .autosave-info {
-  padding:2px 0;
-  float:right;
-  color: $grey-1;
-  clear:right;
+.textarea-footer {
+
+  .count-label,
+  .autosave-info {
+    padding:2px 0;
+    float:right;
+    color: $grey-1;
+    clear:right;
+  }
 }
 
-.count-label .negative{
-  color: $orange;
-  font-weight: 700;
-}
+.count-label {
 
-.count-label .word-count-reached .count-down{
-  color: $orange;
-  font-weight: 700;
+  .negative {
+    color: $orange;
+    font-weight: 700;
+  }
+
+  .word-count-reached .count-down{
+    color: $orange;
+    font-weight: 700;
+  }
 }
 
 .feedback .textarea-wrapped textarea{
@@ -309,17 +326,17 @@ td.autosave-info {
 
 // ------- file upload -------- //
 
-.upload-section{
+.upload-section {
   overflow: hidden;
   background: $grey-4;
   padding: 16px 16px 8px 16px;
   margin: 16px 0;
-}
 
-.upload-section.error{
-  @extend .warning-alert;
-  background: none;
-  padding-left: 16px;
+  &.error {
+    @extend .warning-alert;
+    background: none;
+    padding-left: 16px;
+  }
 }
 
 .no-js .upload-section .inputfile + label{
@@ -423,9 +440,9 @@ Used to show information and CTAs under wrapped textarea used in application que
     float: right;
   }
 
-  @include media-down(mobile) {
-    &__actions,
-    &__info{
+  &__actions,
+  &__info {
+    @include media-down(mobile) {
       min-height: 1em;
       display: block;
       float: none;
@@ -433,31 +450,33 @@ Used to show information and CTAs under wrapped textarea used in application que
     }
   }
 
-  .buttonlink{
+  .buttonlink {
     margin-bottom: 0;
   }
 
-  .autosave-info{
+  .autosave-info {
     padding: 0;
     float: none;
     font-weight: bold;
   }
 
-  .update-details{
+  .update-details {
     margin-right: 1em;
   }
 
-  @include media-down(mobile) {
-    &__actions,
-    &__info{
+  &__actions,
+  &__info {
+    @include media-down(mobile) {
       min-height: 1em;
       display: block;
       float: none;
       text-align: center;
       padding: 0.25em 0;
     }
+  }
 
-    .buttonlink{
+  .buttonlink {
+    @include media-down(mobile) {
       margin: 0.5em;
     }
   }

@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -33,13 +32,16 @@ public class MilestoneRowForm {
     private MilestoneType milestoneType;
     private String dayOfWeek;
     private ZonedDateTime date;
+    private boolean editable;
 
-    public MilestoneRowForm() {
-
+    public MilestoneRowForm() {}
+    public MilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime) {
+        this(milestoneType, dateTime, true);
     }
 
-    public MilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime) {
+    public MilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime, boolean editable) {
         this.setMilestoneType(milestoneType);
+        this.editable = editable;
         if(dateTime != null) {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
@@ -98,11 +100,6 @@ public class MilestoneRowForm {
         return milestoneType.name();
     }
 
-    public boolean editableForCompetition(CompetitionResource competitionResource) {
-        return competitionResource.isNonIfs() ||
-                !(competitionResource.isSetupAndLive() && date.isBefore(ZonedDateTime.now()));
-    }
-
     public boolean isTimeOption() {
         return WITH_TIME_TYPES.contains(milestoneType);
     }
@@ -129,6 +126,18 @@ public class MilestoneRowForm {
 
     public void setTime(MilestoneTime time) {
         this.time = time;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public boolean isReadonly() {
+        return !editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
     private String getNameOfDay() {
