@@ -23,6 +23,7 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -166,10 +167,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, financeContactForm.getOrganisation(), loggedInUser, financeContactForm, false, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, financeContactForm.getOrganisation(), financeContactForm.getFinanceContact());
+            ServiceResult<Void> updateResult = projectService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, financeContactForm.getOrganisation()), financeContactForm.getFinanceContact());
 
             return validationHandler.addAnyErrors(updateResult, toField("financeContact")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));

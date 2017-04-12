@@ -6,14 +6,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class FinanceCheckDocs {
 
-    public static final FieldDescriptor[] financeCheckApprovalStatusFields = {
-            fieldWithPath("canApprove").description("Is the Finance Check currently in a state where it can be approved"),
-            fieldWithPath("currentState").description("The current state of the Finance Check process"),
-            fieldWithPath("participant").description("The latest ProjectUser to interact with the Finance Check process"),
-            fieldWithPath("internalParticipant").description("The latest internal User to interact with the Finance Check process"),
-            fieldWithPath("modifiedDate").description("The latest time that the Finance Check process was updated")
-    };
-
     public static final FieldDescriptor[] financeCheckSummaryResourceFields = {
             fieldWithPath("projectId").description("Id or project that the status is from"),
             fieldWithPath("projectName").description("Name of project that the status is from"),

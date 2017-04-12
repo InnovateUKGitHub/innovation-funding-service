@@ -226,11 +226,6 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
                         orElse(serviceFailure(forbiddenError())));
     }
 
-    protected ServiceResult<PartnerOrganisation> getPartnerOrganisation(Long projectId, Long organisationId) {
-        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId),
-                notFoundError(PartnerOrganisation.class, projectId, organisationId));
-    }
-
     private boolean findUserAndRole(ProjectParticipantRole role, User currentUser, ProjectUser pu) {
         return pu.getUser().getId().equals(currentUser.getId()) && pu.getRole().equals(role);
     }
