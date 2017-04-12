@@ -28,7 +28,7 @@ public interface ProjectService {
 
     ProjectResource getByApplicationId(Long applicationId);
 
-    ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
+    ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);
 
     ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
 
