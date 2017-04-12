@@ -21,10 +21,7 @@ public interface AssessorFormInputResponseService {
     ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(Long assessmentId, Long questionId);
 
     @PreAuthorize("hasPermission(#response, 'UPDATE')")
-    ServiceResult<AssessorFormInputResponseResource> updateFormInputResponse(AssessorFormInputResponseResource response);
-
-    @PreAuthorize("hasPermission(#response, 'UPDATE')")
-    ServiceResult<Void> saveUpdatedFormInputResponse(AssessorFormInputResponseResource response);
+    ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId);
