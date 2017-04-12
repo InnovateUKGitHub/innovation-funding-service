@@ -109,10 +109,6 @@ include::alert.adoc[]
 == Application
 include::application.adoc[]
 
-[[applicationstatus]]
-== Application Status
-include::application-status.adoc[]
-
 [[ApplicationAssessmentSummary]]
 == Application Assessment Summary
 include::application-assessment-summary.adoc[]

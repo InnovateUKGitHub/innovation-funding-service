@@ -77,7 +77,7 @@ Competition information and search: Valid values
     Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
     And the user enters text to a text field        id=keywords  Search, Testing, Robot
     And the user clicks the button/link             jQuery=.button:contains("Save and return")
-    Then the user should see the element            jQuery=li:nth-of-type(1) img.complete
+    Then the user should see the element            jQuery=li:nth-of-type(1) .task-status-complete
 
 Competition information and search: ReadOnly
     [Documentation]  INFUND-6915
@@ -116,7 +116,7 @@ Summary: User enters valid values and saves
     When the user clicks the button/link       jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element      link=Summary
-    And the user should see the element      css=img[title='The "Summary" section is marked as done']
+    And the user should see the element      jQuery=li:nth-child(2) .task-status-complete
 
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916, INFUND-7486
@@ -130,7 +130,7 @@ Summary: Contains the correct values when viewed
     When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
     And the user enters text to a text field  jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     When the user clicks the button/link      jQuery=button:contains("Save and return")
-    Then the user should see the element      css=img[title='The "Summary" section is marked as done']
+    Then the user should see the element      jQuery=li:nth-child(2) .task-status-complete
 
 Eligibility: server side validation and autosave
     [Documentation]    INFUND-6916, INFUND-7487
@@ -159,7 +159,7 @@ Eligibility: User enters valid values and saves
     When the user clicks the button/link                    jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                     link=Eligibility
-    And the user should see the element                     css=img[title='The "Eligibility" section is marked as done']
+    And the user should see the element                     jQuery=li:nth-child(3) .task-status-complete
 
 Eligibility: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6916, INFUND-7487
@@ -182,7 +182,7 @@ Eligibility: Contains the correct values when viewed, Edit sections
     Then the user clicks the button/link                        jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
     And the user uploads the file                               jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
-    And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
+    And the user should see the element                         jQuery=li:nth-child(3) .task-status-complete
 
 Scope: Server side validation
     [Documentation]  INFUND-7488
@@ -197,7 +197,7 @@ Scope: Add, remove sections and submit
     [Tags]  HappyPath
     Given the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
-    And the user should see the element  css=img[title='The "Scope" section is marked as done']
+    And the user should see the element  jQuery=li:nth-child(4) .task-status-complete
 
 Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
@@ -208,7 +208,7 @@ Dates: Add, remove dates and submit
     And the user should see the text in the page                 Submission deadline, competition closed.
     And the user should see the text in the page                 Applicants notified
     And the user can add and remove multiple event groups
-    And the user should see the element  css=img[title='The "Dates" section is marked as done']
+    And the user should see the element  jQuery=li:nth-child(5) .task-status-complete
 
 How to apply: server side validation and autosave
     [Documentation]    INFUND-7490
@@ -238,7 +238,7 @@ How to apply: User enters valid values and saves
     When the user clicks the button/link                    jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                     link=How to apply
-    And the user should see the element                     css=img[title='The "How to apply" section is marked as done']
+    And the user should see the element                     jQuery=li:nth-child(6) .task-status-complete
 
 How to apply: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6920 INFUND-7602, INFUND-7490
@@ -270,7 +270,7 @@ How to apply: Contains the correct values when viewed, Edit sections
     And the user uploads the file                   jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     And the user uploads the file                   jQuery=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link            jQuery=button:contains("Save and return")
-    And the user should see the element             css=img[title='The "How to apply" section is marked as done']
+    And the user should see the element             jQuery=li:nth-child(6) .task-status-complete
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
@@ -278,7 +278,7 @@ Supporting information: Add, remove sections and submit
     When the user clicks the button/link                         link=Supporting information
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
-    And the user should see the element  css=img[title='The "Supporting information" section is marked as done']
+    And the user should see the element  jQuery=li:nth-child(7) .task-status-complete
 
 Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
@@ -301,7 +301,7 @@ The user is able to edit and publish again
     Then the user should see the element        jQuery=small:contains("${today}")
     And the user should not see the element     jQuery=button:contains("Publish and return")
     When the user clicks the button/link        link=Return to setup overview
-    Then the user should see the element        JQuery=p:contains("${today}")
+    Then the user should see the element        JQuery=.notification:contains("${today}")
 
 Guest user can filter competitions by Keywords
     [Documentation]  INFUND-6923
@@ -498,4 +498,4 @@ the user visits
 
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
-    \    the user should see the element  jQuery=li:nth-child(${i}) img.complete
+    \    the user should see the element  jQuery=li:nth-child(${i}) .task-status-complete

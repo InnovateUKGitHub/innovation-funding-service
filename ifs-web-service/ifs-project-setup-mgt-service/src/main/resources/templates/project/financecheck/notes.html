@@ -84,7 +84,8 @@
 
                 <th:block th:if="${model.noteId != null and note.id == model.noteId}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
                     <h2 class="heading-medium">Add your comment</h2>
-                    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+                    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
+                          method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                         <div th:class="${#fields.hasErrors('comment')}? 'form-group error':'form-group'">
                             <label for="comment" class="form-label-bold">
                                 <span class="heading-small no-margin">Comment</span>
@@ -140,7 +141,7 @@
                         <input type="hidden" id="action" value="postComment">
                         <div class="grid-row extra-margin">
                             <div class="column-half">
-                                <button class="button button-large no-margin">Save comment</button>
+                                <button class="button button-large no-margin" data-content-on-submit="Please wait...">Save comment</button>
                                 <a class="button button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                             </div>
                         </div>
