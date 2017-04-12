@@ -188,10 +188,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false, true);
         Supplier<String> successView = () -> redirectToFinanceContact(projectId, organisation);
 
-        if (loggedInUser.getEmail().equals(financeContactForm.getEmail())) {
-
-            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
-        }
+        validateIfTryingToInviteSelf(loggedInUser.getEmail(), financeContactForm.getEmail(), validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -254,10 +251,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
         Supplier<String> successView = () -> redirectToProjectManager(projectId);
 
-        if (loggedInUser.getEmail().equals(projectManagerForm.getEmail())) {
-
-            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
-        }
+        validateIfTryingToInviteSelf(loggedInUser.getEmail(), projectManagerForm.getEmail(), validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -279,6 +273,14 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 }
             });
         });
+    }
+
+    private void validateIfTryingToInviteSelf(String loggedInUserEmail, String inviteEmail,
+                                              ValidationHandler validationHandler) {
+        if (org.apache.commons.lang3.StringUtils.equals(loggedInUserEmail, inviteEmail)) {
+
+            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
