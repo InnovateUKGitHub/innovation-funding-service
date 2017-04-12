@@ -789,7 +789,7 @@ public class ApplicationFormController {
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);
             if (financePositionKeys.isEmpty() && !OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationType)) {
                 bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
-                return Boolean.FALSE;
+                valid = Boolean.FALSE;
             }
         }
 
