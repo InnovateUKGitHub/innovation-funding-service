@@ -4,24 +4,16 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.assessment.form.AssessmentOverviewForm;
-import org.innovateuk.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
-import org.innovateuk.ifs.assessment.model.AssessmentOverviewModelPopulator;
-import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
-import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.overview.viewmodel.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -208,6 +200,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(sectionRestService.getByCompetitionIdVisibleForAssessment(competition.getId())).thenReturn(restSuccess(sections));
         when(sectionService.getSectionsForCompetitionByType(competition.getId(), SectionType.GENERAL)).thenReturn(sections);
         when(sectionService.filterParentSections(sections)).thenReturn(sections);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questions);
@@ -299,12 +292,12 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/application-overview"));
 
-        InOrder inOrder = inOrder(assessmentService, competitionService, sectionService, questionService, formInputService,
+        InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, sectionService, questionService, formInputService,
                 assessorFormInputResponseService, formInputResponseService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
-        inOrder.verify(sectionService).getSectionsForCompetitionByType(competition.getId(), SectionType.GENERAL);
+        inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(sectionService).filterParentSections(sections);
         inOrder.verify(formInputService).findAssessmentInputsByCompetition(competition.getId());
         inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
@@ -654,9 +647,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .thenReturn(restSuccess(formInputResponseFileEntry));
 
         mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download",
-                    assessmentId,
-                    applicationId,
-                    formInputId))
+                assessmentId,
+                applicationId,
+                formInputId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("The returned file data"))
                 .andExpect(header().string("Content-Type", "text/hello"))

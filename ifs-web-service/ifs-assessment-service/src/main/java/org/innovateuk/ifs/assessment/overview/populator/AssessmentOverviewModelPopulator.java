@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -46,16 +47,25 @@ public class AssessmentOverviewModelPopulator {
 
     @Autowired
     private CompetitionService competitionService;
+
     @Autowired
     private QuestionService questionService;
+
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private SectionRestService sectionRestService;
+
     @Autowired
     private AssessmentService assessmentService;
+
     @Autowired
     private AssessorFormInputResponseService assessorFormInputResponseService;
+
     @Autowired
     private FormInputService formInputService;
+
     @Autowired
     private FormInputResponseService formInputResponseService;
 
@@ -79,7 +89,7 @@ public class AssessmentOverviewModelPopulator {
     private List<AssessmentOverviewSectionViewModel> getSections(AssessmentResource assessment,
                                                                  List<QuestionResource> questions) {
         List<SectionResource> sections = sectionService.filterParentSections(
-                sectionService.getSectionsForCompetitionByType(assessment.getCompetition(), SectionType.GENERAL));
+                sectionRestService.getByCompetitionIdVisibleForAssessment(assessment.getCompetition()).getSuccessObjectOrThrowException());
 
         Map<Long, List<FormInputResource>> formInputs = getFormInputsByQuestion(assessment.getCompetition());
         Map<Long, AssessorFormInputResponseResource> responses = getResponsesByFormInput(assessment.getId());
