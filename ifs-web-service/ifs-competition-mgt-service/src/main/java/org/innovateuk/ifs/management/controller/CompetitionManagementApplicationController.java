@@ -101,9 +101,6 @@ public class CompetitionManagementApplicationController extends BaseController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionSectionModelPopulator;
-
-    @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
 
     @Autowired
@@ -114,9 +111,6 @@ public class CompetitionManagementApplicationController extends BaseController {
 
     @Autowired
     protected CompetitionService competitionService;
-
-    @Autowired
-    protected SectionService sectionService;
 
     @Autowired
     protected ProcessRoleService processRoleService;
@@ -244,40 +238,6 @@ public class CompetitionManagementApplicationController extends BaseController {
             return validationHandler.
                     addAnyErrors(removeFileResult, toField("assessorFeedback")).
                     failNowOrSucceedWith(failureView, () -> redirectToApplicationOverview(competitionId, applicationId));
-        });
-    }
-
-    @GetMapping("/{applicationId}/finances/{organisationId}")
-    public String displayApplicationFinances(@PathVariable("applicationId") final Long applicationId,
-                                             @PathVariable("competitionId") final Long competitionId,
-                                             @PathVariable("organisationId") final Long organisationId,
-                                             @ModelAttribute("form") ApplicationForm form,
-                                             Model model,
-                                             BindingResult bindingResult
-    ) throws ExecutionException, InterruptedException {
-
-        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
-            SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-            List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-            List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
-            UserResource impersonatingUser;
-            try {
-                impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            // so the mode is viewonly
-            form.setAdminMode(true);
-            application.enableViewMode();
-            model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
-            model.addAttribute("applicationReadyForSubmit", false);
-
-            //TODO - INFUND-7498 - ViewModel is changed so template should be changed as well
-            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections, organisationId);
-            model.addAttribute("model", openFinanceSectionViewModel);
-
-            return "comp-mgt-application-finances";
         });
     }
 
