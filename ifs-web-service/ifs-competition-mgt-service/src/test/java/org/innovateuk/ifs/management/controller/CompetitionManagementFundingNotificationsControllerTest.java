@@ -177,7 +177,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("subject", "a subject")
                 .param("message", "a message")
                 .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED))
                 .param("fundingDecisions[" + APPLICATION_ID_TWO + "]", String.valueOf(UNFUNDED)))
@@ -188,27 +187,11 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     }
 
     @Test
-    public void sendNotificationsWithInvalidSubject() throws Exception {
-        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("message", "a message")
-                .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
-                .andExpect(view().name("comp-mgt-send-notifications"))
-                .andExpect(model().attributeHasFieldErrors("form", "subject"))
-                .andReturn();
-
-        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(FundingNotificationResource.class));
-    }
-
-    @Test
     public void sendNotificationsTestWithInvalidMessage() throws Exception {
         when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("subject", "a subject")
                 .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
                 .andExpect(view().name("comp-mgt-send-notifications"))
                 .andExpect(model().attributeHasFieldErrors("form", "message"))
@@ -225,7 +208,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("subject", "a subject")
                 .param("message", "a message"))
                 .andExpect(view().name("comp-mgt-send-notifications"))
                 .andExpect(model().attributeHasFieldErrors("form", "fundingDecisions"))

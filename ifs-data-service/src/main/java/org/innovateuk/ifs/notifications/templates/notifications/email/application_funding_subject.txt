@@ -1,1 +1,1 @@
-Notification regarding your application ${applicationNumber} : ${applicationName}
+Notification regarding your application ${applicationNumber}: ${applicationName}
