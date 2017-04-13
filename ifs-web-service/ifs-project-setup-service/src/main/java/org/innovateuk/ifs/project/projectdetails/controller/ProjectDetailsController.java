@@ -194,29 +194,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return sendInvite(financeContactForm.getName(), financeContactForm.getInviteEmail(), loggedInUser, validationHandler,
                 failureView, successView, projectId, organisation,
                 (project, inviteProjectResource) -> projectService.inviteFinanceContact(project, inviteProjectResource));
-
-
-        /*validateIfTryingToInviteSelf(loggedInUser.getEmail(), financeContactForm.getInviteEmail(), validationHandler);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, financeContactForm.getName(), financeContactForm.getInviteEmail(), organisation);
-
-            ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
-
-            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
-
-                Optional<InviteProjectResource> savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
-
-                if(savedInvite.isPresent()) {
-                    ServiceResult<Void> inviteResult = projectService.inviteFinanceContact(projectId, savedInvite.get());
-                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
-                } else {
-                    return validationHandler.failNowOrSucceedWith(failureView, successView);
-                }
-            });
-        });*/
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
@@ -225,8 +202,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser
-    ) {
+                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
 
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
@@ -237,29 +213,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return sendInvite(projectManagerForm.getName(), projectManagerForm.getInviteEmail(), loggedInUser, validationHandler,
                 failureView, successView, projectId, organisation,
                 (project, inviteProjectResource) -> projectService.inviteProjectManager(project, inviteProjectResource));
-
-/*        validateIfTryingToInviteSelf(loggedInUser.getEmail(), projectManagerForm.getInviteEmail(), validationHandler);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            //Long organisation = projectService.getLeadOrganisation(projectId).getId();
-            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, projectManagerForm.getName(), projectManagerForm.getInviteEmail(), organisation);
-
-            ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
-
-            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
-
-                Optional<InviteProjectResource> savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
-
-                if(savedInvite.isPresent()) {
-                    ServiceResult<Void> inviteResult = projectService.inviteProjectManager(projectId, savedInvite.get());
-                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
-                } else {
-                    return validationHandler.failNowOrSucceedWith(failureView, successView);
-                }
-            });
-        });*/
     }
 
     private String sendInvite(String inviteName, String inviteEmail, UserResource loggedInUser, ValidationHandler validationHandler,
@@ -270,7 +223,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            //Long organisation = projectService.getLeadOrganisation(projectId).getId(); // Used for PM
             InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, inviteName, inviteEmail, organisation);
 
             ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
@@ -281,7 +233,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                         .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
 
                 if(savedInvite.isPresent()) {
-                    //ServiceResult<Void> inviteResult = projectService.inviteProjectManager(projectId, savedInvite.get());
                     ServiceResult<Void> inviteResult = sendInvite.apply(projectId, savedInvite.get());
                     return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
                 } else {
@@ -289,6 +240,14 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 }
             });
         });
+    }
+
+    private void validateIfTryingToInviteSelf(String loggedInUserEmail, String inviteEmail,
+                                              ValidationHandler validationHandler) {
+        if (org.apache.commons.lang3.StringUtils.equalsIgnoreCase(loggedInUserEmail, inviteEmail)) {
+
+            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
@@ -316,51 +275,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             return validationHandler.addAnyErrors(updateResult, toField("projectManager")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
-    }
-
-/*    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @PostMapping(value = "/{projectId}/details/project-manager", params = INVITE_PM)
-    public String inviteProjectManager(Model model,
-                                       @PathVariable("projectId") final Long projectId,
-                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
-                                       @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-        @ModelAttribute("loggedInUser") UserResource loggedInUser
-    ) {
-        populateOriginalProjectManagerForm(projectId, projectManagerForm);
-
-        Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
-        Supplier<String> successView = () -> redirectToProjectManager(projectId);
-
-        validateIfTryingToInviteSelf(loggedInUser.getEmail(), projectManagerForm.getInviteEmail(), validationHandler);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            Long organisation = projectService.getLeadOrganisation(projectId).getId();
-            InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, projectManagerForm.getName(), projectManagerForm.getInviteEmail(), organisation);
-
-            ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
-
-            return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
-
-                Optional<InviteProjectResource> savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
-
-                if(savedInvite.isPresent()) {
-                    ServiceResult<Void> inviteResult = projectService.inviteProjectManager(projectId, savedInvite.get());
-                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
-                } else {
-                    return validationHandler.failNowOrSucceedWith(failureView, successView);
-                }
-            });
-        });
-    }*/
-
-    private void validateIfTryingToInviteSelf(String loggedInUserEmail, String inviteEmail,
-                                              ValidationHandler validationHandler) {
-        if (org.apache.commons.lang3.StringUtils.equalsIgnoreCase(loggedInUserEmail, inviteEmail)) {
-
-            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
-        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
