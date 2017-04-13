@@ -28,10 +28,6 @@ public class FundingNotificationResourceBuilder extends BaseBuilder<FundingNotif
                 .with(uniqueIds());
     }
 
-    public FundingNotificationResourceBuilder withSubject(String... subjects) {
-        return withArray((subject, object) -> setField("subject", subject, object), subjects);
-    }
-
     public FundingNotificationResourceBuilder withMessageBody(String... messageBodies) {
         return withArray((messageBody, object) -> setField("messageBody", messageBody, object), messageBodies);
     }

@@ -9,16 +9,13 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * This is used for sending the subject and content of a notification,
- * e.g. when sending an email to notify of an application funding decision.
+ * Contains the information required when sending an email to notify of an application funding decision.
  */
 public class FundingNotificationResource {
-    private String subject;
     private String messageBody;
     private Map<Long, FundingDecision> fundingDecisions;
 
-    public FundingNotificationResource(String subject, String messageBody, Map<Long, FundingDecision> fundingDecisions) {
-        this.subject = subject;
+    public FundingNotificationResource(String messageBody, Map<Long, FundingDecision> fundingDecisions) {
         this.messageBody = messageBody;
         this.fundingDecisions = fundingDecisions;
     }
@@ -26,14 +23,6 @@ public class FundingNotificationResource {
     public FundingNotificationResource()
     {
         //default constructor
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 
     public String getMessageBody() {
@@ -65,7 +54,6 @@ public class FundingNotificationResource {
         FundingNotificationResource that = (FundingNotificationResource) o;
 
         return new EqualsBuilder()
-                .append(subject, that.subject)
                 .append(messageBody, that.messageBody)
                 .append(fundingDecisions, that.fundingDecisions)
                 .isEquals();
@@ -74,7 +62,6 @@ public class FundingNotificationResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(subject)
                 .append(messageBody)
                 .append(fundingDecisions)
                 .toHashCode();

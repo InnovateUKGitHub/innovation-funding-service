@@ -61,7 +61,7 @@ public class CompetitionManagementFundingNotificationsController {
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
-        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(form.getSubject(), form.getMessage(), form.getFundingDecisions());
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(form.getMessage(), form.getFundingDecisions());
 
         Supplier<String> failureView = () -> getFundingDecisionPage(model, form, competitionId, form.getApplicationIds());
         Supplier<String> successView = () -> successfulEmailRedirect(competitionId);

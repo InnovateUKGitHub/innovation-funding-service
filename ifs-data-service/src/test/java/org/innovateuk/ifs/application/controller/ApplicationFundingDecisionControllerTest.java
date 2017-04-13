@@ -45,7 +45,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     public void testSendNotificationsShouldReturnAppropriateStatusCode() throws Exception {
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
-        FundingNotificationResource notification = new FundingNotificationResource("Subject of notification", "Body of notification message.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
@@ -61,7 +61,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     public void testSendNotificationsButErrorOccursCreatingProjects() throws Exception {
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
-        FundingNotificationResource notification = new FundingNotificationResource("Subject of notification", "Body of notification message.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceFailure(internalServerErrorError()));
 
@@ -78,7 +78,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     public void testSendNotificationsButErrorOccursSendingNotifications() throws Exception {
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
-        FundingNotificationResource notification = new FundingNotificationResource("Subject of notification", "Body of notification message.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceFailure(internalServerErrorError()));

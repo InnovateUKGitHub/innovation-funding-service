@@ -13,7 +13,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.Map;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.FundingNotificationResourceDocs.notificationResourceFields;
+import static org.innovateuk.ifs.documentation.FundingNotificationResourceDocs.fundingNotificationResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -57,7 +57,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     @Test
     public void sendNotifications() throws Exception {
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED, 3L, ON_HOLD);
-        FundingNotificationResource notification = new FundingNotificationResource("Subject of notification", "Body of notification message.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
@@ -66,7 +66,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
                 .andDo( this.document.snippets(
-                        requestFields(notificationResourceFields)
+                        requestFields(fundingNotificationResourceFields)
                 ));
     }
 }

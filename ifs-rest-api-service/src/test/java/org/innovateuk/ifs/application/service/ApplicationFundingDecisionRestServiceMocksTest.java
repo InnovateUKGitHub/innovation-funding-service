@@ -42,7 +42,7 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
     public void testSendFundingDecision() {
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
 
-        FundingNotificationResource notification = new FundingNotificationResource("Subject", "Body.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Body.", decisions);
 
         String expectedUrl = applicationFundingDecisionRestURL + "/sendNotifications";
         setupPostWithRestResultExpectations(expectedUrl, notification, HttpStatus.OK);

@@ -181,7 +181,6 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
 
             Long applicationId = pair.getKey();
-            //Application application = applicationRepository.findOne(applicationId);
             Application application = applications.stream().filter(x -> x.getId() == applicationId).findFirst().get();
 
             Map<String, Object> perNotificationTargetArguments = new HashMap<>();
@@ -189,7 +188,6 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             perNotificationTargetArguments.put("applicationNumber", applicationId);
             return Pair.of(pair.getValue(), perNotificationTargetArguments);
         });
-        //globalArguments.put("subject", notificationResource.getSubject());
         globalArguments.put("message", fundingNotificationResource.getMessageBody());
 
         List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);

@@ -127,10 +127,9 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 application2.getId(), FundingDecision.UNFUNDED,
                 application3.getId(), FundingDecision.ON_HOLD);
 
-        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Subject", "The message body.", decisions);
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
 
-        Map<String, Object> expectedGlobalNotificationArguments = asMap(
-                "message", fundingNotificationResource.getMessageBody());
+        Map<String, Object> expectedGlobalNotificationArguments = asMap("message", fundingNotificationResource.getMessageBody());
 
         Map<NotificationTarget, Map<String, Object>> expectedTargetSpecificNotificationArguments = asMap(
                 application1LeadApplicantTarget, asMap("applicationName", application1.getName(), "applicationNumber", application1.getId()),
@@ -193,7 +192,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
                 application1.getId(), FundingDecision.FUNDED,
                 application2.getId(), FundingDecision.UNFUNDED);
-        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Subject", "The message body.", decisions);
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
 
         Notification expectedFundingNotification =
                 new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, emptyMap());
