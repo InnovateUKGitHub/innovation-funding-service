@@ -755,9 +755,9 @@ Project Finance still has a link to the spend profile after approval
     [Tags]
     When the user clicks the button/link           jQuery=td:nth-child(6) a
     Then the user should see the text in the page  Project spend profile
-    And the user clicks the button/link            link=${Katz_Name}-spend-profile.csv
-    And the user clicks the button/link            link=${Meembee_Name}-spend-profile.csv
-    And the user clicks the button/link            link=${Zooveo_Name}-spend-profile.csv
+    And the user clicks the button/link            link=${Katz_Name}-spend-profile.csv (opens in a new window)
+    And the user clicks the button/link            link=${Meembee_Name}-spend-profile.csv (opens in a new window)
+    And the user clicks the button/link            link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
     And the user should see the text in the page   The spend profile has been approved
 
 Project finance user cannot access external users' spend profile page
