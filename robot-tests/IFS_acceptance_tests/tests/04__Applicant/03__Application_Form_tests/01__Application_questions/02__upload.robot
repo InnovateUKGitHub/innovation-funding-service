@@ -77,7 +77,7 @@ Collaborators can view a file
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
     And the user should see the text in the page    ${valid_pdf}
-    When the user clicks the button/link    link=${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
@@ -116,7 +116,7 @@ Collaborators can view a file when the question is assigned
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
     And the user should see the element    link=${valid_pdf}
-    When the user clicks the button/link    link=${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
     [Teardown]    The user goes back to the previous page
 
@@ -187,5 +187,5 @@ the user can see the option to upload a file on the question
     the user should see the text in the page    Upload
 
 The applicant opens the uploaded file
-    When the user clicks the button/link    link=${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Run Keyword And Ignore Error Without Screenshots    Confirm Action

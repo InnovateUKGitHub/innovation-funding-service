@@ -77,7 +77,7 @@ Academic partner can view the file on the finances
     [Documentation]    INFUND-917
     [Tags]    HappyPath
     When The user navigates to the academic application finances
-    When the user clicks the button/link    link=${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
 
 Academic partner can view the file on the finances overview
@@ -99,7 +99,7 @@ Lead applicant can view the file on the finances overview page
     [Tags]
     Given The user navigates to the finance overview of the academic
     And the user should see the text in the page    ${valid_pdf}
-    When the user clicks the button/link    link=${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
 
 Academic finances JeS link showing

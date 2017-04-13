@@ -40,6 +40,22 @@ Application team page
     ...    INFUND-7973
     [Tags]    HappyPath
     [Setup]    The user navigates to the page    ${DASHBOARD_URL}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     Given the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     Then the user should see the text in the page    Application team
