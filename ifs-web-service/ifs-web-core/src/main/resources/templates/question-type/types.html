@@ -111,7 +111,7 @@
         <!--/* file upload has been submitted to innovate uk or marked as complete */-->
         <th:block th:if="${viewmode == 'readonly'}">
             <p th:if="${#strings.isEmpty(filename)}" class="uploaded-file">No file currently uploaded</p>
-            <a th:unless="${#strings.isEmpty(filename)}" class="uploaded-file" th:href="${downloadUrl}"  th:text="${filename}">The-uploaded-file-example.pdf</a>
+            <a th:unless="${#strings.isEmpty(filename)}" class="uploaded-file" th:href="${downloadUrl}"  th:text="${filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
         </th:block>
         <!--/* file upload can still be changed */-->
         <th:block th:if="${viewmode == 'edit'}">
@@ -136,7 +136,7 @@
                     <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${formInputId}">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">
-                    <a class="uploaded-file" th:href="${downloadUrl}" th:text="${filename}+' (opens in a new window)" target="_blank">The-uploaded-file-example.pdf</a>
+                    <a class="uploaded-file" th:href="${downloadUrl}" th:text="${filename}+' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
                     <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit">Remove</button>
                 </th:block>
             </div>
