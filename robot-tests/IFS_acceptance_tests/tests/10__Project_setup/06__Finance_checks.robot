@@ -193,8 +193,7 @@ Project finance user can view the file
     Given the user should see the element    link=${valid_pdf} (opens in a new window)
     And the file has been scanned for viruses
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf} (opens in a new window)")
-    Then the user should not see an error in the page
-    And the user goes back to the previous tab
+    Then the user goes back to the previous tab
 
 
 Project finance user can upload more than one file
@@ -207,10 +206,10 @@ Project finance user can still view and delete both files
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf} (opens in a new window)"):nth-of-type(1)
-    And the user goes back to the previous tab
+    Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf} (opens in a new window)"):nth-of-type(1)
-    And the user goes back to the previous tab
+    Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Post new query server side validations
@@ -595,8 +594,7 @@ Project finance can view the file in notes
     Given the user should see the element    link=${valid_pdf} (opens in a new window)
     And the file has been scanned for viruses
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf} (opens in a new window)")
-    Then the user should not see an error in the page
-    And the user goes back to the previous tab
+    Then the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save note")
 
 Project finance can upload more than one file to notes
