@@ -34,6 +34,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_U
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
@@ -78,11 +79,11 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-
     @Override
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource) {
 
-        List<Application> applications = setApplicationStatus(notificationResource.getFundingDecisions());
+        List<Application> applications = getFundingApplications(notificationResource.getFundingDecisions());
+        setApplicationStatus(notificationResource.getFundingDecisions(), applications);
 
         List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(notificationResource.calculateApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
@@ -91,7 +92,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                 failure -> serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS),
                 success -> {
 
-                    Notification fundingNotification = createFundingDecisionNotification(notificationResource, aggregatedFundingTargets.getSuccessObject(), APPLICATION_FUNDING);
+                    Notification fundingNotification = createFundingDecisionNotification(applications, notificationResource, aggregatedFundingTargets.getSuccessObject(), APPLICATION_FUNDING);
                     ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
 
                     ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
@@ -111,17 +112,21 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                 });
     }
 
-    private List<Application> setApplicationStatus(Map<Long, FundingDecision> applicationFundingDecisions) {
+
+    private List<Application> getFundingApplications(Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
         List<Application> applications = findApplicationsByIds(applicationIds);
+        return applications;
+    }
+
+    private void setApplicationStatus(Map<Long, FundingDecision> applicationFundingDecisions, List<Application> applications) {
 
         applications.forEach(app -> {
             FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
             ApplicationStatus status = statusFromDecision(applicationFundingDecision);
             app.setApplicationStatus(status);
         });
-        return applications;
     }
 
     private List<Application> findApplicationsByIds(List<Long> applicationIds) {
@@ -169,14 +174,28 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         applicationService.setApplicationFundingEmailDateTime(application.getId(), null);
     }
 
-    private Notification createFundingDecisionNotification(NotificationResource notificationResource, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
+    private Notification createFundingDecisionNotification(List<Application> applications, NotificationResource notificationResource, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
 
         Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("subject", notificationResource.getSubject());
+
+        List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
+
+            Long applicationId = pair.getKey();
+            //Application application = applicationRepository.findOne(applicationId);
+            Application application = applications.stream().filter(x -> x.getId() == applicationId).findFirst().get();
+
+            Map<String, Object> perNotificationTargetArguments = new HashMap<>();
+            perNotificationTargetArguments.put("applicationName", application.getName());
+            perNotificationTargetArguments.put("applicationNumber", applicationId);
+            return Pair.of(pair.getValue(), perNotificationTargetArguments);
+        });
+        //globalArguments.put("subject", notificationResource.getSubject());
         globalArguments.put("message", notificationResource.getMessageBody());
 
         List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
-        return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments);
+
+        Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
+        return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
     }
 
     private List<ServiceResult<Pair<Long, NotificationTarget>>> getLeadApplicantNotificationTargets(List<Long> applicationIds) {

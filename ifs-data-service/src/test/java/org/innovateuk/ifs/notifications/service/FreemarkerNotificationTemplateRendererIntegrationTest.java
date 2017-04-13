@@ -84,7 +84,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testFundingApplicationEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "subject", "Subject of message",
+                "applicationName", "My Application",
+                "applicationNumber", "999",
                 "message", "Body of message."
         );
 

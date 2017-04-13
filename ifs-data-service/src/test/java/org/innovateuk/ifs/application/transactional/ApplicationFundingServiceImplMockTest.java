@@ -128,11 +128,16 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 application3.getId(), FundingDecision.ON_HOLD);
 
         NotificationResource notificationResource = new NotificationResource("Subject", "The message body.", decisions);
+
         Map<String, Object> expectedGlobalNotificationArguments = asMap(
-                "subject", notificationResource.getSubject(),
                 "message", notificationResource.getMessageBody());
 
-        Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments);
+        Map<NotificationTarget, Map<String, Object>> expectedTargetSpecificNotificationArguments = asMap(
+                application1LeadApplicantTarget, asMap("applicationName", application1.getName(), "applicationNumber", application1.getId()),
+                application2LeadApplicantTarget, asMap("applicationName", application2.getName(), "applicationNumber", application2.getId()),
+                application3LeadApplicantTarget, asMap("applicationName", application3.getName(), "applicationNumber", application3.getId()));
+
+        Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments, expectedTargetSpecificNotificationArguments);
 
         List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
         List<Application> applications = asList(application1, application2, application3);
@@ -291,6 +296,17 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
             assertEquals(expectedNotification.getGlobalArguments(), notification.getGlobalArguments());
 
+            Map<NotificationTarget, Map<String, Object>> expectedTargetSpecifics = expectedNotification.getPerNotificationTargetArguments();
+            Map<NotificationTarget, Map<String, Object>> actualTargetSpecifics = notification.getPerNotificationTargetArguments();
+
+            assertEquals(expectedTargetSpecifics.size(), actualTargetSpecifics.size());
+
+            expectedTargetSpecifics.forEach((target, expectedArguments) -> {
+                Map<String, Object> actualArguments = actualTargetSpecifics.get(target);
+                assertEquals(expectedArguments, actualArguments);
+            });
+
+            assertEquals(expectedTargetSpecifics, actualTargetSpecifics);
         });
     }
 
