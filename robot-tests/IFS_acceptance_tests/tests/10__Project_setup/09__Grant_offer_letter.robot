@@ -288,9 +288,8 @@ PM can view the uploaded Annex file
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
-    When the user clicks the button/link     link=${valid_pdf}
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    When the user clicks the button/link     link=${valid_pdf} (opens in a new window)
+    Then the user goes back to the previous tab
 
 PM can download the annex
     [Documentation]    INFUND-5998
