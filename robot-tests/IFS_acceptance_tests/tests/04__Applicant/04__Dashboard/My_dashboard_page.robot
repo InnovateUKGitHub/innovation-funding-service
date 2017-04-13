@@ -33,13 +33,13 @@ Hours remaining should show the last 24hours
     When the user reloads the page
     Then the user should see the text in the page    hours left
     [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2067-09-09 11:00:00' WHERE `competition_id`='${OPEN_COMPETITION_ID}' and type IN ('SUBMISSION_DATE');
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2067-09-09 11:00:00' WHERE `competition_id`='${OPEN_COMPETITION}' and type IN ('SUBMISSION_DATE');
 
 *** Keywords ***
 Custom setup
     ${TIME}=    Get Current Date    UTC    + 3 hours    exclude_millis=true    # This line gets the current date/time and adds 3 hours
     Connect to Database    @{database}
-    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${TIME}' WHERE `competition_id`='${OPEN_COMPETITION_ID}' and type IN ('SUBMISSION_DATE');
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${TIME}' WHERE `competition_id`='${OPEN_COMPETITION}' and type IN ('SUBMISSION_DATE');
 
 the user should see the date for submission of application
     the user should see the element    css=.in-progress li:nth-child(2) .day

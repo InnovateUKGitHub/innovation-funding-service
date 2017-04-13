@@ -27,7 +27,6 @@ ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    47,000
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
 #Competitions and Applications Variables
-${OPEN_COMPETITION_ID}    15
 ${OPEN_COMPETITION_NAME}    Predicting market trends programme
 ${OPEN_COMPETITION}    ${competition_ids['${OPEN_COMPETITION_NAME}']}
 ${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
