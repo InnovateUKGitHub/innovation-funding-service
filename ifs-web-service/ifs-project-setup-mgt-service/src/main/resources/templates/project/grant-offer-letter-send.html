@@ -106,7 +106,7 @@
         <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
         <div class="upload-section">
             <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-                <p><a class="uploaded-file" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename}">signed-offer-letter.PDF</a></p>
+                <p><a class="uploaded-file" target="_blank" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename} + ' (opens in a new window)'">signed-offer-letter.PDF</a></p>
             </th:block>
             <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
                 <p>Awaiting upload by the Project Manager</p>
