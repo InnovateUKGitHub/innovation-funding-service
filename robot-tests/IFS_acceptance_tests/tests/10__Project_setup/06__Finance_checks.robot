@@ -78,6 +78,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-4846 As a Project finance team member, I want to view Finance overview and Finance summaries for the consortium
 ...
 ...               INFUND-4837 Project finance team member able to view all originally submitted details of all partners against the revisions made during the Finance Checks eligibility section to make a clear comparison
+...
+...               INFUND-8778 Partners do not need to see percentages in the Finance checks section of PS, only financial sub-totals and total-costs are to be seen
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -256,6 +258,7 @@ New query can be posted
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
+    Then the user should not see the element  jQuery=.button:contains("Post Query")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
 
 Query sections are no longer editable
@@ -467,6 +470,7 @@ Query response can be posted
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post response")
+    Then the user should not see the element   jQuery=.button:contains("Post response")
 
 Query section now becomes read-only
     [Documentation]    INFUND-4843
@@ -658,6 +662,7 @@ New note can be posted
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save note")
+    Then the user should not see the element  jQuery=.button:contains("Save note")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
 
 Note sections are no longer editable
@@ -687,26 +692,26 @@ Non pdf uploads not allowed for note comments
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
 
-Finance contact can upload a pdf file to note comments
+Project finance can upload a pdf file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file      name=attachment   ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
-Finance contact can remove the file from note comments
+Project finance can remove the file from note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    name=removeAttachment
     Then the user should not see the element    jQuery=form a:contains("${valid_pdf} (opens in a new window)")
     And the user should not see an error in the page
 
-Finance contact can re-upload the file to note comments
+Project finance can re-upload the file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
     Then the user should see the element    jQuery=form a:contains("${valid_pdf} (opens in a new window)")
 
-Finance contact can view the file in note comments
+Project finance can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
     Given the user should see the element    link=${valid_pdf} (opens in a new window)
@@ -715,13 +720,13 @@ Finance contact can view the file in note comments
     And the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save comment")
 
-Finance contact can upload more than one file to note comments
+Project finance can upload more than one file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
 
-Finance contact can still view both files in note comments
+Project finance can still view both files in note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=form li:nth-of-type(1) a:contains("${valid_pdf}")
@@ -759,6 +764,7 @@ Note comment can be posted
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
+    Then the user should not see the element   jQuery=.button:contains("Save comment")
 
 Note comment section now becomes read-only
     [Documentation]    INFUND-7756
@@ -776,7 +782,7 @@ Project Finance user can view academic Jes form
     Then the user goes back to the previous tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
-Proj finance can see the within limit research participation level
+Project finance can see the within limit research participation level
     [Documentation]    INFUND-7580
     [Tags]
     When the user clicks the button/link  link=Project finance overview
@@ -835,18 +841,18 @@ Project finance user can view Finance summaries for the consortium
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can see finance breakdown for different categories
-       [Documentation]    INFUND-4846
-       [Tags]
-       When the user clicks the button/link               link=Project finance overview
-       Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-       # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
-       And all the categories are verified   1   £ 301,355  £ 4,622  £ 0  £ 150,300  £ 828  £ 135,000  £ 8,955  £ 1,650
-       When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-       Then all the categories are verified  2   £ 990      £ 286 	 £ 154 	£ 66     £ 0    £ 0        £ 44     £ 440
-       When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-       Then all the categories are verified  3   £ 200,903 	£ 3,081   £ 0   £ 100,200  £ 552  £ 90,000   £ 5,970  £ 1,100
-       And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 503,248
-       [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    [Documentation]    INFUND-4846
+    [Tags]
+    When the user clicks the button/link               link=Project finance overview
+    Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
+    And all the categories are verified   1   £ 301,355  £ 4,622  £ 0  £ 150,300  £ 828  £ 135,000  £ 8,955  £ 1,650
+    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    Then all the categories are verified  2   £ 990      £ 286 	 £ 154 	£ 66     £ 0    £ 0        £ 44     £ 440
+    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    Then all the categories are verified  3   £ 200,903 	£ 3,081   £ 0   £ 100,200  £ 552  £ 90,000   £ 5,970  £ 1,100
+    And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 503,248
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance user can review Lead-partner's Changes to finances during the Finance Checks eligibility before the revisions made
     [Documentation]    INFUND-4837
@@ -915,9 +921,43 @@ Project finance user can review Partner's Overall cost for Changes-from-submitte
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
-Viability checks are populated in the table
-    [Documentation]    INFUND-4822, INFUND-7095
+Lead-Partner can review only the external version of Finance Checks Eligibility table
+    [Documentation]    INFUND-8778
     [Tags]
+    Given log in as a different user        &{lead_applicant_credentials}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user clicks the button/link    link=Finance checks
+    When the user clicks the button/link    link=View finances
+    Then the user should see the text in the element    css=#content h2:nth-of-type(2)      Detailed finances
+    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
+    And the user should see the text in the element     css=#content div:nth-of-type(4) div:nth-of-type(1) label        Total project costs
+    And the user moves focus to the element     css=#content div:nth-of-type(4) div:nth-of-type(2)
+    Then the user should see the element        jQuery=div:nth-of-type(4) div:nth-child(2) #total-cost
+    And the user clicks the button/link     link=Finance checks
+    [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
+
+Partner can review only the external version of Finance Checks Eligibility table
+    [Documentation]    INFUND-8778
+    [Tags]
+    Given log in as a different user        &{collaborator1_credentials}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user clicks the button/link    link=Finance checks
+    When the user clicks the button/link    link=View finances
+    Then the user should see the text in the element    css=#content h2:nth-of-type(2)      Detailed finances
+    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
+    And the user should see the text in the element     css=#content div:nth-of-type(4) div:nth-of-type(1) label        Total project costs
+    And the user moves focus to the element     css=#content div:nth-of-type(4) div:nth-of-type(2)
+    Then the user should see the element        jQuery=div:nth-of-type(4) div:nth-child(2) #total-cost
+    And the user clicks the button/link     link=Finance checks
+    [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
+
+Viability checks are populated in the table
+    [Documentation]    INFUND-4822, INFUND-7095, INFUND-8778
+    [Tags]
+    Given log in as a different user    &{internal_finance_credentials}
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(3)    Not set
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2)    N/A
@@ -1405,18 +1445,18 @@ Project finance user can see updated finance overview after partner changes to e
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
 Project finance can see updated finance breakdown for different categories
-       [Documentation]    INFUND-4846
-       [Tags]
-       When the user clicks the button/link   link=Project finance overview
-       Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-       # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
-       And all the categories are verified  1   £ 206,867 	 £ 60,602  £ 1,954 	£ 52,100   £ 10,376   £ 65,000  £ 4,985   £ 11,850
-       When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-       Then all the categories are verified  2   £ 990 	     £ 286 	   £ 154    £ 66       £ 0 	      £ 0 	    £ 44      £ 440
-       When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-       Then all the categories are verified  3   £ 114,256   £ 59,778  £ 9,078  £ 2,000    £ 10,100   £ 20,000  £ 2,000   £ 11,300
-       And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 322,113
-       [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    [Documentation]    INFUND-4846
+    [Tags]
+    When the user clicks the button/link   link=Project finance overview
+    Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
+    And all the categories are verified  1   £ 206,867 	 £ 60,602  £ 1,954 	£ 52,100   £ 10,376   £ 65,000  £ 4,985   £ 11,850
+    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    Then all the categories are verified  2   £ 990 	     £ 286 	   £ 154    £ 66       £ 0 	      £ 0 	    £ 44      £ 440
+    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    Then all the categories are verified  3   £ 114,256   £ 59,778  £ 9,078  £ 2,000    £ 10,100   £ 20,000  £ 2,000   £ 11,300
+    And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 322,113
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
@@ -1755,14 +1795,14 @@ Project finance user can view Partner's Overall cost difference after Changes-fr
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    [Setup]    log in as a different user       &{collaborator1_credentials}
+    When the user clicks the button/link        link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    And the user should see the element     jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the element    jQuery=ul li.complete:nth-child(2)
-    And the user should see the element    jQuery=ul li.complete:nth-child(4)
-    And the user should see the element    jQuery=ul li.complete:nth-child(5)
-    And the user should see the element    jQuery=ul li.read-only:nth-child(6)
+    And the user should see the element     jQuery=ul li.complete:nth-child(2)
+    And the user should see the element     jQuery=ul li.complete:nth-child(4)
+    And the user should see the element     jQuery=ul li.complete:nth-child(5)
+    And the user should see the element     jQuery=ul li.read-only:nth-child(6)
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
@@ -1786,29 +1826,39 @@ Other internal users do not have access to Finance checks
 
 Finance contact can access the external view of the finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
-    [Tags]    HappyPath
-    [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    [Tags]
+    [Setup]    Log in as a different user   ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
+    Given the user clicks the button/link   link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     When the user clicks the button/link    link=Finance checks
-    And the user should not see an error in the page
+    Then the user should not see an error in the page
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 Lead-Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
-    [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
+    Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user clicks the button/link     link=Finance checks
+    Then the user clicks the button/link    link=Finance checks
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Lead-Partner can view only the external version of Finance Checks Eligibility table
+    [Documentation]    INFUND-8778
+    [Tags]
+    When the user clicks the button/link    link=View finances
+    Then the user should see the text in the element    css=#content h2:nth-of-type(2)      Detailed finances
+    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
+    And the user should see the text in the element     css=#content div:nth-of-type(5) div:nth-of-type(1) label        Total project costs
+    Then the user should see the element                jQuery=div:nth-of-type(5) div:nth-child(2) #total-cost
 
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787
     [Tags]
-    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    Given log in as a different user        &{collaborator2_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
@@ -1818,12 +1868,22 @@ Academic user can view Finance checks page
 Non Lead Partner can view Finance checks page
     [Documentation]     INFUND-8787
     [Tags]
-    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     Then the user clicks the button/link    link=Finance checks
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Non Lead-Partner can view only the external version of Finance Checks Eligibility table
+    [Documentation]    INFUND-8778
+    [Tags]
+    When the user clicks the button/link    link=View finances
+    Then the user should see the text in the element    css=#content h2:nth-of-type(2)      Detailed finances
+    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
+    And the user should see the text in the element     css=#content div:nth-of-type(5) div:nth-of-type(1) label        Total project costs
+    Then the user should see the element                jQuery=div:nth-of-type(5) div:nth-child(2) #total-cost
 
 *** Keywords ***
 
@@ -2371,3 +2431,20 @@ the revised categories are verified for specified Section
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
 
+the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    the user should not see the text in the element     jQuery=section:nth-of-type(1) h3 button   %
+    the user should not see the text in the element     jQuery=section:nth-of-type(3) h3 button   %
+    the user should not see the text in the element     jQuery=section:nth-of-type(4) h3 button   %
+    the user should not see the text in the element     jQuery=section:nth-of-type(5) h3 button   %
+    the user should not see the text in the element     jQuery=section:nth-of-type(6) h3 button   %
+    the user should not see the text in the element     jQuery=section:nth-of-type(7) h3 button   %
+
+the user verifies the financial sub-totals for external version under the Detailed-finances
+    [Arguments]  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}
+    the user should see the text in the element     jQuery=section:nth-of-type(1) h3 button span   ${labour}
+    the user should see the text in the element     jQuery=section:nth-of-type(2) h3 button span   ${overheads}
+    the user should see the text in the element     jQuery=section:nth-of-type(3) h3 button span   ${materials}
+    the user should see the text in the element     jQuery=section:nth-of-type(4) h3 button span   ${capital_usage}
+    the user should see the text in the element     jQuery=section:nth-of-type(5) h3 button span   ${sub_contracting}
+    the user should see the text in the element     jQuery=section:nth-of-type(6) h3 button span   ${travel_and_subsistence}
+    the user should see the text in the element     jQuery=section:nth-of-type(7) h3 button span   ${other_costs}

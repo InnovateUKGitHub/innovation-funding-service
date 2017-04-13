@@ -46,11 +46,11 @@ public class SectionController {
         return sectionService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
     }
 
-    @PostMapping("/markAsNotRequired/{sectionId}/{applicationId}/{markedAsCompleteById}")
+    @PostMapping("/markAsNotRequired/{sectionId}/{applicationId}/{markedAsNotRequiredById}")
     public RestResult<Void> markAsNotRequired(@PathVariable("sectionId") final Long sectionId,
                                               @PathVariable("applicationId") final Long applicationId,
-                                              @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
-        return sectionService.markSectionAsNotRequired(sectionId, applicationId, markedAsCompleteById).toGetResponse();
+                                              @PathVariable("markedAsNotRequiredById") final Long markedAsNotRequiredById) {
+        return sectionService.markSectionAsNotRequired(sectionId, applicationId, markedAsNotRequiredById).toGetResponse();
     }
 
     @PostMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}")
@@ -98,5 +98,10 @@ public class SectionController {
     @GetMapping("/getByCompetition/{competitionId}")
     public RestResult<List<SectionResource>> getSectionsByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
         return sectionService.getByCompetitionId(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/getByCompetitionIdVisibleForAssessment/{competitionId}")
+    public RestResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(@PathVariable("competitionId") long competitionId) {
+        return sectionService.getByCompetitionIdVisibleForAssessment(competitionId).toGetResponse();
     }
 }

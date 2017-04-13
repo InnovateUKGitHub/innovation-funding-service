@@ -12,17 +12,12 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <h1 class="heading-xlarge">Create application</h1>
-
-
     <div class="error-summary" th:if="${applicationNameEmpty}">
-        <h1 class="heading-medium error-summary-heading">
-            No application name was entered.
-        </h1>
-        <p>
-            An application name has to be entered before a new application can be created.
-        </p>
+        <h2 class="heading-medium error-summary-heading">No application name was entered.</h2>
+        <p>An application name has to be entered before a new application can be created.</p>
     </div>
+
+    <h1 class="heading-xlarge">Create application</h1>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
         <div th:class="${(param.invalid != null)}? 'form-group error':'form-group'">

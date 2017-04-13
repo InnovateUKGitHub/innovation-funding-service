@@ -34,7 +34,8 @@
         You must confirm any finance changes with the contact before you approve.
     </p>
 
-    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
+          th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
         <fieldset>
             <legend class="heading-medium">Post new query</legend>
             <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group error':'form-group'">
@@ -140,7 +141,7 @@
         <input type="hidden" id="action" value="postQuery">
         <div class="grid-row">
             <div class="column-half">
-                <button class="button button-large no-margin">Post Query</button>
+                <button type="submit" data-content-on-submit="Please wait..." class="button button-large no-margin">Post Query</button>
             </div>
             <div class="column-half alignright">
                 <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>
