@@ -12,6 +12,11 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}" data-ignore-errors="true">
+                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                <p>Please correct the errors in the form below.</p>
+            </div>
+
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your declaration of interest</h1>
             </div>
@@ -26,11 +31,6 @@
             <h2 class="heading-large">Your affiliations (financial interests)</h2>
 
             <form th:action="@{/profile/declaration/edit}" method="post" th:object="${form}" novalidate="novalidate">
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}" data-ignore-errors="true">
-                    <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-                    <p>Please correct the errors in the form below.</p>
-                </div>
-
                 <h3 class="heading-medium no-margin">Principal employer and role</h3>
 
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('principalEmployer')}? error">
