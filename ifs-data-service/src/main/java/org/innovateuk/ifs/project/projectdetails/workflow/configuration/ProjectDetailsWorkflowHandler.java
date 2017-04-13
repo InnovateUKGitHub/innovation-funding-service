@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.project.workflow.projectdetails.configuration;
+package org.innovateuk.ifs.project.projectdetails.workflow.configuration;
 
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectDetailsProcess;
+import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.repository.ProjectDetailsProcessRepository;
+import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes;

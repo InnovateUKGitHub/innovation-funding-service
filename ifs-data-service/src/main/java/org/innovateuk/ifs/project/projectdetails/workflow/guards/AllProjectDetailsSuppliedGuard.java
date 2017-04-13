@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.workflow.projectdetails.guards;
+package org.innovateuk.ifs.project.projectdetails.workflow.guards;
 
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
