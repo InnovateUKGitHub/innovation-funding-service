@@ -1,0 +1,68 @@
+FROM debian:jessie-slim
+
+LABEL maintainer "infrastructure@orangebus.co.uk"
+
+ENV HTTP_PORT=9080 \
+    HTTPS_PORT=9443 \
+    WEBAPPS_PROTO=ajp \
+    SP_DOMAIN=ifs-local-dev \
+    IDP_DOMAIN=idp \
+    IDP_PORT=8443 \
+    TRUSTED_IP \
+    PROXY_CERTIFICATE \
+    PROXY_KEY \
+    PROXY_CA_CERTIFICATE
+
+WORKDIR /usr/local/bin
+
+COPY files /usr/local/files/
+
+RUN apt-get update --fix-missing && \
+
+# install apache and shibboleth sp module \
+  apt-get -y install apache2 libapache2-modsecurity libapache2-mod-shib2 && \
+  apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
+
+# put certificates in place \
+  mkdir /etc/apache2/certs && chown -R root:www-data /etc/apache2/certs && chmod -R 640 /etc/apache2/certs && \
+  echo -e "$PROXY_CERTIFICATE" > /etc/apache2/certs/server.crt && \
+  echo -e "$PROXY_KEY" > /etc/apache2/certs/server.crt && \
+  echo -e "$PROXY_CA_CERTIFICATE" > /etc/apache2/certs/DigiCertCA.crt && \
+
+# configure apache \
+  rm -f /etc/apache2/sites-enabled/000-default.conf && \
+  a2enmod shib2 socache_shmcb slotmem_shm ssl proxy_balancer status lbmethod_byrequests proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
+  sed -i -e "s/Listen 80/Listen $HTTP_PORT/" -e "s/Listen 443/Listen $HTTPS_PORT/" /etc/apache2/ports.conf && \
+  mv /usr/local/files/apache2/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
+
+# run apache as its own user \
+  chgrp -R 0 /etc/apache2 /var/cache/apache2 /run/lock/apache2 && \
+  chmod -R g+rw /etc/apache2 /var/cache/apache2 /run/lock/apache2 && \
+
+# configure shibboleth module
+  mv /usr/local/files/sp/* /etc/shibboleth/ && chmod -R 640 /etc/shibboleth/ && \
+  mkdir /var/www/html/Logout &&  mv /usr/local/files/apache2/index.html /var/www/html/Logout/ && \
+  mkdir /var/run/shibboleth && chmod -R 640 /var/run/shibboleth/ && \
+  sed -i "s#\/\/ifs-local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
+  sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml && \
+  sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/shibboleth2.xml /etc/shibboleth/metadata.xml /var/www/html/Logout/index.html && \
+  sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
+
+# run shibboleth sp as its own user (same as apache)
+  chgrp -R 0 /etc/shibboleth /var/www/html && \
+  chmod -R g+rw /etc/shibboleth /var/www/html && \
+
+# put holding pages in place. A dedicated container is probably a better idea \
+  mv /usr/local/files/apache2/locking /var/www/html/ && chown -R root:www-data /var/www/html/locking && chmod -R 640 /var/www/html/locking && \
+  mv /usr/local/files/scripts/* /usr/local/bin/ && \
+
+# configure ifs virtual host \
+  mv "/usr/local/files/apache2/ifs-services.conf.$WEBAPPS_PROTO" /etc/apache2/sites-available/ifs-services.conf && a2ensite ifs-services && \
+
+# put static files in place \
+  mkdir -p /var/www/html/files && \
+  mv /usr/local/files/files/* /var/www/html/files/ && chown root:www-data /var/www/html/files && chmod -R 640 /var/www/html/files && \
+
+  rm -Rf /usr/local/files/
+
+ENTRYPOINT [ "run-shibboleth-sp.sh" ]
