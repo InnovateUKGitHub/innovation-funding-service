@@ -125,9 +125,6 @@ public class CompetitionManagementApplicationController extends BaseController {
     protected ApplicationPrintPopulator applicationPrintPopulator;
 
     @Autowired
-    protected UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     protected FormInputService formInputService;
 
     @Autowired
@@ -137,13 +134,13 @@ public class CompetitionManagementApplicationController extends BaseController {
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
                                              @ModelAttribute("form") ApplicationForm form,
+                                             @ModelAttribute("loggedInUser") UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                              @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model,
                                              HttpServletRequest request
     ) {
         return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
-            UserResource user = getLoggedUser(request);
             form.setAdminMode(true);
 
             List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
@@ -204,12 +201,13 @@ public class CompetitionManagementApplicationController extends BaseController {
             @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
             @RequestParam MultiValueMap<String, String> queryParams,
             @ModelAttribute("form") ApplicationForm applicationForm,
+            @ModelAttribute("loggedInUser") UserResource user,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
             HttpServletRequest request) {
 
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, origin, queryParams, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model, request);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -231,11 +229,12 @@ public class CompetitionManagementApplicationController extends BaseController {
                                              @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model,
                                              @ModelAttribute("form") ApplicationForm applicationForm,
+                                             @ModelAttribute("loggedInUser") UserResource user,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
                                              HttpServletRequest request) {
 
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, origin, queryParams, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model, request);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -304,8 +303,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
-            HttpServletRequest request) throws ExecutionException, InterruptedException {
-        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+            @ModelAttribute("loggedInUser") UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
         if (user.hasRole(UserRoleType.COMP_ADMIN)) {
             long processRoleId = formInputResponseService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
@@ -326,9 +324,10 @@ public class CompetitionManagementApplicationController extends BaseController {
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
+                                             @ModelAttribute("loggedInUser") UserResource user,
                                              Model model, HttpServletRequest request) {
 
-        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, request));
+        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {

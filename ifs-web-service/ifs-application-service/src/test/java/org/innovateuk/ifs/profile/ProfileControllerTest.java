@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.profile;
 
 import org.hamcrest.Matchers;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
@@ -42,23 +43,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class ProfileControllerTest extends BaseUnitTest {
-    @InjectMocks
-    private ProfileController profileController;
+public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileController> {
 
-    @Mock
-    private EthnicityRestService ethnicityRestService;
+    @Override
+    protected ProfileController supplyControllerUnderTest() {
+        return new ProfileController();
+    }
+
+    @Mock EthnicityRestService ethnicityRestService;
 
     private UserResource user;
 
     private OrganisationResource organisation;
 
-    @SuppressWarnings("unchecked")
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
-        mockMvc = setupMockMvc(profileController, () -> loggedInUser, env, messageSource);
+        super.setUp();
 
         user = newUserResource()
                 .withTitle(Ms)
@@ -70,8 +70,8 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .withGender(Gender.FEMALE)
                 .withEthnicity(2L)
                 .build();
-        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
-        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class), eq(true))).thenReturn(user);
+        setLoggedInUser(user);
+
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(newEthnicityResource().build(4)));
     }
 
@@ -263,7 +263,6 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void whenSubmittingAnInvalidFormTheUserProfileDetailsFormIsReturned() throws Exception {
         mockMvc.perform(post("/profile/edit")
-                .param("title", "illegalcharacters:!@#$%^&*()")
                 .param("firstName", "illegalcharacters:!@#$%^&*()")
                 .param("lastName", "illegalcharacters:!@#$%^&*()")
                 .param("phoneNumber", "illegalcharacters:!@#$%^&*()")
