@@ -80,8 +80,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
-        return projectRestService.updateFinanceContact(projectId, organisationId, financeContactUserId).toServiceResult();
+    public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+        return projectRestService.updateFinanceContact(composite, financeContactUserId).toServiceResult();
     }
 
     @Override
