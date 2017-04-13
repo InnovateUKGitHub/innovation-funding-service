@@ -7,16 +7,16 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
-import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.overview.viewmodel.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -45,8 +45,7 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.nCopies;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -67,7 +66,8 @@ import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -137,12 +137,15 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         List<QuestionResource> questions = asList(questionApplicationDetails, questionScope, questionBusinessOpportunity, questionPotentialMarket);
 
         List<SectionResource> sections = newSectionResource()
-                .withName("Details", "Application questions")
+                .withName("Project details", "Application questions", "Finances")
                 .withQuestions(
                         asList(questionApplicationDetails.getId(), questionScope.getId()),
-                        asList(questionBusinessOpportunity.getId(), questionPotentialMarket.getId()))
-                .withAssessorGuidanceDescription("These do not need scoring", "Each question should be given a score")
-                .build(2);
+                        asList(questionBusinessOpportunity.getId(), questionPotentialMarket.getId()),
+                        emptyList())
+                .withAssessorGuidanceDescription("These do not need scoring.",
+                        "Each question should be given a score.",
+                        "Each partner is required to submit their own finances.")
+                .build(3);
 
         FormInputResource potentialMarketFileEntryFormInput = newFormInputResource()
                 .build();
@@ -200,8 +203,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(sections);
-        when(sectionService.filterParentSections(sections)).thenReturn(sections);
+        when(sectionRestService.getByCompetitionIdVisibleForAssessment(competition.getId())).thenReturn(restSuccess(sections));
         when(questionService.findByCompetition(competition.getId())).thenReturn(questions);
         when(formInputService.findAssessmentInputsByCompetition(competition.getId())).thenReturn(assessorFormInputs);
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
@@ -209,8 +211,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         List<AssessmentOverviewSectionViewModel> expectedSections = asList(
                 new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
-                        "Details",
-                        "These do not need scoring",
+                        "Project details",
+                        "These do not need scoring.",
                         asList(
                                 new AssessmentOverviewQuestionViewModel(
                                         questionApplicationDetails.getId(),
@@ -230,11 +232,12 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                                         false,
                                         TRUE,
                                         null)
-                        )
+                        ),
+                        false
                 ),
                 new AssessmentOverviewSectionViewModel(sections.get(1).getId(),
                         "Application questions",
-                        "Each question should be given a score",
+                        "Each question should be given a score.",
                         asList(
                                 new AssessmentOverviewQuestionViewModel(
                                         questionBusinessOpportunity.getId(),
@@ -254,7 +257,14 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                                         false,
                                         null,
                                         null)
-                        )
+                        ),
+                        false
+                ),
+                new AssessmentOverviewSectionViewModel((sections.get(2).getId()),
+                        "Finances",
+                        "Each partner is required to submit their own finances.",
+                        emptyList(),
+                        true
                 )
         );
 
@@ -283,13 +293,12 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/application-overview"));
 
-        InOrder inOrder = inOrder(assessmentService, competitionService, sectionService, questionService, formInputService,
+        InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService, formInputService,
                 assessorFormInputResponseService, formInputResponseService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(sectionService).getAllByCompetitionId(competition.getId());
-        inOrder.verify(sectionService).filterParentSections(sections);
         inOrder.verify(questionService).findByCompetition(competition.getId());
+        inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputService).findAssessmentInputsByCompetition(competition.getId());
         inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseService).getByApplication(applicationId);
@@ -638,9 +647,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .thenReturn(restSuccess(formInputResponseFileEntry));
 
         mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download",
-                    assessmentId,
-                    applicationId,
-                    formInputId))
+                assessmentId,
+                applicationId,
+                formInputId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("The returned file data"))
                 .andExpect(header().string("Content-Type", "text/hello"))

@@ -7,7 +7,7 @@ EXPOSE 8080
 ENV JAVA_OPTS -Xmx300m
 VOLUME /tmp
 
-ADD project-setup-management-@version@.jar app.jar
+ADD @app_name@-@version@.jar app.jar
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
