@@ -554,9 +554,9 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page    Peter Freeman
     When the user should see the text in the page    Project spend profile
-    Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv
-    And the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv
-    And the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
+    Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv (opens in a new window)
+    And the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv (opens in a new window)
+    And the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
     When the user should see the text in the page    Approved by Innovate UK
     Then the element should be disabled    jQuery=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
@@ -589,14 +589,14 @@ Comp Admin can download the Spend Profile csv
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element     jQuery=h2:contains("Spend profile")
-    Then the user should see the element    link=${Katz_Name}-spend-profile.csv
-    And the user should see the element     link=${Meembee_Name}-spend-profile.csv
-    And the user should see the element     link=${Zooveo_Name}-spend-profile.csv
-    When the user clicks the button/link    link=${Katz_Name}-spend-profile.csv
+    Then the user should see the element    link=${Katz_Name}-spend-profile.csv (opens in a new window)
+    And the user should see the element     link=${Meembee_Name}-spend-profile.csv (opens in a new window)
+    And the user should see the element     link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
+    When the user clicks the button/link    link=${Katz_Name}-spend-profile.csv (opens in a new window)
     Then the user should not see an error in the page
-    When the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv
+    When the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv (opens in a new window)
     Then the user should not see an error in the page
-    When the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
+    When the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
     Then the user should not see an error in the page
 
 Status updates correctly for internal user's table
@@ -755,7 +755,7 @@ Project Finance still has a link to the spend profile after approval
     [Tags]
     When the user clicks the button/link           jQuery=td:nth-child(6) a
     Then the user should see the text in the page  Project spend profile
-    And the user clicks the button/link            link=${Katz_Name}-spend-profile.csv (opens in a new window)    #TODO NUNO - maybe remove as it's downloaded???
+    And the user clicks the button/link            link=${Katz_Name}-spend-profile.csv (opens in a new window)
     And the user clicks the button/link            link=${Meembee_Name}-spend-profile.csv (opens in a new window)
     And the user clicks the button/link            link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
     And the user should see the text in the page   The spend profile has been approved

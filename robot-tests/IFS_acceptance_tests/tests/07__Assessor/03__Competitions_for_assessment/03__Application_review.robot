@@ -101,13 +101,12 @@ Application questions should be scorable
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given the user should see the element    jQuery=a:contains("products-and-services-personalised-technical-approach.pdf")
-    And the user should see the element    jQuery=a:contains("products-and-services-personalised-innovation.pdf")
-    And the user should see the element    jQuery=a:contains("products-and-services-personalised-project-team.pdf")
+    Given the user should see the element    link=products-and-services-personalised-technical-approach.pdf (opens in a new window)
+    And the user should see the element    link=products-and-services-personalised-innovation.pdf (opens in a new window)
+    And the user should see the element    link=products-and-services-personalised-project-team.pdf (opens in a new window)
     When the user clicks the button/link    jQuery=a:contains("6. Innovation")
-    And the user clicks the button/link    jQuery=a:contains("products-and-services-personalised-innovation.pdf")
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    And the user clicks the button/link    link=products-and-services-personalised-innovation.pdf (opens in a new window)
+    And the user goes back to the previous tab
 
 Scope: Status in the overview is updated
     [Documentation]    INFUND-1483

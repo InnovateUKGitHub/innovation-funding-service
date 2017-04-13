@@ -63,7 +63,7 @@ Lead applicant can upload a pdf file
 Lead applicant can view a file
     [Documentation]    INFUND-2720
     [Tags]    HappyPath    SmokeTest
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} (opens in a new window)
     And the file has been scanned for viruses
     When the applicant opens the uploaded file
     Then the user should not see an error in the page
@@ -114,7 +114,7 @@ Collaborators can view a file when the question is assigned
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
-    And the user should see the element    link=${valid_pdf}
+    And the user should see the element    link=${valid_pdf} (opens in a new window)
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     [Teardown]    The user goes back to the previous tab
 
