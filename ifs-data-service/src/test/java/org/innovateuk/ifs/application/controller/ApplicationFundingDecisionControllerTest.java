@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     public void testSendNotificationsShouldReturnAppropriateStatusCode() throws Exception {
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
-        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Subject of notification", "Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
@@ -61,7 +61,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     public void testSendNotificationsButErrorOccursCreatingProjects() throws Exception {
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
-        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Subject of notification", "Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceFailure(internalServerErrorError()));
 
@@ -71,14 +71,14 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
 
-        verify(applicationFundingServiceMock, never()).notifyLeadApplicantsOfFundingDecisions(any(NotificationResource.class));
+        verify(applicationFundingServiceMock, never()).notifyLeadApplicantsOfFundingDecisions(any(FundingNotificationResource.class));
     }
 
     @Test
     public void testSendNotificationsButErrorOccursSendingNotifications() throws Exception {
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
-        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Subject of notification", "Body of notification message.", decisions);
 
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceFailure(internalServerErrorError()));

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
@@ -61,13 +61,13 @@ public class CompetitionManagementFundingNotificationsController {
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
-        NotificationResource notificationResource = new NotificationResource(form.getSubject(), form.getMessage(), form.getFundingDecisions());
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(form.getSubject(), form.getMessage(), form.getFundingDecisions());
 
         Supplier<String> failureView = () -> getFundingDecisionPage(model, form, competitionId, form.getApplicationIds());
         Supplier<String> successView = () -> successfulEmailRedirect(competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> applicationFundingService.sendFundingNotifications(notificationResource));
+                () -> applicationFundingService.sendFundingNotifications(fundingNotificationResource));
     }
 
     private String getFundingDecisionPage(Model model, NotificationEmailsForm form, Long competitionId, List<Long> applicationIds) {

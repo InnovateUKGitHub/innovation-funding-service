@@ -12,18 +12,18 @@ import java.util.List;
  * This is used for sending the subject and content of a notification,
  * e.g. when sending an email to notify of an application funding decision.
  */
-public class NotificationResource {
+public class FundingNotificationResource {
     private String subject;
     private String messageBody;
     private Map<Long, FundingDecision> fundingDecisions;
 
-    public NotificationResource(String subject, String messageBody, Map<Long, FundingDecision> fundingDecisions) {
+    public FundingNotificationResource(String subject, String messageBody, Map<Long, FundingDecision> fundingDecisions) {
         this.subject = subject;
         this.messageBody = messageBody;
         this.fundingDecisions = fundingDecisions;
     }
 
-    public NotificationResource()
+    public FundingNotificationResource()
     {
         //default constructor
     }
@@ -62,7 +62,7 @@ public class NotificationResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        NotificationResource that = (NotificationResource) o;
+        FundingNotificationResource that = (FundingNotificationResource) o;
 
         return new EqualsBuilder()
                 .append(subject, that.subject)

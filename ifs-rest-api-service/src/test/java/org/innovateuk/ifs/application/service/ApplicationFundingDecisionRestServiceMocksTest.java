@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Assert;
@@ -42,7 +42,7 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
     public void testSendFundingDecision() {
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
 
-        NotificationResource notification = new NotificationResource("Subject", "Body.", decisions);
+        FundingNotificationResource notification = new FundingNotificationResource("Subject", "Body.", decisions);
 
         String expectedUrl = applicationFundingDecisionRestURL + "/sendNotifications";
         setupPostWithRestResultExpectations(expectedUrl, notification, HttpStatus.OK);
