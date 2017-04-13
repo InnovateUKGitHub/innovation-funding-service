@@ -8,12 +8,11 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.Map;
 
-@Component
-public class LivenessEndpoint implements Endpoint<ResponseEntity<Map<String, String>>> {
+public abstract class AbstractMonitoringEndpoint implements Endpoint<ResponseEntity<Map<String, String>>> {
 
     @Override
     public String getId() {
-        return "live";
+        return "abstract-monitor";
     }
 
     @Override
@@ -26,8 +25,15 @@ public class LivenessEndpoint implements Endpoint<ResponseEntity<Map<String, Str
         return false;
     }
 
+    abstract protected boolean isReady();
+
     @Override
     public ResponseEntity<Map<String, String>> invoke() {
+        if (!isReady()) {
+            return new ResponseEntity<Map<String, String>>(
+                    Collections.singletonMap("message", "Service unavailable"),
+                    HttpStatus.SERVICE_UNAVAILABLE);
+        }
         return new ResponseEntity<Map<String, String>>(
                 Collections.singletonMap("message", "OK"),
                 HttpStatus.OK);

@@ -30,13 +30,17 @@ items:
               path: /service-monitoring/live
               port: 8080
             initialDelaySeconds: 120
-            periodSeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /service-monitoring/ready
               port: 8080
             initialDelaySeconds: 120
-            periodSeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           imagePullPolicy: Always
           lifecycle:
             postStart:

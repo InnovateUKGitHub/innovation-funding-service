@@ -27,12 +27,14 @@ items:
               port: 8123
             initialDelaySeconds: 60
             periodSeconds: 10
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /health
               port: 8123
             initialDelaySeconds: 60
             periodSeconds: 10
+            failureThreshold: 3
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8123
