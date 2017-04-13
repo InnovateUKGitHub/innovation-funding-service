@@ -1829,13 +1829,17 @@ Other internal users do not have access to Finance checks
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 Finance contact can access the external view of the finance checks page
-    [Documentation]    INFUND-7573, INFUND 8787
+    [Documentation]    INFUND-7573
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    When the user clicks the button/link    link=Finance checks
+
+Finance contact can see the status for external view of the finance checks page
+    [Documentation]     INFUND 8787
+    [Tags]
+    Given the user should see the element   jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    When the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link    link=Finance checks
     And the user should not see an error in the page
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
