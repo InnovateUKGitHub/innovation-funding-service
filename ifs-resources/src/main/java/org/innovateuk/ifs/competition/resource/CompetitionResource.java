@@ -7,7 +7,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -61,7 +60,7 @@ public class CompetitionResource {
     private Boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
-    private LeadApplicantType leadApplicantType;
+    private List<Long> leadApplicantTypes;
     private Set<Long> researchCategories;
 
     private Integer assessorCount;
@@ -446,12 +445,12 @@ public class CompetitionResource {
         this.collaborationLevel = collaborationLevel;
     }
 
-    public LeadApplicantType getLeadApplicantType() {
-        return leadApplicantType;
+    public List<Long> getLeadApplicantTypes() {
+        return leadApplicantTypes;
     }
 
-    public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
-        this.leadApplicantType = leadApplicantType;
+    public void setLeadApplicantTypes(List<Long> leadApplicantTypes) {
+        this.leadApplicantTypes = leadApplicantTypes;
     }
 
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {

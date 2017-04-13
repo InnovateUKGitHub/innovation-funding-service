@@ -4,12 +4,14 @@ package org.innovateuk.ifs.competition.resource;
  * This enum defines the options for the lead applicant type for a competition.
  */
 public enum LeadApplicantType {
-	BUSINESS("business", "Business"), RESEARCH("research", "Research"), EITHER("either", "Either");
+	BUSINESS("business", "Business"),
+	RESEARCH("research", "Research"),
+	RTO("rto", "Research and technology organisation (RTO's)");
 
 	private String code;
 	private String name;
 	
-	private LeadApplicantType(String code, String name) {
+	LeadApplicantType(String code, String name) {
 		this.code = code;
 		this.name = name;
 	}

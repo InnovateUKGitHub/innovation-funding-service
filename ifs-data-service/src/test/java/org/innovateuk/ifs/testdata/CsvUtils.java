@@ -410,7 +410,6 @@ class CsvUtils {
         String innovationSector;
         String researchCategory;
         String collaborationLevel;
-        String leadApplicantType;
         Integer researchRatio;
         Boolean resubmission;
         Boolean multiStream;
@@ -461,7 +460,6 @@ class CsvUtils {
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
             collaborationLevel = nullable(line.get(i++));
-            leadApplicantType = nullable(line.get(i++));
             researchRatio = nullableInteger(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             multiStream = nullableBoolean(line.get(i++));
