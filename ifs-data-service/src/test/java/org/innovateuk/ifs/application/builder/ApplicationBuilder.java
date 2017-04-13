@@ -10,6 +10,8 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -49,19 +51,14 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((competition, application) -> application.setCompetition(competition), competitions);
     }
 
-    // this isn't that useful
     public ApplicationBuilder withApplicationStatus(ApplicationStatus... applicationStatuses) {
         return withArray((applicationStatus, application)
                         -> setField("applicationProcess",
-                                new ApplicationProcess(application, null, applicationStatus.toApplicationState()), application
+                                new ApplicationProcess(application, null, new ActivityState(ActivityType.APPLICATION, applicationStatus.toBackingState())), application
                 ),
                 applicationStatuses
         );
     }
-//
-//    public ApplicationBuilder withApplicationProcess(ApplicationProcess... applicationProcesses) {
-//        return withArraySetFieldByReflection("applicationProcess", applicationProcesses);
-//    }
 
     public ApplicationBuilder withStartDate(LocalDate... dates) {
         return withArray((date, application) -> application.setStartDate(date), dates);

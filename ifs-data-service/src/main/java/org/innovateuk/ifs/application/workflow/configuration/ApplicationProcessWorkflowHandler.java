@@ -10,7 +10,9 @@ import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
@@ -38,7 +40,7 @@ public class ApplicationProcessWorkflowHandler extends BaseWorkflowEventHandler<
 
     @Override
     protected ApplicationProcess createNewProcess(Application target, ProcessRole participant) {
-        return new ApplicationProcess(target, participant);
+        return new ApplicationProcess(target, participant, new ActivityState(APPLICATION, State.CREATED));
     }
 
     @Override

@@ -23,11 +23,6 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
-    @Deprecated
-    public static ApplicationProcess fromApplicationStatus(Application application, ApplicationStatus applicationStatus) {
-        return new ApplicationProcess(application, null, applicationStatus.toApplicationState());
-    }
-
     ApplicationProcess() {
     }
 
@@ -35,19 +30,6 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
         this.target = target;
         this.participant = participant;
         this.setActivityState(initialState);
-    }
-
-    public ApplicationProcess(Application target, ProcessRole participant) {
-        this.target = target;
-        this.participant = participant;
-        this.setActivityState(new ActivityState(ActivityType.APPLICATION, ApplicationState.CREATED.getBackingState()));
-    }
-
-    // this is really for tests / builders
-    public ApplicationProcess(Application target, ProcessRole participant, ApplicationState initialState) {
-        this.target = target;
-        this.participant = participant;
-        this.setActivityState(new ActivityState(ActivityType.APPLICATION, initialState.getBackingState()));
     }
 
     @Override

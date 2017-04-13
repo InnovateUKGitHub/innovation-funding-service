@@ -10,6 +10,7 @@ import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -38,7 +39,7 @@ public class ApplicationProcessWorkflowHandlerIntegrationTest extends BaseWorkfl
     public void testFoo() {
 
         Application application = newApplication().build();
-        ApplicationProcess applicationProcess = new ApplicationProcess(application, null);
+        ApplicationProcess applicationProcess = new ApplicationProcess(application, null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
         when(applicationProcessRepositoryMock.findOneByTargetId(application.getId())).thenReturn(applicationProcess);
 
         ActivityState exoectedActivityState = new ActivityState(ActivityType.APPLICATION, ApplicationState.OPEN.getBackingState());

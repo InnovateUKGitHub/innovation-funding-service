@@ -151,7 +151,6 @@ public class Application implements ProcessActivity {
         this.previousApplicationTitle = previousApplicationTitle;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }
