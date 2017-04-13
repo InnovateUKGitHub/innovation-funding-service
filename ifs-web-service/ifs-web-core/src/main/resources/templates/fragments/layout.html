@@ -173,7 +173,7 @@
                th:href="${linkUrl}"
                th:text="${linkTitle}" />
         </nav>
-        <div class="deadline" th:if="${currentCompetition != null && currentCompetition.open}">Days left to submit <span th:text="${currentCompetition.getDaysLeft()}"></span></div>
+        <div class="deadline" th:if="${currentCompetition != null && currentCompetition.open}"><span th:text="${currentCompetition.getDaysLeft()}"></span> days left to submit</div>
     </div>
 </th:block>
 
