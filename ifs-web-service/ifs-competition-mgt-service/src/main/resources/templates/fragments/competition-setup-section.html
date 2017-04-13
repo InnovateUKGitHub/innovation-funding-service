@@ -1,6 +1,13 @@
 
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
 <th:block th:fragment="section-initial">
+    <div class="error-summary" th:if="${#fields.hasErrors('${competitionSetupForm.*}')}">
+      <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
+      <ul class="error-summary-list">
+          <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
+      </ul>
+    </div>
+
     <div class="page-title">
         <h1 class="heading-xlarge">Initial details</h1>
     </div>
@@ -12,16 +19,6 @@
           th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-
-        <div class="error-summary" th:if="${#fields.hasGlobalErrors()}">
-            <h2 class="heading-medium error-summary-heading">
-                Unable to save section
-            </h2>
-
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
-            </ul>
-        </div>
 
         <th:block th:if="${editable}" id="section-1-edit">
             <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
@@ -126,7 +123,7 @@
                 </div>
             </th:block>
             <input type="hidden" name="autosaveInnovationAreaIds" />
-            <div class="form-group">
+            <div class="form-group" th:unless="${isSetupAndLive}">
                 <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
             </div>
 
@@ -293,6 +290,13 @@
 
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
 <th:block th:fragment="section-additional">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
+      <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
+      <ul class="error-summary-list">
+          <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
+      </ul>
+    </div>
+
     <div class="page-title">
         <h1 class="heading-xlarge">Funding information</h1>
     </div>
@@ -300,16 +304,6 @@
     <form th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="additional"
           th:action="@{(${editable} ? '' : 'additional/edit')}"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-
-        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-            <h2 class="heading-medium error-summary-heading">
-                Unable to save section
-            </h2>
-
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-            </ul>
-        </div>
 
         <fieldset th:if="${editable}">
             <legend class="visuallyhidden">Funding information</legend>
@@ -751,6 +745,12 @@
 
 <!-- =================Section: Milestones (4) =========================== -->
 <th:block th:fragment="section-milestones">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
+        <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
 
     <div class="page-title">
         <h1 class="heading-xlarge">Milestones</h1>
@@ -764,17 +764,6 @@
           th:attrappend="data-autosave=${setupComplete != true}?compSetup"
           th:attr="data-competition=${competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-
-        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-           <h2 class="heading-medium error-summary-heading">
-               Unable to save section
-           </h2>
-
-           <ul class="error-summary-list">
-               <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-           </ul>
-       </div>
-
         <fieldset th:if="${editable}" id="section-4-edit">
 
 
@@ -806,13 +795,16 @@
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
                              th:value="${milestoneEntry.key}" />
+                      <input type="hidden"
+                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
+                             th:value="${milestoneEntry.value.editable}" />
                       <td class="time">
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   class="form-control width-large"
                                   required="required"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                  th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}">
+                                  th:readonly="${!milestoneEntry.value.readonly}">
                               <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
                                       th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
@@ -838,7 +830,7 @@
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
-                                 th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}" />
+                                 th:readonly="${milestoneEntry.value.readonly}" />
                       </td>
                       <td class="month">
                           <input type="number"
@@ -850,7 +842,7 @@
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
-                                th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}"/>
+                                th:readonly="${milestoneEntry.value.readonly}"/>
                       </td>
                       <td class="year" >
                           <input type="number"
@@ -862,7 +854,7 @@
                                  class="form-control width-small"
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
-                                 th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}" />
+                                 th:readonly="${milestoneEntry.value.readonly}" />
                           </td>
                     </tr>
                 </tbody>
@@ -918,23 +910,18 @@
 
 <!-- =================== Comp setup section - Application questions (5) ============================== -->
 <th:block th:fragment="section-application">
+    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
+        <h2 class="heading-medium error-summary-heading">Unable to mark as complete.</h2>
+        <ul class="error-summary-list">
+            <li>view the application section(s) to resolve the error.</li>
+        </ul>
+    </div>
 
     <div class="page-title">
         <h1 class="heading-xlarge">Application process</h1>
     </div>
 
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-
-        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-            <h2 class="heading-medium error-summary-heading">
-                Unable to mark as complete.
-            </h2>
-            <ul class="error-summary-list">
-                <li>view the application section(s) to resolve the error.</li>
-            </ul>
-
-        </div>
-
         <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
 
         <p>Here you can review and amend the application and assessment questions and guidance for this competition.

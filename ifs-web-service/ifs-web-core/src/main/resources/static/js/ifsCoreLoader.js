@@ -29,6 +29,7 @@ IFS.core.loadOrder = {
       IFS.core.disableSubmitUntilChecked.init()
       IFS.core.finance.init()
       IFS.core.progressiveGroupSelect.init()
+      IFS.core.singleSubmit.init()
     },
     finalize: function () {
       IFS.core.modal.init()

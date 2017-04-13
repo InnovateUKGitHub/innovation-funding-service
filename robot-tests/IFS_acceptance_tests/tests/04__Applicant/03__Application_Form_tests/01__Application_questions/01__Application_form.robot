@@ -33,6 +33,7 @@ Application details: Previous submission
 Application details: Research category
     [Documentation]    INFUND-6823
     Given The user clicks the button/link    jQuery=button:contains("Choose your research category")
+    and the user should not see the text in the page     Changing the research category will reset the funding level for all business participants.
     Then the user should see the element    jQuery=label:contains("Industrial research")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
@@ -40,6 +41,17 @@ Application details: Research category
     Then the user should see an error    This field cannot be left blank
     and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     and the user clicks the button/link    jQuery=button:contains(Save)
+    and the user should see the element     jQuery=span:contains(Chosen research category: Feasibility studies)
+
+Research Category : Autosave not applicable
+    [Documentation]    INFUND-6823, INFUND-8251
+    the user clicks the button/link      jQuery=button:contains("Change your research category")
+    #  TODO commented due to INFUND-9212
+    # and the user should see the text in the page     Changing the research category will reset the funding level for all business participants.
+    the user should see the element      jQuery=label:contains("Industrial research")
+    and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
+    and the user clicks the button/link     jQuery=a:contains("Application details")
+    and the user should see the element     jQuery=span:contains("Chosen research category: Feasibility studies")
     And the finance summary page should show a warning
 
 Application details: Innovation Area - Materials and manufacturing
@@ -74,13 +86,15 @@ Application details: Innovation Area - Infrastructe
     Then the user should see the element     jQuery=button:contains("Change your innovation area")
     [Teardown]  Set the competition innovation sector to Materials and manufacturing
 
-
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]    HappyPath
     [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
+    When the user clicks the button/link    link=Application details
+    then the application details need to be autosaved
+    and the user clicks the button/link     link=Application overview
     And the user clicks the button/link    link=Project summary
     When the user edits the project summary question
     And the user reloads the page
@@ -127,6 +141,16 @@ Review and submit button
     Then the user should see the text in the page    Application summary
     And the user should see the text in the page    Please review your application before final submission
 
+Collaborator: read only view of Application details
+    [Documentation]    INFUND-8251 , INFUND-8260
+    [Tags]
+    [Setup]  Log in as a different user     &{collaborator1_credentials}
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=${Competition_E2E}
+    When the user clicks the button/link    link=Application details
+    then the user should not see the element      css=input
+    and the user should see the element      jQuery=button:contains("Save and return to application overview")
+
 *** Keywords ***
 the text should be visible
     Wait Until Element Contains Without Screenshots    css=#form-input-1039 .editor    I am a robot
@@ -136,6 +160,14 @@ The user clicks the section link and is redirected to the correct section
     The user clicks the button/link    link=${link}
     The user should be redirected to the correct page    ${url}
     The user clicks the button/link    link=Application overview
+
+the application details need to be autosaved
+   the user enters text to a text field      application.durationInMonths   22
+   wait for autosave
+   the user clicks the button/link      link=Application overview
+   the user clicks the button/link      link=Application details
+   the user should not see the text in the element       application.durationInMonths   22
+
 
 the Applicant edits the Project summary
     Clear Element Text    css=#form-input-1039 .editor

@@ -82,7 +82,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
             UserResource partnerUser = findAnyPartnerForOrganisation(data, organisation.getId());
 
-            doAs(partnerUser, () -> projectService.updateFinanceContact(data.getProject().getId(), organisation.getId(), financeContact.getId()).
+            doAs(partnerUser, () -> projectService.updateFinanceContact(new ProjectOrganisationCompositeId(data.getProject().getId(), organisation.getId()), financeContact.getId()).
                     getSuccessObjectOrThrowException());
         });
     }

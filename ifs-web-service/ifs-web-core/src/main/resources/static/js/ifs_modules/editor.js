@@ -77,13 +77,13 @@ IFS.core.editor = (function () {
       jQuery('[role="textbox"][data-editor="md"]').hallo(s.editorOptions)
 
       jQuery(document).on('hallomodified', '[role="textbox"][data-editor="md"]', function (event, data) {
-        var source = jQuery(this).next()
+        var source = jQuery(this).parent().find('textarea')
         IFS.core.editor.editorHtmlToMarkdown(data.content, source)
         jQuery(source).trigger('keyup')
       })
 
       jQuery(document).on('hallomodified', '[role="textbox"][data-editor="html"]', function (event, data) {
-        var textarea = jQuery(this).next()
+        var textarea = jQuery(this).parent().find('textarea')
         var html = jQuery.htmlClean(data.content, s.editorOptions.plugins.hallocleanhtml)
         if (html.replace(/<[^>]+>/ig, '').length === 0) {
           html = ''
@@ -92,7 +92,7 @@ IFS.core.editor = (function () {
         jQuery(textarea).trigger('keyup')
       })
       jQuery(document).on('blur', '[role="textbox"][data-editor]', function () {
-        var textarea = jQuery(this).next()
+        var textarea = jQuery(this).parent().find('textarea')
         jQuery(textarea).trigger('change')
       })
     },
