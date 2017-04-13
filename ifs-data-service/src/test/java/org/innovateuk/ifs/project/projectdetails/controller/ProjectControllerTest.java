@@ -11,6 +11,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -148,12 +149,12 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     @Test
     public void updateFinanceContact() throws Exception {
 
-        when(projectServiceMock.updateFinanceContact(123L, 456L, 789L)).thenReturn(serviceSuccess());
+        when(projectServiceMock.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 456L), 789L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isOk());
 
-        verify(projectServiceMock).updateFinanceContact(123L, 456L, 789L);
+        verify(projectServiceMock).updateFinanceContact(new ProjectOrganisationCompositeId(123L, 456L), 789L);
     }
 
     @Test

@@ -99,7 +99,8 @@ public class ProjectController {
     public RestResult<Void> updateFinanceContact(@PathVariable("projectId") final Long projectId,
                                                  @PathVariable("organisation") final Long organisationId,
                                                  @RequestParam("financeContact") Long financeContactUserId) {
-        return projectService.updateFinanceContact(projectId, organisationId, financeContactUserId).toPostResponse();
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
     }
 
     @PostMapping("/{projectId}/invite-finance-contact")
