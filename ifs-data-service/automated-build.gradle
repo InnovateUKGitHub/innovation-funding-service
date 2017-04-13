@@ -3,7 +3,6 @@ ext.ifsDatasourceUsername=""
 ext.ifsDatasourcePassword=""
 ext.ifsFlywayLocations=""
 
-project.properties['idp.rest.key'] ?:"123456789"
 ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_test"
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
