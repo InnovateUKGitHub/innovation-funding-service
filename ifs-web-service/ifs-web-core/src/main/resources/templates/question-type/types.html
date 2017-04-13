@@ -208,28 +208,34 @@
                     This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
                 </div>
 
-                <div class="form-group">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-medium">Research category</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
-                        </legend>
-                        <span th:if="${model.questionApplicationViewModel.selectedResearchCategoryName != null}">Chosen research category: <th:block th:text="${model.questionApplicationViewModel.selectedResearchCategoryName}"/></span><br/>
-                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}"
-                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span></button>
-                    </fieldset>
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'error'">
+                    <label for="researchCategory">
+                        <span class="heading-medium">Research category</span>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
+                    </label>
+                    <div th:if="${model.questionApplicationViewModel.selectedResearchCategoryName != null}">
+                        Chosen research category: <th:block th:text="${model.questionApplicationViewModel.selectedResearchCategoryName}"/>
+                    </div>
+                    <input type="hidden" th:field="*{__application.innovationArea.name__}" value="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
+
+                    <button id="researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}"
+                            type="submit"><span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span></button>
                 </div>
 
-                <div class="form-group">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-medium">Innovation area</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
-                        </legend>
-                        <span th:if="${model.questionApplicationViewModel.selectedInnovationAreaName != null}">Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/></span><br/>
-                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}"
-                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span></button>
-                    </fieldset>
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'error'">
+                    <label for="researchArea">
+                        <span class="heading-medium">Innovation area</span>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.innovationArea')" />
+                    </label>
+                    <div th:if="${model.questionApplicationViewModel.selectedInnovationAreaName != null}">
+                        Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
+                    </div>
+                    <input type="hidden" th:field="*{__application.innovationArea.name__}" value="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
+                    <button id="researchArea" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}"
+                            type="submit"><span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span></button>
+
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                     <fieldset>

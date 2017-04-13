@@ -289,7 +289,7 @@ public class ApplicationFormController {
 
     @ProfileExecution
     @PostMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
-    public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
+    public String questionFormSubmit(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler,
                                      Model model,
@@ -581,10 +581,7 @@ public class ApplicationFormController {
                         .forEach(e -> {
                             if (validationMessage.getObjectName().equals("target")) {
                                 if (hasText(e.getErrorKey())) {
-                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey()));
-                                    if (e.getErrorKey().equals("durationInMonths")) {
-                                        application.setDurationInMonths(null);
-                                    }
+                                    toFieldErrors.addError(fieldError("application." + e.getFieldName(), e.getFieldRejectedValue(), e.getErrorKey()));
                                 }
                             }
                         }));
@@ -718,10 +715,6 @@ public class ApplicationFormController {
         return emptyList();
     }
 
-    /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
-     */
     @ProfileExecution
     @PostMapping(SECTION_URL + "{sectionId}")
     public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
