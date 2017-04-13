@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
@@ -72,16 +70,12 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
         inviteOrgApplication1Org2 = inviteOrganisations.get(1);
         inviteOrgApplication2Org1 = inviteOrganisations.get(2);
 
-        application1 = new Application(null, "", CREATED);
-        application2 = new Application(null, "", CREATED);
-
         ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED);
-        application1.getApplicationProcess().setActivityState(createdActivityState);
-        application2.getApplicationProcess().setActivityState(createdActivityState);
+        application1 = new Application(null, "", createdActivityState);
+        application2 = new Application(null, "", createdActivityState);
+
         applicationRepository.save(application1);
         applicationRepository.save(application2);
-
-//        applications.stream().map(application -> applicationRepository.save(application));
 
         createNewApplicationInvite(application1, inviteOrgApplication1Org1, "app1.user1@org1.com");
         createNewApplicationInvite(application1, inviteOrgApplication1Org1, "app1.user2@org1.com");

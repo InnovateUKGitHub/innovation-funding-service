@@ -17,3 +17,5 @@ INSERT INTO process (process_type, last_modified, target_id, activity_state_id)
 SELECT 'ApplicationProcess', now(), id, (SELECT id FROM activity_state WHERE activity_type='APPLICATION' AND state = IF (status = 'APPROVED', 'ACCEPTED', status)) FROM application;
 
 ALTER TABLE application MODIFY status ENUM('CREATED','SUBMITTED','APPROVED','REJECTED','OPEN');
+
+ALTER TABLE application DROP COLUMN status;

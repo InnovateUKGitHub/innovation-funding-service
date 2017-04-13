@@ -31,6 +31,12 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     ApplicationProcess() {
     }
 
+    public ApplicationProcess(Application target, ProcessRole participant, ActivityState initialState) {
+        this.target = target;
+        this.participant = participant;
+        this.setActivityState(initialState);
+    }
+
     public ApplicationProcess(Application target, ProcessRole participant) {
         this.target = target;
         this.participant = participant;

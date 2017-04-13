@@ -10,6 +10,9 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +46,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         Application application = new Application(
                 APPLICATION_ID,
                 "",
-                ApplicationStatus.CREATED
+                new ActivityState(ActivityType.APPLICATION, State.CREATED)
         );
         processRoles.add(
             new ProcessRole(

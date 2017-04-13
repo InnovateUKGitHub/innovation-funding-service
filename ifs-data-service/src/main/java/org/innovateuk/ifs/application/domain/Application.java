@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -59,10 +60,6 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy = "application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
-    private ApplicationStatus applicationStatus; // TODO delete and drop column
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition", referencedColumnName = "id")
     private Competition competition;
@@ -96,22 +93,22 @@ public class Application implements ProcessActivity {
     public Application() {
     }
 
-    public Application(Long id, String name, ApplicationStatus applicationStatus) {
+    // TODO remove the id from the constructor
+    public Application(Long id, String name, ActivityState activityState) {
+        requireNonNull(activityState, "activityState cannot be null " + activityState);
         this.id = id;
         this.name = name;
-        this.applicationStatus = applicationStatus;
-        this.applicationProcess = ApplicationProcess.fromApplicationStatus(this, applicationStatus);
+        this.applicationProcess = new ApplicationProcess(this, null, activityState);
     }
 
-    public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
-        requireNonNull(applicationStatus, "applicationStatus cannot be null");
+    // TODO remove the id from the constructor
+    public Application(Competition competition, String name, List<ProcessRole> processRoles, ActivityState activityState, Long id) {
+        requireNonNull(activityState, "activityState cannot be null " + activityState);
         this.competition = competition;
         this.name = name;
         this.processRoles = processRoles;
-        this.applicationStatus = applicationStatus;
         this.id = id;
-        this.applicationProcess = ApplicationProcess.fromApplicationStatus(this, applicationStatus);
-
+        this.applicationProcess = new ApplicationProcess(this, null, activityState);
     }
 
     protected boolean canEqual(Object other) {
@@ -168,12 +165,9 @@ public class Application implements ProcessActivity {
     }
 
     public ApplicationStatus getApplicationStatus() {
+//        if (applicationProcess == null) return null; // mapper workaround
         return ApplicationStatus.toApplicationState(applicationProcess.getActivityState());
     }
-
-//    public void setApplicationStatus(ApplicationStatus applicationStatus) {
-//        this.applicationStatus = applicationStatus;
-//    }
 
     public Competition getCompetition() {
         return competition;

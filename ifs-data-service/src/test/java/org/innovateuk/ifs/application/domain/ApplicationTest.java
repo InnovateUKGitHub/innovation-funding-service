@@ -6,6 +6,9 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +46,7 @@ public class ApplicationTest {
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
 
-        application = new Application(competition, name, processRoles, applicationStatus, id);
+        application = new Application(competition, name, processRoles, new ActivityState(ActivityType.APPLICATION, State.CREATED), id);
     }
 
     @Test

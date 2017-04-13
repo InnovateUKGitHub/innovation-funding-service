@@ -36,6 +36,9 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,6 +108,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private NotificationSender notificationSender;
     @Autowired
     private ApplicationProcessWorkflowHandler applicationProcessWorkflowHandler;
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
 
     @Override
@@ -127,11 +132,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
-        Application application = new Application();
-        application.setName(applicationName);
-        application.setStartDate(null);
+        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED);
 
-//        application.setApplicationStatus(ApplicationStatus.CREATED);
+        Application application = new Application(null, applicationName, createdActivityState);
+        application.setStartDate(null);
 
         application.setDurationInMonths(3L);
         application.setCompetition(competition);
