@@ -1830,7 +1830,7 @@ Other internal users do not have access to Finance checks
 
 Finance contact can access the external view of the finance checks page
     [Documentation]    INFUND-7573
-    [Tags]    HappyPath
+    [Tags]
     [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
 
