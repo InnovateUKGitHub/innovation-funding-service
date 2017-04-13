@@ -5,7 +5,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReadinessEndpoint extends AbstractMonitoringEndpoint {
 
-    protected String id = "ready";
+    @Override
+    public String getId() {
+        return "ready";
+    }
 
     @Override
     protected boolean isReady() {
