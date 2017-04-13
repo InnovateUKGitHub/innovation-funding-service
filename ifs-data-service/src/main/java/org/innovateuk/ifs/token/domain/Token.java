@@ -2,7 +2,7 @@ package org.innovateuk.ifs.token.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.token.JpaConverterJson;
+import org.innovateuk.ifs.commons.util.JpaJsonConverter;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -38,7 +38,7 @@ public class Token {
     @DateTimeFormat
     private ZonedDateTime updated;
 
-    @Convert(converter = JpaConverterJson.class)
+    @Convert(converter = JpaJsonConverter.class)
     @Column( length = 5000 )
     JsonNode extraInfo;
 

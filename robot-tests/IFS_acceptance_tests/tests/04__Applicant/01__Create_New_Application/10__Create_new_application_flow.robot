@@ -34,7 +34,7 @@ Non registered users CH route
     And the user clicks the button/link    LINK=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+${unique_email_number}@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
@@ -55,7 +55,6 @@ Non registered users CH route (email step)
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
 
 The email address does not stay in the cookie
@@ -71,7 +70,7 @@ The email address does not stay in the cookie
     And the user clicks the button/link    link=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     Then the user should not see the text in the page    ${test_mailbox_one}+1@gmail.com
 
 Non registered users non CH route
@@ -87,7 +86,7 @@ Non registered users non CH route
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
-    And the user clicks the button/link    jQuery=.button:contains("Confirm")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
@@ -105,7 +104,6 @@ Non registered users non CH route (email step)
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
 
 Verify the name of the new application
@@ -134,7 +132,7 @@ Special Project Finance role
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
-    And the user clicks the button/link    jQuery=.button:contains("Confirm")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
