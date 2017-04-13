@@ -10,6 +10,7 @@ import org.junit.Test;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static java.util.Arrays.asList;
 
 public class EligibilityFormPopulatorTest {
 
@@ -34,7 +35,7 @@ public class EligibilityFormPopulatorTest {
 				.withMultiStream(true)
 				.withStreamName("streamname")
 				.withCollaborationLevel(CollaborationLevel.COLLABORATIVE)
-				.withLeadApplicantType(LeadApplicantType.BUSINESS)
+				.withLeadApplicantType(asList(2L))
 				.build();
 
 		CompetitionSetupForm result = service.populateForm(competition);
@@ -45,6 +46,6 @@ public class EligibilityFormPopulatorTest {
 		assertEquals("no", form.getMultipleStream());
 		assertEquals(null, form.getStreamName());
 		assertEquals("collaborative", form.getSingleOrCollaborative());
-		assertEquals("business", form.getLeadApplicantType());
+		assertEquals(asList(2L), form.getLeadApplicantTypes());
 	}
 }

@@ -5,28 +5,30 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 public enum OrganisationTypeEnum {
-    BUSINESS(1, false, true, null),
-    RESEARCH(2, false, false, null),
-    RTO(3, false, false, null),
-    PUBLICSECTOR_OR_CHARITY(4, false, false, null);
+    BUSINESS(1, false, true, true, null),
+    RESEARCH(2, false, false, true, null),
+    RTO(3, false, false, true, null),
+    PUBLICSECTOR_OR_CHARITY(4, false, false, false, null);
 
     private static final Map<Long, OrganisationTypeEnum> lookup = new TreeMap<>();
 
     static {
         for (OrganisationTypeEnum d : OrganisationTypeEnum.values()) {
-            lookup.put(d.getOrganisationTypeId(), d);
+            lookup.put(d.getId(), d);
         }
     }
 
     private final Long organisationTypeId;
     private final boolean restrictOrganisationName; // if true, the user won't be able to enter his organisation name, and should use the search to find his organisation
     private final boolean useOrganisationSearch; // if true there is a search available to search for organisations of this type.
+    private final boolean showInCompetitionSetup;
     private final OrganisationTypeEnum parentOrganisationType;
 
-    OrganisationTypeEnum(int organisationTypeId, boolean restrictOrganisationName, boolean useOrganisationSearch, OrganisationTypeEnum parent){
+    OrganisationTypeEnum(int organisationTypeId, boolean restrictOrganisationName, boolean useOrganisationSearch, boolean showInCompetitionSetup, OrganisationTypeEnum parent){
         this.organisationTypeId = Long.valueOf(organisationTypeId);
         this.restrictOrganisationName = restrictOrganisationName;
         this.useOrganisationSearch = useOrganisationSearch;
+        this.showInCompetitionSetup = showInCompetitionSetup;
         this.parentOrganisationType = parent;
 
         if(this.restrictOrganisationName && !this.useOrganisationSearch){
@@ -55,12 +57,16 @@ public enum OrganisationTypeEnum {
         return child.isPresent();
     }
 
-    public Long getOrganisationTypeId() {
+    public Long getId() {
         return organisationTypeId;
     }
 
     public OrganisationTypeEnum getParentOrganisationType() {
         return parentOrganisationType;
+    }
+
+    public boolean isShowInCompetitionSetup() {
+        return showInCompetitionSetup;
     }
 
     public boolean isRestrictOrganisationName() {

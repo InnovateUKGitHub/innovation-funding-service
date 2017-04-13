@@ -28,6 +28,10 @@ public class OrganisationTypeResourceBuilder extends BaseBuilder<OrganisationTyp
         return withArray((name, organisationTypeResource) -> organisationTypeResource.setName(name), names);
     }
 
+    public OrganisationTypeResourceBuilder withVisibleInSetup(Boolean... visibleInSetups) {
+        return withArray((visibleInSetup, organisationTypeResource) -> organisationTypeResource.setVisibleInSetup(visibleInSetup), visibleInSetups);
+    }
+
     @Override
     protected OrganisationTypeResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, OrganisationTypeResource>> actions) {
         return new OrganisationTypeResourceBuilder(actions);

@@ -548,7 +548,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
                 .param("singleOrCollaborative", "collaborative")
-                .param("leadApplicantType", "business")
+                .param("leadApplicantTypes", "1", "2", "3")
                 .param("researchParticipationAmountId", "1")
                 .param("resubmission", "yes"))
                 .andExpect(status().is3xxRedirection())

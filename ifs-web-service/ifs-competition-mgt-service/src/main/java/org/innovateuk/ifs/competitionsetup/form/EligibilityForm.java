@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,8 +20,8 @@ public class EligibilityForm extends CompetitionSetupForm {
 	private Set<Long> researchCategoryId;
 	@NotBlank(message = "{validation.eligibilityform.singleorcollaborative.required}")
 	private String singleOrCollaborative;
-	@NotBlank(message = "{validation.eligibilityform.leadapplicanttype.required}")
-	private String leadApplicantType;
+	@NotEmpty(message = "{validation.eligibilityform.leadapplicanttype.required}")
+	private List<Long> leadApplicantTypes;
 	@NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
 	private Integer researchParticipationAmountId;
 	@NotBlank(message = "{validation.eligibilityform.resubmission.required}")
@@ -59,11 +60,11 @@ public class EligibilityForm extends CompetitionSetupForm {
 	public void setSingleOrCollaborative(String singleOrCollaborative) {
 		this.singleOrCollaborative = singleOrCollaborative;
 	}
-	public String getLeadApplicantType() {
-		return leadApplicantType;
+	public List<Long> getLeadApplicantTypes() {
+		return leadApplicantTypes;
 	}
-	public void setLeadApplicantType(String leadApplicantType) {
-		this.leadApplicantType = leadApplicantType;
+	public void setLeadApplicantTypes(List<Long> leadApplicantTypes) {
+		this.leadApplicantTypes = leadApplicantTypes;
 	}
 	public Integer getResearchParticipationAmountId() {
 		return researchParticipationAmountId;

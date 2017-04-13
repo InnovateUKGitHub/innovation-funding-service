@@ -49,7 +49,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getOrganisationTypeId()).build(); // Industrial
+        OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build(); // Industrial
         Map<FinanceRowType, FinanceRowCostCategory> fod = new HashMap<>();
         FinanceRowCostCategory labourFrcc = newLabourCostCategory().withCosts(newLabourCost().build(1)).build();
         FinanceRowCostCategory materialsFrcc = newDefaultCostCategory().withCosts(newMaterials().build(1)).build();
@@ -82,7 +82,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Academic
+        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getId()).build(); // Academic
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName("A name that will not match - we care only about the contained CostCategories").
@@ -109,7 +109,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Academic
+        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getId()).build(); // Academic
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName(DESCRIPTION_PREFIX + simpleJoiner(sorted(allOf(AcademicCostCategoryGenerator.class)), AcademicCostCategoryGenerator::getName, ", ")).

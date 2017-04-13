@@ -627,15 +627,15 @@
                        </span>
                     </legend>
 
-                     <label th:each="leadApplicantTypes : ${leadApplicantTypes}" class="block-label selection-button-radio" th:for="${'lead-applicant-type-' + leadApplicantTypes.code}">
-                        <input th:id="${'lead-applicant-type-' + leadApplicantTypes.code}"
+                     <label th:each="leadApplicantType : ${leadApplicantTypes}" class="block-label selection-button-checkbox" th:for="${'lead-applicant-type-' + leadApplicantType.id}">
+                        <input th:id="${'lead-applicant-type-' + leadApplicantType.id}"
                                name="leadApplicantTypes"
-                               th:value="${leadApplicantTypes.code}"
-                               type="radio"
-                               th:checked="${competitionSetupForm.leadApplicantTypes == leadApplicantTypes.code}"
+                               th:value="${leadApplicantType.id}"
+                               type="checkbox"
+                               th:checked="${competitionSetupForm.leadApplicantTypes.contains(leadApplicantType.id)}"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.eligibilityform.leadapplicanttype.required}" />
-                        <span th:text="${leadApplicantTypes.name}" th:remove="tag" />
+                        <th:block th:text="${leadApplicantType.name}" />
                      </label>
                 </fieldset>
             </div>
@@ -713,7 +713,11 @@
                 <dd th:text="${researchCategoriesFormatted}"></dd>
 
                 <dt>Lead applicant</dt>
-                <dd th:each="(leadApplicantTypes : ${leadApplicantTypes})" th:if="${leadApplicantTypes.code == competitionSetupForm.leadApplicantTypes}" th:text="${leadApplicantTypes.name}">Lead applicant type</dd>
+                <dd>
+                    <th:block th:each="leadApplicantTypes : ${leadApplicantTypes}"
+                              th:if="${competitionSetupForm.leadApplicantTypes.contains(leadApplicantTypes.id)}"
+                              th:text="${leadApplicantTypes.name + ' '}"/>
+                </dd>
 
                 <dt>Research participation</dt>
                 <dd th:each="(researchParticipationAmount : ${researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmoun
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.LeadApplicantType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
@@ -54,8 +53,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 		CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
 		competition.setCollaborationLevel(level);
 		
-		LeadApplicantType type = LeadApplicantType.fromCode(eligibilityForm.getLeadApplicantType());
-		competition.setLeadApplicantType(type);
+		competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
 		
 		return competitionService.update(competition);
 	}
