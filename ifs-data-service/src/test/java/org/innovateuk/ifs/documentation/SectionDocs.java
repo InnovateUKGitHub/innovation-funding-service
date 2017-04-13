@@ -8,7 +8,7 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class SectionResourceDocs {
+public class SectionDocs {
     public static final FieldDescriptor[] sectionResourceFields = {
             fieldWithPath("id").description("Id of the sectionResource"),
             fieldWithPath("name").description("name of the section"),

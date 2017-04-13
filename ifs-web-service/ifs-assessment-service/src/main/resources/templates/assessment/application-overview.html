@@ -24,7 +24,7 @@
                 <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
                 <p class="form-hint" th:text="${section.guidance}" />
                 <ul class="task-list">
-                    <li th:each="question : ${section.questions}" th:class="${question.responseRequired} ? '': 'read-only'">
+                    <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
                         <div class="task">
                             <h3 class="heading-small">
                                 <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"
@@ -37,7 +37,7 @@
                         <div th:if="${question.assessed}" class="task-status-complete"><span>Complete</span></div>
                         <div th:unless="${question.responseRequired}" class="task-status"><span>No score required</span></div>
                     </li>
-                    <li th:if="${iterStat.last}" class="read-only">
+                    <li class="read-only" th:if="${section.finance}">
                         <div class="task">
                             <h3 class="heading-small">
                                 <a th:href="@{/{id}/finances(id=${model.assessmentId})}">Finances overview</a>
@@ -48,7 +48,7 @@
                 </ul>
             </section>
 
-            <div th:unless="${#lists.isEmpty(model.appendices)}" th:remove="tag">
+            <th:block th:unless="${#lists.isEmpty(model.appendices)}">
                 <h2 class="heading-medium">Appendices</h2>
                 <ul th:each="appendix : ${model.appendices}">
                     <li class="form-group download">
@@ -56,7 +56,7 @@
                         <a th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name} (${appendix.size})|">Project-plan.pdf (161.96 KB)</a>
                     </li>
                 </ul>
-            </div>
+            </th:block>
 
             <div class="alignright-button extra-margin">
                 <a class="button large" th:href="@{/{assessmentId}/summary(assessmentId=${model.assessmentId})}">Review and complete your assessment</a>
