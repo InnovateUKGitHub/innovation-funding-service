@@ -301,7 +301,6 @@ PM can download the annex
 PM can remove the signed grant offer letter
     [Documentation]    INFUND-6780
     [Tags]
-
     When the user clicks the button/link    name=removeSignedGrantOfferLetterClicked
     Then the user should not see the text in the page    Remove
     And the user should not see the text in the page    jQuery=.upload-section a:contains("${valid_pdf}")
