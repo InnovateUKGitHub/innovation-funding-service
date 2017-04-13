@@ -39,14 +39,6 @@ subprojects {
             })
         }
 
-        task prepareDockerFile (type: Copy) {
-            outputs.upToDateWhen { false }
-            from 'src/main/docker/'
-            into 'src/main/docker/'
-            include 'Dockerfile-template'
-            rename 'Dockerfile-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [version : project.properties['version']])
-        }
     }
 
     task codeCoverage {
