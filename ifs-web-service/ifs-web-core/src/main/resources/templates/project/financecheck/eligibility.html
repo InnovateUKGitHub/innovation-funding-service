@@ -147,7 +147,7 @@
         <div class="upload-section">
             <h3 class="heading-small no-margin">Download Je-S form:</h3>
             <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
-               class="uploaded-file" th:text="${summaryModel.jesFileDetails?.filename} + ' (opens in a new window)'">The-uploaded-file-example.pdf</a>
+               class="uploaded-file" th:text="${summaryModel.jesFileDetails?.filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
         </div>
     </th:block>
 

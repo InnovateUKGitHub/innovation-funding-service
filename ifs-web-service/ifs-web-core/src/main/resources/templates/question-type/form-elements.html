@@ -491,7 +491,7 @@
 <th:block th:fragment="readonly-file-download (filename, filesizeKbytes, fileDescription, downloadURL)" class="form-group download extra-margin">
     <div class="form-group download">
         <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
-        <a href="#" th:href="${downloadURL}" th:text="${filename + ', ' + filesizeKbytes + ' KB (opens in a new window)'}">filename.pdf, 161.96 KB (opens in a new window)</a>
+        <a href="#" th:href="${downloadURL}" th:text="${filename + ', ' + filesizeKbytes + ' KB (opens in a new window)'}" target="_blank">filename.pdf, 161.96 KB (opens in a new window)</a>
     </div>
 </th:block>
 
