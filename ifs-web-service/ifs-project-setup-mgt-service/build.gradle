@@ -1,20 +1,9 @@
-
 jar {
     baseName = 'project-setup-management'
 }
+prepareDockerFile.appName = jar.baseName
+buildDocker.applicationName = 'project-setup-management-service'
 
-//
-// Workaround for https://github.com/spring-projects/spring-boot/issues/8308
-// Can reinstate excludeDevtools in the bootRepackage task in next release
-//
-springBoot {
-    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
-
-bootRepackage {
-    mainClass = 'org.innovateuk.ifs.Application'
-//    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
@@ -43,19 +32,3 @@ processResources {
         exclude '**/application.properties'
     }
 }
-
-
-
-
-task buildDocker( type:Docker, dependsOn: build) {
-    push = false
-    applicationName = 'project-setup-management-service'
-    dockerfile = file('src/main/docker/Dockerfile')
-    doFirst {
-        copy {
-            from jar
-            into stageDir
-        }
-    }
-}
-buildDocker.dependsOn prepareDockerFile

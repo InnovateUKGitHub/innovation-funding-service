@@ -244,6 +244,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionRepository sectionRepositoryMock;
 
     @Mock
+    protected SectionService sectionServiceMock;
+
+    @Mock
     protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock

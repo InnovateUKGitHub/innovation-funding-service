@@ -61,12 +61,12 @@ Competition brief link can be seen
     [Documentation]    INFUND-5494
     [Tags]
     When the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then the user should see the element    link=See competition brief (opens in a new window)
+    Then the user should see the element    link=View competition brief
 
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When the user clicks the button/link    link=See competition brief (opens in a new window)
+    When the user clicks the button/link    link=View competition brief
     Then The user should get a competition brief window
     And the user should not see an error in the page
     And the user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
@@ -177,8 +177,7 @@ Milestone date for assessment submission is visible
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    MySQL    Pending
-    #TODO Pending INFUND-8925
+    [Tags]    MySQL
     Then the assessor should see the number of days remaining
     And the calculation of the remaining days should be correct    2068-01-28
 

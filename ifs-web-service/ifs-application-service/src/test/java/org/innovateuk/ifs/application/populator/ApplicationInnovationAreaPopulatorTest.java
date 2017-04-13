@@ -24,24 +24,29 @@ public class ApplicationInnovationAreaPopulatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
         String competitionName = "COMP_NAME";
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionName(competitionName).build();
 
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withCompetitionName(competitionName).build()));
         when(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId)).thenReturn(restSuccess(newInnovationAreaResource().build(5)));
 
-        InnovationAreaViewModel innovationAreaViewModel = populator.populate(applicationId, questionId);
+        InnovationAreaViewModel innovationAreaViewModel = populator.populate(applicationResource, questionId);
 
         assertEquals(questionId, innovationAreaViewModel.getQuestionId());
         assertEquals(applicationId, innovationAreaViewModel.getApplicationId());
-        assertEquals(innovationAreaViewModel.getCurrentCompetitionName(), competitionName);
-        assertEquals(innovationAreaViewModel.getAvailableInnovationAreas().size(), 5L);
+        assertEquals(competitionName, innovationAreaViewModel.getCurrentCompetitionName());
+        assertEquals(5L, innovationAreaViewModel.getAvailableInnovationAreas().size());
     }
 
     @Test
     public void populate_noInnovationAreaApplicableShouldBeSetWhenAppropriate() throws Exception {
         Long questionId = 1L;
         Long applicationId = 2L;
-        String competitionName = "COMP_NAME";
         Long innovationAreaId = 3L;
+        String competitionName = "COMP_NAME";
+        ApplicationResource applicationResource = newApplicationResource()
+                .withId(applicationId)
+                .withCompetitionName(competitionName)
+                .withInnovationArea(newInnovationAreaResource().withId(innovationAreaId).build()).build();
+
 
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource().withId(innovationAreaId).withName("Innovation Area").build();
         ApplicationResource applicationWithInnovationArea = newApplicationResource().withInnovationArea(innovationAreaResource).withCompetitionName(competitionName).build();
@@ -49,7 +54,7 @@ public class ApplicationInnovationAreaPopulatorTest extends BaseUnitTest {
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationWithInnovationArea));
         when(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId)).thenReturn(restSuccess(newInnovationAreaResource().build(5)));
 
-        InnovationAreaViewModel innovationAreaViewModel = populator.populate(applicationId, questionId);
+        InnovationAreaViewModel innovationAreaViewModel = populator.populate(applicationResource, questionId);
 
         assertEquals(innovationAreaId, innovationAreaViewModel.getSelectedInnovationAreaId());
         assertEquals(false, innovationAreaViewModel.isNoInnovationAreaApplicable());
@@ -60,13 +65,14 @@ public class ApplicationInnovationAreaPopulatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
         String competitionName = "COMP_NAME";
+        ApplicationResource applicationWithInnovationArea = newApplicationResource()
+                .withId(applicationId)
+                .withNoInnovationAreaApplicable(true)
+                .withCompetitionName(competitionName).build();
 
-        ApplicationResource applicationWithInnovationArea = newApplicationResource().withNoInnovationAreaApplicable(true).withCompetitionName(competitionName).build();
-
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationWithInnovationArea));
         when(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId)).thenReturn(restSuccess(newInnovationAreaResource().build(5)));
 
-        InnovationAreaViewModel innovationAreaViewModel = populator.populate(applicationId, questionId);
+        InnovationAreaViewModel innovationAreaViewModel = populator.populate(applicationWithInnovationArea, questionId);
 
         assertEquals(null, innovationAreaViewModel.getSelectedInnovationAreaId());
         assertEquals(true, innovationAreaViewModel.isNoInnovationAreaApplicable());
