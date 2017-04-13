@@ -58,12 +58,6 @@ public interface AssessmentService {
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> acceptInvitation(long assessmentId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(
-            value = "NOTIFY_ASSESSORS",
-            description = "Comp admins and execs can notify all assessors of their assignments for a competition")
-    ServiceResult<Void> notifyAssessorsByCompetition(long competitionId);
-
     @PreAuthorize("hasPermission(#assessmentSubmissions, 'SUBMIT')")
     ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource);
 

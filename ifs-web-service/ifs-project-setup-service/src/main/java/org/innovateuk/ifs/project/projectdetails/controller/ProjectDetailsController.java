@@ -14,21 +14,22 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.form.FinanceContactForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
-import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -45,6 +46,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -53,7 +55,6 @@ import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInv
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static java.util.stream.Collectors.toList;
 /**
  * This controller will handle all requests that are related to project details.
  */
@@ -121,7 +122,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> partnerOrganisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
@@ -165,10 +165,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, financeContactForm.getOrganisation(), loggedInUser, financeContactForm, false, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> updateResult = projectService.updateFinanceContact(projectId, financeContactForm.getOrganisation(), financeContactForm.getFinanceContact());
+            ServiceResult<Void> updateResult = projectService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, financeContactForm.getOrganisation()), financeContactForm.getFinanceContact());
 
             return validationHandler.addAnyErrors(updateResult, toField("financeContact")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
@@ -435,7 +436,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             return redirectToProjectDetails(projectId);
         }
 
-        if(!userIsPartnerInOrganisationForProject(projectId, organisation, loggedInUser.getId())){
+        if(!organisationService.userIsPartnerInOrganisationForProject(projectId, organisation, loggedInUser.getId())){
             return redirectToProjectDetails(projectId);
         }
 
@@ -478,18 +479,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
         List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
         return !projectUsersForOrganisation.isEmpty();
-    }
-
-    private boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
-        if(userId == null) {
-            return false;
-        }
-
-        List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
-        List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
-        List<ProjectUserResource> projectUsersForUserAndOrganisation = simpleFilter(projectUsersForOrganisation, user -> user.getUser().equals(userId));
-
-        return !projectUsersForUserAndOrganisation.isEmpty();
     }
 
     private String modelForFinanceContact(Model model, Long projectId, Long organisation, UserResource loggedInUser, FinanceContactForm financeContactForm, boolean setDefaultFinanceContact, boolean inviteAction) {
@@ -569,19 +558,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(project.getId());
 
         Optional<OrganisationAddressResource> registeredAddress = getAddress(leadOrganisation, REGISTERED);
-        if(registeredAddress.isPresent()){
-            projectDetailsAddressViewModel.setRegisteredAddress(registeredAddress.get().getAddress());
-        }
+        registeredAddress.ifPresent(organisationAddressResource -> projectDetailsAddressViewModel.setRegisteredAddress(organisationAddressResource.getAddress()));
 
         Optional<OrganisationAddressResource> operatingAddress = getAddress(leadOrganisation, OPERATING);
-        if(operatingAddress.isPresent()){
-            projectDetailsAddressViewModel.setOperatingAddress(operatingAddress.get().getAddress());
-        }
+        operatingAddress.ifPresent(organisationAddressResource -> projectDetailsAddressViewModel.setOperatingAddress(organisationAddressResource.getAddress()));
 
         Optional<OrganisationAddressResource> projectAddress = getAddress(leadOrganisation, PROJECT);
-        if(projectAddress.isPresent()){
-            projectDetailsAddressViewModel.setProjectAddress(projectAddress.get().getAddress());
-        }
+        projectAddress.ifPresent(organisationAddressResource -> projectDetailsAddressViewModel.setProjectAddress(organisationAddressResource.getAddress()));
 
         return projectDetailsAddressViewModel;
     }
