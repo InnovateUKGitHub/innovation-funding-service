@@ -49,6 +49,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -229,8 +230,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
             return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
 
-                Optional<InviteProjectResource> savedInvite = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
-                        .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
+                Optional<InviteProjectResource> savedInvite = getSavedInvite(projectId, invite);
 
                 if(savedInvite.isPresent()) {
                     ServiceResult<Void> inviteResult = sendInvite.apply(projectId, savedInvite.get());
@@ -244,10 +244,15 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private void validateIfTryingToInviteSelf(String loggedInUserEmail, String inviteEmail,
                                               ValidationHandler validationHandler) {
-        if (org.apache.commons.lang3.StringUtils.equalsIgnoreCase(loggedInUserEmail, inviteEmail)) {
-
+        if (equalsIgnoreCase(loggedInUserEmail, inviteEmail)) {
             validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_CANNOT_INVITE_SELF));
         }
+    }
+
+    private Optional<InviteProjectResource> getSavedInvite(Long projectId, InviteProjectResource invite) {
+
+        return projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+                .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
