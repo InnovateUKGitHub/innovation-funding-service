@@ -200,8 +200,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void updateFinanceContact() throws Exception {
-
-        when(projectServiceMock.updateFinanceContact(123L, 456L, 789L)).thenReturn(serviceSuccess());
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
+        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isOk())
@@ -218,8 +218,9 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void updateFinanceContactButUserIsNotOnProjectForOrganisation() throws Exception {
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
 
-        when(projectServiceMock.updateFinanceContact(123L, 456L, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isBadRequest())
@@ -228,8 +229,9 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void updateFinanceContactButUserIsNotPartnerOnProjectForOrganisation() throws Exception {
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
 
-        when(projectServiceMock.updateFinanceContact(123L, 456L, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isBadRequest())

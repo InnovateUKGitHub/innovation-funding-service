@@ -21,20 +21,20 @@
 
         <div class="my-applications">
             <h1 class="heading-large">Your dashboard</h1>
-            <section th:if="${!projectsInSetup.isEmpty()}" class="projects-in-setup">
+            <section th:if="${model.projectsInSetupNotEmpty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="heading-medium">Set up your project</h2>
                     <ul>
-                        <li th:each="project : ${projectsInSetup}">
+                        <li th:each="project : ${model.projectsInSetup}">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="@{/project-setup/project/{id}(id=${project.getId()})}" th:text="${(project.name == '' ? competitions.get(project.application).getName(): project.name)}">
+                                    <a th:href="@{/project-setup/project/{id}(id=${project.getId()})}" th:text="${(project.name == '' ? model.competitions.get(project.application).getName(): project.name)}">
                                         PROJECT NAME
                                     </a>
                                 </h3>
                                 <ul class="application-details">
                                     <li>Project number: <span th:text="${project.application}">PROJECT NUMBER</span></li>
-                                    <li>Competition: <span th:text="${competitions.get(project.application).name}">COMPETITION NAME</span></li>
+                                    <li>Competition: <span th:text="${model.competitions.get(project.application).name}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>
                             <div class="status">
@@ -47,47 +47,52 @@
                 </div>
             </section>
 
-            <section class="in-progress" th:unless="${applicationsInProgress.isEmpty()}">
+            <section class="in-progress" th:if="${model.applicationsInProgressNotEmpty}">
                 <div class="progress-list">
-                    <h2 class="heading-medium" th:text="${#lists.size(applicationsInProgress) == 1} ? 'Application in progress' : 'Applications in progress'"/>
+                    <h2 class="heading-medium" th:text="${model.applicationInProgressText}"/>
                     <ul>
-                        <li class="status-2-col" th:each="app : ${applicationsInProgress}" th:classappend="${applicationsAssigned?.contains(
-                        app.id) ? 'assigned-to-me' : '' }">
-                            <th:block th:unless="${applicationStatuses.get(app.getId()) == T(org.innovateuk.ifs.application.resource.ApplicationStatus).SUBMITTED}">
-                                <div class="task" th:with="created=${T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED == app.applicationStatus}">
+                        <li class="status-2-col" th:each="app : ${model.applicationsInProgress}" th:classappend="${model.applicationIsAssignedToMe(app.id) ? 'assigned-to-me' : '' }">
+                            <th:block th:unless="${model.applicationIsSubmitted(app.id)}">
+                                <div class="task">
                                     <h3 class="heading-small" th:with="teamUrl=@{/application/{id}/team(id=${app.getId()})}, formUrl=@{/application/{id}(id=${app.getId()})}, noTitle=#{ifs.application.dashboard.no_title}">
-                                        <a th:href="${created ? teamUrl : formUrl}"
+                                        <a th:href="${model.applicationIsCreated(app.id) ? teamUrl : formUrl}"
                                             th:text="${#strings.isEmpty(app.name) ? noTitle : app.name}"/>
                                     </h3>
                                     <ul class="application-details">
                                         <li>Application number: <span th:text="${app.id}"></span></li>
-                                        <li>Competition: <span th:text="${competitions.get(app.getId()).getName()}">COMPETITION NAME</span></li>
+                                        <li>Competition: <span th:text="${model.competitions.get(app.id).name}">COMPETITION NAME</span></li>
                                     </ul>
-                                    <th:block th:if="${applicationsAssigned?.contains(app.id)}">
+                                    <th:block th:if="${model.applicationIsAssignedToMe(app.id)}">
                                         <div class="action-required">
                                             <strong>Sections are assigned to you</strong>
                                         </div>
                                     </th:block>
                                 </div>
                                 <div class="status">
-                                    <div class="status-msg msg-deadline">
-                                      <strong class="bold-medium days-remaining" th:text="${competitions.get(app.getId()).getDaysLeft()}">DAYS LEFT</strong> <br />
+                                    <div class="status-msg msg-deadline" th:unless="${model.isApplicationWithin24Hours(app.id)}">
+                                      <strong class="bold-medium days-remaining" th:text="${model.competitions.get(app.id).daysLeft}">DAYS LEFT</strong> <br />
                                       days left <br />
                                       Deadline
-                                      <span class="day" th:text="${#temporals.day(competitions.get(app.getId()).getEndDate())}">END DAY</span>
-                                      <span class="month" th:text="${#temporals.monthName(competitions.get(app.getId()).getEndDate())}">END MONTH</span>
+                                      <span class="day" th:text="${#temporals.day(model.competitions.get(app.id).endDate)}">END DAY</span>
+                                      <span class="month" th:text="${#temporals.monthName(model.competitions.get(app.id).endDate)}">END MONTH</span>
                                     </div>
-                                    <span class="status-msg msg-progress" th:text="${applicationProgress.get(app.getId())}+'% complete'">PERCENTAGE COMPLETE</span>
+                                    <div class="status-msg msg-deadline-today" th:if="${model.isApplicationWithin24Hours(app.id)}">
+                                        <strong class="bold-medium" th:text="${model.getHoursLeftBeforeSubmit(app.id)}"></strong><br/>
+                                        hours left<br/>
+                                        Deadline <th:block th:text="${#temporals.format(model.competitions.get(app.id).endDate, 'hh:mm a')}"/>
+                                        <th:block th:text="${model.isClosingToday(app.id) ? 'today' : 'tomorrow'}"/>
+                                    </div>
+                                    <span class="status-msg msg-progress" th:text="${model.applicationProgress.get(app.id)}+'% complete'">PERCENTAGE COMPLETE</span>
                                 </div>
                             </th:block>
-                            <th:block th:if="${applicationStatuses.get(app.getId()) == T(org.innovateuk.ifs.application.resource.ApplicationStatus).SUBMITTED}">
+                            <th:block th:if="${model.applicationIsSubmitted(app.id)}">
                                 <div class="task">
                                     <h3 class="heading-small">
-                                        <a th:href="@{/application/{id}/track(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
+                                        <a th:href="@{/application/{id}/track(id=${app.id})}" th:text="${app.name}">placeholder</a>
                                     </h3>
                                     <ul class="application-details">
                                         <li>Application number: <span th:text="${app.id}"></span></li>
-                                        <li>Competition: <span th:text="${competitions.get(app.getId()).getName()}">COMPETITION NAME</span></li>
+                                        <li>Competition: <span th:text="${model.competitions.get(app.id).name}">COMPETITION NAME</span></li>
                                     </ul>
                                 </div>
                                 <div class="status">
@@ -100,26 +105,25 @@
                 </div>
             </section>
 
-            <section class="previous-applications" th:unless="${applicationsFinished.isEmpty()}">
+            <section class="previous-applications" th:if="${model.applicationsInFinishedNotEmpty}">
                 <div class="progress-list">
                     <h2 class="heading-medium">Previous applications</h2>
                     <ul>
-                        <li th:each="app : ${applicationsFinished}"
-                            th:with="status=${applicationStatuses.get(app.id)}"
-                            th:class="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).APPROVED} ? 'positive' : 'negative'">
+                        <li th:each="app : ${model.applicationsFinished}"
+                            th:class="${model.applicationIsApproved(app.id)} ? 'positive' : 'negative'">
                             <div class="task">
                                 <h3 class="heading-small">
                                     <a th:href="@{/application/{id}/summary(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
                                 </h3>
                                 <ul class="application-details">
                                     <li>Application number: <span th:text="${app.id}"></span></li>
-                                    <li>Competition: <span th:text="${competitions.get(app.getId()).getName()}">COMPETITION NAME</span></li>
+                                    <li>Competition: <span th:text="${model.competitions.get(app.id).name}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>
                             <div class="status">
-                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).REJECTED}" class="status-msg msg-progress">Unsuccessful</p>
-                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).APPROVED}" class="status-msg msg-progress">Successful</p>
-                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED or status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).OPEN}" class="status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${model.applicationIsRejected(app.id)}" class="status-msg msg-progress">Unsuccessful</p>
+                                <p th:if="${model.applicationIsApproved(app.id)}" class="status-msg msg-progress">Successful</p>
+                                <p th:if="${model.applicationIsCreatedOrOpen(app.id)}" class="status-msg msg-progress not-submitted">Not submitted</p>
                             </div>
                         </li>
                     </ul>
