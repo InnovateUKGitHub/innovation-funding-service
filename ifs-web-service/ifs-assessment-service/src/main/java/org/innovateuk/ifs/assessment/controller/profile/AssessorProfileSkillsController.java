@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.model.profile.AssessorProfileEditSkillsMode
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.profile.service.ProfileService;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -30,7 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 public class AssessorProfileSkillsController {
 
     @Autowired
-    private UserService userService;
+    private ProfileService profileService;
 
     @Autowired
     private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
@@ -43,7 +44,7 @@ public class AssessorProfileSkillsController {
     @GetMapping
     public String getReadonlySkills(Model model,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProfileSkillsResource profileSkillsResource = userService.getProfileSkills(loggedInUser.getId());
+        ProfileSkillsResource profileSkillsResource = profileService.getProfileSkills(loggedInUser.getId());
         model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(profileSkillsResource));
         return "profile/skills";
     }
@@ -66,7 +67,7 @@ public class AssessorProfileSkillsController {
         Supplier<String> failureView = () -> doViewEditSkills(model, loggedInUser, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> result = userService.updateProfileSkills(loggedInUser.getId(), form.getAssessorType(), form.getSkillAreas());
+            ServiceResult<Void> result = profileService.updateProfileSkills(loggedInUser.getId(), form.getAssessorType(), form.getSkillAreas());
 
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> "redirect:/profile/skills");
@@ -75,7 +76,7 @@ public class AssessorProfileSkillsController {
 
     private String doViewEditSkills(Model model, UserResource loggedInUser,
                                     AssessorProfileSkillsForm form, BindingResult bindingResult) {
-        ProfileSkillsResource profileSkillsResource = userService.getProfileSkills(loggedInUser.getId());
+        ProfileSkillsResource profileSkillsResource = profileService.getProfileSkills(loggedInUser.getId());
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(profileSkillsResource, form);
         }

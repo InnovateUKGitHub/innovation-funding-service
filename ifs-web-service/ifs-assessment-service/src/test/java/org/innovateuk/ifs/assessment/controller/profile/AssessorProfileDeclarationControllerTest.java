@@ -125,7 +125,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 expectedFamilyFinancialInterests
         );
 
-        when(userService.getUserAffiliations(user.getId())).thenReturn(combineLists(
+        when(affiliationService.getUserAffiliations(user.getId())).thenReturn(combineLists(
                 combineLists(
                         expectedAppointments,
                         expectedFamilyAffiliations
@@ -142,7 +142,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("profile/declaration-of-interest"));
 
-        verify(userService).getUserAffiliations(user.getId());
+        verify(affiliationService).getUserAffiliations(user.getId());
     }
 
     @Test
@@ -161,14 +161,14 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 null
         );
 
-        when(userService.getUserAffiliations(user.getId())).thenReturn(null);
+        when(affiliationService.getUserAffiliations(user.getId())).thenReturn(null);
 
         mockMvc.perform(get("/profile/declaration"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("profile/declaration-of-interest"));
 
-        verify(userService).getUserAffiliations(user.getId());
+        verify(affiliationService).getUserAffiliations(user.getId());
     }
 
     @Test
@@ -234,7 +234,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withDescription(expectedFamilyFinancialInterests)
                 .build();
 
-        when(userService.getUserAffiliations(user.getId())).thenReturn(combineLists(
+        when(affiliationService.getUserAffiliations(user.getId())).thenReturn(combineLists(
                 combineLists(
                         appointments,
                         familyAffiliations
@@ -264,7 +264,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("profile/declaration-of-interest-edit"));
 
-        verify(userService).getUserAffiliations(user.getId());
+        verify(affiliationService).getUserAffiliations(user.getId());
     }
 
 
@@ -291,7 +291,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build(1);
 
-        when(userService.getUserAffiliations(user.getId())).thenReturn(appointments);
+        when(affiliationService.getUserAffiliations(user.getId())).thenReturn(appointments);
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasAppointments(FALSE);
@@ -311,7 +311,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build(1);
 
-        when(userService.getUserAffiliations(user.getId())).thenReturn(financialInterests);
+        when(affiliationService.getUserAffiliations(user.getId())).thenReturn(financialInterests);
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFinancialInterests(FALSE);
@@ -331,7 +331,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build(1);
 
-        when(userService.getUserAffiliations(user.getId())).thenReturn(appointments);
+        when(affiliationService.getUserAffiliations(user.getId())).thenReturn(appointments);
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFamilyAffiliations(FALSE);
@@ -351,7 +351,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build(1);
 
-        when(userService.getUserAffiliations(user.getId())).thenReturn(familyFinancialInterests);
+        when(affiliationService.getUserAffiliations(user.getId())).thenReturn(familyFinancialInterests);
 
         AssessorProfileDeclarationForm expectedForm = new AssessorProfileDeclarationForm();
         expectedForm.setHasFamilyFinancialInterests(FALSE);
@@ -425,7 +425,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withDescription(familyFinancialInterests)
                 .build();
 
-        when(userService.updateUserAffiliations(user.getId(), combineLists(
+        when(affiliationService.updateUserAffiliations(user.getId(), combineLists(
                 combineLists(expectedAppointments,
                         expectedFamilyAffiliations
                 ),
@@ -511,7 +511,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build();
 
-        when(userService.updateUserAffiliations(user.getId(), combineLists(
+        when(affiliationService.updateUserAffiliations(user.getId(), combineLists(
                 expectedAppointments,
                 expectedFamilyAffiliations,
                 expectedPrincipalEmployer,
@@ -697,7 +697,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build();
 
-        when(userService.updateUserAffiliations(user.getId(), combineLists(
+        when(affiliationService.updateUserAffiliations(user.getId(), combineLists(
                 expectedAppointments,
                 expectedFamilyAffiliations,
                 expectedPrincipalEmployer,
@@ -949,7 +949,7 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
                 .withExists(FALSE)
                 .build();
 
-        when(userService.updateUserAffiliations(user.getId(), combineLists(
+        when(affiliationService.updateUserAffiliations(user.getId(), combineLists(
                 expectedAppointments,
                 expectedFamilyAffiliations,
                 expectedPrincipalEmployer,

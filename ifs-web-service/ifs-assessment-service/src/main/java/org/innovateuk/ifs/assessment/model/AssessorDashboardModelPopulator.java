@@ -8,8 +8,8 @@ import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,13 +27,13 @@ public class AssessorDashboardModelPopulator {
     private CompetitionParticipantRestService competitionParticipantRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProfileRestService profileRestService;
 
     public AssessorDashboardViewModel populateModel(Long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccessObject();
 
-        UserProfileStatusResource profileStatusResource = userRestService.getUserProfileStatus(userId).getSuccessObject();
+        UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccessObject();
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource),

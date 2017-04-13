@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileAgreementModelPopulator;
+import org.innovateuk.ifs.profile.service.ProfileService;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,19 +23,19 @@ public class AssessorProfileAgreementController {
     private AssessorProfileAgreementModelPopulator assessorProfileAgreementModelPopulator;
 
     @Autowired
-    private UserService userService;
+    private ProfileService profileService;
 
     @GetMapping
     public String getAgreement(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProfileAgreementResource profileAgreementResource = userService.getProfileAgreement(loggedInUser.getId());
+        ProfileAgreementResource profileAgreementResource = profileService.getProfileAgreement(loggedInUser.getId());
         return doViewAgreement(model, profileAgreementResource);
     }
 
     @PostMapping
     public String submitAgreement(Model model,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        userService.updateProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        profileService.updateProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
         return "redirect:/assessor/dashboard";
     }
 

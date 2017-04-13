@@ -48,7 +48,7 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
                         .build())
                 .build();
 
-        when(userService.getProfileAgreement(user.getId())).thenReturn(profileAgreementResource);
+        when(profileService.getProfileAgreement(user.getId())).thenReturn(profileAgreementResource);
 
         AssessorProfileAgreementViewModel expectedViewModel = new AssessorProfileAgreementViewModel();
         expectedViewModel.setCurrentAgreement(true);
@@ -61,7 +61,7 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("profile/agreement"));
 
-        verify(userService, only()).getProfileAgreement(user.getId());
+        verify(profileService, only()).getProfileAgreement(user.getId());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
-        when(userService.updateProfileAgreement(user.getId())).thenReturn(serviceSuccess());
+        when(profileService.updateProfileAgreement(user.getId())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/profile/agreement")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -77,6 +77,6 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard"));
 
-        verify(userService, only()).updateProfileAgreement(user.getId());
+        verify(profileService, only()).updateProfileAgreement(user.getId());
     }
 }

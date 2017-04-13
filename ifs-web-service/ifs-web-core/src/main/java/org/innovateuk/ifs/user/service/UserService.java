@@ -31,15 +31,7 @@ public interface UserService {
                                                                                     String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId);
     ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
-    ProfileSkillsResource getProfileSkills(Long userId);
-    ServiceResult<Void> updateProfileSkills(Long userId, BusinessType businessType, String skillsAreas);
-    ProfileAgreementResource getProfileAgreement(Long userId);
-    ServiceResult<Void> updateProfileAgreement(Long userId);
-    List<AffiliationResource> getUserAffiliations(Long userId);
-    ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
     List<UserResource> findUserByType(UserRoleType type);
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
-    UserProfileResource getUserProfile(Long userId);
-    ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile);
     Long getUserOrganisationId(Long userId, Long applicationId);
 }

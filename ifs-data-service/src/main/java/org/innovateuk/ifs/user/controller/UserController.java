@@ -1,29 +1,28 @@
 package org.innovateuk.ifs.user.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.UserProfileService;
 import org.innovateuk.ifs.user.transactional.UserService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -47,9 +46,6 @@ public class UserController {
 
     @Autowired
     private TokenService tokenService;
-
-    @Autowired
-    private UserProfileService userProfileService;
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable("uid") final String uid) {
@@ -148,54 +144,6 @@ public class UserController {
 
     @PostMapping("/updateDetails")
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
-        return userProfileService.updateDetails(userResource).toPutResponse();
-    }
-
-    @GetMapping("/id/{userId}/getProfileSkills")
-    public RestResult<ProfileSkillsResource> getProfileSkills(@PathVariable("userId") long userId) {
-        return userProfileService.getProfileSkills(userId).toGetResponse();
-    }
-
-    @PutMapping("/id/{userId}/updateProfileSkills")
-    public RestResult<Void> updateProfileSkills(@PathVariable("userId") long id,
-                                                @Valid @RequestBody ProfileSkillsEditResource profileSkills) {
-        return userProfileService.updateProfileSkills(id, profileSkills).toPutResponse();
-    }
-
-    @GetMapping("/id/{userId}/getProfileAgreement")
-    public RestResult<ProfileAgreementResource> getProfileAgreement(@PathVariable("userId") long userId) {
-        return userProfileService.getProfileAgreement(userId).toGetResponse();
-    }
-
-    @PutMapping("/id/{userId}/updateProfileAgreement")
-    public RestResult<Void> updateProfileAgreement(@PathVariable("userId") long userId) {
-        return userProfileService.updateProfileAgreement(userId).toPutResponse();
-    }
-
-    @GetMapping("/id/{userId}/getUserAffiliations")
-    public RestResult<List<AffiliationResource>> getUserAffiliations(@PathVariable("userId") Long userId) {
-        return userProfileService.getUserAffiliations(userId).toGetResponse();
-    }
-
-    @PutMapping("/id/{userId}/updateUserAffiliations")
-    public RestResult<Void> updateUserAffiliations(@PathVariable("userId") Long userId,
-                                                   @RequestBody List<AffiliationResource> affiliations) {
-        return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
-    }
-
-    @GetMapping("/id/{userId}/getUserProfile")
-    public RestResult<UserProfileResource> getUserProfile(@PathVariable("userId") Long userId) {
-        return userProfileService.getUserProfile(userId).toGetResponse();
-    }
-
-    @PutMapping("/id/{userId}/updateUserProfile")
-    public RestResult<Void> updateUserProfile(@PathVariable("userId") Long userId,
-                                              @RequestBody UserProfileResource profileDetails) {
-        return userProfileService.updateUserProfile(userId, profileDetails).toPutResponse();
-    }
-
-    @GetMapping("/id/{userId}/profileStatus")
-    public RestResult<UserProfileStatusResource> getUserProfileStatus(@PathVariable("userId") Long userId) {
-        return userProfileService.getUserProfileStatus(userId).toGetResponse();
+        return userService.updateDetails(userResource).toPutResponse();
     }
 }

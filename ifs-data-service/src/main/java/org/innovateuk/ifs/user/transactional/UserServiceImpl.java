@@ -25,6 +25,7 @@ import java.util.*;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
+import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -110,7 +111,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     public ServiceResult<Void> sendPasswordResetNotification(UserResource user) {
-        if(UserStatus.ACTIVE.equals(user.getStatus())){
+        if (UserStatus.ACTIVE.equals(user.getStatus())){
             String hash = getAndSavePasswordResetToken(user);
 
             NotificationSource from = systemNotificationSource;
@@ -121,7 +122,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
-        }else{
+        } else {
             return serviceFailure(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE));
         }
     }
@@ -148,7 +149,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         );
     }
 
-
     private String getRandomHash() {
         return UUID.randomUUID().toString();
     }
@@ -159,5 +159,30 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     private List<UserResource> usersToResources(List<User> filtered) {
         return simpleMap(filtered, user -> userMapper.mapToResource(user));
+    }
+
+    @Override
+    public ServiceResult<Void> updateDetails(UserResource userResource) {
+        if (userResource != null) {
+            return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()))
+                        .andOnSuccess( user -> {
+                        UserResource existingUserResource = userMapper.mapToResource(user);
+                        return updateUser(existingUserResource, userResource);
+                    });
+        } else {
+            return serviceFailure(badRequestError("User resource may not be null"));
+        }
+    }
+
+    private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
+        existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
+        existingUserResource.setTitle(updatedUserResource.getTitle());
+        existingUserResource.setLastName(updatedUserResource.getLastName());
+        existingUserResource.setFirstName(updatedUserResource.getFirstName());
+        existingUserResource.setGender(updatedUserResource.getGender());
+        existingUserResource.setDisability(updatedUserResource.getDisability());
+        existingUserResource.setEthnicity(updatedUserResource.getEthnicity());
+        User existingUser = userMapper.mapToDomain(existingUserResource);
+        return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }
 }

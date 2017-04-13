@@ -5,7 +5,7 @@ import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.mapstruct.Mapper;

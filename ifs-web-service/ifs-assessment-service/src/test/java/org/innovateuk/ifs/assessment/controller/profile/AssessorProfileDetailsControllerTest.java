@@ -62,7 +62,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         setLoggedInUser(user);
 
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
-        when(userService.getUserProfile(user.getId())).thenReturn(buildTestUserProfile());
+        when(profileService.getUserProfile(user.getId())).thenReturn(buildTestUserProfile());
 
         mockMvc.perform(get("/profile/details"))
                 .andExpect(status().isOk())
@@ -76,7 +76,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         UserProfileResource userProfile = buildTestUserProfile();
 
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
-        when(userService.getUserProfile(user.getId())).thenReturn(userProfile);
+        when(profileService.getUserProfile(user.getId())).thenReturn(userProfile);
 
         MvcResult result = mockMvc.perform(get("/profile/details/edit"))
                 .andExpect(status().isOk())
@@ -100,7 +100,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         UserProfileResource profileDetails = buildTestUserProfile();
 
-        when(userService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
+        when(profileService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
@@ -127,7 +127,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(profileDetails.getDisability(), form.getDisability());
         assertEquals(profileDetails.getAddress().getPostcode(), form.getAddressForm().getPostcode());
 
-        verify(userService).updateUserProfile(user.getId(), profileDetails);
+        verify(profileService).updateUserProfile(user.getId(), profileDetails);
     }
 
     @Test
@@ -161,7 +161,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                         .build())
                 .build();
 
-        when(userService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
+        when(profileService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
         when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
@@ -190,7 +190,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(form.getAddressForm().getTown(), town);
         assertEquals(form.getAddressForm().getPostcode(), postcode);
 
-        verify(userService).updateUserProfile(user.getId(), profileDetails);
+        verify(profileService).updateUserProfile(user.getId(), profileDetails);
     }
 
     @Test

@@ -2,6 +2,7 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.affiliation.service.AffiliationService;
 import org.innovateuk.ifs.agreement.service.AgreementService;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
@@ -47,6 +48,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.profile.service.ProfileService;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
@@ -148,6 +150,10 @@ public class BaseUnitTest {
     public ProcessRoleService processRoleService;
     @Mock
     public UserService userService;
+    @Mock
+    public ProfileService profileService;
+    @Mock
+    public AffiliationService affiliationService;
     @Mock
     public AlertService alertService;
     @Mock

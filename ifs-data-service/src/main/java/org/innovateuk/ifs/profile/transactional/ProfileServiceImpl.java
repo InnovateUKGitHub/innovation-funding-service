@@ -1,27 +1,24 @@
-package org.innovateuk.ifs.user.transactional;
+package org.innovateuk.ifs.profile.transactional;
 
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.Agreement;
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.AgreementMapper;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
-import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -30,13 +27,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
- * A Service for operations regarding Users' profiles.  This implementation delegates some of this work to an Identity Provider Service
+ * A Service that covers basic operations concerning Profiles
  */
 @Service
-public class UserProfileServiceImpl extends BaseTransactionalService implements UserProfileService {
-
-    @Autowired
-    private UserService userService;
+public class ProfileServiceImpl extends BaseTransactionalService implements ProfileService {
 
     @Autowired
     private UserMapper userMapper;
@@ -134,37 +128,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> updateDetails(UserResource userResource) {
-        if (userResource != null) {
-            return userService.findByEmail(userResource.getEmail())
-                    .andOnSuccess(existingUser ->
-                            updateUser(existingUser, userResource));
-        } else {
-            return serviceFailure(badRequestError("User resource may not be null"));
-        }
-    }
-
-    @Override
-    public ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccessReturn(user -> user.getAffiliations().stream().map(affiliation -> affiliationMapper.mapToResource(affiliation)).collect(toList()));
-    }
-
-    @Override
-    public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
-            List<Affiliation> targetAffiliations = user.getAffiliations();
-            targetAffiliations.clear();
-            affiliationMapper.mapToDomain(affiliations)
-                    .forEach(affiliation -> {
-                        affiliation.setUser(user);
-                        targetAffiliations.add(affiliation);
-                    });
-            userRepository.save(user);
-            return serviceSuccess();
-        });
-    }
-
-    @Override
     public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> {
@@ -219,7 +182,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
         return profile;
     }
-
 
     @Override
     public ServiceResult<UserProfileStatusResource> getUserProfileStatus(Long userId) {

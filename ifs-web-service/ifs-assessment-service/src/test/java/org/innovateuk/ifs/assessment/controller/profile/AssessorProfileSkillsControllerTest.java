@@ -80,7 +80,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("profile/skills"));
 
-        verify(userService, only()).getProfileSkills(userResource.getId());
+        verify(profileService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("profile/skills-edit"));
 
-        verify(userService, only()).getProfileSkills(userResource.getId());
+        verify(profileService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = String.join(" ", nCopies(100, "skill"));
 
-        when(userService.updateProfileSkills(1L, businessType, skillAreas)).thenReturn(serviceSuccess());
+        when(profileService.updateProfileSkills(1L, businessType, skillAreas)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -123,7 +123,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile/skills"));
 
-        verify(userService, only()).updateProfileSkills(1L, businessType, skillAreas);
+        verify(profileService, only()).updateProfileSkills(1L, businessType, skillAreas);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("skillAreas").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("skillAreas").getArguments()[1]);
 
-        verify(userService, only()).getProfileSkills(userResource.getId());
+        verify(profileService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("skillAreas").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("skillAreas").getArguments()[1]);
 
-        verify(userService, only()).getProfileSkills(userResource.getId());
+        verify(profileService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test
@@ -243,7 +243,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertTrue(bindingResult.hasFieldErrors("assessorType"));
         assertEquals("Please select an assessor type.", bindingResult.getFieldError("assessorType").getDefaultMessage());
 
-        verify(userService, only()).getProfileSkills(userResource.getId());
+        verify(profileService, only()).getProfileSkills(userResource.getId());
     }
 
     private List<InnovationAreaResource> setUpInnovationAreasForSector(String sectorName, String... innovationAreaNames) {
@@ -257,7 +257,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
-        when(userService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
+        when(profileService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
                 .withUser(user.getId())
                 .withInnovationAreas(innovationAreaResources)
                 .withBusinessType(businessType)

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
@@ -38,6 +39,8 @@ import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
@@ -140,7 +143,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected SpendProfileService spendProfileService;
     protected FinanceCheckService financeCheckService;
     protected RejectionReasonService rejectionReasonService;
-    protected UserProfileService userProfileService;
+    protected ProfileService profileService;
+    protected AffiliationService affiliationService;
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
     protected AssessorFormInputResponseService assessorFormInputResponseService;
 
@@ -201,7 +205,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.innovationSectorRepository = serviceLocator.getBean(InnovationSectorRepository.class);
         this.researchCategoryRepository = serviceLocator.getBean(ResearchCategoryRepository.class);
         this.rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
-        this.userProfileService = serviceLocator.getBean(UserProfileService.class);
+        this.profileService = serviceLocator.getBean(ProfileService.class);
+        this.affiliationService = serviceLocator.getBean(AffiliationService.class);
         this.baseUserService = serviceLocator.getBean(BaseUserService.class);
         this.profileRepository = serviceLocator.getBean(ProfileRepository.class);
         this.publicContentService = serviceLocator.getBean(PublicContentService.class);

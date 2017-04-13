@@ -101,6 +101,10 @@ The errorMessage on the other hand is an optional "human-readable" field that ca
 == Address
 include::address.adoc[]
 
+[[affiliation]]
+== Affiliation
+include::affiliation.adoc[]
+
 [[alert]]
 == Alert
 include::alert.adoc[]
@@ -181,6 +185,10 @@ include::assessment.adoc[]
 [[user]]
 == User
 include::user.adoc[]
+
+[[profile]]
+== Profile
+include::profile.adoc[]
 
 [[organisation]]
 == Organisation

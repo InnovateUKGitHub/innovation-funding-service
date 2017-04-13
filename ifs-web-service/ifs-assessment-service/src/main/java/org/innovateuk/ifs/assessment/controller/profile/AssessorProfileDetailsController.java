@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.model.profile.AssessorProfileEditDetailsMod
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.profile.service.ProfileService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -42,7 +43,7 @@ public class AssessorProfileDetailsController {
     private AssessorProfileEditDetailsModelPopulator assessorEditDetailsModelPopulator;
 
     @Autowired
-    private UserService userService;
+    private ProfileService profileService;
 
     @Autowired
     private EthnicityRestService ethnicityRestService;
@@ -81,7 +82,7 @@ public class AssessorProfileDetailsController {
             profileDetails.setPhoneNumber(form.getPhoneNumber());
             profileDetails.setAddress(form.getAddressForm());
             profileDetails.setEmail(loggedInUser.getEmail());
-            ServiceResult<Void> detailsResult = userService.updateUserProfile(loggedInUser.getId(), profileDetails);
+            ServiceResult<Void> detailsResult = profileService.updateUserProfile(loggedInUser.getId(), profileDetails);
 
             return validationHandler.addAnyErrors(detailsResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
@@ -95,7 +96,7 @@ public class AssessorProfileDetailsController {
 
     private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
-            UserProfileResource profileDetails = userService.getUserProfile(loggedInUser.getId());
+            UserProfileResource profileDetails = profileService.getUserProfile(loggedInUser.getId());
             form.setFirstName(profileDetails.getFirstName());
             form.setLastName(profileDetails.getLastName());
             form.setPhoneNumber(profileDetails.getPhoneNumber());
