@@ -928,7 +928,7 @@ Project finance user can review Partner's Overall cost for Changes-from-submitte
 Lead-Partner can review only the external version of Finance Checks Eligibility table
     [Documentation]    INFUND-8778
     [Tags]
-    [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
+    Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
@@ -944,7 +944,7 @@ Lead-Partner can review only the external version of Finance Checks Eligibility 
 Partner can review only the external version of Finance Checks Eligibility table
     [Documentation]    INFUND-8778
     [Tags]
-    Given log in as a different user   jessica.doe@ludlow.co.uk    ${short_password}
+    Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
@@ -1799,14 +1799,14 @@ Project finance user can view Partner's Overall cost difference after Changes-fr
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    [Setup]    log in as a different user       &{collaborator1_credentials}
+    When the user clicks the button/link        link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    And the user should see the element     jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
-    And the user should see the element    jQuery=ul li.complete:nth-child(2)
-    And the user should see the element    jQuery=ul li.complete:nth-child(4)
-    And the user should see the element    jQuery=ul li.complete:nth-child(5)
-    And the user should see the element    jQuery=ul li.read-only:nth-child(6)
+    And the user should see the element     jQuery=ul li.complete:nth-child(2)
+    And the user should see the element     jQuery=ul li.complete:nth-child(4)
+    And the user should see the element     jQuery=ul li.complete:nth-child(5)
+    And the user should see the element     jQuery=ul li.read-only:nth-child(6)
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
@@ -1842,7 +1842,7 @@ Finance contact can access the external view of the finance checks page
 Lead-Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
-    [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
+    Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
@@ -1862,7 +1862,7 @@ Lead-Partner can view only the external version of Finance Checks Eligibility ta
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787
     [Tags]
-    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    Given log in as a different user        &{collaborator2_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
@@ -1872,7 +1872,7 @@ Academic user can view Finance checks page
 Non Lead Partner can view Finance checks page
     [Documentation]     INFUND-8787
     [Tags]
-    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
