@@ -116,20 +116,31 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
     @Test
     public void testUpdateApplicationStatusApproved() throws Exception {
+        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.OPEN);
+        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.SUBMITTED);
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.APPROVED);
         assertEquals(ApplicationStatus.APPROVED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
     }
 
     @Test
     public void testUpdateApplicationStatusRejected() throws Exception {
+        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.OPEN);
+        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.SUBMITTED);
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.REJECTED);
         assertEquals(ApplicationStatus.REJECTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
     }
 
+
+//    @Test
+//    public void testUpdateApplicationStatusCreated() throws Exception {
+//        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.CREATED);
+//        assertEquals(ApplicationStatus.CREATED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
+//    }
+
     @Test
-    public void testUpdateApplicationStatusCreated() throws Exception {
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.CREATED);
-        assertEquals(ApplicationStatus.CREATED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
+    public void testUpdateApplicationStatusOpened() throws Exception {
+        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.OPEN);
+        assertEquals(ApplicationStatus.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
     }
 
     @Test

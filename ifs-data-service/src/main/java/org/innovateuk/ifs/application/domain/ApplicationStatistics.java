@@ -33,9 +33,12 @@ public class ApplicationStatistics {
 
     private Long competition;
 
-    @Column(name="status")
-    @Enumerated(EnumType.STRING)
-    private ApplicationStatus applicationStatus;
+//    @Column(name="status")
+//    @Enumerated(EnumType.STRING)
+//    private ApplicationStatus applicationStatus;
+
+    @OneToOne(mappedBy = "target", optional=false)
+    private ApplicationProcess applicationProcess;
 
     @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
@@ -58,7 +61,7 @@ public class ApplicationStatistics {
     }
 
     public ApplicationStatus getApplicationStatus() {
-        return applicationStatus;
+        return ApplicationStatus.toApplicationState(applicationProcess.getActivityState());
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {

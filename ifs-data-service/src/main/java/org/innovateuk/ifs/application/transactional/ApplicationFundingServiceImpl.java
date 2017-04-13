@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationProcessWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -59,6 +60,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private ApplicationProcessWorkflowHandler applicationProcessWorkflowHandler;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -119,7 +123,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         applications.forEach(app -> {
             FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
             ApplicationStatus status = statusFromDecision(applicationFundingDecision);
-            app.setApplicationStatus(status);
+            applicationProcessWorkflowHandler.notifyFromApplicationStatus(app, status);
+//            app.setApplicationStatus(status);
         });
         return applications;
     }

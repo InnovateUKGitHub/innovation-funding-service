@@ -11,6 +11,7 @@ import org.innovateuk.ifs.alert.transactional.AlertService;
 import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationProcessWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
@@ -641,6 +642,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionSetupTransactionalService competitionSetupTransactionalServiceMock;
+
+    @Mock
+    protected ApplicationProcessWorkflowHandler applicationProcessWorkflowHandlerMock;
 
     @Before
     public void setupMockInjection() {

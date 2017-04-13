@@ -37,6 +37,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSES
 import static org.innovateuk.ifs.competition.resource.MilestoneType.FEEDBACK_RELEASED;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.innovateuk.ifs.workflow.resource.State.CREATED;
 import static org.innovateuk.ifs.workflow.resource.State.PENDING;
@@ -398,7 +399,8 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         controller.saveCompetition(closedCompetition, closedCompetition.getId());
 
         UserResource user = getPaulPlum();
-        List<Long> assessmentIds = createCreatedAssessmentsWithCompetition(closedCompetition.getId(), user, 2);
+        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION, CREATED);
+        List<Long> assessmentIds = createCreatedAssessmentsWithCompetition(closedCompetition.getId(), user, 2, createdActivityState);
 
         RestResult<Void> notifyResult = controller.notifyAssessors(closedCompetition.getId());
         assertTrue("Notify assessors is a success", notifyResult.isSuccess());
@@ -568,11 +570,13 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(competitionTypeId, competitionsResult.getSuccessObject().getCompetitionType());
     }
 
-    private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, UserResource assessor, int numberOfAssessments) {
+    private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, UserResource assessor, int numberOfAssessments, ActivityState created) {
         List<Application> applications = newApplication()
                 .withCompetition(competitionRepository.findById(competitionId))
                 .withApplicationStatus(ApplicationStatus.CREATED)
                 .build(numberOfAssessments);
+
+        applications.stream().forEach(application -> application.getApplicationProcess().setActivityState(created));
 
         applicationRepository.save(applications);
 

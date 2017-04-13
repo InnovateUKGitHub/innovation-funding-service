@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
@@ -25,6 +26,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -58,7 +61,7 @@ public class Application implements ProcessActivity {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
-    private ApplicationStatus applicationStatus;
+    private ApplicationStatus applicationStatus; // TODO delete and drop column
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition", referencedColumnName = "id")
@@ -83,6 +86,9 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private ApplicationInnovationAreaLink innovationArea;
 
+    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false)
+    private ApplicationProcess applicationProcess;
+
     private boolean noInnovationAreaApplicable;
 
     private Boolean stateAidAgreed;
@@ -94,14 +100,18 @@ public class Application implements ProcessActivity {
         this.id = id;
         this.name = name;
         this.applicationStatus = applicationStatus;
+        this.applicationProcess = ApplicationProcess.fromApplicationStatus(this, applicationStatus);
     }
 
     public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
+        requireNonNull(applicationStatus, "applicationStatus cannot be null");
         this.competition = competition;
         this.name = name;
         this.processRoles = processRoles;
         this.applicationStatus = applicationStatus;
         this.id = id;
+        this.applicationProcess = ApplicationProcess.fromApplicationStatus(this, applicationStatus);
+
     }
 
     protected boolean canEqual(Object other) {
@@ -158,12 +168,12 @@ public class Application implements ProcessActivity {
     }
 
     public ApplicationStatus getApplicationStatus() {
-        return applicationStatus;
+        return ApplicationStatus.toApplicationState(applicationProcess.getActivityState());
     }
 
-    public void setApplicationStatus(ApplicationStatus applicationStatus) {
-        this.applicationStatus = applicationStatus;
-    }
+//    public void setApplicationStatus(ApplicationStatus applicationStatus) {
+//        this.applicationStatus = applicationStatus;
+//    }
 
     public Competition getCompetition() {
         return competition;
@@ -237,7 +247,7 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isOpen() {
-        return applicationStatus == ApplicationStatus.OPEN;
+        return applicationProcess.isInState(ApplicationState.OPEN);
     }
 
     public void setInvites(List<ApplicationInvite> invites) {
@@ -364,5 +374,9 @@ public class Application implements ProcessActivity {
         }
 
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
+    }
+
+    public ApplicationProcess getApplicationProcess() {
+        return applicationProcess;
     }
 }

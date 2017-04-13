@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -48,9 +49,19 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((competition, application) -> application.setCompetition(competition), competitions);
     }
 
-    public ApplicationBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {
-        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
+    // this isn't that useful
+    public ApplicationBuilder withApplicationStatus(ApplicationStatus... applicationStatuses) {
+        return withArray((applicationStatus, application)
+                        -> setField("applicationProcess",
+                                new ApplicationProcess(application, null, applicationStatus.toApplicationState()), application
+                ),
+                applicationStatuses
+        );
     }
+//
+//    public ApplicationBuilder withApplicationProcess(ApplicationProcess... applicationProcesses) {
+//        return withArraySetFieldByReflection("applicationProcess", applicationProcesses);
+//    }
 
     public ApplicationBuilder withStartDate(LocalDate... dates) {
         return withArray((date, application) -> application.setStartDate(date), dates);

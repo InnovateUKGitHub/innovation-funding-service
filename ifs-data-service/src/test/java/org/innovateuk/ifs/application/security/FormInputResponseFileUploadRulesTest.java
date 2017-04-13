@@ -48,10 +48,10 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     @Test
     public void applicantCanUploadFilesInResponsesForOwnApplication() {
 
-        Application application = newApplication().build();
+        Application application = newApplication().withApplicationStatus(ApplicationStatus.OPEN).build();
 
-        ApplicationStatus applicationStatusOpen = ApplicationStatus.OPEN;
-        application.setApplicationStatus(applicationStatusOpen);
+//        ApplicationStatus applicationStatusOpen = ApplicationStatus.OPEN;
+//        application.setApplicationStatus(applicationStatusOpen);
 
         User user = newUser().build();
         UserResource userResource = newUserResource().withId(user.getId()).build();

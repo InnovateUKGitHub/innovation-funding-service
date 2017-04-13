@@ -24,7 +24,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private Long id;
     private String event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // cascade??
     protected ActivityState activityState;
 
     @Version

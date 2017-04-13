@@ -587,9 +587,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "testToken123abc", "my-uid");
         User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", "my-uid");
 
-        Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
-        Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
-        Application testApplication3 = new Application(null, "testApplication3Name", null, null, 3L);
+        Application testApplication1 = new Application(null, "testApplication1Name", null, ApplicationStatus.CREATED, 1L);
+        Application testApplication2 = new Application(null, "testApplication2Name", null, ApplicationStatus.CREATED, 2L);
+        Application testApplication3 = new Application(null, "testApplication3Name", null, ApplicationStatus.CREATED, 3L);
 
         ApplicationResource testApplication1Resource = newApplicationResource().with(id(1L)).withName("testApplication1Name").build();
         ApplicationResource testApplication2Resource = newApplicationResource().with(id(2L)).withName("testApplication2Name").build();
@@ -756,7 +756,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -791,7 +791,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -888,7 +888,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -922,7 +922,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -1022,7 +1022,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -1054,7 +1054,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
