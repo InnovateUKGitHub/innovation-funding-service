@@ -50,6 +50,9 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
+/**
+ * Implementation of {@link CompetitionManagementApplicationService}
+ */
 @Service
 public class CompetitionManagementApplicationServiceImpl implements CompetitionManagementApplicationService {
 
