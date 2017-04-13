@@ -289,7 +289,7 @@ public class ApplicationFormController {
 
     @ProfileExecution
     @PostMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
-    public String questionFormSubmit(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
+    public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler,
                                      Model model,
