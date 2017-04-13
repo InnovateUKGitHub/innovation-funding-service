@@ -37,12 +37,12 @@ public class ApplicationForm extends Form {
         this.application = application;
     }
 
-    /** Placeholder function for mapping errors */
+    /** Placeholder function for mapping errors to field in Thymeleaf */
     public String getOrganisationSize() {
         return "";
     }
 
-    /** Placeholder function for mapping errors */
+    /** Placeholder function for mapping errors to field in Thymeleaf */
     public void setOrganisationSize(String organisationSize) {
     }
 
