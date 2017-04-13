@@ -120,7 +120,7 @@
            <tbody>
              <tr th:each="result, index : ${results.content}" th:class="${competition.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
                <td>
-                   <div class="multi-choice">
+                   <div class="multiple-choice">
                        <input data-switches-button-status="[name=fundingDecision]" type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:value="${result.id}" aria-labelledby="select-applications-label" />
                        <label th:if="${result.applicationFundingDecisionIsChangeable()}" th:for="${'app-row-'+index.count}">
                            <span class="invisible">Select application</span>

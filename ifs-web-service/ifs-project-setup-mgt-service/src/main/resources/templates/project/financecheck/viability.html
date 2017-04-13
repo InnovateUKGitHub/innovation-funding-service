@@ -78,7 +78,7 @@
 
         <h2 class="heading-medium">Credit report</h2>
         <div class="form-group">
-            <div class="multi-choice">
+            <div class="multiple-choice">
                 <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />
                 <label for="costs-reviewed">
                     A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
@@ -94,7 +94,7 @@
           <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
           <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
           <div class="form-group">
-              <div class="multi-choice" data-target="add-rag-rating">
+              <div class="multiple-choice" data-target="add-rag-rating">
                   <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-switches-button-status="#confirm-button" />
                   <label for="project-viable">
                       <th:block th:text="${model.organisationName}" /> is viable for this project

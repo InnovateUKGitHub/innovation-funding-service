@@ -104,7 +104,7 @@
                     Funding type
                 </label>
 
-                <div class="multi-choice" th:each="fundingType : ${model.fundingTypes}">
+                <div class="multiple-choice" th:each="fundingType : ${model.fundingTypes}">
                     <input type="radio"
                            name="fundingType"
                            th:id="${'fundingType-'+fundingType.displayName}"

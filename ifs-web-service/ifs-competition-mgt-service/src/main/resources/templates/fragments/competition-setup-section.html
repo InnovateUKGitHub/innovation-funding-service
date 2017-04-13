@@ -528,7 +528,7 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
                             </span>
                         </legend>
-                        <div class="multi-choice" data-target="competition-stream-name-fields">
+                        <div class="multiple-choice" data-target="competition-stream-name-fields">
                             <input id="comp-stream-yes"
                                    value="yes"
                                    type="radio"
@@ -537,7 +537,7 @@
                                    th:attr="data-required-errormessage=#{validation.eligibilityform.multiplestream.required}" />
                             <label for="comp-stream-yes">Yes</label>
                         </div>
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input id="comp-stream-no"
                                    value="no"
                                    type="radio"
@@ -579,7 +579,7 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}" />
                         </span>
                     </legend>
-                    <div class="multi-choice" th:each="collaborationLevel : ${collaborationLevels}">
+                    <div class="multiple-choice" th:each="collaborationLevel : ${collaborationLevels}">
                         <input th:id="${'single-or-collaborative-' + collaborationLevel.code}"
                                name="singleOrCollaborative"
                                th:value="${collaborationLevel.code}"
@@ -604,7 +604,7 @@
                         </span>
                     </legend>
 
-                    <div class="multi-choice">
+                    <div class="multiple-choice">
                         <input th:value="${researchCategory.id}"
                                 type="checkbox"
                                 name="researchCategoryId"
@@ -630,7 +630,7 @@
                        </span>
                     </legend>
 
-                    <div class="multi-choice" th:each="leadApplicantType : ${leadApplicantTypes}">
+                    <div class="multiple-choice" th:each="leadApplicantType : ${leadApplicantTypes}">
                         <input th:id="${'lead-applicant-type-' + leadApplicantType.code}"
                                name="leadApplicantType"
                                th:value="${leadApplicantType.code}"
@@ -673,7 +673,7 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}" />
                         </span>
                     </legend>
-                    <div class="multi-choice">
+                    <div class="multiple-choice">
                         <input id="comp-resubmissions-yes"
                                value="yes"
                                type="radio"
@@ -684,7 +684,7 @@
                             Yes
                         </label>
                     </div>
-                    <div class="multi-choice">
+                    <div class="multiple-choice">
                         <input id="comp-resubmissions-no"
                                value="no"
                                type="radio"
@@ -998,14 +998,14 @@
           th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="assessors">
         <th:block th:if="${editable}" id="section-assessors-edit">
             <div th:class="${#fields.hasErrors('assessorCount')}? 'form-group form-group-error':'form-group'">
-                <fieldset>
+                <fieldset class="inline">
                     <legend class="heading-small">
                         How many assessors are required for each application?
                         <span th:if="${#fields.hasErrors('assessorCount')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}" />
                         </span>
                     </legend>
-                    <div class="multi-choice" th:each="assessorOption : ${assessorOptions}">
+                    <div class="multiple-choice" th:each="assessorOption : ${assessorOptions}">
                         <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
                                th:value="${assessorOption.optionValue}" type="radio"
                                th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}" />

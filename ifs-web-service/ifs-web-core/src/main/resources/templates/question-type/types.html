@@ -239,7 +239,7 @@
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                         </legend>
 
-                        <div class="multi-choice" data-target="resubmission-details">
+                        <div class="multiple-choice" data-target="resubmission-details">
                             <input type="radio"
                                    id="application.resubmission-yes"
                                    th:field="*{__application.resubmission__}"
@@ -253,7 +253,7 @@
                             </label>
                         </div>
 
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input type="radio"
                                    id="application.resubmission-no"
                                    th:field="*{__application.resubmission__}"

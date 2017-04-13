@@ -13,7 +13,7 @@
         </legend>
 
         <div class="form-block" th:if="${model.registeredAddress}">
-            <div class="multi-choice" data-target="registeredAddress">
+            <div class="multiple-choice" data-target="registeredAddress">
                 <input id="address-use-org" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="REGISTERED" th:field="*{addressType}" />
                 <label for="address-use-org">
                     Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
@@ -22,7 +22,7 @@
         </div>
 
         <div class="form-block" th:if="${model.operatingAddress}">
-            <div class="multi-choice" data-target="operatingAddress">
+            <div class="multiple-choice" data-target="operatingAddress">
                 <input id="address-use-operating" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="OPERATING" th:field="*{addressType}" />
                 <label for="address-use-operating">
                     Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
@@ -31,7 +31,7 @@
         </div>
 
         <div class="form-block">
-            <div class="multi-choice" data-target="custom-postcode">
+            <div class="multiple-choice" data-target="custom-postcode">
                 <input id="address-add-bank" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="ADD_NEW" th:field="*{addressType}" />
                 <label for="address-add-bank">
                     Enter an alternative billing address

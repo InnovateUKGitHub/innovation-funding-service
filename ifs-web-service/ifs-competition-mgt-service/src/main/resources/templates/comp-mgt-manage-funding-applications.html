@@ -74,7 +74,7 @@
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
 
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <label for="select-all-1">
                                 <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox">
                                 Select all applications
@@ -108,7 +108,7 @@
                     <tbody>
                     <tr th:each="applicationSummary, stat : ${model.content}">
                         <td class="form-group-cell">
-                            <div class="multi-choice">
+                            <div class="multiple-choice">
                                 <input data-switches-button-status="[name=write-an-send-email]" type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'app-row-' + ${applicationSummary.id}" />
                                 <label th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}" th:for="'app-row-' + ${applicationSummary.id}">
                                     <span class="invisible">Select application</span>
@@ -141,7 +141,7 @@
                 <div class="select-all">
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <label for="select-all-2">
                                 <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox">
                                 Select all applications

@@ -29,7 +29,7 @@
                             </div>
                         </legend>
                         <p class="form-hint">Who will be the Project Manager for your project?</p>
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <label data-set-section-valid="#project-manager-section" data-clear-inputs="#name-project-manager,#email-project-manager" th:each="user : ${model.organisationUsers}" th:for="${#ids.next('projectManager')}">
                                 <th:block th:text="${user.name}" />
                             </label>
@@ -39,7 +39,7 @@
                             <span th:text="${user.name}" th:remove="tag"></span>
                         </label>
 
-                        <div class="multi-choice" data-target="project-manager-table">
+                        <div class="multiple-choice" data-target="project-manager-table">
                             <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required"  type="radio" value="-1" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
                             <label for="new">
                                 Add new team member

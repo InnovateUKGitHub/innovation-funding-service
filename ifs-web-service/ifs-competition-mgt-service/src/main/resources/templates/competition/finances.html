@@ -41,13 +41,13 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}" />
                     </span>
                 </legend>
-                <div class="multi-choice">
+                <div class="multiple-choice">
                     <input id="full-application-finance-yes" value="true" type="radio" th:field="*{fullApplicationFinance}" required="required" />
                     <label for="full-application-finance-yes">
                         Full application finances
                     </label>
                 </div>
-                <div class="multi-choice">
+                <div class="multiple-choice">
                     <input id="full-application-finance-no" value="false" disabled="disabled" type="radio" th:field="*{fullApplicationFinance}" required="required" />
                     <label for="full-application-finance-no">
                         Light finances
@@ -64,13 +64,13 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}" />
 		                </span>
                 </legend>
-                <div class="multi-choice">
+                <div class="multiple-choice">
                     <input id="include-growth-table-yes" value="true" type="radio" th:field="*{includeGrowthTable}" required="required" />
                     <label for="include-growth-table-yes">
                         Yes
                     </label>
                 </div>
-                <div class="multi-choice">
+                <div class="multiple-choice">
                     <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${isSectorCompetition}" />
                     <label for="include-growth-table-no">
                         No

@@ -57,7 +57,7 @@
 
                         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
 
-                        <div class="multi-choice" th:each="size : ${organisationSizes}">
+                        <div class="multiple-choice" th:each="size : ${organisationSizes}">
                             <input type="radio"
                                    th:id="'financePosition-organisationSize-'+${size.id}"
                                    th:name="'financePosition-organisationSize'"
@@ -527,7 +527,7 @@
                 <div class="form-group">
                     <fieldset>
                         <legend class="visuallyhidden">Overhead costs</legend>
-                        <div class="multi-choice" data-target="overhead-none">
+                        <div class="multiple-choice" data-target="overhead-none">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}"
                                    type="radio"
                                    required="required"
@@ -540,7 +540,7 @@
                             </label>
                         </div>
 
-                        <div class="multi-choice" data-target="overhead-default-percentage">
+                        <div class="multiple-choice" data-target="overhead-default-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"
                                    type="radio"
                                    required="required"
@@ -553,7 +553,7 @@
                             </label>
                         </div>
 
-                        <div class="multi-choice" data-target="overhead-custom-percentage">
+                        <div class="multiple-choice" data-target="overhead-custom-percentage">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"
                                    type="radio"
                                    required="required"
@@ -566,7 +566,7 @@
                             </label>
                         </div>
 
-                        <div class="multi-choice" data-target="overhead-total">
+                        <div class="multiple-choice" data-target="overhead-total">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"
                                    type="radio"
                                    required="required"
@@ -931,7 +931,7 @@
 
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-existing'})" />
 
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_0'}"
                                    type="radio"
                                    th:name="${'capital_usage-existing-' + question.id + '-' + costIdentifier}"
@@ -944,7 +944,7 @@
                             </label>
                         </div>
 
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_1'}"
                                    type="radio"
                                    th:name="${'capital_usage-existing-' + question.id + '-' + costIdentifier}"
@@ -1490,7 +1490,7 @@
 
                         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
 
-                        <div class="multi-choice" data-target="other-funding-table">
+                        <div class="multiple-choice" data-target="other-funding-table">
                             <input type="radio"
                                    th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
                                    th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
@@ -1503,7 +1503,7 @@
                             </label>
                         </div>
 
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input type="radio"
                                    th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
                                    th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"

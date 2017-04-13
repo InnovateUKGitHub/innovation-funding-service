@@ -77,7 +77,7 @@
                             </span>
                         </legend>
                         <p class="form-hint">Please select your current area of work. If you are working in both areas please select the most dominant.</p>
-                        <div class="multi-choice" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
+                        <div class="multiple-choice" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
                             <input th:field="*{assessorType}"
                                    th:value="${type}"
                                    type="radio"

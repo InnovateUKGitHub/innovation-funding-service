@@ -75,7 +75,7 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}" />
                             </span>
                         </legend>
-                        <div class="multi-choice" data-target="toggle-appointments">
+                        <div class="multiple-choice" data-target="toggle-appointments">
                             <input value="yes" type="radio" th:field="*{hasAppointments}"
                                    data-repeatable-rowcontainer="#position-table tbody"
                                    required="required"
@@ -83,7 +83,7 @@
                                    data-conditionally-add-required="input.appointment-field" />
                             <label>Yes</label>
                         </div>
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input value="no" type="radio" th:field="*{hasAppointments}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
@@ -163,14 +163,14 @@
 
                         <p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
 
-                        <div class="multi-choice" data-target="toggle-interest">
+                        <div class="multiple-choice" data-target="toggle-interest">
                             <input value="Yes" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
                                    data-conditionally-add-required="#financialInterests" />
                             <label>Yes</label>
                         </div>
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input value="No" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
@@ -210,7 +210,7 @@
                             </span>
                         </legend>
 
-                        <div class="multi-choice" data-target="toggle-familyAffiliations">
+                        <div class="multiple-choice" data-target="toggle-familyAffiliations">
                             <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}"
                                    data-repeatable-rowcontainer="#family-table tbody"
                                    required="required"
@@ -218,7 +218,7 @@
                                    data-conditionally-add-required="input.family-affiliation-field" />
                             <label>Yes</label>
                         </div>
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input value="No" type="radio" th:field="*{hasFamilyAffiliations}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
@@ -308,14 +308,14 @@
                                       th:text="${err}" />
                             </span>
                         </legend>
-                        <div class="multi-choice" data-target="toggle-family-interest">
+                        <div class="multiple-choice" data-target="toggle-family-interest">
                             <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
                                    data-conditionally-add-required="#familyFinancialInterests" />
                             <label>Yes</label>
                         </div>
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
@@ -350,7 +350,7 @@
                           </span>
                         </legend>
 
-                        <div class="multi-choice">
+                        <div class="multiple-choice">
                             <input type="checkbox" th:field="*{accurateAccount}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />

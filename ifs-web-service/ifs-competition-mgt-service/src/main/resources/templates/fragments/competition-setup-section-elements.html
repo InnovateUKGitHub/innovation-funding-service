@@ -194,13 +194,13 @@
             <div class="form-group" th:if="${question.appendix != null}">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Appendix</legend>
-                    <div class="multi-choice">
+                    <div class="multiple-choice">
                         <input th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio" />
                         <label>
                             Yes
                         </label>
                     </div>
-                    <div class="multi-choice">
+                    <div class="multiple-choice">
                         <input th:name="question.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
                         <label>
                             No
@@ -220,13 +220,13 @@
                     <div class="form-group">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Research category question</legend>
-                            <div class="multi-choice">
+                            <div class="multiple-choice">
                                 <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == true}" value="1" type="radio" />
                                 <label>
                                     Yes
                                 </label>
                             </div>
-                            <div class="multi-choice">
+                            <div class="multiple-choice">
                                 <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == false}" value="0" type="radio" />
                                 <label>
                                     No
@@ -242,11 +242,11 @@
                     <div class="form-group">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Scored</legend>
-                            <div class="multi-choice" data-target="score-total">
+                            <div class="multiple-choice" data-target="score-total">
                                 <input th:name="question.scored" th:checked="${question.scored == true}" value="1" type="radio" />
                                 <label>Yes</label>
                             </div>
-                            <div class="multi-choice">
+                            <div class="multiple-choice">
                                 <input th:name="question.scored" th:checked="${question.scored == false}" value="0" type="radio" />
                                 <label>No</label>
                             </div>
@@ -277,13 +277,13 @@
                         <div class="form-group">
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Scope 'Y/N' question</legend>
-                                <div class="multi-choice">
+                                <div class="multiple-choice">
                                     <input th:name="question.scope" th:checked="${question.scope == true}" value="1" type="radio" />
                                     <label>
                                         Yes
                                     </label>
                                 </div>
-                                <div class="multi-choice">
+                                <div class="multiple-choice">
                                     <input th:name="question.scope" th:checked="${question.scope == false}" value="0" type="radio" />
                                     <label>
                                         No
@@ -299,11 +299,11 @@
                         <div class="form-group">
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Written feedback</legend>
-                                <div class="multi-choice" data-target="scored-options">
+                                <div class="multiple-choice" data-target="scored-options">
                                     <input th:name="question.writtenFeedback" th:checked="${question.writtenFeedback}" value="1" type="radio" />
                                     <label>Yes</label>
                                 </div>
-                                <div class="multi-choice">
+                                <div class="multiple-choice">
                                     <input th:name="question.writtenFeedback" th:checked="${!question.writtenFeedback}" value="0" type="radio" />
                                     <label>No</label>
                                 </div>

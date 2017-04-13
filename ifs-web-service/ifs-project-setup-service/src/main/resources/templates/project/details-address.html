@@ -31,7 +31,7 @@
                         <p class="form-hint">Please select the address where the majority of work will be carried out.</p>
 
                         <th:block th:if="${model.registeredAddress}">
-                            <div class="multi-choice" data-target="registeredAddress">
+                            <div class="multiple-choice" data-target="registeredAddress">
                                 <input id="address-use-org" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="REGISTERED" th:field="*{addressType}" />
                                 <label for="address-use-org">
                                     Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
@@ -48,7 +48,7 @@
                         </th:block>
 
                         <th:block th:if="${model.operatingAddress}">
-                            <div class="multi-choice" data-target="operatingAddress">
+                            <div class="multiple-choice" data-target="operatingAddress">
                                 <input id="address-use-operating" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="OPERATING" th:field="*{addressType}" />
                                 <label for="address-use-operating">
                                     Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
@@ -65,7 +65,7 @@
                         </th:block>
 
                         <th:block th:if="${model.projectAddress}">
-                            <div class="multi-choice" data-target="projectAddress">
+                            <div class="multiple-choice" data-target="projectAddress">
                                 <input id="address-use-project" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="PROJECT" th:field="*{addressType}" />
                                 <label for="address-use-project">
                                     Use project address (<strong th:text="${model.projectAddress?.postcode}">SN1 2EE</strong>)
@@ -81,7 +81,7 @@
                             </div>
                         </th:block>
 
-                        <div class="multi-choice" data-target="custom-postcode">
+                        <div class="multiple-choice" data-target="custom-postcode">
                             <input id="address-add-project" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="ADD_NEW" th:field="*{addressType}" />
                             <label for="address-add-project">
                                 Enter an alternative project address

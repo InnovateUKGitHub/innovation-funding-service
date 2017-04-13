@@ -36,7 +36,7 @@
                     </th:block>
                 </legend>
                 <th:block th:each="researchCategory : ${model.availableResearchCategories}">
-                    <div class="multi-choice">
+                    <div class="multiple-choice">
                         <input type="radio" name="researchCategoryChoice" required="required"
                                th:id="${'researchCategoryChoice-'+researchCategory.id}"
                                th:value="${researchCategory.id}"

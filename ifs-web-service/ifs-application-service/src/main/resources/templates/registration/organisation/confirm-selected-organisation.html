@@ -35,7 +35,7 @@
             <div th:class="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-block error' : 'form-block'">
                 <span class="error-message" th:if="${#fields.hasErrors('*{useSearchResultAddress}')}" th:errors="*{useSearchResultAddress}" />
 
-                <div class="multi-choice" data-target="manual-company-input" data-target-inverted="true">
+                <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
                     <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
                     <label for="address-same">
                         The operating address is the same as the registered organisation address
