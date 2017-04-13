@@ -8,11 +8,11 @@ import javax.validation.constraints.Size;
 @FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class ResetPasswordForm {
     @NotEmpty(message = "{validation.standard.password.required}")
-    @Size(min = 10, max = 30, message = "{validation.standard.password.length.range}")
+    @Size(min = 8, message = "{validation.standard.password.length.min}")
     private String password;
 
     @NotEmpty(message = "{validation.standard.password.required}")
-    @Size(min = 10, max = 30, message = "{validation.standard.password.length.range}")
+    @Size(min = 8, message = "{validation.standard.password.length.min}")
     private String retypedPassword;
 
     public String getPassword() {
