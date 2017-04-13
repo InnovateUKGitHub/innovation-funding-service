@@ -57,7 +57,7 @@
     <!--/* open */-->
     <th:block th:unless="${readonly}">
 
-      <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber') ? 'error' : ''}">
+      <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber') ? 'form-group-error' : ''}">
         <label for="bank-acc-number">
           <span class="form-label-bold">Account number</span>
           <span class="form-hint">For example: 15481965</span>
@@ -68,7 +68,7 @@
         <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="field-error" required="required" pattern="[0-9]{8,}" maxlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
       </div>
 
-      <div class="form-group" th:classappend="${#fields.hasErrors('sortCode') ? 'error' : ''}">
+      <div class="form-group" th:classappend="${#fields.hasErrors('sortCode') ? 'form-group-error' : ''}">
         <label for="bank-sort-code">
           <span class="form-label-bold">Sort code</span>
           <span class="form-hint">For example: 311212</span>

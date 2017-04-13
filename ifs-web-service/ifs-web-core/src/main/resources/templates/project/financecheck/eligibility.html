@@ -161,9 +161,12 @@
             <p>After making any necessary changes, the eligible costs should be approved.</p>
             <p>Make sure the partner has reviewed and understood all changes before you approve.</p>
             <div class="form-group">
-                <label class="block-label selection-button-checkbox" for="project-eligible" data-target="add-rag-rating">
-                    <input  id="project-eligible" type="checkbox" th:field="*{confirmEligibilityChecked}" data-switches-button-status="#confirm-button" />These funding costs have been reviewed and are acceptable
-                </label>
+                <div class="multi-choice" data-target="add-rag-rating">
+                    <input  id="project-eligible" type="checkbox" th:field="*{confirmEligibilityChecked}" data-switches-button-status="#confirm-button" />
+                    <label for="project-eligible">
+                        These funding costs have been reviewed and are acceptable
+                    </label>
+                </div>
             </div>
             <div class="form-group" id="add-rag-rating">
                 <label for="rag-rating" class="form-label">Please enter the RAG rating for this eligibility review</label>

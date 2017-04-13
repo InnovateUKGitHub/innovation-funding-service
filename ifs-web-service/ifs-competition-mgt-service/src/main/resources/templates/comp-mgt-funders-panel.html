@@ -67,10 +67,12 @@
                 <div class="select-all">
                     <fieldset>
                         <legend class="visuallyhidden">Select applications</legend>
-                        <label class="block-label selection-button-checkbox" for="select-all-1">
-                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox">
-                            Select all applications
-                        </label>
+                        <div class="multi-choice">
+                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox" />
+                            <label for="select-all-1">
+                                Select all applications
+                            </label>
+                        </div>
                         <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
                     </fieldset>
                 </div>
@@ -93,10 +95,13 @@
                 <div class="select-all">
                     <fieldset>
                         <legend class="visuallyhidden">Select all applications</legend>
-                        <label class="block-label selection-button-checkbox" for="select-all-2">
-                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox">
-                            Select all applications
-                        </label>
+
+                        <div class="multi-choice">
+                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox" />
+                            <label for="select-all-2">
+                                Select all applications
+                            </label>
+                        </div>
                         <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
                     </fieldset>
                 </div>

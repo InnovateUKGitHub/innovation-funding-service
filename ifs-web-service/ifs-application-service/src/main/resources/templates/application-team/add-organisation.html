@@ -29,7 +29,7 @@
             <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="post">
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
 
-                <div th:class="${#fields.hasErrors('organisationName')}? 'form-group error':'form-group'">
+                <div th:class="${#fields.hasErrors('organisationName')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label-bold" for="organisationName">
                         Organisation name
                         <th:block th:if="${#fields.hasErrors('organisationName')}">
@@ -53,7 +53,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="applicant, applicantStat : *{applicants}" class="repeatable-row">
-                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'form-group error':'form-group'">
+                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'form-group form-group-error':'form-group'">
                                 <label th:for="'applicants'+${applicantStat.index}+'.name'">
                                     <span class="visually-hidden">Applicant name</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
@@ -70,7 +70,7 @@
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
-                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'form-group error':'form-group'">
+                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'form-group form-group-error':'form-group'">
                                 <label th:for="'applicants'+${applicantStat.index}+'.email'">
                                     <span class="visually-hidden">Applicant email</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">

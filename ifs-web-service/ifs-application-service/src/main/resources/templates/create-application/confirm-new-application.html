@@ -22,20 +22,24 @@
             <fieldset>
                 <legend class="visuallyhidden">Create a new application?</legend>
                 <div class="form-group">
-                    <label class="block-label selection-button-radio" for="new-application-yes">
+                    <div class="multiple-choice">
                         <input id="new-application-yes"
                                type="radio"
                                th:name="create-application"
-                               value="true"/>
-                         Yes, I want to create a new application.
-                    </label>
-                    <label class="block-label selection-button-radio" for="new-application-no">
+                               value="true" />
+                        <label for="new-application-yes">
+                            Yes, I want to create a new application.
+                        </label>
+                    </div>
+                    <div class="multiple-choice">
                         <input type="radio"
                                id="new-application-no"
                                name="create-application"
-                               value="false"/>
-                        No, I want to continue with my existing application.
-                    </label>
+                               value="false" />
+                        <label for="new-application-no">
+                            No, I want to continue with my existing application.
+                        </label>
+                    </div>
                 </div>
             </fieldset>
 

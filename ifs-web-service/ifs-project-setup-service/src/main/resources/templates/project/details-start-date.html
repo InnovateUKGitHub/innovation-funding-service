@@ -28,7 +28,7 @@
             </ol>
 
             <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
-                <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate') ? 'error' : ''}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate') ? 'form-group-error' : ''}">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Target start date</span>

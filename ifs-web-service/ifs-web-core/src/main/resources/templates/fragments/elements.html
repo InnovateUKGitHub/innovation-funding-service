@@ -180,7 +180,7 @@
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <th:block th:fragment="application-agree-to-terms">
-    <div class="form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'error'">
+    <div class="form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'form-group-error'">
         <fieldset>
             <legend>
                 <span class="visuallyhidden">Terms and conditions</span>
@@ -188,10 +188,13 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
                 </th:block>
             </legend>
-            <label class="block-label selection-button-checkbox" for="agree-terms-page">
+
+            <div class="multi-choice">
                 <input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
-                As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.application.currentCompetition.id})}">grant terms and conditions</a> set out by Innovate UK.
-            </label>
+                <label for="agree-terms-page">
+                    As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.application.currentCompetition.id})}">grant terms and conditions</a> set out by Innovate UK.
+                </label>
+            </div>
         </fieldset>
     </div>
 </th:block>
@@ -202,11 +205,14 @@
         <th:block th:if="${#fields.hasErrors('stateAidAgreed')}">
             <span class="error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
         </th:block>
-        <label class="block-label selection-button-checkbox" for="agree-state-aid-page">
+
+        <div class="multi-choice">
             <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
-            By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-            <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance</a>
-        </label>
+            <label for="agree-state-aid-page">
+                By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
+                <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance</a>
+            </label>
+        </div>
     </div>
 </th:block>
 

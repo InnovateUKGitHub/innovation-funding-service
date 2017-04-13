@@ -4,7 +4,7 @@
 
 <div th:fragment="select-address">
     <fieldset>
-      <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}') ? 'error' : ''}">
+      <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}') ? 'form-group-error' : ''}">
         <legend>
             <span class="visuallyhidden">Operating address</span>
             <span th:if="${#fields.hasErrors('*{addressType}')}" th:remove="tag">
@@ -13,24 +13,30 @@
         </legend>
 
         <div class="form-block" th:if="${model.registeredAddress}">
-            <label class="block-label selection-button-radio" for="address-use-org" data-target="registeredAddress">
-                <input id="address-use-org" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="REGISTERED" th:field="*{addressType}"/>
-                Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
-            </label>
+            <div class="multi-choice" data-target="registeredAddress">
+                <input id="address-use-org" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="REGISTERED" th:field="*{addressType}" />
+                <label for="address-use-org">
+                    Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
+                </label>
+            </div>
         </div>
 
         <div class="form-block" th:if="${model.operatingAddress}">
-            <label class="block-label selection-button-radio" for="address-use-operating" data-target="operatingAddress">
-                <input id="address-use-operating" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="OPERATING" th:field="*{addressType}"/>
-                Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
-            </label>
+            <div class="multi-choice" data-target="operatingAddress">
+                <input id="address-use-operating" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="OPERATING" th:field="*{addressType}" />
+                <label for="address-use-operating">
+                    Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
+                </label>
+            </div>
         </div>
 
         <div class="form-block">
-            <label class="block-label selection-button-radio" for="address-add-bank" data-target="custom-postcode">
-                <input id="address-add-bank" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="ADD_NEW" th:field="*{addressType}"/>
-                Enter an alternative billing address
-            </label>
+            <div class="multi-choice" data-target="custom-postcode">
+                <input id="address-add-bank" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="ADD_NEW" th:field="*{addressType}" />
+                <label for="address-add-bank">
+                    Enter an alternative billing address
+                </label>
+            </div>
         </div>
       </div>
     </fieldset>

@@ -114,7 +114,7 @@
                             <th:block th:if="${readonly}">
                                 <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
                                     class="form-group-row"
-                                    th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'error' : ''}">
+                                    th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
                                     <th scope="row">
                                         <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"/>
                                         <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
@@ -132,7 +132,7 @@
                             <!--/* edit */-->
                             <th:block th:unless="${readonly}" th:object="${form}">
                                 <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}" class="form-group-row"
-                                    th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) || #fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*') ? 'error' : ''}">
+                                    th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) || #fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*') ? 'form-group-error' : ''}">
                                     <th scope="row"
                                         th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}">
                                         <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"/>
@@ -181,7 +181,7 @@
                                     <!--/* readonly */-->
                                     <th:block th:if="${readonly}">
                                         <tr th:each="row : ${rowList}" class="form-group-row"
-                                            th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'error' : ''}">
+                                            th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
                                             <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"/>
                                             <th scope="row"
                                                 th:id="${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}">
@@ -202,7 +202,7 @@
                                     <!--/* edit  */-->
                                     <th:block th:unless="${readonly}">
                                         <tr th:each="row : ${rowList}" class="form-group-row"
-                                            th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'error' : ''}">
+                                            th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'form-group-error' : ''}">
                                             <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"/>
                                             <th scope="row">
                                                 <span

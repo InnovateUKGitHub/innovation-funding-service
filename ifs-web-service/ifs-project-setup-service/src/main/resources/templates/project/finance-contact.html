@@ -29,7 +29,7 @@
             <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
                 <input type="hidden" th:field="*{organisation}" />
 
-                <div class="form-group extra-margin" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'error' : ''}">
+                <div class="form-group extra-margin" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'form-group-error' : ''}">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Finance contact</span>
@@ -40,25 +40,27 @@
 
                         <p class="form-hint">Please select the person responsible for finances in your organisation</p>
 
-                        <th:block th:each="user : ${model.organisationUsers}">
-                            <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.next('financeContact')}" class="block-label selection-button-radio">
-                                <input type="radio" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
+                        <div class="multi-choice" th:each="user : ${model.organisationUsers}">
+                            <input type="radio" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
+                            <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.next('financeContact')}">
                                 <th:block th:text="${user.name}" />
                             </label>
-                        </th:block>
+                        </div>
 
-                        <th:block th:each="user : ${model.invitedUsers}">
-                            <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.next('financeContact')}" class="block-label selection-button-radio">
-                                <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
+                        <div class="multi-choice" th:each="user : ${model.invitedUsers}">
+                            <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
+                            <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.next('financeContact')}">
                                 <th:block th:text="${user.name}" />
                             </label>
-                        </th:block>
+                        </div>
 
-                        <label for="new" class="block-label selection-button-radio" data-target="finance-contact-table" data-target-hide-error-messages="true">
+                        <div class="multi-choice" data-target="finance-contact-table">
                             <input id="new" name="financeContact" th:checked="${model.inviteAction} or *{financeContact == -1}" type="radio" value="-1" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
-                            Add new team member
-                            <span class="form-hint">A new team member will be invited to join the project</span>
-                        </label>
+                            <label for="new" data-target-hide-error-messages="true">
+                                Add new team member
+                                <span class="form-hint">A new team member will be invited to join the project</span>
+                            </label>
+                        </div>
 
                         <div id="finance-contact-table" class="panel">
                             <table>

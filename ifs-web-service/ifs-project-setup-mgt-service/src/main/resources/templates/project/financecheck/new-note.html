@@ -29,7 +29,7 @@
                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                 <fieldset>
                     <legend class="heading-medium">New note</legend>
-                    <div th:class="${#fields.hasErrors('noteTitle')}? 'form-group error':'form-group'">
+                    <div th:class="${#fields.hasErrors('noteTitle')}? 'form-group form-group-error':'form-group'">
                         <label for="noteTitle" class="form-label-bold">
                             <span class="heading-small no-margin">Title</span>
                             <th:block th:if="${#fields.hasErrors('noteTitle')}">
@@ -41,14 +41,14 @@
                         <input name="noteTitle"
                                id="noteTitle"
                                type="text"
-                               th:class="${#fields.hasErrors('noteTitle') ? 'form-control field-error width-full' : 'form-control width-full'}"
+                               th:class="${#fields.hasErrors('noteTitle') ? 'form-control field-group-error width-full' : 'form-control width-full'}"
                                required="required"
                                th:field="*{noteTitle}"
                                th:attr="maxlength=${model.maxTitleCharacters},
                                         data-required-errormessage=#{validation.field.must.not.be.blank},
                                         data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                     </div>
-                    <div th:class="${#fields.hasErrors('note')}? 'form-group error':'form-group'">
+                    <div th:class="${#fields.hasErrors('note')}? 'form-group form-group-error':'form-group'">
                         <label for="note" class="form-label-bold">
                             <span class="heading-small no-margin">Note</span>
                             <th:block th:if="${#fields.hasErrors('note')}">
@@ -69,7 +69,7 @@
                               data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
                               data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxNoteCharacters})},
                               data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                      th:classappend="${#fields.hasErrors('note') ? 'form-control field-error' : 'form-control'}"></textarea>
+                                      th:classappend="${#fields.hasErrors('note') ? 'form-control field-group-error' : 'form-control'}"></textarea>
                             <div class="textarea-footer" th:with="note =*{note}">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})"/>
                             </div>

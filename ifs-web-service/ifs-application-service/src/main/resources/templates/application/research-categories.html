@@ -17,7 +17,7 @@
     </div>
 
     <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'form-group-error'">
             <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
                 <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
                 <p>The type of research affects the level of funding a business can receive under UK state aid rules.
@@ -36,15 +36,17 @@
                     </th:block>
                 </legend>
                 <th:block th:each="researchCategory : ${model.availableResearchCategories}">
-                    <label class="block-label selection-button-radio" th:for="${'researchCategoryChoice-'+researchCategory.id}">
+                    <div class="multi-choice">
                         <input type="radio" name="researchCategoryChoice" required="required"
                                th:id="${'researchCategoryChoice-'+researchCategory.id}"
                                th:value="${researchCategory.id}"
                                th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}"
-                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}">
-                        <th:block th:text="${researchCategory.name}" />
-                        <span class="form-hint" th:text="${researchCategory.description}">description</span>
-                    </label>
+                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}" />
+                        <label th:for="${'researchCategoryChoice-'+researchCategory.id}">
+                            <th:block th:text="${researchCategory.name}" />
+                            <span class="form-hint" th:text="${researchCategory.description}">description</span>
+                        </label>
+                    </div>
                 </th:block>
             </fieldset>
         </div>

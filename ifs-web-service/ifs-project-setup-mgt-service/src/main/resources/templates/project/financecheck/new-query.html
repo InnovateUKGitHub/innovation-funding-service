@@ -38,7 +38,7 @@
           th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
         <fieldset>
             <legend class="heading-medium">Post new query</legend>
-            <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group form-group-error':'form-group'">
                 <label for="queryTitle" class="form-label-bold">
                     <span class="heading-small no-margin">Title</span>
                     <th:block th:if="${#fields.hasErrors('queryTitle')}">
@@ -50,14 +50,14 @@
                 <input name="queryTitle"
                        id="queryTitle"
                        type="text"
-                       th:class="${#fields.hasErrors('queryTitle') ? 'form-control field-error width-full' : 'form-control width-full'}"
+                       th:class="${#fields.hasErrors('queryTitle') ? 'form-control field-group-error width-full' : 'form-control width-full'}"
                        required="required"
                        th:field="*{queryTitle}"
                        th:attr="maxlength=${model.maxTitleCharacters},
                                 data-required-errormessage=#{validation.field.must.not.be.blank},
                                 data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
             </div>
-            <div th:class="${#fields.hasErrors('section')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('section')}? 'form-group form-group-error':'form-group'">
                 <label for="section" class="form-label-bold">
                     <span class="heading-small no-margin">Section</span>
                     <th:block th:if="${#fields.hasErrors('section')}">
@@ -87,7 +87,7 @@
                     </th:block>
                 </select>
             </div>
-            <div th:class="${#fields.hasErrors('query')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('query')}? 'form-group form-group-error':'form-group'">
                 <label for="query" class="form-label-bold">
                     <span class="heading-small no-margin">Query</span>
                     <th:block th:if="${#fields.hasErrors('query')}">
@@ -108,7 +108,7 @@
                       data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
                       data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxQueryCharacters})},
                       data-required-errormessage=#{validation.field.must.not.be.blank}"
-                              th:classappend="${#fields.hasErrors('query') ? 'form-control field-error' : 'form-control'}"></textarea>
+                              th:classappend="${#fields.hasErrors('query') ? 'form-control field-group-error' : 'form-control'}"></textarea>
                     <div class="textarea-footer" th:with="query=*{query}">
                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" />
                     </div>

@@ -26,7 +26,7 @@
 
             <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="extra-margin">
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('selectedRole')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('selectedRole')}? form-group-error">
                     <fieldset class="inline">
                         <legend class="heading-medium">
                             <span class="heading-small">Please choose the role you are signing in as today</span>
@@ -34,10 +34,12 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
                             </span>
                         </legend>
-                        <label class="block-label selection-button-radio" th:each="role : ${model.ACCEPTED_ROLES}">
+                        <div class="multiple-choice">
                             <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
-                            <span th:text="${role.displayName}" th:remove="tag" />
-                        </label>
+                            <label th:each="role : ${model.ACCEPTED_ROLES}">
+                                <th:block th:text="${role.displayName}" />
+                            </label>
+                        </div>
                     </fieldset>
                 </div>
 

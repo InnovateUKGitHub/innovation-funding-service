@@ -81,14 +81,14 @@
             </div>
         </details>
 
-        <div th:class="${#fields.hasErrors('subject')}? 'form-group error':'form-group extra-margin'">
+        <div th:class="${#fields.hasErrors('subject')}? 'form-group form-group-error':'form-group extra-margin'">
             <label class="form-label" for="subject">
                 <span class="form-label-bold">Subject</span>
                 <span th:if="${#fields.hasErrors('subject')}" th:remove="tag">
                     <span class="error-message"  th:each="err : ${#fields.errors('subject')}" th:text="${err}" />
                 </span>
             </label>
-            <input th:class="${#fields.hasErrors('subject') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+            <input th:class="${#fields.hasErrors('subject') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
                    id="subject"
                    type="text"
                    th:field="${form.subject}"
@@ -96,7 +96,7 @@
                    th:attr="data-required-errormessage=#{validation.manage.funding.notifications.title.required}" />
         </div>
 
-        <div th:class="${#fields.hasErrors('message')}? 'form-group error':'form-group'">
+        <div th:class="${#fields.hasErrors('message')}? 'form-group form-group-error':'form-group'">
             <label class="form-label" for="message">
                 <span class="form-label-bold">Message</span>
                 <span th:if="${#fields.hasErrors('subject')}" th:remove="tag">

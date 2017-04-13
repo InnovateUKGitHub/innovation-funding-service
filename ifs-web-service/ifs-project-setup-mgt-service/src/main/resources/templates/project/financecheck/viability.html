@@ -76,11 +76,14 @@
 
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
 
-      <h2 class="heading-medium">Credit report</h2>
-      <div class="form-group">
-        <label class="block-label selection-button-checkbox" for="costs-reviewed">
-          <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
-        </label>
+        <h2 class="heading-medium">Credit report</h2>
+        <div class="form-group">
+            <div class="multi-choice">
+                <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />
+                <label for="costs-reviewed">
+                    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+                </label>
+            </div>
       </div>
       <div class="extra-margin">
           <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="button button-secondary">Queries</a>
@@ -91,9 +94,12 @@
           <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
           <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
           <div class="form-group">
-            <label class="block-label selection-button-checkbox" for="project-viable" data-target="add-rag-rating">
-              <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-switches-button-status="#confirm-button" /><th:block th:text="${model.organisationName}" /> is viable for this project
-            </label>
+              <div class="multi-choice" data-target="add-rag-rating">
+                  <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-switches-button-status="#confirm-button" />
+                  <label for="project-viable">
+                      <th:block th:text="${model.organisationName}" /> is viable for this project
+                  </label>
+              </div>
           </div>
           <div class="form-group" id="add-rag-rating">
             <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>

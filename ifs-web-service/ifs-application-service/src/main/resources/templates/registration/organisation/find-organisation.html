@@ -31,7 +31,7 @@
         </div>
     </th:block>
     <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group-error'">
             <label class="form-label" th:for="*{organisationSearchName}">
                 <span class="form-label-bold" th:text="${searchLabel}">Find your ? organisation</span>
                 <span class="form-hint" th:text="${searchHint}">Enter your organisation name</span>

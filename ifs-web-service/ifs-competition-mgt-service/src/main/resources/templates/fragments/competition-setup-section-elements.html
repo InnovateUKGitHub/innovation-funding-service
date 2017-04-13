@@ -92,7 +92,7 @@
                th:value="${question.type}" />
 
         <div class="question">
-            <div th:class="${#fields.hasErrors('question.shortTitle')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('question.shortTitle')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="question.shortTitle">
                     <span class="form-label-bold">Question heading</span>
                     <span th:if="${#fields.hasErrors('question.shortTitle')}" th:remove="tag">
@@ -100,7 +100,7 @@
                     </span>
                 </label>
 
-                <input th:class="${#fields.hasErrors('question.shortTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                <input th:class="${#fields.hasErrors('question.shortTitle') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
                        required="required"
                        id="question.shortTitle"
@@ -109,7 +109,7 @@
                        th:readonly="${!question.shortTitleEditable}"
                        maxlength="255"/>
             </div>
-            <div th:class="${#fields.hasErrors('question.title')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('question.title')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="question.title">
                     <span class="form-label-bold">Question title</span>
                     <span th:if="${#fields.hasErrors('question.title')}" th:remove="tag">
@@ -117,7 +117,7 @@
                         </span>
                 </label>
 
-                <input th:class="${#fields.hasErrors('question.title') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                <input th:class="${#fields.hasErrors('question.title') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
                        required="required"
                        id="question.title"
@@ -125,28 +125,28 @@
                        th:value="${question.title}"
                        maxlength="255"/>
             </div>
-            <div th:class="${#fields.hasErrors('question.subTitle')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('question.subTitle')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="question.subTitle">
                     <span class="form-label-bold">Question subtitle</span>
                     <span th:if="${#fields.hasErrors('question.subTitle')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('question.subTitle')}" th:text="${err}" />
                         </span>
                 </label>
-                <input th:class="${#fields.hasErrors('question.subTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                <input th:class="${#fields.hasErrors('question.subTitle') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
                        id="question.subTitle"
                        th:name="question.subTitle"
                        th:value="${question.subTitle}"
                        maxlength="255"/>
             </div>
-            <div th:class="${#fields.hasErrors('question.guidanceTitle')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('question.guidanceTitle')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="question.guidanceTitle">
                     <span class="form-label-bold">Question guidance title</span>
                     <span th:if="${#fields.hasErrors('question.guidanceTitle')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('question.guidanceTitle')}" th:text="${err}" />
                         </span>
                 </label>
-                <input th:class="${#fields.hasErrors('question.guidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                <input th:class="${#fields.hasErrors('question.guidanceTitle') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
                        type="text"
                        id="question.guidanceTitle"
                        required="required"
@@ -154,7 +154,7 @@
                        th:value="${question.guidanceTitle}"
                        maxlength="255"/>
             </div>
-            <div th:class="${#fields.hasErrors('question.guidance')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('question.guidance')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="question.guidance">
                     <span class="form-label-bold">Question guidance</span>
                     <span th:if="${#fields.hasErrors('question.guidance')}" th:remove="tag">
@@ -175,14 +175,14 @@
                     </div>
                 </div>
             </div>
-            <div th:class="${#fields.hasErrors('question.maxWords')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('question.maxWords')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="question.maxWords">
                     <span class="form-label-bold">Max word count</span>
                     <span th:if="${#fields.hasErrors('question.maxWords')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('question.maxWords')}" th:text="${err}" />
                         </span>
                 </label>
-                <input th:class="${#fields.hasErrors('question.maxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                <input th:class="${#fields.hasErrors('question.maxWords') ? 'form-control field-group-error width-medium' : 'form-control width-medium'}"
                        type="number"
                        id="question.maxWords"
                        min="1"
@@ -194,14 +194,18 @@
             <div class="form-group" th:if="${question.appendix != null}">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Appendix</legend>
-                    <label class="block-label selection-button-radio">
+                    <div class="multi-choice">
                         <input th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio" />
-                        Yes
-                    </label>
-                    <label class="block-label selection-button-radio">
+                        <label>
+                            Yes
+                        </label>
+                    </div>
+                    <div class="multi-choice">
                         <input th:name="question.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
-                        No
-                    </label>
+                        <label>
+                            No
+                        </label>
+                    </div>
                 </fieldset>
             </div>
 
@@ -216,14 +220,18 @@
                     <div class="form-group">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Research category question</legend>
-                            <label class="block-label selection-button-radio">
+                            <div class="multi-choice">
                                 <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == true}" value="1" type="radio" />
-                                Yes
-                            </label>
-                            <label class="block-label selection-button-radio">
+                                <label>
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="multi-choice">
                                 <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == false}" value="0" type="radio" />
-                                No
-                            </label>
+                                <label>
+                                    No
+                                </label>
+                            </div>
                         </fieldset>
                     </div>
 
@@ -234,27 +242,27 @@
                     <div class="form-group">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Scored</legend>
-                            <label class="block-label selection-button-radio" data-target="score-total">
+                            <div class="multi-choice" data-target="score-total">
                                 <input th:name="question.scored" th:checked="${question.scored == true}" value="1" type="radio" />
-                                Yes
-                            </label>
-                            <label class="block-label selection-button-radio">
+                                <label>Yes</label>
+                            </div>
+                            <div class="multi-choice">
                                 <input th:name="question.scored" th:checked="${question.scored == false}" value="0" type="radio" />
-                                No
-                            </label>
+                                <label>No</label>
+                            </div>
                         </fieldset>
                     </div>
                 </th:block>
 
                     <th:block th:if="${question.scored != null}">
-                        <div class="form-group " th:classappend="${#fields.hasErrors('question.scoreTotal')}? 'error':''" id="score-total">
+                        <div class="form-group " th:classappend="${#fields.hasErrors('question.scoreTotal')}? 'form-group-error':''" id="score-total">
                             <label class="form-label" for="question.scoreTotal">
                                 <span class="form-label-bold">Out of</span>
                                 <span th:if="${#fields.hasErrors('question.scoreTotal')}" th:remove="tag">
                                         <span class="error-message"  th:each="err : ${#fields.errors('question.scoreTotal')}" th:text="${err}" />
                                     </span>
                             </label>
-                            <input th:class="${#fields.hasErrors('question.scoreTotal') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                            <input th:class="${#fields.hasErrors('question.scoreTotal') ? 'form-control field-group-error width-medium' : 'form-control width-medium'}"
                                    type="number"
                                    id="question.scoreTotal"
                                    min="1"
@@ -269,14 +277,18 @@
                         <div class="form-group">
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Scope 'Y/N' question</legend>
-                                <label class="block-label selection-button-radio">
-                                    <input th:name="question.scope" th:checked="${question.scope == true}" value="1" type="radio"/>
-                                    Yes
-                                </label>
-                                <label class="block-label selection-button-radio">
+                                <div class="multi-choice">
+                                    <input th:name="question.scope" th:checked="${question.scope == true}" value="1" type="radio" />
+                                    <label>
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="multi-choice">
                                     <input th:name="question.scope" th:checked="${question.scope == false}" value="0" type="radio" />
-                                    No
-                                </label>
+                                    <label>
+                                        No
+                                    </label>
+                                </div>
                             </fieldset>
                         </div>
 
@@ -287,27 +299,27 @@
                         <div class="form-group">
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Written feedback</legend>
-                                <label class="block-label selection-button-radio" data-target="scored-options">
+                                <div class="multi-choice" data-target="scored-options">
                                     <input th:name="question.writtenFeedback" th:checked="${question.writtenFeedback}" value="1" type="radio" />
-                                    Yes
-                                </label>
-                                <label class="block-label selection-button-radio">
+                                    <label>Yes</label>
+                                </div>
+                                <div class="multi-choice">
                                     <input th:name="question.writtenFeedback" th:checked="${!question.writtenFeedback}" value="0" type="radio" />
-                                    No
-                                </label>
+                                    <label>No</label>
+                                </div>
                             </fieldset>
                         </div>
                     </th:block>
                     <div class="js-hidden" id="scored-options">
                         <th:block th:if="${question.writtenFeedback != null}">
-                        <div th:class="${#fields.hasErrors('question.assessmentGuidanceTitle')}? 'form-group error':'form-group'">
+                        <div th:class="${#fields.hasErrors('question.assessmentGuidanceTitle')}? 'form-group form-group-error':'form-group'">
                             <label class="form-label" for="question.assessmentGuidanceTitle">
                                 <span class="form-label-bold">Guidance title</span>
                                 <span th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}" th:remove="tag">
                                         <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}" th:text="${err}" />
                                     </span>
                             </label>
-                            <input th:class="${#fields.hasErrors('question.assessmentGuidanceTitle') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                            <input th:class="${#fields.hasErrors('question.assessmentGuidanceTitle') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
                                    type="text"
                                    id="question.assessmentGuidanceTitle"
                                    th:name="question.assessmentGuidanceTitle"
@@ -315,14 +327,14 @@
                                    required="required"/>
                         </div>
 
-                        <div th:class="${#fields.hasErrors('question.assessmentGuidance')}? 'form-group error':'form-group'">
+                        <div th:class="${#fields.hasErrors('question.assessmentGuidance')}? 'form-group form-group-error':'form-group'">
                             <label class="form-label" for="question.assessmentGuidance">
                                 <span class="form-label-bold">Guidance</span>
                                 <span th:if="${#fields.hasErrors('question.assessmentGuidance')}" th:remove="tag">
                                         <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentGuidance')}" th:text="${err}" />
                                     </span>
                             </label>
-                            <input th:class="${#fields.hasErrors('question.assessmentGuidance') ? 'form-control field-error width-x-large' : 'form-control width-x-large'}"
+                            <input th:class="${#fields.hasErrors('question.assessmentGuidance') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
                                    type="text"
                                    id="question.assessmentGuidance"
                                    th:name="question.assessmentGuidance"
@@ -347,7 +359,7 @@
                                     <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
 
                                         <tr th:id="${'guidance-'+iteration.index}">
-                                            <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'error'">
+                                            <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'form-group-error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-scorefrom'}">
                                                     <span class="visuallyhidden">Score from</span>
                                                     <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
@@ -364,7 +376,7 @@
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.scorefrom.required},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scorefrom.min}" />
                                             </td>
-                                            <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'error'">
+                                            <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'form-group-error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-scoreto'}">
                                                     <span class="visuallyhidden">Score to</span>
                                                     <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
@@ -379,7 +391,7 @@
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.scoreto.required},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scoreto.min}" />
                                             </td>
-                                            <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'error'">
+                                            <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-justification'}">
                                                     <span class="visuallyhidden">Justification</span>
                                                     <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
@@ -415,7 +427,7 @@
                                 <tbody>
                                     <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
                                         <tr th:id="${'guidance-'+iteration.index}">
-                                            <td class="form-group" th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'error'">
+                                            <td class="form-group" th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'form-group-error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-subject'}">
                                                     <span class="visuallyhidden">Subject</span>
                                                     <th:block th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
@@ -431,7 +443,7 @@
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.subject.required},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.subject.maxlength}" />
                                             </td>
-                                            <td class="form-group" th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'error'">
+                                            <td class="form-group" th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
                                                 <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-justification'}">
                                                     <span class="visuallyhidden">Justification</span>
                                                     <th:block th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
@@ -459,14 +471,14 @@
                                 <button class="buttonlink" data-add-row="guidance" type="button">+Add guidance row</button>
                             </div>
 
-                            <div th:class="${#fields.hasErrors('question.assessmentMaxWords')}? 'form-group error':'form-group'">
+                            <div th:class="${#fields.hasErrors('question.assessmentMaxWords')}? 'form-group form-group-error':'form-group'">
                                 <label class="form-label" for="question.assessmentMaxWords">
                                     <span class="form-label-bold">Max word count</span>
                                     <span th:if="${#fields.hasErrors('question.assessmentMaxWords')}" th:remove="tag">
                                         <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentMaxWords')}" th:text="${err}" />
                                     </span>
                                 </label>
-                                <input th:class="${#fields.hasErrors('question.assessmentMaxWords') ? 'form-control field-error width-medium' : 'form-control width-medium'}"
+                                <input th:class="${#fields.hasErrors('question.assessmentMaxWords') ? 'form-control field-group-error width-medium' : 'form-control width-medium'}"
                                        type="number"
                                        id="question.assessmentMaxWords"
                                        min="0"

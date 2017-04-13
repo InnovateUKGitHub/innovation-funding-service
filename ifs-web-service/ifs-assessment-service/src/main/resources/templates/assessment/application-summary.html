@@ -38,14 +38,14 @@
 
                 <div class="question" th:id="form-input-fundingConfirmation">
                     <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')}? error">
-                        <fieldset class="inline">
+                        <fieldset>
                             <legend>
                                 <span class="form-label-bold">Do you believe that this application is suitable for funding?</span>
                                 <span th:if="${#fields.hasErrors('fundingConfirmation')}" th:remove="tag">
                                     <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}" />
                                 </span>
                             </legend>
-                            <label class="block-label selection-button-radio">
+                            <div class="multi-choice">
                                 <input
                                 value="true"
                                 type="radio"
@@ -53,9 +53,11 @@
                                 required="required"
                                 th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                 data-conditionally-remove-required="#feedback" />
-                                Yes
-                            </label>
-                            <label class="block-label selection-button-radio">
+                                <label>
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="multi-choice">
                                 <input
                                 value="false"
                                 type="radio"
@@ -63,8 +65,10 @@
                                 required="required"
                                 th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                 data-conditionally-add-required="#feedback, .form-group input" />
-                                No
-                            </label>
+                                <label>
+                                    No
+                                </label>
+                            </div>
                         </fieldset>
                     </div>
                 </div>

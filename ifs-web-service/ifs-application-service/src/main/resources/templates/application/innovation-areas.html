@@ -20,7 +20,7 @@
             </div>
 
             <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'form-group-error'">
                     <fieldset>
                         <legend class="extra-margin-bottom">
                             <span class="visuallyhidden">
@@ -31,21 +31,23 @@
                             </th:block>
                         </legend>
                         <th:block th:each="innovationArea : ${model.availableInnovationAreas}">
-                            <label class="block-label selection-button-radio" th:for="${'innovationAreaChoice-'+innovationArea.id}">
+                            <div class="multiple-choice">
                                 <input type="radio" name="innovationAreaChoice" required="required"
                                        th:id="${'innovationAreaChoice-'+innovationArea.id}"
                                        th:value="${innovationArea.id}"
                                        th:checked="${model.selectedInnovationAreaId} == ${innovationArea.id}"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}">
-                                <th:block th:text="${innovationArea.name}" />
-                                <span class="form-hint" th:text="${innovationArea.description}">description</span>
-                            </label>
+                               <label th:for="${'innovationAreaChoice-'+innovationArea.id}">
+                                   <th:block th:text="${innovationArea.name}" />
+                                   <span class="form-hint" th:text="${innovationArea.description}">description</span>
+                               </label>
+                            </div>
                         </th:block>
                         <p class="form-block">or</p>
-                        <label class="block-label selection-button-radio">
-                            <input type="radio" name="innovationAreaChoice" value="NOT_APPLICABLE" th:checked="${model.noInnovationAreaApplicable}" required="required">
-                            My innovation area is not listed
-                        </label>
+                        <div class="multiple-choice">
+                            <input type="radio" name="innovationAreaChoice" value="NOT_APPLICABLE" th:checked="${model.noInnovationAreaApplicable}" required="required" />
+                            <label>My innovation area is not listed</label>
+                        </div>
                     </fieldset>
                 </div>
                 <button class="button" name="save-innovation-area">Save</button>

@@ -44,7 +44,7 @@
 						<span class="visuallyhidden">Monitoring Officer</span>
 			</legend>
 
-						<div class="form-group" th:classappend="${#fields.hasErrors('firstName') ? 'error' : ''}">
+						<div class="form-group" th:classappend="${#fields.hasErrors('firstName') ? 'form-group-error' : ''}">
 							<label class="form-label" for="firstName">
 								<span class="form-label-bold">First name</span>
 								<th:block th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
@@ -54,7 +54,7 @@
 							<input type="text" th:errorclass="field-error" required="required" th:attr="data-required-errormessage=#{validation.standard.firstname.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{firstName}" />
 						</div>
 
-						  <div class="form-group" th:classappend="${#fields.hasErrors('lastName') ? 'error' : ''}">
+						  <div class="form-group" th:classappend="${#fields.hasErrors('lastName') ? 'form-group-error' : ''}">
 							  <label class="form-label" th:for="lastName">
 								  <span class="form-label-bold">Last name</span>
 											<th:block th:if="${#fields.hasErrors('lastName')}">
@@ -64,7 +64,7 @@
 							  <input type="text" th:errorclass="field-error" required="required" th:attr="data-required-errormessage=#{validation.standard.lastname.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{lastName}" />
 						  </div>
 
-						  <div class="form-group" th:classappend="${#fields.hasErrors('emailAddress') ? 'error' : ''}">
+						  <div class="form-group" th:classappend="${#fields.hasErrors('emailAddress') ? 'form-group-error' : ''}">
 							  <label class="form-label" for="emailAddress">
 								  <span class="form-label-bold">Email</span>
 											<th:block th:if="${#fields.hasErrors('emailAddress')}">
@@ -74,7 +74,7 @@
 							  <input type="email" th:errorclass="field-error" required="required" th:attr="data-required-errormessage=#{validation.invite.email.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{emailAddress}" />
 						  </div>
 
-						  <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber') ? 'error' : ''}">
+						  <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber') ? 'form-group-error' : ''}">
 							  <label class="form-label" for="phoneNumber">
 								  <span class="form-label-bold">Phone number</span>
 									<th:block th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">

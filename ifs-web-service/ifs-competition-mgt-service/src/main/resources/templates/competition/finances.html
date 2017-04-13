@@ -33,7 +33,7 @@
           data-section="application"
           data-subsection="finance">
 
-        <div th:class="${#fields.hasErrors('fullApplicationFinance')}? 'form-group error':'form-group'">
+        <div th:class="${#fields.hasErrors('fullApplicationFinance')}? 'form-group form-group-error':'form-group'">
             <fieldset class="inline">
                 <legend>
                     <span class="form-label-bold">Finances form</span>
@@ -41,18 +41,22 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('fullApplicationFinance')}" th:text="${err}" />
                     </span>
                 </legend>
-                <label class="block-label selection-button-radio" for="full-application-finance-yes">
+                <div class="multi-choice">
                     <input id="full-application-finance-yes" value="true" type="radio" th:field="*{fullApplicationFinance}" required="required" />
-                    Full application finances
-                </label>
-                <label class="block-label selection-button-radio" for="full-application-finance-no">
+                    <label for="full-application-finance-yes">
+                        Full application finances
+                    </label>
+                </div>
+                <div class="multi-choice">
                     <input id="full-application-finance-no" value="false" disabled="disabled" type="radio" th:field="*{fullApplicationFinance}" required="required" />
-                    Light finances
-                </label>
+                    <label for="full-application-finance-no">
+                        Light finances
+                    </label>
+                </div>
             </fieldset>
         </div>
 
-        <div th:class="${#fields.hasErrors('includeGrowthTable')}? 'form-group error':'form-group'">
+        <div th:class="${#fields.hasErrors('includeGrowthTable')}? 'form-group form-group-error':'form-group'">
             <fieldset class="inline">
                 <legend>
                     <span class="form-label-bold">Include project growth table</span>
@@ -60,14 +64,18 @@
 		                      <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}" />
 		                </span>
                 </legend>
-                <label class="block-label selection-button-radio" for="include-growth-table-yes">
+                <div class="multi-choice">
                     <input id="include-growth-table-yes" value="true" type="radio" th:field="*{includeGrowthTable}" required="required" />
-                    Yes
-                </label>
-                <label class="block-label selection-button-radio" for="include-growth-table-no">
-                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${isSectorCompetition}"/>
-                    No
-                </label>
+                    <label for="include-growth-table-yes">
+                        Yes
+                    </label>
+                </div>
+                <div class="multi-choice">
+                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${isSectorCompetition}" />
+                    <label for="include-growth-table-no">
+                        No
+                    </label>
+                </div>
             </fieldset>
         </div>
 

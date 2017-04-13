@@ -104,7 +104,7 @@
                     Funding type
                 </label>
 
-                <label th:for="${'fundingType-'+fundingType.displayName}" class="block-label selection-button-radio" th:each="fundingType : ${model.fundingTypes}" >
+                <div class="multi-choice" th:each="fundingType : ${model.fundingTypes}">
                     <input type="radio"
                            name="fundingType"
                            th:id="${'fundingType-'+fundingType.displayName}"
@@ -112,9 +112,10 @@
                            required="required"
                            th:checked="${form.fundingType == fundingType.displayName}"
                            th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
-                    <th:block th:text="${fundingType.displayName}" />
-                </label>
-
+                    <label th:for="${'fundingType-'+fundingType.displayName}">
+                        <th:block th:text="${fundingType.displayName}" />
+                    </label>
+                </div>
             </div>
             <div class="form-group">
                 <label class="form-label-bold" for="project-size">
@@ -165,7 +166,7 @@
         </dl>
         <th:block th:each="formDate, iteration : ${form.dates}" th:with="index=${iteration.index}">
             <div class="contentGroup" th:id="${'contentDateGroup-row-'+index}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'error' : ''">
+                <div class="form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'form-group-error' : ''">
                     <fieldset>
                         <input type="hidden" th:id="${'dates'+index+'-id'}" th:field="${form.dates[__${index}__].id}">
                         <legend>
@@ -227,7 +228,7 @@
                     </fieldset>
 
                 </div>
-                <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'error':''">
+                <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'form-group-error':''">
                     <label class="form-label" th:for="${'dates-'+index+'-content'}">
                         <span class="form-label-bold">Content</span>
                         <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
@@ -294,13 +295,13 @@
     <th:block th:each="contentGroup,iter: ${form.contentGroups}" th:with="index=${iter.index}">
         <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
             <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
-            <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'error':''">
+            <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'form-group-error':''">
                 <label class="form-label-bold" th:for="${'heading-'+index}">Heading</label>
                 <input class="form-control" th:id="${'heading-'+index}" type="text" th:field="*{contentGroups[__${index}__].heading}"
                        required="required"
                        th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.heading.required}" />
             </div>
-            <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'error':''">
+            <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'form-group-error':''">
                 <label class="form-label-bold" th:for="${'content-'+index}">Content</label>
                     <textarea th:errorclass="field-error" th:id="${'content-'+index}" cols="30" rows="10" class="width-full form-control" data-editor="html" th:field="*{contentGroups[__${index}__].content}"
                               required="required"

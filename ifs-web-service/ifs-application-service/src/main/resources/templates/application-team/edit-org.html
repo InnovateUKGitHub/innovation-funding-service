@@ -62,7 +62,7 @@
                         </tr>
 
                         <tr th:each="applicant, applicantStat: *{applicants}" class="repeatable-row">
-                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].name') ? 'form-group error':'form-group'}">
+                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].name') ? 'form-group form-group-error':'form-group'}">
                                 <label th:for="'applicants'+${applicantStat.index}+'.name'">
                                     <span class="visually-hidden">Applicant name</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
@@ -79,7 +79,7 @@
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
-                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].email') ? 'form-group error':'form-group'}">
+                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].email') ? 'form-group form-group-error':'form-group'}">
                                 <label th:for="'applicants'+${applicantStat.index}+'.email'">
                                     <span class="visually-hidden">Applicant email</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">

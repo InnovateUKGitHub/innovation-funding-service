@@ -62,12 +62,14 @@
                                     <div class="task">
                                         <th:block th:if="${app.readyToSubmit}">
                                             <div class="label-holder">
-                                                <label class="block-label selection-button-checkbox">
-                                                <span class="visuallyhidden">Mark assessment for submission</span>
-                                                <input class="assessment-submit-checkbox" type="checkbox"
-                                                       data-toggle-submit="#submit-assessment-button"
-                                                       th:field="*{assessmentIds}" th:value="${app.assessmentId}" />
-                                                </label>
+                                                <div class="multi-choice">
+                                                    <input class="assessment-submit-checkbox" type="checkbox"
+                                                           data-toggle-submit="#submit-assessment-button"
+                                                           th:field="*{assessmentIds}" th:value="${app.assessmentId}" />
+                                                    <label>
+                                                        <span class="visuallyhidden">Mark assessment for submission</span>
+                                                    </label>
+                                                </div>
                                             </div>
                                         </th:block>
                                         <h3 class="heading-small"><a

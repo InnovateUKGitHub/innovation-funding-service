@@ -18,7 +18,7 @@
             <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
                 UK</p>
             <p>Enter the figures from the following fields on the Je-S form:</p>
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')}? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')}? 'form-group-error'">
                 <label class="form-label" for="tsb-ref">
           		    		<span class="form-label-bold">TSB reference</span>
                       <span class="form-hint">This number is found at the top of your Je-S form</span>
@@ -44,7 +44,7 @@
 
             <div class="grid-row">
                 <div class="form-group"
-                    th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'error'">
+                    th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'form-group-error'">
 
                     <label class="form-label column-third" for="incurred-staff">
                         <span>Staff</span>
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'form-group-error'">
 
                     <label class="form-label column-third" for="travel">
                         <span>Travel &amp; subsistence </span>
@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'error'">
+                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'form-group-error'">
                     <label class="form-label column-third" for="other">
                         <span>Other costs</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredOtherCosts?.id+'-cost'})" />
@@ -122,7 +122,7 @@
 
 
             <div class="grid-row">
-                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'form-group-error'">
                     <label class="form-label column-third" for="investigators">
                         <span>Investigators</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedInvestigators?.id+'-cost'})" />
@@ -139,7 +139,7 @@
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'form-group-error'">
                     <label class="form-label column-third" for="estates">
                         <span>Estates Costs</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedEstatesCosts?.id+'-cost'})" />
@@ -156,7 +156,7 @@
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'form-group-error'">
                     <label class="form-label column-third" for="other-direct">
                         <span>Other costs</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedOtherCosts?.id+'-cost'})" />
@@ -190,7 +190,7 @@
         <fieldset>
             <legend class="visuallyhidden">Indirect costs</legend>
             <div class="grid-row">
-                <div class="form-group border-top"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'error'">
+                <div class="form-group border-top"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'form-group-error'">
                     <label class="form-label column-third" for="indirect">
                         <span class="form-label-bold">Indirect costs </span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.indirectCosts?.id+'-cost'})" />
@@ -216,7 +216,7 @@
             <hr class="underline"/>
 
             <div class="grid-row">
-                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'error'">
+                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'form-group-error'">
                     <label class="form-label column-third" for="exceptions-staff">
                         <span>Staff</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsStaff?.id+'-cost'})" />
@@ -233,7 +233,7 @@
                 </div>
             </div>
             <div class="grid-row">
-                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'form-group-error'">
                     <label class="form-label column-third" for="exceptions-other-direct">
                         <span>Other costs</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsOtherCosts?.id+'-cost'})" />

@@ -82,10 +82,12 @@
     <fieldset class="inline">
         <legend class="visuallyhidden">Is this application in scope?</legend>
         <div class="form-group">
-            <label class="block-label selection-button-radio" th:each="option : ${ { true, false } }">
+            <div class="multi-choice">
                 <input th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
-                <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
-            </label>
+                <label th:each="option : ${ { true, false } }">
+                    <th:block th:text="${option ? 'Yes' : 'No'}" />
+                </label>
+            </div>
         </div>
     </fieldset>
 </div>

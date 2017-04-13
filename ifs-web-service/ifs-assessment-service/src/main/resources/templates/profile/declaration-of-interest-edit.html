@@ -75,22 +75,23 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}" />
                             </span>
                         </legend>
-
-                        <label class="block-label selection-button-radio" data-target="toggle-appointments">
+                        <div class="multi-choice" data-target="toggle-appointments">
                             <input value="yes" type="radio" th:field="*{hasAppointments}"
                                    data-repeatable-rowcontainer="#position-table tbody"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
                                    data-conditionally-add-required="input.appointment-field" />
-                            Yes
-                        </label>
-                        <label class="block-label selection-button-radio">
+                            <label>Yes</label>
+                        </div>
+                        <div class="multi-choice">
                             <input value="no" type="radio" th:field="*{hasAppointments}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
                                    data-conditionally-remove-required="input.appointment-field" />
-                            No
-                        </label>
+                            <label>
+                                No
+                            </label>
+                        </div>
                     </fieldset>
 
                     <div class="panel js-hidden" id="toggle-appointments">
@@ -159,22 +160,25 @@
                                       th:text="${err}" />
                             </span>
                         </legend>
+
                         <p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
 
-                        <label class="block-label selection-button-radio" data-target="toggle-interest">
+                        <div class="multi-choice" data-target="toggle-interest">
                             <input value="Yes" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
                                    data-conditionally-add-required="#financialInterests" />
-                            Yes
-                        </label>
-                        <label class="block-label selection-button-radio">
+                            <label>Yes</label>
+                        </div>
+                        <div class="multi-choice">
                             <input value="No" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
                                    data-conditionally-remove-required="#financialInterests" />
-                            No
-                        </label>
+                            <label>
+                                No
+                            </label>
+                        </div>
                     </fieldset>
                 </div>
 
@@ -206,21 +210,23 @@
                             </span>
                         </legend>
 
-                        <label class="block-label selection-button-radio" data-target="toggle-familyAffiliations">
+                        <div class="multi-choice" data-target="toggle-familyAffiliations">
                             <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}"
                                    data-repeatable-rowcontainer="#family-table tbody"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
                                    data-conditionally-add-required="input.family-affiliation-field" />
-                            Yes
-                        </label>
-                        <label class="block-label selection-button-radio">
+                            <label>Yes</label>
+                        </div>
+                        <div class="multi-choice">
                             <input value="No" type="radio" th:field="*{hasFamilyAffiliations}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
                                    data-conditionally-remove-required="input.family-affiliation-field" />
-                            No
-                        </label>
+                            <label>
+                                No
+                            </label>
+                        </div>
                     </fieldset>
 
                     <div class="panel js-hidden" id="toggle-familyAffiliations">
@@ -302,21 +308,22 @@
                                       th:text="${err}" />
                             </span>
                         </legend>
-
-                        <label class="block-label selection-button-radio" data-target="toggle-family-interest">
+                        <div class="multi-choice" data-target="toggle-family-interest">
                             <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
                                    data-conditionally-add-required="#familyFinancialInterests" />
-                            Yes
-                        </label>
-                        <label class="block-label selection-button-radio">
+                            <label>Yes</label>
+                        </div>
+                        <div class="multi-choice">
                             <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
                                    data-conditionally-remove-required="#familyFinancialInterests" />
-                            No
-                        </label>
+                            <label>
+                                No
+                            </label>
+                        </div>
                     </fieldset>
                 </div>
 
@@ -342,12 +349,16 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}" />
                           </span>
                         </legend>
-                        <label class="block-label selection-button-checkbox">
-                            <input type="checkbox" th:field="*{accurateAccount}" required="required"
+
+                        <div class="multi-choice">
+                            <input type="checkbox" th:field="*{accurateAccount}"
+                                   required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
-                            I confirm that the above is an accurate account, to the best of my knowledge, of my financial interests.
-                            I agree to inform Innovate UK immediately of any changes which may affect this declaration.
-                        </label>
+                            <label>
+                                I confirm that the above is an accurate account, to the best of my knowledge, of my financial interests.
+                                I agree to inform Innovate UK immediately of any changes which may affect this declaration.
+                            </label>
+                        </div>
                     </fieldset>
                 </div>
 

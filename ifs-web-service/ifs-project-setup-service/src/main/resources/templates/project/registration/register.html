@@ -30,14 +30,14 @@
 
             <h2 class="heading-medium">Your details</h2>
 
-                <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
+                <div th:class="${#fields.hasErrors('firstName')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="firstName">
                         <span class="form-label-bold">First name</span>
                         <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
                               <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}"
+                    <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-group-error' : 'form-control'}"
                            class="form-control"
                            type="text"
                            th:field="*{firstName}"
@@ -49,14 +49,14 @@
                                     data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
 
-                <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
+                <div th:class="${#fields.hasErrors('lastName')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="lastName">
                         <span class="form-label-bold">Last name</span>
                         <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
                               <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
+                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-group-error' : 'form-control'}"
                            id="lastName"
                            type="text"
                            th:field="*{lastName}"
@@ -67,7 +67,7 @@
                                     data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                     data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
-                <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
+                <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application</span>
@@ -75,7 +75,7 @@
                               <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
                         </span>
                      </label>
-                    <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"
+                    <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-group-error' : 'form-control'}"
                            type="tel"
                            th:field="*{phoneNumber}"
                            minlength="8"
@@ -85,7 +85,7 @@
                                     data-maxlength-errormessage=#{validation.standard.firstname.length.max(20)},
                                     data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
-                <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group error':'form-group'">
+                <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="email">
                         <span class="form-label-bold">Email</span>
 
@@ -104,7 +104,7 @@
                     </label>
 
                     <span th:unless="${invitee}">
-                        <input th:class="${#fields.hasErrors('email') ? 'form-control field-error' : 'form-control'}"
+                        <input th:class="${#fields.hasErrors('email') ? 'form-control field-group-error' : 'form-control'}"
                                type="email"
                                th:field="*{email}"
                                maxlength="256"
@@ -116,16 +116,19 @@
 
                 <th:block th:insert="fragments/password :: registration"/>
 
-                <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
+                <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group form-group-error':'form-group'">
                   <fieldset>
                       <legend>
                         <span class="visuallyhidden">Terms and conditions</span>
                         <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                       </legend>
-                      <label class="block-label selection-button-checkbox" for="termsAndConditions">
+
+                      <div class="multi-choice">
                           <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
-                          I agree to the <a href="/info/terms-and-conditions">terms and conditions</a>
-                      </label>
+                          <label for="termsAndConditions">
+                              I agree to the <a href="/info/terms-and-conditions">terms and conditions</a>
+                          </label>
+                      </div>
                   </fieldset>
                 </div>
 

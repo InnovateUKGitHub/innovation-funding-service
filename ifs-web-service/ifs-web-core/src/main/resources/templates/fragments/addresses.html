@@ -4,7 +4,7 @@
         <fieldset>
             <legend th:if="${legend}" class="visuallyhidden" th:text="${legend}" />
             <legend th:unless="${legend}" class="visuallyhidden">Organisation details</legend>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'form-group-error'">
                 <label class="form-label" for="addressForm.postcodeInput">
                     <span class="form-label-bold">Postcode</span>
                     <span th:if="${formHint}" class="form-hint" th:text="${formHint}"></span>
@@ -17,7 +17,7 @@
                 <div th:if='${form.addressForm.postcodeInput != ""} and ${#lists.isEmpty(form.addressForm.postcodeOptions)}'>No results were found</div>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeOptions}')} ? 'error'" id="select-address-block" th:unless="${#lists.isEmpty(form.addressForm.postcodeOptions)}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeOptions}')} ? 'form-group-error'" id="select-address-block" th:unless="${#lists.isEmpty(form.addressForm.postcodeOptions)}">
                 <label class="form-label" for="addressForm.selectedPostcodeIndex">
                     <span class="form-label-bold">Select your address</span>
                     <th:block th:if="${#fields.hasErrors('*{addressForm.postcodeOptions}')}">
@@ -35,7 +35,7 @@
             <input type="hidden" th:field="*{addressForm.manualAddress}" />
             <legend class="heading-medium" th:if="${addressType}" th:text="|Your ${addressType}|">ADDRESS TYPE</legend>
             <legend class="visuallyhidden" th:unless="${addressType}">Address details</legend>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'form-group-error'">
                 <label class="form-label" for="addressForm.selectedPostcode.addressLine1">
                     <span class="form-label-bold">Street</span>
                     <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave}">
@@ -44,7 +44,7 @@
                 </label>
                 <input class="form-control" th:field="*{addressForm.selectedPostcode.addressLine1}" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'field-error'" type="text" />
             </div>
-            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave} ? 'form-group form-group-error' : 'form-group'">
                 <label class="form-label visuallyhidden" for="addressForm.selectedPostcode.addressLine2">
                     <span class="form-label-bold">Street line 2</span>
                     <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave}">
@@ -53,7 +53,7 @@
                 </label>
                 <input class="form-control" th:field="*{addressForm.selectedPostcode.addressLine2}" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave} ? 'field-error' : ''"   type="text" />
             </div>
-            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'form-group form-group-error' : 'form-group'">
                 <label class="form-label" for="addressForm.selectedPostcode.addressLine3">
                     <span class="form-label-bold visuallyhidden">Street line 3</span>
                     <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave}">
@@ -62,7 +62,7 @@
                 </label>
                 <input class="form-control" th:field="*{addressForm.selectedPostcode.addressLine3}"  th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'field-error' : ''" type="text" />
             </div>
-            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave} ? 'form-group form-group-error' : 'form-group'">
                 <label class="form-label" for="addressForm.selectedPostcode.town">
                     <span class="form-label-bold">Town</span>
                     <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave}">
@@ -71,7 +71,7 @@
                 </label>
                 <input class="form-control" th:field="*{addressForm.selectedPostcode.town}"  th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave} ? 'field-error' : ''" type="text" />
             </div>
-            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave} ? 'form-group form-group-error' : 'form-group'">
                 <label class="form-label" for="addressForm.selectedPostcode.county">
                     <span class="form-label-bold">County</span>
                     <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave}">
@@ -80,7 +80,7 @@
                 </label>
                 <input class="form-control" th:field="*{addressForm.selectedPostcode.county}" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave} ? 'field-error' : ''"  type="text" />
             </div>
-            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave} ? 'form-group form-group-error' : 'form-group'">
                 <label class="form-label" for="addressForm.selectedPostcode.postcode" >
                     <span class="form-label-bold">Postcode</span>
                     <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave}">
@@ -169,7 +169,7 @@
 </th:block>
 
 <th:block th:fragment="organisation-name">
-    <div th:class="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
+    <div th:class="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave} ? 'form-group form-group-error' : 'form-group'">
         <label class="form-label" for="org-name">
             <span class="form-label-bold">Organisation name</span>
             <span class="error-message" th:if="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave}" th:errors="*{organisationName}"></span>

@@ -30,7 +30,7 @@
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
-    <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
+    <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? form-group-error : ''">
 
         <th:block th:if="${!userIsLeadApplicant}">
             <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
@@ -124,7 +124,7 @@
                 #fields.hasErrors('notBindedField') will throw an exception, and there is no quick way of checking if a
                 field has been binded
             */-->
-            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'error')">
+            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'form-group-error')">
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
                         <span class="error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
@@ -167,7 +167,7 @@
             <th:block th:unless="${readonly or appIsClosed}">
             <!--/* start of edit template */-->
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'form-group-error'">
                     <label for="application_details-title">
                         <span class="form-label form-label-bold">Application title</span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
@@ -182,7 +182,7 @@
                          required="required"
                          th:errorclass="field-error" />
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'form-group-error'">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Estimated timescales</span>
@@ -193,7 +193,7 @@
                         <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
                     </fieldset>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'form-group-error'">
                     <th:block th:insert="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
                     <input class="form-control width-extra-small"
@@ -231,42 +231,44 @@
                                 type="submit"><span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span></button>
                     </fieldset>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'form-group-error'">
                     <fieldset>
                         <legend>
                             <span class="form-label form-label-bold">Is this application a resubmission?</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                         </legend>
-                        <label class="block-label selection-button-radio "
-                               th:classappend="${currentApplication.resubmission != null and currentApplication.resubmission} ? 'selected'"
-                               for="application.resubmission-yes"
-                               data-target="resubmission-details">
+
+                        <div class="multi-choice" data-target="resubmission-details">
                             <input type="radio"
                                    id="application.resubmission-yes"
                                    th:field="*{__application.resubmission__}"
                                    value="true"
                                    required="required"
                                    th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}"
-                                   th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
-                                    Yes
-                        </label>
-                        <label class="block-label selection-button-radio"
-                               th:classappend="${currentApplication.resubmission != null and !currentApplication.resubmission} ? 'selected'"
-                               for="application.resubmission-no">
-                                <input type="radio"
-                                       id="application.resubmission-no"
-                                       th:field="*{__application.resubmission__}"
-                                       value="false"
-                                       required="required"
-                                       th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}"
-                                       th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
-                                    No
-                        </label>
+                                   th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}" />
+                            <label th:classappend="${currentApplication.resubmission != null and currentApplication.resubmission} ? 'selected'"
+                                   for="application.resubmission-yes">
+                                Yes
+                            </label>
+                        </div>
+
+                        <div class="multi-choice">
+                            <input type="radio"
+                                   id="application.resubmission-no"
+                                   th:field="*{__application.resubmission__}"
+                                   value="false"
+                                   required="required"
+                                   th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}"
+                                   th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}" />
+                            <label th:classappend="${currentApplication.resubmission != null and !currentApplication.resubmission} ? 'selected'" for="application.resubmission-no">
+                                No
+                            </label>
+                        </div>
                     </fieldset>
                 </div>
                 <div id="resubmission-details">
-                    <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'error'">
+                    <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
                         <h2 class="heading-medium no-margin-top">Please provide the details of this previous application</h2>
                         <label for="application_details-previousapplicationnumber">
                             <span class="form-label form-label-bold">Previous application number</span>
@@ -280,7 +282,7 @@
                                    th:errorclass="field-error"
                                    th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
                     </div>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'error'">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'form-group-error'">
                         <label for="application_details-previousapplicationtitle">
                             <span class="form-label form-label-bold">Previous application title</span>
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />

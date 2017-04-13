@@ -47,7 +47,7 @@
 
                      <div th:if="${!assessorFeedback.fileUploaded}"
                           th:action="@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition}, applicationId=${currentApplication.id})}"
-                          th:classappend="${#fields.hasErrors('assessorFeedback')} ? error : ''">
+                          th:classappend="${#fields.hasErrors('assessorFeedback')} ? form-group-error : ''">
 
                          <th:block th:if="${#fields.hasErrors('assessorFeedback')}">
                              <span class="error-message" th:each="err : ${#fields.errors('assessorFeedback')}" th:text="${err}" />

@@ -32,15 +32,18 @@
         <p class="form-hint">This is the address your organisation works from</p>
         <fieldset>
             <legend class="visuallyhidden">Operating address</legend>
-            <div  th:class="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-block error' : 'form-block'">
+            <div th:class="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-block error' : 'form-block'">
                 <span class="error-message" th:if="${#fields.hasErrors('*{useSearchResultAddress}')}" th:errors="*{useSearchResultAddress}" />
-                <label class="block-label selection-button-checkbox" for="address-same" data-target="manual-company-input"
-                       data-target-inverted="true">
-                    <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes"/>
-                    The operating address is the same as the registered organisation address
-                </label>
+
+                <div class="multi-choice" data-target="manual-company-input" data-target-inverted="true">
+                    <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
+                    <label for="address-same">
+                        The operating address is the same as the registered organisation address
+                    </label>
+                </div>
             </div>
         </fieldset>
+
         <th:block th:insert="fragments/addresses :: company-address-details"
                   th:with="form=${organisationForm},addressType=${'operating address'}" />
 

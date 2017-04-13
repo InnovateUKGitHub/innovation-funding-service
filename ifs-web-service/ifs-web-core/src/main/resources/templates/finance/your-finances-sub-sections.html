@@ -61,7 +61,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="formInput, status : ${model.getFormInputsFinancialOverview(question.id)}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="form-group">
+                                <tr th:each="formInput, status : ${model.getFormInputsFinancialOverview(question.id)}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error' : ''" class="form-group">
                                     <td>
                                         <label th:for="${'input-'+formInput.id}">
                                             <span th:text="${formInput.description}"></span>
