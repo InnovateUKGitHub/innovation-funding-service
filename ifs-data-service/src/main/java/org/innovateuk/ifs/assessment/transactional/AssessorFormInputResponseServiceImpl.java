@@ -11,15 +11,17 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResourc
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.transactional.CategoryService;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.AssessorScoreAverageCollector;
-import org.innovateuk.ifs.validator.AssessorScoreValidator;
+import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -61,6 +64,9 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Autowired
     private AssessmentRepository assessmentRepository;
 
+    @Autowired
+    private ValidationUtil validationUtil;
+
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
@@ -72,7 +78,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     }
 
     @Override
-    public ServiceResult<AssessorFormInputResponseResource> updateFormInputResponse(AssessorFormInputResponseResource response) {
+    public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
         AssessorFormInputResponseResource createdResponse = getOrCreateAssessorFormInputResponse(response.getAssessment(), response.getFormInput())
                 .getSuccessObjectOrThrowException();
 
@@ -84,12 +90,14 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         }
         createdResponse.setValue(value);
 
-        return serviceSuccess(createdResponse);
-    }
+        BindingResult result = validationUtil.validateResponse(mapToFormInputResponse(createdResponse), true);
 
-    @Override
-    public ServiceResult<Void> saveUpdatedFormInputResponse(AssessorFormInputResponseResource response) {
-        saveAndNotifyWorkflowHandler(response);
+        if (result.hasErrors()) {
+            return serviceFailure(new ValidationMessages(result).getErrors());
+        } else {
+            saveAndNotifyWorkflowHandler(createdResponse);
+        }
+
         return serviceSuccess();
     }
 
@@ -110,7 +118,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 }
             }
         }
-        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope,avgScores,averagePercentage));
+        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope, avgScores, averagePercentage));
     }
 
     private long getAveragePercentage(List<AssessorFormInputResponse> responses) {

@@ -48,15 +48,6 @@ Assessor agreement
     When the user clicks the button/link    link=Download assessor agreement
     Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/New%20simple%20assessor%20agreement.pdf
     And The user goes back to the previous page
-    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/agreement
-
-Find out more about our travel and subsistence rates
-    [Documentation]    INFUND-8806
-    [Tags]
-    Given the user should see the text in the page    Find out more about our travel and subsistence rates
-    When the user clicks the button/link    link=travel and subsistence rates
-    Then the user should be redirected to the correct page    ${Server}/assessment/profile/travel
-    And The user goes back to the previous page
 
 Client-side validations and Submit
     [Documentation]    INFUND-1481
@@ -64,6 +55,8 @@ Client-side validations and Submit
     ...
     ...    INFUND-5432
     [Tags]    HappyPath
+    [Setup]
+    Given the user navigates to the page    ${Server}/assessment/profile/agreement
     When the user selects the checkbox    agreesToTerms1
     And the user should not see an error in the page
     And the user clicks the button/link    jQuery=button:contains("Save and return to assessor dashboard")
@@ -74,3 +67,13 @@ Agreement Confirmation
     [Documentation]    INFUND-5628
     Then the user clicks the button/link    jQuery=a:contains("your assessor agreement")
     And the user should see the text in the page    You signed the assessor agreement on
+
+Find out more about our travel and subsistence rates
+    [Documentation]    INFUND-8806
+    [Tags]
+    [Setup]    The user navigates to the page    ${Server}/assessment/profile/agreement
+    Given the user should see the text in the page    Find out more about our travel and subsistence rates
+    When the user clicks the button/link    link=travel and subsistence rates
+    Then the user should be redirected to the correct page    ${Server}/assessment/profile/travel
+    And The user goes back to the previous page
+

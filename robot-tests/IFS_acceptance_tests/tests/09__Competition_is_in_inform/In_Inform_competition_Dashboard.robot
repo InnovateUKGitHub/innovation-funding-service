@@ -155,7 +155,7 @@ User sends the notification to enable release feedback
     the user selects the checkbox    app-row-3
     the user clicks the button/link    jQuery=button:contains("Unsuccessful")
     the user clicks the button/link    jQuery=.link-back:contains("Competition")
-    the user clicks the button/link    jQuery=button:contains("Manage funding notifications")
+    the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
     the user selects the checkbox     app-row-70
     the user clicks the button/link    jQuery=button:contains("Write and send email")
     the user enters text to a text field    id=subject    Subject
