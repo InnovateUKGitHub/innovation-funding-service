@@ -106,7 +106,7 @@ Lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
+    Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=status of my partners
     When the user clicks the button/link    link=status of my partners
@@ -137,7 +137,7 @@ Non-lead partner can view both documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
+    Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
@@ -160,7 +160,7 @@ PM can view both documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
+    Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
@@ -245,9 +245,8 @@ PM can still view both documents after submitting
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
-    Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    And the user should not see an error in the page
-    And the user goes back to the previous page
+    And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    Then the user goes back to the previous tab
 
 PM cannot remove the documents after submitting
     [Documentation]    INFUND-3012
@@ -270,8 +269,7 @@ Lead partner can still view both documents after submitting
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    And the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
 
 Non-lead partner cannot remove the documents after submission by PM
     [Documentation]    INFUND-3012
@@ -288,7 +286,7 @@ Non-lead partner can still view both documents after submitting
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    And the user should not see an error in the page
+    Then the user goes back to the previous tab
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=status of my partners
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
@@ -365,7 +363,7 @@ After rejection, lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
+    Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=status of my partners
     When the user clicks the button/link    link=status of my partners
@@ -390,7 +388,7 @@ After rejection, non-lead partner cannot view both documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
+    Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
