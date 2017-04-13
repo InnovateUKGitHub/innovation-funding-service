@@ -101,11 +101,11 @@ Application questions should be scorable
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given the user should see the element    link=products-and-services-personalised-technical-approach.pdf (opens in a new window)
-    And the user should see the element    link=products-and-services-personalised-innovation.pdf (opens in a new window)
-    And the user should see the element    link=products-and-services-personalised-project-team.pdf (opens in a new window)
+    Given the user should see the element    link=products-and-services-personalised-technical-approach.pdf, 7 KB (opens in a new window)
+    And the user should see the element    link=products-and-services-personalised-innovation.pdf, 7 KB (opens in a new window)
+    And the user should see the element    link=products-and-services-personalised-project-team.pdf, 7 KB (opens in a new window)
     When the user clicks the button/link    jQuery=a:contains("6. Innovation")
-    And the user clicks the button/link    link=products-and-services-personalised-innovation.pdf (opens in a new window)
+    And the user clicks the button/link    link=products-and-services-personalised-innovation.pdf, 7 KB (opens in a new window)
     And the user goes back to the previous tab
 
 Scope: Status in the overview is updated
