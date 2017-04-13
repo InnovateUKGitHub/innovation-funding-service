@@ -391,6 +391,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long loggedInUserId = 1L;
         long projectId = 4L;
+        long organisationId = 4L;
         long applicationId = 16L;
 
         UserResource loggedInUser = newUserResource().withId(loggedInUserId).withFirstName("Steve").withLastName("Smith").withEmail("Steve.Smith@empire.com").build();
@@ -400,9 +401,11 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         String invitedUserEmail = "Steve.Smith@empire.com";
 
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.isUserLeadPartner(projectResource.getId(), loggedInUser.getId())).thenReturn(false);
+        when(projectService.getLeadOrganisation(projectId)).thenReturn(organisationResource);
 
         mockMvc.perform(post("/project/{id}/details/project-manager", projectId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
