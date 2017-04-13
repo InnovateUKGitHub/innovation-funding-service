@@ -84,7 +84,7 @@ Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
     [Tags]
     Given The user navigates to the finance overview of the academic
-    When the user clicks the button/link    link=testing.pdf
+    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
 
 Lead applicant can't view the file on the finances page

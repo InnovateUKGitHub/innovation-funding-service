@@ -104,8 +104,7 @@ Lead partner can view both documents
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
@@ -136,8 +135,7 @@ Non-lead partner can view both documents
     And the user should see the element   jQuery=#content ul > li:nth-child(7) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
@@ -160,8 +158,7 @@ PM can view both documents
     And the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
@@ -247,8 +244,7 @@ PM can still view both documents after submitting
     And the user clicks the button/link    link=Other documents
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     And the user should not see an error in the page
     And the user goes back to the previous page
@@ -272,8 +268,7 @@ Lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     And the user should not see an error in the page
     And the user goes back to the previous page
@@ -291,8 +286,7 @@ Non-lead partner can still view both documents after submitting
     [Documentation]    INFUND-3012 , INFUND-4428, INFUND-6139
     When the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
@@ -369,8 +363,7 @@ After rejection, lead partner can view both documents
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
@@ -395,8 +388,7 @@ After rejection, non-lead partner cannot view both documents
     And the user should see the element   jQuery=#content ul > li:nth-child(7) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
