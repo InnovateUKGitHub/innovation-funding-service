@@ -7,11 +7,18 @@ EXPOSE 8000
 EXPOSE 12345
 ENV JAVA_OPTS -Xmx300m
 RUN apk --update add curl
+
 COPY certificate /certificate
 WORKDIR $JAVA_HOME
 RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
 WORKDIR /
-VOLUME /tmp
+
+RUN adduser -D -u 1000 ifs
+RUN chown ifs:ifs /mnt
+
+USER ifs
+
+VOLUME /mnt
 
 ADD ifs-data-service-@version@.jar app.jar
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
