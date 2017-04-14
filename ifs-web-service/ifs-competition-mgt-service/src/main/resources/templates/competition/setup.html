@@ -16,7 +16,7 @@
 
 
     <th:block th:if="${currentSection.toString() == 'HOME'}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',subTitle=null,size='heading-xlarge'" />
     </th:block>
 
     <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(${allSections}, ${currentSection}, ${competition}, ${readyToOpen})" th:if="${currentSection.toString() == 'HOME'}" />
