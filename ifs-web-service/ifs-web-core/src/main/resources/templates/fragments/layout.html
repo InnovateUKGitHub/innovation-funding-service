@@ -164,10 +164,10 @@
 </th:block>
 <!-- =========================== Element : page-title =========================== -->
 <th:block th:fragment="page-title">
-    <h1 th:class="${size == null} ? 'heading-large' : ${size}">
-        <span class="heading-secondary" th:if="${subTitle != null}" th:text="${subTitle}"></span>
+    <h1 th:class="${#strings.isEmpty(size)} ? 'heading-large' : ${size}">
+        <span class="heading-secondary" th:unless="${#strings.isEmpty(subTitle)}" th:text="${subTitle}"></span>
         <th:block th:text="${pageTitle}" />
-        <small th:unless="${smallText == null}" th:text="${smallText}"></small>
+        <small th:unless="${#strings.isEmpty(smallText)}" th:text="${smallText}"></small>
     </h1>
 </th:block>
 

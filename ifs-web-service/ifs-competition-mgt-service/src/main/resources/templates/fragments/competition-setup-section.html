@@ -7,7 +7,7 @@
           <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
       </ul>
     </div>
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Initial details',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Initial details',subTitle=null,size='heading-xlarge'" />
     <div class="panel">
         This will create a new competition. You will be able to add more details later on.
     </div>
@@ -293,7 +293,7 @@
           <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
       </ul>
     </div>
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',subTitle=null,size='heading-xlarge'" />
 
     <form th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="additional"
           th:action="@{(${editable} ? '' : 'additional/edit')}"
@@ -498,7 +498,7 @@
 
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
 <th:block th:fragment="section-eligibility">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Eligibility',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Eligibility',subTitle=null,size='heading-xlarge'" />
 
     <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post"
           th:object="${competitionSetupForm}" novalidate="novalidate"
@@ -743,7 +743,7 @@
             <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
         </ul>
     </div>
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Milestones',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Milestones',subTitle=null,size='heading-xlarge'" />
 
     <div class="panel">
         Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
@@ -905,7 +905,7 @@
             <li>view the application section(s) to resolve the error.</li>
         </ul>
     </div>
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',subTitle=null,size='heading-xlarge'" />
 
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
         <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
@@ -966,7 +966,7 @@
 <!-- =================== Comp setup section - Assessors (6) ============================== -->
 <th:block th:fragment="section-assessors">
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',subTitle=null,size='heading-xlarge'" />
 
     <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="assessors">
