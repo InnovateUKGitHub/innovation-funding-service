@@ -11,14 +11,8 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
-
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
-                <h1 class="heading-xlarge">Target start date</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target start date',subTitle=${model.projectName},size='heading-xlarge'" />
             <p>The following steps need to be taken before your project can begin. If required, the start date can be changed later.</p>
-
             <p>The project can only start when:</p>
 
             <ol class="list list-number">

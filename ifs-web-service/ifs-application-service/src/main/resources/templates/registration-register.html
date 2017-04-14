@@ -21,10 +21,7 @@
                 </ul>
             </div>
 
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">Create your account</span>
-                Your details
-            </h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create your account',size='heading-xlarge'" />
 
             <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}">
                 <div class="panel">

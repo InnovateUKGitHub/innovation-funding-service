@@ -11,126 +11,126 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
-        <h1 class="heading-large">Create your account</h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create your account',size='heading-large'" />
 
-        <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}">
-            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                <h1 class="heading-medium error-summary-heading">
-                    We were unable to create your account
-                </h1>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                </ul>
-            </div>
+    <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}">
+        <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+            <h2 class="heading-medium error-summary-heading">
+                We were unable to create your account
+            </h2>
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+            </ul>
+        </div>
 
-            <div class="panel">
-                <p>The profile that you are creating will be linked to the following organisation <br/>
-                    <strong><th:block th:text="${organisationName}" /></strong></p>
-            </div>
+        <div class="panel">
+            <p>The profile that you are creating will be linked to the following organisation <br/>
+                <strong><th:block th:text="${organisationName}" /></strong></p>
+        </div>
 
-            <h2 class="heading-medium">Your details</h2>
+        <h2 class="heading-medium">Your details</h2>
 
-                <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="firstName">
-                        <span class="form-label-bold">First name</span>
-                        <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
-                              <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}"
-                           class="form-control"
-                           type="text"
-                           th:field="*{firstName}"
-                           required="required"
-                           minlength="2"
-                           maxlength="70"
-                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
-                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
-                                    data-required-errormessage=#{validation.standard.firstname.required}" />
-                </div>
-
-                <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="lastName">
-                        <span class="form-label-bold">Last name</span>
-                        <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
-                              <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
-                           id="lastName"
-                           type="text"
-                           th:field="*{lastName}"
-                           required="required"
-                           minlength="2"
-                           maxlength="70"
-                           th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
-                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
-                                    data-required-errormessage=#{validation.standard.lastname.required}" />
-                </div>
-                <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="phoneNumber">
-                        <span class="form-label-bold">Phone number</span>
-                        <span class="form-hint">We may use this to contact you about the application</span>
-                        <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
-                              <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
-                        </span>
-                     </label>
-                    <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"
-                           type="tel"
-                           th:field="*{phoneNumber}"
-                           minlength="8"
-                           maxlength="20"
-                           required="required"
-                           th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(8)},
-                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max(20)},
-                                    data-required-errormessage=#{validation.standard.firstname.required}" />
-                </div>
-                <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group error':'form-group'">
-                    <label class="form-label" for="email">
-                        <span class="form-label-bold">Email</span>
-
-                        <span th:if="${invitee}">
-                            <span class="form-hint">You will need this to sign into your account, the provided email is:
-                                <br/>
-                            <strong><span th:remove="tag" th:text="${registrationForm.email}"></span></strong>
-                            </span>
-                        </span>
-                        <span th:unless="${invitee}">
-                            <span class="form-hint">You will need this to sign into your account</span>
-                            <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
-                                  <span class="error-message" th:each="err : ${#fields.errors('email')}" th:text="${err}" />
-                            </span>
-                        </span>
-                    </label>
-
-                    <span th:unless="${invitee}">
-                        <input th:class="${#fields.hasErrors('email') ? 'form-control field-error' : 'form-control'}"
-                               type="email"
-                               th:field="*{email}"
-                               maxlength="256"
-                               required="required"
-                               th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
-                                        data-required-errormessage=#{validation.standard.email.required}" />
+            <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
+                <label class="form-label" for="firstName">
+                    <span class="form-label-bold">First name</span>
+                    <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
+                          <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
                     </span>
-                </div>
+                </label>
+                <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}"
+                       class="form-control"
+                       type="text"
+                       th:field="*{firstName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                data-required-errormessage=#{validation.standard.firstname.required}" />
+            </div>
 
-                <th:block th:insert="fragments/password :: registration"/>
+            <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
+                <label class="form-label" for="lastName">
+                    <span class="form-label-bold">Last name</span>
+                    <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
+                          <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+                    </span>
+                </label>
+                <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
+                       id="lastName"
+                       type="text"
+                       th:field="*{lastName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                data-required-errormessage=#{validation.standard.lastname.required}" />
+            </div>
+            <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
+                <label class="form-label" for="phoneNumber">
+                    <span class="form-label-bold">Phone number</span>
+                    <span class="form-hint">We may use this to contact you about the application</span>
+                    <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
+                          <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
+                    </span>
+                 </label>
+                <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"
+                       type="tel"
+                       th:field="*{phoneNumber}"
+                       minlength="8"
+                       maxlength="20"
+                       required="required"
+                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(8)},
+                                data-maxlength-errormessage=#{validation.standard.firstname.length.max(20)},
+                                data-required-errormessage=#{validation.standard.firstname.required}" />
+            </div>
+            <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group error':'form-group'">
+                <label class="form-label" for="email">
+                    <span class="form-label-bold">Email</span>
 
-                <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
-                  <fieldset>
-                      <legend>
-                        <span class="visuallyhidden">Terms and conditions</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
-                      </legend>
-                      <label class="block-label selection-button-checkbox" for="termsAndConditions">
-                          <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
-                          I agree to the <a href="/info/terms-and-conditions">terms and conditions</a>
-                      </label>
-                  </fieldset>
-                </div>
+                    <span th:if="${invitee}">
+                        <span class="form-hint">You will need this to sign into your account, the provided email is:
+                            <br/>
+                        <strong><span th:remove="tag" th:text="${registrationForm.email}"></span></strong>
+                        </span>
+                    </span>
+                    <span th:unless="${invitee}">
+                        <span class="form-hint">You will need this to sign into your account</span>
+                        <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
+                              <span class="error-message" th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+                        </span>
+                    </span>
+                </label>
 
-            <button class="button button-large" name="create-account" type="submit">Create account</button>
-        </form>
+                <span th:unless="${invitee}">
+                    <input th:class="${#fields.hasErrors('email') ? 'form-control field-error' : 'form-control'}"
+                           type="email"
+                           th:field="*{email}"
+                           maxlength="256"
+                           required="required"
+                           th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                    data-required-errormessage=#{validation.standard.email.required}" />
+                </span>
+            </div>
+
+            <th:block th:insert="fragments/password :: registration"/>
+
+            <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
+              <fieldset>
+                  <legend>
+                    <span class="visuallyhidden">Terms and conditions</span>
+                    <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+                  </legend>
+                  <label class="block-label selection-button-checkbox" for="termsAndConditions">
+                      <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
+                      I agree to the <a href="/info/terms-and-conditions">terms and conditions</a>
+                  </label>
+              </fieldset>
+            </div>
+
+        <button class="button button-large" name="create-account" type="submit">Create account</button>
+    </form>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

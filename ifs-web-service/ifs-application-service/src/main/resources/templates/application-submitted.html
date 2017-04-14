@@ -12,11 +12,10 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" />
 
-        <h1 class="heading-xlarge"  >Application submitted</h1>
-        <h2 class="heading-large" th:text="${currentApplication.getName()}"></h2>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application submitted',size='heading-xlarge'" />
+        <h2 class="heading-large" th:text="${currentApplication.name}"></h2>
 
-
-        <p>Thank you for entering the '<span th:remove="tag" th:text="${currentCompetition.getName()}" />' competition. You have now submitted your application.</p>
+        <p>Thank you for entering the '<th:block th:text="${currentCompetition.name}" />' competition. You have now submitted your application.</p>
 
         <h2 class="heading-large">Next steps:</h2>
         <ul class="list list-bullet">

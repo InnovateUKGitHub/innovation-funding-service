@@ -5,34 +5,28 @@
 </head>
 <body th:with="context='comp-management'" class="competition-management application-project-setup">
 
-	<th:block th:insert="fragments/layout :: body-start" />
-	<th:block th:insert="fragments/layout :: global-header" />
+    <th:block th:insert="fragments/layout :: body-start" />
+    <th:block th:insert="fragments/layout :: global-header" />
 
-	<main tabindex="-1" id="content" class="full-width">
-	<th:block th:insert="fragments/layout :: main-content-start" 		   />
+    <main tabindex="-1" id="content" class="full-width">
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
-	<div class="grid-row">
-		<div class="column-two-thirds">
-			<div class="page-title">
-				<div
-					th:include="fragments/competition-management :: competition-id(competition=${competitionSummary})"
-					th:remove="tag" />
-				<h1 class="heading-xlarge"
-					th:text="${competitionSummary.competitionName}" />
-			</div>
-		</div>
-		<div class="column-third alignright extra-margin">
-			<div
-				th:include="fragments/competition-management :: competition-status(competition=${competitionSummary})"
-				th:remove="tag" />
-		</div>
-	</div>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <th:block th:with="competitionTitle=${#strings.isEmpty(competitionSummary.name)} ? |${competitionSummary.id} : $#{ifs.competition.no_title}| : |${competitionSummary.id} : ${competitionSummary.name}|">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
+            </th:block>
+        </div>
+        <div class="column-third alignright extra-margin">
+            <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})" />
+        </div>
+    </div>
 
-	<th:block th:insert="fragments/layout :: main-content-end" />
-	</main>
+    <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
 
-	<th:block th:insert="fragments/layout :: footer" />
-	<th:block th:insert="fragments/layout :: body-end" />
+    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

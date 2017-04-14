@@ -12,10 +12,9 @@
     <th:block th:include="fragments/layout :: main-content-start" />
     <th:block th:include="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" th:remove="tag"></th:block>
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})"/>
-        <h1 class="heading-xlarge no-margin">Application overview</h1>
-    </div>
+    <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${applicationName},size='heading-xlarge'" />
+    </th:block>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
           method="post" enctype="multipart/form-data"

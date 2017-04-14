@@ -10,10 +10,8 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <h1 class="heading-large">Sorry, you are unable to accept this invitation.</h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sorry, you are unable to accept this invitation.',size='heading-large'" />
     <p>You are signed in with a different email address. Please sign out and sign back in using the email address that the invite was sent to.</p>
-
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

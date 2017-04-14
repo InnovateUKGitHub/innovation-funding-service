@@ -13,16 +13,11 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
 
-    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" th:remove="tag"></div>
-
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectName=${model.project.name})" />
-        <h1 class="heading-xlarge">Project details</h1>
-    </div>
-
-<h2 class="heading-medium">Project details</h2>
-<p>These project details were supplied by the lead partner on behalf of the project.</p>
+    <h2 class="heading-medium">Project details</h2>
+    <p>These project details were supplied by the lead partner on behalf of the project.</p>
 
     <table id="project-details">
         <thead>

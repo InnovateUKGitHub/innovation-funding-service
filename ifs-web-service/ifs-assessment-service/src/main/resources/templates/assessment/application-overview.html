@@ -14,11 +14,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge">Assessment overview</h1>
-            </div>
-
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment overview',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <section th:each="section,iterStat : ${model.sections}">
                 <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>

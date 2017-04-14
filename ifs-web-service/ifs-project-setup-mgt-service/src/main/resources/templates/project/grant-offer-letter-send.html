@@ -16,14 +16,9 @@
 
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" th:remove="tag"></div>
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" />
-                <h1 class="heading-xlarge">Grant offer letter</h1>
-            </div>
-        </div>
-    </div>
+    <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${competitionTitle},size='heading-xlarge'" />
+    </th:block>
     <hr/>
 
     <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">

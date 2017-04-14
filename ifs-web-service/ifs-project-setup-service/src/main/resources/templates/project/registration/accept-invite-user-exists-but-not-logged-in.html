@@ -11,20 +11,14 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div class="hgroup">
-        <h1 class="heading-xlarge no-margin-bottom">Join a project</h1>
-        <p>You have been invited to join a project</p>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join a project',size='heading-xlarge'" />
 
+    <p>You have been invited to join a project</p>
     <div class="grid-row">
-        <section class="column-half">
-            <div>
-                <p>You already have an account with us. Please sign in with your existing account.</p>
-                <p><a th:href="@{/registration/accept-invite-user-exist-show-project}">Sign into the Innovation Funding Service.</a></p>
-            </div>
-        </section>
-        <section class="column-half">
-        </section>
+        <div class="column-half">
+            <p>You already have an account with us. Please sign in with your existing account.</p>
+            <p><a th:href="@{/registration/accept-invite-user-exist-show-project}">Sign into the Innovation Funding Service.</a></p>
+        </div>
     </div>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

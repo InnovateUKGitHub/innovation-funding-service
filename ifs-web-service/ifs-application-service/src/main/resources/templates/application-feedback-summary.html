@@ -10,16 +10,11 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-
-            <th:block th:include="fragments/layout :: header-sub"
-                      th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
-
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
-
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
-                <h1 class="heading-xlarge no-margin">Feedback overview</h1>
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 

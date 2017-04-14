@@ -13,10 +13,9 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=|Back to ${model.organisationName}|, linkClass='link-back',
     linkUrl=@{/application/{applicationId}/team/update(applicationId=${model.applicationId})}"/>
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})"/>
-        <h1 class="heading-xlarge" th:text="|Delete ${model.organisationName}|">Delete Empire Ltd</h1>
-    </div>
+    <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Delete ${model.organisationName}|,subTitle=${applicationName},size='heading-xlarge'" />
+    </th:block>
 
     <form th:action="${actionUrl}"
           th:object="${form}" method="POST" class="contributorsForm" th:with="

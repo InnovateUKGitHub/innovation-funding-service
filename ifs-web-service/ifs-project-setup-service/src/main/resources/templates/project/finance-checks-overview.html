@@ -11,11 +11,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${project.id})}" />
-
-    <div class="page-title">
-        <p class="subtitle"><th:block th:text="${project.name}" /></p>
-        <h1 class="heading-xlarge">Finance overview</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=${project.name},size='heading-xlarge'" />
     <p>This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
 
     <h3 class="heading-medium">Finance summaries</h3>

@@ -20,7 +20,7 @@
         </div>
 
         <div class="my-applications">
-            <h1 class="heading-large">Your dashboard</h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your dashboard',size='heading-large'" />
             <section th:if="${model.projectsInSetupNotEmpty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="heading-medium">Set up your project</h2>

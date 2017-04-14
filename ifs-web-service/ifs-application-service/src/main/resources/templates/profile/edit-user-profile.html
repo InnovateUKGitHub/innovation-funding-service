@@ -20,8 +20,7 @@
         </ul>
     </div>
 
-    <h1 class="heading-large">Your details</h1>
-
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='heading-xlarge'" />
     <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}">
         <fieldset>
             <legend class="visuallyhidden">Your details</legend>

@@ -70,25 +70,6 @@
     <th:block th:text="${#temporals.day(date)}" />
 </th:block>
 
-<!-- =========================== Element: Application Title =========================== -->
-<th:block th:fragment="application-title (applicationName) ">
-    <th:block th:with="noTitle=#{ifs.application.no_title}">
-        <p class="subtitle" th:text="${#strings.isEmpty(applicationName) ? noTitle : applicationName} "/>
-    </th:block>
-</th:block>
-
-<!-- =========================== Element: Competition Title =========================== -->
-<th:block th:fragment="competition-title (competition) ">
-    <th:block th:with="noTitle=#{ifs.competition.no_title}">
-        <p class="subtitle" th:text="${competition.id} + ': ' + ${#strings.isEmpty(competition.name) ? noTitle : competition.name} "/>
-    </th:block>
-</th:block>
-
-<!-- =========================== Element: Project Title =========================== -->
-<th:block th:fragment="project-title (projectName) ">
-    <p class="subtitle" th:text="${projectName} "/>
-</th:block>
-
 <!-- =========================== Element: Competition Closing soon? =========================== -->
 <th:block th:fragment="competition-closing-warning (competition) ">
     <th:block th:if="${competition.isClosingSoon()}">

@@ -12,12 +12,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
-
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
-                <h1 class="heading-xlarge">Finance contact</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance contact',subTitle=${model.projectName},size='heading-xlarge'" />
             <p>We will ask the finance contact to:</p>
 
             <ul class="list list-bullet">

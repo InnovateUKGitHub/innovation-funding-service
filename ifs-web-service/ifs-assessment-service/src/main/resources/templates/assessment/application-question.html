@@ -12,10 +12,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <form th:if="${responseRequired}"
                   th:action="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${model.questionId})}"

@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: global-header" />
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <h1 class="heading-xlarge no-margin-bottom">Invitation to collaborate</h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='heading-xlarge'" />
             <p>You have been invited to join an application in the competition '
                 <a th:href="@{/competition/{competitionId}/details(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>
                 '.

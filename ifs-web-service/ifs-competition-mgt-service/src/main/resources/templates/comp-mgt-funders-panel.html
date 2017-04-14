@@ -11,19 +11,15 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${competitionSummary.competitionId})}" />
 
-  <div class="grid-row">
-      <div class="column-two-thirds">
-            <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id-and-name(${competitionSummary.competitionId},${competitionSummary.competitionName})" />
-                <h1 class="heading-xlarge">Funding decision</h1>
-            </div>
-      </div>
-  </div>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${currentCompetition.id} : ${competitionSummary.competitionName}|,size='heading-xlarge'" />
+        </div>
+    </div>
 
     <form method="GET" th:object="${applicationSummaryQueryForm}">
         <div class="search-filters extra-margin">
-            <fieldset>
-                <legend class="heading-medium">Filter applications</legend>
+                <h2 class="heading-medium">Filter applications</legend>
                 <div class="grid-row">
                     <div class="column-half">
                         <div class="form-group">
@@ -44,7 +40,6 @@
                         </div>
                     </div>
                 </div>
-            </fieldset>
             <div class="grid-row">
                 <div class="column-half">
                     <a href="?" class="button button-clear no-margin">Clear all filters</a>

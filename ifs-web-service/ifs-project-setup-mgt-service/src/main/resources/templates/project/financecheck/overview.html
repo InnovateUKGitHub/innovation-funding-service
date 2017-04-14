@@ -14,10 +14,9 @@
 
     <div class="grid-row">
         <div class="column-two-thirds">
-            <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id-and-name(${#numbers.formatInteger(model.overview.projectId,8)}, ${model.overview.projectName})" />
-                <h1 class="heading-xlarge">Finance overview</h1>
-            </div>
+            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionName)} ? |${model.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionId} : ${model.competitionName}|">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=${competitionTitle},size='heading-xlarge'" />
+            </th:block>
         </div>
         <div class="column-third alignright extra-margin">
             <h2 class="bold-small blue-block">Finance checks</h2>

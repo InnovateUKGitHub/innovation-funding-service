@@ -23,10 +23,9 @@
 
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" />
 
-          	<div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.currentApplication.id},applicationName=${model.application.currentApplication.name})" />
-                <h1 class="heading-xlarge" th:text="${model.title}" />
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.application.currentApplication.name)} ? #{ifs.application.no_title} : ${model.application.currentApplication.name}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
                     th:with="appIsClosed=${model.application.applicationIsClosed}, readonly=${model.application.applicationIsReadOnly}" novalidate="novalidate">

@@ -15,10 +15,7 @@
   <th:block th:insert="fragments/layout :: main-content-start" />
   <div class="grid-row">
       <div class="column-two-thirds">
-            <div class="page-title">
-                <p class="subtitle"><div th:text="${currentCompetition.id}" th:remove="tag" /> : Innovate UK</p>
-                <h1 class="heading-xlarge" th:text="${currentCompetition.name}" />
-            </div>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${currentCompetition.name},subTitle=|${currentCompetition.id} : Innovate UK|,size='heading-xlarge'" />
       </div>
       <div class="column-third alignright extra-margin">
         <th:block th:insert="fragments/competition-management :: competition-status(competition=${currentCompetition})" />
@@ -31,11 +28,10 @@
 <div class="grid-container constrain-width">
 
 
+        <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${title},subTitle=${applicationName},size='heading-xlarge'" />
+        </th:block>
 
-	<div class="page-title">
-            <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
-            <h1 class="heading-xlarge"  th:text="${title}" />
-        </div>
         <form action="#"  method="post" th:object="${form}" enctype="multipart/form-data"
                 th:with="appIsClosed=${!currentApplication.isOpen()}, readonly=${!currentApplication.isOpen()}">
 

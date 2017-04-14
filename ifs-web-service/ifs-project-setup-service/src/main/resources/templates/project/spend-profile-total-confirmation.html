@@ -12,8 +12,8 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" />
 
-    <form th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
-        <h2 class="heading-medium no-margin">Send project spend profile</h2>
+    <form th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send project spend profile',size='heading-medium'" />
         <p>The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
         <input type="submit" class="button large" value="Submit"/>
     </form>

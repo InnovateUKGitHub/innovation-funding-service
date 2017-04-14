@@ -162,6 +162,15 @@
       </div>
     </footer>
 </th:block>
+<!-- =========================== Element : page-title =========================== -->
+<th:block th:fragment="page-title">
+    <h1 th:class="${size == null} ? 'heading-large' : ${size}">
+        <span class="heading-secondary" th:if="${subTitle != null}" th:text="${subTitle}"></span>
+        <th:block th:text="${pageTitle}" />
+        <small th:unless="${smallText == null}" th:text="${smallText}"></small>
+    </h1>
+</th:block>
+
 
 
 <!-- =========================== Element : subheader =========================== -->
