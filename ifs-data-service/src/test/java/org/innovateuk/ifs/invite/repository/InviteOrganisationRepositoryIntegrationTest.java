@@ -71,8 +71,8 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
         inviteOrgApplication2Org1 = inviteOrganisations.get(2);
 
         ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED);
-        application1 = new Application(null, "", createdActivityState);
-        application2 = new Application(null, "", createdActivityState);
+        application1 = new Application("", createdActivityState);
+        application2 = new Application("", createdActivityState);
 
         applicationRepository.save(application1);
         applicationRepository.save(application2);

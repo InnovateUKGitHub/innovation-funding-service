@@ -93,21 +93,17 @@ public class Application implements ProcessActivity {
     public Application() {
     }
 
-    // TODO remove the id from the constructor
-    public Application(Long id, String name, ActivityState activityState) {
+    public Application(String name, ActivityState activityState) {
         requireNonNull(activityState, "activityState cannot be null " + activityState);
-        this.id = id;
         this.name = name;
         this.applicationProcess = new ApplicationProcess(this, null, activityState);
     }
 
-    // TODO remove the id from the constructor
-    public Application(Competition competition, String name, List<ProcessRole> processRoles, ActivityState activityState, Long id) {
+    public Application(Competition competition, String name, List<ProcessRole> processRoles, ActivityState activityState) {
         requireNonNull(activityState, "activityState cannot be null " + activityState);
         this.competition = competition;
         this.name = name;
         this.processRoles = processRoles;
-        this.id = id;
         this.applicationProcess = new ApplicationProcess(this, null, activityState);
     }
 

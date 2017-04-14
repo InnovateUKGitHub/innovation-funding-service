@@ -134,7 +134,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
         ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED);
 
-        Application application = new Application(null, applicationName, createdActivityState);
+        Application application = new Application(applicationName, createdActivityState);
         application.setStartDate(null);
 
         application.setDurationInMonths(3L);

@@ -114,10 +114,10 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         List<ProcessRole> proccessRoles = new ArrayList<>();
         Application application = new Application(
-                APPLICATION_ID,
                 "",
                 new ActivityState(ActivityType.APPLICATION, State.CREATED)
         );
+        application.setId(APPLICATION_ID);
         proccessRoles.add(
                 new ProcessRole(
                         leadApplicantProcessRole,

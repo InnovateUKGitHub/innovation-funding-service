@@ -80,10 +80,10 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         leadApplicantProcessRole = 1L;
         List<ProcessRole> processRoles = new ArrayList<>();
         Application app = new Application(
-                APPLICATION_ID,
                 "",
                 new ActivityState(ActivityType.APPLICATION, State.CREATED)
         );
+        app.setId(APPLICATION_ID);
         processRoles.add(
                 new ProcessRole(
                         leadApplicantProcessRole,

@@ -46,7 +46,8 @@ public class ApplicationTest {
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
 
-        application = new Application(competition, name, processRoles, new ActivityState(ActivityType.APPLICATION, State.CREATED), id);
+        application = new Application(competition, name, processRoles, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        application.setId(id);
     }
 
     @Test

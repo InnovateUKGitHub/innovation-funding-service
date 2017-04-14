@@ -44,10 +44,10 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         leadApplicantProcessRole = 1L;
         List<ProcessRole> processRoles = new ArrayList<>();
         Application application = new Application(
-                APPLICATION_ID,
                 "",
                 new ActivityState(ActivityType.APPLICATION, State.CREATED)
         );
+        application.setId(APPLICATION_ID);
         processRoles.add(
             new ProcessRole(
                 leadApplicantProcessRole,
