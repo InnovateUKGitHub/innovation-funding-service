@@ -7,7 +7,10 @@ public enum ApplicationOutcome implements OutcomeType {
     OPENED("opened"),
     APPROVED("approved"),
     SUBMITTED("submitted"),
-    REJECTED("rejected");
+    REJECTED("rejected"),
+    MARK_INELIGIBLE("mark-ineligible"),
+    INFORM_INELIGIBLE("inform-ineligible"),
+    REINSTATE_INELIGIBLE("reinstate-ineligible");
 
     private final String event;
 

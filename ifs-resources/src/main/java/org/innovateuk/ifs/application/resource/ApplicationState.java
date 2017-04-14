@@ -11,6 +11,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public enum ApplicationState implements ProcessStates{
     CREATED(State.CREATED), // initial state
     SUBMITTED(State.SUBMITTED),
+    INELIGIBLE(State.NOT_APPLICABLE),
+    INELIGIBLE_INFORMED(State.NOT_APPLICABLE_INFORMED),
     APPROVED(State.ACCEPTED),
     REJECTED(State.REJECTED),
     OPEN(State.OPEN);

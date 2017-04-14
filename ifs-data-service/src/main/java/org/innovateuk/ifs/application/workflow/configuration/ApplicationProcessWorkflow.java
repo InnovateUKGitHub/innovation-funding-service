@@ -45,6 +45,21 @@ public class ApplicationProcessWorkflow extends StateMachineConfigurerAdapter<Ap
                 .and()
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
+                    .event(ApplicationOutcome.MARK_INELIGIBLE)
+                    .target(ApplicationState.INELIGIBLE)
+                .and()
+                .withExternal()
+                    .source(ApplicationState.INELIGIBLE)
+                    .event(ApplicationOutcome.INFORM_INELIGIBLE)
+                    .target(ApplicationState.INELIGIBLE_INFORMED)
+                .and()
+                .withExternal()
+                    .source(ApplicationState.INELIGIBLE).source(ApplicationState.INELIGIBLE_INFORMED)
+                    .event(ApplicationOutcome.REINSTATE_INELIGIBLE)
+                    .target(ApplicationState.SUBMITTED)
+                .and()
+                .withExternal()
+                    .source(ApplicationState.SUBMITTED)
                     .event(ApplicationOutcome.APPROVED)
                     .target(ApplicationState.APPROVED)
                 .and()
@@ -52,6 +67,5 @@ public class ApplicationProcessWorkflow extends StateMachineConfigurerAdapter<Ap
                     .source(ApplicationState.SUBMITTED)
                     .event(ApplicationOutcome.REJECTED)
                     .target(ApplicationState.REJECTED);
-
     }
 }
