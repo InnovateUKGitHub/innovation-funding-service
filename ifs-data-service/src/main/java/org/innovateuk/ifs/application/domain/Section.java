@@ -53,28 +53,10 @@ public class Section implements Comparable<Section> {
 
     @Column(nullable = false)
     private boolean displayInAssessmentApplicationSummary = false;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name="section_type")
     private SectionType type = SectionType.GENERAL;
-
-    public Section () {
-    	// no-arg constructor
-    }
-
-    public Section(String name, String description, String assessorGuidanceDescription, Integer priority, boolean questionGroup, Competition competition, List<Question> questions, Section parentSection, List<Section> childSections, boolean displayInAssessmentApplicationSummary, SectionType type) {
-        this.name = name;
-        this.description = description;
-        this.assessorGuidanceDescription = assessorGuidanceDescription;
-        this.priority = priority;
-        this.questionGroup = questionGroup;
-        this.competition = competition;
-        this.questions = questions;
-        this.parentSection = parentSection;
-        this.childSections = childSections;
-        this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
-        this.type = type;
-    }
 
     public String getName() {
         return name;

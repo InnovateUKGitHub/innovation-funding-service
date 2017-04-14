@@ -32,10 +32,6 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
         return withArraySetFieldByReflection("questions", questions);
     }
 
-    public SectionResourceBuilder withDisplayInAssessmentApplicationSummary(boolean displayInSummary) {
-        return with(section -> setField("displayInAssessmentApplicationSummary", displayInSummary, section));
-    }
-
     public SectionResourceBuilder withCompetitionAndPriority(Long competition, Integer priority) {
         return with(section -> {
             section.setCompetition(competition);
@@ -85,6 +81,10 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
 
     public SectionResourceBuilder withChildSections(List<Long>... childSectionss) {
         return withArray((childSections, object) -> setField("childSections", childSections, object), childSectionss);
+    }
+
+    public SectionResourceBuilder withDisplayInAssessmentApplicationSummary(Boolean... displayInAssessmentApplicationSummaries) {
+        return withArray((displayInAssessmentApplicationSummary, object) -> setField("displayInAssessmentApplicationSummary", displayInAssessmentApplicationSummary, object), displayInAssessmentApplicationSummaries);
     }
 
     public SectionResourceBuilder withType(SectionType... types) {
