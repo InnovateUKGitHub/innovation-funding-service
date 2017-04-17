@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
@@ -11,7 +11,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Arrays;
@@ -29,11 +28,8 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
-public class SectionServiceImplTest extends BaseUnitTestMocksTest {
+public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceImpl> {
 
-
-    @InjectMocks
-    private SectionService service = new SectionServiceImpl();
     @Mock
     private SectionRestService sectionRestService;
     @Mock
@@ -46,6 +42,11 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
     private SectionResource childSection1;
     private FormInputResource formInputResource1;
     private FormInputResource formInputResource2;
+
+    @Override
+    protected SectionServiceImpl supplyServiceUnderTest() {
+        return new SectionServiceImpl();
+    }
 
     @Before
     public void setUp() {

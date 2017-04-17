@@ -14,53 +14,75 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>This information is used for search results and the opening section of the competition page.</p>
-        <fieldset>
-            <div class="form-group">
-                <label class="form-label-bold" for="short-description">
-                    Short description
-                    <span class="form-hint">Appears at the top of the competition page.</span>
-                </label>
-                <input class="form-control width-full" id="short-description" type="text" th:field="${form.shortDescription}"
+        <div class="form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'error'">
+            <label for="short-description">
+                <span class="form-label-bold">Short description</span>
+                <span class="form-hint">Appears at the top of the competition page.</span>
+                <th:block th:if="${#fields.hasErrors('shortDescription')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('shortDescription')}" th:text="${err}" />
+                </th:block>
+            </label>
+            <input class="form-control width-full"
+                   id="short-description"
+                   type="text"
+                   th:errorclass="field-error"
+                   th:field="${form.shortDescription}"
+                   required="required"
+                   maxlength="255"
+                   th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('projectFundingRange')} ? 'error'">
+            <label for="funding-range">
+                <span class="form-label-bold">Project funding range</span>
+                <span class="form-hint">Appears against the competition search result.</span>
+                <th:block th:if="${#fields.hasErrors('projectFundingRange')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('projectFundingRange')}" th:text="${err}" />
+                </th:block>
+            </label>
+            <input class="form-control"
+                   id="funding-range"
+                   type="text"
+                   th:errorclass="field-error"
+                   th:field="${form.projectFundingRange}"
+                   required="required"
+                   maxlength="255"
+                   th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('eligibilitySummary')} ? 'error'">
+            <label for="eligibility-summary">
+                <span class="form-label-bold">Eligibility summary</span>
+                <span class="form-hint">Appears against the competition search result.</span>
+                <th:block th:if="${#fields.hasErrors('eligibilitySummary')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('eligibilitySummary')}" th:text="${err}" />
+                </th:block>
+            </label>
+            <div class="textarea-wrapped">
+                <textarea data-editor="html"
+                       class="form-control"
+                       id="eligibility-summary"
+                       ifs:utext="${form.eligibilitySummary}"
+                       th:field="${form.eligibilitySummary}"
                        required="required"
-                       maxlength="255"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}"></textarea>
             </div>
-            <div class="form-group">
-                <label class="form-label-bold" for="funding-range">
-                    Project funding range
-                    <span class="form-hint">Appears against the competition search result.</span>
-                </label>
-                <input class="form-control" id="funding-range" type="text" th:field="${form.projectFundingRange}"
-                       required="required"
-                       maxlength="255"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
-            </div>
-            <div class="form-group">
-                <label class="form-label-bold" for="eligibility-summary">
-                    Eligibility summary
-                    <span class="form-hint">Appears against the competition search result.</span>
-                </label>
-                <div class="textarea-wrapped">
-                    <textarea data-editor="html"
-                           class="form-control"
-                           id="eligibility-summary"
-                           ifs:utext="${form.eligibilitySummary}"
-                           th:field="${form.eligibilitySummary}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}"></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label-bold" for="keywords">
-                    Keywords
-                    <span class="form-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
-                </label>
-                <input class="form-control width-full" id="keywords" type="text" th:field="${form.keywords}"
-                       required="required"
-                       maxlength="255"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}"/>
-            </div>
-        </fieldset>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('keywords')} ? 'error'">
+            <label for="keywords">
+                <span class="form-label-bold">Keywords</span>
+                <span class="form-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
+                <th:block th:if="${#fields.hasErrors('keywords')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('keywords')}" th:text="${err}" />
+                </th:block>
+            </label>
+            <input class="form-control width-full"
+                   id="keywords"
+                   type="text"
+                   th:field="${form.keywords}"
+                   th:errorclass="field-error"
+                   required="required"
+                   maxlength="255"
+                   th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}" />
+        </div>
     </th:block>
 </div>
 
@@ -79,10 +101,12 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear in the summary tab.</p>
-        <fieldset>
-            <div class="form-group">
-                <label class="form-label-bold" for="description">
-                    Competition description
+            <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'error'">
+                <label for="description">
+                    <span class="form-label-bold">Competition description</span>
+                    <th:block th:if="${#fields.hasErrors('description')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('description')}" th:text="${err}" />
+                    </th:block>
                 </label>
                 <div class="textarea-wrapped">
                         <textarea id="description"
@@ -99,32 +123,39 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label-bold">
-                    Funding type
-                </label>
-
-                <label th:for="${'fundingType-'+fundingType.displayName}" class="block-label selection-button-radio" th:each="fundingType : ${model.fundingTypes}" >
-                    <input type="radio"
-                           name="fundingType"
-                           th:id="${'fundingType-'+fundingType.displayName}"
-                           th:value="${fundingType.displayName}"
-                           required="required"
-                           th:checked="${form.fundingType == fundingType.displayName}"
-                           th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
-                    <th:block th:text="${fundingType.displayName}" />
-                </label>
-
+            <div class="form-group" th:classappend="${#fields.hasErrors('fundingType')} ? 'error'">
+                <fieldset>
+                    <legend>
+                        <span class="form-label-bold">Funding type</span>
+                        <th:block th:if="${#fields.hasErrors('fundingType')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('fundingType')}" th:text="${err}" />
+                        </th:block>
+                    </legend>
+                    <label th:for="${'fundingType-'+fundingType.displayName}" class="block-label selection-button-radio" th:each="fundingType : ${model.fundingTypes}" >
+                        <input type="radio"
+                               name="fundingType"
+                               th:id="${'fundingType-'+fundingType.displayName}"
+                               th:value="${fundingType.displayName}"
+                               required="required"
+                               th:checked="${form.fundingType == fundingType.displayName}"
+                               th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
+                        <th:block th:text="${fundingType.displayName}" />
+                    </label>
+                </fieldset>
             </div>
-            <div class="form-group">
-                <label class="form-label-bold" for="project-size">
-                    Project size
-                </label>
-                <input class="form-control" id="project-size" type="text" th:field="${form.projectSize}"
+            <div class="form-group" th:classappend="${#fields.hasErrors('projectSize')} ? 'error'">
+                <label for="project-size">
+                    <span class="form-label-bold">Project size</span>
+                    <th:block th:if="${#fields.hasErrors('projectSize')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('projectSize')}" th:text="${err}" />
+                    </th:block>
+               </label>
+                <input class="form-control" id="project-size" type="text"
+                       th:field="${form.projectSize}"
                        required="required"
+                       th:errorclass="field-error"
                        th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required}" />
             </div>
-        </fieldset>
 
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
 

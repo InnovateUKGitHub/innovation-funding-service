@@ -1,20 +1,14 @@
 FROM davidcaste/alpine-java-unlimited-jce:jdk8
 MAINTAINER David Soff <dsoff@worth.systems>
-EXPOSE 8080
-EXPOSE 8090
-EXPOSE 8081
+RUN apk --update add curl
+EXPOSE 8009
 EXPOSE 8000
-EXPOSE 12345
+EXPOSE 8080
 ENV JAVA_OPTS -Xmx300m
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
-RUN apk --update add curl
-COPY certificate /certificate
-WORKDIR $JAVA_HOME
-RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
-WORKDIR /
 VOLUME /tmp
 
-ADD ifs-data-service-@version@.jar app.jar
+ADD @app_name@-@version@.jar app.jar
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 
 ENTRYPOINT exec java $JAVA_OPTS $JMX_OPTS -jar app.jar

@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild+"-build.gradle";
 
@@ -149,6 +151,15 @@ task buildDocker(type: Docker, dependsOn: build) {
             into stageDir
         }
     }
+}
+
+task prepareDockerFile (type: Copy) {
+    outputs.upToDateWhen { false }
+    from 'src/main/docker/'
+    into 'src/main/docker/'
+    include 'Dockerfile-template'
+    rename 'Dockerfile-template', 'Dockerfile'
+    filter(ReplaceTokens, tokens: [version: project.properties['version']])
 }
 
 buildDocker.dependsOn prepareDockerFile
