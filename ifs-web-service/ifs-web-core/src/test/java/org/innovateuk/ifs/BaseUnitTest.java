@@ -141,7 +141,7 @@ public class BaseUnitTest {
     @Mock
     public ApplicationService applicationService;
     @Mock
-    private CompetitionsRestService competitionRestService;
+    protected CompetitionsRestService competitionRestService;
     @Mock
     public AgreementService agreementService;
     @Mock
