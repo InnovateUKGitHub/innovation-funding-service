@@ -18,7 +18,7 @@ public enum ApplicationStatus {
     SUBMITTED(ApplicationState.SUBMITTED),
     APPROVED(ApplicationState.APPROVED),
     REJECTED(ApplicationState.REJECTED),
-    OPEN(ApplicationState.REJECTED);
+    OPEN(ApplicationState.OPEN);
 
     static Map<ApplicationState, ApplicationStatus> stateMap =
             Arrays.stream(values()).collect(toMap(ApplicationStatus::fromApplicationState, identity()));
