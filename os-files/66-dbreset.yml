@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: db-config
+  data:
+    DB_NAME: <<DB-NAME>>
+    DB_USER: <<DB-USER>>
+    DB_PASS: <<DB-PASS>>
+    DB_HOST: <<DB-HOST>>
+    DB_PORT: "<<DB-PORT>>"
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ldap-config
+  data:
+    LDAP_HOST: <<LDAP-HOST>>
+    LDAP_PORT: "<<LDAP-PORT>>"
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: dbreset
+  spec:
+    template:
+      metadata:
+        name: dbreset
+      spec:
+        containers:
+          - name: dbreset
+            image: innovateuk/dbreset:1.0-SNAPSHOT
+            imagePullPolicy: Always
+            command: [ "/bin/bash", "-exec"]
+            args:
+              - |
+                cat > flyway.conf <<EOF
+                flyway.url=jdbc:mysql://${DB_HOST}:${DB_PORT}
+                flyway.schemas=$DB_NAME
+                flyway.locations=filesystem:db/migration,filesystem:db/setup,filesystem:db/webtest
+                flyway.user=$DB_USER
+                flyway.password=$DB_PASS
+                flyway.jarDirs=/
+                EOF
+                flyway clean
+                flyway migrate
+                . /ldap-sync-from-ifs-db.sh
+            env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: DB_PASS
+            - name: LDAP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: LDAP_HOST
+            - name: LDAP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: LDAP_PORT
+        restartPolicy: Never
