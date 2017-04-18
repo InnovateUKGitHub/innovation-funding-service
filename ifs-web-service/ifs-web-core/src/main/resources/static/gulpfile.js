@@ -71,7 +71,7 @@ gulp.task('ifs-js', function () {
 gulp.task('vendor', function () {
   return gulp.src(filesExist(vendorJsFiles))
   .pipe(concat('vendor.min.js'))
-  .pipe(uglify())
+  // .pipe(uglify())
   .pipe(gulp.dest('js/dest'))
 })
 

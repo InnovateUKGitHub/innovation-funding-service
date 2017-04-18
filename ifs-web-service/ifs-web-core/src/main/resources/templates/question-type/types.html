@@ -236,13 +236,15 @@
                         <legend>
                             <span class="form-label form-label-bold">Is this application a resubmission?</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
-                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                         </legend>
+
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
 
                         <div class="multiple-choice" data-target="resubmission-details">
                             <input type="radio"
                                    id="application.resubmission-yes"
                                    th:field="*{__application.resubmission__}"
+                                   th:name="application-resubmission"
                                    value="true"
                                    required="required"
                                    th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}"
@@ -251,6 +253,36 @@
                                    for="application.resubmission-yes">
                                 Yes
                             </label>
+                        </div>
+
+                        <div class="panel js-hidden" id="resubmission-details">
+                            <h2 class="heading-medium no-margin-top">Please provide the details of this previous application</h2>
+                            <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
+                                <label for="application_details-previousapplicationnumber">
+                                    <span class="form-label form-label-bold">Previous application number</span>
+                                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />
+                                </label>
+                                <input class="form-control width-full"
+                                           type="text"
+                                           id="application_details-previousapplicationnumber"
+                                           th:field="*{__application.previousApplicationNumber__}"
+                                           required="required"
+                                           th:errorclass="field-error"
+                                           th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
+                            </div>
+                            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'form-group-error'">
+                                <label for="application_details-previousapplicationtitle">
+                                    <span class="form-label form-label-bold">Previous application title</span>
+                                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
+                                </label>
+                                <input class="form-control width-full"
+                                       type="text"
+                                       id="application_details-previousapplicationtitle"
+                                       th:field="*{__application.previousApplicationTitle__}"
+                                       required="required"
+                                       th:errorclass="field-error"
+                                       th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
+                            </div>
                         </div>
 
                         <div class="multiple-choice">
@@ -266,35 +298,6 @@
                             </label>
                         </div>
                     </fieldset>
-                </div>
-                <div id="resubmission-details">
-                    <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
-                        <h2 class="heading-medium no-margin-top">Please provide the details of this previous application</h2>
-                        <label for="application_details-previousapplicationnumber">
-                            <span class="form-label form-label-bold">Previous application number</span>
-                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />
-                        </label>
-                        <input class="form-control width-full"
-                                   type="text"
-                                   id="application_details-previousapplicationnumber"
-                                   th:field="*{__application.previousApplicationNumber__}"
-                                   required="required"
-                                   th:errorclass="field-error"
-                                   th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
-                    </div>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'form-group-error'">
-                        <label for="application_details-previousapplicationtitle">
-                            <span class="form-label form-label-bold">Previous application title</span>
-                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
-                        </label>
-                        <input class="form-control width-full"
-                               type="text"
-                               id="application_details-previousapplicationtitle"
-                               th:field="*{__application.previousApplicationTitle__}"
-                               required="required"
-                               th:errorclass="field-error"
-                               th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
-                    </div>
                 </div>
             </th:block>
             <!--/* end of edit template */-->

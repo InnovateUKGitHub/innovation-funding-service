@@ -354,9 +354,8 @@
                             <input type="checkbox" th:field="*{accurateAccount}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
-                            <label>
-                                I confirm that the above is an accurate account, to the best of my knowledge, of my financial interests.
-                                I agree to inform Innovate UK immediately of any changes which may affect this declaration.
+                            <label th:for="accurateAccount1">
+                                I confirm that the above is an accurate account, to the best of my knowledge, of my financial interests. I agree to inform Innovate UK immediately of any changes which may affect this declaration.
                             </label>
                         </div>
                     </fieldset>
