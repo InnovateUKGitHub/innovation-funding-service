@@ -40,7 +40,7 @@ ext {
     generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
 }
 
-ext.idpRestKey=project.properties['idp.rest.key'] ?:"123456789"
+ext.idpRestKey=project.properties['idp.rest.key'] ?:"1234567890"
 ext.companyHouseKey=ext.get('ifs.company-house.key')
 ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
 
