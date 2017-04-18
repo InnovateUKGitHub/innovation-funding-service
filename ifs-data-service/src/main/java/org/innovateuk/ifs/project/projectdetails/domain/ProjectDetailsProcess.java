@@ -1,5 +1,7 @@
-package org.innovateuk.ifs.project.domain;
+package org.innovateuk.ifs.project.projectdetails.domain;
 
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;

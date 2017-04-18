@@ -44,6 +44,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-6882 Email validation done when valid is input selected for PM selection in project details
 ...
 ...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
+...
+...               INFUND-9062 Validation missing when inviting self as finance contact or PM
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -256,11 +258,15 @@ Option to invite a project manager
     [Teardown]    the user selects the radio button    projectManager    new
 
 Inviting project manager server side validations
-    [Documentation]    INFUND-3483
+    [Documentation]    INFUND-3483, INFUND-9062
     [Tags]
     When the user clicks the button/link    id=invite-project-manager
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
+    When the user enters text to a text field    id=name-project-manager    Steve Smith
+    And the user enters text to a text field     id=email-project-manager    steve.smith@empire.com
+    And the user clicks the button/link    id=invite-project-manager
+    Then the user should see the text in the page    You cannot invite yourself to the project.
 
 Inviting project manager client side validations
     [Documentation]    INFUND-3483, INFUND-6882
@@ -434,11 +440,15 @@ Option to invite a finance contact
     [Teardown]    the user selects the radio button    financeContact    new
 
 Inviting finance contact server side validations
-    [Documentation]    INFUND-3483
+    [Documentation]    INFUND-3483, INFUND-9062
     [Tags]
     When the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
+    When the user enters text to a text field    id=name-finance-contact    Steve Smith
+    And the user enters text to a text field     id=email-finance-contact    steve.smith@empire.com
+    And the user clicks the button/link    id=invite-finance-contact
+    Then the user should see the text in the page    You cannot invite yourself to the project.
 
 Inviting finance contact client side validations
     [Documentation]    INFUND-3483
