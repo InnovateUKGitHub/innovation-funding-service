@@ -65,8 +65,6 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     private String webBaseUrl;
 
     enum Notifications {
-        APPLICATION_FUNDED,
-        APPLICATION_NOT_FUNDED,
         APPLICATION_FUNDING,
     }
 
