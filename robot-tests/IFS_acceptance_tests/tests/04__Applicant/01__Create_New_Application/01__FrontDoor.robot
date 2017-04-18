@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation  INFUND-6923 Create new public Competition listings page for Applicants to view open and upcoming competitions
 ...
-...            INFUND-
+...            INFUND-7946 Sign in page facelift
 Suite Setup    The guest user opens the browser
 Force Tags     Applicant
 Resource       ../../../resources/defaultResources.robot
@@ -9,7 +9,7 @@ Resource       ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Guest user navigates to Front Door
-    [Documentation]  INFUND-6923
+    [Documentation]  INFUND-6923    INFUND-7946
     [Tags]
     [Setup]    the user navigates to the front door
     When the user should see the element     jQuery=h1:contains("Innovation competitions")
