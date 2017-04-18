@@ -82,18 +82,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
 
-    @Autowired
-    private SectionService sectionService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionSectionModelPopulator;
-
     public enum ApplicationOverviewOrigin {
         ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
@@ -142,31 +130,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     }
 
     @Override
-    public String displayApplicationFinances(long applicationId, long organisationId, ApplicationForm form, Model model, BindingResult bindingResult, ApplicationResource application) {
-        SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
-        UserResource impersonatingUser;
-        try {
-            impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        // so the mode is viewonly
-        form.setAdminMode(true);
-        application.enableViewMode();
-        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
-        model.addAttribute("applicationReadyForSubmit", false);
-
-        //TODO - INFUND-7498 - ViewModel is changed so template should be changed as well
-        OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections, organisationId);
-        model.addAttribute("model", openFinanceSectionViewModel);
-
-        return "comp-mgt-application-finances";
-    }
-
-    @Override
     public String validateApplicationAndCompetitionIds(Long applicationId, Long competitionId, Function<ApplicationResource, String> success) {
         ApplicationResource application = applicationService.getById(applicationId);
         if (application.getCompetition().equals(competitionId)) {
@@ -174,23 +137,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         } else {
             throw new ObjectNotFoundException();
         }
-    }
-
-    private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") Long organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
-        UserResource user;
-        form.setImpersonateOrganisationId(Long.valueOf(organisationId));
-        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
-        Optional<Long> userId = processRoles.stream()
-                .filter(p -> p.getOrganisationId().equals(Long.valueOf(organisationId)))
-                .map(p -> p.getUser())
-                .findAny();
-
-        if (!userId.isPresent()) {
-            LOG.error("Found no user to impersonate.");
-            return null;
-        }
-        user = userService.retrieveUserById(userId.get());
-        return user;
     }
 
     private String buildBackUrl(String origin, Long applicationId, Long competitionId, MultiValueMap<String, String> queryParams) {
