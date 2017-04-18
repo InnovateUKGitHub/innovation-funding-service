@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -573,7 +573,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, UserResource assessor, int numberOfAssessments, ActivityState created) {
         List<Application> applications = newApplication()
                 .withCompetition(competitionRepository.findById(competitionId))
-                .withApplicationStatus(ApplicationStatus.CREATED)
+                .withApplicationState(ApplicationState.CREATED)
                 .build(numberOfAssessments);
 
         applications.stream().forEach(application -> application.getApplicationProcess().setActivityState(created));

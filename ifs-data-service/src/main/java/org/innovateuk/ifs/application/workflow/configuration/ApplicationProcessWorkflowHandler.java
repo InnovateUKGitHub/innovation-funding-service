@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.repository.ApplicationProcessRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationOutcome;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
@@ -101,8 +100,8 @@ public class ApplicationProcessWorkflowHandler extends BaseWorkflowEventHandler<
         return fireEvent(applicationMessage(application, ApplicationOutcome.REJECTED), application);
     }
 
-    public boolean notifyFromApplicationStatus(Application application, ApplicationStatus applicationStatus) {
-        switch (applicationStatus) {
+    public boolean notifyFromApplicationState(Application application, ApplicationState applicationState) {
+        switch (applicationState) {
             case CREATED:
                 return false;
             case SUBMITTED:
@@ -114,7 +113,7 @@ public class ApplicationProcessWorkflowHandler extends BaseWorkflowEventHandler<
             case OPEN:
                 return open(application);
             default:
-                throw new IllegalArgumentException("unknown applicationStatus: " + applicationStatus);
+                throw new IllegalArgumentException("unknown applicationState: " + applicationState);
         }
     }
 

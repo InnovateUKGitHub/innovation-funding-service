@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.comparators.*;
@@ -33,23 +33,23 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
-    public static final Collection<ApplicationStatus> SUBMITTED_STATUSES = asList(
-            ApplicationStatus.APPROVED,
-            ApplicationStatus.REJECTED,
-            ApplicationStatus.SUBMITTED);
+    public static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.SUBMITTED);
 
     public static final Collection<State> SUBMITTED_STATES = simpleMap(asList(
-            ApplicationStatus.APPROVED,
-            ApplicationStatus.REJECTED,
-            ApplicationStatus.SUBMITTED), ApplicationStatus::toBackingState);
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.SUBMITTED), ApplicationState::getBackingState);
 
     public static final Collection<State> CREATED_AND_OPEN_STATUSES = simpleMap(asList(
-            ApplicationStatus.CREATED,
-            ApplicationStatus.OPEN), ApplicationStatus::toBackingState);
+            ApplicationState.CREATED,
+            ApplicationState.OPEN), ApplicationState::getBackingState);
 
     public static final Collection<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMap(asList(
-            ApplicationStatus.APPROVED,
-            ApplicationStatus.REJECTED), ApplicationStatus::toBackingState);
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED), ApplicationState::getBackingState);
 
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
         put("name", new Sort(ASC, new String[]{"name", "id"}));

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -157,10 +156,6 @@ public class Application implements ProcessActivity {
 
     public void setProcessRoles(List<ProcessRole> processRoles) {
         this.processRoles = processRoles;
-    }
-
-    public ApplicationStatus getApplicationStatus() {
-        return ApplicationStatus.fromApplicationState(applicationProcess.getActivityState());
     }
 
     public Competition getCompetition() {

@@ -34,7 +34,6 @@ public class ApplicationProcessWorkflowHandlerIntegrationTest extends BaseWorkfl
 
     private Application application;
 
-
     @Before
     public void setUp() throws Exception {
         application = newApplication().build();

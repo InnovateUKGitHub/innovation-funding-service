@@ -6,10 +6,7 @@ import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
@@ -136,12 +133,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
-        ApplicationStatus applicationStatus = ApplicationStatus.CREATED;
+        ApplicationState applicationState = ApplicationState.CREATED;
 
         Application application = ApplicationBuilder.newApplication().
                 withId(1L).
                 withName("testApplication").
-                withApplicationStatus(applicationStatus).
+                withApplicationState(applicationState).
                 withDurationInMonths(3L).
                 withCompetition(competition).
                 build();
@@ -158,7 +155,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
-            assertEquals(applicationStatus, created.getApplicationStatus());
+            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
             assertNull(created.getStartDate());
@@ -652,14 +649,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Role role = newRole().with(name(roleName)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         User user = newUser().with(id(userId)).build();
-        ApplicationStatus applicationStatus = ApplicationStatus.CREATED;
+        ApplicationState applicationState = ApplicationState.CREATED;
 
         String applicationName = "testApplication";
 
         Application application = ApplicationBuilder.newApplication().
                 withId(1L).
                 withName(applicationName).
-                withApplicationStatus(applicationStatus).
+                withApplicationState(applicationState).
                 withCompetition(competition).
                 build();
 
@@ -677,7 +674,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
-            assertEquals(applicationStatus, created.getApplicationStatus());
+            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
             assertEquals(competitionId, created.getCompetition().getId());
             return true;
         }));
@@ -764,7 +761,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -799,7 +796,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -896,7 +893,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -930,7 +927,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -1030,7 +1027,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -1062,7 +1059,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED.toBackingState()));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));

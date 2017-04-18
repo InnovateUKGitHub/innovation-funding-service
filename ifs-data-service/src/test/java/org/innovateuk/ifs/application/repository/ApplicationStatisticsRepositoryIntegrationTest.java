@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,9 @@ import static org.junit.Assert.assertEquals;
 public class ApplicationStatisticsRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationStatisticsRepository> {
 
     public static final Collection<State> SUBMITTED_STATUSES = simpleMap(asList(
-            ApplicationStatus.APPROVED,
-            ApplicationStatus.REJECTED,
-            ApplicationStatus.SUBMITTED), ApplicationStatus::toBackingState);
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.SUBMITTED), ApplicationState::getBackingState);
 
     @Autowired
     @Override

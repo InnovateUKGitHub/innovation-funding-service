@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.mapper;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -66,7 +66,6 @@ public class ApplicationSummaryMapperTest {
         clearUniqueIds();
         when(fundingDecisionMapper.mapToResource(FundingDecisionStatus.FUNDED)).thenReturn(FundingDecision.FUNDED);
 
-        ApplicationStatus openStatus = ApplicationStatus.OPEN;
         source = newApplication()
                 .withId(APPLICATION_ID)
                 .withName("appname")
@@ -74,7 +73,7 @@ public class ApplicationSummaryMapperTest {
                         newInnovationArea()
                                 .withName("Digital Manufacturing")
                                 .build())
-                .withApplicationStatus(openStatus)
+                .withApplicationState(ApplicationState.OPEN)
                 .withDurationInMonths(7L)
                 .withFundingDecision(FundingDecisionStatus.FUNDED)
                 .build();

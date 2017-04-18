@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationController;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -125,17 +125,17 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void updateApplicationStatus() throws Exception {
         Long applicationId = 1L;
-        ApplicationStatus status = ApplicationStatus.APPROVED;
+        ApplicationState state = ApplicationState.APPROVED;
 
         ApplicationResource applicationResource = applicationResourceBuilder.build();
 
-        when(applicationServiceMock.updateApplicationStatus(applicationId, status)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.updateApplicationState(applicationId, state)).thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(put("/application/updateApplicationStatus?applicationId={applicationId}&status={status}", applicationId, status))
+        mockMvc.perform(put("/application/updateApplicationStatus?applicationId={applicationId}&state={state}", applicationId, state))
                 .andDo(document("application/{method-name}",
                     requestParameters(
-                        parameterWithName("applicationId").description("id of the application for which to update the application status"),
-                        parameterWithName("status").description("new status id")
+                        parameterWithName("applicationId").description("id of the application for which to update the application state"),
+                        parameterWithName("state").description("new state id")
                     )
                 ));
     }

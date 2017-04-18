@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
@@ -185,7 +185,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         int applicationsAwaitingDecision = 2;
 
         List<Application> applications = newApplication()
-                .withApplicationStatus(ApplicationStatus.SUBMITTED)
+                .withApplicationState(ApplicationState.SUBMITTED)
                 .withFundingDecision(FundingDecisionStatus.FUNDED, FundingDecisionStatus.UNFUNDED, FundingDecisionStatus.ON_HOLD)
                 .build(3);
 

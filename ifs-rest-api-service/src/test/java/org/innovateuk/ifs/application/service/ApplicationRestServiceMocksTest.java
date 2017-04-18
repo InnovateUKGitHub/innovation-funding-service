@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
@@ -114,7 +114,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         String expectedUrl = applicationRestURL + "/updateApplicationStatus?applicationId=123&status=APPROVED";
         setupPutWithRestResultExpectations(expectedUrl, Void.class, null, null);
         // now run the method under test
-        service.updateApplicationStatus(123L, ApplicationStatus.APPROVED);
+        service.updateApplicationState(123L, ApplicationState.APPROVED);
     }
 
     @Test

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -30,10 +30,11 @@ import static org.junit.Assert.*;
 @Rollback
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
 
-    @Autowired
-    UserMapper userMapper;
-
     public static final long APPLICATION_ID = 1L;
+
+    @Autowired
+    private UserMapper userMapper;
+
     private QuestionController questionController;
     private Long leadApplicantProcessRole;
     private Long leadApplicantId;
@@ -118,34 +119,34 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    public void testUpdateApplicationStatusApproved() throws Exception {
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.OPEN);
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.SUBMITTED);
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.APPROVED);
-        assertEquals(ApplicationStatus.APPROVED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
+    public void testUpdateApplicationStateApproved() throws Exception {
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.APPROVED);
+        assertEquals(ApplicationState.APPROVED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
     }
 
     @Test
-    public void testUpdateApplicationStatusRejected() throws Exception {
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.OPEN);
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.SUBMITTED);
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.REJECTED);
-        assertEquals(ApplicationStatus.REJECTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
+    public void testUpdateApplicationStateRejected() throws Exception {
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.REJECTED);
+        assertEquals(ApplicationState.REJECTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
     }
 
     @Test
-    public void testUpdateApplicationStatusOpened() throws Exception {
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.OPEN);
-        assertEquals(ApplicationStatus.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
+    public void testUpdateApplicationStateOpened() throws Exception {
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
     }
 
     @Test
-    public void testUpdateApplicationStatusSubmitted() throws Exception {
+    public void testUpdateApplicationStateSubmitted() throws Exception {
         ApplicationResource applicationBefore = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
         assertNull(applicationBefore.getSubmittedDate());
 
-        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.SUBMITTED);
-        assertEquals(ApplicationStatus.SUBMITTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        assertEquals(ApplicationState.SUBMITTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
 
         ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
         assertNotNull(applicationAfter.getSubmittedDate());
@@ -163,5 +164,4 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertTrue(application.isPresent());
         assertEquals(competitionId, application.get().getCompetition());
     }
-
 }

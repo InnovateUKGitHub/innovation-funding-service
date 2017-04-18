@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -29,7 +29,7 @@ public class ApplicationTest {
     private Competition competition;
     private String name;
     private List<ProcessRole> processRoles;
-    private ApplicationStatus applicationStatus;
+    private ApplicationState applicationState;
     private Long id;
     private List<ApplicationFinance> applicationFinances;
 
@@ -37,7 +37,7 @@ public class ApplicationTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "testApplicationName";
-        applicationStatus = ApplicationStatus.CREATED;
+        applicationState = ApplicationState.CREATED;
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 
@@ -54,7 +54,7 @@ public class ApplicationTest {
     public void applicationShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(application.getId(), id);
         Assert.assertEquals(application.getName(), name);
-        Assert.assertEquals(application.getApplicationStatus(), applicationStatus);
+        Assert.assertEquals(application.getApplicationProcess().getActivityState(), applicationState);
         Assert.assertEquals(application.getProcessRoles(), processRoles);
         Assert.assertEquals(application.getCompetition(), competition);
         Assert.assertEquals(application.getApplicationFinances(), applicationFinances);

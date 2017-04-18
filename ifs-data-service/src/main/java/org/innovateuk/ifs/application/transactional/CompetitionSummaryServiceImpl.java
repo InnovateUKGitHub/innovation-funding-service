@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -50,7 +50,7 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
         );
         competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
         competitionSummaryResource.setApplicationsFunded(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationStatus.APPROVED.toBackingState())
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.APPROVED.getBackingState())
         );
         competitionSummaryResource.setAssessorsInvited(
                 competitionParticipantRepository.countByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.ASSESSOR)

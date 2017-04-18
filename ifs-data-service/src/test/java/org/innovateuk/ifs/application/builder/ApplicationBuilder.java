@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -51,12 +51,12 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((competition, application) -> application.setCompetition(competition), competitions);
     }
 
-    public ApplicationBuilder withApplicationStatus(ApplicationStatus... applicationStatuses) {
-        return withArray((applicationStatus, application)
+    public ApplicationBuilder withApplicationState(ApplicationState... applicationStates) {
+        return withArray((applicationState, application)
                         -> setField("applicationProcess",
-                                new ApplicationProcess(application, null, new ActivityState(ActivityType.APPLICATION, applicationStatus.toBackingState())), application
+                                new ApplicationProcess(application, null, new ActivityState(ActivityType.APPLICATION, applicationState.getBackingState())), application
                 ),
-                applicationStatuses
+                applicationStates
         );
     }
 

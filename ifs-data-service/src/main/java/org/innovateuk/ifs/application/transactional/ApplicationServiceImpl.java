@@ -383,10 +383,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
-                                                                      final ApplicationStatus status) {
+    public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
         return find(application(id)).andOnSuccess((application) -> {
-            applicationProcessWorkflowHandler.notifyFromApplicationStatus(application, status);
+            applicationProcessWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
@@ -474,8 +473,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<ApplicationStatus> applicationStatuses) {
-        Collection<State> states = applicationStatuses.stream().map(ApplicationStatus::toBackingState).collect(Collectors.toList());
+    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
+        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
         return serviceSuccess(applicationResults);
     }
@@ -488,7 +487,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId,
-                simpleMap(Arrays.asList(ApplicationStatus.CREATED), ApplicationStatus::toBackingState))
+                simpleMap(Arrays.asList(ApplicationState.CREATED), ApplicationState::getBackingState))
                 .stream()
                 .flatMap(x -> x.getProcessRoles().stream())
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)

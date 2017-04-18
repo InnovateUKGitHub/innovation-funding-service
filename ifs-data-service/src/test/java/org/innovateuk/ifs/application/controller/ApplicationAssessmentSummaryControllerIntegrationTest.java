@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
@@ -71,7 +71,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
                 .with(id(null))
                 .withCompetition(competition)
                 .withName("Progressive machines")
-                .withApplicationStatus(CREATED)
+                .withApplicationState(CREATED)
                 .build();
         application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED));
 

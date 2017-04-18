@@ -6,7 +6,7 @@ import org.apache.poi.POIXMLDocument;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
 import org.innovateuk.ifs.commons.error.exception.SummaryDataUnavailableException;
@@ -54,14 +54,14 @@ public class ApplicationDownloadController {
     private Integer rowCount = 0;
     private Integer headerCount = 0;
 
-    public static final Collection<ApplicationStatus> SUBMITTED_STATUSES = asList(
-            ApplicationStatus.APPROVED,
-            ApplicationStatus.REJECTED,
-            ApplicationStatus.SUBMITTED);
+    public static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.SUBMITTED);
 
     @GetMapping("/downloadByCompetition/{competitionId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
-        ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndStatus(competitionId, SUBMITTED_STATUSES);
+        ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndState(competitionId, SUBMITTED_STATUSES);
         
         List<Application> applications;
         if(applicationsResult.isSuccess()) {

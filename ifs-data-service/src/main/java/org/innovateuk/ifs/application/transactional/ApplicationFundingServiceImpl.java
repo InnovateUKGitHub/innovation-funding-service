@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationProcessWorkflowHandler;
@@ -122,8 +122,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
         applications.forEach(app -> {
             FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
-            ApplicationStatus status = statusFromDecision(applicationFundingDecision);
-            applicationProcessWorkflowHandler.notifyFromApplicationStatus(app, status);
+            ApplicationState state = stateFromDecision(applicationFundingDecision);
+            applicationProcessWorkflowHandler.notifyFromApplicationState(app, state);
         });
         return applications;
     }
@@ -190,13 +190,13 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
+    private ApplicationState stateFromDecision(FundingDecision applicationFundingDecision) {
         if (FUNDED.equals(applicationFundingDecision)) {
-            return ApplicationStatus.APPROVED;
+            return ApplicationState.APPROVED;
         } else if (UNFUNDED.equals(applicationFundingDecision)) {
-            return ApplicationStatus.REJECTED;
+            return ApplicationState.REJECTED;
         } else {
-            return ApplicationStatus.SUBMITTED;
+            return ApplicationState.SUBMITTED;
         }
     }
 }

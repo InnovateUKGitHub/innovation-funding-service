@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.Entity;

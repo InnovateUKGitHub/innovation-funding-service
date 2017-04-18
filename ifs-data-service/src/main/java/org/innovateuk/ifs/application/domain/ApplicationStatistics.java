@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.domain;
 
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Where;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -56,8 +56,8 @@ public class ApplicationStatistics {
         return competition;
     }
 
-    public ApplicationStatus getApplicationStatus() {
-        return ApplicationStatus.fromApplicationState(applicationProcess.getActivityState());
+    public ApplicationState getApplicationState() {
+        return applicationProcess.getActivityState();
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {

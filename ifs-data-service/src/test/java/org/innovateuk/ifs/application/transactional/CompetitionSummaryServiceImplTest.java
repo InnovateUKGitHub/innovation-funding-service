@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -68,7 +68,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                         newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
                 ));
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(COMP_ID, SUBMITTED_STATES)).thenReturn(5);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMP_ID, ApplicationStatus.APPROVED.toBackingState())).thenReturn(8);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMP_ID, ApplicationState.APPROVED.getBackingState())).thenReturn(8);
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRole(COMP_ID, ASSESSOR)).thenReturn(10);
     }
 
@@ -92,5 +92,4 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(10, summaryResource.getAssessorsInvited());
         assertEquals(8, summaryResource.getApplicationsFunded());
     }
-
 }

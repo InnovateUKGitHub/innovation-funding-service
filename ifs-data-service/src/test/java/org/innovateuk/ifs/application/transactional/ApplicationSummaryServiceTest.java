@@ -5,7 +5,7 @@ import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -371,7 +371,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 eq(COMP_ID),
-                eq(simpleMap(asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED, ApplicationStatus.SUBMITTED), ApplicationStatus::toBackingState)),
+                eq(simpleMap(asList(ApplicationState.APPROVED, ApplicationState.REJECTED, ApplicationState.SUBMITTED), ApplicationState::getBackingState)),
                 eq(""),
                 eq(UNFUNDED),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
@@ -400,7 +400,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(asList(ApplicationStatus.APPROVED.toBackingState(), ApplicationStatus.REJECTED.toBackingState())), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(asList(ApplicationState.APPROVED.getBackingState(), ApplicationState.REJECTED.getBackingState())), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
 

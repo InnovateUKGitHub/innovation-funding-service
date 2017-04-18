@@ -29,8 +29,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class
-EligibilityWorkflowHandlerIntegrationTest extends
+public class EligibilityWorkflowHandlerIntegrationTest extends
         BaseWorkflowHandlerIntegrationTest<EligibilityWorkflowHandler, EligibilityProcessRepository, TestableTransitionWorkflowAction> {
 
     @Autowired
