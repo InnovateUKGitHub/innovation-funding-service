@@ -81,6 +81,7 @@ public class ProfileController {
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
         form.setPhoneNumber(user.getPhoneNumber());
+        form.setAllowMarketingEmails(user.getAllowMarketingEmails());
 
         if(organisation == null) {
         	LOG.warn("No organisation retrieved for user" + user.getId());
@@ -161,7 +162,8 @@ public class ProfileController {
                 userDetailsForm.getPhoneNumber(),
                 userDetailsForm.getGender(),
                 Long.parseLong(userDetailsForm.getEthnicity()),
-                userDetailsForm.getDisability());
+                userDetailsForm.getDisability(),
+                userDetailsForm.getAllowMarketingEmails());
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {

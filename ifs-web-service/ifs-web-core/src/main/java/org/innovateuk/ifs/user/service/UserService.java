@@ -31,7 +31,7 @@ public interface UserService {
                                                                                     String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId,
                                                                                     Long competitionId, Boolean allowMarketingEmails);
     ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails);
-    ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
+    ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
     ProfileSkillsResource getProfileSkills(Long userId);
     ServiceResult<Void> updateProfileSkills(Long userId, BusinessType businessType, String skillsAreas);
     ProfileAgreementResource getProfileAgreement(Long userId);

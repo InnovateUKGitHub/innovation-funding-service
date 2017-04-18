@@ -36,7 +36,7 @@ public interface UserRestService {
                                                                                  Long competitionId, Boolean allowMarketingEmails);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Boolean allowMarketingEmails);
-    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
+    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
     RestResult<ProfileSkillsResource> getProfileSkills(Long userId);
     RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkills);
     RestResult<ProfileAgreementResource> getProfileAgreement(Long userId);
