@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.project.financecheck.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.project.financecheck.domain.*;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
+import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
+import org.innovateuk.ifs.project.spendprofile.domain.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;

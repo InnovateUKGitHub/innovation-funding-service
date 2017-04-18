@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.financecheck.domain;
 
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
+import org.innovateuk.ifs.project.spendprofile.domain.Cost;
+import org.innovateuk.ifs.project.spendprofile.domain.CostTimePeriod;
 import org.junit.Test;
 
 import java.time.LocalDate;

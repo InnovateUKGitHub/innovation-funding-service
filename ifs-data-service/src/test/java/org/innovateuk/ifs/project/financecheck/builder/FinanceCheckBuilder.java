@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.financecheck.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.financecheck.domain.CostGroup;
-import org.innovateuk.ifs.project.financecheck.domain.FinanceCheck;
+import org.innovateuk.ifs.project.spendprofile.domain.CostGroup;
+import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.user.domain.Organisation;
 
 import java.util.List;

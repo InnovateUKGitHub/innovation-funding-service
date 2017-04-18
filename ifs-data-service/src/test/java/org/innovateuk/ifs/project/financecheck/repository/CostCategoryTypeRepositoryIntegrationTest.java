@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.project.financecheck.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategoryGroup;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
+import org.innovateuk.ifs.project.spendprofile.domain.CostCategory;
+import org.innovateuk.ifs.project.spendprofile.domain.CostCategoryGroup;
+import org.innovateuk.ifs.project.spendprofile.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.repository.*;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryGroupRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -26,7 +28,7 @@ public class CostCategoryTypeRepositoryIntegrationTest extends BaseRepositoryInt
     }
 
     @Autowired
-    private CostCategoryRepository costCategoryRepository;
+    private org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository costCategoryRepository;
 
     @Autowired
     private CostCategoryGroupRepository costCategoryGroupRepository;
