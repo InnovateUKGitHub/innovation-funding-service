@@ -159,11 +159,6 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void canViewBankDetailsChangeForm() throws Exception {
-/*        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        */
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
