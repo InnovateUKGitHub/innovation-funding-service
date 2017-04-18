@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.project.financecheck.domain;
+package org.innovateuk.ifs.project.spendprofile.domain;
 
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.spendprofile.domain.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;

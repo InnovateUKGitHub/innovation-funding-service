@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financecheck.transactional;
+package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;

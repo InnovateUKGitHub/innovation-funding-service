@@ -1,7 +1,5 @@
-package org.innovateuk.ifs.project.financecheck.domain;
+package org.innovateuk.ifs.project.spendprofile.domain;
 
-import org.innovateuk.ifs.project.spendprofile.domain.Cost;
-import org.innovateuk.ifs.project.spendprofile.domain.CostGroup;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;

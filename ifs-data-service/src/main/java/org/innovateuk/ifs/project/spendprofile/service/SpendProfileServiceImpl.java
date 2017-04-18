@@ -149,7 +149,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF.getLabel());
     }
 
-    enum Notifications {
+    public enum Notifications {
         FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE
     }
 
