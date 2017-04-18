@@ -37,7 +37,7 @@
         <nav>
             <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
         </nav>
-        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}"><span th:text="${daysLeft}"></span> days left to submit</div>
+        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}"><th:block th:text="${daysLeft}" /> days left to submit</div>
     </div>
 </div>
 
