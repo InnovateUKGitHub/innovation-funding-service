@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.project.repository;
+package org.innovateuk.ifs.project.projectdetails.repository;
 
-import org.innovateuk.ifs.project.domain.ProjectDetailsProcess;
+import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

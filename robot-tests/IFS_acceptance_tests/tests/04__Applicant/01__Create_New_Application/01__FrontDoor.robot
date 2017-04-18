@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation  INFUND-6923 Create new public Competition listings page for Applicants to view open and upcoming competitions
+...
+...            INFUND-7946 Sign in page facelift
 Suite Setup    The guest user opens the browser
 Force Tags     Applicant
 Resource       ../../../resources/defaultResources.robot
@@ -7,9 +9,9 @@ Resource       ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Guest user navigates to Front Door
-    [Documentation]  INFUND-6923
+    [Documentation]  INFUND-6923    INFUND-7946
     [Tags]
-    [Setup]  the user navigates to the page  ${frontDoor}
+    [Setup]    the user navigates to the front door
     When the user should see the element     jQuery=h1:contains("Innovation competitions")
     And the user should see the element      jQuery=p:contains("Browse upcoming and live competitions.")
     And the user should see the element      jQuery=a:contains("signing up for competition updates")
@@ -126,3 +128,6 @@ Guest user can apply to a competition
 
 
 *** Keywords ***
+the user navigates to the front door
+    the user clicks the button/link     jQuery=span:contains("Need help signing in or creating an account")
+    the user clicks the button/link     jQuery=a:contains("competitions listings page")

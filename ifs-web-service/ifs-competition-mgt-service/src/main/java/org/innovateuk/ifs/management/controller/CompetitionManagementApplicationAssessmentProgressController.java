@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
-import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
