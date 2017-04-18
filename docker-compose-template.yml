@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
 
   shib:
@@ -41,31 +41,56 @@ services:
 
   application-svc:
     image: innovateuk/application-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   assessment-svc:
     image: innovateuk/assessment-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/assessment/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   competition-mgt-svc:
     image: innovateuk/competition-management-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/management/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   project-setup-mgt-svc:
     image: innovateuk/project-setup-management-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup-management/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   project-setup-svc:
     image: innovateuk/project-setup-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
+
   data-service:
     image: innovateuk/data-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       ifs:
         aliases:
