@@ -5,7 +5,7 @@ LABEL maintainer "infrastructure@orangebus.co.uk"
 ENV HTTP_PORT=9080 \
     HTTPS_PORT=9443 \
     WEBAPPS_PROTO=ajp \
-    SP_DOMAIN=ifs-local-dev \
+    SP_DOMAIN=ifs.local-dev \
     IDP_DOMAIN=idp \
     IDP_PORT=8443 \
     TRUSTED_IP \
