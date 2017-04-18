@@ -20,13 +20,6 @@ public interface CompetitionManagementApplicationService {
                                                 Function<ApplicationResource,
                                                         String> success);
 
-    String displayApplicationFinances(long applicationId,
-                                      long organisationId,
-                                      ApplicationForm form,
-                                      Model model,
-                                      BindingResult bindingResult,
-                                      ApplicationResource application);
-
     String displayApplicationOverview(UserResource user,
                                       long applicationId,
                                       long competitionId,
