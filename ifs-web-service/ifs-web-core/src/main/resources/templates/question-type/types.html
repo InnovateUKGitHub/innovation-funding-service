@@ -217,10 +217,11 @@
                     <div th:if="${model.questionApplicationViewModel.selectedResearchCategoryName != null}">
                         Chosen research category: <th:block th:text="${model.questionApplicationViewModel.selectedResearchCategoryName}"/>
                     </div>
-                    <input type="hidden" th:field="*{__application.innovationArea.name__}" value="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
+                    <input type="hidden" th:field="*{__application.researchCategory.name__}" value="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
 
-                    <button id="researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}"
-                            type="submit"><span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span></button>
+                    <button id="researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
+                        <span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span>
+                    </button>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'error'">
@@ -233,8 +234,9 @@
                         Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
                     </div>
                     <input type="hidden" th:field="*{__application.innovationArea.name__}" value="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
-                    <button id="researchArea" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}"
-                            type="submit"><span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span></button>
+                    <button id="researchArea" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">
+                        <span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span>
+                    </button>
 
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
