@@ -323,7 +323,8 @@ public class RegistrationController {
                 Long.parseLong(registrationForm.getEthnicity()),
                 registrationForm.getDisability(),
                 organisationId,
-                competitionId);
+                competitionId,
+                registrationForm.getAllowMarketingEmails());
     }
 
     private void addOrganisationNameToModel(Model model, OrganisationResource organisation) {

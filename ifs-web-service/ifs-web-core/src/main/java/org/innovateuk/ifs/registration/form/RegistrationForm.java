@@ -80,6 +80,8 @@ public class RegistrationForm {
     @NotBlank(message = "{validation.account.termsandconditions.required}")
     private String termsAndConditions;
 
+    private Boolean allowMarketingEmails;
+
     public String getPassword() {
         return password;
     }
@@ -143,6 +145,14 @@ public class RegistrationForm {
 
     public void setTermsAndConditions(String termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
+    }
+
+    public Boolean getAllowMarketingEmails() {
+        return allowMarketingEmails;
+    }
+
+    public void setAllowMarketingEmails(Boolean allowMarketingEmails) {
+        this.allowMarketingEmails = allowMarketingEmails;
     }
 
     public String getGender() {
