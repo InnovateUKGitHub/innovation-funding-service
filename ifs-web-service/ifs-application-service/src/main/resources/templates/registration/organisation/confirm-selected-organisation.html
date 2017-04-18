@@ -23,7 +23,7 @@
 
     <h2 class="heading-medium">Organisation</h2>
 
-    <th:block th:insert="fragments/addresses :: organisation-details" />
+    <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${model.showOrgType}"/>
 
     <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" class="extra-margin">
         <input type="hidden" th:field="*{searchOrganisationId}" />

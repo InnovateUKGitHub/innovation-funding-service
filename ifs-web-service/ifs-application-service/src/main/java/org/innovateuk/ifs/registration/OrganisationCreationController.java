@@ -14,6 +14,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -72,6 +73,7 @@ public class OrganisationCreationController {
     private static final String FIND_BUSINESS = "find-business";
     private static final String FIND_ORGANISATION = "find-organisation";
     private static final String SELECTED_ORGANISATION = "selected-organisation";
+    private static final String SELECT_ORGANISATION_TYPE = "select-organisation-type";
     private static final String CONFIRM_ORGANISATION = "confirm-organisation";
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
     private static final String BASE_URL = "/organisation/create";
@@ -85,6 +87,7 @@ public class OrganisationCreationController {
     private static final String SEARCH_ADDRESS = "search-address";
     private static final String SELECT_ADDRESS = "select-address";
     private static final String ORGANISATION_NAME = "organisationName";
+    private static final String MODEL = "model";
 
     @Autowired
     private InviteRestService inviteRestService;
@@ -103,6 +106,9 @@ public class OrganisationCreationController {
 
     @Autowired
     private OrganisationSearchRestService organisationSearchRestService;
+
+    @Autowired
+    private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
     @Autowired
     private MessageSource messageSource;
@@ -299,7 +305,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -338,7 +344,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -363,7 +369,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -453,12 +459,45 @@ public class OrganisationCreationController {
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-            return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
+            return "redirect:" + BASE_URL + "/" + SELECT_ORGANISATION_TYPE;
         } else {
             organisationForm.setTriedToSave(true);
             organisationForm.getAddressForm().setTriedToSave(true);
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
             return getRedirectUrlInvalidSave(organisationForm, referer);
+        }
+    }
+
+    @GetMapping("/" + SELECT_ORGANISATION_TYPE)
+    public String selectOrganisationType(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                          Model model,
+                                          HttpServletRequest request) {
+
+        model.addAttribute(MODEL, organisationCreationSelectTypePopulator.populate());
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+
+        return TEMPLATE_PATH + "/" + SELECT_ORGANISATION_TYPE;
+    }
+
+    @PostMapping("/" + SELECT_ORGANISATION_TYPE)
+    public String confirmSelectOrganisationType(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                                BindingResult bindingResult,
+                                                Model model,
+                                                HttpServletRequest request, HttpServletResponse response) {
+        if (!bindingResult.hasFieldErrors("organisationTypeId")) {
+            OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
+            organisationTypeForm.setOrganisationType(OrganisationTypeEnum.getFromId(organisationForm.getOrganisationTypeId()).getId());
+            organisationTypeForm.setSelectedByDefault(true);
+            String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
+
+            cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
+
+            return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
+        } else {
+            organisationForm.setTriedToSave(true);
+            model.addAttribute(MODEL, organisationCreationSelectTypePopulator.populate());
+
+            return TEMPLATE_PATH + "/" + SELECT_ORGANISATION_TYPE;
         }
     }
 

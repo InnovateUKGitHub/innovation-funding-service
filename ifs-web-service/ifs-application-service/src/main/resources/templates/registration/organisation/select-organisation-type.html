@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+</head>
+<body th:with="context='applicant'" class="create-application-organisation">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
+
+    <h1 class="heading-xlarge">
+        <span class="heading-secondary">Create your account</span>
+        Choose your organisation type
+    </h1>
+
+    <div class="message-alert">
+        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+    </div>
+
+    <h2 class="heading-medium">What type of organisation are you?</h2>
+
+    <form th:object="${organisationForm}" th:action="@{/organisation/create/select-organisation-type}" method="POST">
+        <fieldset>
+            <legend class="visuallyhidden">Please select your organisation type</legend>
+            <div th:class="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-block error' : 'form-block'">
+                <span class="error-message" th:if="${#fields.hasErrors('*{organisationTypeId}')}" th:errors="*{organisationTypeId}"></span>
+                <label class="block-label selection-button-radio" th:each="type : ${model.types}" th:for="'radio-'+ ${type.id}">
+                    <input th:id="'radio-'+ ${type.id}" type="radio"
+                           th:field="*{organisationTypeId}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
+                           th:value="${type.id}"/>
+                    <span th:text="${type.name}"></span>
+                    <span class="form-hint" th:text="${type.description}"></span>
+                </label>
+            </div>
+        </fieldset>
+        <div class="message-alert">
+            <h2 class="heading-small">You can only lead an application as an RTO if both the following rules are met:</h2>
+            <ul class="list-bullet">
+                <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>
+                <li>your project is essential to lay the foundations for the growth of an early stage industry</li>
+            </ul>
+        </div>
+        <button class="button button-large extra-margin" name="select-company-type" type="submit">Save and Continue</button>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

@@ -19,7 +19,7 @@
 
     <h2 class="heading-medium" th:text="${organisationForm.organisationType.name}"></h2>
 
-    <th:block th:insert="fragments/addresses :: organisation-details" />
+    <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${true}" />
 
     <a th:href="@{/organisation/create/save-company}" name="save-company" class="button button-large">Save</a>
 

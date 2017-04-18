@@ -8,10 +8,11 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
  */
 public class OrganisationAddressViewModel {
     private OrganisationTypeResource organisationType;
+    private Boolean isLead;
 
-
-    public OrganisationAddressViewModel(OrganisationTypeResource organisationType) {
+    public OrganisationAddressViewModel(OrganisationTypeResource organisationType, Boolean isLead) {
         this.organisationType = organisationType;
+        this.isLead = isLead;
     }
 
     public boolean isResearch() {
@@ -20,5 +21,9 @@ public class OrganisationAddressViewModel {
 
     public String getOrganisationTypeName() {
         return organisationType.getName().toLowerCase();
+    }
+
+    public Boolean isShowOrgType() {
+        return !isLead;
     }
 }
