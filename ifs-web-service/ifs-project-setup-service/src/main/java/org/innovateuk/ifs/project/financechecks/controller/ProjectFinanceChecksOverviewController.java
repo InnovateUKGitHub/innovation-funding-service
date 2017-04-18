@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 @RequestMapping(ProjectFinanceChecksOverviewController.PROJECT_FINANCE_CHECKS_BASE_URL)
 public class ProjectFinanceChecksOverviewController {
 
-    static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks/overview";
+    public static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks/overview";
 
     private PartnerOrganisationService partnerOrganisationService;
 
