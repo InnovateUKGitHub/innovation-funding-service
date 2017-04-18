@@ -713,11 +713,7 @@
                 <dd th:text="${researchCategoriesFormatted}"></dd>
 
                 <dt>Lead applicant</dt>
-                <dd>
-                    <th:block th:each="leadApplicantTypes : ${leadApplicantTypes}"
-                              th:if="${competitionSetupForm.leadApplicantTypes.contains(leadApplicantTypes.id)}"
-                              th:text="${leadApplicantTypes.name + ' '}"/>
-                </dd>
+                <dd th:text="${leadApplicantTypesText}"></dd>
 
                 <dt>Research participation</dt>
                 <dd th:each="(researchParticipationAmount : ${researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>

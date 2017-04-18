@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.junit.Assert.assertArrayEquals;
@@ -56,6 +57,7 @@ public class EligibilityModelPopulatorTest {
 				.withCompetitionCode("code")
 				.withName("name")
 				.withId(8L)
+                .withLeadApplicantType(asList(1L, 2L))
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
 				.build();
 		
@@ -64,16 +66,18 @@ public class EligibilityModelPopulatorTest {
 		when(categoryFormatter.format(CollectionFunctions.asLinkedSet(2L, 3L), researchCategories)).thenReturn("formattedcategories");
 
 		when(organisationTypeRestService.getAll()).thenReturn(RestResult.restSuccess(newOrganisationTypeResource()
-                .withName("Business")
-                .withVisibleInSetup(Boolean.TRUE)
-                .build(1)));
+                .withId(1L, 2L, 3L)
+                .withName("Business", "Research", "Something else")
+                .withVisibleInSetup(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE)
+                .build(3)));
 
 		populator.populateModel(model, competition);
 		
-		assertEquals(5, model.asMap().size());
+		assertEquals(6, model.asMap().size());
 		assertArrayEquals(ResearchParticipationAmount.values(), (Object[])model.asMap().get("researchParticipationAmounts"));
 		assertArrayEquals(CollaborationLevel.values(), (Object[])model.asMap().get("collaborationLevels"));
 		assertEquals(researchCategories, model.asMap().get("researchCategories"));
-		assertEquals("formattedcategories", model.asMap().get("researchCategoriesFormatted"));
+		assertEquals("Business, Research", model.asMap().get("leadApplicantTypesText"));
+        assertEquals("formattedcategories", model.asMap().get("researchCategoriesFormatted"));
 	}
 }

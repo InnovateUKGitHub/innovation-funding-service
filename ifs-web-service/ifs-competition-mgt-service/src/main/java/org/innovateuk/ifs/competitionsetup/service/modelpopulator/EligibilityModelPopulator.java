@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -43,9 +44,15 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
 		model.addAttribute("collaborationLevels", CollaborationLevel.values());
         List<OrganisationTypeResource> organisationTypes = organisationTypeRestService.getAll().getSuccessObject();
 
-		model.addAttribute("leadApplicantTypes", organisationTypes.stream()
-				.filter(organisationType -> organisationType.getVisibleInSetup())
-                .collect(toList()));
+        List<OrganisationTypeResource> leadApplicantTypes = organisationTypes.stream()
+                .filter(organisationType -> organisationType.getVisibleInSetup())
+                .collect(toList());
+
+		model.addAttribute("leadApplicantTypes", leadApplicantTypes);
+        model.addAttribute("leadApplicantTypesText", leadApplicantTypes.stream()
+                .filter(organisationTypeResource -> competitionResource.getLeadApplicantTypes().contains(organisationTypeResource.getId()))
+                .map(organisationTypeResource -> organisationTypeResource.getName())
+                .collect(Collectors.joining(", ")));
 		List<ResearchCategoryResource> researchCategories = categoryService.getResearchCategories();
 		model.addAttribute("researchCategories",researchCategories);
 		model.addAttribute("researchCategoriesFormatted", categoryFormatter.format(competitionResource.getResearchCategories(), researchCategories));
