@@ -126,13 +126,13 @@ public class BaseUnitTest {
     protected final Log log = LogFactory.getLog(getClass());
 
     @Mock
-    public ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
+    protected ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
     @Mock
-    public ApplicationFinanceRestService applicationFinanceRestService;
+    protected ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
-    public InviteOrganisationRestService inviteOrganisationRestService;
+    protected InviteOrganisationRestService inviteOrganisationRestService;
     @Mock
-    public UserAuthenticationService userAuthenticationService;
+    protected UserAuthenticationService userAuthenticationService;
     @Mock
     public FormInputResponseService formInputResponseService;
     @Mock
@@ -140,55 +140,57 @@ public class BaseUnitTest {
     @Mock
     public ApplicationService applicationService;
     @Mock
-    public CompetitionsRestService competitionRestService;
+    protected CompetitionsRestService competitionRestService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
     public UserService userService;
     @Mock
-    public AlertService alertService;
+    protected AlertService alertService;
     @Mock
-    public FinanceService financeService;
+    protected FinanceService financeService;
     @Mock
-    public FinanceRowService financeRowService;
+    protected FinanceRowService financeRowService;
     @Mock
     public FinanceRowRestService financeRowRestService;
     @Mock
-    public ApplicationRestService applicationRestService;
+    protected ApplicationRestService applicationRestService;
     @Mock
     public QuestionService questionService;
     @Mock
     public OrganisationService organisationService;
     @Mock
-    public OrganisationRestService organisationRestService;
+    protected OrganisationRestService organisationRestService;
     @Mock
-    public OrganisationTypeRestService organisationTypeRestService;
+    private OrganisationTypeRestService organisationTypeRestService;
     @Mock
-    public OrganisationAddressRestService organisationAddressRestService;
+    protected OrganisationAddressRestService organisationAddressRestService;
     @Mock
     public SectionService sectionService;
+    @Mock
+    protected SectionRestService sectionRestService;
     @Mock
     public CompetitionService competitionService;
     @Mock
     public InviteRestService inviteRestService;
     @Mock
-    public CompetitionInviteRestService competitionInviteRestService;
+    protected CompetitionInviteRestService competitionInviteRestService;
     @Mock
     public FinanceModelManager financeModelManager;
     @Mock
-    public DefaultFinanceModelManager defaultFinanceModelManager;
+    protected DefaultFinanceModelManager defaultFinanceModelManager;
     @Mock
-    public DefaultFinanceFormHandler defaultFinanceFormHandler;
+    protected DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
-    public DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
+    protected DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
     @Mock
     public FinanceHandler financeHandler;
     @Mock
-    public ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
+    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
     @Mock
     public FinanceFormHandler financeFormHandler;
     @Mock
-    public AssessorFeedbackRestService assessorFeedbackRestService;
+    protected AssessorFeedbackRestService assessorFeedbackRestService;
     @Mock
     public ProjectService projectService;
     @Mock
@@ -196,45 +198,45 @@ public class BaseUnitTest {
     @Mock
     public ProjectRestService projectRestService;
     @Mock
-    public BankDetailsRestService bankDetailsRestService;
+    protected BankDetailsRestService bankDetailsRestService;
     @Mock
-    public BankDetailsService bankDetailsService;
+    protected BankDetailsService bankDetailsService;
     @Mock
-    public RejectionReasonRestService rejectionReasonRestService;
+    protected RejectionReasonRestService rejectionReasonRestService;
     @Mock
-    public FinanceCheckService financeCheckServiceMock;
+    protected FinanceCheckService financeCheckServiceMock;
     @Mock
-    public FinanceUtil financeUtilMock;
+    protected FinanceUtil financeUtilMock;
     @Mock
-    public ProjectStatusService projectStatusServiceMock;
+    protected ProjectStatusService projectStatusServiceMock;
     @Mock
-    public PartnerOrganisationService partnerOrganisationServiceMock;
+    protected PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
-    public CookieUtil cookieUtil;
+    private CookieUtil cookieUtil;
     @Mock
-    public CategoryService categoryServiceMock;
+    protected CategoryService categoryServiceMock;
     @Mock
-    public UserRestService userRestServiceMock;
+    protected UserRestService userRestServiceMock;
     @Mock
-    public AssessmentRestService assessmentRestService;
+    protected AssessmentRestService assessmentRestService;
     @Mock
     public MilestoneService milestoneServiceMock;
     @Mock
-    public AssessorRestService assessorRestService;
+    protected AssessorRestService assessorRestService;
     @Mock
-    public ApplicationSummaryRestService applicationSummaryRestService;
+    protected ApplicationSummaryRestService applicationSummaryRestService;
     @Mock
-    public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
+    protected CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
     @Mock
-    public AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+    protected AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     @Mock
-    public ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
+    protected ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
     @Mock
-    public CategoryRestService categoryRestServiceMock;
+    protected CategoryRestService categoryRestServiceMock;
     @Mock
-    public OrganisationDetailsRestService organisationDetailsRestService;
+    protected OrganisationDetailsRestService organisationDetailsRestService;
     @Mock
-    public ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
+    protected ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Spy
     @InjectMocks

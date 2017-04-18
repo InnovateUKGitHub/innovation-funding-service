@@ -47,12 +47,14 @@
         <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
             <th:block th:unless="${readonly}">
                 <!--/* edit */-->
-                <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? error">
                     <fieldset>
                         <legend>
                             <span class="form-label form-label-bold" th:text="${question.name}"/>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+                            <th:block th:if="${#fields.hasErrors('organisationSize')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}" />
+                            </th:block>
                         </legend>
                         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
                         <label class="block-label selection-button-radio" th:for="'financePosition-organisationSize-'+${size.id}" th:each="size : ${organisationSizes}">
@@ -61,7 +63,8 @@
                                    th:name="'financePosition-organisationSize'"
                                    th:value="${size.id}"
                                    th:checked="${size.id == model.finance.organisationFinanceSize}"
-                                   required="required" />
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}"/>
                             <th:block th:text="${size.description}" />
                         </label>
                     </fieldset>
@@ -251,6 +254,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <th:block th:fragment="labour (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},formInputIndex=${status.index}">
+        <p th:text="${question.getDescription()}"></p>
         <th:block th:if="${viewmode == 'approved'}">
 
             <dl class="standard-definition-list">
