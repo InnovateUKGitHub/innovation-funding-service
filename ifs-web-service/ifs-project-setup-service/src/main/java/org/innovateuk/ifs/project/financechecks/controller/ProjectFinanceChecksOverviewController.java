@@ -33,9 +33,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 @RequestMapping(ProjectFinanceChecksOverviewController.PROJECT_FINANCE_CHECKS_BASE_URL)
 public class ProjectFinanceChecksOverviewController {
 
-    public static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks/overview";
+    static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks/overview";
 
-    @Autowired
     private PartnerOrganisationService partnerOrganisationService;
 
     @Autowired
@@ -70,9 +69,7 @@ public class ProjectFinanceChecksOverviewController {
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(Long projectId, List<PartnerOrganisationResource> partnerOrgs) {
-        List<FinanceCheckEligibilityResource> summaries = mapWithIndex(partnerOrgs, (i, org) -> {
-            return financeCheckService.getFinanceCheckEligibilityDetails(projectId, org.getOrganisation());
-        });
+        List<FinanceCheckEligibilityResource> summaries = mapWithIndex(partnerOrgs, (i, org) -> financeCheckService.getFinanceCheckEligibilityDetails(projectId, org.getOrganisation()));
         return new FinanceCheckSummariesViewModel(summaries, partnerOrgs);
     }
 
