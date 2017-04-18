@@ -16,9 +16,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -31,6 +31,8 @@ import static org.mockito.Mockito.*;
 
 public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<AssessmentService> {
 
+    private static Long ID_TO_FIND = 1L;
+    private static int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
     private AssessmentPermissionRules assessmentPermissionRules;
     private AssessmentLookupStrategy assessmentLookupStrategy;
     private ApplicationPermissionRules applicationPermissionRules;
@@ -48,9 +50,6 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         applicationPermissionRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
-
-    private static Long ID_TO_FIND = 1L;
-    private static int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
     @Test
     public void findById() {
@@ -117,12 +116,6 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> classUnderTest.getTotalScore(assessmentId),
                 () -> verify(assessmentPermissionRules).userCanReadAssessmentScore(isA(AssessmentResource.class), isA(UserResource.class))
         );
-    }
-
-    @Test
-    public void notifyAssessorsByCompetition() throws Exception {
-        long competitionId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessorsByCompetition(competitionId), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -264,11 +257,6 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<Void> acceptInvitation(@P("assessmentId") long assessmentId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
             return null;
         }
 

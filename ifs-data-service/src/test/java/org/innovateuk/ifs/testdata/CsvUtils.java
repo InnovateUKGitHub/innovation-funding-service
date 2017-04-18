@@ -16,6 +16,7 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.io.File;
 import java.io.FileReader;
@@ -25,6 +26,7 @@ import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
@@ -245,7 +247,7 @@ class CsvUtils {
         String ownerName;
         String innovationAreaName;
         String sentByEmail;
-        LocalDateTime sentOn;
+        ZonedDateTime sentOn;
 
         private InviteLine(List<String> line) {
             int i = 0;
@@ -327,7 +329,7 @@ class CsvUtils {
         Integer durationInMonths;
         String leadApplicant;
         List<String> collaborators;
-        LocalDateTime submittedDate;
+        ZonedDateTime submittedDate;
         ApplicationStatus status;
         boolean markFinancesComplete;
         String researchCategory;
@@ -408,26 +410,25 @@ class CsvUtils {
         String innovationSector;
         String researchCategory;
         String collaborationLevel;
-        String leadApplicantType;
         Integer researchRatio;
         Boolean resubmission;
         Boolean multiStream;
-        LocalDateTime openDate;
-        LocalDateTime briefingDate;
-        LocalDateTime submissionDate;
-        LocalDateTime allocateAssessorDate;
-        LocalDateTime assessorBriefingDate;
-        LocalDateTime assessorsNotifiedDate;
-        LocalDateTime assessorAcceptsDate;
-        LocalDateTime assessorEndDate;
-        LocalDateTime assessmentClosedDate;
-        LocalDateTime drawLineDate;
-        LocalDateTime assessmentPanelDate;
-        LocalDateTime panelDate;
-        LocalDateTime fundersPanelDate;
-        LocalDateTime fundersPanelEndDate;
-        LocalDateTime releaseFeedback;
-        LocalDateTime feedbackReleased;
+        ZonedDateTime openDate;
+        ZonedDateTime briefingDate;
+        ZonedDateTime submissionDate;
+        ZonedDateTime allocateAssessorDate;
+        ZonedDateTime assessorBriefingDate;
+        ZonedDateTime assessorsNotifiedDate;
+        ZonedDateTime assessorAcceptsDate;
+        ZonedDateTime assessorEndDate;
+        ZonedDateTime assessmentClosedDate;
+        ZonedDateTime drawLineDate;
+        ZonedDateTime assessmentPanelDate;
+        ZonedDateTime panelDate;
+        ZonedDateTime fundersPanelDate;
+        ZonedDateTime fundersPanelEndDate;
+        ZonedDateTime releaseFeedback;
+        ZonedDateTime feedbackReleased;
         String leadTechnologist;
         String compExecutive;
         boolean setupComplete;
@@ -459,7 +460,6 @@ class CsvUtils {
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
             collaborationLevel = nullable(line.get(i++));
-            leadApplicantType = nullable(line.get(i++));
             researchRatio = nullableInteger(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             multiStream = nullableBoolean(line.get(i++));
@@ -533,7 +533,7 @@ class CsvUtils {
 
     static class PublicContentDateLine {
         String competitionName;
-        LocalDateTime date;
+        ZonedDateTime date;
         String content;
 
         private PublicContentDateLine(List<String> line) {
@@ -718,14 +718,14 @@ class CsvUtils {
         return LocalDate.parse(s, DATE_PATTERN);
     }
 
-    private static LocalDateTime nullableDateTime(String s) {
+    private static ZonedDateTime nullableDateTime(String s) {
         String value = nullable(s);
 
         if (value == null) {
             return null;
         }
-
-        return LocalDateTime.parse(s, DATE_TIME_PATTERN);
+        return ZonedDateTime.of(LocalDateTime.parse(s, DATE_TIME_PATTERN),
+                TimeZoneUtil.UK_TIME_ZONE);
     }
 
     private static Integer nullableInteger(String s) {

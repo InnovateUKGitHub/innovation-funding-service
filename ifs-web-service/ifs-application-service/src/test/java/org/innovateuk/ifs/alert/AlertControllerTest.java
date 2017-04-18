@@ -10,7 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -42,8 +42,8 @@ public class AlertControllerTest extends BaseUnitTest {
                                 .withId(1L)
                                 .withMessage("Test Maintenance")
                                 .withType(AlertType.MAINTENANCE)
-                                .withValidFromDate(LocalDateTime.now().minusDays(2))
-                                .withValidToDate(LocalDateTime.now().plusDays(2))
+                                .withValidFromDate(ZonedDateTime.now().minusDays(2))
+                                .withValidToDate(ZonedDateTime.now().plusDays(2))
                                 .build())
                 );
     }

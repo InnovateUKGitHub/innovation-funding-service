@@ -43,7 +43,7 @@ the user fills in the CS Initial details
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
-    the user should see the element                      jQuery=img[title$="is done"] + h3:contains("Initial details")
+    the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
@@ -57,7 +57,7 @@ the user fills in the CS Funding Information
     textfield should contain              css=input[name="competitionCode"]  18
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
-    the user should see the element       jQuery=img[title$="is done"] + h3:contains("Funding information")
+    the user should see the element       jQuery=div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Eligibility
     the user clicks the button/link  link=Eligibility
@@ -72,7 +72,7 @@ the user fills in the CS Eligibility
     the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
-    the user should see the element   jQuery=img[title$="is done"] + h3:contains("Eligibility")
+    the user should see the element   jQuery=div:contains("Eligibility") ~ .task-status-complete
     #Elements in this page need double clicking
 
 the user fills in the CS Milestones
@@ -117,15 +117,13 @@ the user fills in the CS Milestones
     the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.year input  ${nextyear}
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
-    the user should see the element       jQuery=img[title$="is done"] + h3:contains("Milestones")
-
+    the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
 
 the user marks the Application as done
     the user clicks the button/link  link=Application
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
-    the user should see the element  jQuery=img[title$="is done"] + h3:contains("Application")
-
+    the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Assessors
     the user clicks the button/link  link=Assessors
@@ -133,7 +131,7 @@ the user fills in the CS Assessors
     the user should see the element  css=#assessorPay[value="100"]
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
-    the user should see the element  jQuery=img[title$="is done"] + h3:contains("Assessors")
+    the user should see the element  jQuery=div:contains("Assessors") ~ .task-status-complete
 
 the user fills in the Public content and publishes
     # Fill in the Competition information and search
@@ -143,42 +141,42 @@ the user fills in the Public content and publishes
     the user enters text to a text field        css=[labelledby="eligibility-summary"]      Summary of eligiblity
     the user enters text to a text field        id=keywords  Search, Testing, Robot
     the user clicks the button/link             jQuery=button:contains("Save and return")
-    the user should see the element             css=img[title='The "Competition information and search" section is marked as done']
+    the user should see the element             jQuery=div:contains("Competition information and search") ~ .task-status-complete
     # Fill in the Summary
     the user clicks the button/link         link=Summary
     the user enters text to a text field    css=.editor  This is a Summary description
     the user selects the radio button       fundingType    Grant
     the user enters text to a text field    id=project-size   10 millions
     the user clicks the button/link         jQuery=button:contains("Save and return")
-    the user should see the element         css=img[title='The "Summary" section is marked as done']
+    the user should see the element         jQuery=div:contains("Summary") ~ .task-status-complete
     # Fill in the Eligibility
     the user clicks the button/link         link=Eligibility
     the user enters text to a text field    id=heading-0    Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
-    the user should see the element         css=img[title='The "Eligibility" section is marked as done']
+    the user should see the element         jQuery=div:contains("Eligibility") ~ .task-status-complete
     # Fill in the Scope
     the user clicks the button/link         link=Scope
     the user enters text to a text field    id=heading-0    Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
-    the user should see the element         css=img[title='The "Scope" section is marked as done']
+    the user should see the element         jQuery=div:contains("Scope") ~ .task-status-complete
     # Save the dates
     the user clicks the button/link  link=Dates
     the user clicks the button/link  jQuery=button:contains("Save and return")
-    the user should see the element  css=img[title='The "Dates" section is marked as done']
+    the user should see the element  jQuery=div:contains("Dates") ~ .task-status-complete
     # Fill in the How to apply
     the user clicks the button/link         link=How to apply
     the user enters text to a text field    id=heading-0    Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
-    the user should see the element         css=img[title='The "How to apply" section is marked as done']
+    the user should see the element         jQuery=div:contains("How to apply") ~ .task-status-complete
     # Fill in the Supporting information
     the user clicks the button/link         link=Supporting information
     the user enters text to a text field    id=heading-0    Heading 1
     the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
-    the user should see the element         css=img[title='The "Supporting information" section is marked as done']
+    the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish public content")
 

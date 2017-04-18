@@ -4,17 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -28,9 +26,6 @@ import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
  */
 @Entity
 public class Competition implements ProcessActivity {
-
-    @Transient
-    private DateProvider dateProvider = new DateProvider();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -100,8 +95,12 @@ public class Competition implements ProcessActivity {
     private String streamName;
     @Enumerated(EnumType.STRING)
     private CollaborationLevel collaborationLevel;
-    @Enumerated(EnumType.STRING)
-    private LeadApplicantType leadApplicantType;
+
+    @ManyToMany
+    @JoinTable(name = "lead_applicant_type",
+            joinColumns = @JoinColumn(name = "competition_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
+    private List<OrganisationType> leadApplicantTypes;
 
     @ElementCollection
     @JoinTable(name = "competition_setup_status", joinColumns = @JoinColumn(name = "competition_id"))
@@ -124,7 +123,7 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -136,7 +135,7 @@ public class Competition implements ProcessActivity {
         this.setupComplete = true;
     }
 
-    public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+    public Competition(long id, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -214,7 +213,7 @@ public class Competition implements ProcessActivity {
 
     @JsonIgnore
     public long getDaysLeft() {
-        return getDaysBetween(LocalDateTime.now(), this.getEndDate());
+        return getDaysBetween(ZonedDateTime.now(), this.getEndDate());
     }
 
     @JsonIgnore
@@ -245,79 +244,79 @@ public class Competition implements ProcessActivity {
         this.description = description;
     }
 
-    public LocalDateTime getEndDate() {
+    public ZonedDateTime getEndDate() {
         return getMilestoneDate(SUBMISSION_DATE).orElse(null);
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(ZonedDateTime endDate) {
         setMilestoneDate(SUBMISSION_DATE, endDate);
     }
 
-    public LocalDateTime getStartDate() {
+    public ZonedDateTime getStartDate() {
         return getMilestoneDate(OPEN_DATE).orElse(null);
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(ZonedDateTime startDate) {
         setMilestoneDate(OPEN_DATE, startDate);
     }
 
-    public LocalDateTime getAssessorAcceptsDate() {
+    public ZonedDateTime getAssessorAcceptsDate() {
         return getMilestoneDate(ASSESSOR_ACCEPTS).orElse(null);
     }
 
-    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+    public void setAssessorAcceptsDate(ZonedDateTime assessorAcceptsDate) {
         setMilestoneDate(ASSESSOR_ACCEPTS, assessorAcceptsDate);
     }
 
-    public LocalDateTime getAssessorDeadlineDate() {
+    public ZonedDateTime getAssessorDeadlineDate() {
         return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
     }
 
-    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+    public void setAssessorDeadlineDate(ZonedDateTime assessorDeadlineDate) {
         setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorDeadlineDate);
     }
 
-    public LocalDateTime getReleaseFeedbackDate() {
+    public ZonedDateTime getReleaseFeedbackDate() {
         return getMilestoneDate(MilestoneType.RELEASE_FEEDBACK).orElse(null);
     }
 
-    public void setReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+    public void setReleaseFeedbackDate(ZonedDateTime releaseFeedbackDate) {
         setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, releaseFeedbackDate);
     }
 
-    public LocalDateTime getFundersPanelDate() {
+    public ZonedDateTime getFundersPanelDate() {
         return getMilestoneDate(MilestoneType.FUNDERS_PANEL).orElse(null);
     }
 
-    public void setFundersPanelDate(LocalDateTime fundersPanelDate) {
+    public void setFundersPanelDate(ZonedDateTime fundersPanelDate) {
         setMilestoneDate(MilestoneType.FUNDERS_PANEL, fundersPanelDate);
     }
 
-    public LocalDateTime getAssessorFeedbackDate() {
+    public ZonedDateTime getAssessorFeedbackDate() {
         return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
     }
 
-    public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
+    public void setAssessorFeedbackDate(ZonedDateTime assessorFeedbackDate) {
         setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorFeedbackDate);
     }
 
-    public LocalDateTime getFundersPanelEndDate() {
+    public ZonedDateTime getFundersPanelEndDate() {
         return getMilestoneDate(MilestoneType.NOTIFICATIONS).orElse(null);
     }
 
-    public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
+    public void setFundersPanelEndDate(ZonedDateTime fundersPanelEndDate) {
         setMilestoneDate(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
     }
 
-    public LocalDateTime getAssessorBriefingDate() {
+    public ZonedDateTime getAssessorBriefingDate() {
         return getMilestoneDate(MilestoneType.ASSESSOR_BRIEFING).orElse(null);
     }
 
-    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+    public void setAssessorBriefingDate(ZonedDateTime assessorBriefingDate) {
         setMilestoneDate(MilestoneType.ASSESSOR_BRIEFING, assessorBriefingDate);
     }
 
-    private void setMilestoneDate(MilestoneType milestoneType, LocalDateTime dateTime) {
+    private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
             Milestone m = new Milestone();
             m.setType(milestoneType);
@@ -333,7 +332,7 @@ public class Competition implements ProcessActivity {
     }
 
     private boolean isMilestoneReached(MilestoneType milestoneType) {
-        LocalDateTime today = dateProvider.provideDate();
+        ZonedDateTime today = ZonedDateTime.now();
         return getMilestone(milestoneType).map(milestone -> milestone.isReached(today)).orElse(false);
     }
 
@@ -341,11 +340,11 @@ public class Competition implements ProcessActivity {
         return getMilestone(milestoneType).isPresent();
     }
 
-    private Optional<LocalDateTime> getMilestoneDate(MilestoneType milestoneType) {
+    private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType) {
         return getMilestone(milestoneType).map(Milestone::getDate);
     }
 
-    private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
+    private long getDaysBetween(ZonedDateTime dateA, ZonedDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
     }
 
@@ -375,16 +374,6 @@ public class Competition implements ProcessActivity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    protected void setDateProvider(DateProvider dateProvider) {
-        this.dateProvider = dateProvider;
-    }
-
-    protected static class DateProvider {
-        public LocalDateTime provideDate() {
-            return LocalDateTime.now();
-        }
     }
 
     public User getExecutive() {
@@ -539,12 +528,12 @@ public class Competition implements ProcessActivity {
         this.collaborationLevel = collaborationLevel;
     }
 
-    public LeadApplicantType getLeadApplicantType() {
-        return leadApplicantType;
+    public List<OrganisationType> getLeadApplicantTypes() {
+        return leadApplicantTypes;
     }
 
-    public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
-        this.leadApplicantType = leadApplicantType;
+    public void setLeadApplicantTypes(List<OrganisationType> leadApplicantTypes) {
+        this.leadApplicantTypes = leadApplicantTypes;
     }
 
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
@@ -571,7 +560,7 @@ public class Competition implements ProcessActivity {
         return displayDate(getStartDate(), CompetitionResource.START_DATE_FORMAT);
     }
 
-    private String displayDate(LocalDateTime date, DateTimeFormatter formatter) {
+    private String displayDate(ZonedDateTime date, DateTimeFormatter formatter) {
         if (date != null) {
             return date.format(formatter);
         }
@@ -618,7 +607,7 @@ public class Competition implements ProcessActivity {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-    public void notifyAssessors(LocalDateTime date) {
+    public void notifyAssessors(ZonedDateTime date) {
         if (getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT) {
             return;
         }
@@ -631,11 +620,11 @@ public class Competition implements ProcessActivity {
         setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
     }
 
-    public void releaseFeedback(LocalDateTime date) {
+    public void releaseFeedback(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
 
-    public void closeAssessment(LocalDateTime date) {
+    public void closeAssessment(ZonedDateTime date) {
         setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, date);
     }
 

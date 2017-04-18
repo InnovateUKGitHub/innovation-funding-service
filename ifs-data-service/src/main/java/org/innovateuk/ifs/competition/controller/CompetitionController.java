@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public class CompetitionController {
     @Autowired
     private CompetitionSetupService competitionSetupService;
     @Autowired
-    private AssessmentService assessmentService;
+    private AssessorService assessorService;
     @Autowired
     private ApplicationService applicationService;
 
@@ -89,7 +89,7 @@ public class CompetitionController {
 
 
     @PostMapping("/generateCompetitionCode/{id}")
-    public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
+    public RestResult<String> generateCompetitionCode(@RequestBody ZonedDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
     }
 
@@ -130,7 +130,7 @@ public class CompetitionController {
     @PutMapping("/{id}/notify-assessors")
     public RestResult<Void> notifyAssessors(@PathVariable("id") final long competitionId) {
         return competitionService.notifyAssessors(competitionId)
-                .andOnSuccess(() -> assessmentService.notifyAssessorsByCompetition(competitionId))
+                .andOnSuccess(() -> assessorService.notifyAssessorsByCompetition(competitionId))
                 .toPutResponse();
     }
 

@@ -8,15 +8,13 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -74,7 +72,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
                                                 String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay,
-                                                Boolean multiStream, String collaborationLevelCode, String leadApplicantTypeCode, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
+                                                Boolean multiStream, String collaborationLevelCode, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
 
         return asCompAdmin(data -> {
 
@@ -89,7 +87,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 Long researchCategory = getResearchCategoryIdOrNull(researchCategoryName);
 
                 CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
-                LeadApplicantType leadApplicantType = LeadApplicantType.BUSINESS.fromCode(leadApplicantTypeCode);
 
                 competition.setName(name);
                 competition.setDescription(description);
@@ -105,7 +102,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setBudgetCode(budgetCode);
                 competition.setActivityCode(activityCode);
                 competition.setCollaborationLevel(collaborationLevel);
-                competition.setLeadApplicantType(leadApplicantType);
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);
@@ -207,11 +203,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
         MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> milestoneType.equals(m.getType())).get();
 
-        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
-        LocalDateTime submissionDeadline = submissionDateMilestone.getDate();
+        ZonedDateTime now = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        ZonedDateTime submissionDeadline = submissionDateMilestone.getDate();
 
         final long daysPassedSinceSubmissionEnded;
-        if (LocalTime.now().isAfter(submissionDeadline.toLocalTime())) {
+        if (ZonedDateTime.now().withZoneSameInstant(submissionDeadline.getZone()).toLocalTime().isAfter(submissionDeadline.toLocalTime())) {
             daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS) + 1;
         } else {
             daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
@@ -256,69 +252,69 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withOpenDate(LocalDateTime date) {
+    public CompetitionDataBuilder withOpenDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, OPEN_DATE);
     }
 
-    public CompetitionDataBuilder withBriefingDate(LocalDateTime date) {
+    public CompetitionDataBuilder withBriefingDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, BRIEFING_EVENT);
     }
 
-    public CompetitionDataBuilder withSubmissionDate(LocalDateTime date) {
+    public CompetitionDataBuilder withSubmissionDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, SUBMISSION_DATE);
     }
 
-    public CompetitionDataBuilder withAllocateAssesorsDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAllocateAssesorsDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ALLOCATE_ASSESSORS);
     }
 
-    public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessorBriefingDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
     }
 
-    public CompetitionDataBuilder withAssessorsNotifiedDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessorsNotifiedDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSORS_NOTIFIED);
     }
 
-    public CompetitionDataBuilder withAssessorAcceptsDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessorAcceptsDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_ACCEPTS);
     }
 
-    public CompetitionDataBuilder withAssessorEndDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessorEndDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_DEADLINE);
     }
 
-    public CompetitionDataBuilder withAssessmentClosedDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessmentClosedDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
     }
 
-    public CompetitionDataBuilder withLineDrawDate(LocalDateTime date) {
+    public CompetitionDataBuilder withLineDrawDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, LINE_DRAW);
     }
 
-    public CompetitionDataBuilder withAsessmentPanelDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAsessmentPanelDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSMENT_PANEL);
     }
 
-    public CompetitionDataBuilder withPanelDate(LocalDateTime date) {
+    public CompetitionDataBuilder withPanelDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, PANEL_DATE);
     }
 
-    public CompetitionDataBuilder withFundersPanelDate(LocalDateTime date) {
+    public CompetitionDataBuilder withFundersPanelDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, FUNDERS_PANEL);
     }
 
-    public CompetitionDataBuilder withFundersPanelEndDate(LocalDateTime date) {
+    public CompetitionDataBuilder withFundersPanelEndDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, NOTIFICATIONS);
     }
-    public CompetitionDataBuilder withReleaseFeedbackDate(LocalDateTime date) {
+    public CompetitionDataBuilder withReleaseFeedbackDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, RELEASE_FEEDBACK);
     }
-    public CompetitionDataBuilder withFeedbackReleasedDate(LocalDateTime date) {
+    public CompetitionDataBuilder withFeedbackReleasedDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, FEEDBACK_RELEASED);
     }
 
-    private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
+    private CompetitionDataBuilder withMilestoneUpdate(ZonedDateTime date, MilestoneType milestoneType) {
 
         if (date == null) {
             return this;

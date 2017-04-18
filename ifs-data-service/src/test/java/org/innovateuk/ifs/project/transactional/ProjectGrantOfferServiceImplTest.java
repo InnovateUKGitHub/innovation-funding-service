@@ -38,7 +38,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
@@ -261,7 +261,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
-        when(financeUtilMock.isUsingJesFinances(RESEARCH.getOrganisationTypeId())).thenReturn(true);
+        when(financeUtilMock.isUsingJesFinances(RESEARCH.getId())).thenReturn(true);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
@@ -648,7 +648,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("TownCity", "Swindon&");
         templateArgs.put("PostCode", "SN1 1AA'");
         templateArgs.put("ProjectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
-        templateArgs.put("Date", LocalDateTime.now().toString());
+        templateArgs.put("Date", ZonedDateTime.now().toString());
 
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
         organisationAndGrantPercentageMap.put("OrgLeader&amp;", new Integer("30"));
@@ -689,7 +689,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
         when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
@@ -800,7 +800,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), nonAcademicUnfunded.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZero));
         when(spendProfileServiceMock.getSpendProfileTable(new ProjectOrganisationCompositeId(projectId, nonAcademicUnfunded.getId())))
                 .thenReturn(ServiceResult.serviceSuccess(tableZero));
@@ -988,7 +988,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("TownCity", "Swindon");
         templateArgs.put("PostCode", "SN1 1AA");
         templateArgs.put("ProjectStartDate",project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
-        templateArgs.put("Date", LocalDateTime.now().toString());
+        templateArgs.put("Date", ZonedDateTime.now().toString());
 
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
         organisationAndGrantPercentageMap.put(o1.getName(), new Integer("0"));
@@ -1029,7 +1029,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
         when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZeroGrantClaim));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));

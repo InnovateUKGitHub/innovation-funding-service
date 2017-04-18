@@ -300,7 +300,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
 
         return organisationList.stream()
-            .filter(o -> OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(o.getOrganisationType()))
+            .filter(o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()))
             .collect(Collectors.toCollection(supplier));
     }
 

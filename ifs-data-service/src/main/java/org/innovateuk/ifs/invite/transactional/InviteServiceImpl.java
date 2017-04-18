@@ -42,15 +42,15 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
@@ -60,6 +60,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
@@ -119,7 +120,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
-        return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(Collectors.toList());
+        return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(toList());
     }
 
     private ServiceResult<Void> processCollaboratorInvite(String baseUrl, ApplicationInvite invite) {
@@ -142,7 +143,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private void handleInviteSuccess(ApplicationInvite invite) {
-        applicationInviteRepository.save(invite.send(loggedInUserSupplier.get(), LocalDateTime.now()));
+        applicationInviteRepository.save(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
     }
 
     private Consumer<ServiceFailure> logInviteError(ApplicationInvite i) {
@@ -199,23 +200,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
-        List<Error> errors = validateUniqueEmails(inviteOrganisationResource.getInviteResources());
-        if (errors.size() > 0) {
-            LOG.warn("Some double email addresses found");
-            return serviceFailure(errors);
-        }
-
-        if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
-            return serviceFailure(PROJECT_INVITE_INVALID);
-        }
-
-        return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(newInviteOrganisation -> {
-            List<ApplicationInvite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
-            inviteOrganisationRepository.save(newInviteOrganisation);
-            Iterable<ApplicationInvite> savedInvites = applicationInviteRepository.save(newInvites);
-            InviteResultsResource sentInvites = sendInvites(newArrayList(savedInvites));
-            return sentInvites;
-        });
+        return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
+                validateUniqueEmails(inviteOrganisationResource.getInviteResources())).andOnSuccess(() ->
+                assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(inviteOrganisation -> {
+                            List<ApplicationInvite> invites = saveInviteOrganisationWithInvites(inviteOrganisation, inviteOrganisationResource.getInviteResources());
+                            return sendInvites(invites);
+                        }
+                ));
     }
 
     @Override
@@ -235,15 +226,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
-        List<Error> errors = validateUniqueEmails(inviteResources);
-        if (errors.size() > 0) {
-            LOG.warn("Some double email addresses found");
-            return serviceFailure(errors);
-        }
-
-        List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
-        applicationInviteRepository.save(invites);
-        return serviceSuccess(sendInvites(invites));
+        return validateUniqueEmails(inviteResources).andOnSuccess(() -> {
+            List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
+            applicationInviteRepository.save(invites);
+            return serviceSuccess(sendInvites(invites));
+        });
     }
 
     @Override
@@ -369,13 +356,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
     }
 
-    private List<ApplicationInvite> assembleInvitesFromInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource, InviteOrganisation newInviteOrganisation) {
-        List<ApplicationInvite> invites = new ArrayList<>();
-        inviteOrganisationResource.getInviteResources().forEach(inviteResource ->
-                invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
-        );
-
-        return invites;
+    private List<ApplicationInvite> saveInviteOrganisationWithInvites(InviteOrganisation inviteOrganisation, List<ApplicationInviteResource> applicationInviteResources) {
+        inviteOrganisationRepository.save(inviteOrganisation);
+        return applicationInviteResources.stream().map(inviteResource ->
+                applicationInviteRepository.save(mapInviteResourceToInvite(inviteResource, inviteOrganisation))).collect(toList());
     }
 
     private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
@@ -386,105 +370,48 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
 
-    private boolean inviteOrganisationResourceIsValid(InviteOrganisationResource inviteOrganisationResource) {
-        if (!inviteOrganisationResourceNameAndIdAreValid(inviteOrganisationResource)) {
-            return false;
+    private ServiceResult<Void> validateInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource) {
+        if (inviteOrganisationResource.getOrganisation() != null || StringUtils.isNotBlank(inviteOrganisationResource.getOrganisationName())
+                && inviteOrganisationResource.getInviteResources().stream().allMatch(this::applicationInviteResourceIsValid)) {
+            return serviceSuccess();
         }
-
-        if (!allInviteResourcesAreValid(inviteOrganisationResource)) {
-            return false;
-        }
-
-        return true;
+        return serviceFailure(PROJECT_INVITE_INVALID);
     }
 
-    private boolean inviteOrganisationResourceNameAndIdAreValid(InviteOrganisationResource inviteOrganisationResource) {
-        if ((inviteOrganisationResource.getOrganisationName() == null ||
-                inviteOrganisationResource.getOrganisationName().isEmpty())
-                &&
-                inviteOrganisationResource.getOrganisation() == null) {
-            return false;
-        } else {
-            return true;
-        }
+    private boolean applicationInviteResourceIsValid(ApplicationInviteResource inviteResource) {
+        return inviteResource.getApplication() != null && StringUtils.isNotBlank(inviteResource.getEmail()) && StringUtils.isNotBlank(inviteResource.getName());
     }
 
-    private boolean allInviteResourcesAreValid(InviteOrganisationResource inviteOrganisationResource) {
-        if (inviteOrganisationResource.getInviteResources()
-                .stream()
-                .filter(inviteResource -> !inviteResourceIsValid(inviteResource))
-                .count() > 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean inviteResourceIsValid(ApplicationInviteResource inviteResource) {
-        if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplication() == null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private List<Error> validateUniqueEmails(List<ApplicationInviteResource> inviteResources) {
-        List<Error> errors = new ArrayList<>();
-        int inviteIndex = 0;
-
-        List<ApplicationInviteResource> duplicatesInList = findDuplicatesInResourceList(inviteResources);
-
-        for (ApplicationInviteResource invite : inviteResources) {
-            if (duplicatesInList.contains(invite) || validateUniqueEmail(invite).equals(false)) {
-                errors.add(fieldError("applicants[" + inviteIndex + "].email", invite.getEmail(), "email.already.in.invite"));
-            }
-            inviteIndex++;
-        }
-
-        return errors;
-    }
-
-    private Boolean validateUniqueEmail(ApplicationInviteResource inviteResource) {
-        if (inviteResource.getEmail() == null) {
-            return true;
-        }
-
-        Application application = applicationRepository.findOne(inviteResource.getApplication());
-
-        Set<String> savedEmails = getSavedEmailAddresses(inviteResource.getApplication());
-        if (application.getLeadApplicant() != null) {
-            savedEmails.add(application.getLeadApplicant().getEmail());
-        }
-
-        return !savedEmails.contains(inviteResource.getEmail());
-    }
-
-    private Set<String> getSavedEmailAddresses(Long applicationId) {
-        Set<String> savedEmails = new TreeSet<>();
-        List<InviteOrganisationResource> savedInvites = newArrayList();
-        savedInvites.addAll(getInvitesByApplication(applicationId).getSuccessObject());
-        savedInvites.forEach(s -> {
-            if (s.getInviteResources() != null) {
-                s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail()));
+    private ServiceResult<Void> validateUniqueEmails(List<ApplicationInviteResource> inviteResources) {
+        List<Error> failures = new ArrayList<>();
+        long applicationId = inviteResources.get(0).getApplication();
+        Set<String> uniqueEmails = getUniqueEmailAddressesForApplication(applicationId);
+        forEachWithIndex(inviteResources, (index, invite) -> {
+            if (!uniqueEmails.add(invite.getEmail())) {
+                failures.add(fieldError(format("applicants[%s].email", index), invite.getEmail(), "email.already.in.invite"));
             }
         });
-        return savedEmails;
+        return failures.isEmpty() ? serviceSuccess() : serviceFailure(failures);
     }
 
-    private List<ApplicationInviteResource> findDuplicatesInResourceList(List<ApplicationInviteResource> resourceList) {
-        List<ApplicationInviteResource> result = new ArrayList();
-        List<String> emails = resourceList.stream().map(inviteResource -> inviteResource.getEmail()).collect(Collectors.toList());
-        Integer currentIndex = 0;
-
-        for (String email : emails) {
-            if (emails.subList(currentIndex + 1, emails.size()).contains(email)) {
-                result.add(resourceList.get(currentIndex));
-            }
-            currentIndex++;
+    private Set<String> getUniqueEmailAddressesForApplication(long applicationId) {
+        Set<String> result = getUniqueEmailAddressesForApplicationInvites(applicationId);
+        String leadApplicantEmail = getLeadApplicantEmail(applicationId);
+        if (leadApplicantEmail != null) {
+            result.add(leadApplicantEmail);
         }
-
         return result;
+    }
 
+    private Set<String> getUniqueEmailAddressesForApplicationInvites(long applicationId) {
+        List<InviteOrganisationResource> inviteOrganisationResources = getInvitesByApplication(applicationId).getSuccessObject();
+        return inviteOrganisationResources.stream().flatMap(inviteOrganisationResource ->
+                inviteOrganisationResource.getInviteResources().stream().map(ApplicationInviteResource::getEmail)).collect(Collectors.toSet());
+    }
+
+    private String getLeadApplicantEmail(long applicationId) {
+        Application application = applicationRepository.findOne(applicationId);
+        return application.getLeadApplicant() != null ? application.getLeadApplicant().getEmail() : null;
     }
 
     private void reassignCollaboratorResponsesAndQuestionStatuses(long applicationId,
@@ -509,7 +436,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                                                    List<ProcessRole> organisationRoles) {
         List<FormInputResponse> formInputResponses = formInputResponseRepository.findByUpdatedById(collaboratorProcessRole.getId());
 
-        List<FormInputResponse> unassignableFormInputResponses = newArrayList();
+        List<FormInputResponse> unassignableFormInputResponses = new ArrayList<>();
 
         formInputResponses.forEach(collaboratorResponse -> {
             if (collaboratorResponse.getFormInput().getQuestion().hasMultipleStatuses()) {
@@ -538,7 +465,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 collaboratorProcessRole.getId()
         );
 
-        List<QuestionStatus> unassignableQuestionStatuses = newArrayList();
+        List<QuestionStatus> unassignableQuestionStatuses = new ArrayList<>();
 
         questionStatuses.forEach(questionStatus -> {
             if (questionStatus.getQuestion().hasMultipleStatuses()) {
@@ -563,7 +490,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             ProcessRole assignedBy =
                     convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignedBy(), reassignTo, leadApplicantRole);
 
-            questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
+            questionStatus.setAssignee(assignee, assignedBy, ZonedDateTime.now());
         }
 
         if (questionStatus.getMarkedAsCompleteBy() != null) {

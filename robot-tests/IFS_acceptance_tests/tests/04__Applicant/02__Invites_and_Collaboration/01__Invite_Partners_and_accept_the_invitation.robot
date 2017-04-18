@@ -106,8 +106,8 @@ Lead Adds/Removes partner organisation
     And The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
     And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
-    Then The user clicks the button/link    jQuery=button:contains('Delete organisation')
-    And The user clicks the button/link    jQuery=.modal-delete-organisation button:contains('Delete organisation')
+    Then The user clicks the button/link    jQuery=a:contains('Delete organisation')
+    And The user clicks the button/link     jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should not see the text in the page    Fannie May
     And the user should see the text in the page    Application team
 
@@ -176,7 +176,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    link=NOMENSA LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Adrian    Booth
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}

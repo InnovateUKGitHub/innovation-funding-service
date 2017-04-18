@@ -228,11 +228,11 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
 
         when(formInputService.findApplicationInputsByCompetition(competitionResource.getId())).thenReturn(formInputs);
 
-        when(organisationService.getOrganisationType(userResource.getId(), applicationResource.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        when(organisationService.getOrganisationType(userResource.getId(), applicationResource.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(Optional.of(newOrganisationResource().build()));
 
         DefaultFinanceModelManager financeManager = mock(DefaultFinanceModelManager.class);
-        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(financeManager);
+        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(financeManager);
 
         QuestionResource question = newQuestionResource().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), eq(FormInputType.APPLICATION_DETAILS))).thenReturn(ServiceResult.serviceSuccess(question));

@@ -145,7 +145,7 @@ Initial details - should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=img.section-status:eq(0)
+    Then the user should see the element    jQuery=li:nth-child(1) .task-status-complete
     And the user should not see the element    jQuery=.button:contains("Save")
 
 User should have access to all the sections
@@ -228,7 +228,7 @@ Funding information: should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=img.section-status:eq(1)
+    Then the user should see the element    jQuery=li:nth-child(2) .task-status-complete
     And the user should not see the element    jQuery=.button:contains("Save")
 
 Eligibility: Contain the correct options
@@ -284,7 +284,7 @@ Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=img.section-status:eq(2)
+    Then the user should see the element    jQuery=li:nth-child(3) .task-status-complete
     And the user should not see the element    jQuery=.button:contains("Save")
 
 Milestones: Page should contain the correct fields
@@ -319,7 +319,7 @@ Milestones: Green check should show
     [Documentation]    INFUND-2993
     [Tags]
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=li:nth-child(4) .section-status
+    Then the user should see the element    css=li:nth-child(4) .task-status-complete
     And the user should not see the element    jQuery=.button:contains("Save")
 
 Application - Application process Page
@@ -393,6 +393,7 @@ Application: Scope
 Application: Scope Assessment questions
     [Documentation]    INFUND-5631    INFUND-6044  INFUND-6283
     Given the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user selects the radio button    question.writtenFeedback    1
     And the user fills the scope assessment questions
     When the user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Scope
@@ -443,7 +444,7 @@ Application: Mark as done should display green tick
     Given The user clicks the button/link       jQuery=button:contains(Done)
     Then The user should not see the element    jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
-    Then the user should see the element        css=img[title='The "Application" section is done']
+    Then the user should see the element        jQuery=li:nth-child(5) .task-status-complete
 
 Application: Edit again should mark as incomplete
     [Documentation]    INFUND-5964
@@ -453,7 +454,7 @@ Application: Edit again should mark as incomplete
     And The user clicks the button/link         jQuery=button:contains("Save and close")
     Then The user should see the element        jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
-    Then the user should not see the element    css=img[title='The "Application" section is done']
+    Then the user should not see the element    jQuery=li:nth-child(5) .task-status-complete
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468

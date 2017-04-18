@@ -25,7 +25,7 @@ import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -158,11 +158,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testUpdateFinanceContact() {
 
         ProjectResource project = newProjectResource().build();
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.updateFinanceContact(123L, 456L, 789L), () -> {
-            verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(project, getLoggedInUser());
+        assertAccessDenied(() -> classUnderTest.updateFinanceContact(composite, 789L), () -> {
+            verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -542,7 +543,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
 		@Override
-		public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
+		public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
 			return null;
 		}
 
@@ -552,7 +553,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> submitProjectDetails(Long id, LocalDateTime date) {
+        public ServiceResult<Void> submitProjectDetails(Long id, ZonedDateTime date) {
             return null;
         }
 
@@ -562,7 +563,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+        public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
             return null;
         }
 

@@ -63,7 +63,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testUpdateFinanceContact() {
         setupPostWithRestResultExpectations(projectRestURL + "/123/organisation/5/finance-contact?financeContact=6", null, OK);
-        RestResult<Void> result = service.updateFinanceContact(123L, 5L, 6L);
+        RestResult<Void> result = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 6L);
         assertTrue(result.isSuccess());
     }
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +15,12 @@ public class NoteResource {
     public final Long contextClassPk;
     public final List<PostResource> posts;
     public final String title;
-    public final LocalDateTime createdOn;
+    public final ZonedDateTime createdOn;
 
     @JsonCreator
     public NoteResource(@JsonProperty("id") Long id, @JsonProperty("contextClassPk") Long contextClassPk,
                         @JsonProperty("posts") List<PostResource> posts, @JsonProperty("title") String title,
-                        @JsonProperty("createdOn") LocalDateTime createdOn) {
+                        @JsonProperty("createdOn") ZonedDateTime createdOn) {
         this.id = id;
         this.contextClassPk = contextClassPk;
         this.posts = ofNullable(posts).map(ArrayList::new).orElse(new ArrayList<>());

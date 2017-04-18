@@ -18,7 +18,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
@@ -71,7 +71,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
     public ProjectDataBuilder submitProjectDetails() {
         return with(data -> doAs(data.getProjectManager(), () -> {
-            projectService.submitProjectDetails(data.getProject().getId(), LocalDateTime.now()).getSuccessObjectOrThrowException();
+            projectService.submitProjectDetails(data.getProject().getId(), ZonedDateTime.now()).getSuccessObjectOrThrowException();
         }));
     }
 
@@ -82,7 +82,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
             UserResource partnerUser = findAnyPartnerForOrganisation(data, organisation.getId());
 
-            doAs(partnerUser, () -> projectService.updateFinanceContact(data.getProject().getId(), organisation.getId(), financeContact.getId()).
+            doAs(partnerUser, () -> projectService.updateFinanceContact(new ProjectOrganisationCompositeId(data.getProject().getId(), organisation.getId()), financeContact.getId()).
                     getSuccessObjectOrThrowException());
         });
     }

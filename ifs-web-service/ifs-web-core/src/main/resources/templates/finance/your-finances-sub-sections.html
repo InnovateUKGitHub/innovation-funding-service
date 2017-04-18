@@ -146,16 +146,14 @@
                     </div>
                 </th:block>
                 <th:block th:if="${model.showSectionAsLockedFunding(subSection)}">
-                    <div class="task-full-width">
+                    <div class="task full-width">
                         <h3 class="heading-small" th:text="${subSection.name}"></h3>
-                        <th:block th:if="${model.userIsLeadApplicant}">
-                            <p>You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.
-                                You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
-                        </th:block>
-                        <th:block th:unless="${model.userIsLeadApplicant}">
-                            <p>The lead applicant must select a research category in application details before you can supply funding.
-                                You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
-                        </th:block>
+                        <p>
+                            <th:block th:if="${model.userIsLeadApplicant}">You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.</th:block>
+                            <th:block th:unless="${model.userIsLeadApplicant}">The lead applicant must select a research category in application details before you can supply funding.</th:block>
+                            <br />
+                            You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
+                        </p>
                     </div>
                 </th:block>
                 <th:block th:if="${model.showSectionStatus(subSection)}">
@@ -180,7 +178,7 @@
                 <tbody>
                 <tr th:if="${hasOrganisationFinance}" th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}">
                     <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /></strong></td>
-                    <td class="numeric">&pound;<th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
+                    <td class="numeric"><th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}" /></td>

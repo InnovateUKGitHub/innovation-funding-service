@@ -52,7 +52,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -81,7 +81,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -516,7 +516,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     withApplications(applicationBuilders).
                     restoreOriginalMilestones();
 
-            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(LocalDateTime.now())) {
+            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
 
                 withApplications = withApplications.
                         moveCompetitionIntoFundersPanelStatus().
@@ -766,7 +766,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 .withBasicData(line.name, null, null, line.innovationArea,
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null,
-                        null, null, null, null, line.nonIfsUrl)
+                        null, null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
@@ -780,7 +780,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withBasicData(line.name, line.description, line.type, line.innovationArea,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                        line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                        line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
@@ -792,7 +792,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withBasicData(line.name, line.description, line.type, line.innovationArea,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                        line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                        line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
                 withNewMilestones()).
                 withOpenDate(line.openDate).
@@ -906,7 +906,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
         Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
-        Optional<LocalDateTime> sentOn = Optional.of(LocalDateTime.now());
+        Optional<ZonedDateTime> sentOn = Optional.of(ZonedDateTime.now());
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(

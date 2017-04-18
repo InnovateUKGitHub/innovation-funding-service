@@ -40,8 +40,9 @@ import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -755,7 +756,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -790,7 +791,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -887,7 +888,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -921,7 +922,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -1021,7 +1022,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -1053,7 +1054,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -1086,7 +1087,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void setApplicationFundingEmailDateTime() throws Exception {
 
         Long applicationId = 1L;
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
         ApplicationResource newApplication = newApplicationResource().build();
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
@@ -1103,7 +1104,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void setApplicationFundingEmailDateTime_Failure() throws Exception {
 
         Long applicationId = 1L;
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
         ApplicationResource newApplication = newApplicationResource().build();
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {

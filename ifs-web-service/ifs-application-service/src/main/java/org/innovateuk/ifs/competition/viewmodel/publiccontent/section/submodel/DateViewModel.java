@@ -2,21 +2,21 @@ package org.innovateuk.ifs.competition.viewmodel.publiccontent.section.submodel;
 
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.DatesViewModel;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
  * Repeating viewmodel that's being used by {@link DatesViewModel}
  */
 public class DateViewModel {
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
     private String content;
     private Boolean mustBeStrong;
 
     public DateViewModel() {
     }
 
-    public DateViewModel(LocalDateTime dateTime, String content, Boolean mustBeStrong) {
+    public DateViewModel(ZonedDateTime dateTime, String content, Boolean mustBeStrong) {
         this.dateTime = dateTime;
         this.content = content;
         this.mustBeStrong = mustBeStrong;
@@ -24,7 +24,7 @@ public class DateViewModel {
 
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM YYYY");
 
-    public LocalDateTime getDateTime() {
+    public ZonedDateTime getDateTime() {
         return dateTime;
     }
 
@@ -36,7 +36,7 @@ public class DateViewModel {
         return dateTime.format(DATE_FORMAT);
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(ZonedDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

@@ -49,18 +49,19 @@ Details of the competition are visible
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
-    And the user should see the text in the page    12:00am Thursday 12 January 2068
-    And the user should see the text in the page    12:00am Saturday 28 January 2068
+    And the user should see the text in the page    12:00pm Thursday 12 January 2068
+    And the user should see the text in the page    12:00pm Saturday 28 January 2068
 
 Competition brief link can be seen
     [Documentation]    INFUND-5494
     [Tags]
-    Then the user should see the element    link=View competition brief (opens in a new window)
+    Then the user should see the element    link=View competition brief
+    And the user should see the text in the page    View competition brief (opens in a new window)
 
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When the user clicks the button/link    link=View competition brief (opens in a new window)
+    When the user clicks the button/link    link=View competition brief
     Then the user should get a competition brief window
     And the user should not see an error in the page
     And the user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}

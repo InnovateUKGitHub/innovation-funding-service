@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,7 +41,7 @@ public class EligibilitySectionSaverTest {
 	@Test
 	public void testSaveCompetitionSetupSection() {
 		EligibilityForm competitionSetupForm = new EligibilityForm();
-		competitionSetupForm.setLeadApplicantType("business");
+		competitionSetupForm.setLeadApplicantTypes(asList(1L, 2L));
 		competitionSetupForm.setMultipleStream("yes");
 		competitionSetupForm.setStreamName("streamname");
 		competitionSetupForm.setResubmission("yes");
@@ -50,8 +52,8 @@ public class EligibilitySectionSaverTest {
 		CompetitionResource competition = newCompetitionResource().build();
 
 		service.saveSection(competition, competitionSetupForm);
-		
-		assertEquals(LeadApplicantType.BUSINESS, competition.getLeadApplicantType());
+
+		assertEquals(asList(OrganisationTypeEnum.BUSINESS.getId(), OrganisationTypeEnum.RESEARCH.getId()), competition.getLeadApplicantTypes());
 		assertTrue(competition.isMultiStream());
 		assertEquals("streamname", competition.getStreamName());
 		assertEquals(CollectionFunctions.asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());
@@ -107,7 +109,7 @@ public class EligibilitySectionSaverTest {
 		MilestoneResource milestone = new MilestoneResource();
 		milestone.setId(10L);
 		milestone.setType(MilestoneType.OPEN_DATE);
-		milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
+		milestone.setDate(ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
 		milestone.setCompetitionId(1L);
 		return milestone;
 	}

@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -200,8 +200,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void updateFinanceContact() throws Exception {
-
-        when(projectServiceMock.updateFinanceContact(123L, 456L, 789L)).thenReturn(serviceSuccess());
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
+        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isOk())
@@ -218,8 +218,9 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void updateFinanceContactButUserIsNotOnProjectForOrganisation() throws Exception {
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
 
-        when(projectServiceMock.updateFinanceContact(123L, 456L, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isBadRequest())
@@ -228,8 +229,9 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void updateFinanceContactButUserIsNotPartnerOnProjectForOrganisation() throws Exception {
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
 
-        when(projectServiceMock.updateFinanceContact(123L, 456L, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
+        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isBadRequest())
@@ -371,7 +373,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void setApplicationDetailsSubmittedDateButDetailsNotFilledIn() throws Exception {
-        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
+        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isBadRequest())
                 .andDo(this.document.snippets(
@@ -382,7 +384,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void setApplicationDetailsSubmittedDate() throws Exception {
-        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
@@ -457,7 +459,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
     @Test
     public void setPartnerDocumentsSubmittedDate() throws Exception {
-        when(projectServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        when(projectServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(

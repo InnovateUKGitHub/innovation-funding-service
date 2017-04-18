@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -86,7 +86,7 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
         return with(project -> project.setOtherDocumentsApproved(otherDocumentsApproved));
     }
 
-    public ProjectResourceBuilder withDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+    public ProjectResourceBuilder withDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
         return with(project -> project.setDocumentsSubmittedDate(documentsSubmittedDate));
     }
 

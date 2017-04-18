@@ -307,12 +307,11 @@
 </th:block>
 
 <th:block th:fragment="modal-reject-profile">
-    <div class="modal-reject-profile warning-model" role="dialog" aria-hidden="true">
+    <div class="modal-reject-profile warning-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="heading-medium no-margin">Reject spend profile</h2>
-            <p>Rejecting will return access to the spend profile to all project partners.</p>
-            <p>You should contact the Project Manager to explain why the spend profile is being returned.</p>
+            <p>Rejecting will return access to the spend profile to all project partners. You should contact the Project Manager to explain why the spend profile is being returned.</p>
         </div>
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/REJECTED'}" method="post">
@@ -388,18 +387,13 @@
 <th:block th:fragment="modal-delete-organisation">
     <div class="modal-delete-organisation" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="heading-medium no-margin">Delete organisation</h2>
-        <p>Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
-        <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
+        <h2 class="heading-medium no-margin-top">Delete organisation</h2>
+        <p>Are you sure you wish to remove the entire organisation from this project? This will also remove team members associated with that organisation. The organisation's finance information will be deleted and any assigned questions will be returned to you.</p>
+        <p>The organisation will not be notified of this action through this service. You should therefore discuss this with them beforehand.</p>
         <hr />
         <div>
-            <button class="button large"
-                    name="deleteLastApplicant"
-                    type="submit"
-                    th:value="${model.applicants.get(0).applicationInviteId}">
-                Delete organisation
-            </button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="button" name="deleteOrganisation" type="submit">Delete organisation</button>
+            <button class="buttonlink js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>

@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.ZonedDateTime;
 
 import static java.lang.String.format;
-import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
@@ -107,7 +107,7 @@ public class ApplicationCreationController {
         if (publicContentItem.getNonIfs()) {
             return false;
         }
-        return (publicContentItem.getCompetitionOpenDate().isBefore(now()) &&
-                publicContentItem.getCompetitionCloseDate().isAfter(now()));
+        return (publicContentItem.getCompetitionOpenDate().isBefore(ZonedDateTime.now()) &&
+                publicContentItem.getCompetitionCloseDate().isAfter(ZonedDateTime.now()));
     }
 }

@@ -10,49 +10,36 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.lang.String.format;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.assessment.domain.Assessment} data.
  */
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
-
-    private static final String WEB_CONTEXT = "/assessment";
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -71,20 +58,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
-
-    @Autowired
-    private NotificationSender notificationSender;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
-
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
-
-
-    enum Notifications {
-        ASSESSOR_HAS_ASSESSMENTS
-    }
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -150,50 +123,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                             assessment -> assessment.getFundingDecision().getFeedback()
                     )
         ));
-    }
-
-    @Override
-    public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
-        return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Assessment> assessments = assessmentRepository.findByActivityStateStateAndTargetCompetitionId(
-                    AssessmentStates.CREATED.getBackingState(),
-                    competitionId
-            );
-
-            return processAnyFailuresOrSucceed(simpleMap(assessments, this::attemptNotifyAssessorTransition))
-                    .andOnSuccess(() -> assessments.stream()
-                            .collect(Collectors.groupingBy(assessment -> assessment.getParticipant().getUser()))
-                            .forEach((user, userAssessments) -> sendNotification(user, competition))
-                    );
-        });
-    }
-
-    private ServiceResult<Void> attemptNotifyAssessorTransition(Assessment assessment) {
-        if (!assessmentWorkflowHandler.notify(assessment)) {
-            return serviceFailure(ASSESSMENT_NOTIFY_FAILED);
-        }
-
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> sendNotification(User user, Competition competition) {
-        NotificationTarget recipient = new UserNotificationTarget(user);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        Notification notification = new Notification(
-                systemNotificationSource,
-                singletonList(recipient),
-                AssessmentServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
-                asMap(
-                        "name", user.getName(),
-                        "competitionName", competition.getName(),
-                        "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
-                        "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
-                        "competitionUrl", format("%s/assessor/dashboard/competition/%s", webBaseUrl + WEB_CONTEXT, competition.getId()))
-        );
-
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
-
-        return notificationSender.sendEmailWithContent(notification, recipient, content).andOnSuccessReturnVoid();
     }
 
     @Override
@@ -264,23 +193,25 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
                         .andOnSuccess(application -> getRole(UserRoleType.ASSESSOR)
                                 .andOnSuccess(role -> getAssessmentActivityState(AssessmentStates.CREATED)
-                                        .andOnSuccess(activityState -> {
-                                            ProcessRole processRole = new ProcessRole();
-                                            processRole.setUser(assessor);
-                                            processRole.setApplicationId(application.getId());
-                                            processRole.setRole(role);
-
-                                            ProcessRole newProcessRole = processRoleRepository.save(processRole);
-
-                                            Assessment assessment = new Assessment(application, newProcessRole);
-                                            assessment.setActivityState(activityState);
-
-                                            return serviceSuccess(assessmentRepository.save(assessment))
-                                                    .andOnSuccessReturn(assessmentMapper::mapToResource);
-                                        })
+                                        .andOnSuccess(activityState -> createAssessment(assessor, application, role, activityState))
                                 )
                         )
                 );
+    }
+
+    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, Role role, ActivityState activityState) {
+        ProcessRole processRole = new ProcessRole();
+        processRole.setUser(assessor);
+        processRole.setApplicationId(application.getId());
+        processRole.setRole(role);
+
+        ProcessRole newProcessRole = processRoleRepository.save(processRole);
+
+        Assessment assessment = new Assessment(application, newProcessRole);
+        assessment.setActivityState(activityState);
+
+        return serviceSuccess(assessmentRepository.save(assessment))
+                .andOnSuccessReturn(assessmentMapper::mapToResource);
     }
 
     private ServiceResult<User> getAssessor(Long assessorId) {

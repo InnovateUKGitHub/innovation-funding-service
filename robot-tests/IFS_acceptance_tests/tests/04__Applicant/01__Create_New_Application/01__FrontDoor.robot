@@ -26,7 +26,7 @@ Guest user can see Competitions and their information
     Given the user should see the element    link=Home and industrial efficiency programme
     Then the user should see the element     jQuery=dt:contains("Eligibility") + dd:contains("UK based business of any size. Must involve at least one SME")
     And the user should see the element      jQuery=dt:contains("Opens") + dd:contains("15 April 2016")
-    And the user should see the element      jQuery=dt:contains("Closes") + dd:contains("09 September 2067")
+    And the user should see the element      jQuery=dt:contains("Closes") + dd:contains("9 September 2067")
 
 #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
 

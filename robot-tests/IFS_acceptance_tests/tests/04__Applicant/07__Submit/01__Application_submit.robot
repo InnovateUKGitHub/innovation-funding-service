@@ -95,8 +95,8 @@ Status of the submitted application
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=${application_name}
     And the user should see the element    Link=View application
-    And the user should see the element    Link=Print Application
-    When the user clicks the button/link    Link=Print Application
+    And the user should see the element    Link=Print application
+    When the user clicks the button/link    Link=Print application
     Then the user should be redirected to the correct page without the usual headers    print
 
 *** Keywords ***
