@@ -81,6 +81,18 @@ public class ApplicationProcessWorkflowHandler extends BaseWorkflowEventHandler<
         return fireEvent(applicationMessage(application, ApplicationOutcome.SUBMITTED), application);
     }
 
+    public boolean markIneligible(Application application) {
+        return fireEvent(applicationMessage(application, ApplicationOutcome.MARK_INELIGIBLE), application);
+    }
+
+    public boolean informIneligible(Application application) {
+        return fireEvent(applicationMessage(application, ApplicationOutcome.INFORM_INELIGIBLE), application);
+    }
+
+    public boolean reinstateIneligible(Application application) {
+        return fireEvent(applicationMessage(application, ApplicationOutcome.REINSTATE_INELIGIBLE), application);
+    }
+
     public boolean approve(Application application) {
         return fireEvent(applicationMessage(application, ApplicationOutcome.APPROVED), application);
     }
@@ -92,7 +104,7 @@ public class ApplicationProcessWorkflowHandler extends BaseWorkflowEventHandler<
     public boolean notifyFromApplicationStatus(Application application, ApplicationStatus applicationStatus) {
         switch (applicationStatus) {
             case CREATED:
-                return false; // TODO might need to allow a move to created, even though it shouldn't be possible
+                return false;
             case SUBMITTED:
                 return submit(application);
             case APPROVED:
@@ -106,7 +118,7 @@ public class ApplicationProcessWorkflowHandler extends BaseWorkflowEventHandler<
         }
     }
 
-    private MessageBuilder<ApplicationOutcome> applicationMessage(Application application, ApplicationOutcome event) {
+    private static MessageBuilder<ApplicationOutcome> applicationMessage(Application application, ApplicationOutcome event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", application);
