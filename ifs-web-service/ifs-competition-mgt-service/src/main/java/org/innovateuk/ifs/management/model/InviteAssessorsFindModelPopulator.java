@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.management.viewmodel.AvailableAssessorRowViewModel;
@@ -29,10 +30,17 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
     @Autowired
     private CategoryRestService categoryRestService;
 
-    public InviteAssessorsFindViewModel populateModel(CompetitionResource competition,
+    @Autowired
+    private CompetitionsRestService competitionsRestService;
+
+    public InviteAssessorsFindViewModel populateModel(long competitionId,
                                                       int page,
                                                       Optional<Long> innovationArea,
                                                       String originQuery) {
+        CompetitionResource competition = competitionsRestService
+                .getCompetitionById(competitionId)
+                .getSuccessObjectOrThrowException();
+
         InviteAssessorsFindViewModel model = super.populateModel(competition);
 
         List<InnovationSectorResource> innovationSectors = categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
