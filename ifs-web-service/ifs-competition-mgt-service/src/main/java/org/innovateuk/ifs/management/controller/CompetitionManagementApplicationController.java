@@ -75,8 +75,7 @@ public class CompetitionManagementApplicationController extends BaseController {
                                              @ModelAttribute("loggedInUser") UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                              @RequestParam MultiValueMap<String, String> queryParams,
-                                             Model model,
-                                             HttpServletRequest request
+                                             Model model
     ) {
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> competitionManagementApplicationService
@@ -103,10 +102,9 @@ public class CompetitionManagementApplicationController extends BaseController {
             @ModelAttribute("loggedInUser") UserResource user,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            Model model,
-            HttpServletRequest request) {
+            Model model) {
 
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -130,10 +128,9 @@ public class CompetitionManagementApplicationController extends BaseController {
                                              @ModelAttribute("form") ApplicationForm applicationForm,
                                              @ModelAttribute("loggedInUser") UserResource user,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
-                                             ValidationHandler validationHandler,
-                                             HttpServletRequest request) {
+                                             ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
