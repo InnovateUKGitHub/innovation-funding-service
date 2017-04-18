@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.spendprofile.mapper;
+package org.innovateuk.ifs.project.financechecks.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.project.spendprofile.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.finance.resource.CostResource;
 import org.mapstruct.Mapper;
 

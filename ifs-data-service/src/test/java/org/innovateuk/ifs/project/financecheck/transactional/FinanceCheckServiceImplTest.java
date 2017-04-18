@@ -14,7 +14,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.spendprofile.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;

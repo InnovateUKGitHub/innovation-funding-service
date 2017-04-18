@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.spendprofile.domain;
+package org.innovateuk.ifs.project.financechecks.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;

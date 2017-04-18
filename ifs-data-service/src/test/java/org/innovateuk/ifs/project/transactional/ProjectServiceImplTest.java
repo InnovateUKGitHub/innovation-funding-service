@@ -30,7 +30,7 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
-import org.innovateuk.ifs.project.spendprofile.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;

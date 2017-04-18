@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.financecheck.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.spendprofile.domain.CostGroup;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.user.domain.Organisation;
 

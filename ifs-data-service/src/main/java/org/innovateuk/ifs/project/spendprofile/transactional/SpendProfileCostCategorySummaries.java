@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import org.innovateuk.ifs.project.spendprofile.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 
 import java.util.List;
 

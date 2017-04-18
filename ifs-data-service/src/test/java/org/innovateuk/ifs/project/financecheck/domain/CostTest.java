@@ -1,5 +1,8 @@
-package org.innovateuk.ifs.project.spendprofile.domain;
+package org.innovateuk.ifs.project.financecheck.domain;
 
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 

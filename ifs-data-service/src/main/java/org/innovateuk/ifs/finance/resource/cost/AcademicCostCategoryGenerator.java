@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.project.spendprofile.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 
 import java.math.BigDecimal;
 import java.util.List;

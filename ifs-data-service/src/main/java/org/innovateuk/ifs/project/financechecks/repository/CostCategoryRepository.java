@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.repository;
 
-import org.innovateuk.ifs.project.spendprofile.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.project.spendprofile.domain.Cost;
-import org.innovateuk.ifs.project.spendprofile.domain.CostGroup;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 
 import java.util.List;
 import java.util.function.BiConsumer;
