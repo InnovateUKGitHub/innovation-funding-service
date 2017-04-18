@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.ApplicationSummaryQueryForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionForm;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -52,9 +53,6 @@ public class CompetitionManagementFundingController {
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
     private ApplicationFundingDecisionService applicationFundingDecisionService;
 
     @Autowired
@@ -77,7 +75,7 @@ public class CompetitionManagementFundingController {
                 .getSuccessObjectOrThrowException();
 
         model.addAttribute("competitionSummary", competitionSummary);
-        String originQuery = buildOriginQueryString(CompetitionManagementApplicationController.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, getFilteredParameterValues(queryParams));
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, getFilteredParameterValues(queryParams));
         model.addAttribute("originQuery", originQuery);
 
         switch (competitionSummary.getCompetitionStatus()) {
