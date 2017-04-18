@@ -124,7 +124,6 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
             ApplicationStatus status = statusFromDecision(applicationFundingDecision);
             applicationProcessWorkflowHandler.notifyFromApplicationStatus(app, status);
-//            app.setApplicationStatus(status);
         });
         return applications;
     }

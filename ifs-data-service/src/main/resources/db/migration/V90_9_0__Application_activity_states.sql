@@ -1,3 +1,4 @@
+-- add new APPLICATION activity_type and NOT_APPLICABLE_INFORMED state enum values
 ALTER TABLE activity_state MODIFY
   activity_type ENUM(
     'APPLICATION_ASSESSMENT','PROJECT_SETUP','PROJECT_SETUP_COMPANIES_HOUSE_DETAILS','PROJECT_SETUP_PROJECT_DETAILS',
@@ -7,6 +8,7 @@ ALTER TABLE activity_state MODIFY
   MODIFY state ENUM('CREATED','PENDING','REJECTED','ACCEPTED','WITHDRAWN','OPEN','READY_TO_SUBMIT','SUBMITTED','VERIFIED',
     'NOT_VERIFIED','ASSIGNED','NOT_ASSIGNED','NOT_APPLICABLE','NOT_APPLICABLE_INFORMED') NOT NULL;
 
+-- add the APPLICATION activity_states
 INSERT INTO activity_state (activity_type, state) VALUES
   ('APPLICATION', 'CREATED'),
   ('APPLICATION', 'OPEN'),
@@ -14,8 +16,9 @@ INSERT INTO activity_state (activity_type, state) VALUES
   ('APPLICATION', 'ACCEPTED'),
   ('APPLICATION', 'REJECTED');
 
--- give existing applications a backing process
+-- add a backing process to each existing application
 INSERT INTO process (process_type, last_modified, target_id, activity_state_id)
 SELECT 'ApplicationProcess', now(), id, (SELECT id FROM activity_state WHERE activity_type='APPLICATION' AND state = IF (status = 'APPROVED', 'ACCEPTED', status)) FROM application;
 
+-- drop the  status column from application
 ALTER TABLE application DROP COLUMN status;

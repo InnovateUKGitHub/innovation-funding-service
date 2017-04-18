@@ -160,8 +160,7 @@ public class Application implements ProcessActivity {
     }
 
     public ApplicationStatus getApplicationStatus() {
-//        if (applicationProcess == null) return null; // mapper workaround
-        return ApplicationStatus.toApplicationState(applicationProcess.getActivityState());
+        return ApplicationStatus.fromApplicationState(applicationProcess.getActivityState());
     }
 
     public Competition getCompetition() {

@@ -57,7 +57,7 @@ public class ApplicationStatistics {
     }
 
     public ApplicationStatus getApplicationStatus() {
-        return ApplicationStatus.toApplicationState(applicationProcess.getActivityState());
+        return ApplicationStatus.fromApplicationState(applicationProcess.getActivityState());
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {

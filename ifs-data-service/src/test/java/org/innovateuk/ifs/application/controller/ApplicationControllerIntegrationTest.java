@@ -133,13 +133,6 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(ApplicationStatus.REJECTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
     }
 
-
-//    @Test
-//    public void testUpdateApplicationStatusCreated() throws Exception {
-//        controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.CREATED);
-//        assertEquals(ApplicationStatus.CREATED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus());
-//    }
-
     @Test
     public void testUpdateApplicationStatusOpened() throws Exception {
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatus.OPEN);

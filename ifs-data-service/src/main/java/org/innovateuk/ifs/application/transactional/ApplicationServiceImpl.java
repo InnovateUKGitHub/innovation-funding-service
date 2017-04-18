@@ -386,7 +386,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
                                                                       final ApplicationStatus status) {
         return find(application(id)).andOnSuccess((application) -> {
-//            application.setApplicationStatus(status);
             applicationProcessWorkflowHandler.notifyFromApplicationStatus(application, status);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
