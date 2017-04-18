@@ -12,6 +12,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -192,23 +193,25 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
                         .andOnSuccess(application -> getRole(UserRoleType.ASSESSOR)
                                 .andOnSuccess(role -> getAssessmentActivityState(AssessmentStates.CREATED)
-                                        .andOnSuccess(activityState -> {
-                                            ProcessRole processRole = new ProcessRole();
-                                            processRole.setUser(assessor);
-                                            processRole.setApplicationId(application.getId());
-                                            processRole.setRole(role);
-
-                                            ProcessRole newProcessRole = processRoleRepository.save(processRole);
-
-                                            Assessment assessment = new Assessment(application, newProcessRole);
-                                            assessment.setActivityState(activityState);
-
-                                            return serviceSuccess(assessmentRepository.save(assessment))
-                                                    .andOnSuccessReturn(assessmentMapper::mapToResource);
-                                        })
+                                        .andOnSuccess(activityState -> createAssessment(assessor, application, role, activityState))
                                 )
                         )
                 );
+    }
+
+    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, Role role, ActivityState activityState) {
+        ProcessRole processRole = new ProcessRole();
+        processRole.setUser(assessor);
+        processRole.setApplicationId(application.getId());
+        processRole.setRole(role);
+
+        ProcessRole newProcessRole = processRoleRepository.save(processRole);
+
+        Assessment assessment = new Assessment(application, newProcessRole);
+        assessment.setActivityState(activityState);
+
+        return serviceSuccess(assessmentRepository.save(assessment))
+                .andOnSuccessReturn(assessmentMapper::mapToResource);
     }
 
     private ServiceResult<User> getAssessor(Long assessorId) {

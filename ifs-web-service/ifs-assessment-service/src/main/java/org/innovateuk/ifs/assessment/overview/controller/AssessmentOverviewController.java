@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.assessment.overview.controller;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
-import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
@@ -51,9 +50,6 @@ public class AssessmentOverviewController {
     private AssessmentService assessmentService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private FormInputResponseService formInputResponseService;
 
     @Autowired
@@ -77,7 +73,7 @@ public class AssessmentOverviewController {
     }
 
     @GetMapping("/application/{applicationId}/formInput/{formInputId}/download")
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix (
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
