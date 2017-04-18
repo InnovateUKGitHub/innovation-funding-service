@@ -52,9 +52,9 @@ public class ApplicationController {
         return applicationService.getProgressPercentageByApplicationId(applicationId).toGetResponse();
     }
 
-    @PutMapping("/updateApplicationStatus")
+    @PutMapping("/updateApplicationState")
     public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
-                                                    @RequestParam("status") final ApplicationState state) {
+                                                    @RequestParam("state") final ApplicationState state) {
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationState(id, state);
 
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {

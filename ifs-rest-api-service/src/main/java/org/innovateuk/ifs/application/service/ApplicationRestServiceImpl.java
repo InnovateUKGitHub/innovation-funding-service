@@ -45,7 +45,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state) {
-        return putWithRestResult(applicationRestURL + "/updateApplicationStatus?applicationId=" + applicationId + "&status=" + state, Void.class);
+        return putWithRestResult(applicationRestURL + "/updateApplicationState?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 
     // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible

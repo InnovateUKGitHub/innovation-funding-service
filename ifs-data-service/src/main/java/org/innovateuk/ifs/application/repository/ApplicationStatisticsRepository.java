@@ -20,10 +20,10 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStatusIds);
 
     @Query("SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
-            "AND (a.applicationProcess.activityState.state IN :status) " +
+            "AND (a.applicationProcess.activityState.state IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))")
     Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(@Param("compId") long competitionId,
-                                                                                           @Param("status") Collection<State> applicationStatusIds,
+                                                                                           @Param("states") Collection<State> applicationStates,
                                                                                            @Param("filter") String filter,
                                                                                            Pageable pageable);
 }

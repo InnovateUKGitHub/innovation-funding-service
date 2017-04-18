@@ -111,7 +111,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void test_updateApplicationStatus() {
 
-        String expectedUrl = applicationRestURL + "/updateApplicationStatus?applicationId=123&status=APPROVED";
+        String expectedUrl = applicationRestURL + "/updateApplicationState?applicationId=123&state=APPROVED";
         setupPutWithRestResultExpectations(expectedUrl, Void.class, null, null);
         // now run the method under test
         service.updateApplicationState(123L, ApplicationState.APPROVED);

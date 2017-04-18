@@ -131,7 +131,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         when(applicationServiceMock.updateApplicationState(applicationId, state)).thenReturn(serviceSuccess(applicationResource));
 
-        mockMvc.perform(put("/application/updateApplicationStatus?applicationId={applicationId}&state={state}", applicationId, state))
+        mockMvc.perform(put("/application/updateApplicationState?applicationId={applicationId}&state={state}", applicationId, state))
                 .andDo(document("application/{method-name}",
                     requestParameters(
                         parameterWithName("applicationId").description("id of the application for which to update the application state"),

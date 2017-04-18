@@ -86,7 +86,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource) {
 
-        List<Application> applications = setApplicationStatus(notificationResource.getFundingDecisions());
+        List<Application> applications = setApplicationState(notificationResource.getFundingDecisions());
 
         List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(notificationResource.calculateApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
@@ -115,7 +115,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                 });
     }
 
-    private List<Application> setApplicationStatus(Map<Long, FundingDecision> applicationFundingDecisions) {
+    private List<Application> setApplicationState(Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
         List<Application> applications = findApplicationsByIds(applicationIds);

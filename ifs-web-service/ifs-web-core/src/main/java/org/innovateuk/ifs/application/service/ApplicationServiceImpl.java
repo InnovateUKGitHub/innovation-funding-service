@@ -68,29 +68,29 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
     
     private boolean applicationInProgress(ApplicationResource a) {
-    	boolean applicationInProgressForOpenCompetition = applicationStatusInProgress(a) && competitionOpen(a);
-    	boolean applicationSubmittedForCompetitionNotYetFinishedFunding = applicationStatusSubmitted(a) && competitionFundingNotYetComplete(a);
+    	boolean applicationInProgressForOpenCompetition = applicationStateInProgress(a) && competitionOpen(a);
+    	boolean applicationSubmittedForCompetitionNotYetFinishedFunding = applicationStateSubmitted(a) && competitionFundingNotYetComplete(a);
 
     	return applicationInProgressForOpenCompetition || applicationSubmittedForCompetitionNotYetFinishedFunding;
     }
    
     private boolean applicationFinished(ApplicationResource a) {
-    	boolean applicationInProgressForClosedCompetition = applicationStatusInProgress(a) && competitionClosed(a);
-    	boolean applicationSubmittedForCompetitionFinishedFunding = applicationStatusSubmitted(a) && competitionFundingComplete(a);
-    	boolean applicationFinished = applicationStatusFinished(a);
+    	boolean applicationInProgressForClosedCompetition = applicationStateInProgress(a) && competitionClosed(a);
+    	boolean applicationSubmittedForCompetitionFinishedFunding = applicationStateSubmitted(a) && competitionFundingComplete(a);
+    	boolean applicationFinished = applicationStateFinished(a);
     	
     	return applicationInProgressForClosedCompetition || applicationSubmittedForCompetitionFinishedFunding || applicationFinished;
     }
     
-    private boolean applicationStatusInProgress(ApplicationResource a) {
+    private boolean applicationStateInProgress(ApplicationResource a) {
     	return appStatusIn(a, ApplicationState.CREATED, ApplicationState.OPEN);
     }
 
-	private boolean applicationStatusFinished(ApplicationResource a) {
+	private boolean applicationStateFinished(ApplicationResource a) {
 		return appStatusIn(a, ApplicationState.APPROVED, ApplicationState.REJECTED);
     }
 	
-    private boolean applicationStatusSubmitted(ApplicationResource a) {
+    private boolean applicationStateSubmitted(ApplicationResource a) {
     	return a.getApplicationState() == ApplicationState.SUBMITTED;
     }
     

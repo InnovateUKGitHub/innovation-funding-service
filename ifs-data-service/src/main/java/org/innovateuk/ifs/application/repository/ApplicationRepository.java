@@ -27,7 +27,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
-			"AND (a.applicationProcess.activityState.state IN :statuses) " +
+			"AND (a.applicationProcess.activityState.state IN :states) " +
 			"AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
 			"AND (:funding IS NULL " +
 			"	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
@@ -55,28 +55,28 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     @Query(COMP_FILTER)
     List<Application> findByCompetitionIdAndIdLike(@Param("compId") long competitionId, @Param("filter") String filter);
 	
-	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStatuses, Pageable pageable);
+	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(@Param("compId") long competitionId,
-																							@Param("statuses") Collection<State> applicationStatuses,
+																							@Param("states") Collection<State> applicationStates,
 																							@Param("filter") String filter,
 																							@Param("funding") FundingDecisionStatus funding,
 																							Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(@Param("compId") long competitionId,
-																							@Param("statuses") Collection<State> applicationStatuses,
+																							@Param("states") Collection<State> applicationStates,
 																							@Param("filter") String filter,
 																							@Param("funding") FundingDecisionStatus funding);
 
-	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(long competitionId, Collection<State> applicationStatuses, Pageable pageable);
+	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
 
-	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStatuses);
+	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
-	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(long competitionId, Collection<State> applicationStatuses);
+	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(long competitionId, Collection<State> applicationStates);
 
-	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(long competitionId, Collection<State> applicationStatus, Pageable pageable);
+	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(long competitionId, Collection<State> applicationStates, Pageable pageable);
 
 	@Query(COMP_FUNDING_FILTER)
 	Page<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") long competitionId,
@@ -95,17 +95,17 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(long competitionId);
 	
-	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(long competitionId, Collection<State> applicationStatuses);
+	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(long competitionId, Collection<State> applicationStates);
 
     int countByCompetitionId(long competitionId);
 
-	int countByCompetitionIdAndApplicationProcessActivityStateState(long competitionId, State applicationStatus);
+	int countByCompetitionIdAndApplicationProcessActivityStateState(long competitionId, State applicationStates);
 
-	int countByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> submittedStatuses);
+	int countByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> submittedStates);
 
-	int countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(Long competitionId, Collection<State> submittedStatuses, BigDecimal limit);
+	int countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(Long competitionId, Collection<State> submittedStates, BigDecimal limit);
 
-	int countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(long competitionId, Collection<State> submittedStatuses, BigDecimal limit);
+	int countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(long competitionId, Collection<State> submittedStates, BigDecimal limit);
 
 	int countByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
 
