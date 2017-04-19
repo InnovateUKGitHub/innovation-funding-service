@@ -113,6 +113,14 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     private Address address;
 
+    private FileEntryResource fileEntryResource;
+
+    private FileEntry createdFile;
+
+    private String htmlFile;
+
+    private Pair<File, FileEntry> fileEntryPair;
+
     @Captor
     ArgumentCaptor<Map<String, Object> > templateArgsCaptor;
 
@@ -289,7 +297,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                         service.createGrantOfferLetterFileEntry(123L, fileToCreate, inputStreamSupplier));
     }
 
-
     @Test
     public void testCreateAdditionalContractFileEntry() {
         assertCreateFile(
@@ -297,7 +304,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 (fileToCreate, inputStreamSupplier) ->
                         service.createAdditionalContractFileEntry(123L, fileToCreate, inputStreamSupplier));
     }
-
 
     @Test
     public void testGetAdditionalContractFileEntryDetails() {
@@ -363,7 +369,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         ServiceResult<Void> result = service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
-
     }
 
     @Test
@@ -378,9 +383,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         ServiceResult<Void> result = service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier);
         assertTrue(result.isFailure());
         assertEquals(result.getErrors().get(0).getErrorKey(), CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY.toString());
-
     }
-
 
     @Test
     public void testSubmitGrantOfferLetterFailureNoSignedGolFile() {
@@ -467,7 +470,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
     }
 
-
     @Test
     public void testRemoveGrantOfferLetterFileEntryButWorkflowRejected() {
 
@@ -540,154 +542,29 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withName(name)
                 .build();
     }
+
     @Test
     public void testGenerateGrantOfferLetterIfReadySuccess() {
-        FileEntryResource fileEntryResource = newFileEntryResource().
-                withFilesizeBytes(1024).
-                withMediaType("application/pdf").
-                withName("grant_offer_letter").
-                build();
 
-        FileEntry createdFile = newFileEntry().build();
-        Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
+        setupGolTemplate();
 
-        StringBuilder stringBuilder = new StringBuilder();
-        String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-                .append("<html dir=\"ltr\" lang=\"en\">\n")
-                .append("<head>\n")
-                .append("<meta charset=\"UTF-8\"></meta>\n")
-                .append("</head>\n")
-                .append("<body>\n")
-                .append("<p>\n")
-                .append("${LeadContact}<br/>\n")
-                .append("</p>\n")
-                .append("</body>\n")
-                .append("</html>\n").toString();
-
-        Competition comp = newCompetition()
-                .withName("Test Comp<")
-                .build();
         Organisation o1 = organisation(BUSINESS, "OrgLeader&");
         Organisation o2 = organisation(BUSINESS, "Org2\"");
         Organisation o3 = organisation(BUSINESS, "Org3<");
-        
-        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
-                .build();
-        User u = newUser()
-                .withFirstName("ab")
-                .withLastName("cd")
-                .build();
-        ProcessRole leadAppProcessRole = newProcessRole()
-                .withOrganisationId(o1.getId())
-                .withUser(u)
-                .withRole(leadAppRole)
-                .build();
-        Application app = newApplication()
-                .withCompetition(comp)
-                .withProcessRoles(leadAppProcessRole)
-                .withId(3L)
-                .build();
-        ProjectUser pm = newProjectUser()
-                .withRole(PROJECT_MANAGER)
-                .withOrganisation(o1)
-                .build();
-
-        PartnerOrganisation po = newPartnerOrganisation()
-                .withOrganisation(o1)
-                .withLeadOrganisation(true)
-                .build();
-
-        PartnerOrganisation po2 = newPartnerOrganisation()
-                .withOrganisation(o2)
-                .withLeadOrganisation(false)
-                .build();
-
-        PartnerOrganisation po3 = newPartnerOrganisation()
-                .withOrganisation(o3)
-                .withLeadOrganisation(false)
-                .build();
-
-
-        Address address = newAddress()
-                .withAddressLine1("InnovateUK>")
-                .withAddressLine2("Northstar House\"")
-                .withTown("Swindon&")
-                .withPostcode("SN1 1AA'")
-                .build();
-        Project project = newProject()
-                .withOtherDocumentsApproved(ApprovalType.APPROVED)
-                .withName("project 1")
-                .withApplication(app)
-                .withPartnerOrganisations(asList(po3, po, po2))
-                .withProjectUsers(asList(pm))
-                .withDuration(10L)
-                .withAddress(address)
-                .withTargetStartDate(LocalDate.now())
-                .build();
 
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
                 .withGrantClaimPercentage(30)
                 .withApplication(456L)
                 .withOrganisation(3L)
                 .build();
-        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
-                .withTotalPercentageGrant(BigDecimal.valueOf(25))
-                .build();
 
-        Map<String, Object> templateArgs = new HashMap();
-        templateArgs.put("SortedOrganisations", asList("OrgLeader&amp;", "Org2&quot;", "Org3&lt;"));
-        templateArgs.put("ProjectLength", 10L);
-        templateArgs.put("ProjectTitle", "project 1");
-        templateArgs.put("LeadContact", "ab cd");
-        templateArgs.put("ApplicationNumber", 3L);
-        templateArgs.put("LeadOrgName", "OrgLeader&");
-        templateArgs.put("CompetitionName", "Test Comp<");
-        templateArgs.put("Address1", "InnovateUK>");
-        templateArgs.put("Address2", "Northstar House\"");
-        templateArgs.put("Address3", "");
-        templateArgs.put("TownCity", "Swindon&");
-        templateArgs.put("PostCode", "SN1 1AA'");
-        templateArgs.put("ProjectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
-        templateArgs.put("Date", ZonedDateTime.now().toString());
+        setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
 
-        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
-        organisationAndGrantPercentageMap.put("OrgLeader&amp;", new Integer("30"));
-        organisationAndGrantPercentageMap.put("Org2&quot;", new Integer("30"));
-        organisationAndGrantPercentageMap.put("Org3&lt;", new Integer("30"));
+        YearlyGOLProfileTable expectedYearlyGOLProfileTable = populateExpectedTable("OrgLeader&amp;", "Org2&quot;", "Org3&lt;", new Integer("30"), new Integer("30"), new Integer("30"));
+        Map<String, Object> templateArgs = setupTemplateArguments(expectedYearlyGOLProfileTable);
 
-        Map<String, List<String>> organisationYearsMap  = new HashMap<>();
-        organisationYearsMap.put("OrgLeader&amp;", new LinkedList<>());
-        organisationYearsMap.put("Org2&quot;", new LinkedList<>());
-        organisationYearsMap.put("Org3&lt;", new LinkedList<>());
-
-        Map<String, List<BigDecimal>> organisationEligibleCostTotal  = new HashMap<>();
-        organisationEligibleCostTotal.put("OrgLeader&amp;", asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        organisationEligibleCostTotal.put("Org2&quot;", asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        organisationEligibleCostTotal.put("Org3&lt;", asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-
-        Map<String, List<BigDecimal>> organisationGrantAllocationTotal  = new HashMap<>();
-        organisationGrantAllocationTotal.put("OrgLeader&amp;", new LinkedList<>());
-        organisationGrantAllocationTotal.put("Org2&quot;", new LinkedList<>());
-        organisationGrantAllocationTotal.put("Org3&lt;", new LinkedList<>());
-
-        Map<String, BigDecimal> yearEligibleCostTotal  = new HashMap<>();
-        yearEligibleCostTotal.put("OrgLeader&amp;", new BigDecimal("1"));
-        yearEligibleCostTotal.put("Org2&quot;", new BigDecimal("1"));
-        yearEligibleCostTotal.put("Org3&lt;", new BigDecimal("1"));
-
-        Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
-        YearlyGOLProfileTable expectedYearlyGOLProfileTable = new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
-
-        when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
-        when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
-        when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(rendererMock.renderTemplate(eq("common/grantoffer/grant_offer_letter.html"), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
-        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
-        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
-        when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
         when(financeUtilMock.isUsingJesFinances(BUSINESS.getId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
@@ -699,43 +576,17 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         eligibleCostTotal.put(o2.getName(), new BigDecimal("1"));
         eligibleCostTotal.put(o3.getName(), new BigDecimal("1"));
         when(spendProfileTableCalculatorMock.createYearlyEligibleCostTotal(any(ProjectResource.class), any(Map.class), any(List.class))).thenReturn(eligibleCostTotal);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getId())).thenReturn(false);
+
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
 
         verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
         verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
 
-        assertEquals(templateArgs.get("SortedOrganisations"), templateArgsCaptor.getAllValues().get(0).get("SortedOrganisations"));
-        assertEquals(templateArgs.get("ProjectLength"), templateArgsCaptor.getAllValues().get(0).get("ProjectLength"));
-        assertEquals(templateArgs.get("ProjectTitle"), templateArgsCaptor.getAllValues().get(0).get("ProjectTitle"));
-        assertEquals(templateArgs.get("ProjectStartDate"), templateArgsCaptor.getAllValues().get(0).get("ProjectStartDate"));
-        assertEquals(templateArgs.get("LeadContact"), templateArgsCaptor.getAllValues().get(0).get("LeadContact"));
-        assertEquals(templateArgs.get("ApplicationNumber"), templateArgsCaptor.getAllValues().get(0).get("ApplicationNumber"));
-        assertEquals(templateArgs.get("LeadOrgName"), templateArgsCaptor.getAllValues().get(0).get("LeadOrgName"));
-        assertEquals(templateArgs.get("CompetitionName"), templateArgsCaptor.getAllValues().get(0).get("CompetitionName"));
-        assertEquals(templateArgs.get("Address1"), templateArgsCaptor.getAllValues().get(0).get("Address1"));
-        assertEquals(templateArgs.get("Address2"), templateArgsCaptor.getAllValues().get(0).get("Address2"));
-        assertEquals(templateArgs.get("Address3"), templateArgsCaptor.getAllValues().get(0).get("Address3"));
-        assertEquals(templateArgs.get("TownCity"), templateArgsCaptor.getAllValues().get(0).get("TownCity"));
-        assertEquals(templateArgs.get("PostCode"), templateArgsCaptor.getAllValues().get(0).get("PostCode"));
-
-        assertEquals(fileEntryResource.getMediaType(), fileEntryResCaptor.getAllValues().get(0).getMediaType());
-        assertEquals(fileEntryResource.getName() + ".pdf", fileEntryResCaptor.getAllValues().get(0).getName());
-
-        String startOfGeneratedFileString = null;
-        try {
-            int n = supplierCaptor.getAllValues().get(0).get().available();
-            byte [] startOfGeneratedFile = new byte[n];
-            supplierCaptor.getAllValues().get(0).get().read(startOfGeneratedFile, 0, n <9 ? n : 9);
-            startOfGeneratedFileString = new String(startOfGeneratedFile, StandardCharsets.UTF_8);
-        }
-        catch(IOException e) {
-
-        }
-        String pdfHeader = "%PDF-1.4\n";
-        assertEquals(pdfHeader, startOfGeneratedFileString.substring(0, pdfHeader.length()));
+        assertTrue(checkGolTemplate());
         assertTrue(result.isSuccess());
-        assertTrue(compareYearlyGolProfileTable(expectedYearlyGOLProfileTable, (YearlyGOLProfileTable) templateArgsCaptor.getAllValues().get(0).get("TableData")));
+        assertTrue(compareTemplate(templateArgs, templateArgsCaptor.getAllValues().get(0)));
     }
 
     @Test
@@ -746,7 +597,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
         assertTrue(result.isSuccess());
     }
-
 
     @Test
     public void testGenerateGrantOfferLetterOtherDocsNotApproved() {
@@ -780,6 +630,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testUnfundedNonAcademicPartnerNotIncludedInGrantOfferLetter() {
+        setupGolTemplate();
         PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisations.get(0)).build();
         PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisations.get(1)).build();
         PartnerOrganisation partnerOrganisation3 = newPartnerOrganisation().withOrganisation(organisations.get(2)).build();
@@ -816,54 +667,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         when(spendProfileTableCalculatorMock.calculateEligibleCostPerYear(any(ProjectResource.class), any(List.class), any(List.class))).thenReturn(yearlyCosts);
 
-        FileEntryResource fileEntryResource = newFileEntryResource().
-                withFilesizeBytes(1024).
-                withMediaType("application/pdf").
-                withName("grant_offer_letter").
-                build();
-        FileEntry createdFile = newFileEntry().build();
-        Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
-        StringBuilder stringBuilder = new StringBuilder();
-        String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-                .append("<html dir=\"ltr\" lang=\"en\">\n")
-                .append("<head>\n")
-                .append("<meta charset=\"UTF-8\"></meta>\n")
-                .append("</head>\n")
-                .append("<body>\n")
-                .append("<p>\n")
-                .append("${LeadContact}<br/>\n")
-                .append("</p>\n")
-                .append("</body>\n")
-                .append("</html>\n").toString();
-
-        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
-        organisationAndGrantPercentageMap.put("Org1&amp;", new Integer("100"));
-        organisationAndGrantPercentageMap.put("Org2&quot;", new Integer("100"));
-        organisationAndGrantPercentageMap.put("Org3&lt;", new Integer("100"));
-        Map<String, List<String>> organisationYearsMap  = new HashMap<>();
-        organisationYearsMap.put("Org1&amp;", new LinkedList<>());
-        organisationYearsMap.put("Org2&quot;", new LinkedList<>());
-        organisationYearsMap.put("Org3&lt;", new LinkedList<>());
-        Map<String, List<BigDecimal>> organisationEligibleCostTotal  = new HashMap<>();
-        organisationEligibleCostTotal.put("Org1&amp;", asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        organisationEligibleCostTotal.put("Org2&quot;", asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        organisationEligibleCostTotal.put("Org3&lt;", asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        Map<String, List<BigDecimal>> organisationGrantAllocationTotal  = new HashMap<>();
-        organisationGrantAllocationTotal.put("Org1&amp;", new LinkedList<>());
-        organisationGrantAllocationTotal.put("Org2&quot;", new LinkedList<>());
-        organisationGrantAllocationTotal.put("Org3&lt;", new LinkedList<>());
-        Map<String, BigDecimal> yearEligibleCostTotal  = new HashMap<>();
-        yearEligibleCostTotal.put("Org1&amp;", new BigDecimal("1"));
-        yearEligibleCostTotal.put("Org2&quot;", new BigDecimal("2"));
-        yearEligibleCostTotal.put("Org3&lt;", new BigDecimal("3"));
-        Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
-
-        YearlyGOLProfileTable expectedYearlyGOLProfileTable = new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
-
-        when(rendererMock.renderTemplate(any(String.class), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
-
-        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
-        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
+        YearlyGOLProfileTable expectedYearlyGOLProfileTable = populateExpectedTable("Org1&amp;", "Org2&quot;", "Org3&lt;", new Integer("100"), new Integer("100"), new Integer("100"));//new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
 
         service.generateGrantOfferLetter(123L, fileEntryResource);
 
@@ -876,88 +680,11 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testGenerateGrantOfferLetterLeadPartnerNonAcademicWithNoFunding() {
-        FileEntryResource fileEntryResource = newFileEntryResource().
-                withFilesizeBytes(1024).
-                withMediaType("application/pdf").
-                withName("grant_offer_letter").
-                build();
+        setupGolTemplate();
 
-        FileEntry createdFile = newFileEntry().build();
-        Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-                .append("<html dir=\"ltr\" lang=\"en\">\n")
-                .append("<head>\n")
-                .append("<meta charset=\"UTF-8\"></meta>\n")
-                .append("</head>\n")
-                .append("<body>\n")
-                .append("<p>\n")
-                .append("${LeadContact}<br/>\n")
-                .append("</p>\n")
-                .append("</body>\n")
-                .append("</html>\n").toString();
-
-        Competition comp = newCompetition()
-                .withName("Test Comp")
-                .build();
-        Organisation o1 = organisation(BUSINESS, "OrgLeader");
-        Organisation o2 = organisation(BUSINESS, "Org2");
-        Organisation o3 = organisation(BUSINESS, "Org3");
-
-        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
-                .build();
-        User u = newUser()
-                .withFirstName("ab")
-                .withLastName("cd")
-                .build();
-        ProcessRole leadAppProcessRole = newProcessRole()
-                .withOrganisationId(o1.getId())
-                .withUser(u)
-                .withRole(leadAppRole)
-                .build();
-        Application app = newApplication()
-                .withCompetition(comp)
-                .withProcessRoles(leadAppProcessRole)
-                .withId(3L)
-                .build();
-        ProjectUser pm = newProjectUser()
-                .withRole(PROJECT_MANAGER)
-                .withOrganisation(o1)
-                .build();
-
-        PartnerOrganisation po = newPartnerOrganisation()
-                .withOrganisation(o1)
-                .withLeadOrganisation(true)
-                .build();
-
-        PartnerOrganisation po2 = newPartnerOrganisation()
-                .withOrganisation(o2)
-                .withLeadOrganisation(false)
-                .build();
-
-        PartnerOrganisation po3 = newPartnerOrganisation()
-                .withOrganisation(o3)
-                .withLeadOrganisation(false)
-                .build();
-
-
-        Address address = newAddress()
-                .withAddressLine1("InnovateUK")
-                .withAddressLine2("Northstar House")
-                .withTown("Swindon")
-                .withPostcode("SN1 1AA")
-                .build();
-        Project project = newProject()
-                .withOtherDocumentsApproved(ApprovalType.APPROVED)
-                .withName("project 1")
-                .withApplication(app)
-                .withPartnerOrganisations(asList(po3, po, po2))
-                .withProjectUsers(asList(pm))
-                .withDuration(10L)
-                .withAddress(address)
-                .withTargetStartDate(LocalDate.now())
-                .build();
+        Organisation o1 = organisation(BUSINESS, "OrgLeader&");
+        Organisation o2 = organisation(BUSINESS, "Org2\"");
+        Organisation o3 = organisation(BUSINESS, "Org3<");
 
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
                 .withGrantClaimPercentage(30)
@@ -970,74 +697,28 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withApplication(456L)
                 .withOrganisation(3L)
                 .build();
-        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
-                .withTotalPercentageGrant(BigDecimal.valueOf(25))
-                .build();
+        setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResourceZeroGrantClaim, applicationFinanceResource, applicationFinanceResource);
 
-        Map<String, Object> templateArgs = new HashMap();
-        templateArgs.put("SortedOrganisations", asList(o1.getName(), o2.getName(), o3.getName()));
-        templateArgs.put("ProjectLength", 10L);
-        templateArgs.put("ProjectTitle", "project 1");
-        templateArgs.put("LeadContact", "ab cd");
-        templateArgs.put("ApplicationNumber", 3L);
-        templateArgs.put("LeadOrgName", "OrgLeader");
-        templateArgs.put("CompetitionName", "Test Comp");
-        templateArgs.put("Address1", "InnovateUK");
-        templateArgs.put("Address2", "Northstar House");
-        templateArgs.put("Address3", "");
-        templateArgs.put("TownCity", "Swindon");
-        templateArgs.put("PostCode", "SN1 1AA");
-        templateArgs.put("ProjectStartDate",project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
-        templateArgs.put("Date", ZonedDateTime.now().toString());
+        YearlyGOLProfileTable expectedYearlyGOLProfileTable = populateExpectedTable("OrgLeader&amp;", "Org2&quot;", "Org3&lt;", new Integer("0"), new Integer("30"), new Integer("30"));
 
-        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
-        organisationAndGrantPercentageMap.put(o1.getName(), new Integer("0"));
-        organisationAndGrantPercentageMap.put(o2.getName(), new Integer("30"));
-        organisationAndGrantPercentageMap.put(o3.getName(), new Integer("30"));
+        Map<String, Object> templateArgs = setupTemplateArguments(expectedYearlyGOLProfileTable);
 
-        Map<String, List<String>> organisationYearsMap  = new HashMap<>();
-        organisationYearsMap.put(o1.getName(), new LinkedList<>());
-        organisationYearsMap.put(o2.getName(), new LinkedList<>());
-        organisationYearsMap.put(o3.getName(), new LinkedList<>());
-
-        Map<String, List<BigDecimal>> organisationEligibleCostTotal  = new HashMap<>();
-        organisationEligibleCostTotal.put(o1.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        organisationEligibleCostTotal.put(o2.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        organisationEligibleCostTotal.put(o3.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-
-        Map<String, List<BigDecimal>> organisationGrantAllocationTotal  = new HashMap<>();
-        organisationGrantAllocationTotal.put(o1.getName(), new LinkedList<>());
-        organisationGrantAllocationTotal.put(o2.getName(), new LinkedList<>());
-        organisationGrantAllocationTotal.put(o3.getName(), new LinkedList<>());
-
-        Map<String, BigDecimal> yearEligibleCostTotal  = new HashMap<>();
-        yearEligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
-        yearEligibleCostTotal.put(o2.getName(), new BigDecimal("1"));
-        yearEligibleCostTotal.put(o3.getName(), new BigDecimal("1"));
-
-        Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
-        YearlyGOLProfileTable expectedYearlyGOLProfileTable = new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
-
-        when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
-        when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
-        when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(rendererMock.renderTemplate(eq("common/grantoffer/grant_offer_letter.html"), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
-        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
-        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
-        when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
+<<<<<<< HEAD
         when(financeUtilMock.isUsingJesFinances(BUSINESS.getId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZeroGrantClaim));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+=======
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
+>>>>>>> development
 
         Map<String, BigDecimal> eligibleCostTotal = new HashMap<>();
         eligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
-        eligibleCostTotal.put(o2.getName(), new BigDecimal("1"));
-        eligibleCostTotal.put(o3.getName(), new BigDecimal("1"));
+        eligibleCostTotal.put(o2.getName(), new BigDecimal("2"));
+        eligibleCostTotal.put(o3.getName(), new BigDecimal("3"));
         when(spendProfileTableCalculatorMock.createYearlyEligibleCostTotal(any(ProjectResource.class), any(Map.class), any(List.class))).thenReturn(eligibleCostTotal);
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
@@ -1045,42 +726,84 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
         verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
 
-        assertEquals(templateArgs.get("SortedOrganisations"), templateArgsCaptor.getAllValues().get(0).get("SortedOrganisations"));
-        assertEquals(templateArgs.get("ProjectLength"), templateArgsCaptor.getAllValues().get(0).get("ProjectLength"));
-        assertEquals(templateArgs.get("ProjectTitle"), templateArgsCaptor.getAllValues().get(0).get("ProjectTitle"));
-        assertEquals(templateArgs.get("ProjectStartDate"), templateArgsCaptor.getAllValues().get(0).get("ProjectStartDate"));
-        assertEquals(templateArgs.get("LeadContact"), templateArgsCaptor.getAllValues().get(0).get("LeadContact"));
-        assertEquals(templateArgs.get("ApplicationNumber"), templateArgsCaptor.getAllValues().get(0).get("ApplicationNumber"));
-        assertEquals(templateArgs.get("LeadOrgName"), templateArgsCaptor.getAllValues().get(0).get("LeadOrgName"));
-        assertEquals(templateArgs.get("CompetitionName"), templateArgsCaptor.getAllValues().get(0).get("CompetitionName"));
-        assertEquals(templateArgs.get("Address1"), templateArgsCaptor.getAllValues().get(0).get("Address1"));
-        assertEquals(templateArgs.get("Address2"), templateArgsCaptor.getAllValues().get(0).get("Address2"));
-        assertEquals(templateArgs.get("Address3"), templateArgsCaptor.getAllValues().get(0).get("Address3"));
-        assertEquals(templateArgs.get("TownCity"), templateArgsCaptor.getAllValues().get(0).get("TownCity"));
-        assertEquals(templateArgs.get("PostCode"), templateArgsCaptor.getAllValues().get(0).get("PostCode"));
-
-        assertEquals(fileEntryResource.getMediaType(), fileEntryResCaptor.getAllValues().get(0).getMediaType());
-        assertEquals(fileEntryResource.getName() + ".pdf", fileEntryResCaptor.getAllValues().get(0).getName());
-
-        String startOfGeneratedFileString = null;
-        try {
-            int n = supplierCaptor.getAllValues().get(0).get().available();
-            byte [] startOfGeneratedFile = new byte[n];
-            supplierCaptor.getAllValues().get(0).get().read(startOfGeneratedFile, 0, n <9 ? n : 9);
-            startOfGeneratedFileString = new String(startOfGeneratedFile, StandardCharsets.UTF_8);
-        }
-        catch(IOException e) {
-
-        }
-        String pdfHeader = "%PDF-1.4\n";
-        assertEquals(pdfHeader, startOfGeneratedFileString.substring(0, pdfHeader.length()));
+        assertTrue(checkGolTemplate());
         assertTrue(result.isSuccess());
-        assertTrue(compareYearlyGolProfileTable(expectedYearlyGOLProfileTable, (YearlyGOLProfileTable) templateArgsCaptor.getAllValues().get(0).get("TableData")));
+        assertTrue(compareTemplate(templateArgs, templateArgsCaptor.getAllValues().get(0)));
     }
 
     @Override
     protected ProjectGrantOfferService supplyServiceUnderTest() {
         return new ProjectGrantOfferServiceImpl();
+    }
+
+    private YearlyGOLProfileTable populateExpectedTable(String org1, String org2, String org3, Integer orgGPM1, Integer orgGPM2, Integer orgGPM3) {
+        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
+        organisationAndGrantPercentageMap.put(org1, orgGPM1);
+        organisationAndGrantPercentageMap.put(org2, orgGPM2);
+        organisationAndGrantPercentageMap.put(org3, orgGPM3);
+
+        Map<String, List<String>> organisationYearsMap  = new HashMap<>();
+        organisationYearsMap.put(org1, new LinkedList<>());
+        organisationYearsMap.put(org2, new LinkedList<>());
+        organisationYearsMap.put(org3, new LinkedList<>());
+
+        Map<String, List<BigDecimal>> organisationEligibleCostTotal  = new HashMap<>();
+        organisationEligibleCostTotal.put(org1, asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+        organisationEligibleCostTotal.put(org2, asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+        organisationEligibleCostTotal.put(org3, asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+
+        Map<String, List<BigDecimal>> organisationGrantAllocationTotal  = new HashMap<>();
+        organisationGrantAllocationTotal.put(org1, new LinkedList<>());
+        organisationGrantAllocationTotal.put(org2, new LinkedList<>());
+        organisationGrantAllocationTotal.put(org3, new LinkedList<>());
+
+        Map<String, BigDecimal> yearEligibleCostTotal  = new HashMap<>();
+        yearEligibleCostTotal.put(org1, new BigDecimal("1"));
+        yearEligibleCostTotal.put(org2, new BigDecimal("2"));
+        yearEligibleCostTotal.put(org3, new BigDecimal("3"));
+
+        Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
+        return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
+    }
+
+    private Map<String, Object> setupTemplateArguments(YearlyGOLProfileTable yearlyGOLProfileTable) {
+        Map<String, Object> templateArgs = new HashMap();
+        templateArgs.put("SortedOrganisations", asList("OrgLeader&amp;", "Org2&quot;", "Org3&lt;"));
+        templateArgs.put("ProjectLength", 10L);
+        templateArgs.put("ProjectTitle", "project 1");
+        templateArgs.put("LeadContact", "ab cd");
+        templateArgs.put("ApplicationNumber", 3L);
+        templateArgs.put("LeadOrgName", "OrgLeader&");
+        templateArgs.put("CompetitionName", "Test Comp<");
+        templateArgs.put("Address1", "InnovateUK>");
+        templateArgs.put("Address2", "Northstar House\"");
+        templateArgs.put("Address3", "");
+        templateArgs.put("TownCity", "Swindon&");
+        templateArgs.put("PostCode", "SN1 1AA'");
+        templateArgs.put("ProjectStartDate", ZonedDateTime.now().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
+        templateArgs.put("Date", ZonedDateTime.now().toString());
+        templateArgs.put("TableData", yearlyGOLProfileTable);
+        return templateArgs;
+    }
+
+    private boolean compareTemplate(Map<String, Object> expectedTemplateArgs, Map<String, Object> templateArgs) {
+        boolean result = true;
+        result &= expectedTemplateArgs.get("SortedOrganisations").equals(templateArgs.get("SortedOrganisations"));
+        result &= expectedTemplateArgs.get("ProjectLength").equals(templateArgs.get("ProjectLength"));
+        result &= expectedTemplateArgs.get("ProjectTitle").equals(templateArgs.get("ProjectTitle"));
+        result &= expectedTemplateArgs.get("ProjectStartDate").equals(templateArgs.get("ProjectStartDate"));
+        result &= expectedTemplateArgs.get("LeadContact").equals(templateArgs.get("LeadContact"));
+        result &= expectedTemplateArgs.get("ApplicationNumber").equals(templateArgs.get("ApplicationNumber"));
+        result &= expectedTemplateArgs.get("LeadOrgName").equals(templateArgs.get("LeadOrgName"));
+        result &= expectedTemplateArgs.get("CompetitionName").equals(templateArgs.get("CompetitionName"));
+        result &= expectedTemplateArgs.get("Address1").equals(templateArgs.get("Address1"));
+        result &= expectedTemplateArgs.get("Address2").equals(templateArgs.get("Address2"));
+        result &= expectedTemplateArgs.get("Address3").equals(templateArgs.get("Address3"));
+        result &= expectedTemplateArgs.get("TownCity").equals(templateArgs.get("TownCity"));
+        result &= expectedTemplateArgs.get("PostCode").equals(templateArgs.get("PostCode"));
+        result &= ZonedDateTime.parse((String) expectedTemplateArgs.get("Date")).isBefore(ZonedDateTime.parse((String)templateArgs.get("Date"))) || ZonedDateTime.parse((String)expectedTemplateArgs.get("Date")).isEqual(ZonedDateTime.parse((String)templateArgs.get("Date")));
+        result &= compareYearlyGolProfileTable((YearlyGOLProfileTable) expectedTemplateArgs.get("TableData"), (YearlyGOLProfileTable) templateArgs.get("TableData"));
+        return result;
     }
 
     private boolean compareYearlyGolProfileTable(YearlyGOLProfileTable a, YearlyGOLProfileTable b) {
@@ -1095,7 +818,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 result &= false;
             }
         }
-
         if(a.getOrganisationYearsMap().entrySet().size() != b.getOrganisationYearsMap().entrySet().size()) {
             return false;
         }
@@ -1141,7 +863,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 }
             }
         }
-
         if(a.getYearEligibleCostTotal().entrySet().size() != b.getYearEligibleCostTotal().entrySet().size()) {
             return false;
         }
@@ -1152,7 +873,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 result &= false;
             }
         }
-
         if(a.getYearGrantAllocationTotal().entrySet().size() != b.getYearGrantAllocationTotal().entrySet().size()) {
             return false;
         }
@@ -1165,5 +885,134 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         }
         result &= a.getEligibleCostGrandTotal() == b.getEligibleCostGrandTotal();
         return result;
+    }
+
+    private void setupGolTemplate() {
+        fileEntryResource = newFileEntryResource().
+                withFilesizeBytes(1024).
+                withMediaType("application/pdf").
+                withName("grant_offer_letter").
+                build();
+
+        createdFile = newFileEntry().build();
+        fileEntryPair = Pair.of(new File("blah"), createdFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                .append("<html dir=\"ltr\" lang=\"en\">\n")
+                .append("<head>\n")
+                .append("<meta charset=\"UTF-8\"></meta>\n")
+                .append("</head>\n")
+                .append("<body>\n")
+                .append("<p>\n")
+                .append("${LeadContact}<br/>\n")
+                .append("</p>\n")
+                .append("</body>\n")
+                .append("</html>\n").toString();
+
+        when(rendererMock.renderTemplate(eq("common/grantoffer/grant_offer_letter.html"), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
+        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
+        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
+    }
+
+    private boolean checkGolTemplate() {
+        boolean result = true;
+        result &= fileEntryResource.getMediaType().equals(fileEntryResCaptor.getAllValues().get(0).getMediaType());
+        result &= (fileEntryResource.getName() + ".pdf").equals(fileEntryResCaptor.getAllValues().get(0).getName());
+
+        String startOfGeneratedFileString = null;
+        try {
+            int n = supplierCaptor.getAllValues().get(0).get().available();
+            byte [] startOfGeneratedFile = new byte[n];
+            supplierCaptor.getAllValues().get(0).get().read(startOfGeneratedFile, 0, n <9 ? n : 9);
+            startOfGeneratedFileString = new String(startOfGeneratedFile, StandardCharsets.UTF_8);
+        }
+        catch(IOException e) {
+
+        }
+        String pdfHeader = "%PDF-1.4\n";
+        result &= pdfHeader.equals(startOfGeneratedFileString.substring(0, pdfHeader.length()));
+        return result;
+    }
+
+    private void setupOrganisationsForGrantOfferLetter(Organisation o1, Organisation o2, Organisation o3, ApplicationFinanceResource af1, ApplicationFinanceResource af2, ApplicationFinanceResource af3) {
+        Competition comp = newCompetition()
+                .withName("Test Comp<")
+                .build();
+
+        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
+                .build();
+        User u = newUser()
+                .withFirstName("ab")
+                .withLastName("cd")
+                .build();
+        ProcessRole leadAppProcessRole = newProcessRole()
+                .withOrganisationId(o1.getId())
+                .withUser(u)
+                .withRole(leadAppRole)
+                .build();
+        Application app = newApplication()
+                .withCompetition(comp)
+                .withProcessRoles(leadAppProcessRole)
+                .withId(3L)
+                .build();
+        ProjectUser pm = newProjectUser()
+                .withRole(PROJECT_MANAGER)
+                .withOrganisation(o1)
+                .build();
+
+        PartnerOrganisation po = newPartnerOrganisation()
+                .withOrganisation(o1)
+                .withLeadOrganisation(true)
+                .build();
+
+        PartnerOrganisation po2 = newPartnerOrganisation()
+                .withOrganisation(o2)
+                .withLeadOrganisation(false)
+                .build();
+
+        PartnerOrganisation po3 = newPartnerOrganisation()
+                .withOrganisation(o3)
+                .withLeadOrganisation(false)
+                .build();
+
+        Address address = newAddress()
+                .withAddressLine1("InnovateUK>")
+                .withAddressLine2("Northstar House\"")
+                .withTown("Swindon&")
+                .withPostcode("SN1 1AA'")
+                .build();
+        Project project = newProject()
+                .withOtherDocumentsApproved(ApprovalType.APPROVED)
+                .withName("project 1")
+                .withApplication(app)
+                .withPartnerOrganisations(asList(po3, po, po2))
+                .withProjectUsers(asList(pm))
+                .withDuration(10L)
+                .withAddress(address)
+                .withTargetStartDate(LocalDate.now())
+                .build();
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(af1));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(af2));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(af3));
+
+        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
+                .withTotalPercentageGrant(BigDecimal.valueOf(25))
+                .build();
+        when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
+
+        when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
+        when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
+        when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
+
+        Map<String, BigDecimal> eligibleCostTotal = new HashMap<>();
+        eligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
+        eligibleCostTotal.put(o2.getName(), new BigDecimal("2"));
+        eligibleCostTotal.put(o3.getName(), new BigDecimal("3"));
+        when(spendProfileTableCalculatorMock.createYearlyEligibleCostTotal(any(ProjectResource.class), any(Map.class), any(List.class))).thenReturn(eligibleCostTotal);
+
     }
 }

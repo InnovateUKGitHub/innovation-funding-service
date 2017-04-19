@@ -85,6 +85,22 @@ public class ExperianEndpointController {
         validationErrors.put(
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
+                        "  \"accountNumber\":\"00000012\"\n" +
+                        "}", SILBankDetails.class),
+                fromJson("{\n" +
+                        "  \"ValidationResult\": {\n" +
+                        "    \"checkPassed\": false,\n" +
+                        "    \"iban\": null,\n" +
+                        "    \"conditions\": {\n" +
+                        "      \"severity\": \"error\",\n" +
+                        "      \"code\": 4,\n" +
+                        "      \"description\": \"Account number format is incorrect\"\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}", ValidationResultWrapper.class));
+        validationErrors.put(
+                fromJson("{\n" +
+                        "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"12345673\"\n" +
                         "}\n", SILBankDetails.class),
                 fromJson("{\n" +
