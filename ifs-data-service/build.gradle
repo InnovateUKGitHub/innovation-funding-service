@@ -131,7 +131,7 @@ test {
     }
 }
 
-task appDocker(type: Docker, dependsOn: build) {
+task buildDocker(type: Docker, dependsOn: build) {
     push = false
     applicationName = 'data-service'
     dockerfile = file('src/main/docker/Dockerfile')
