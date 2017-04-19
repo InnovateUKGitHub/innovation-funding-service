@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectdetails.controller;
+package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;

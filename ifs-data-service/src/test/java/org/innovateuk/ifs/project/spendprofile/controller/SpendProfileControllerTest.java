@@ -1,10 +1,9 @@
-package org.innovateuk.ifs.project.financecheck.controller;
+package org.innovateuk.ifs.project.spendprofile.controller;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
-import org.innovateuk.ifs.project.projectdetails.controller.SpendProfileController;
 import org.innovateuk.ifs.project.resource.*;
 import org.junit.Test;
 

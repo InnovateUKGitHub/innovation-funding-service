@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financecheck.documentation;
+package org.innovateuk.ifs.project.spendprofile.documentation;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
-import org.innovateuk.ifs.project.projectdetails.controller.SpendProfileController;
+import org.innovateuk.ifs.project.spendprofile.controller.SpendProfileController;
 import org.innovateuk.ifs.project.resource.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,8 +59,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
     @Before
     public void setup() {
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
+        this.document = document("project/{method-name}", preprocessResponse(prettyPrint()));
     }
 
     @Test
