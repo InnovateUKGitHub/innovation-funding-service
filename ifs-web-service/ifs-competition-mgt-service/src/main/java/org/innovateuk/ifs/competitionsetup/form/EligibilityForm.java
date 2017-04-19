@@ -74,14 +74,10 @@ public class EligibilityForm extends CompetitionSetupForm {
 	}
 	
 	public boolean includesResearchCategory(Long id) {
-		if(this.researchCategoryId != null) {
-			for(Long cat: this.researchCategoryId) {
-				if(cat.equals(id)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return researchCategoryId != null && researchCategoryId.contains(id);
 	}
-	
+
+	public boolean includesLeadApplicantType(Long id) {
+		return leadApplicantTypes != null && leadApplicantTypes.contains(id);
+	}
 }
