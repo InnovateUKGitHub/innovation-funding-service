@@ -131,20 +131,6 @@ public class CompetitionManagementApplicationController extends BaseController {
         });
     }
 
-    @GetMapping("/{applicationId}/finances/{organisationId}")
-    public String displayApplicationFinances(@PathVariable("applicationId") final Long applicationId,
-                                             @PathVariable("competitionId") final Long competitionId,
-                                             @PathVariable("organisationId") final Long organisationId,
-                                             @ModelAttribute("form") ApplicationForm form,
-                                             Model model,
-                                             BindingResult bindingResult
-    ) throws ExecutionException, InterruptedException {
-        return competitionManagementApplicationService
-                .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) ->
-                        competitionManagementApplicationService.displayApplicationFinances(
-                                applicationId, organisationId, form, model, bindingResult, application));
-    }
-
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
     public
     @ResponseBody

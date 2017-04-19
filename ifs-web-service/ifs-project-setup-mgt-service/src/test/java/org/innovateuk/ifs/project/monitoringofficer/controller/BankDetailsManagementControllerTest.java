@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsManagementController;
+import org.innovateuk.ifs.project.bankdetails.populator.BankDetailsReviewModelPopulator;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
@@ -13,6 +14,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -51,6 +53,8 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     private List<ProjectUserResource> projectUsers;
     private BankDetailsReviewViewModel bankDetailsReviewViewModel;
     private ChangeBankDetailsViewModel notUpdatedChangeBankDetailsViewModel;
+    @Mock
+    private BankDetailsReviewModelPopulator bankDetailsReviewModelPopulator;
 
     @Before
     public void setUp(){
@@ -119,6 +123,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, project, bankDetailsResource)).thenReturn(bankDetailsReviewViewModel);
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details")).
                 andExpect(view().name("project/review-bank-details")).
                 andExpect(status().isOk()).
@@ -135,6 +140,9 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, project, bankDetailsResource)).thenReturn(bankDetailsReviewViewModel);
+        bankDetailsReviewViewModel.setApprovedManually(true);
+
         //The manualApproval flag will be 'true' in case of re-submission
         bankDetailsResource.setManualApproval(true);
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details")).
@@ -145,7 +153,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         Map<String, Object> modelMap = result.getModelAndView().getModel();
         BankDetailsReviewViewModel model = (BankDetailsReviewViewModel) modelMap.get("model");
         assertEquals(bankDetailsReviewViewModel.getBankAccountNumber(), model.getBankAccountNumber());
-        assertEquals(true, model.getApprovedManually());
+            assertEquals(true, model.getApprovedManually());
     }
 
     @Test
@@ -154,6 +162,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, project, bankDetailsResource)).thenReturn(bankDetailsReviewViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change")).
                 andExpect(view().name("project/change-bank-details")).

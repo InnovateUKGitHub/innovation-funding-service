@@ -10,6 +10,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.ApproveBankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.form.ChangeBankDetailsForm;
+import org.innovateuk.ifs.project.bankdetails.populator.BankDetailsReviewModelPopulator;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
@@ -55,6 +56,9 @@ public class BankDetailsManagementController {
 
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
+
+    @Autowired
+    private BankDetailsReviewModelPopulator bankDetailsReviewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping("/review-all-bank-details")
@@ -126,6 +130,8 @@ public class BankDetailsManagementController {
             @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
+        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        bankDetailsReviewModelPopulator.populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
         populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
@@ -201,16 +207,15 @@ public class BankDetailsManagementController {
     }
 
     private String doViewReviewBankDetails(OrganisationResource organisationResource, ProjectResource projectResource, BankDetailsResource bankDetailsResource, Model model, ApproveBankDetailsForm form) {
-        BankDetailsReviewViewModel viewModel = populateBankDetailsReviewViewModel(organisationResource, projectResource, bankDetailsResource);
-        model.addAttribute("model", viewModel);
+        model.addAttribute("model", bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, projectResource, bankDetailsResource));
         model.addAttribute(FORM_ATTR_NAME, form);
         return "project/review-bank-details";
     }
 
     private String doViewChangeBankDetailsNotUpdated(OrganisationResource organisationResource,
-                                                  ProjectResource projectResource,
-                                                  BankDetailsResource bankDetailsResource,
-                                                  Model model) {
+                                                     ProjectResource projectResource,
+                                                     BankDetailsResource bankDetailsResource,
+                                                     Model model) {
         return doViewChangeBankDetails(organisationResource, projectResource, bankDetailsResource, false, model);
     }
 
@@ -219,52 +224,10 @@ public class BankDetailsManagementController {
                                            BankDetailsResource bankDetailsResource,
                                            boolean updated,
                                            Model model) {
-        BankDetailsReviewViewModel bankDetailsReviewViewModel = populateBankDetailsReviewViewModel(organisationResource, projectResource, bankDetailsResource);
+        BankDetailsReviewViewModel bankDetailsReviewViewModel = bankDetailsReviewModelPopulator.populateBankDetailsReviewViewModel(organisationResource, projectResource, bankDetailsResource);
         ChangeBankDetailsViewModel changeBankDetailsViewModel = new ChangeBankDetailsViewModel(bankDetailsReviewViewModel.getProjectId(), bankDetailsReviewViewModel.getApplicationId(), bankDetailsReviewViewModel.getProjectName(), bankDetailsReviewViewModel.getFinanceContactName(), bankDetailsReviewViewModel.getFinanceContactEmail(), bankDetailsReviewViewModel.getFinanceContactPhoneNumber(), bankDetailsReviewViewModel.getOrganisationId(), bankDetailsReviewViewModel.getOrganisationName(), bankDetailsReviewViewModel.getRegistrationNumber(), bankDetailsReviewViewModel.getBankAccountNumber(), bankDetailsReviewViewModel.getSortCode(), bankDetailsReviewViewModel.getOrganisationAddress(), bankDetailsReviewViewModel.getVerified(), bankDetailsReviewViewModel.getCompanyNameScore(), bankDetailsReviewViewModel.getRegistrationNumberMatched(), bankDetailsReviewViewModel.getAddressScore(), bankDetailsReviewViewModel.getApproved(), bankDetailsReviewViewModel.getApprovedManually(), updated);
         model.addAttribute("model", changeBankDetailsViewModel);
         return "project/change-bank-details";
-    }
-
-    private BankDetailsReviewViewModel populateBankDetailsReviewViewModel(OrganisationResource organisation, ProjectResource project,  BankDetailsResource bankDetails){
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
-        ProjectUserResource financeContact = getOnlyElement(simpleFilter(projectUsers, pr -> pr.isFinanceContact() && organisation.getId().equals(pr.getOrganisation())));
-        return buildViewModel(project, financeContact, organisation, bankDetails);
-    }
-
-    private BankDetailsReviewViewModel buildViewModel(ProjectResource project, ProjectUserResource financeContact, OrganisationResource organisation, BankDetailsResource bankDetails){
-        return new BankDetailsReviewViewModel(
-                project.getId(),
-                project.getApplication(),
-                project.getName(),
-                financeContact.getUserName(),
-                financeContact.getEmail(),
-                financeContact.getPhoneNumber(),
-                organisation.getId(),
-                organisation.getName(),
-                organisation.getCompanyHouseNumber(),
-                bankDetails.getAccountNumber(),
-                bankDetails.getSortCode(),
-                bankDetails.getOrganisationAddress().getAddress().getAsSingleLine(),
-                bankDetails.isVerified(),
-                bankDetails.getCompanyNameScore(),
-                bankDetails.getRegistrationNumberMatched(),
-                bankDetails.getAddressScore(),
-                bankDetails.isApproved(),
-                bankDetails.isManualApproval());
-    }
-
-
-    private void populateExitingBankDetailsInForm(OrganisationResource organisation, BankDetailsResource bankDetails, ChangeBankDetailsForm form){
-        form.setOrganisationName(organisation.getName());
-        form.setRegistrationNumber(organisation.getCompanyHouseNumber());
-        form.setSortCode(bankDetails.getSortCode());
-        form.setAccountNumber(bankDetails.getAccountNumber());
-        populateAddress(form.getAddressForm(), bankDetails);
-    }
-
-    private void populateAddress(AddressForm addressForm, BankDetailsResource bankDetails){
-        addressForm.setManualAddress(true);
-        addressForm.setSelectedPostcode(bankDetails.getOrganisationAddress().getAddress());
     }
 
     private String doViewBankDetailsSummaryPage(ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary, Model model){
