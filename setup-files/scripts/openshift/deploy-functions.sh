@@ -116,7 +116,7 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/application-service:${VERSION}
 }
 
-function pushDBResetnImages() {
+function pushDBResetImages() {
     docker tag innovateuk/dbreset:${VERSION} \
         ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 
