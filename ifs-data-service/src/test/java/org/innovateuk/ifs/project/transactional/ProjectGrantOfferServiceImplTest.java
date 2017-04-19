@@ -5,7 +5,6 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -15,8 +14,6 @@ import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -35,7 +32,6 @@ import org.mockito.Captor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -55,14 +51,11 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.project.transactional.ProjectGrantOfferServiceImpl.GRANT_OFFER_LETTER_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -72,7 +65,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -94,22 +86,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private ProjectUser leadPartnerProjectUser;
     private Project project;
     private List<OrganisationResource> organisationResources;
-    private SpendProfileTableResource table;
-    private SpendProfileTableResource tableZero;
-
-    private List<BigDecimal> monthlyTotalsZero = asList(
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO) ;
-
-    private ApplicationFinanceResource applicationFinanceResourceZero = newApplicationFinanceResource().withGrantClaimPercentage(0)
-            .withApplication(456L).withOrganisation(3L)
-            .build();
-
-    private List<BigDecimal> yearlyCosts = asList(
-            BigDecimal.valueOf(500),
-            BigDecimal.valueOf(100),
-            BigDecimal.valueOf(200));
 
     private Address address;
 
@@ -135,64 +111,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Before
     public void setUp() {
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withGrantClaimPercentage(30)
-                .withApplication(456L).withOrganisation(3L)
-                .build();
-        table = new SpendProfileTableResource();
-        table.setMarkedAsComplete(true);
-        table.setMonthlyCostsPerCategoryMap(asMap(
-                1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
-                2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
-                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))));
-
-        table.setCostCategoryGroupMap(asMap(
-                LABOUR,  asList(asMap(
-                        1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
-                        2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
-                        3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31")))
-                )));
-
-        table.setEligibleCostPerCategoryMap(asMap(
-                1L, asList(new BigDecimal("30.44"), new BigDecimal("30"), new BigDecimal("40")),
-                2L, asList(new BigDecimal("70"), new BigDecimal("50.10"), new BigDecimal("60")),
-                3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("10.31"))
-        ));
-        table.setCostCategoryResourceMap(asMap(
-                1L, newCostCategoryResource().withName("Labour").build(),
-                2L, newCostCategoryResource().withName("Materials").build(),
-                3L, newCostCategoryResource().withName("Other").build()
-        ));
-        table.setMonths(asList(
-                new LocalDateResource(1, 3, 2019),new LocalDateResource(1, 4, 2019)));
-
-        tableZero = new SpendProfileTableResource();
-        tableZero.setMarkedAsComplete(true);
-        tableZero.setMonthlyCostsPerCategoryMap(asMap(
-                1L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
-                2L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
-                3L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO)));
-
-        tableZero.setCostCategoryGroupMap(asMap(
-                LABOUR,  asList(asMap(
-                        1L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
-                        2L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
-                        3L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO)
-                ))));
-
-        tableZero.setEligibleCostPerCategoryMap(asMap(
-                1L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
-                2L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO),
-                3L, asList(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO)
-        ));
-        tableZero.setCostCategoryResourceMap(asMap(
-                1L, newCostCategoryResource().withName("Labour").build(),
-                2L, newCostCategoryResource().withName("Materials").build(),
-                3L, newCostCategoryResource().withName("Other").build()
-        ));
-        tableZero.setMonths(asList(
-                new LocalDateResource(1, 3, 2019),new LocalDateResource(1, 4, 2019)));
-
         organisations = newOrganisation().withOrganisationType(RESEARCH).withName("Org1&", "Org2\"", "Org3<").build(3);
         nonAcademicUnfunded = newOrganisation().withOrganisationType(BUSINESS).withName("Org4").build();
         organisationResources = newOrganisationResource().build(4);
@@ -248,20 +166,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
                 build();
 
-        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
-                .withTotalPercentageGrant(BigDecimal.valueOf(25))
-                .build();
-
-        List<BigDecimal> monthlyTotals = asList(
-                BigDecimal.valueOf(50),
-                BigDecimal.valueOf(10),
-                BigDecimal.valueOf(20));
-
-        List<BigDecimal> yearlyCosts = asList(
-                BigDecimal.valueOf(500),
-                BigDecimal.valueOf(100),
-                BigDecimal.valueOf(200));
-
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisations.get(0).getId())).thenReturn(organisations.get(0));
         when(organisationRepositoryMock.findOne(organisations.get(1).getId())).thenReturn(organisations.get(1));
@@ -269,16 +173,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
-        when(financeUtilMock.isUsingJesFinances(RESEARCH.getOrganisationTypeId())).thenReturn(true);
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
-        when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class)))
-                .thenReturn(ServiceResult.serviceSuccess(table));
-        when(spendProfileTableCalculatorMock.calculateMonthlyTotals(table.getMonthlyCostsPerCategoryMap(),
-                table.getMonths().size())).thenReturn(monthlyTotals);
-        when(spendProfileTableCalculatorMock.calculateEligibleCostPerYear(any(ProjectResource.class), any(List.class), any(List.class))).thenReturn(yearlyCosts);
-        when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
     }
 
     @Test
@@ -560,13 +454,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResource, applicationFinanceResource, applicationFinanceResource);
 
-        YearlyGOLProfileTable expectedYearlyGOLProfileTable = populateExpectedTable("OrgLeader&amp;", "Org2&quot;", "Org3&lt;", new Integer("30"), new Integer("30"), new Integer("30"));
-        Map<String, Object> templateArgs = setupTemplateArguments(expectedYearlyGOLProfileTable);
+        Map<String, Object> templateArgs = setupTemplateArguments();
 
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
-
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
 
@@ -617,145 +507,13 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         assertTrue(result.isSuccess());
     }
 
-    @Test
-    public void testUnfundedNonAcademicPartnerNotIncludedInGrantOfferLetter() {
-        setupGolTemplate();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisations.get(0)).build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisations.get(1)).build();
-        PartnerOrganisation partnerOrganisation3 = newPartnerOrganisation().withOrganisation(organisations.get(2)).build();
-        PartnerOrganisation partnerOrganisation4 = newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build();
-
-        List<PartnerOrganisation> partnerOrganisations = new ArrayList<>();
-        partnerOrganisations.add(partnerOrganisation);
-        partnerOrganisations.add(partnerOrganisation2);
-        partnerOrganisations.add(partnerOrganisation3);
-        partnerOrganisations.add(partnerOrganisation4);
-
-        project = newProject().
-                withId(projectId).
-                withPartnerOrganisations(partnerOrganisations).
-                withAddress(address).
-                withApplication(application).
-                withProjectUsers(singletonList(leadPartnerProjectUser)).
-                build();
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), nonAcademicUnfunded.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZero));
-        when(spendProfileServiceMock.getSpendProfileTable(new ProjectOrganisationCompositeId(projectId, nonAcademicUnfunded.getId())))
-                .thenReturn(ServiceResult.serviceSuccess(tableZero));
-        when(spendProfileTableCalculatorMock.calculateMonthlyTotals(tableZero.getMonthlyCostsPerCategoryMap(),
-                tableZero.getMonths().size())).thenReturn(monthlyTotalsZero);
-
-        Map<String, BigDecimal> eligibleCostTotal = new HashMap<>();
-        eligibleCostTotal.put(organisations.get(0).getName(), new BigDecimal("1"));
-        eligibleCostTotal.put(organisations.get(1).getName(), new BigDecimal("2"));
-        eligibleCostTotal.put(organisations.get(2).getName(), new BigDecimal("3"));
-        eligibleCostTotal.put(nonAcademicUnfunded.getName(), BigDecimal.ZERO);
-        when(spendProfileTableCalculatorMock.createYearlyEligibleCostTotal(any(ProjectResource.class), any(Map.class), any(List.class))).thenReturn(eligibleCostTotal);
-
-        when(spendProfileTableCalculatorMock.calculateEligibleCostPerYear(any(ProjectResource.class), any(List.class), any(List.class))).thenReturn(yearlyCosts);
-
-        YearlyGOLProfileTable expectedYearlyGOLProfileTable = populateExpectedTable("Org1&amp;", "Org2&quot;", "Org3&lt;", new Integer("100"), new Integer("100"), new Integer("100"));//new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
-
-        service.generateGrantOfferLetter(123L, fileEntryResource);
-
-        verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
-
-        verify(projectRepositoryMock).findOne(123L);
-
-        assertTrue(compareYearlyGolProfileTable(expectedYearlyGOLProfileTable, (YearlyGOLProfileTable) templateArgsCaptor.getAllValues().get(0).get("TableData")));
-    }
-
-    @Test
-    public void testGenerateGrantOfferLetterLeadPartnerNonAcademicWithNoFunding() {
-        setupGolTemplate();
-
-        Organisation o1 = organisation(BUSINESS, "OrgLeader&");
-        Organisation o2 = organisation(BUSINESS, "Org2\"");
-        Organisation o3 = organisation(BUSINESS, "Org3<");
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withGrantClaimPercentage(30)
-                .withApplication(456L)
-                .withOrganisation(3L)
-                .build();
-
-        ApplicationFinanceResource applicationFinanceResourceZeroGrantClaim = newApplicationFinanceResource()
-                .withGrantClaimPercentage(0)
-                .withApplication(456L)
-                .withOrganisation(3L)
-                .build();
-        setupOrganisationsForGrantOfferLetter(o1, o2, o3, applicationFinanceResourceZeroGrantClaim, applicationFinanceResource, applicationFinanceResource);
-
-        YearlyGOLProfileTable expectedYearlyGOLProfileTable = populateExpectedTable("OrgLeader&amp;", "Org2&quot;", "Org3&lt;", new Integer("0"), new Integer("30"), new Integer("30"));
-
-        Map<String, Object> templateArgs = setupTemplateArguments(expectedYearlyGOLProfileTable);
-
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
-
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
-
-        Map<String, BigDecimal> eligibleCostTotal = new HashMap<>();
-        eligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
-        eligibleCostTotal.put(o2.getName(), new BigDecimal("2"));
-        eligibleCostTotal.put(o3.getName(), new BigDecimal("3"));
-        when(spendProfileTableCalculatorMock.createYearlyEligibleCostTotal(any(ProjectResource.class), any(Map.class), any(List.class))).thenReturn(eligibleCostTotal);
-
-        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-
-        verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
-        verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
-
-        assertTrue(checkGolTemplate());
-        assertTrue(result.isSuccess());
-        assertTrue(compareTemplate(templateArgs, templateArgsCaptor.getAllValues().get(0)));
-    }
-
     @Override
     protected ProjectGrantOfferService supplyServiceUnderTest() {
         return new ProjectGrantOfferServiceImpl();
     }
 
-    private YearlyGOLProfileTable populateExpectedTable(String org1, String org2, String org3, Integer orgGPM1, Integer orgGPM2, Integer orgGPM3) {
-        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
-        organisationAndGrantPercentageMap.put(org1, orgGPM1);
-        organisationAndGrantPercentageMap.put(org2, orgGPM2);
-        organisationAndGrantPercentageMap.put(org3, orgGPM3);
-
-        Map<String, List<String>> organisationYearsMap  = new HashMap<>();
-        organisationYearsMap.put(org1, new LinkedList<>());
-        organisationYearsMap.put(org2, new LinkedList<>());
-        organisationYearsMap.put(org3, new LinkedList<>());
-
-        Map<String, List<BigDecimal>> organisationEligibleCostTotal  = new HashMap<>();
-        organisationEligibleCostTotal.put(org1, asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        organisationEligibleCostTotal.put(org2, asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-        organisationEligibleCostTotal.put(org3, asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
-
-        Map<String, List<BigDecimal>> organisationGrantAllocationTotal  = new HashMap<>();
-        organisationGrantAllocationTotal.put(org1, new LinkedList<>());
-        organisationGrantAllocationTotal.put(org2, new LinkedList<>());
-        organisationGrantAllocationTotal.put(org3, new LinkedList<>());
-
-        Map<String, BigDecimal> yearEligibleCostTotal  = new HashMap<>();
-        yearEligibleCostTotal.put(org1, new BigDecimal("1"));
-        yearEligibleCostTotal.put(org2, new BigDecimal("2"));
-        yearEligibleCostTotal.put(org3, new BigDecimal("3"));
-
-        Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
-
-        Map<Long, String> orgNames = new HashMap<>();
-        orgNames.put(1L, org1);
-        orgNames.put(2L, org2);
-        orgNames.put(3L, org3);
-        return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal, orgNames);
-    }
-
-    private Map<String, Object> setupTemplateArguments(YearlyGOLProfileTable yearlyGOLProfileTable) {
+    private Map<String, Object> setupTemplateArguments() {
         Map<String, Object> templateArgs = new HashMap();
-        templateArgs.put("SortedOrganisations", asList("OrgLeader&amp;", "Org2&quot;", "Org3&lt;"));
         templateArgs.put("ProjectLength", 10L);
         templateArgs.put("ProjectTitle", "project 1");
         templateArgs.put("LeadContact", "ab cd");
@@ -769,13 +527,11 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("PostCode", "SN1 1AA'");
         templateArgs.put("ProjectStartDate", ZonedDateTime.now().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
         templateArgs.put("Date", ZonedDateTime.now().toString());
-        templateArgs.put("TableData", yearlyGOLProfileTable);
         return templateArgs;
     }
 
     private boolean compareTemplate(Map<String, Object> expectedTemplateArgs, Map<String, Object> templateArgs) {
         boolean result = true;
-        result &= expectedTemplateArgs.get("SortedOrganisations").equals(templateArgs.get("SortedOrganisations"));
         result &= expectedTemplateArgs.get("ProjectLength").equals(templateArgs.get("ProjectLength"));
         result &= expectedTemplateArgs.get("ProjectTitle").equals(templateArgs.get("ProjectTitle"));
         result &= expectedTemplateArgs.get("ProjectStartDate").equals(templateArgs.get("ProjectStartDate"));
@@ -789,88 +545,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         result &= expectedTemplateArgs.get("TownCity").equals(templateArgs.get("TownCity"));
         result &= expectedTemplateArgs.get("PostCode").equals(templateArgs.get("PostCode"));
         result &= ZonedDateTime.parse((String) expectedTemplateArgs.get("Date")).isBefore(ZonedDateTime.parse((String)templateArgs.get("Date"))) || ZonedDateTime.parse((String)expectedTemplateArgs.get("Date")).isEqual(ZonedDateTime.parse((String)templateArgs.get("Date")));
-        result &= compareYearlyGolProfileTable((YearlyGOLProfileTable) expectedTemplateArgs.get("TableData"), (YearlyGOLProfileTable) templateArgs.get("TableData"));
-        return result;
-    }
-
-    private boolean compareYearlyGolProfileTable(YearlyGOLProfileTable a, YearlyGOLProfileTable b) {
-        boolean result = true;
-        if(a.getOrganisationAndGrantPercentageMap().entrySet().size() != b.getOrganisationAndGrantPercentageMap().entrySet().size()) {
-            return false;
-        }
-        for(int i = 0; i < a.getOrganisationAndGrantPercentageMap().keySet().size(); i++) {
-            Object k = a.getOrganisationAndGrantPercentageMap().keySet().toArray()[i];
-            if(!b.getOrganisationAndGrantPercentageMap().containsKey(k) || !a.getOrganisationAndGrantPercentageMap().get(k).equals(b.getOrganisationAndGrantPercentageMap().get(k)))
-            {
-                result &= false;
-            }
-        }
-        if(a.getOrganisationYearsMap().entrySet().size() != b.getOrganisationYearsMap().entrySet().size()) {
-            return false;
-        }
-        for(int i = 0; i < a.getOrganisationYearsMap().keySet().size(); i++) {
-            Object k = a.getOrganisationYearsMap().keySet().toArray()[i];
-            if(!b.getOrganisationYearsMap().containsKey(k) || a.getOrganisationYearsMap().get(k).size() != b.getOrganisationYearsMap().get(k).size()) {
-                result &= false;
-            } else {
-                for(int j = 0; j < a.getOrganisationYearsMap().get(k).size(); j++) {
-                    if(!a.getOrganisationYearsMap().get(k).get(j).equals(b.getOrganisationYearsMap().get(k).get(j))) {
-                        result &= false;
-                    }
-                }
-            }
-        }
-        if(a.getOrganisationEligibleCostTotal().entrySet().size() != b.getOrganisationEligibleCostTotal().entrySet().size()) {
-            return false;
-        }
-        for(int i = 0; i < a.getOrganisationEligibleCostTotal().keySet().size(); i++) {
-            Object k = a.getOrganisationEligibleCostTotal().keySet().toArray()[i];
-            if(!b.getOrganisationEligibleCostTotal().containsKey(k) || a.getOrganisationEligibleCostTotal().get(k).size() != b.getOrganisationEligibleCostTotal().get(k).size()) {
-                result &= false;
-            } else {
-                for(int j = 0; j < a.getOrganisationEligibleCostTotal().get(k).size(); j++) {
-                    if(!a.getOrganisationEligibleCostTotal().get(k).get(j).equals(b.getOrganisationEligibleCostTotal().get(k).get(j))) {
-                        result &= false;
-                    }
-                }
-            }
-        }
-        if(a.getOrganisationGrantAllocationTotal().entrySet().size() != b.getOrganisationGrantAllocationTotal().entrySet().size()) {
-            return false;
-        }
-        for(int i = 0; i < a.getOrganisationGrantAllocationTotal().keySet().size(); i++) {
-            Object k = a.getOrganisationGrantAllocationTotal().keySet().toArray()[i];
-            if(!b.getOrganisationGrantAllocationTotal().containsKey(k) || a.getOrganisationGrantAllocationTotal().get(k).size() != b.getOrganisationGrantAllocationTotal().get(k).size()) {
-                result &= false;
-            } else {
-                for(int j = 0; j < a.getOrganisationGrantAllocationTotal().get(k).size(); j++) {
-                    if(!a.getOrganisationGrantAllocationTotal().get(k).get(j).equals(b.getOrganisationGrantAllocationTotal().get(k).get(j))) {
-                        result &= false;
-                    }
-                }
-            }
-        }
-        if(a.getYearEligibleCostTotal().entrySet().size() != b.getYearEligibleCostTotal().entrySet().size()) {
-            return false;
-        }
-        for(int i = 0; i < a.getYearEligibleCostTotal().keySet().size(); i++) {
-            Object k = a.getYearEligibleCostTotal().keySet().toArray()[i];
-            if(!b.getYearEligibleCostTotal().containsKey(k) || !a.getYearEligibleCostTotal().get(k).equals(b.getYearEligibleCostTotal().get(k)))
-            {
-                result &= false;
-            }
-        }
-        if(a.getYearGrantAllocationTotal().entrySet().size() != b.getYearGrantAllocationTotal().entrySet().size()) {
-            return false;
-        }
-        for(int i = 0; i < a.getYearGrantAllocationTotal().keySet().size(); i++) {
-            Object k = a.getYearGrantAllocationTotal().keySet().toArray()[i];
-            if(!b.getYearGrantAllocationTotal().containsKey(k) || !a.getYearGrantAllocationTotal().get(k).equals(b.getYearGrantAllocationTotal().get(k)))
-            {
-                result &= false;
-            }
-        }
-        result &= a.getEligibleCostGrandTotal() == b.getEligibleCostGrandTotal();
         return result;
     }
 
@@ -982,24 +656,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
 
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(af1));
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(af2));
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(af3));
-
-        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
-                .withTotalPercentageGrant(BigDecimal.valueOf(25))
-                .build();
-        when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
-
         when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
         when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
         when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
-
-        Map<String, BigDecimal> eligibleCostTotal = new HashMap<>();
-        eligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
-        eligibleCostTotal.put(o2.getName(), new BigDecimal("2"));
-        eligibleCostTotal.put(o3.getName(), new BigDecimal("3"));
-        when(spendProfileTableCalculatorMock.createYearlyEligibleCostTotal(any(ProjectResource.class), any(Map.class), any(List.class))).thenReturn(eligibleCostTotal);
 
     }
 }
