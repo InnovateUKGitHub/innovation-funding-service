@@ -74,6 +74,7 @@ then
     pushDBResetImages
 fi
 
+oc project $PROJECT ${SVC_ACCOUNT_CLAUSE}
 dbReset
 
 echo Waiting for completion
@@ -83,5 +84,5 @@ do
   sleep 5
 done
 
-[ "$(oc get -o template job dbreset  --template={{.status.succeeded}})" != 1 ] && exit -1
+[ "$(oc get -o template job dbreset --template={{.status.succeeded}})" != 1 ] && exit -1
 exit 0
