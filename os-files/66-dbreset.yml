@@ -6,23 +6,23 @@ items:
   metadata:
     name: db-config
   data:
-    DB_NAME: <<DB-NAME>>
-    DB_USER: <<DB-USER>>
-    DB_PASS: <<DB-PASS>>
-    DB_HOST: <<DB-HOST>>
+    DB_NAME: "<<DB-NAME>>"
+    DB_USER: "<<DB-USER>>"
+    DB_PASS: "<<DB-PASS>>"
+    DB_HOST: "<<DB-HOST>>"
     DB_PORT: "<<DB-PORT>>"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
     name: flyway-config
   data:
-    FLYWAY_LOCATIONS: <<FLYWAY-LOCATIONS>>
+    FLYWAY_LOCATIONS: "<<FLYWAY-LOCATIONS>>"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
     name: ldap-config
   data:
-    LDAP_HOST: <<LDAP-HOST>>
+    LDAP_HOST: "<<LDAP-HOST>>"
     LDAP_PORT: "<<LDAP-PORT>>"
     LDAP_PASS: "<<LDAP-PASS>>"
     LDAP_DOMAIN: "<<LDAP-DOMAIN>>"
@@ -41,17 +41,17 @@ items:
             imagePullPolicy: Always
             command: [ "/bin/bash", "-exec"]
             args:
-              - |
-                cat > flyway.conf <<EOF
-                flyway.url=jdbc:mysql://${DB_HOST}:${DB_PORT}
-                flyway.schemas=$DB_NAME
-                flyway.locations=$FLYWAY_LOCATIONS
-                flyway.user=$DB_USER
-                flyway.password=$DB_PASS
-                EOF
-                flyway clean
-                flyway migrate
-                . /ldap-sync-from-ifs-db.sh
+            - |
+              cat > flyway.conf <<EOF
+              flyway.url=jdbc:mysql://${DB_HOST}:${DB_PORT}
+              flyway.schemas=$DB_NAME
+              flyway.locations=$FLYWAY_LOCATIONS
+              flyway.user=$DB_USER
+              flyway.password=$DB_PASS
+              EOF
+              flyway clean
+              flyway migrate
+              . /ldap-sync-from-ifs-db.sh
             env:
             - name: DB_HOST
               valueFrom:
