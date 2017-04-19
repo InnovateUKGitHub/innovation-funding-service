@@ -17,7 +17,7 @@ function injectDBVariables() {
 
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
-    sed -i.bak "s/<<FLYWAY-LOCATIONS>>/$FLYWAY_LOCATIONS/g" os-files-tmp/*.yml
+    sed -i.bak "s_<<FLYWAY-LOCATIONS>>_${FLYWAY_LOCATIONS}_g" os-files-tmp/*.yml
 }
 
 function injectLDAPVariables() {
