@@ -3,7 +3,10 @@ package org.innovateuk.ifs.application;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.*;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
+import org.innovateuk.ifs.application.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
@@ -17,8 +20,8 @@ import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -96,16 +99,13 @@ public class ApplicationController {
     private FormInputResponseService formInputResponseService;
 
     @Autowired
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
-
-    @Autowired
-    private FormInputService formInputService;
 
     @Autowired
     private UserRestService userRestService;
@@ -167,7 +167,7 @@ public class ApplicationController {
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      HttpServletRequest request) {
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 

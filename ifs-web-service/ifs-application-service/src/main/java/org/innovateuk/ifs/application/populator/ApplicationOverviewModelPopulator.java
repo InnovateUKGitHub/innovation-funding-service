@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -45,26 +46,36 @@ public class ApplicationOverviewModelPopulator {
 
     @Autowired
     private ApplicationService applicationService;
+
     @Autowired
     private CompetitionService competitionService;
+
     @Autowired
     private ProcessRoleService processRoleService;
+
     @Autowired
     private OrganisationService organisationService;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private QuestionService questionService;
+
     @Autowired
     private InviteRestService inviteRestService;
+
     @Autowired
     private SectionService sectionService;
+
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
+
     @Autowired
     private ProjectService projectService;
+
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
     
     public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
         ApplicationResource application = applicationService.getById(applicationId);
@@ -93,7 +104,7 @@ public class ApplicationOverviewModelPopulator {
 
         FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
-        model.addAttribute("researchCategories", categoryService.getResearchCategories());
+        model.addAttribute("researchCategories", categoryRestService.getResearchCategories().getSuccessObjectOrThrowException());
     }
     
     private void addSections(Model model, CompetitionResource competition) {

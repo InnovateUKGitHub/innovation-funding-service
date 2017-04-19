@@ -21,8 +21,9 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -38,7 +39,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -74,7 +74,10 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private FormInputResponseService formInputResponseService;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputResponseRestService formInputResponseRestService;
+
+    @Autowired
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private FileEntryRestService fileEntryRestService;
@@ -116,7 +119,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     public String displayApplicationOverview(UserResource user, long applicationId, long competitionId, ApplicationForm form, String origin, MultiValueMap<String, String> queryParams, Model model, ApplicationResource application) {
         form.setAdminMode(true);
 
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
 
         // so the mode is viewonly
         application.enableViewMode();
@@ -145,7 +148,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     public String displayApplicationFinances(long applicationId, long organisationId, ApplicationForm form, Model model, BindingResult bindingResult, ApplicationResource application) {
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
         UserResource impersonatingUser;
         try {
             impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
@@ -211,7 +214,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
         final List<AppendixResource> appendices = responses.stream().filter(fir -> fir.getFileEntry() != null).
                 map(fir -> {
-                    FormInputResource formInputResource = formInputService.getOne(fir.getFormInput());
+                    FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccessObjectOrThrowException();
                     FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccessObject();
                     String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
                     return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);

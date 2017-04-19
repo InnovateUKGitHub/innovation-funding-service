@@ -54,6 +54,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationStatus.SUBMITTE
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -117,13 +118,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.setupFinances();
         this.setupInvites();
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }
 
     @Test
     public void testApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
-        Map<Long, Set<Long>> mappedSections = new HashMap();
+        Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -157,7 +159,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testNonAcceptedInvitationsAffectPendingAssignableUsersAndPendingOrganisationNames() throws Exception {
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
-        Map<Long, Set<Long>> mappedSections = new HashMap();
+        Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -194,7 +196,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testPendingOrganisationNamesOmitsEmptyOrganisationName() throws Exception {
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
-        Map<Long, Set<Long>> mappedSections = new HashMap();
+        Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -228,7 +230,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testPendingOrganisationNamesOmitsOrganisationNamesThatAreAlreadyCollaborators() throws Exception {
         ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
-        Map<Long, Set<Long>> mappedSections = new HashMap();
+        Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
         when(applicationService.getById(app.getId())).thenReturn(app);
@@ -318,7 +320,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getById(questionId)).thenReturn(questionResource);
         when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
         when(applicationService.getById(applicationId)).thenReturn(applicationResource);
-        when(formInputResponseService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(responseResources);
+        when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(restSuccess(responseResources));
         when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
                 .thenReturn(restSuccess(aggregateResource));
 

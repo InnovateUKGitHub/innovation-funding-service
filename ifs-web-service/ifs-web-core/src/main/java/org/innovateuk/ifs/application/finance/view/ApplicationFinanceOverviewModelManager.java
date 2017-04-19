@@ -13,7 +13,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 //TODO - INFUND-7482 - remove usages of Model model
@@ -32,7 +33,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
     private QuestionService questionService;
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -41,13 +42,13 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
     public ApplicationFinanceOverviewModelManager(ApplicationFinanceRestService applicationFinanceRestService, SectionService sectionService,
                                                   FinanceService financeService, QuestionService questionService,
                                                   FileEntryRestService fileEntryRestService,
-                                                  FormInputService formInputService) {
+                                                  FormInputRestService formInputRestService) {
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.financeService = financeService;
         this.questionService = questionService;
         this.fileEntryRestService = fileEntryRestService;
-        this.formInputService = formInputService;
+        this.formInputRestService = formInputRestService;
     }
 
     public void addFinanceDetails(Model model, Long competitionId, Long applicationId, Optional<Long> organisationId) {
@@ -92,7 +93,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputService.findApplicationInputsByCompetition(competitionId);
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObjectOrThrowException();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
@@ -151,7 +152,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputService.findApplicationInputsByCompetition(competitionId);
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObjectOrThrowException();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())

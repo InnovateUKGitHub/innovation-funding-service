@@ -4,13 +4,7 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
-import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
@@ -28,9 +22,6 @@ import java.util.Optional;
  */
 @Service
 public class ProjectFinanceServiceImpl implements ProjectFinanceService {
-
-    @Autowired
-    private ProjectService projectService;
 
     @Autowired
     private ProjectFinanceRestService projectFinanceRestService;

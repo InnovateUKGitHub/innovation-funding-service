@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -225,10 +226,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         assertFalse(form.isVisible());
 
-        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
-        inOrder.verify(categoryServiceMock).getInnovationSectors();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -433,10 +434,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(1, form.getInvites().size());
         assertEquals(expectedNewUserRow, form.getInvites().get(0));
 
-        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
-        inOrder.verify(categoryServiceMock).getInnovationSectors();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -478,10 +479,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(1, form.getInvites().size());
         assertEquals(expectedNewUserRow, form.getInvites().get(0));
 
-        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
-        inOrder.verify(categoryServiceMock).getInnovationSectors();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -514,10 +515,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(1, form.getInvites().size());
         assertEquals(expectedInviteRow, form.getInvites().get(0));
 
-        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
-        inOrder.verify(categoryServiceMock).getInnovationSectors();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -587,7 +588,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
 
         when(competitionInviteRestService.getCreatedInvites(competition.getId(), page)).thenReturn(restSuccess(expectedPageResource));
-        when(categoryServiceMock.getInnovationSectors()).thenReturn(emptyList());
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("inviteNewUsers", "")
@@ -602,9 +603,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         assertEquals("Please enter an innovation sector and area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
 
-        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
-        inOrder.verify(categoryServiceMock).getInnovationSectors();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -617,7 +618,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
 
         when(competitionInviteRestService.getCreatedInvites(competition.getId(), page)).thenReturn(restSuccess(expectedPageResource));
-        when(categoryServiceMock.getInnovationSectors()).thenReturn(emptyList());
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("inviteNewUsers", "")
@@ -631,9 +632,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         assertEquals("Please add at least one person to invite.", bindingResult.getFieldError("invites").getDefaultMessage());
 
-        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
-        inOrder.verify(categoryServiceMock).getInnovationSectors();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -646,7 +647,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
 
         when(competitionInviteRestService.getCreatedInvites(competition.getId(), page)).thenReturn(restSuccess(expectedPageResource));
-        when(categoryServiceMock.getInnovationSectors()).thenReturn(emptyList());
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("inviteNewUsers", "")
@@ -663,9 +664,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals("Please enter a name.", bindingResult.getFieldError("invites[0].name").getDefaultMessage());
         assertEquals("Please enter an email address.", bindingResult.getFieldError("invites[0].email").getDefaultMessage());
 
-        InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
-        inOrder.verify(categoryServiceMock).getInnovationSectors();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -744,7 +745,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private String formatInnovationAreas(List<InnovationAreaResource> innovationAreas) {
         return innovationAreas == null ? EMPTY : innovationAreas.stream()
-                .map(i -> i.getName())
+                .map(CategoryResource::getName)
                 .collect(joining(", "));
     }
 
@@ -801,6 +802,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build(1);
 
         when(competitionInviteRestService.getCreatedInvites(competition.getId(), page)).thenReturn(restSuccess(assessorCreatedInvitePageResource));
-        when(categoryServiceMock.getInnovationSectors()).thenReturn(innovationSectors);
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
     }
 }

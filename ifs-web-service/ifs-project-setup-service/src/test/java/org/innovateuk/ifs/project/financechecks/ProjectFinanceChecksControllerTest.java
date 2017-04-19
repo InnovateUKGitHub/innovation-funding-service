@@ -17,7 +17,6 @@ import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.finance.view.ProjectFinanceFormHandler;
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
@@ -47,6 +46,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
@@ -82,9 +82,6 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
     @Mock
     private Model model;
-
-    @Mock
-    private ProjectFinanceRowService financeRowService;
 
     @Mock
     private ProjectFinanceFormHandler projectFinanceFormHandler;
@@ -123,8 +120,8 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
                 .build();
 
         // save actions should always succeed.
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
 
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);

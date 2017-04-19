@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -27,13 +27,13 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
@@ -106,7 +106,7 @@ public class FinanceChecksEligibilityController {
     private FinanceHandler financeHandler;
 
     @Autowired
-    private ProjectFinanceRowService financeRowService;
+    private ProjectFinanceRowRestService projectFinanceRowRestService;
 
     @Autowired
     private FinanceUtil financeUtil;
@@ -201,7 +201,7 @@ public class FinanceChecksEligibilityController {
     @RequestMapping(value = "/remove_cost/{costId}") // Note: request type not explicit as it is used by existing ajax calls which do GET
     public @ResponseBody
     String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
-        financeRowService.delete(costId);
+        projectFinanceRowRestService.delete(costId).getSuccessObjectOrThrowException();
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);

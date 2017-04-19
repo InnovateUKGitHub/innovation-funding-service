@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static javax.persistence.EnumType.STRING;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.

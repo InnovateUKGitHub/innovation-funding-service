@@ -194,7 +194,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
         when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(viability);
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
-        //when(organisationSizeService.getOrganisationSizes()).thenReturn(new ArrayList<>());
+        when(organisationDetailsRestService.getOrganisationSizes()).thenReturn(restSuccess(new ArrayList<>()));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(organisationDetailsRestService.getHeadCount(456L, 2L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
         when(organisationDetailsRestService.getTurnover(456L, 2L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));

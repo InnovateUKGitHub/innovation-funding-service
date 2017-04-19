@@ -15,8 +15,9 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
@@ -28,6 +29,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 
 /**
  * Managing all the view attributes for the finances
@@ -51,7 +53,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private OrganisationService organisationService;
     
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
     
     @Autowired
     private ApplicationService applicationService;
@@ -153,7 +155,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     }
 
     private FinanceRowType costTypeForQuestion(QuestionResource question) {
-    	List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
+    	List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException();
     	if(formInputs.isEmpty()) {
     		return null;
     	}

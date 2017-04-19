@@ -1,31 +1,19 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.populator.OpenApplicationFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileEntryRestService;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +42,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 public class CompetitionManagementApplicationController extends BaseController {
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
@@ -167,14 +155,14 @@ public class CompetitionManagementApplicationController extends BaseController {
         final UserResource user = getLoggedUser(request);
         ProcessRoleResource processRole;
         if (user.hasRole(UserRoleType.COMP_ADMIN)) {
-            long processRoleId = formInputResponseService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
+            long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
             processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         }
 
-        final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 

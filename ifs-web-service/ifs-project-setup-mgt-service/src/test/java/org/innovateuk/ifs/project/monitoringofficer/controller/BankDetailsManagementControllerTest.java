@@ -2,12 +2,12 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsManagementController;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -21,10 +21,10 @@ import java.util.Map;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -116,7 +116,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     @Test
     public void canViewBankDetailsWhenBankDetailsSubmitted() throws Exception {
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
-        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details")).
@@ -132,7 +132,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     @Test
     public void canViewBankDetailsWhenBankDetailsReSubmitted() throws Exception {
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
-        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         //The manualApproval flag will be 'true' in case of re-submission
@@ -152,7 +152,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     public void canViewBankDetailsChangeForm() throws Exception {
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change")).
@@ -169,12 +169,12 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     public void canUpdateAccountDetails() throws Exception {
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(bankDetailsService.updateBankDetails(project.getId(), updatedBankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsRestService.updateBankDetails(project.getId(), updatedBankDetailsResource)).thenReturn(restSuccess());
         when(organisationService.updateNameAndRegistration(organisationResource)).thenReturn(organisationResource);
 
-        MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
+        mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param("organisationName", "Vitruvius Stonework Limited").
                 param("registrationNumber", "60674010").
@@ -187,10 +187,9 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details")).
-                andReturn();
+                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details"));
 
-        verify(bankDetailsService).updateBankDetails(project.getId(), updatedBankDetailsResource);
+        verify(bankDetailsRestService).updateBankDetails(project.getId(), updatedBankDetailsResource);
         verify(organisationService).updateNameAndRegistration(organisationResource);
     }
 
@@ -198,12 +197,12 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     public void canUpdateBankAddress() throws Exception {
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(bankDetailsService.updateBankDetails(project.getId(), updatedAddressBankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsRestService.updateBankDetails(project.getId(), updatedAddressBankDetailsResource)).thenReturn(restSuccess());
         when(organisationService.updateNameAndRegistration(organisationResource)).thenReturn(organisationResource);
 
-        MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
+        mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param("organisationName", "Vitruvius Stonework Limited").
                 param("registrationNumber", "60674010").
@@ -216,10 +215,9 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details")).
-                andReturn();
+                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details"));
 
-        verify(bankDetailsService).updateBankDetails(project.getId(), updatedAddressBankDetailsResource);
+        verify(bankDetailsRestService).updateBankDetails(project.getId(), updatedAddressBankDetailsResource);
         verify(organisationService).updateNameAndRegistration(organisationResource);
     }
 
@@ -227,12 +225,12 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     public void canUpdateOrganisationDetails() throws Exception {
         when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(bankDetailsService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResource);
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(bankDetailsService.updateBankDetails(project.getId(), notUpdatedBankDetailsResource)).thenReturn(serviceSuccess());
+        when(bankDetailsRestService.updateBankDetails(project.getId(), notUpdatedBankDetailsResource)).thenReturn(restSuccess());
         when(organisationService.updateNameAndRegistration(updatedOrganisationResource)).thenReturn(updatedOrganisationResource);
 
-        MvcResult result = mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
+        mockMvc.perform(post("/project/" + project.getId() + "/organisation/" + organisationResource.getId() + "/review-bank-details/change").
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param("organisationName", "Vitruvius Stonework").
                 param("registrationNumber", "60674010").
@@ -245,10 +243,9 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 param("addressForm.selectedPostcode.county", "Cheshire").
                 param("addressForm.selectedPostcode.postcode", "CH64 3RU")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details")).
-                andReturn();
+                andExpect(view().name("redirect:/project/" + project.getId() +"/organisation/" + organisationResource.getId() + "/review-bank-details"));
 
-        verify(bankDetailsService).updateBankDetails(any(Long.class), any(BankDetailsResource.class));
+        verify(bankDetailsRestService).updateBankDetails(any(Long.class), any(BankDetailsResource.class));
         verify(organisationService).updateNameAndRegistration(updatedOrganisationResource);
     }
 
@@ -256,7 +253,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     public void testViewPartnerBankDetails() throws  Exception {
         Long projectId = 123L;
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().build();
-        when(bankDetailsService.getBankDetailsByProject(projectId)).thenReturn(bankDetailsStatusSummary);
+        when(bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)).thenReturn(restSuccess(bankDetailsStatusSummary));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/review-all-bank-details")).andExpect(status().isOk()).andExpect(view().name("project/bank-details-status")).andReturn();
         assertEquals(bankDetailsStatusSummary, result.getModelAndView().getModel().get("model"));
     }
