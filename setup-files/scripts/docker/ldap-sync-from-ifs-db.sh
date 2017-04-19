@@ -60,7 +60,7 @@ addUserToShibboleth() {
 
   uid=$(executeMySQLCommand "select uid from user where email='$email';")
 
-  echo "dn: uid=$uid,$domain"
+  echo "dn: uid=$uid,$LDAP_DOMAIN"
   echo "uid: $uid"
   echo "mail: $email"
   echo "sn:: IA=="

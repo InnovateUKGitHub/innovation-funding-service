@@ -48,8 +48,8 @@ items:
                 flyway.locations=$FLYWAY_LOCATIONS
                 flyway.user=$DB_USER
                 flyway.password=$DB_PASS
-                flyway.jarDirs=/
                 EOF
+                sleep infinity
                 flyway clean
                 flyway migrate
                 . /ldap-sync-from-ifs-db.sh
