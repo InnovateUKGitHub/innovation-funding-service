@@ -8,10 +8,10 @@ ENV HTTP_PORT=9080 \
     SP_DOMAIN=ifs.local-dev \
     IDP_DOMAIN=idp \
     IDP_PORT=8443 \
-    TRUSTED_IP \
-    PROXY_CERTIFICATE \
-    PROXY_KEY \
-    PROXY_CA_CERTIFICATE
+    TRUSTED_IP=@auth_service_trusted_ip@ \
+    PROXY_CERTIFICATE=@auth_sp_proxy_certificate@ \
+    PROXY_KEY=@auth_sp_proxy_key@ \
+    PROXY_CA_CERTIFICATE=@auth_sp_proxy_ca_certificate@
 
 WORKDIR /usr/local/bin
 
@@ -24,10 +24,10 @@ RUN apt-get update --fix-missing && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
 
 # put certificates in place \
-  mkdir /etc/apache2/certs && chown -R root:www-data /etc/apache2/certs && chmod -R 640 /etc/apache2/certs && \
-  echo -e "$PROXY_CERTIFICATE" > /etc/apache2/certs/server.crt && \
-  echo -e "$PROXY_KEY" > /etc/apache2/certs/server.crt && \
-  echo -e "$PROXY_CA_CERTIFICATE" > /etc/apache2/certs/DigiCertCA.crt && \
+  mkdir /etc/apache2/certs && \
+  echo "$PROXY_CERTIFICATE" > /etc/apache2/certs/server.crt && \
+  echo "$PROXY_KEY" > /etc/apache2/certs/server.key && \
+  echo "$PROXY_CA_CERTIFICATE" > /etc/apache2/certs/DigiCertCA.crt && \
 
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
@@ -35,25 +35,8 @@ RUN apt-get update --fix-missing && \
   sed -i -e "s/Listen 80/Listen $HTTP_PORT/" -e "s/Listen 443/Listen $HTTPS_PORT/" /etc/apache2/ports.conf && \
   mv /usr/local/files/apache2/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
 
-# run apache as its own user \
-  chgrp -R 0 /etc/apache2 /var/cache/apache2 /run/lock/apache2 && \
-  chmod -R g+rw /etc/apache2 /var/cache/apache2 /run/lock/apache2 && \
-
-# configure shibboleth module
-  mv /usr/local/files/sp/* /etc/shibboleth/ && chmod -R 640 /etc/shibboleth/ && \
-  mkdir /var/www/html/Logout &&  mv /usr/local/files/apache2/index.html /var/www/html/Logout/ && \
-  mkdir /var/run/shibboleth && chmod -R 640 /var/run/shibboleth/ && \
-  sed -i "s#\/\/ifs-local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
-  sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml && \
-  sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/shibboleth2.xml /etc/shibboleth/metadata.xml /var/www/html/Logout/index.html && \
-  sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
-
-# run shibboleth sp as its own user (same as apache)
-  chgrp -R 0 /etc/shibboleth /var/www/html && \
-  chmod -R g+rw /etc/shibboleth /var/www/html && \
-
 # put holding pages in place. A dedicated container is probably a better idea \
-  mv /usr/local/files/apache2/locking /var/www/html/ && chown -R root:www-data /var/www/html/locking && chmod -R 640 /var/www/html/locking && \
+  mv /usr/local/files/apache2/locking /var/www/html/ && \
   mv /usr/local/files/scripts/* /usr/local/bin/ && \
 
 # configure ifs virtual host \
@@ -61,8 +44,30 @@ RUN apt-get update --fix-missing && \
 
 # put static files in place \
   mkdir -p /var/www/html/files && \
-  mv /usr/local/files/files/* /var/www/html/files/ && chown root:www-data /var/www/html/files && chmod -R 640 /var/www/html/files && \
+  mv /usr/local/files/files/* /var/www/html/files/ && \
+
+# run apache as its own user \
+  mkdir -p /var/run/apache2 && \
+  chown -R www-data:0 /etc/apache2 /var/cache/apache2 /run/lock/apache2 /var/run/apache2 /var/www/html/ && \
+  chmod -R u=rwX,g=rwX,o= /etc/apache2 /var/cache/apache2 /run/lock/apache2 /var/www/html/ && \
+
+# configure shibboleth module
+  mv /usr/local/files/sp/* /etc/shibboleth/ && \
+  mkdir /var/www/html/Logout &&  mv /usr/local/files/apache2/index.html /var/www/html/Logout/ && \
+  mkdir /var/run/shibboleth && \
+  sed -i "s#\/\/ifs-local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
+  sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml && \
+  sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/shibboleth2.xml /etc/shibboleth/metadata.xml /var/www/html/Logout/index.html && \
+  sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
+
+# run shibboleth sp as its own user (same as apache)
+  mkdir -p /var/run/shibboleth && \
+  chown -R www-data:0 /etc/shibboleth /var/www/html/Logout /var/run/shibboleth && \
+  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /var/www/html/Logout /var/run/shibboleth && \
 
   rm -Rf /usr/local/files/
 
 ENTRYPOINT [ "run-shibboleth-sp.sh" ]
+
+HEALTHCHECK --interval=15s --timeout=8s \
+  CMD curl --connect-timeout 5 -m 5 -k -f https://localhost:$HTTPS_PORT/Shibboleth.sso/Metadata || exit 1
