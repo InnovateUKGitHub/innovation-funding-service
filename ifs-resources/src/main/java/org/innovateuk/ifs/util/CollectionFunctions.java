@@ -57,6 +57,17 @@ public final class CollectionFunctions {
         return doCombineLists(lists);
     }
 
+    public static <T> Predicate<T> and(Predicate<? super T>... predicates){
+        return t -> {
+            for (Predicate<? super T> predicate : predicates){
+                if (!predicate.test(t)){
+                    return false;
+                }
+            }
+            return true;
+        };
+    }
+
     private static <T> List<T> doCombineLists(List<T>... lists) {
         List<T> combinedList = new ArrayList<>();
 
