@@ -34,6 +34,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<InnovationAreaResource> getInnovationAreasBySector(long sectorId) {
-        return categoryRestService.getInnovationAreasBySector(sectorId).getSuccessObjectOrThrowException();
+
+        // zero is the Open sector so all innovation areas are relevant
+        if (sectorId == 0) {
+            return categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+        } else {
+            return categoryRestService.getInnovationAreasBySector(sectorId).getSuccessObjectOrThrowException();
+        }
     }
 }
