@@ -3,12 +3,10 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
-import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.grantofferletter.populator.ProjectGrantOfferLetterViewModelPopulator;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +21,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-import static java.util.function.Function.identity;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static java.util.Collections.singletonList;
 /**
  * Controller for the grant offer letter
  **/
@@ -44,6 +41,9 @@ public class ProjectGrantOfferLetterController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectGrantOfferLetterViewModelPopulator grantOfferLetterViewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
@@ -148,37 +148,9 @@ public class ProjectGrantOfferLetterController {
 
 
     private String createGrantOfferLetterPage(Long projectId, Model model, UserResource loggedInUser, ProjectGrantOfferLetterForm form) {
-        ProjectGrantOfferLetterViewModel viewModel = populateGrantOfferLetterViewModel(projectId, loggedInUser);
-        model.addAttribute("model", viewModel);
+        model.addAttribute("model", grantOfferLetterViewModelPopulator.populateGrantOfferLetterViewModel(projectId, loggedInUser));
         model.addAttribute("form", form);
         return BASE_DIR + "/" + TEMPLATE_NAME;
-    }
-
-    private ProjectGrantOfferLetterViewModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
-        ProjectResource project = projectService.getById(projectId);
-        boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
-
-        Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
-
-        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGrantOfferFileDetails(projectId);
-
-        Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
-
-        Boolean grantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
-
-        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
-
-        boolean isGrantOfferLetterSent = projectService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);
-
-        return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
-                leadPartner,
-                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
-                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                project.getOfferSubmittedDate(),
-                grantOfferLetterApproved,
-                isProjectManager,
-		isGrantOfferLetterSent);
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
