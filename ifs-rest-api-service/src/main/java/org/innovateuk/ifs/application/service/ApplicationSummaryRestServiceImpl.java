@@ -54,7 +54,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
 	@Override
 	public RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter) {
-		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/inelgible";
+		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/ineligible";
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		if (filter != null) {
 			params.put("filter", singletonList(filter));
