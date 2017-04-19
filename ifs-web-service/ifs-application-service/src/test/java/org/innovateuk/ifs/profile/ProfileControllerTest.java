@@ -187,7 +187,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     public void userServiceSaveMethodIsCalledWhenSubmittingValidDetailsForm() throws Exception {
 
         when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname",
-                "Mrs", "0987654321", "MALE", 2L,"NO"))
+                "Mrs", "0987654321", "MALE", 2L,"NO", false))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
                 .param("title", Mrs.toString())
@@ -197,6 +197,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("gender", Gender.MALE.toString())
                 .param("ethnicity", "2")
                 .param("disability", Disability.NO.toString())
+                .param("allowMarketingEmails", Boolean.FALSE.toString())
 
         );
 
@@ -209,7 +210,8 @@ public class ProfileControllerTest extends BaseUnitTest {
                 eq("0987654321"),
                 any(),
                 any(),
-                any());
+                any(),
+                eq(false));
     }
 
     @Test
@@ -233,7 +235,8 @@ public class ProfileControllerTest extends BaseUnitTest {
                 isA(String.class),
                 isA(String.class),
                 isA(Long.class),
-                isA(String.class));
+                isA(String.class),
+                isA(Boolean.class));
     }
 
     @Test
@@ -244,7 +247,8 @@ public class ProfileControllerTest extends BaseUnitTest {
                 eq(user.getPhoneNumber()),
                 anyString(),
                 anyLong(),
-                anyString()))
+                anyString(),
+                anyBoolean()))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
                 .param("title", user.getTitle().name())
@@ -254,7 +258,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("gender", user.getGender().name())
                 .param("ethnicity", user.getEthnicity().toString())
                 .param("disability", user.getDisability().name())
-
+                .param("allowMarketingEmails", Boolean.FALSE.toString())
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("profile/user-profile"));
@@ -270,6 +274,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("gender", "")
                 .param("ethnicity", "")
                 .param("disability", "")
+                .param("allowMarketingEmails", Boolean.FALSE.toString())
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("profile/edit-user-profile"));
@@ -280,7 +285,7 @@ public class ProfileControllerTest extends BaseUnitTest {
 
         Error error = new Error("objectName", singletonList("fieldName"), BAD_REQUEST);
         when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), anyString(),
-                eq(user.getPhoneNumber()), anyString(), anyLong(), anyString()))
+                eq(user.getPhoneNumber()), anyString(), anyLong(), anyString(), anyBoolean()))
                 .thenReturn(ServiceResult.serviceFailure(error));
 
         mockMvc.perform(post("/profile/edit")
@@ -291,7 +296,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("gender", user.getGender().name())
                 .param("ethnicity", user.getEthnicity().toString())
                 .param("disability", user.getDisability().name())
-
+                .param("allowMarketingEmails", Boolean.FALSE.toString())
         )
                 .andExpect(model().hasErrors());
     }

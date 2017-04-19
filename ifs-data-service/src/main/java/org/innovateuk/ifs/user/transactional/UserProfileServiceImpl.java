@@ -246,6 +246,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         existingUserResource.setGender(updatedUserResource.getGender());
         existingUserResource.setDisability(updatedUserResource.getDisability());
         existingUserResource.setEthnicity(updatedUserResource.getEthnicity());
+        existingUserResource.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }
