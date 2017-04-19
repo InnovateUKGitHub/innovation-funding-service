@@ -1,0 +1,51 @@
+FROM debian:jessie-slim
+
+LABEL maintainer "infrastructure@orangebus.co.uk"
+
+ENV LDAP_PORT=8389 \
+    LDAP_SSL_PORT=8636 \
+    LDAP_BASE_DN="dc=nodomain" \
+    LDAP_PASSWORD=@auth_ldap_password@ \
+    DEBIAN_FRONTEND=noninteractive
+
+COPY scripts/* /usr/local/bin/
+WORKDIR /usr/local/bin
+
+RUN apt-get update --fix-missing && \
+
+# preconfigure openldap \
+  echo "slapd slapd/password1 password $LDAP_PASSWORD" | debconf-set-selections && \
+  echo "slapd slapd/password2 password $LDAP_PASSWORD" | debconf-set-selections && \
+  echo "slapd slapd/internal/adminpw password $LDAP_PASSWORD" | debconf-set-selections && \
+  echo "slapd slapd/internal/generated_adminpw password $LDAP_PASSWORD" | debconf-set-selections && \
+
+# install openldap \
+  apt-get -y install slapd ldap-utils && \
+  apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
+
+# run openldap as its own user \
+  chown -R openldap:0 /etc/ldap /var/lib/ldap /var/run/slapd && \
+  chmod -R g+rw /etc/ldap /var/lib/ldap /var/run/slapd && \
+
+  /usr/sbin/slapd -h "ldap:/// ldapi:///" -g openldap -u openldap -F /etc/ldap/slapd.d && \
+  sleep 3 && \
+
+# configure password policy \
+  ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/ppolicy.ldif && \
+  ldapadd -Y EXTERNAL -H ldapi:/// -f ppolicymod.ldif && \
+  ldapadd -Y EXTERNAL -H ldapi:/// -f ppolicy.ldif && \
+  ldapadd -H ldapi:/// -f ppolicy_ou.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
+  ldapadd -H ldapi:/// -f ppolicy_cn.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
+  ldapmodify -H ldapi:/// -f ppolicy_cn_attribs.ldif -D cn=admin,$LDAP_BASE_DN -w $LDAP_PASSWORD && \
+
+# install dev tools and test ldap entries \
+RUN apt-get -y install grep mysql-client net-tools rsync && \
+  apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
+  /usr/sbin/slapadd -c -l testentries.ldif && \
+
+  rm -f ppolicy*.ldif
+
+ENTRYPOINT [ "run-openldap.sh" ]
+
+HEALTHCHECK --interval=10s --timeout=5s \
+  CMD ldapsearch -l 3 -h localhost -p $LDAP_PORT -b $LDAP_BASE_DN -x -LLL -s base || exit 1
