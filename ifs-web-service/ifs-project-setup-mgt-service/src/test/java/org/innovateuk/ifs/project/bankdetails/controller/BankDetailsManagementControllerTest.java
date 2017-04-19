@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.project.monitoringofficer.controller;
+package org.innovateuk.ifs.project.bankdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsManagementController;
 import org.innovateuk.ifs.project.bankdetails.populator.BankDetailsReviewModelPopulator;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;

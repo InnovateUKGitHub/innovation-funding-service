@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.project.monitoringofficer;
+package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.monitoringofficer.controller.ProjectMonitoringOfficerController;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -28,7 +27,7 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
         when(projectService.getById(123L)).thenReturn(project);
-        when(projectService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.of(monitoringOfficer));
+        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.of(monitoringOfficer));
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("project/monitoring-officer")).
@@ -52,7 +51,7 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
         ProjectResource project = newProjectResource().withId(123L).withApplication(345L).build();
 
         when(projectService.getById(123L)).thenReturn(project);
-        when(projectService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.empty());
+        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("project/monitoring-officer")).
