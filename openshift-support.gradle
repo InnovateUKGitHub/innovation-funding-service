@@ -10,6 +10,11 @@ task osDeployRemote(type:Exec) {
     args = [openshiftEnv, "remote", project.version]
 }
 
+task dbResetSysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
 task osDeployLocal(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local"]
