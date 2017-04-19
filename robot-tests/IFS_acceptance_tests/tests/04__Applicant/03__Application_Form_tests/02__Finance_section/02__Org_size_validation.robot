@@ -60,7 +60,7 @@ User sees warning that the funding section will be reset
 Medium org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
     [Tags]    HappyPath
-    When the user clicks the button/link   jQuery=button:contains("Edit your organisation")
+    When the user clicks the button/link   jQuery=button:contains("Edit")
     And the user marks their organisation as    ${MEDIUM_ORGANISATION_SIZE}
 
 Funding section shows as incomplete
@@ -100,7 +100,7 @@ User still sees warning that the funding section will be reset
 Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
     [Tags]    HappyPath
-    When the user clicks the button/link   jQuery=button:contains("Edit your organisation")
+    When the user clicks the button/link   jQuery=button:contains("Edit")
     And the user marks their organisation as    ${LARGE_ORGANISATION_SIZE}
 
 Funding section shows as incomplete again
@@ -165,4 +165,4 @@ the funding section has been reset including funding level
 
 the user marks the 'your funding' section as incomplete again
     the user clicks the button/link    link=Your funding
-    the user clicks the button/link    jQuery=button:contains("Edit your funding")
+    the user clicks the button/link    jQuery=button:contains("Edit")
