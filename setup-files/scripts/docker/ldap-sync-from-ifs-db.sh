@@ -55,10 +55,9 @@ executeMySQLCommand() {
 }
 
 addUserToShibboleth() {
-
-  email=$1
-
-  uid=$(executeMySQLCommand "select uid from user where email='$email';")
+  IFS=$'\t' read -r -a array <<< "$1"
+  uid="${array[0]}"
+  email="${array[1]}"
 
   echo "dn: uid=$uid,$LDAP_DOMAIN"
   echo "uid: $uid"
@@ -78,7 +77,8 @@ addUserToShibboleth() {
 
 wipeLdapUsers
 
-for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where status = 'ACTIVE' and system_user = 0;")
+IFS=$'\n'
+for u in $(executeMySQLCommand "select uid,email from user where status = 'ACTIVE' and system_user = 0;")
 do
   addUserToShibboleth $u 
 done | ldapadd -H ldap://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
