@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
+import org.innovateuk.ifs.project.otherdocuments.populator.ProjectOtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -42,8 +43,9 @@ import static java.util.Collections.singletonList;
 @RequestMapping("/project/{projectId}/partner/documents")
 public class ProjectOtherDocumentsController {
 
-
     private static final String FORM_ATTR = "form";
+    @Autowired
+    ProjectOtherDocumentsViewModelPopulator otherDocumentsViewModel;
 
     @Autowired
     private ProjectService projectService;
@@ -61,7 +63,7 @@ public class ProjectOtherDocumentsController {
     @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+        ProjectOtherDocumentsViewModel viewModel = otherDocumentsViewModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
 
@@ -73,7 +75,7 @@ public class ProjectOtherDocumentsController {
     public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+        ProjectOtherDocumentsViewModel viewModel = otherDocumentsViewModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("readOnlyView", true);
@@ -180,7 +182,7 @@ public class ProjectOtherDocumentsController {
     }
 
     private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+        ProjectOtherDocumentsViewModel viewModel = otherDocumentsViewModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
@@ -195,33 +197,6 @@ public class ProjectOtherDocumentsController {
         Supplier<String> failureView = () -> doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
 
         return validationHandler.performActionOrBindErrorsToField(fieldName, failureView, successView, actionFn);
-    }
-
-    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId, UserResource loggedInUser) {
-
-        ProjectResource project = projectService.getById(projectId);
-        Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);
-        Optional<FileEntryResource> exploitationPlan = projectService.getExploitationPlanFileDetails(projectId);
-        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
-
-        List<String> partnerOrganisationNames = simpleMap(partnerOrganisations, OrganisationResource::getName);
-
-        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
-
-        boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId);
-
-        // TODO DW - these rejection messages to be covered in other stories
-        List<String> rejectionReasons = emptyList();
-
-        boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
-        ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();
-
-        return new ProjectOtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
-                collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
-                exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
-                partnerOrganisationNames, rejectionReasons,
-                isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
-                isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
