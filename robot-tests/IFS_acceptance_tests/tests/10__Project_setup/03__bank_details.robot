@@ -16,6 +16,9 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-6482 Extra validation message showing on fields
 ...
 ...               INFUND-8276 Content: Bank Details: should not say "each"
+...
+...               INFUND-8688 Experian response - Error message if wrong bank details are submitted
+
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -127,16 +130,27 @@ Bank account postcode lookup
     And the address fields should be filled
 
 Bank details experian validations
-    [Documentation]    INFUND-3010
+    [Documentation]    INFUND-3010, INFUND-8688
     [Tags]    Experian
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     When the user submits the bank account details    12345673    000003
     Then the user should see the text in the page    Bank account details are incorrect, please check and try again
+    When the user submits the bank account details    00000123    000004 
+    Then the user should see the text in the page    Bank details cannot be validated. 
+    And the user should see the text in the page     please check your account number 
+    And the user should see the text in the page     please check your sort code 
 
 Bank details submission
-    [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109
+    [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
+    Given the user enters text to a text field        name=accountNumber    00000123
+    When the user enters text to a text field         name=sortCode    000004
+    Then the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link               jquery=button:contains("Submit")
+    Then the user should see the text in the page     Bank details cannot be validated. 
+    And the user should see the text in the page      please check your account number 
+    And the user should see the text in the page      please check your sort code 
     When the user enters text to a text field         name=accountNumber    12345677
     And the user enters text to a text field          name=sortCode    000004
     When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
@@ -156,7 +170,7 @@ Bank details submission
     Then the user should see the element              jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action
 
 Bank details for Academic
-    [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018
+    [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018, INFUND-8688
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
@@ -168,6 +182,15 @@ Bank details for Academic
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
+    When the user enters text to a text field       name=accountNumber    00000123
+    Then the user enters text to a text field       name=sortCode    000004
+    And the user clicks the button/link             jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    Then the user clicks the button/link            jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link             jquery=button:contains("Submit")
+    Then the user should see the text in the page   Bank details cannot be validated. 
+    And the user should see the text in the page    please check your account number 
+    And the user should see the text in the page    please check your sort code 
     When the user enters text to a text field      name=accountNumber  51406795
     And the user enters text to a text field       name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -203,7 +226,7 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(7).status          # GOL
 
 Bank details for non-lead partner
-    [Documentation]    INFUND-3010, INFUND-6018
+    [Documentation]    INFUND-3010, INFUND-6018, INFUND-8688
     [Tags]    HappyPath
     #TODO pending due to INFUND-6090  Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
@@ -217,6 +240,15 @@ Bank details for non-lead partner
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
+    When the user enters text to a text field      name=accountNumber    00000123
+    Then the user enters text to a text field      name=sortCode    000004
+    And the user clicks the button/link            jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    Then the user clicks the button/link            jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
+    And the user clicks the button/link            jquery=button:contains("Submit")
+    Then the user should see the text in the page  Bank details cannot be validated. 
+    And the user should see the text in the page   please check your account number 
+    And the user should see the text in the page   please check your sort code 
     When the user enters text to a text field      name=accountNumber  51406795
     Then the user enters text to a text field      name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -266,7 +298,6 @@ Project Finance can see the progress of partners bank details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
     Then the user clicks the button/link            link=Bank details
     [Teardown]  the user clicks the button/link     link=Projects in setup
-
 
 Project Finance can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903
