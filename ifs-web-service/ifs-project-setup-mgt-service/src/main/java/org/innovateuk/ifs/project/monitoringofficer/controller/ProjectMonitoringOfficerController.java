@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.monitoringofficer.controller;
+package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
@@ -9,8 +9,8 @@ import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.monitoringofficer.form.ProjectMonitoringOfficerForm;
-import org.innovateuk.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.form.ProjectMonitoringOfficerForm;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;

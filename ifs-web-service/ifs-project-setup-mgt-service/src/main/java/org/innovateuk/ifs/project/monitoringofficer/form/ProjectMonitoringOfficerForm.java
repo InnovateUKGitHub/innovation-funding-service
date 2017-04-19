@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.monitoringofficer.form;
+package org.innovateuk.ifs.project.monitoringofficer.form;
 
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
