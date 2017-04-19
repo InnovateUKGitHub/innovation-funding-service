@@ -77,7 +77,7 @@ public class EligibilityModelPopulatorTest {
 		assertArrayEquals(ResearchParticipationAmount.values(), (Object[])model.asMap().get("researchParticipationAmounts"));
 		assertArrayEquals(CollaborationLevel.values(), (Object[])model.asMap().get("collaborationLevels"));
 		assertEquals(researchCategories, model.asMap().get("researchCategories"));
-		assertEquals("Business, Research", model.asMap().get("leadApplicantTypesText"));
+		assertEquals("Business", model.asMap().get("leadApplicantTypesText"));
         assertEquals("formattedcategories", model.asMap().get("researchCategoriesFormatted"));
 	}
 }
