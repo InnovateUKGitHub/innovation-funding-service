@@ -2,6 +2,8 @@
 
 set -e
 
+env
+
 PROJECT=$1
 TARGET=$2
 VERSION=$3
