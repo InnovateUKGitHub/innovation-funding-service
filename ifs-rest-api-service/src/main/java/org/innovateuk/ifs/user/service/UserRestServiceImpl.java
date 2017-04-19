@@ -159,6 +159,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(!StringUtils.isEmpty(disability)) {
             user.setDisability(Disability.valueOf(disability));
         }
+        user.setAllowMarketingEmails(allowMarketingEmails);
 
         String url;
         if(competitionId != null){
