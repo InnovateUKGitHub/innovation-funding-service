@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.UserResource;
 
 /**
- * A Service that covers basic operations concerning Users
+ * A Service that covers basic operations concerning CRM data
  */
 public interface CrmService {
 
+    @NotSecured(value = "Anyone can update crm", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> syncCrmContact(final long userId);
 }

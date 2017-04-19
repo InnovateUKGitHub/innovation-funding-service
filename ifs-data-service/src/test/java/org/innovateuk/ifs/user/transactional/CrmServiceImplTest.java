@@ -12,14 +12,14 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +50,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         Organisation organisation = newOrganisation().build();
         when(userRepository.findOne(userId)).thenReturn(user);
         when(organisationRepository.findByUsersId(userId)).thenReturn(asList(organisation));
-        when(silCrmEndpoint.updateContact(any())).thenReturn(serviceSuccess());
+        when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.syncCrmContact(userId);
 
@@ -59,10 +59,11 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
 
     }
 
-    private Consumer<SilContact> matchSilContact(User user, Organisation organisation) {
+    private Predicate<SilContact> matchSilContact(User user, Organisation organisation) {
         return silContact -> {
-            assertThat(silContact.getSrcSysContactId(), equalTo(user.getId()));
-            assertThat(silContact.getOrganisation().getSrcSysOrgId(), equalTo(organisation.getId()));
+            assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
+            assertThat(silContact.getOrganisation().getSrcSysOrgId(), equalTo(String.valueOf(organisation.getId())));
+            return true;
         };
     }
 }

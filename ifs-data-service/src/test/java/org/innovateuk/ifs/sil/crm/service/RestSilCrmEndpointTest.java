@@ -39,7 +39,7 @@ public class RestSilCrmEndpointTest extends BaseUnitTestMocksTest {
         adaptor = factory.silAdaptor();
         ReflectionTestUtils.setField(service, "adaptor", adaptor);
         ReflectionTestUtils.setField(service, "silRestServiceUrl", "http://sil.com");
-        ReflectionTestUtils.setField(service, "silSendmailPath", "/silstub/sendmail");
+        ReflectionTestUtils.setField(service, "silCrmContacts", "/silstub/contacts");
         adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
         adaptor.setRestTemplate(mockRestTemplate);
     }
