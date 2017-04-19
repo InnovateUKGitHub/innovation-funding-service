@@ -14,12 +14,14 @@ public class AssessmentOverviewSectionViewModel {
     private String name;
     private String guidance;
     private List<AssessmentOverviewQuestionViewModel> questions;
+    private boolean finance;
 
-    public AssessmentOverviewSectionViewModel(long id, String name, String guidance, List<AssessmentOverviewQuestionViewModel> questions) {
+    public AssessmentOverviewSectionViewModel(long id, String name, String guidance, List<AssessmentOverviewQuestionViewModel> questions, boolean finance) {
         this.id = id;
         this.name = name;
         this.guidance = guidance;
         this.questions = questions;
+        this.finance = finance;
     }
 
     public long getId() {
@@ -38,6 +40,10 @@ public class AssessmentOverviewSectionViewModel {
         return questions;
     }
 
+    public boolean isFinance() {
+        return finance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -52,6 +58,7 @@ public class AssessmentOverviewSectionViewModel {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(finance, that.finance)
                 .append(name, that.name)
                 .append(guidance, that.guidance)
                 .append(questions, that.questions)
@@ -65,6 +72,7 @@ public class AssessmentOverviewSectionViewModel {
                 .append(name)
                 .append(guidance)
                 .append(questions)
+                .append(finance)
                 .toHashCode();
     }
 }

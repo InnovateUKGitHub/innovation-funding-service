@@ -14,17 +14,16 @@
         <!-- Link back -->
         <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
 
-        <div class="page-title">
-            <th:block th:insert="fragments/elements :: competition-title (competition=${model.competition})" />
-            <h1 class="heading-xlarge" th:text="${model.section.type.text}"></h1>
-        </div>
-
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">There was a problem submitting the public content.</h2>
-
             <ul class="error-summary-list">
                 <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
             </ul>
+        </div>
+
+        <div class="page-title">
+            <th:block th:insert="fragments/elements :: competition-title (competition=${model.competition})" />
+            <h1 class="heading-xlarge" th:text="${model.section.type.text}"></h1>
         </div>
 
         <!-- sections -->

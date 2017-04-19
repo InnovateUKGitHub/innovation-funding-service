@@ -89,7 +89,7 @@
     </form>
 
     <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
-    <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div> Print your application</a>
+    <a class="button button-clear" th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><span class="icon icon-print"></span> Print your application</a>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />

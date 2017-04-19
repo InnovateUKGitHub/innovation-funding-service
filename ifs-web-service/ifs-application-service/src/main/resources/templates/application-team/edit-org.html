@@ -13,6 +13,13 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
 
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+                <h2 class="heading-medium error-summary-heading">We are unable to send the invites out</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
             <div class="page-title">
                 <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="|Update ${model.organisationName}|">Update Empire Ltd</h1>
@@ -28,15 +35,6 @@
                   actionUrl=${model.inviteOrganisationId} ?
                   @{/application/{applicationId}/team/update(applicationId=${model.applicationId},inviteOrganisation=${model.inviteOrganisationId})} :
                   @{/application/{applicationId}/team/update(applicationId=${model.applicationId},organisation=${model.organisationId})}">
-
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                    <h2 class="heading-medium error-summary-heading">
-                        We are unable to send the invites out:
-                    </h2>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                    </ul>
-                </div>
 
                 <table id="applicant-table" class="table-overflow">
                     <thead>

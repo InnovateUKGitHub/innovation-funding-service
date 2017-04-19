@@ -45,9 +45,6 @@ public class CompetitionManagementInviteAssessorsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
@@ -71,11 +68,9 @@ public class CompetitionManagementInviteAssessorsController {
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
                        @RequestParam MultiValueMap<String, String> queryParams) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
 
-        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competition, page, filterForm.getInnovationArea(), originQuery));
+        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/find";
@@ -123,11 +118,9 @@ public class CompetitionManagementInviteAssessorsController {
             form.getInvites().add(new InviteNewAssessorsRowForm());
         }
 
-        CompetitionResource competition = competitionService.getById(competitionId);
-
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams);
 
-        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition, page, originQuery));
+        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/invite";
@@ -207,12 +200,10 @@ public class CompetitionManagementInviteAssessorsController {
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam MultiValueMap<String, String> queryParams) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams);
 
         model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(
-                competition,
+                competitionId,
                 page,
                 filterForm.getInnovationArea(),
                 filterForm.getStatus(),
