@@ -8,6 +8,9 @@ ENV JAVA_OPTS -Xmx300m
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 VOLUME /tmp
 
+RUN adduser -D -u 1000 ifs
+USER ifs
+
 ADD @app_name@-@version@.jar app.jar
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 
