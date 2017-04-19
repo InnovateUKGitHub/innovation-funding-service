@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationProcessWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -35,6 +36,10 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,6 +106,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationMapper applicationMapper;
     @Autowired
     private NotificationSender notificationSender;
+    @Autowired
+    private ApplicationProcessWorkflowHandler applicationProcessWorkflowHandler;
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
+
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -122,11 +132,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
-        Application application = new Application();
-        application.setName(applicationName);
+        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED);
+
+        Application application = new Application(applicationName, createdActivityState);
         application.setStartDate(null);
 
-        application.setApplicationStatus(ApplicationStatus.CREATED);
         application.setDurationInMonths(3L);
         application.setCompetition(competition);
 
@@ -373,10 +383,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
-                                                                      final ApplicationStatus status) {
+    public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
         return find(application(id)).andOnSuccess((application) -> {
-            application.setApplicationStatus(status);
+            applicationProcessWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
@@ -464,8 +473,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<ApplicationStatus> applicationStatuses) {
-        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIn(competitionId, applicationStatuses);
+    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
+        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
         return serviceSuccess(applicationResults);
     }
 
@@ -476,7 +486,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
-        List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))
+        List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId,
+                simpleMap(Arrays.asList(ApplicationState.CREATED), ApplicationState::getBackingState))
                 .stream()
                 .flatMap(x -> x.getProcessRoles().stream())
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)

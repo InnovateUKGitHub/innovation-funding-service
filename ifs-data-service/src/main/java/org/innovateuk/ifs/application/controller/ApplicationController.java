@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -52,12 +52,12 @@ public class ApplicationController {
         return applicationService.getProgressPercentageByApplicationId(applicationId).toGetResponse();
     }
 
-    @PutMapping("/updateApplicationStatus")
-    public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
-                                                    @RequestParam("status") final ApplicationStatus status) {
-        ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, status);
+    @PutMapping("/updateApplicationState")
+    public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
+                                                    @RequestParam("state") final ApplicationState state) {
+        ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationState(id, state);
 
-        if (updateStatusResult.isSuccess() && ApplicationStatus.SUBMITTED == status) {
+        if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {
             applicationService.saveApplicationSubmitDateTime(id, ZonedDateTime.now());
             applicationService.sendNotificationApplicationSubmitted(id);
         }

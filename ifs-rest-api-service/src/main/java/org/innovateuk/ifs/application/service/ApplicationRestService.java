@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
@@ -18,7 +18,7 @@ public interface ApplicationRestService {
     RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
     RestResult<Void> saveApplication(ApplicationResource application);
     RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName);
-    RestResult<Void> updateApplicationStatus(Long applicationId, ApplicationStatus status);
+    RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state);
     Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
