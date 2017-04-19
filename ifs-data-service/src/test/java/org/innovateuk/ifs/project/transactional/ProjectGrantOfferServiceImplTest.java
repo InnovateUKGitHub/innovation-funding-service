@@ -706,14 +706,13 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
 
-<<<<<<< HEAD
+
         when(financeUtilMock.isUsingJesFinances(BUSINESS.getId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZeroGrantClaim));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
-=======
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
->>>>>>> development
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getId())).thenReturn(false);
+
 
         Map<String, BigDecimal> eligibleCostTotal = new HashMap<>();
         eligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
