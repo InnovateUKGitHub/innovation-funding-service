@@ -245,7 +245,7 @@ the user edits the MO details
     The user enters text to a text field    id=lastName    Harper
     The user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
     The user enters text to a text field    id=phoneNumber    08549731414
-    the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    the user clicks the button/link    jQuery=.button[type="submit"]:contains("Assign Monitoring Officer")
     the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
 
 the user can see the changed MO details
