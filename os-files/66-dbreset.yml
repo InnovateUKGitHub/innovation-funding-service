@@ -49,7 +49,6 @@ items:
                 flyway.user=$DB_USER
                 flyway.password=$DB_PASS
                 EOF
-                sleep infinity
                 flyway clean
                 flyway migrate
                 . /ldap-sync-from-ifs-db.sh
