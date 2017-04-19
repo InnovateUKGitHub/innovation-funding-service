@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.profile.populator;
 
-import org.innovateuk.ifs.affiliation.service.AffiliationService;
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
@@ -19,10 +19,10 @@ import java.util.Optional;
 public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDeclarationBasePopulator {
 
     @Autowired
-    private AffiliationService affiliationService;
+    private AffiliationRestService affiliationRestService;
 
     public AssessorProfileDeclarationViewModel populateModel(UserResource user) {
-        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationService.getUserAffiliations(user.getId()));
+        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccessObjectOrThrowException());
 
         Optional<AffiliationResource> principalEmployer = getPrincipalEmployer(affiliations);
 

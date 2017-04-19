@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.profile.populator;
 
-import org.innovateuk.ifs.affiliation.service.AffiliationService;
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
@@ -25,10 +25,10 @@ import static org.innovateuk.ifs.user.resource.AffiliationType.PERSONAL;
 public class AssessorProfileDeclarationFormPopulator extends AssessorProfileDeclarationBasePopulator {
 
     @Autowired
-    private AffiliationService affiliationService;
+    private AffiliationRestService affiliationRestService;
 
     public AssessorProfileDeclarationForm populateForm(AssessorProfileDeclarationForm form, UserResource user) {
-        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationService.getUserAffiliations(user.getId()));
+        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccessObjectOrThrowException());
 
         form.setPrincipalEmployer(getPrincipalEmployer(affiliations).map(AffiliationResource::getOrganisation).orElse(null));
         form.setRole(getPrincipalEmployer(affiliations).map(AffiliationResource::getPosition).orElse(null));

@@ -59,9 +59,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Mock
     private CompetitionParticipantRestService competitionParticipantRestService;
 
-    @Mock
-    private ProfileRestService profileRestService;
-
     @Override
     protected AssessorDashboardController supplyControllerUnderTest() {
         return new AssessorDashboardController();

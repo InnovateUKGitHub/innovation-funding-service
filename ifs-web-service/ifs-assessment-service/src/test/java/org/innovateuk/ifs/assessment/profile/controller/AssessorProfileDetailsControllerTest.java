@@ -24,6 +24,8 @@ import org.springframework.validation.Validator;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -62,8 +64,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         UserResource user = buildTestUser();
         setLoggedInUser(user);
 
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
-        when(profileService.getUserProfile(user.getId())).thenReturn(buildTestUserProfile());
+        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(buildTestEthnicity())));
+        when(profileRestService.getUserProfile(user.getId())).thenReturn(restSuccess(buildTestUserProfile()));
 
         mockMvc.perform(get("/profile/details"))
                 .andExpect(status().isOk())
@@ -76,8 +78,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         setLoggedInUser(user);
         UserProfileResource userProfile = buildTestUserProfile();
 
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
-        when(profileService.getUserProfile(user.getId())).thenReturn(userProfile);
+        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(buildTestEthnicity())));
+        when(profileRestService.getUserProfile(user.getId())).thenReturn(restSuccess(userProfile));
 
         MvcResult result = mockMvc.perform(get("/profile/details/edit"))
                 .andExpect(status().isOk())
@@ -101,8 +103,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         UserProfileResource profileDetails = buildTestUserProfile();
 
-        when(profileService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
+        when(profileRestService.updateUserProfile(user.getId(), profileDetails)).thenReturn(restSuccess());
+        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(buildTestEthnicity())));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -128,7 +130,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(profileDetails.getDisability(), form.getDisability());
         assertEquals(profileDetails.getAddress().getPostcode(), form.getAddressForm().getPostcode());
 
-        verify(profileService).updateUserProfile(user.getId(), profileDetails);
+        verify(profileRestService).updateUserProfile(user.getId(), profileDetails);
     }
 
     @Test
@@ -162,8 +164,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                         .build())
                 .build();
 
-        when(profileService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(profileRestService.updateUserProfile(user.getId(), profileDetails)).thenReturn(restSuccess());
+        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(ethnicity)));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -191,7 +193,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(form.getAddressForm().getTown(), town);
         assertEquals(form.getAddressForm().getPostcode(), postcode);
 
-        verify(profileService).updateUserProfile(user.getId(), profileDetails);
+        verify(profileRestService).updateUserProfile(user.getId(), profileDetails);
     }
 
     @Test
@@ -201,7 +203,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         UserProfileResource profileDetails = buildTestUserProfile();
 
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
+        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(buildTestEthnicity())));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -246,7 +248,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
     public void submitDetails_emptyRequest() throws Exception {
         UserResource user = buildTestUser();
         setLoggedInUser(user);
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
+        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(buildTestEthnicity())));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED))

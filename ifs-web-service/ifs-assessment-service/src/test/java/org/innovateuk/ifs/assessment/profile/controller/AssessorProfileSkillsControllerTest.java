@@ -9,7 +9,9 @@ import org.innovateuk.ifs.assessment.profile.controller.AssessorProfileSkillsCon
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileEditSkillsViewModel;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -28,7 +30,9 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
@@ -81,7 +85,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("profile/skills"));
 
-        verify(profileService, only()).getProfileSkills(userResource.getId());
+        verify(profileRestService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test
@@ -107,7 +111,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("profile/skills-edit"));
 
-        verify(profileService, only()).getProfileSkills(userResource.getId());
+        verify(profileRestService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test
@@ -115,7 +119,12 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = String.join(" ", nCopies(100, "skill"));
 
-        when(profileService.updateProfileSkills(1L, businessType, skillAreas)).thenReturn(serviceSuccess());
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
+                .withBusinessType(businessType)
+                .withSkillsAreas(skillAreas)
+                .build();
+
+        when(profileRestService.updateProfileSkills(1L, profileSkillsEditResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -124,7 +133,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile/skills"));
 
-        verify(profileService, only()).updateProfileSkills(1L, businessType, skillAreas);
+        verify(profileRestService, only()).updateProfileSkills(1L, profileSkillsEditResource);
     }
 
     @Test
@@ -165,7 +174,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("skillAreas").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("skillAreas").getArguments()[1]);
 
-        verify(profileService, only()).getProfileSkills(userResource.getId());
+        verify(profileRestService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test
@@ -206,7 +215,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("skillAreas").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("skillAreas").getArguments()[1]);
 
-        verify(profileService, only()).getProfileSkills(userResource.getId());
+        verify(profileRestService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test
@@ -244,7 +253,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         assertTrue(bindingResult.hasFieldErrors("assessorType"));
         assertEquals("Please select an assessor type.", bindingResult.getFieldError("assessorType").getDefaultMessage());
 
-        verify(profileService, only()).getProfileSkills(userResource.getId());
+        verify(profileRestService, only()).getProfileSkills(userResource.getId());
     }
 
     private List<InnovationAreaResource> setUpInnovationAreasForSector(String sectorName, String... innovationAreaNames) {
@@ -258,12 +267,12 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
-        when(profileService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
+        when(profileRestService.getProfileSkills(user.getId())).thenReturn(restSuccess(newProfileSkillsResource()
                 .withUser(user.getId())
                 .withInnovationAreas(innovationAreaResources)
                 .withBusinessType(businessType)
                 .withSkillsAreas(skillAreas)
-                .build());
+                .build()));
 
         return user;
     }

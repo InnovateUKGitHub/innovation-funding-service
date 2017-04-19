@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileAgreementModelPopulator;
-import org.innovateuk.ifs.profile.service.ProfileService;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -23,19 +23,19 @@ public class AssessorProfileAgreementController {
     private AssessorProfileAgreementModelPopulator assessorProfileAgreementModelPopulator;
 
     @Autowired
-    private ProfileService profileService;
+    private ProfileRestService profileRestService;
 
     @GetMapping
     public String getAgreement(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProfileAgreementResource profileAgreementResource = profileService.getProfileAgreement(loggedInUser.getId());
+        ProfileAgreementResource profileAgreementResource = profileRestService.getProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
         return doViewAgreement(model, profileAgreementResource);
     }
 
     @PostMapping
     public String submitAgreement(Model model,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        profileService.updateProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        profileRestService.updateProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
         return "redirect:/assessor/dashboard";
     }
 

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
-import org.innovateuk.ifs.affiliation.service.AffiliationService;
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 public class AssessorProfileDeclarationController {
 
     @Autowired
-    private AffiliationService affiliationService;
+    private AffiliationRestService affiliationRestService;
 
     @Autowired
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
@@ -82,7 +82,7 @@ public class AssessorProfileDeclarationController {
         validateLists(form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> updateResult = affiliationService.updateUserAffiliations(loggedInUser.getId(), populateAffiliationsFromForm(form));
+            ServiceResult<Void> updateResult = affiliationRestService.updateUserAffiliations(loggedInUser.getId(), populateAffiliationsFromForm(form)).toServiceResult();
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> "redirect:/profile/declaration");
         });
