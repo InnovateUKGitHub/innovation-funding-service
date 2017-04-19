@@ -36,73 +36,73 @@ items:
         name: dbreset
       spec:
         containers:
-          - name: dbreset
-            image: innovateuk/dbreset:1.0-SNAPSHOT
-            imagePullPolicy: Always
-            command: [ "/bin/bash", "-exec" ]
-            args:
-            - |
-              cat > flyway.conf <<EOF
-              flyway.url=jdbc:mysql://${DB_HOST}:${DB_PORT}
-              flyway.schemas=$DB_NAME
-              flyway.locations=$FLYWAY_LOCATIONS
-              flyway.user=$DB_USER
-              flyway.password=$DB_PASS
-              EOF
-              flyway clean
-              flyway migrate
-              flyway info
-              flyway validate
-              . /ldap-sync-from-ifs-db.sh
-            env:
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config
-                  key: DB_HOST
-            - name: DB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config
-                  key: DB_PORT
-            - name: DB_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config
-                  key: DB_NAME
-            - name: DB_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                configMapKeyRef:
-                  name: db-config
-                  key: DB_PASS
-            - name: LDAP_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_HOST
-            - name: LDAP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_PORT
-            - name: LDAP_PASS
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_PASS
-            - name: LDAP_DOMAIN
-              valueFrom:
-                configMapKeyRef:
-                  name: ldap-config
-                  key: LDAP_DOMAIN
-            - name: FLYWAY_LOCATIONS
-              valueFrom:
-                configMapKeyRef:
-                  name: flyway-config
-                  key: FLYWAY_LOCATIONS
+        - name: dbreset
+          image: innovateuk/dbreset:1.0-SNAPSHOT
+          imagePullPolicy: Always
+          command: [ "/bin/bash", "-exec" ]
+          args:
+          - |
+            cat > flyway.conf <<EOF
+            flyway.url=jdbc:mysql://${DB_HOST}:${DB_PORT}
+            flyway.schemas=$DB_NAME
+            flyway.locations=$FLYWAY_LOCATIONS
+            flyway.user=$DB_USER
+            flyway.password=$DB_PASS
+            EOF
+            flyway clean
+            flyway migrate
+            flyway info
+            flyway validate
+            . /ldap-sync-from-ifs-db.sh
+          env:
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: DB_HOST
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: DB_PORT
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: DB_NAME
+          - name: DB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: DB_USER
+          - name: DB_PASS
+            valueFrom:
+              configMapKeyRef:
+                name: db-config
+                key: DB_PASS
+          - name: LDAP_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: ldap-config
+                key: LDAP_HOST
+          - name: LDAP_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: ldap-config
+                key: LDAP_PORT
+          - name: LDAP_PASS
+            valueFrom:
+              configMapKeyRef:
+                name: ldap-config
+                key: LDAP_PASS
+          - name: LDAP_DOMAIN
+            valueFrom:
+              configMapKeyRef:
+                name: ldap-config
+                key: LDAP_DOMAIN
+          - name: FLYWAY_LOCATIONS
+            valueFrom:
+              configMapKeyRef:
+                name: flyway-config
+                key: FLYWAY_LOCATIONS
         restartPolicy: Never
