@@ -1,0 +1,23 @@
+# define the appenders
+
+log4j.appender.shibd_log=org.apache.log4j.ConsoleAppender
+log4j.appender.shibd_log.Target=System.out
+log4j.appender.shibd_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.shibd_log.layout.ConversionPattern=%d{%Y-%m-%d %H:%M:%S} %p %c %x: %m%n
+
+log4j.appender.warn_log=org.apache.log4j.ConsoleAppender
+log4j.appender.warn_log.Target=System.out
+log4j.appender.warn_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.warn_log.layout.ConversionPattern=%d{%Y-%m-%d %H:%M:%S} %p %c %x: %m%n
+log4j.appender.warn_log.threshold=WARN
+
+log4j.appender.tran_log=org.apache.log4j.ConsoleAppender
+log4j.appender.tran_log.Target=System.out
+log4j.appender.tran_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.tran_log.layout.ConversionPattern=%d{%Y-%m-%d %H:%M:%S} %p %c %x: %m%n
+
+log4j.appender.sig_log=org.apache.log4j.ConsoleAppender
+log4j.appender.sig_log.Target=System.out
+log4j.appender.sig_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.sig_log.layout.ConversionPattern=%m
+
