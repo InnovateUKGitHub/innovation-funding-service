@@ -345,7 +345,8 @@
 
         <div class="assign-team">
             <!--/* Reassign question */-->
-            <select name="assign_question" class="prog-menu">
+            <label th:for="'assign'+${question.id}">Assign question to</label>
+            <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">
                 <th:block th:each="assignableUser : ${assignableUsers}">
                     <option th:value="${question.id}+'_'+${assignableUser.getId()}"
                             th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.id == assignableUser.getUser()))}"
