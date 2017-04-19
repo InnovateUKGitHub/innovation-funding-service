@@ -15,6 +15,11 @@ function injectDBVariables() {
     sed -i.bak "s/<<DB-PORT>>/$DB_PORT/g" os-files-tmp/*.yml
 }
 
+function injectFlywayVariables() {
+    [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
+    sed -i.bak "s/<<FLYWAY-LOCATIONS>>/$FLYWAY_LOCATIONS/g" os-files-tmp/*.yml
+}
+
 function injectLDAPVariables() {
     if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
     LDAP_PORT=${LDAP_PORT:-389}

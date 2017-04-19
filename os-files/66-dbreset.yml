@@ -14,6 +14,12 @@ items:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
+    name: flyway-config
+  data:
+    FLYWAY_LOCATIONS: <<FLYWAY-LOCATIONS>>
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
     name: ldap-config
   data:
     LDAP_HOST: <<LDAP-HOST>>
@@ -39,7 +45,7 @@ items:
                 cat > flyway.conf <<EOF
                 flyway.url=jdbc:mysql://${DB_HOST}:${DB_PORT}
                 flyway.schemas=$DB_NAME
-                flyway.locations=filesystem:db/migration,filesystem:db/setup,filesystem:db/webtest
+                flyway.locations=$FLYWAY_LOCATIONS
                 flyway.user=$DB_USER
                 flyway.password=$DB_PASS
                 flyway.jarDirs=/
@@ -93,4 +99,9 @@ items:
                 configMapKeyRef:
                   name: ldap-config
                   key: LDAP_DOMAIN
+            - name: FLYWAY_LOCATIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: flyway-config
+                  key: FLYWAY_LOCATIONS
         restartPolicy: Never

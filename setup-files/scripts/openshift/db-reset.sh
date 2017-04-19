@@ -64,6 +64,7 @@ cloneConfig
 tailorAppInstance
 injectDBVariables
 injectLDAPVariables
+injectFlywayVariables
 
 if [[ (${TARGET} != "local") ]]
 then
