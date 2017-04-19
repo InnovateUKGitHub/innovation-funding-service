@@ -102,13 +102,10 @@ public class UserServiceImpl implements UserService {
         return createUserForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
     }
 
-
     @Override
-    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability) {
-        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability).toServiceResult();
+    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails) {
+        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability, allowMarketingEmails).toServiceResult();
     }
-
-
 
     @Override
     public Long getUserOrganisationId(Long userId, Long applicationId) {
@@ -166,5 +163,4 @@ public class UserServiceImpl implements UserService {
     public Optional<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email).getOptionalSuccessObject();
     }
-    
 }

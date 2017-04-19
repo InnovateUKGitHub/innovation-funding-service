@@ -1830,13 +1830,13 @@ Other internal users do not have access to Finance checks
 
 Finance contact can access the external view of the finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
-    [Tags]    HappyPath
-    [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    [Tags]
+    [Setup]    Log in as a different user   ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
+    Given the user clicks the button/link   link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     When the user clicks the button/link    link=Finance checks
-    And the user should not see an error in the page
+    Then the user should not see an error in the page
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 Lead-Partner can view finance checks page

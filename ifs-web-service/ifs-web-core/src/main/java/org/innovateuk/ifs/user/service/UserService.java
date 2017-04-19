@@ -30,7 +30,7 @@ public interface UserService {
     ServiceResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
                                                                                     String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId);
     ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
-    ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
+    ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
     List<UserResource> findUserByType(UserRoleType type);
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
     Long getUserOrganisationId(Long userId, Long applicationId);

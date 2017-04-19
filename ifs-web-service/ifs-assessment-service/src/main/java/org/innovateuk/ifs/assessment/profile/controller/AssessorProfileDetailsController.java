@@ -44,9 +44,6 @@ public class AssessorProfileDetailsController {
     @Autowired
     private ProfileRestService profileRestService;
 
-    @Autowired
-    private EthnicityRestService ethnicityRestService;
-
     private static final String FORM_ATTR_NAME = "form";
 
     @GetMapping
@@ -102,12 +99,7 @@ public class AssessorProfileDetailsController {
             form.setAddressForm(profileDetails.getAddress());
         }
 
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         model.addAttribute("model", assessorEditDetailsModelPopulator.populateModel(loggedInUser));
         return "profile/details-edit";
-    }
-
-    private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
     }
 }

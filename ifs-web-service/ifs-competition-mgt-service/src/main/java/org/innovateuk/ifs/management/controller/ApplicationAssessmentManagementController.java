@@ -4,14 +4,17 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResour
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.model.ManageApplicationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
@@ -24,7 +27,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 public class ApplicationAssessmentManagementController {
 
     @Autowired
-    private ApplicationCountSummaryRestService  applicationCountSummaryRestService;
+    private ApplicationCountSummaryRestService applicationCountSummaryRestService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -40,7 +43,7 @@ public class ApplicationAssessmentManagementController {
                                      @RequestParam(value = "page", defaultValue = "0") int page,
                                      @RequestParam(value = "filterSearch", defaultValue = "") String filter) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        ApplicationCountSummaryPageResource applicationCounts = applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionId, page,20, filter)
+        ApplicationCountSummaryPageResource applicationCounts = applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionId, page, 20, filter)
                 .getSuccessObjectOrThrowException();
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.MANAGE_APPLICATIONS, queryParams);
         model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, originQuery));

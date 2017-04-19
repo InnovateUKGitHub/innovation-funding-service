@@ -1,0 +1,15 @@
+dn: cn=PPolicy,ou=Policies,dc=nodomain
+changetype: modify
+replace: pwdAttribute
+pwdAttribute: userPassword
+-
+replace: pwdLockout
+pwdLockout: TRUE
+-
+replace: pwdLockoutDuration
+pwdLockoutDuration: 600
+-
+replace: pwdMaxFailure
+pwdMaxFailure: 10
+-
+
