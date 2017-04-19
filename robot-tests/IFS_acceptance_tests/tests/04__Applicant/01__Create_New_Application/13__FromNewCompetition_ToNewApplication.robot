@@ -176,9 +176,8 @@ Mark Organisation as complete when no
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link    link=Your organisation
-    # Then the user should see the fields in readonly mode, but currently they are missing this attribute
-    # TODO INFUND-8071
-    Then the user should see the element    jQuery=button:contains("Edit your organisation")
+    Then The user should not see the element      css=input
+    and the user should see the element    jQuery=button:contains("Edit your organisation")
     And the user clicks the button/link    jQuery=a:contains("Return to finances")
 
 The Lead applicant is able to edit and re-submit when no
