@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
+import org.innovateuk.ifs.project.grantofferletter.populator.ProjectGrantOfferLetterViewModelPopulator;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -13,6 +14,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
@@ -42,8 +47,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-
 public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVCTest<ProjectGrantOfferLetterController> {
+
+    @Spy
+    @InjectMocks
+    private ProjectGrantOfferLetterViewModelPopulator grantOfferLetterViewModelPopulator;
 
     @Test
     public void testViewGrantOfferLetterPageWithSignedOffer() throws Exception {
@@ -63,7 +71,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
-	    when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
                 andExpect(status().isOk()).
@@ -200,9 +208,8 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         when(projectService.getAdditionalContractFileDetails(123L)).thenReturn(Optional.empty());
         when(projectService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
-
         when(projectService.isGrantOfferLetterAlreadySent(123L)).thenReturn(serviceSuccess(Boolean.TRUE));
- 	    when(projectService.isSignedGrantOfferLetterApproved(project.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(projectService.isSignedGrantOfferLetterApproved(project.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         MvcResult mvcResult = mockMvc.perform(
                 fileUpload("/project/123/offer").

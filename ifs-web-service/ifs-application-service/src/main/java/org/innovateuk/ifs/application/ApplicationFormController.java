@@ -781,8 +781,8 @@ public class ApplicationFormController {
             List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);
             if (financePositionKeys.isEmpty() && !OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationType)) {
-                bindingResult.reject("APPLICATION_ORGANISATION_SIZE_REQUIRED");
-                return false;
+                bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
+                valid = Boolean.FALSE;
             }
         }
 

@@ -32,9 +32,6 @@ public class NonIfsCompetitionController {
     private static final String FORM_ATTR = "form";
 
     @Autowired
-    private CompetitionDashboardSearchService competitionDashboardSearchService;
-
-    @Autowired
     private NonIfsDetailsFormSaver nonIfsDetailsFormSaver;
     @Autowired
     private NonIfsDetailsFormPopulator nonIfsDetailsFormPopulator;
