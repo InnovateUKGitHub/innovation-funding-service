@@ -85,17 +85,6 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber) {
-        MonitoringOfficerResource monitoringOfficerData = new MonitoringOfficerResource(firstName, lastName, emailAddress, phoneNumber, projectId);
-        return putWithRestResult(projectRestURL + "/" + projectId + "/monitoring-officer", monitoringOfficerData, Void.class);
-    }
-
-    @Override
-    public RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/monitoring-officer", MonitoringOfficerResource.class);
-    }
-
-    @Override
     public RestResult<Optional<ByteArrayResource>> getCollaborationAgreementFile(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/collaboration-agreement", ByteArrayResource.class).toOptionalIfNotFound();
     }
