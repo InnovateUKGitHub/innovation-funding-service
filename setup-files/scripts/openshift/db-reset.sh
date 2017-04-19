@@ -74,17 +74,13 @@ then
     pushDBResetImages
 fi
 dbReset
-exit
 
-if [[ ${TARGET} == "local" || ${TARGET} == "remote" ]]
-then
-    shibInit
-fi
 
-if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
-then
-    # We only scale up data-service once data-service started up and performed the Flyway migrations on one thread
-    scaleDataService
-fi
+echo Waiting for completion
+while [ `oc get jobs dbreset -o go-template --template '{{.status.completionTime}}{{"\n"}}'` == "<no value>" ]
+do
+  echo -n .
+  sleep 5
+done
 
-cleanUp
+[ `oc get -o template job dbreset  --template={{.status.succeeded}}` != 1 ] && exit -1
