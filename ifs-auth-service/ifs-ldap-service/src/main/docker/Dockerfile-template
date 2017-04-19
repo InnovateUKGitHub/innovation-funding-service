@@ -46,6 +46,3 @@ RUN apt-get -y install grep mysql-client net-tools rsync && \
   rm -f ppolicy*.ldif
 
 ENTRYPOINT [ "run-openldap.sh" ]
-
-HEALTHCHECK --interval=10s --timeout=5s \
-  CMD ldapsearch -l 3 -h localhost -p $LDAP_PORT -b $LDAP_BASE_DN -x -LLL -s base || exit 1
