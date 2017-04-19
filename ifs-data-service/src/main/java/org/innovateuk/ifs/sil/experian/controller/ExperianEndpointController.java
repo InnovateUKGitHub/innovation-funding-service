@@ -238,6 +238,23 @@ public class ExperianEndpointController {
                         "  }\n" +
                         "}", ValidationResultWrapper.class));
 
+        validationErrors.put(
+                fromJson("{\n" +
+                        "  \"sortcode\":\"000004\",\n" +
+                        "  \"accountNumber\":\"00000123\"\n" +
+                        "}", SILBankDetails.class),
+                fromJson("{\n" +
+                        "  \"ValidationResult\": {\n" +
+                        "    \"checkPassed\": false,\n" +
+                        "    \"iban\": null,\n" +
+                        "    \"conditions\": {\n" +
+                        "      \"severity\": \"error\",\n" +
+                        "      \"code\": 3,\n" +
+                        "      \"description\": \"\"" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}", ValidationResultWrapper.class));
+
 
         defaultValidationResult =
                 fromJson("{\n" +
