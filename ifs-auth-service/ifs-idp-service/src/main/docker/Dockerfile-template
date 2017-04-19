@@ -27,7 +27,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
   LDAPRSEARCHFILTER="(mail=\$resolutionContext.principal)" \
   LDAPRRETURNATTRIBUTE="mail,uid" \
   LDAPVALIDATEPERIOD="PT20S" \
-  REGAPIKEY= \
+  REGAPIKEY=@auth_idp_regapikey@ \
   REGAPIVER="0.0.13"
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
 ENV JRE_HOME=${JAVA_HOME}/jre
