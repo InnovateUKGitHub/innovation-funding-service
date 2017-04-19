@@ -210,7 +210,7 @@ Ekz23Yv8baWqwZRwZcbjbe4zAMMNa6oc5b//kg==
 
 </EntityDescriptor>
 
-<EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" ID="_5bec37c96575996255dab967c3c21bf6b1400113" entityID="https://ifs-local-dev">
+<EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" ID="_5bec37c96575996255dab967c3c21bf6b1400113" entityID="https://ifs.local-dev">
 
   <Extensions xmlns:alg="urn:oasis:names:tc:SAML:metadata:algsupport">
     <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
@@ -233,8 +233,8 @@ Ekz23Yv8baWqwZRwZcbjbe4zAMMNa6oc5b//kg==
 
   <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol">
     <Extensions>
-      <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="https://ifs-local-dev/Shibboleth.sso/Login"/>
-      <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://ifs-local-dev/Shibboleth.sso/Login" index="1"/>
+      <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="https://ifs.local-dev/Shibboleth.sso/Login"/>
+      <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://ifs.local-dev/Shibboleth.sso/Login" index="1"/>
     </Extensions>
     <KeyDescriptor>
       <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
@@ -267,13 +267,13 @@ IYZT/dpniOXel4qSRw==
       <EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#rsa-oaep"/>
       <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/>
     </KeyDescriptor>
-    <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://ifs-local-dev/Shibboleth.sso/Artifact/SOAP" index="1"/>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ifs-local-dev/Shibboleth.sso/SAML2/POST" index="1"/>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://ifs-local-dev/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://ifs-local-dev/Shibboleth.sso/SAML2/Artifact" index="3"/>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://ifs-local-dev/Shibboleth.sso/SAML2/ECP" index="4"/>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://ifs-local-dev/Shibboleth.sso/SAML/POST" index="5"/>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://ifs-local-dev/Shibboleth.sso/SAML/Artifact" index="6"/>
+    <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://ifs.local-dev/Shibboleth.sso/Artifact/SOAP" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/POST" index="1"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/Artifact" index="3"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/ECP" index="4"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://ifs.local-dev/Shibboleth.sso/SAML/POST" index="5"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://ifs.local-dev/Shibboleth.sso/SAML/Artifact" index="6"/>
   </SPSSODescriptor>
 
 </EntityDescriptor>

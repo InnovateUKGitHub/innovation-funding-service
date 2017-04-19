@@ -5,7 +5,7 @@
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
 
-    <ApplicationDefaults entityID="https://ifs-local-dev"
+    <ApplicationDefaults entityID="https://ifs.local-dev"
                          REMOTE_USER="uid">
 
         <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"

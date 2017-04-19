@@ -55,7 +55,7 @@ RUN apt-get update --fix-missing && \
   mv /usr/local/files/sp/* /etc/shibboleth/ && \
   mkdir /var/www/html/Logout &&  mv /usr/local/files/apache2/index.html /var/www/html/Logout/ && \
   mkdir /var/run/shibboleth && \
-  sed -i "s#\/\/ifs-local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
+  sed -i "s#\/\/ifs.local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
   sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml && \
   sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/shibboleth2.xml /etc/shibboleth/metadata.xml /var/www/html/Logout/index.html && \
   sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
