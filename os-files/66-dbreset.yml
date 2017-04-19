@@ -39,7 +39,7 @@ items:
           - name: dbreset
             image: innovateuk/dbreset:1.0-SNAPSHOT
             imagePullPolicy: Always
-            command: [ "/bin/bash", "-exec"]
+            command: [ "/bin/bash", "-exec" ]
             args:
             - |
               cat > flyway.conf <<EOF
@@ -51,6 +51,8 @@ items:
               EOF
               flyway clean
               flyway migrate
+              flyway info
+              flyway validate
               . /ldap-sync-from-ifs-db.sh
             env:
             - name: DB_HOST
