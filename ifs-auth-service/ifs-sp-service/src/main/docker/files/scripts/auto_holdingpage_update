@@ -1,0 +1,195 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Carp qw( croak );
+use Getopt::Long qw(:config no_ignore_case);
+use File::Copy;
+
+my (
+    $fh1,     $fh2,       $line,       @CurrentFiles, $OldFile,
+    $message, $help,      $starttime,  $finishtime,   $day,
+    $offset,  $dayofweek, $dayofmonth, $month,        $whenfrom,
+    $whento,  $showfrom
+);
+my $version  = "0.2";
+my $FindCmd  = "/usr/bin/find /var/www/ -type f -name maintenance.html";
+my $FindJson = "/usr/bin/find /var/www/ -type f -name maintenance.json";
+my $DateCmd  = "/bin/date";
+
+GetOptions(
+    "h|help|?"       => \$help,
+    "m|message=s"    => \$message,
+    "s|starttime=s"  => \$starttime,
+    "f|finishtime=s" => \$finishtime,
+    "d|day=s"        => \$day,
+    "o|offset=i"     => \$offset,
+);
+
+if ( ( defined $help ) ) {
+    &help();
+    exit 1;
+}
+
+if ( ( !$day ) ) {
+    $day = "today";
+}
+if ( ( !$offset ) ) {
+    $offset = 10;
+}
+if ( ( !$finishtime ) ) {
+    $finishtime = `$DateCmd +%H%M --date "$starttime 2hours" | xargs echo -n`;
+}
+$dayofweek  = `$DateCmd +%A --date "$day" | xargs echo -n`;
+$dayofmonth = `$DateCmd +%d --date "$day" | xargs echo -n`;
+$month      = `$DateCmd +%B --date "$day" | xargs echo -n`;
+
+if ( ( $dayofmonth eq "11" ) or ( $dayofmonth eq "13" ) ) {
+    $dayofmonth = $dayofmonth . "th";
+}
+elsif ( ( $dayofmonth =~ m/1$/ ) ) {
+    $dayofmonth = $dayofmonth . "st";
+}
+elsif ( ( $dayofmonth =~ m/2$/ ) ) {
+    $dayofmonth = $dayofmonth . "nd";
+}
+else {
+    $dayofmonth = $dayofmonth . "th";
+}
+
+if ( ( !$message ) and ( !$starttime ) ) {
+    &help();
+}
+elsif ( ( !$message ) ) {
+    &setmessage();
+    &maintenance();
+    &json();
+}
+else {
+    &maintenance();
+}
+
+sub setmessage {
+    $message =
+"Our website is currently undergoing maintenance and will be unavailable from "
+      . `$DateCmd +%R --date "$starttime" | xargs echo -n` . " - "
+      . `$DateCmd +%R --date "$finishtime" | xargs echo -n` . " on "
+      . $dayofweek . " "
+      . $dayofmonth . " "
+      . $month
+      . ". We apologise for any inconvenience this may cause.";
+    $whenfrom =
+`$DateCmd +"%Y/%m/%d %H:%M:%S GMT%z (%Z)" --date "$day $starttime" | xargs echo -n`;
+    $whento =
+`$DateCmd +"%Y/%m/%d %H:%M:%S GMT%z (%Z)" --date "$day $finishtime" | xargs echo -n`;
+    $showfrom =
+`$DateCmd +"%Y/%m/%d %H:%M:%S GMT%z (%Z)" --date "$day $starttime -$offset minutes" | xargs echo -n`;
+}
+
+sub json {
+    open( $fh1, "$FindJson |" ) or croak "Failed to run $FindJson\n";
+    foreach $line (<$fh1>) {
+        chomp $line;
+        if ( $line =~ m/^\//i ) {
+            chomp $line;
+            push @CurrentFiles, $line;
+        }
+        else {
+            croak "Unexpected output from $FindJson\n";
+        }
+    }
+    close($fh1) or croak "Failed to close FH $FindJson\n";
+
+    foreach my $File (@CurrentFiles) {
+        $OldFile = join( '.', $File, "old" );
+        copy( $File, $OldFile ) or croak "Failed to Copy $File, $OldFile: $!";
+        open( $fh1, '<', $OldFile ) or croak "Failed to open $OldFile\n";
+        open( $fh2, '>', $File ) or croak "Failed to open for write $File \n";
+
+        foreach $line (<$fh1>) {
+            chomp $line;
+            if ( $line =~ m/"whenFrom"/i ) {
+                print $fh2 "    \"whenFrom\": \"$whenfrom\", \n";
+            }
+            elsif ( $line =~ m/"whenTo"/i ) {
+                print $fh2 "    \"whenTo\": \"$whento\", \n";
+            }
+            elsif ( $line =~ m/"showFrom"/i ) {
+                print $fh2 "    \"showFrom\": \"$showfrom\" \n";
+            }
+            else {
+                print $fh2 "$line \n";
+            }
+        }
+        close($fh1) or croak "Failed to close FH $OldFile \n";
+        close($fh2) or croak "Failed to close FH $File \n";
+    }
+}
+
+sub maintenance {
+    open( $fh1, "$FindCmd |" ) or croak "Failed to run $FindCmd\n";
+    foreach $line (<$fh1>) {
+        chomp $line;
+        if ( $line =~ m/^\//i ) {
+            chomp $line;
+            push @CurrentFiles, $line;
+        }
+        else {
+            croak "Unexpected output from $FindCmd\n";
+        }
+    }
+    close($fh1) or croak "Failed to close FH $FindCmd\n";
+
+    foreach my $File (@CurrentFiles) {
+        $OldFile = join( '.', $File, "old" );
+        copy( $File, $OldFile ) or croak "Failed to Copy $File, $OldFile: $!";
+        open( $fh1, '<', $OldFile ) or croak "Failed to open $OldFile\n";
+        open( $fh2, '>', $File ) or croak "Failed to open for write $File \n";
+
+        foreach $line (<$fh1>) {
+            chomp $line;
+            if ( $line =~ m/<!-- Auto Tag do not edit this line -->/i ) {
+                print $fh2
+"<!-- Auto Tag do not edit this line --> <p> $message </p> \n";
+            }
+            else {
+                print $fh2 "$line \n";
+            }
+        }
+        close($fh1) or croak "Failed to close FH $OldFile \n";
+        close($fh2) or croak "Failed to close FH $File \n";
+    }
+}
+
+sub help {
+    print << "    EOF"
+    auto_holdingpage_update $version
+
+    Usage:
+
+    auto_holdingpage_update -m "Some text you want on the holding pages"
+    or
+    auto_holdingpage_update -s 1800 -f 2200 -o 30 -d tomorrow
+
+    -h, -?, --help
+        Print Help Information
+    -v, --version
+        Print Version Information
+    -m, --message
+        The Message you want to put on the holding pages
+    -s, --starttime
+        The time you want the downtime to start in 24 hour time format
+    -f, --finishtime
+        The time you want the downtime to finish in 24 hour time format
+        Defaults to 2 hours after start time
+    -o, --offset
+        The number of minutes before the start time you want the
+        warning banner to appear from. Defaults to 10 minutes.
+    -d, --day
+        A string representing the day you want the holding pages up.
+        Defaults to "today"
+
+    EOF
+      ;
+
+}
