@@ -487,12 +487,17 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         includedOrganisations.forEach(includedOrg -> includedOrganisationNames.add(includedOrg.getName()));
 
+        Map<Long, String> organisationMap = new HashMap<>();
+        includedOrganisations.forEach(includedOrg -> organisationMap.put(includedOrg.getId(), StringEscapeUtils.escapeXml10(includedOrg.getName())));
+
         return new YearlyGOLProfileTable(escapeXml10(organisationAndGrantPercentageMap),
                                          escapeXml10(organisationYearsMap),
                                          escapeXml10(organisationEligibleCostTotal),
                                          escapeXml10(organisationGrantAllocationTotal),
                                          escapeXml10(yearEligibleCostTotal),
-                                         escapeXml10(yearlyGrantAllocationTotal));
+                                         escapeXml10(yearlyGrantAllocationTotal),
+                                         organisationMap
+                );
     }
 
     private <T> Map<String, T>escapeXml10(Map<String, T> unescapedMap) {

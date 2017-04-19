@@ -745,7 +745,12 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         yearEligibleCostTotal.put(org3, new BigDecimal("3"));
 
         Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
-        return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
+
+        Map<Long, String> orgNames = new HashMap<>();
+        orgNames.put(1L, org1);
+        orgNames.put(2L, org2);
+        orgNames.put(3L, org3);
+        return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal, orgNames);
     }
 
     private Map<String, Object> setupTemplateArguments(YearlyGOLProfileTable yearlyGOLProfileTable) {

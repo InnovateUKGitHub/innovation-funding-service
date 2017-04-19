@@ -36,7 +36,7 @@ public class YearlyGOLProfileTableTest {
     @Test
     public void getEligibleCostGrandTotalPerOrganisation() throws Exception {
 
-        YearlyGOLProfileTable yearlyGOLProfileTable = new YearlyGOLProfileTable(null, null, TABLE_DATA1, null, null, null);
+        YearlyGOLProfileTable yearlyGOLProfileTable = new YearlyGOLProfileTable(null, null, TABLE_DATA1, null, null, null, null);
 
         Map<String, BigDecimal> eligibleCostGrandTotalPerOrganisation = yearlyGOLProfileTable.getEligibleCostGrandTotalPerOrganisation();
 
@@ -48,7 +48,7 @@ public class YearlyGOLProfileTableTest {
     @Test
     public void getGrantAllocationGrandTotalPerOrganisation() throws Exception {
 
-        YearlyGOLProfileTable yearlyGOLProfileTable = new YearlyGOLProfileTable(null, null, null, TABLE_DATA1, null, null);
+        YearlyGOLProfileTable yearlyGOLProfileTable = new YearlyGOLProfileTable(null, null, null, TABLE_DATA1, null, null, null);
 
         Map<String, BigDecimal> grandTotalPerOrganisation = yearlyGOLProfileTable.getGrantAllocationGrandTotalPerOrganisation();
 

@@ -19,19 +19,22 @@ public class YearlyGOLProfileTable {
     private Map<String, BigDecimal> yearGrantAllocationTotal;
     private BigDecimal eligibleCostGrandTotal;
     private BigDecimal grantAllocationGrandTotal;
+    private Map<Long, String> organisationName;
 
     public YearlyGOLProfileTable(Map<String, Integer> organisationAndGrantPercentageMap,
                                  Map<String, List<String>> organisationYearsMap,
                                  Map<String, List<BigDecimal>> organisationEligibleCostTotal,
                                  Map<String, List<BigDecimal>> organisationGrantAllocationTotal,
                                  Map<String, BigDecimal> yearEligibleCostTotal,
-                                 Map<String, BigDecimal> yearGrantAllocationTotal) {
+                                 Map<String, BigDecimal> yearGrantAllocationTotal,
+                                 Map<Long, String> organisationIdToName) {
         this.organisationAndGrantPercentageMap = organisationAndGrantPercentageMap;
         this.organisationYearsMap = organisationYearsMap;
         this.organisationEligibleCostTotal = organisationEligibleCostTotal;
         this.organisationGrantAllocationTotal = organisationGrantAllocationTotal;
         this.yearEligibleCostTotal = yearEligibleCostTotal;
         this.yearGrantAllocationTotal = yearGrantAllocationTotal;
+        this.organisationName = organisationIdToName;
     }
 
     public int getNumberOfColHeader() {
@@ -90,5 +93,8 @@ public class YearlyGOLProfileTable {
         });
     }
 
+    public Map<Long, String> getOrganisationName() {
+        return organisationName;
+    }
 
 }

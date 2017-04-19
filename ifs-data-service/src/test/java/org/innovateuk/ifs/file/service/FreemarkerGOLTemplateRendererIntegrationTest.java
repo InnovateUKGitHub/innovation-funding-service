@@ -120,8 +120,12 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
         yearGrantAllocationTotal.put(years.get(1), BigDecimal.valueOf(2600));
         yearGrantAllocationTotal.put(years.get(2), BigDecimal.valueOf(2300));
 
+        Map<Long, String> orgNames = new HashMap<>();
+        orgNames.put(1L, "Empire Ltd");
+        orgNames.put(2L, "Ludlow");
+        orgNames.put(3L, "EGGS");
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,
-                yearEligibleCostTotal, yearGrantAllocationTotal);
+                yearEligibleCostTotal, yearGrantAllocationTotal, orgNames);
     }
 }
