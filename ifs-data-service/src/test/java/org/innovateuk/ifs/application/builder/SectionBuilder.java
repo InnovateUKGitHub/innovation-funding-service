@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.competition.domain.Competition;
 
-import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -76,7 +75,7 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
     public SectionBuilder withDisplayInAssessmentApplicationSummary(Boolean... displayInAssessmentApplicationSummaries) {
         return withArray((displayInAssessmentApplicationSummary, object) -> setField("displayInAssessmentApplicationSummary", displayInAssessmentApplicationSummary, object), displayInAssessmentApplicationSummaries);
     }
-    
+
     public SectionBuilder withChildSections(List<Section> childSections) {
     	return with(section -> setField("childSections", childSections, section));
     }

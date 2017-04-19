@@ -391,7 +391,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
         List<Section> sections = newSection()
                 .withQuestions(questionsForSection1, questionsForSection2)
-                .withDisplayInAssessmentApplicationSummary(true, true)
+                .withDisplayInAssessmentApplicationSummary(true)
                 .build(2);
 
         List<SectionResource> sectionsResources = newSectionResource().build(2);

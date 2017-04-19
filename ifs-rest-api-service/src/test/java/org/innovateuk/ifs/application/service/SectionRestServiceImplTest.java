@@ -1,26 +1,26 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.junit.Test;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 
 import java.util.*;
 import java.util.concurrent.Future;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.junit.Assert.*;
 
 /**
  * Tests to check the ApplicationRestService's interaction with the RestTemplate and the processing of its results
  */
-public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<SectionRestServiceImpl> {
+public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionRestServiceImpl> {
 
     private static final String sectionRestUrl = "/section";
 
@@ -31,7 +31,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_markAsComplete() {
+    public void markAsComplete() {
         Long sectionId = 123L;
         Long applicationId = 234L;
         Long markedAsCompleteById = 345L;
@@ -45,7 +45,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_markAsNotRequired() {
+    public void markAsNotRequired() {
         Long sectionId = 123L;
         Long applicationId = 234L;
         Long markedAsCompleteById = 345L;
@@ -58,7 +58,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_markAsInComplete() {
+    public void markAsInComplete() {
         Long sectionId = 123L;
         Long applicationId = 234L;
         Long markedAsCompleteById = 345L;
@@ -71,10 +71,10 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getById() {
+    public void getById() {
         long sectionId = 123L;
         String expectedUrl = sectionRestUrl + "/" + sectionId;
-        SectionResource sectionResource = SectionResourceBuilder.newSectionResource().build();
+        SectionResource sectionResource = newSectionResource().build();
         setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, sectionResource);
 
         RestResult<SectionResource> result = service.getById(sectionId);
@@ -83,10 +83,10 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getByCompetition() {
+    public void getByCompetition() {
         long competitionId = 123L;
         String expectedUrl = sectionRestUrl + "/getByCompetition/" + competitionId;
-        List<SectionResource> sectionResources = SectionResourceBuilder.newSectionResource().build(2);
+        List<SectionResource> sectionResources = newSectionResource().build(2);
         setupGetWithRestResultExpectations(expectedUrl, sectionResourceListType(), sectionResources);
 
         RestResult<List<SectionResource>> result = service.getByCompetition(competitionId);
@@ -95,7 +95,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getCompletedSectionsByOrganisation() {
+    public void getCompletedSectionsByOrganisation() {
         long applicationId = 123L;
         String expectedUrl = sectionRestUrl + "/getCompletedSectionsByOrganisation/" + applicationId;
         Map<Long, Set<Long>> expectedResult = new HashMap<>();
@@ -107,7 +107,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getCompletedSectionIds() {
+    public void getCompletedSectionIds() {
         String expectedUrl = sectionRestUrl + "/getCompletedSections/123/456";
         List<Long> returnedResponse = asList(1L, 2L, 3L);
 
@@ -119,7 +119,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getIncompleteSectionIds() {
+    public void getIncompleteSectionIds() {
 
         String expectedUrl = sectionRestUrl + "/getIncompleteSections/123";
         List<Long> returnedResponse = asList(1L, 2L, 3L);
@@ -132,10 +132,10 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getPreviousSection() throws Exception {
+    public void getPreviousSection() throws Exception {
         long sectionId = 1L;
         String expectedUrl = sectionRestUrl + "/getPreviousSection/" + sectionId;
-        SectionResource resource = SectionResourceBuilder.newSectionResource().build();
+        SectionResource resource = newSectionResource().build();
         setupGetWithRestResultAsyncExpectations(expectedUrl, SectionResource.class, resource);
 
         Future<RestResult<SectionResource>> result = service.getPreviousSection(sectionId);
@@ -144,10 +144,10 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getNextSection() throws Exception {
+    public void getNextSection() throws Exception {
         long sectionId = 1L;
         String expectedUrl = sectionRestUrl + "/getNextSection/" + sectionId;
-        SectionResource resource = SectionResourceBuilder.newSectionResource().build();
+        SectionResource resource = newSectionResource().build();
         setupGetWithRestResultAsyncExpectations(expectedUrl, SectionResource.class, resource);
 
         Future<RestResult<SectionResource>> result = service.getNextSection(sectionId);
@@ -156,10 +156,10 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getSectionByQuestionId() {
+    public void getSectionByQuestionId() {
         long questionId = 1L;
         String expectedUrl = sectionRestUrl + "/getSectionByQuestionId/" + questionId;
-        SectionResource sectionResource = SectionResourceBuilder.newSectionResource().build();
+        SectionResource sectionResource = newSectionResource().build();
         setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, sectionResource);
 
         RestResult<SectionResource> result = service.getSectionByQuestionId(questionId);
@@ -168,7 +168,7 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void test_getQuestionForSectionAndSubsections() {
+    public void getQuestionForSectionAndSubsections() {
         long sectionId = 1L;
         String expectedUrl = sectionRestUrl + "/getQuestionsForSectionAndSubsections/" + sectionId;
         Set<Long> questions = new HashSet<>();
@@ -180,27 +180,35 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
 
     @Test
-    public void testGetSectionsForCompetitionByType() {
+    public void getSectionsForCompetitionByType() {
         String expectedUrl = sectionRestUrl + "/getSectionsByCompetitionIdAndType/123/FINANCE";
         List<SectionResource> returnedResponse = Arrays.asList(new SectionResource());
-        setupGetWithRestResultExpectations(expectedUrl, new ParameterizedTypeReference<List<SectionResource>>() {}, returnedResponse);
+        setupGetWithRestResultExpectations(expectedUrl, sectionResourceListType(), returnedResponse);
 
         List<SectionResource> response = service.getSectionsByCompetitionIdAndType(123L, SectionType.FINANCE).getSuccessObject();
-        
+
         assertEquals(returnedResponse, response);
     }
 
     @Test
-    public void test_getFinanceSectionForCompetition() {
+    public void financeSectionForCompetition() {
         long competitionId = 1L;
         String expectedUrl = sectionRestUrl + "/getFinanceSectionByCompetitionId/" + competitionId;
-        SectionResource resource = SectionResourceBuilder.newSectionResource().build();
+        SectionResource resource = newSectionResource().build();
         setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, resource);
 
         RestResult<SectionResource> result = service.getFinanceSectionForCompetition(competitionId);
 
         assertEquals(resource, result.getSuccessObjectOrThrowException());
     }
-    
 
+    @Test
+    public void getByCompetitionIdVisibleForAssessment() throws Exception {
+        List<SectionResource> expected = newSectionResource().build(2);
+
+        long competitionId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/getByCompetitionIdVisibleForAssessment/%s", sectionRestUrl, competitionId), sectionResourceListType(), expected);
+        assertSame(expected, service.getByCompetitionIdVisibleForAssessment(competitionId).getSuccessObject());
+    }
 }

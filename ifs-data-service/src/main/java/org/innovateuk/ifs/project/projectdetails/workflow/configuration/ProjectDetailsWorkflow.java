@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.workflow.projectdetails.configuration;
+package org.innovateuk.ifs.project.projectdetails.workflow.configuration;
 
+import org.innovateuk.ifs.project.projectdetails.workflow.guards.AllProjectDetailsSuppliedGuard;
 import org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
-import org.innovateuk.ifs.project.workflow.projectdetails.guards.AllProjectDetailsSuppliedGuard;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
