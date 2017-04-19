@@ -5,7 +5,6 @@ import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.ApproveBankDetailsForm;
@@ -17,7 +16,6 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -29,15 +27,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * This controller is for serving internal project finance user, allowing them to view and manage project bank account details.
@@ -130,11 +125,9 @@ public class BankDetailsManagementController {
             @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
-        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        bankDetailsReviewModelPopulator.populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
-        populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
+        bankDetailsReviewModelPopulator.populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
         return doViewChangeBankDetailsNotUpdated(organisationResource, project, bankDetailsResource, model);
     }
 
