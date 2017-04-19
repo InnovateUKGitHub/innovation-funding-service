@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.repository.ApplicationProcessRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.workflow.configuration.ApplicationProcessWorkflowHandler;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -22,12 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class ApplicationProcessWorkflowHandlerIntegrationTest extends BaseWorkflowHandlerIntegrationTest<ApplicationProcessWorkflowHandler, ApplicationProcessRepository, TestableTransitionWorkflowAction> {
+public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandlerIntegrationTest<ApplicationWorkflowHandler, ApplicationProcessRepository, TestableTransitionWorkflowAction> {
 
     private static final ActivityType activityType = ActivityType.APPLICATION;
 
     @Autowired
-    private ApplicationProcessWorkflowHandler applicationProcessWorkflowHandler;
+    private ApplicationWorkflowHandler applicationWorkflowHandler;
 
     private ActivityStateRepository activityStateRepositoryMock;
     private ApplicationProcessRepository applicationProcessRepositoryMock;
@@ -47,42 +47,42 @@ public class ApplicationProcessWorkflowHandlerIntegrationTest extends BaseWorkfl
 
     @Test
     public void open() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.CREATED, ApplicationState.OPEN, application -> applicationProcessWorkflowHandler.open(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.CREATED, ApplicationState.OPEN, application -> applicationWorkflowHandler.open(application));
     }
 
     @Test
     public void submit() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.OPEN, ApplicationState.SUBMITTED, application -> applicationProcessWorkflowHandler.submit(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.OPEN, ApplicationState.SUBMITTED, application -> applicationWorkflowHandler.submit(application));
     }
 
     @Test
     public void markIneligible() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.INELIGIBLE, application -> applicationProcessWorkflowHandler.markIneligible(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.INELIGIBLE, application -> applicationWorkflowHandler.markIneligible(application));
     }
 
     @Test
     public void informIneligible() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED, application -> applicationProcessWorkflowHandler.informIneligible(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED, application -> applicationWorkflowHandler.informIneligible(application));
     }
 
     @Test
     public void reinstateIneligible() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE, ApplicationState.SUBMITTED, application -> applicationProcessWorkflowHandler.reinstateIneligible(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE, ApplicationState.SUBMITTED, application -> applicationWorkflowHandler.reinstateIneligible(application));
     }
 
     @Test
     public void reinstateIneligible_ineligibleInformed() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE_INFORMED, ApplicationState.SUBMITTED, application -> applicationProcessWorkflowHandler.reinstateIneligible(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE_INFORMED, ApplicationState.SUBMITTED, application -> applicationWorkflowHandler.reinstateIneligible(application));
     }
 
     @Test
     public void approve() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.APPROVED, application -> applicationProcessWorkflowHandler.approve(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.APPROVED, application -> applicationWorkflowHandler.approve(application));
     }
 
     @Test
     public void reject() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.REJECTED, application -> applicationProcessWorkflowHandler.reject(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.REJECTED, application -> applicationWorkflowHandler.reject(application));
     }
 
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod) {
@@ -108,8 +108,8 @@ public class ApplicationProcessWorkflowHandlerIntegrationTest extends BaseWorkfl
     }
 
     @Override
-    protected Class<ApplicationProcessWorkflowHandler> getWorkflowHandlerType() {
-        return ApplicationProcessWorkflowHandler.class;
+    protected Class<ApplicationWorkflowHandler> getWorkflowHandlerType() {
+        return ApplicationWorkflowHandler.class;
     }
 
     @Override

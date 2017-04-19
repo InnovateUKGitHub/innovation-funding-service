@@ -10,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+/**
+ * The current state of an {@link Application}.
+ */
 @Entity
 public class ApplicationProcess extends Process<ProcessRole, Application, ApplicationState> {
 

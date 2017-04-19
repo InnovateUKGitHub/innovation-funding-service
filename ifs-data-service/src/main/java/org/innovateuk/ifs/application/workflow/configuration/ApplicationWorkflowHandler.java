@@ -21,8 +21,11 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION;
 
+/**
+ * Workflow handler for firing {@link ApplicationOutcome} events.
+ */
 @Component
-public class ApplicationProcessWorkflowHandler extends BaseWorkflowEventHandler<ApplicationProcess, ApplicationState, ApplicationOutcome, Application, ProcessRole> {
+public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<ApplicationProcess, ApplicationState, ApplicationOutcome, Application, ProcessRole> {
 
     @Autowired
     @Qualifier("applicationProcessStateMachine")

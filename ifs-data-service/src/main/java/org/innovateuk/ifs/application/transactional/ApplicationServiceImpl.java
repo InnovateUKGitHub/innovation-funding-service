@@ -10,7 +10,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.workflow.configuration.ApplicationProcessWorkflowHandler;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -107,7 +107,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private NotificationSender notificationSender;
     @Autowired
-    private ApplicationProcessWorkflowHandler applicationProcessWorkflowHandler;
+    private ApplicationWorkflowHandler applicationWorkflowHandler;
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
@@ -385,7 +385,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
         return find(application(id)).andOnSuccess((application) -> {
-            applicationProcessWorkflowHandler.notifyFromApplicationState(application, state);
+            applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
@@ -479,7 +479,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(applicationResults);
     }
 
-    // TODO DW - INFUND-1555 - deal with rest results
     @Override
     public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);

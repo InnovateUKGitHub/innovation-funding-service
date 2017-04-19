@@ -14,9 +14,13 @@ import java.util.LinkedHashSet;
 
 import static java.util.Arrays.asList;
 
+/**
+ * The workflow for an {@link org.innovateuk.ifs.application.domain.Application}. Describes the possible states and
+ * transitions through an Application's lifecycle.
+ */
 @Configuration
 @EnableStateMachine(name = "applicationProcessStateMachine")
-public class ApplicationProcessWorkflow extends StateMachineConfigurerAdapter<ApplicationState, ApplicationOutcome> {
+public class ApplicationWorkflow extends StateMachineConfigurerAdapter<ApplicationState, ApplicationOutcome> {
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ApplicationState, ApplicationOutcome> config) throws Exception {
