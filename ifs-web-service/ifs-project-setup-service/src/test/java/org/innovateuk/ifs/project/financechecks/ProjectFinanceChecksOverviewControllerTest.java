@@ -37,7 +37,7 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
                 .withName("Industrial Org")
                 .withCompanyHouseNumber("123456789")
                 .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
         FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
