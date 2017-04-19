@@ -53,6 +53,17 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 
 	@Override
+	public RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter) {
+		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/inelgible";
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		if (filter != null) {
+			params.put("filter", singletonList(filter));
+		}
+		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
+		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);
+	}
+
+	@Override
 	public RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplications(Long competitionId,
 																						 String sortField,
 																						 int pageNumber,

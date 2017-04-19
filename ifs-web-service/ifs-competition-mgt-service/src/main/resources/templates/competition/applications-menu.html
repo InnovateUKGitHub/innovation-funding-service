@@ -79,14 +79,9 @@
                 </li>
 
                 */-->
-
-                <!--/* TODO: Implement ineligible applications - INFUND-7373
-
                 <li>
-                    <a class="" href="#">Ineligible applications</a>
+                    <a class="" th:href="@{/competition/{cid}/applications/submitted(cid=${model.competitionId})}">Ineligible applications</a>
                 </li>
-
-                */-->
             </ul>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

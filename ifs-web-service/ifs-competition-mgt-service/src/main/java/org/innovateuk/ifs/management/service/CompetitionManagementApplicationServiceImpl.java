@@ -85,6 +85,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     public enum ApplicationOverviewOrigin {
         ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
+        INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
         MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
         FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
         APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");

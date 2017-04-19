@@ -43,6 +43,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED), ApplicationState::getBackingState);
 
+    public static final Collection<State> INELIGIBLE_STATES = simpleMap(asList(
+            ApplicationState.INELIGIBLE,
+            ApplicationState.INELIGIBLE_INFORMED), ApplicationState::getBackingState);
+
     public static final Collection<State> CREATED_AND_OPEN_STATUSES = simpleMap(asList(
             ApplicationState.CREATED,
             ApplicationState.OPEN), ApplicationState::getBackingState);
@@ -148,6 +152,20 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                         fundingFilter.orElse(null)));
     }
 
+    @Override
+    public ServiceResult<ApplicationSummaryPageResource> getIneligableApplicationSummariesByCompetitionId(
+            long competitionId,
+            String sortBy,
+            int pageIndex,
+            int pageSize,
+            Optional<String> filter) {
+        String filterStr = filter.map(String::trim).orElse("");
+        return applicationSummaries(sortBy, pageIndex, pageSize,
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, INELIGIBLE_STATES, filterStr, null, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, INELIGIBLE_STATES, filterStr, null));
+    }
 
     private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(
             String sortBy,
