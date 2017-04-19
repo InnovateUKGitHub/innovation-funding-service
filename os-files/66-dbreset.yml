@@ -18,6 +18,8 @@ items:
   data:
     LDAP_HOST: <<LDAP-HOST>>
     LDAP_PORT: "<<LDAP-PORT>>"
+    LDAP_PASS: "<<LDAP-PASS>>"
+    LDAP_DOMAIN: "<<LDAP-DOMAIN>>"
 - apiVersion: batch/v1
   kind: Job
   metadata:
@@ -81,4 +83,14 @@ items:
                 configMapKeyRef:
                   name: ldap-config
                   key: LDAP_PORT
+            - name: LDAP_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: LDAP_PASS
+            - name: LDAP_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: LDAP_DOMAIN
         restartPolicy: Never

@@ -20,6 +20,8 @@ function injectLDAPVariables() {
     LDAP_PORT=${LDAP_PORT:-389}
     sed -i.bak "s/<<LDAP-HOST>>/$LDAP_HOST/g" os-files-tmp/*.yml
     sed -i.bak "s/<<LDAP-PORT>>/$LDAP_PORT/g" os-files-tmp/*.yml
+    sed -i.bak "s/<<LDAP-PASS>>/$LDAP_PASS/g" os-files-tmp/*.yml
+    sed -i.bak "s/<<LDAP-DOMAIN>>/$LDAP_DOMAIN/g" os-files-tmp/*.yml
 }
 
 function tailorAppInstance() {
@@ -88,11 +90,11 @@ function useContainerRegistry() {
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/robot-tests/*.yml
+}
 
+function pushApplicationImages() {
     docker tag innovateuk/data-service:${VERSION} \
         ${REGISTRY}/${PROJECT}/data-service:${VERSION}
-    docker tag innovateuk/dbreset:${VERSION} \
-        ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
     docker tag innovateuk/project-setup-service:${VERSION} \
         ${REGISTRY}/${PROJECT}/project-setup-service:${VERSION}
     docker tag innovateuk/project-setup-management-service:${VERSION} \
@@ -112,6 +114,14 @@ function useContainerRegistry() {
     docker push ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/application-service:${VERSION}
+}
+
+function pushDBResetnImages() {
+    docker tag innovateuk/dbreset:${VERSION} \
+        ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
+
     docker push ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 }
 

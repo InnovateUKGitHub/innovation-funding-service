@@ -68,6 +68,7 @@ injectLDAPVariables
 if [[ (${TARGET} != "local") ]]
 then
     useContainerRegistry
+    pushDBResetnImages
 fi
 dbReset
 exit
