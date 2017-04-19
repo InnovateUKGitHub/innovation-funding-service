@@ -53,6 +53,7 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
@@ -198,6 +199,8 @@ public class BaseUnitTest {
     public ProjectService projectService;
     @Mock
     public ProjectFinanceService projectFinanceService;
+    @Mock
+    public SpendProfileService spendProfileService;
     @Mock
     public ProjectRestService projectRestService;
     @Mock

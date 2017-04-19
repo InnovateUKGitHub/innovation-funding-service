@@ -46,8 +46,8 @@ public class ProjectSpendProfileExportControllerTest extends BaseControllerMockM
         SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
         SpendProfileCSVResource expectedSpendProfileCSVResource = buildSpendProfileCSVResource(expectedTable);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
-        when(projectFinanceService.getSpendProfileCSV(projectResource.getId(), organisationId)).thenReturn(expectedSpendProfileCSVResource);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(spendProfileService.getSpendProfileCSV(projectResource.getId(), organisationId)).thenReturn(expectedSpendProfileCSVResource);
 
       mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-export/csv", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())

@@ -68,8 +68,8 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         SpendProfileTableResource tableOne = buildSpendProfileTableResource(projectResource);
         SpendProfileTableResource tableTwo = buildSpendProfileTableResource(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationOneId)).thenReturn(tableOne);
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationTwoId)).thenReturn(tableTwo);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationOneId)).thenReturn(tableOne);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationTwoId)).thenReturn(tableTwo);
 
         TotalSpendProfileViewModel expectedViewModel = buildTotalSpendProfileViewModel(organisations, projectResource, tableTwo, tableOne);
 

@@ -21,26 +21,6 @@ import java.util.List;
  */
 public interface ProjectFinanceRestService {
 
-    RestResult<Void> generateSpendProfile(Long projectId);
-
-    RestResult<Void> acceptOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
-
-    RestResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId);
-
-    RestResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId);
-
-    RestResult<SpendProfileCSVResource> getSpendProfileCSV(Long projectId, Long organisationId);
-
-    RestResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId);
-
-    RestResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table);
-
-    RestResult<Void> markSpendProfileComplete(Long projectId, Long organisationId);
-
-    RestResult<Void> markSpendProfileIncomplete(Long projectId, Long organisationId);
-
-    RestResult<Void> completeSpendProfilesReview(Long projectId);
-
     RestResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
 
     RestResult<ProjectFinanceResource> getProjectFinance(Long projectId, Long organisationId);
