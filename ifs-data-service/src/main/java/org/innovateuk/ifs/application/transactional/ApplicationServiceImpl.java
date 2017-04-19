@@ -129,6 +129,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setApplicationStatus(ApplicationStatus.CREATED);
         application.setDurationInMonths(3L);
         application.setCompetition(competition);
+        setInnovationArea(application, competition);
 
         return getRole(LEADAPPLICANT).andOnSuccess(role -> {
             Application savedApplication = applicationRepository.save(application);
@@ -136,6 +137,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             savedApplication = applicationRepository.findOne(savedApplication.getId());
             return serviceSuccess(applicationMapper.mapToResource(savedApplication));
         });
+    }
+
+    // Default to the competition's innovation area if only one set.
+    private void setInnovationArea(Application application, Competition competition) {
+        if (competition.getInnovationAreas().size() == 1) {
+            application.setInnovationArea(competition.getInnovationAreas().stream().findFirst().orElse(null));
+            application.setNoInnovationAreaApplicable(false);
+        }
     }
 
     @Override
