@@ -81,6 +81,8 @@ echo Waiting for completion
 while [ "$(oc get jobs dbreset -o go-template --template '{{.status.completionTime}}'|cut -c1)" != "2" ]
 do
   echo -n .
+  oc project
+  oc get jobs
   sleep 5
 done
 
