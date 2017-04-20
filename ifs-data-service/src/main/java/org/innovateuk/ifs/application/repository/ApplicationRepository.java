@@ -33,7 +33,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
 			"	OR (a.fundingDecision = :funding))";
 
-	static final String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
+	String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
 			"AND (a.fundingDecision IS NOT NULL) " +
 			"AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +

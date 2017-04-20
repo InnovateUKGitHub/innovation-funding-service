@@ -33,15 +33,15 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
-    public static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
+    public static final Collection<ApplicationState> SUBMITTED_APPLICATION_STATES = asList(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
-            ApplicationState.SUBMITTED);
+            ApplicationState.SUBMITTED,
+            ApplicationState.INELIGIBLE,
+            ApplicationState.INELIGIBLE_INFORMED);
 
-    public static final Collection<State> SUBMITTED_STATES = simpleMap(asList(
-            ApplicationState.APPROVED,
-            ApplicationState.REJECTED,
-            ApplicationState.SUBMITTED), ApplicationState::getBackingState);
+    public static final Collection<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
+            .stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
 
     public static final Collection<State> INELIGIBLE_STATES = simpleMap(asList(
             ApplicationState.INELIGIBLE,

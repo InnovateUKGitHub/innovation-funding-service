@@ -73,7 +73,6 @@ public class ApplicantDashboardPopulator {
         ).mapToLong(ApplicationResource::getId).boxed().collect(Collectors.toList());
     }
 
-    // TODO DW - INFUND-1555 - handle rest result
     @SafeVarargs
     private final Map<Long, ApplicationState> createApplicationStateMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()

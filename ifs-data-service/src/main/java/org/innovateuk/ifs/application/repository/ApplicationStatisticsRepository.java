@@ -17,11 +17,14 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ApplicationStatisticsRepository extends PagingAndSortingRepository<ApplicationStatistics, Long> {
-    List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStatusIds);
 
-    @Query("SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
+    String APPLICATION_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState.state IN :states) " +
-            "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))")
+            "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+
+    List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
+
+    @Query(APPLICATION_FILTER)
     Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateStateIn(@Param("compId") long competitionId,
                                                                                            @Param("states") Collection<State> applicationStates,
                                                                                            @Param("filter") String filter,
