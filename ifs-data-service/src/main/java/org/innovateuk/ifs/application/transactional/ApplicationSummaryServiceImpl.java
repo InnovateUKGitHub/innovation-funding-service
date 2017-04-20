@@ -22,9 +22,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -42,7 +44,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             ApplicationState.SUBMITTED);
 
     public static final Collection<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
-            .stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+            .stream().map(ApplicationState::getBackingState).collect(toList());
 
     public static final Collection<State> NOT_SUBMITTED_STATES = simpleMap(asList(
             ApplicationState.CREATED,
@@ -59,6 +61,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     public static final Collection<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMap(asList(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED), ApplicationState::getBackingState);
+
+    public static final Collection<State> SUBMITTED_AND_INELIGIBLE_STATES = Stream.concat(
+            SUBMITTED_STATES.stream(),
+            INELIGIBLE_STATES.stream()).collect(toList());
 
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
         put("name", new Sort(ASC, new String[]{"name", "id"}));
@@ -215,7 +221,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                 })
                 .skip(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private boolean canUseSpringDataPaginationForSummaryResults(String sortBy) {

@@ -88,7 +88,10 @@
                             <td th:text="${row.projectTitle}">Machine learning in robots</td>
                             <td th:text="${row.lead}">PWC</td>
                             <td th:text="${row.leadApplicant}">HVM</td>
-                            <td th:text="${row.informed} ? 'informed' : 'not informed'">informed</td>
+                            <td>
+                                <span th:if="${row.informed}">informed</span>
+                                <button class="button" th:if="${!row.informed}">Inform</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
