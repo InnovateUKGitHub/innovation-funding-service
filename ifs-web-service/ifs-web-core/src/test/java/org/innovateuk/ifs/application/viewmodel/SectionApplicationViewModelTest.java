@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class SectionApplicationViewModelTest {
         currentCompetition = newCompetitionResource().build();
         currentApplication = newApplicationResource().build();
         currentCompetition.setCompetitionStatus(CompetitionStatus.CLOSED);
-        currentApplication.setApplicationStatus(ApplicationStatus.SUBMITTED);
+        currentApplication.setApplicationState(ApplicationState.SUBMITTED);
 
         viewModel = new SectionApplicationViewModel();
         viewModel.setCurrentCompetition(currentCompetition);

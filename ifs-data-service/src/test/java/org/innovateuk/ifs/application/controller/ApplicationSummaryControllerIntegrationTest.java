@@ -90,7 +90,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(5, resource.getApplicationsSubmitted());
 
         ApplicationResource application = applicationService.findAll().getSuccessObject().get(0);
-        applicationService.updateApplicationStatus(application.getId(), ApplicationStatus.SUBMITTED);
+        applicationService.updateApplicationState(application.getId(), ApplicationState.SUBMITTED);
 
         result = controller.getCompetitionSummary(COMPETITION_ID);
         assertTrue(result.isSuccess());
@@ -192,5 +192,4 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(33, result.getSuccessObject().getContent().get(0).getCompletedPercentage());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
     }
-
 }

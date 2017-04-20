@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -47,11 +47,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
     @Test
     public void applicantCanUploadFilesInResponsesForOwnApplication() {
-
-        Application application = newApplication().build();
-
-        ApplicationStatus applicationStatusOpen = ApplicationStatus.OPEN;
-        application.setApplicationStatus(applicationStatusOpen);
+        Application application = newApplication().withApplicationState(ApplicationState.OPEN).build();
 
         User user = newUser().build();
         UserResource userResource = newUserResource().withId(user.getId()).build();

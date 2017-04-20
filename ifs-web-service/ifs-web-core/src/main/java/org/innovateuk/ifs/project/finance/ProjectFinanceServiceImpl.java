@@ -5,23 +5,13 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
-import org.innovateuk.ifs.project.resource.SpendProfileResource;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * A service for dealing with a Project's finance operations
@@ -37,56 +27,6 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
 
     @Autowired
     private ProjectFinanceRowRestService projectFinanceRowRestService;
-
-    @Override
-    public ServiceResult<Void> generateSpendProfile(Long projectId) {
-        return projectFinanceRestService.generateSpendProfile(projectId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-        return projectFinanceRestService.acceptOrRejectSpendProfile(projectId, approvalType).toServiceResult();
-    }
-
-    @Override
-    public ApprovalType getSpendProfileStatusByProjectId(Long projectId) {
-        return projectFinanceRestService.getSpendProfileStatusByProjectId(projectId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public SpendProfileTableResource getSpendProfileTable(Long projectId, Long organisationId) {
-        return projectFinanceRestService.getSpendProfileTable(projectId, organisationId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public SpendProfileCSVResource getSpendProfileCSV(Long projectId, Long organisationId) {
-        return projectFinanceRestService.getSpendProfileCSV(projectId, organisationId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public Optional<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
-        return projectFinanceRestService.getSpendProfile(projectId, organisationId).toOptionalIfNotFound().getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table) {
-        return projectFinanceRestService.saveSpendProfile(projectId, organisationId, table).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> markSpendProfileComplete(Long projectId, Long organisationId) {
-        return projectFinanceRestService.markSpendProfileComplete(projectId, organisationId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> markSpendProfileIncomplete(Long projectId, Long organisationId) {
-        return projectFinanceRestService.markSpendProfileIncomplete(projectId, organisationId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
-        return projectFinanceRestService.completeSpendProfilesReview(projectId).toServiceResult();
-    }
 
     @Override
     public List<ProjectFinanceResource> getProjectFinances(Long projectId) {
@@ -124,9 +64,9 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId){
+    public List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId) {
         return projectFinanceRestService.getFinanceTotals(projectId).handleSuccessOrFailure(
-                failure -> Collections.<ProjectFinanceResource> emptyList(),
+                failure -> Collections.<ProjectFinanceResource>emptyList(),
                 success -> success
         );
     }
@@ -137,7 +77,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
     }
 
     @Override
-    public ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId){
+    public ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId) {
         return projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 

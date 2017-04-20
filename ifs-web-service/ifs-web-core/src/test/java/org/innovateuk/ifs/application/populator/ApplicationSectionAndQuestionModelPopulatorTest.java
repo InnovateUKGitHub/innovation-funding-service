@@ -114,7 +114,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     @Test
     public void testAddAssignableDetails() {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
-                .withApplicationStatus(ApplicationStatus.OPEN).build();
+                .withApplicationState(ApplicationState.OPEN).build();
         Long userId = 1L;
         Long organisationId = 3L;
         Optional<SectionResource> section = Optional.of(newSectionResource().build());
