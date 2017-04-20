@@ -42,9 +42,6 @@ public class ApplicationPrintPopulatorTest {
     private ApplicationPrintPopulator target;
 
     @Mock
-    private UserAuthenticationService userAuthenticationService;
-
-    @Mock
     private ApplicationService applicationService;
 
     @Mock
@@ -75,7 +72,6 @@ public class ApplicationPrintPopulatorTest {
     public void testPrint() {
         Long applicationId = 1L;
         Model model = mock(Model.class);
-        HttpServletRequest request = mock(HttpServletRequest.class);
         UserResource user = UserResourceBuilder.newUserResource().build();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
@@ -85,8 +81,6 @@ public class ApplicationPrintPopulatorTest {
         Optional<OrganisationResource> userOrganisation = Optional.of(OrganisationResourceBuilder.newOrganisationResource().build());
         Map<Long, FormInputResponseResource> mappedResponses = mock(Map.class);
 
-
-        when(userAuthenticationService.getAuthenticatedUser(request)).thenReturn(user);
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
         when(formInputResponseRestService.getResponsesByApplicationId(applicationId)).thenReturn(restSuccess(responses));
@@ -94,7 +88,7 @@ public class ApplicationPrintPopulatorTest {
         when(applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles)).thenReturn(userOrganisation);
         when(formInputResponseService.mapFormInputResponsesToFormInput(responses)).thenReturn(mappedResponses);
 
-        target.print(applicationId, model, request);
+        target.print(applicationId, model, user);
 
         //Verify model attributes set
         verify(model).addAttribute("responses", mappedResponses);

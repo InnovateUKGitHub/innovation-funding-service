@@ -5,7 +5,7 @@ import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.viewmodel.AssessQuestionFeedbackViewModel;
@@ -35,10 +35,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.*;
@@ -50,7 +48,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.SUBMITTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
@@ -210,7 +208,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
 
         List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
+        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.restSuccess(inviteOrgResources, HttpStatus.OK);
 
         when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
 
@@ -246,7 +244,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
 
         List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
+        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.restSuccess(inviteOrgResources, HttpStatus.OK);
 
         when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
 
@@ -314,7 +312,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         expectedNavigation.setPreviousText("previous");
         expectedNavigation.setPreviousUrl("/application/1/question/1/feedback");
         AssessQuestionFeedbackViewModel expectedModel =
-                new AssessQuestionFeedbackViewModel(applicationResource,questionResource, responseResources, aggregateResource, expectedNavigation);
+                new AssessQuestionFeedbackViewModel(applicationResource, questionResource, responseResources, aggregateResource, expectedNavigation);
 
         when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
         when(questionService.getById(questionId)).thenReturn(questionResource);
@@ -430,11 +428,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(env.acceptsProfiles("debug")).thenReturn(true);
         when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn("Not found");
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException("1234 not found", Collections.singletonList(1234L)));
-
-        List<Object> arguments = new ArrayList<>();
-        arguments.add("Application");
-        arguments.add(1234l);
+        when(applicationService.getById(1234L)).thenThrow(new ObjectNotFoundException("1234 not found", Collections.singletonList(1234L)));
 
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/1234"))
@@ -501,13 +495,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
-        MvcResult result = mockMvc.perform(post("/application/1/submit")
+        mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(view().name("application-submitted"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andReturn();
+                .andExpect(model().attribute("currentApplication", app));
 
-        verify(applicationService).updateStatus(app.getId(), SUBMITTED);
+        verify(applicationService).updateState(app.getId(), SUBMITTED);
     }
 
     @Test
@@ -525,14 +518,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
-        verify(applicationService, never()).updateStatus(any(Long.class), any(ApplicationStatus.class));
+        verify(applicationService, never()).updateState(any(Long.class), any(ApplicationState.class));
     }
 
     @Test
     public void testApplicationCreateView() throws Exception {
-        MvcResult result = mockMvc.perform(get("/application/create/1"))
-                .andExpect(view().name("application-create"))
-                .andReturn();
+        mockMvc.perform(get("/application/create/1"))
+                .andExpect(view().name("application-create"));
     }
 
     @Test
@@ -566,10 +558,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", ""))
+        mockMvc.perform(post("/application/create/1").param("application_name", ""))
                 .andExpect(view().name("application-create"))
-                .andExpect(model().attribute("applicationNameEmpty", true))
-                .andReturn();
+                .andExpect(model().attribute("applicationNameEmpty", true));
     }
 
     @Test
@@ -630,13 +621,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testApplicationPrint() throws Exception {
         ApplicationResource app = applications.get(0);
 
-        when(applicationPrintPopulator.print(eq(1L), any(Model.class), any(HttpServletRequest.class))).thenReturn("uri");
+        when(applicationPrintPopulator.print(eq(1L), any(Model.class), any(UserResource.class))).thenReturn("uri");
 
         mockMvc.perform(get("/application/" + app.getId() + "/print"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("uri"));
 
-        verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(HttpServletRequest.class));
+        verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(UserResource.class));
     }
-
 }

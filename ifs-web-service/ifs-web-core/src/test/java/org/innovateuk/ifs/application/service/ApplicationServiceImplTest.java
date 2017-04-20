@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -62,12 +62,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         List<ApplicationResource> applications = newApplicationResource()
         		.withId(1L, 2L, 3L, 4L, 5L, 6L)
-        		.withApplicationStatus(ApplicationStatus.CREATED,
-                        ApplicationStatus.OPEN,
-                        ApplicationStatus.OPEN,
-                        ApplicationStatus.SUBMITTED,
-                        ApplicationStatus.SUBMITTED,
-                        ApplicationStatus.SUBMITTED)
+        		.withApplicationState(ApplicationState.CREATED,
+                        ApplicationState.OPEN,
+                        ApplicationState.OPEN,
+                        ApplicationState.SUBMITTED,
+                        ApplicationState.SUBMITTED,
+                        ApplicationState.SUBMITTED)
                 .withCompletion(ZERO, new BigDecimal("20.50"), ZERO, ZERO, ZERO, ZERO)
                 .withCompetition(openCompetition.getId(),
                         openCompetition.getId(),
@@ -124,16 +124,16 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void testGetInProgressReliesOnApplicationStatusAndCompetitionStatus() throws Exception {
         List<ApplicationResource> returnedApplications = service.getInProgress(userId);
         assertEquals(4, returnedApplications.size());
-        assertEquals(ApplicationStatus.CREATED, returnedApplications.get(0).getApplicationStatus());
+        assertEquals(ApplicationState.CREATED, returnedApplications.get(0).getApplicationState());
         assertEquals(openCompetition.getId(), returnedApplications.get(0).getCompetition());
 
-        assertEquals(ApplicationStatus.OPEN, returnedApplications.get(1).getApplicationStatus());
+        assertEquals(ApplicationState.OPEN, returnedApplications.get(1).getApplicationState());
         assertEquals(openCompetition.getId(), returnedApplications.get(1).getCompetition());
         
-        assertEquals(ApplicationStatus.SUBMITTED, returnedApplications.get(2).getApplicationStatus());
+        assertEquals(ApplicationState.SUBMITTED, returnedApplications.get(2).getApplicationState());
         assertEquals(inAssessmentCompetition.getId(), returnedApplications.get(2).getCompetition());
         
-        assertEquals(ApplicationStatus.SUBMITTED, returnedApplications.get(3).getApplicationStatus());
+        assertEquals(ApplicationState.SUBMITTED, returnedApplications.get(3).getApplicationState());
         assertEquals(fundersPanelCompetition.getId(), returnedApplications.get(3).getCompetition());
     }
 
@@ -143,7 +143,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertEquals(2, returnedApplications.size());
         assertEquals(inAssessmentCompetition.getId(), returnedApplications.get(0).getCompetition());
 
-        assertEquals(ApplicationStatus.SUBMITTED, returnedApplications.get(1).getApplicationStatus());
+        assertEquals(ApplicationState.SUBMITTED, returnedApplications.get(1).getApplicationState());
         assertEquals(closedCompetition.getId(), returnedApplications.get(1).getCompetition());
     }
     
@@ -168,10 +168,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void testUpdateStatus() throws Exception {
     	Long applicationId = 2L;
-        ApplicationStatus status = ApplicationStatus.APPROVED;
-        when(applicationRestService.updateApplicationStatus(applicationId, status)).thenReturn(restSuccess());
-        service.updateStatus(applicationId, status);
-        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationStatus(applicationId, status);
+        ApplicationState status = ApplicationState.APPROVED;
+        when(applicationRestService.updateApplicationState(applicationId, status)).thenReturn(restSuccess());
+        service.updateState(applicationId, status);
+        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationState(applicationId, status);
     }
 
     @Test
@@ -201,5 +201,4 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertTrue(result.isSuccess());
         Mockito.inOrder(inviteRestService).verify(inviteRestService, calls(1)).removeApplicationInvite(applicationInviteId);
     }
-
 }

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -150,14 +150,14 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder beginApplication() {
 
         return asLeadApplicant(data ->
-                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.OPEN).
+                applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.OPEN).
                         getSuccessObjectOrThrowException());
     }
 
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data -> {
-            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.SUBMITTED).
+            applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.SUBMITTED).
                     getSuccessObjectOrThrowException();
 
             applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), ZonedDateTime.now()).getSuccessObjectOrThrowException();

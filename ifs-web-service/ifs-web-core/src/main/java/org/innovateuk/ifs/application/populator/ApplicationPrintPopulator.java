@@ -57,8 +57,7 @@ public class ApplicationPrintPopulator {
 
 
     public String print(final Long applicationId,
-                           Model model, HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+                           Model model, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 

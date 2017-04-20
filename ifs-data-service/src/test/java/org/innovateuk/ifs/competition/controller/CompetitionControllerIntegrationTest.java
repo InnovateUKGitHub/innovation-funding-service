@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -37,6 +37,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSES
 import static org.innovateuk.ifs.competition.resource.MilestoneType.FEEDBACK_RELEASED;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.innovateuk.ifs.workflow.resource.State.CREATED;
 import static org.innovateuk.ifs.workflow.resource.State.PENDING;
@@ -396,7 +397,8 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         controller.saveCompetition(closedCompetition, closedCompetition.getId());
 
         UserResource user = getPaulPlum();
-        List<Long> assessmentIds = createCreatedAssessmentsWithCompetition(closedCompetition.getId(), user, 2);
+        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION, CREATED);
+        List<Long> assessmentIds = createCreatedAssessmentsWithCompetition(closedCompetition.getId(), user, 2, createdActivityState);
 
         RestResult<Void> notifyResult = controller.notifyAssessors(closedCompetition.getId());
         assertTrue("Notify assessors is a success", notifyResult.isSuccess());
@@ -566,11 +568,13 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(competitionTypeId, competitionsResult.getSuccessObject().getCompetitionType());
     }
 
-    private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, UserResource assessor, int numberOfAssessments) {
+    private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, UserResource assessor, int numberOfAssessments, ActivityState created) {
         List<Application> applications = newApplication()
                 .withCompetition(competitionRepository.findById(competitionId))
-                .withApplicationStatus(ApplicationStatus.CREATED)
+                .withApplicationState(ApplicationState.CREATED)
                 .build(numberOfAssessments);
+
+        applications.stream().forEach(application -> application.getApplicationProcess().setActivityState(created));
 
         applicationRepository.save(applications);
 

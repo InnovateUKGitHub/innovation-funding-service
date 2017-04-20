@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -17,6 +16,9 @@ import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -111,10 +113,10 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         List<ProcessRole> proccessRoles = new ArrayList<>();
         Application application = new Application(
-                APPLICATION_ID,
                 "",
-                ApplicationStatus.CREATED
+                new ActivityState(ActivityType.APPLICATION, State.CREATED)
         );
+        application.setId(APPLICATION_ID);
         proccessRoles.add(
                 new ProcessRole(
                         leadApplicantProcessRole,

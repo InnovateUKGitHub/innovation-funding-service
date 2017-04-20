@@ -54,6 +54,7 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStatusRestService;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
@@ -203,6 +204,8 @@ public class BaseUnitTest {
     protected ProjectFinanceRowRestService projectFinanceRowRestService;
     @Mock
     public ProjectRestService projectRestService;
+    @Mock
+    public SpendProfileService spendProfileService;
     @Mock
     protected BankDetailsRestService bankDetailsRestService;
     @Mock
@@ -547,15 +550,15 @@ public class BaseUnitTest {
 
         List<ApplicationResource> applicationResources = asList(
                 newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatus.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
-                        .withApplicationStatus(ApplicationStatus.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
-                        .withApplicationStatus(ApplicationStatus.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
-                        .withApplicationStatus(ApplicationStatus.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatus.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
+                        .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
