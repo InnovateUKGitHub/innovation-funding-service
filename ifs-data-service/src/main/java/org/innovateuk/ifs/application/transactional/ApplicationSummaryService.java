@@ -54,7 +54,7 @@ public interface ApplicationSummaryService {
 
 	@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 	@SecuredBySpring(value = "READ", description = "Comp Admins can see all Ineligable Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
-	ServiceResult<ApplicationSummaryPageResource> getIneligableApplicationSummariesByCompetitionId(long competitionId,
+	ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(long competitionId,
 																								   String sortBy,
 																								   int pageIndex,
 																								   int pageSize,

@@ -271,4 +271,60 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     }
 
 
+    @Test
+    public void searchIneligibleByCompetitionId() throws Exception {
+        long competitionId = 3L;
+        int page = 6;
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty())).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible",competitionId)
+                .param("page",Integer.toString(page)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty());
+    }
+
+    @Test
+    public void searchIneligibleByCompetitionIdWithSortField() throws Exception {
+        long competitionId = 3L;
+        int page = 6;
+        String sort = "id";
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty())).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible",competitionId)
+                .param("page",Integer.toString(page))
+                .param("sort", sort))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty());
+    }
+
+    @Test
+    public void searchIneligibleByCompetitionIdWithFilter() throws Exception {
+        long competitionId = 3L;
+        int page = 6;
+        String strFilter = "filter";
+        FundingDecisionStatus fundingFilter = FUNDED;
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter))).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible",competitionId)
+                .param("page",Integer.toString(page))
+                .param("filter", strFilter)
+                .param("fundingFilter", fundingFilter.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter));
+    }
 }

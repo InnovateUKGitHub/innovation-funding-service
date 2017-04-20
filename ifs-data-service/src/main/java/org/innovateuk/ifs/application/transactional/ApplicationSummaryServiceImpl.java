@@ -153,7 +153,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<ApplicationSummaryPageResource> getIneligableApplicationSummariesByCompetitionId(
+    public ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(
             long competitionId,
             String sortBy,
             int pageIndex,

@@ -394,6 +394,37 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void findByCompetitionIneligibleApplications() throws Exception {
+
+        Page<Application> page = mock(Page.class);
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                eq(COMP_ID),
+                eq(simpleMap(asList(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED), ApplicationState::getBackingState)),
+                eq(""),
+                eq(null),
+                argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
+                .thenReturn(page);
+
+        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService
+                .getIneligibleApplicationSummariesByCompetitionId(
+                        COMP_ID,
+                        "id",
+                        0,
+                        20,
+                        of(""));
+
+        assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccessObject().getNumber());
+        assertEquals(resource, result.getSuccessObject());
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void findByCompetitionFeedbackRequiredApplications() throws Exception {
 
         Page<Application> page = mock(Page.class);
