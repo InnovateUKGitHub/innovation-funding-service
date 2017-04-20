@@ -37,11 +37,7 @@ public class Notification {
      */
     private Map<NotificationTarget, Map<String, Object>> perNotificationTargetArguments = emptyMap();
 
-    /**
-     * For builder use only
-     */
-    public Notification() {
-    	// no-arg constructor
+    private Notification() {
     }
 
     public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> globalArguments) {
