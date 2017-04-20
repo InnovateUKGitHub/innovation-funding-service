@@ -164,9 +164,6 @@ task dbResetDocker(type: Docker, dependsOn: build) {
     }
 }
 
-task buildDocker(dependsOn: [appDocker, dbResetDocker]) {
-}
-
 buildDocker.dependsOn prepareDockerFile
 
 asciidoctor {
