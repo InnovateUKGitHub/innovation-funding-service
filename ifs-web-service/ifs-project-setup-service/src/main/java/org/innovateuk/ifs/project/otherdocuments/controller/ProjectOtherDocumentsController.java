@@ -45,7 +45,7 @@ public class ProjectOtherDocumentsController {
 
     private static final String FORM_ATTR = "form";
     @Autowired
-    ProjectOtherDocumentsViewModelPopulator otherDocumentsViewModel;
+    ProjectOtherDocumentsViewModelPopulator populateModel;
 
     @Autowired
     private ProjectService projectService;
@@ -63,7 +63,7 @@ public class ProjectOtherDocumentsController {
     @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProjectOtherDocumentsViewModel viewModel = otherDocumentsViewModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
+        ProjectOtherDocumentsViewModel viewModel = populateModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
 
@@ -75,7 +75,7 @@ public class ProjectOtherDocumentsController {
     public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = otherDocumentsViewModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
+        ProjectOtherDocumentsViewModel viewModel = populateModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("readOnlyView", true);
@@ -182,7 +182,7 @@ public class ProjectOtherDocumentsController {
     }
 
     private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
-        ProjectOtherDocumentsViewModel viewModel = otherDocumentsViewModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
+        ProjectOtherDocumentsViewModel viewModel = populateModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
