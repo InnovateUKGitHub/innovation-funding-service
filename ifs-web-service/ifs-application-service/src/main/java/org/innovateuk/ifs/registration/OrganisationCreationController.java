@@ -73,7 +73,7 @@ public class OrganisationCreationController {
     private static final String FIND_BUSINESS = "find-business";
     private static final String FIND_ORGANISATION = "find-organisation";
     private static final String SELECTED_ORGANISATION = "selected-organisation";
-    private static final String SELECT_ORGANISATION_TYPE = "select-organisation-type";
+    private static final String LEAD_ORGANISATION_TYPE = "lead-organisation-type";
     private static final String CONFIRM_ORGANISATION = "confirm-organisation";
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
     private static final String BASE_URL = "/organisation/create";
@@ -459,7 +459,7 @@ public class OrganisationCreationController {
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-            return "redirect:" + BASE_URL + "/" + SELECT_ORGANISATION_TYPE;
+            return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
         } else {
             organisationForm.setTriedToSave(true);
             organisationForm.getAddressForm().setTriedToSave(true);
@@ -468,7 +468,7 @@ public class OrganisationCreationController {
         }
     }
 
-    @GetMapping("/" + SELECT_ORGANISATION_TYPE)
+    @GetMapping("/" + LEAD_ORGANISATION_TYPE)
     public String selectOrganisationType(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                           Model model,
                                           HttpServletRequest request) {
@@ -476,10 +476,10 @@ public class OrganisationCreationController {
         model.addAttribute(MODEL, organisationCreationSelectTypePopulator.populate());
         model.addAttribute(ORGANISATION_FORM, organisationForm);
 
-        return TEMPLATE_PATH + "/" + SELECT_ORGANISATION_TYPE;
+        return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
     }
 
-    @PostMapping("/" + SELECT_ORGANISATION_TYPE)
+    @PostMapping("/" + LEAD_ORGANISATION_TYPE)
     public String confirmSelectOrganisationType(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 BindingResult bindingResult,
                                                 Model model,
@@ -497,7 +497,7 @@ public class OrganisationCreationController {
             organisationForm.setTriedToSave(true);
             model.addAttribute(MODEL, organisationCreationSelectTypePopulator.populate());
 
-            return TEMPLATE_PATH + "/" + SELECT_ORGANISATION_TYPE;
+            return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
         }
     }
 
