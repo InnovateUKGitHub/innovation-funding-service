@@ -12,6 +12,15 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
+            <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}">
+                <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
+                <ul class="error-summary-list">
+                    <th:block th:each="err : ${#fields.errors('${form.*}')}" th:with="markAsCompleteError=#{application.validation.MarkAsCompleteFailed}">
+                        <li th:classappend="${err.equals(markAsCompleteError)} ? 'list-header' : ''" th:text="${err}"></li>
+                    </th:block>
+                </ul>
+            </div>
+
             <div class="page-title">
                 <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />

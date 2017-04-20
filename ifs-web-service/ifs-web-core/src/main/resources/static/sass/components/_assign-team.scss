@@ -46,7 +46,6 @@ The assign container is normally a `<select>`, which gets progressivly transform
   }
 
   .assign-button-container {
-
     display: inline-block;
     position: relative;
 
@@ -55,31 +54,27 @@ The assign container is normally a `<select>`, which gets progressivly transform
     }
 
     .action-required,
-    .secondary-notification{
+    .secondary-notification {
       padding-right: 0;
     }
-
   }
 
   .assign-team {
-    @include core-16;
     @include border-radius(2px);
+    @include core-16;
+    background-color: #fff;
     border: 1px solid $grey-3;
+    margin-top: 10px;
     padding: 10px 15px;
     position: absolute;
-    z-index: 1;
-    background-color: #fff;
     width: 200px;
-    color: $secondary-text-colour;
-    margin-top: 10px;
+    z-index: 1;
 
     @include media-down(mobile) {
       left: 0;
       width: 90%;
     }
-  }
 
-  .assign-team {
     li {
       margin: 0.75em 0;
 
@@ -89,31 +84,31 @@ The assign container is normally a `<select>`, which gets progressivly transform
      }
    }
 
-
   .assign-button {
     display: inline;
+
+    button {
+      @extend .buttonlink;
+
+      &[aria-expanded]::after {
+        content: '\0020\0020\25bc';
+        font-size:12px;
+      }
+
+      &[aria-expanded="true"]::after {
+        content: '\0020\0020\25b2';
+      }
+
+      &[aria-hidden="true"] {
+        display: none;
+      }
+    }
   }
-
-  .assign-button button {
-    @extend .buttonlink;
-  }
-
- .assign-button button[aria-expanded]:after {
-    content: '\0020\0020\25bc';
-    font-size:12px;
- }
-
- .assign-button button[aria-expanded="true"]:after {
-    content: '\0020\0020\25b2';
- }
-
- .assign-button button[aria-hidden="true"] {
-    display: none;
- }
 
   ul {
     margin-bottom:0;
   }
+
   .reassign-status {
     display: inline;
     text-align:left;
@@ -121,23 +116,28 @@ The assign container is normally a `<select>`, which gets progressivly transform
 }
 
 //double class to be more specific as the @extend gets processed last by compass
-.assign-container.assign-container .assign-button button,
-.assign-container.assign-container  .buttonlink {
-  padding: 0;
-  margin: 0 5px 0 0;
-  text-align: left;
+.assign-container.assign-container {
+
+  .assign-button button,
+  .buttonlink {
+    padding: 0;
+    margin: 0 5px 0 0;
+    text-align: left;
+  }
 }
 
 .no-js {
 
   .assign-container {
+
     .assign-team {
-      position: relative;
       border: none;
       margin: 0;
+      padding-bottom: 2px;
       padding-left: 0;
       padding-top: 0;
-      padding-bottom: 2px;
+      position: relative;
+      width: auto;
     }
   }
 
@@ -145,13 +145,14 @@ The assign container is normally a `<select>`, which gets progressivly transform
   .assign-alert {
     margin-bottom: 1em;
 
-    .assign-team{
+    .assign-team {
       background: $grey-4;
     }
   }
 
   .assign-button,
   .secondary-notification-button {
+
     > span {
       @extend .visuallyhidden;
     }
