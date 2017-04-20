@@ -13,13 +13,13 @@
 
     <div class="grid-row">
         <div class="column-two-thirds">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${currentCompetition.id} : ${competitionSummary.competitionName}|,size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${competitionSummary.competitionId} : ${competitionSummary.competitionName}|,size='heading-xlarge'" />
         </div>
     </div>
 
     <form method="GET" th:object="${applicationSummaryQueryForm}">
         <div class="search-filters extra-margin">
-                <h2 class="heading-medium">Filter applications</legend>
+                <h2 class="heading-medium">Filter applications</h2>
                 <div class="grid-row">
                     <div class="column-half">
                         <div class="form-group">
