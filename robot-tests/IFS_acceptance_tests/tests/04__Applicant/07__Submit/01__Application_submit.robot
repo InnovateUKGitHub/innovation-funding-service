@@ -75,6 +75,7 @@ Submit flow (complete application)
     And the user should see the text in the page    you will be notified of our decision by
     And The user should see the element         link=Finished
     # TODO add check here once INFUND-9195 done
+    And the user should see the text in the page    You and your project partners will be emailed notification of the decision by
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
@@ -86,7 +87,6 @@ Submitted application is read only
     [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
-    and the user should see the element     link=Return to dashboard
     and the user clicks the button/link     link=Return to dashboard
     and the user clicks the button/link     link=${application_name}
     When the user clicks the button/link    link=View application
