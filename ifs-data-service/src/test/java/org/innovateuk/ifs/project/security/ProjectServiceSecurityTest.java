@@ -196,44 +196,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetMonitoringOfficer() {
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getMonitoringOfficer(123L), () -> {
-            verify(projectPermissionRules).internalUsersCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
-            verify(projectPermissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testSaveMonitoringOfficer() {
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.saveMonitoringOfficer(123L, newMonitoringOfficerResource().build()), () -> {
-            verify(projectPermissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testNotifyMonitoringOfficer() {
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.notifyStakeholdersOfMonitoringOfficerChange(newMonitoringOfficerResource().withProject(123L).build()),
-                () -> {
-                    verify(projectPermissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-                    verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
     public void testCreateCollaborationAgreementFileEntry() {
 
         ProjectResource project = newProjectResource().build();
@@ -573,17 +535,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
-            return null;
-        }
-
-		@Override
-        public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
             return null;
         }
 
@@ -594,11 +546,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
             return null;
         }
 
