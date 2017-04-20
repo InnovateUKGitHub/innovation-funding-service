@@ -36,12 +36,14 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     public static final Collection<ApplicationState> SUBMITTED_APPLICATION_STATES = asList(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
-            ApplicationState.SUBMITTED,
-            ApplicationState.INELIGIBLE,
-            ApplicationState.INELIGIBLE_INFORMED);
+            ApplicationState.SUBMITTED);
 
     public static final Collection<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
             .stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+
+    public static final Collection<State> NOT_SUBMITTED_STATES = simpleMap(asList(
+            ApplicationState.CREATED,
+            ApplicationState.OPEN), ApplicationState::getBackingState);
 
     public static final Collection<State> INELIGIBLE_STATES = simpleMap(asList(
             ApplicationState.INELIGIBLE,
@@ -87,8 +89,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr, pageable),
-                () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, INELIGIBLE_STATES, filterStr, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, INELIGIBLE_STATES, filterStr));
     }
 
     @Override
@@ -112,10 +114,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Long competitionId, String sortBy, int pageIndex, int pageSize) {
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(
-                        competitionId, SUBMITTED_STATES, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(
-                        competitionId, SUBMITTED_STATES));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, NOT_SUBMITTED_STATES, "", null, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, NOT_SUBMITTED_STATES, "", null));
     }
 
     @Override
