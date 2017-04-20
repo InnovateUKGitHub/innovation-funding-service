@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
@@ -30,7 +29,7 @@ import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
  */
 @Controller
 @PreAuthorize("permitAll")
-public class AcceptProjectInviteController extends BaseController {
+public class AcceptProjectInviteController {
 
     public static final String INVITE_HASH = "project_invite_hash";
 
