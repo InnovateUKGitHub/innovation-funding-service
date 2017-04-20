@@ -72,15 +72,14 @@ then
     pushDBResetImages
 fi
 
-oc project $PROJECT ${SVC_ACCOUNT_CLAUSE}
 dbReset
 
 echo Waiting for completion
-while [ "$(oc get jobs dbreset -o go-template --template '{{.status.completionTime}}'|cut -c1)" != "2" ]
+while [ "$(oc get jobs dbreset -o go-template --template '{{.status.completionTime}}' ${SVC_ACCOUNT_CLAUSE})" == '<no value>' ]
 do
   echo -n .
   sleep 5
 done
 
-[ "$(oc get -o template job dbreset --template={{.status.succeeded}})" != 1 ] && exit -1
+[ "$(oc get -o template job dbreset --template={{.status.succeeded}} ${SVC_ACCOUNT_CLAUSE})" != 1 ] && exit -1
 exit 0
