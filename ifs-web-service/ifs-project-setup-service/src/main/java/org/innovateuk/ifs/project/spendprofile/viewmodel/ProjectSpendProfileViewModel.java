@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.validation.ObjectError;
 

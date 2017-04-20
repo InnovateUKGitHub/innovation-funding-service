@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -63,10 +63,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     @Mock
     private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
     
-    private ApplicationStatus approvedStatus;
-    private ApplicationStatus rejectedStatus;
-    private ApplicationStatus openStatus;
-    
     private Competition competition;
     
     @Override
@@ -78,10 +74,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Before
     public void setup() {
-    	approvedStatus = ApplicationStatus.APPROVED;
-    	rejectedStatus = ApplicationStatus.REJECTED;
-    	openStatus = ApplicationStatus.OPEN;
-
     	competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).withId(123L).build();
     	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
     	
@@ -225,8 +217,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     @Test
     public void testSaveFundingDecisionData() {
     	
-    	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
-     	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationStatus(openStatus).build();
+    	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPEN).build();
+     	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPEN).build();
     	when(applicationRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(asList(application1, application2));
         when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
@@ -236,8 +228,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	
     	assertTrue(result.isSuccess());
     	verify(applicationRepositoryMock).findByCompetitionId(competition.getId());
-    	assertEquals(openStatus, application1.getApplicationStatus());
-    	assertEquals(openStatus, application2.getApplicationStatus());
+    	assertEquals(ApplicationState.OPEN, application1.getApplicationProcess().getActivityState());
+    	assertEquals(ApplicationState.OPEN, application2.getApplicationProcess().getActivityState());
     	assertEquals(FundingDecisionStatus.UNDECIDED, application1.getFundingDecision());
     	assertEquals(FundingDecisionStatus.UNFUNDED, application2.getFundingDecision());
     	assertNull(competition.getFundersPanelEndDate());
@@ -248,7 +240,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         Long applicationId = 1L;
         Long competitionId = competition.getId();
-        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
+        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPEN).build();
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(application1));
         when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
@@ -266,7 +258,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     public void testSaveFundingDecisionDataWontResetEmailDateForSameDecision() {
         Long applicationId = 1L;
         Long competitionId = competition.getId();
-        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
+        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPEN).build();
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(application1));
         when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
@@ -306,5 +298,4 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
         });
     }
-	
 }

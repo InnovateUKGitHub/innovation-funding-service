@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.spendprofile.security;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
-import org.innovateuk.ifs.project.financecheck.controller.FinanceCheckController;
+import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 

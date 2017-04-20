@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 
 
 <!-- ======== Assessment - research category ======= -->
@@ -60,7 +60,9 @@
 <!-- =================== Assessment feedback score ============================== -->
 <div th:fragment="assessor_score (field)">
     <div class="form-group">
-        <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
+        <label class="form-label form-label-bold" for="assessor-question-score">Question score
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"/>
+        </label>
         <select class="form-control width-medium"
                 aria-describedby="info"
                 id="assessor-question-score"

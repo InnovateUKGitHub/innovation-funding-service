@@ -250,7 +250,7 @@ public abstract class BaseSectionViewModel {
     }
 
     public Boolean getShowAgreeToStateAidOption() {
-        return null != currentSection && SectionType.PROJECT_COST_FINANCES.equals(currentSection.getType()) && !getApplication().getAllReadOnly();
+        return null != currentSection && SectionType.PROJECT_COST_FINANCES.equals(currentSection.getType()) && !getApplication().getAllReadOnly() && !isAcademicFinances();
     }
 
     public Boolean getShowAgreeToTermsOption() {
@@ -323,5 +323,9 @@ public abstract class BaseSectionViewModel {
             return questionFormInputs.get(questionId).stream().filter(formInputResource -> formInputType.equals(formInputResource.getType())).collect(toList());
         } 
         return Collections.emptyList();
+    }
+
+    private boolean isAcademicFinances() {
+        return this instanceof OpenFinanceSectionViewModel && ((OpenFinanceSectionViewModel) this).getIsAcademicFinance();
     }
 }
