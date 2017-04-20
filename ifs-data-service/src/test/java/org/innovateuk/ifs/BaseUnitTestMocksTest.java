@@ -80,11 +80,11 @@ import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService
 import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
-import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
+import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.ProjectMonitoringOfficerService;
-import org.innovateuk.ifs.project.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;

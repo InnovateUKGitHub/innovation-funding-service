@@ -24,7 +24,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerBuilder;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
-import org.innovateuk.ifs.project.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
