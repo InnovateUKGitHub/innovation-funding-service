@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financecheck.transactional;
+package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 
@@ -7,6 +7,5 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
  * Organisation
  */
 public interface SpendProfileCostCategorySummaryStrategy {
-
     ServiceResult<SpendProfileCostCategorySummaries> getCostCategorySummaries(Long projectId, Long organisationId);
 }

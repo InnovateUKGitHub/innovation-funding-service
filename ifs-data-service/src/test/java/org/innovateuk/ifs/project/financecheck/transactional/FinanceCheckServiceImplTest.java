@@ -16,7 +16,7 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
 import org.innovateuk.ifs.project.financecheck.domain.FinanceCheck;
-import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.financecheck.service.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;

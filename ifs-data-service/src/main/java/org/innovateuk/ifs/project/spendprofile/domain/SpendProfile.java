@@ -1,6 +1,9 @@
-package org.innovateuk.ifs.project.financecheck.domain;
+package org.innovateuk.ifs.project.spendprofile.domain;
 
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.financecheck.domain.Cost;
+import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financecheck.domain.CostGroup;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -18,9 +21,8 @@ import static javax.persistence.EnumType.STRING;
  */
 @Entity
 public class SpendProfile {
-
-    public static final String ELIGIBLE_COSTS_DESCRIPTION = "Eligible costs for Partner Organisation";
-    public static final String SPEND_PROFILE_DESCRIPTION = "Spend Profile figures for Partner Organisation";
+    private static final String ELIGIBLE_COSTS_DESCRIPTION = "Eligible costs for Partner Organisation";
+    private static final String SPEND_PROFILE_DESCRIPTION = "Spend Profile figures for Partner Organisation";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

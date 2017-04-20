@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financecheck.transactional;
+package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
 
@@ -16,7 +16,7 @@ public class SpendProfileCostCategorySummary {
     private BigDecimal firstMonthSpend;
     private BigDecimal otherMonthsSpend;
 
-    SpendProfileCostCategorySummary(CostCategory category, BigDecimal totalWithScale, long projectDurationInMonths) {
+    public SpendProfileCostCategorySummary(CostCategory category, BigDecimal totalWithScale, long projectDurationInMonths) {
 
         // Set the scale of the total to zero to ignore the pence figures.
         BigDecimal total = totalWithScale.setScale(0, BigDecimal.ROUND_HALF_EVEN);

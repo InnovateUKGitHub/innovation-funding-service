@@ -11,6 +11,9 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
 import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummaries;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummary;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummaryStrategy;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -137,8 +140,8 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
         AcademicCostCategoryGenerator academicCostCategoryMatch = AcademicCostCategoryGenerator.fromFinanceRowName(costCategoryName);
         return simpleFindFirst(costCategoryType.getCostCategories(), cat ->
                         cat.getName().equals(academicCostCategoryMatch.getName()) &&
-                        cat.getLabel().equals(academicCostCategoryMatch.getLabel())).
-                get();
+                        cat.getLabel().equals(academicCostCategoryMatch.getLabel()))
+                .orElse(null);
     }
 
     private CostCategory findIndustrialCostCategoryForName(CostCategoryType costCategoryType, String costCategoryName) {

@@ -9,6 +9,8 @@ import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
 import org.innovateuk.ifs.project.financecheck.domain.CostCategoryGroup;
 import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummaries;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummary;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;
