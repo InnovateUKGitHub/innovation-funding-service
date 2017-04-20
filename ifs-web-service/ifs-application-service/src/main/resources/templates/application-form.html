@@ -40,7 +40,7 @@
                      questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                      currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
                      pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}">
+                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}, summary=false">
 
                     <th:block th:if="${formInput.type.displayableQuestionType}">
                         <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
