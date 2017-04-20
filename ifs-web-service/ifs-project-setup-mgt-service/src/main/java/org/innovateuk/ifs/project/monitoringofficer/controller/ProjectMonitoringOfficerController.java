@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringO
 import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
