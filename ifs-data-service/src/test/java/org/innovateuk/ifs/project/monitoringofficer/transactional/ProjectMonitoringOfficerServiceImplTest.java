@@ -37,7 +37,7 @@ import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.ProjectMonitoringOfficerServiceImpl;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectLeadStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;

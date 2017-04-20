@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.resource;
+package org.innovateuk.ifs.project.monitoringofficer.resource;
 
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;

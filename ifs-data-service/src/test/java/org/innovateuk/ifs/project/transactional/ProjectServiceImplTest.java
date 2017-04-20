@@ -34,6 +34,7 @@ import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
 import org.innovateuk.ifs.project.financecheck.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.*;

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 

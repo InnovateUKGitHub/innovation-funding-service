@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.springframework.stereotype.Service;
 
 @Service
