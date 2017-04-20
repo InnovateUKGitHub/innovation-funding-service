@@ -178,7 +178,7 @@ public class FinanceChecksEligibilityController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @RequestMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")  // Note: request type not explicit as it is used by existing ajax calls which do GET
+    @GetMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")
     public String addCostRow(@ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
@@ -198,7 +198,7 @@ public class FinanceChecksEligibilityController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @RequestMapping(value = "/remove_cost/{costId}") // Note: request type not explicit as it is used by existing ajax calls which do GET
+    @GetMapping(value = "/remove_cost/{costId}")
     public @ResponseBody
     String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
         financeRowService.delete(costId);
