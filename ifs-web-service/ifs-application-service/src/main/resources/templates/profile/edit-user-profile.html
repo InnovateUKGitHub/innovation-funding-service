@@ -60,6 +60,12 @@
                                 data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
+            <div th:class="${#fields.hasErrors('allowMarketingEmails')}? 'form-group error':'form-group'">
+                <label class="block-label selection-button-checkbox" for="allow-marketing-emails">
+                    <input id="allow-marketing-emails" th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>
+                    Send me updates on Innovate UK competitions by email.
+                </label>
+            </div>
             <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
                 <label class="form-label" for="phoneNumber">
                     <span class="form-label-bold">Phone number</span>

@@ -82,9 +82,6 @@ public class FinanceChecksEligibilityController {
     private OpenProjectFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private SectionService sectionService;
 
     @Autowired
@@ -121,13 +118,12 @@ public class FinanceChecksEligibilityController {
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
                                   BindingResult bindingResult,
                                   Model model,
-                                  HttpServletRequest request) {
+                                  @ModelAttribute("loggedInUser") UserResource user) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
@@ -185,8 +181,7 @@ public class FinanceChecksEligibilityController {
                              @PathVariable("projectId") Long projectId,
                              @PathVariable("organisationId") Long organisationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
-                             HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+                             @ModelAttribute("loggedInUser") UserResource user) {
         Long organisationType = organisationService.getOrganisationById(organisationId).getOrganisationType();
 
         FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
@@ -215,6 +210,7 @@ public class FinanceChecksEligibilityController {
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            Model model,
+                                           @ModelAttribute("loggedInUser") UserResource user,
                                            HttpServletRequest request) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -226,7 +222,6 @@ public class FinanceChecksEligibilityController {
         if(saveApplicationErrors.hasErrors()){
             OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
             boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
-            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
             List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
             CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
             validationHandler.addAnyErrors(saveApplicationErrors);
@@ -279,13 +274,12 @@ public class FinanceChecksEligibilityController {
                                      @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
                                      ValidationHandler validationHandler,
                                      Model model,
-                                     HttpServletRequest request) {
+                                     @ModelAttribute("loggedInUser") UserResource user) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
         CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
 
@@ -306,14 +300,13 @@ public class FinanceChecksEligibilityController {
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
                                   Model model,
-                                  HttpServletRequest request) {
+                                  @ModelAttribute("loggedInUser") UserResource user) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
         CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
 

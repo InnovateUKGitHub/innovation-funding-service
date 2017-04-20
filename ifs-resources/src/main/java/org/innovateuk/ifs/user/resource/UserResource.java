@@ -32,6 +32,7 @@ public class UserResource {
     private Disability disability;
     private Long ethnicity;
     private Long profileId;
+    private boolean allowMarketingEmails;
 
     public UserResource() {
         // no-arg constructor
@@ -188,6 +189,14 @@ public class UserResource {
         this.profileId = profileId;
     }
 
+    public boolean getAllowMarketingEmails() {
+        return allowMarketingEmails;
+    }
+
+    public void setAllowMarketingEmails(boolean allowMarketingEmails) {
+        this.allowMarketingEmails = allowMarketingEmails;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -217,6 +226,7 @@ public class UserResource {
                 .append(disability, that.disability)
                 .append(ethnicity, that.ethnicity)
                 .append(profileId, that.profileId)
+                .append(allowMarketingEmails, that.allowMarketingEmails)
                 .isEquals();
     }
 
@@ -239,6 +249,7 @@ public class UserResource {
                 .append(disability)
                 .append(ethnicity)
                 .append(profileId)
+                .append(allowMarketingEmails)
                 .toHashCode();
     }
 }
