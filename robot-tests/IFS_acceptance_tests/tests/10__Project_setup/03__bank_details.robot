@@ -136,21 +136,14 @@ Bank details experian validations
     When the user submits the bank account details    12345673    000003
     Then the user should see the text in the page    Bank account details are incorrect, please check and try again
     When the user submits the bank account details    00000123    000004 
-    Then the user should see the text in the page    Bank details cannot be validated. 
-    And the user should see the text in the page     please check your account number 
-    And the user should see the text in the page     please check your sort code 
+    Then the user views the error response from the stub
 
 Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
-    Given the user enters text to a text field        name=accountNumber    00000123
-    When the user enters text to a text field         name=sortCode    000004
-    Then the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link               jquery=button:contains("Submit")
-    Then the user should see the text in the page     Bank details cannot be validated. 
-    And the user should see the text in the page      please check your account number 
-    And the user should see the text in the page      please check your sort code 
+    Given the user submits the bank account details   00000123    000004 
+    Then the user views the error response from the stub
     When the user enters text to a text field         name=accountNumber    12345677
     And the user enters text to a text field          name=sortCode    000004
     When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
@@ -182,15 +175,8 @@ Bank details for Academic
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
-    When the user enters text to a text field       name=accountNumber    00000123
-    Then the user enters text to a text field       name=sortCode    000004
-    And the user clicks the button/link             jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    Then the user clicks the button/link            jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    When the user clicks the button/link            jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link             jquery=button:contains("Submit")
-    Then the user should see the text in the page   Bank details cannot be validated. 
-    And the user should see the text in the page    please check your account number 
-    And the user should see the text in the page    please check your sort code 
+    When the user submits the bank account details along with the organisation address     00000123    000004
+    Then the user views the error response from the stub
     When the user enters text to a text field      name=accountNumber  51406795
     And the user enters text to a text field       name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -240,15 +226,8 @@ Bank details for non-lead partner
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
-    When the user enters text to a text field      name=accountNumber    00000123
-    Then the user enters text to a text field      name=sortCode    000004
-    And the user clicks the button/link            jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    Then the user clicks the button/link            jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link            jquery=button:contains("Submit")
-    Then the user should see the text in the page  Bank details cannot be validated. 
-    And the user should see the text in the page   please check your account number 
-    And the user should see the text in the page   please check your sort code 
+    When the user submits the bank account details along with the organisation address     00000123    000004
+    Then the user views the error response from the stub
     When the user enters text to a text field      name=accountNumber  51406795
     Then the user enters text to a text field      name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -343,6 +322,20 @@ the user submits the bank account details
     the user enters text to a text field    name=sortCode    ${sort_code}
     the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link    jQuery=.button:contains("Submit")
+
+the user submits the bank account details along with the organisation address
+    [Arguments]    ${account_number}    ${sort_code}
+    the user enters text to a text field    name=accountNumber    ${account_number}
+    the user enters text to a text field    name=sortCode    ${sort_code}
+    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link     jQuery=.button:contains("Submit")
+
+the user views the error response from the stub
+    the user should see the text in the page    Bank details cannot be validated. 
+    the user should see the text in the page    please check your account number 
+    the user should see the text in the page    please check your sort code 
 
 finance contacts are submitted by all users
     user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Npath_Id}
