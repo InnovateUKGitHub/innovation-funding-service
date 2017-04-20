@@ -44,7 +44,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
     @Spy
     @InjectMocks
-    ProjectOtherDocumentsViewModelPopulator otherDocumentsViewModel;
+    ProjectOtherDocumentsViewModelPopulator populator;
 
     @Test
     public void testViewOtherDocumentsPage() throws Exception {
