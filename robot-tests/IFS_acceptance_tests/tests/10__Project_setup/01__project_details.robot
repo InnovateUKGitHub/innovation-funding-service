@@ -636,7 +636,8 @@ All partners can view submitted project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
 
 Non-lead partner cannot change any project details
-    [Documentation]    INFUND-2619  Pending
+    [Documentation]    INFUND-2619
+    [Tags]  Pending
     # TODO this test case fails due to INFUND-9278
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
