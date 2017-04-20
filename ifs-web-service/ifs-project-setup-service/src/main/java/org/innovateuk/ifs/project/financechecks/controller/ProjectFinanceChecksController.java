@@ -109,9 +109,6 @@ public class ProjectFinanceChecksController {
     private OrganisationService organisationService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private SectionService sectionService;
 
     @Autowired
@@ -369,18 +366,22 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility")
-    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser){
+    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId,
+                                              @ModelAttribute(FORM_ATTR) ApplicationForm form,
+                                              BindingResult bindingResult,
+                                              Model model,
+                                              HttpServletRequest request,
+                                              @ModelAttribute("loggedInUser") UserResource loggedInUser){
         ProjectResource project = projectService.getById(projectId);
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        return doViewEligibility(competition, application, project, allSections, user, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
+        return doViewEligibility(competition, application, project, allSections, loggedInUser, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
