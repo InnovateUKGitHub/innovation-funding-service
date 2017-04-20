@@ -302,7 +302,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" />
                     </label>
                     <input type="number"
-                           class="form-control"
+                           class="form-control width-small"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'field-error' : ''"
                            th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}"
                            th:name="${'labour-labourDaysYearly-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
@@ -318,11 +318,12 @@
                     <table class="labour-costs-table">
                         <thead>
                         <tr>
-                            <th id="labour-role" scope="col" class="width-medium">Role within project</th>
-                            <th id="labour-salary" scope="col" class="numeric">Gross annual salary</th>
-                            <th id="labour-rate" scope="col" class="numeric">Rate (£/day)</th>
-                            <th id="labour-days" scope="col" class="numeric width-medium">Days to be spent by all staff at this grade</th>
-                            <th scope="col"  th:if="${viewmode == 'edit'}">
+                            <th id="labour-role" scope="col">Role within project</th>
+                            <th id="labour-salary" scope="col" class="numeric width-small-medium">Gross annual salary</th>
+                            <th id="labour-rate" scope="col" class="numeric width-small">Rate (&pound;/day)</th>
+                            <th id="labour-days" scope="col" class="numeric width-small-medium">Days to be spent by all staff at this grade</th>
+                            <th scope="col" class="numeric width-medium">Total costs</th>
+                            <th scope="col" class="width-small" th:if="${viewmode == 'edit'}">
                                 <span class="visuallyhidden">Actions</span>
                             </th>
                         </tr>
@@ -337,21 +338,20 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another role', question=${question},rowcontainer='.labour-costs-table tbody')" />
                     </p>
                 </div>
-                    <div class="form-group alignright inline">
-                        <label th:for="${'section-total-'+subSection.id}">Total labour costs</label>
-                        <input class="form-control form-control-1-4 alignright"
-                               data-calculation-fields="[id*=labourTotalCost]"
-                               data-calculation-operations="+"
-                               th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                               readonly="readonly"
-                               type="text"
-                               th:id="${'section-total-'+subSection.id}"
-                               th:value="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
-
-                    </div>
-                </div>
-            </th:block>
+                <h3 class="alignright">
+                    Total labour costs
+                    <strong
+                           data-calculation-fields="[id*=labourTotalCost]"
+                           data-calculation-operations="+"
+                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                           th:id="${'section-total-'+subSection.id}"
+                           th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}">
+                                TOTAL LABOUR COSTS
+                    </strong>
+                </h3>
+            </div>
         </th:block>
+    </th:block>
 
         <th:block th:fragment="labour_row">
             <th:block  th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
@@ -392,17 +392,10 @@
                             />
                 </td>
                 <td class="numeric">
-                    <label th:for="${'cost-labour-'+costIdentifier+'-labourRate'}">
-                        <span class="visuallyhidden">Rate (&pound;/day)</span>
-                    </label>
-                    <input type="text"
-                           class="form-control width-full"
-                           th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'},data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
+                    <span class="heading-small" th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'},data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
                            data-calculation-operations="/"
-                           readonly="readonly"
                            th:id="${'cost-labour-'+costIdentifier+'-labourRate'}"
-                           th:name="${'labour-labourRate-' + question.id + '-' + costIdentifier}"
-                           th:value="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
+                           th:text="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
                            maxlength="255" />
                 </td>
                 <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-labourDays]}')} ? 'error' : ''">
@@ -411,7 +404,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-labourDays'})" />
                     </label>
                     <input type="number"
-                           class="form-control width-full"
+                           class="form-control width-small"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')} ? field-error : ''"
                            th:readonly="${viewmode == 'readonly'}"
                            th:id="${'cost-labour-'+costIdentifier+'-labourDays'}"
@@ -424,7 +417,15 @@
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
                             />
                 </td>
-                <td rowspan="2" class="rowspan buttoncolumn" th:if="${viewmode == 'edit'}">
+                <td class="numeric">
+                    <span class="heading-small"
+                           data-calculation-operations="/,*"
+                           readonly="readonly"
+                           th:id="${'cost-labour-'+costIdentifier+'-labourTotalCost'}"
+                           th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly,#cost-labour-'+costIdentifier+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
+                           th:text="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
+                </td>
+                <td class="buttoncolumn alignright" th:if="${viewmode == 'edit'}">
                     <button th:unless="${cost.id == null}"
                             type="submit"
                             name="remove_cost"
@@ -434,20 +435,6 @@
                     </button>
                   <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
                 </td>
-            </tr>
-            <tr th:attr="data-repeatable-row=${costIdentifier}">
-                <td colspan="4" class="numeric colspan">
-                    <label th:for="${'cost-labour-'+costIdentifier+'-labourTotalCost'}"><span>Total costs</span></label>
-                    <input type="text"
-                           class="form-control width-medium"
-                           data-calculation-operations="/,*"
-                           th:name="${'labour-total-' + question.id + '-' + costIdentifier}"
-                           readonly="readonly"
-                           th:id="${'cost-labour-'+costIdentifier+'-labourTotalCost'}"
-                           th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly,#cost-labour-'+costIdentifier+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
-                           th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
-                </td>
-
             </tr>
         </th:block>
     </th:block>
@@ -726,9 +713,9 @@
                         <thead>
                         <tr>
                             <th id="materials-item" scope="col">Item</th>
-                            <th id="materials-quantity" scope="col" class="numeric">Quantity</th>
-                            <th id="materials-cost" scope="col" class="numeric">Cost per item</th>
-                            <th id="materials-total" scope="col" class="numeric">Total</th>
+                            <th id="materials-quantity" scope="col" class="numeric width-medium">Quantity</th>
+                            <th id="materials-cost" scope="col" class="numeric width-medium">Cost per item</th>
+                            <th id="materials-total" scope="col" class="numeric width-medium">Total</th>
                             <th scope="col" th:if="${viewmode == 'edit'}">
                                 <span class="visuallyhidden">Actions</span>
                             </th>
@@ -946,7 +933,7 @@
                     </label>
                     <input  type="number"
                             th:id="${'cost-capital_usage-'+costIdentifier+'-deprecation_period'}"
-                            class="form-control form-finances-capital-usage-depreciation"
+                            class="form-control width-small form-finances-capital-usage-depreciation"
                             th:name="${'capital_usage-deprecation-' + question.id + '-' + costIdentifier}"
                             ifs:nonZeroValue="${cost.deprecation}"
                             th:readonly="${viewmode == 'readonly'}"
@@ -966,7 +953,7 @@
                     <input
                             type="number"
                             th:id="${'cost-capital_usage-'+costIdentifier+'-npv'}"
-                            class="form-control form-finances-capital-usage-npv"
+                            class="form-control width-large form-finances-capital-usage-npv"
                             th:name="${'capital_usage-npv-' + question.id + '-' + costIdentifier}"
                             ifs:nonZeroValue="${cost.npv != null ? #numbers.formatDecimal(cost.npv,0,0) : '0'}"
                             th:readonly="${viewmode == 'readonly'}"
@@ -986,7 +973,7 @@
                     <input
                             type="number"
                             th:id="${'cost-capital_usage-'+costIdentifier+'-residual_value'}"
-                            class="form-control form-finances-capital-usage-residual-value"
+                            class="form-control width-large form-finances-capital-usage-residual-value"
                             th:name="${'capital_usage-residualValue-' + question.id + '-' + costIdentifier}"
                             ifs:nonZeroValue="${#numbers.formatDecimal(cost.residualValue,0,0)}"
                             th:readonly="${viewmode == 'readonly'}"
@@ -1005,7 +992,7 @@
                     </label>
                     <input type="number"
                            th:id="${'cost-capital_usage-'+costIdentifier+'-utilisation'}"
-                           class="form-control form-finances-capital-usage-utilisation"
+                           class="form-control width-small form-finances-capital-usage-utilisation"
                            th:name="${'capital_usage-utilisation-' + question.id + '-' + costIdentifier}"
                            ifs:nonZeroValue="${cost.utilisation}"
                            th:readonly="${viewmode == 'readonly'}"
@@ -1146,7 +1133,7 @@
                       <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
                   </label>
                 <input type="number"
-                       class="form-control"
+                       class="form-control width-large"
                        th:name="${'subcontracting-subcontractingCost-' + question.id + '-' + costIdentifier}"
                        th:id="${'cost-subcontracting-'+costIdentifier+'-subcontractingCost'}"
                        ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
@@ -1411,7 +1398,7 @@
                        th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"  />
             </td>
-            <td th:if="${viewmode == 'edit'}">
+            <td class="alignright" th:if="${viewmode == 'edit'}">
                 <button th:unless="${cost.id == null}"
                         type="submit"
                         class="buttonlink js-remove-row"
