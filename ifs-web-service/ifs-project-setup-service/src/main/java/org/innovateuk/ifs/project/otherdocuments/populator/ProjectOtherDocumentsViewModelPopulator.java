@@ -8,6 +8,8 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +18,13 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-@Service
+@Component
 public class ProjectOtherDocumentsViewModelPopulator {
 
-      public ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId, UserResource loggedInUser, ProjectService projectService) {
+      @Autowired
+      private ProjectService projectService;
+
+      public ProjectOtherDocumentsViewModel populate(Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
         Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);

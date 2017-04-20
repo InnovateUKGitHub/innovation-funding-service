@@ -44,8 +44,9 @@ import static java.util.Collections.singletonList;
 public class ProjectOtherDocumentsController {
 
     private static final String FORM_ATTR = "form";
+
     @Autowired
-    ProjectOtherDocumentsViewModelPopulator populateModel;
+    ProjectOtherDocumentsViewModelPopulator populator;
 
     @Autowired
     private ProjectService projectService;
@@ -63,7 +64,7 @@ public class ProjectOtherDocumentsController {
     @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProjectOtherDocumentsViewModel viewModel = populateModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
+        ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
 
@@ -73,17 +74,15 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/readonly")
     public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = populateModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
+        ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("readOnlyView", true);
 
         return "project/other-documents";
     }
-
-
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping("/submit")
@@ -182,7 +181,7 @@ public class ProjectOtherDocumentsController {
     }
 
     private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
-        ProjectOtherDocumentsViewModel viewModel = populateModel.getOtherDocumentsViewModel(projectId, loggedInUser, projectService);
+        ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
