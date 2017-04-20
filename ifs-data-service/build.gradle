@@ -147,6 +147,23 @@ task buildDocker(type: Docker, dependsOn: build) {
     }
 }
 
+task dbResetDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = 'dbreset'
+    dockerfile = file('src/main/docker/Dockerfile-dbreset')
+    doFirst {
+        copy{
+            from file('src/main/resources')
+            include 'db/**/*.sql'
+            into stageDir
+        }
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
+            into stageDir
+        }
+    }
+}
+
 buildDocker.dependsOn prepareDockerFile
 
 asciidoctor {
