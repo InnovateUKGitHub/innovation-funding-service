@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -421,7 +422,39 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                         "id",
                         0,
                         20,
-                        of(""));
+                        of(""),
+                        empty());
+
+        assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccessObject().getNumber());
+        assertEquals(resource, result.getSuccessObject());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void findByCompetitionIneligibleApplications_informFiltered() throws Exception {
+
+        Page<Application> page = mock(Page.class);
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                eq(COMP_ID),
+                eq(singletonList(ApplicationState.INELIGIBLE_INFORMED.getBackingState())),
+                eq(""),
+                eq(null),
+                argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
+                .thenReturn(page);
+
+        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService
+                .getIneligibleApplicationSummariesByCompetitionId(
+                        COMP_ID,
+                        "id",
+                        0,
+                        20,
+                        of(""),
+                        of(true));
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());

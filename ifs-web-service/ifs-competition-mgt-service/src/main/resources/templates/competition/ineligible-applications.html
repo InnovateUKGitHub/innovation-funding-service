@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Submitted applications - ${model.competitionName}|" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Ineligible applications - ${model.competitionName}|" />
     </head>
 
     <body class="dashboard-internal full-width">
@@ -22,21 +22,33 @@
                 Ineligible applications
             </h1>
 
-            <form method="GET">
+            <form method="GET" th:object="${filterForm}">
                 <div class="search-filters extra-margin">
                     <fieldset>
                         <legend class="heading-medium">Filter applications</legend>
                         <div class="grid-row">
-                            <div class="column-two-thirds">
+                            <div class="column-half">
                                 <label class="form-label" for="filterSearch">Search by application number.</label>
-                                <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
-                                <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                                <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:field="*{filterSearch}"/>
                             </div>
-                            <div class="column-third">
-                                <button class="button">Filter</button>
+                            <div class="column-half">
+                                <label class="form-label" for="filterInform">Informed</label>
+                                <select name="filterInform" id="filterInform" class="form-control" th:field="*{filterInform}">
+                                    <option value="">All</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
                             </div>
                         </div>
                     </fieldset>
+                    <div class="grid-row">
+                        <div class="column-half">
+                            <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                        </div>
+                        <div class="column-half alignright">
+                            <button class="button no-margin" type="submit">Filter</button>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="grid-row sorting">

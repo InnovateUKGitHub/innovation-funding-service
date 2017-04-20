@@ -278,14 +278,14 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty())).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty())).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible",competitionId)
                 .param("page",Integer.toString(page)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty());
+        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, empty(), empty());
     }
 
     @Test
@@ -296,7 +296,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty())).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty())).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible",competitionId)
                 .param("page",Integer.toString(page))
@@ -304,7 +304,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty());
+        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE, empty(), empty());
     }
 
     @Test
@@ -313,10 +313,11 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         int page = 6;
         String strFilter = "filter";
         FundingDecisionStatus fundingFilter = FUNDED;
+        Boolean informFilter = false;
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter))).thenReturn(serviceSuccess(resource));
+        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(informFilter))).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible",competitionId)
                 .param("page",Integer.toString(page))
@@ -325,6 +326,6 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter));
+        verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(informFilter));
     }
 }

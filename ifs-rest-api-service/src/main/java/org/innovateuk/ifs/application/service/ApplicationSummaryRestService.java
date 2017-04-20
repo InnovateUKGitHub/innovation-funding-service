@@ -33,5 +33,5 @@ public interface ApplicationSummaryRestService {
                                                                                   Optional<Boolean> sendFilter,
                                                                                   Optional<FundingDecision> fundingFilter);
 
-    RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter);
+    RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter, Optional<Boolean> informFilter);
 }

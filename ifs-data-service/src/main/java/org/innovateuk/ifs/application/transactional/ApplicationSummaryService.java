@@ -58,5 +58,6 @@ public interface ApplicationSummaryService {
 																								   String sortBy,
 																								   int pageIndex,
 																								   int pageSize,
-																								   Optional<String> filter);
+																								   Optional<String> filter,
+																								   Optional<Boolean> informFilter);
 }

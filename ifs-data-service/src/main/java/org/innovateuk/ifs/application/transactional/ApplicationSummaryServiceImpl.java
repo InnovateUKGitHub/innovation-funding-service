@@ -24,6 +24,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -45,9 +48,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             ApplicationState.CREATED,
             ApplicationState.OPEN), ApplicationState::getBackingState);
 
-    public static final Collection<State> INELIGIBLE_STATES = simpleMap(asList(
+    public static final List<State> INELIGIBLE_STATES = simpleMap(asList(
             ApplicationState.INELIGIBLE,
-            ApplicationState.INELIGIBLE_INFORMED), ApplicationState::getBackingState);
+            INELIGIBLE_INFORMED), ApplicationState::getBackingState);
 
     public static final Collection<State> CREATED_AND_OPEN_STATUSES = simpleMap(asList(
             ApplicationState.CREATED,
@@ -160,13 +163,17 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             String sortBy,
             int pageIndex,
             int pageSize,
-            Optional<String> filter) {
+            Optional<String> filter,
+            Optional<Boolean> informFilter) {
         String filterStr = filter.map(String::trim).orElse("");
+        Collection<State> states = informFilter.map(i -> {
+            return i ? singletonList(INELIGIBLE_INFORMED.getBackingState()) : singletonList(INELIGIBLE.getBackingState());
+        }).orElse(INELIGIBLE_STATES);
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, INELIGIBLE_STATES, filterStr, null, pageable),
+                        competitionId, states, filterStr, null, pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, INELIGIBLE_STATES, filterStr, null));
+                        competitionId, states, filterStr, null));
     }
 
     private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(

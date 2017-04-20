@@ -52,7 +52,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
     @Test
     public void test_getIneligibleApplicationSummariesByCompetitionId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getIneligibleApplicationSummariesByCompetitionId(1L, null, 0, 20, empty()),
+                () -> classUnderTest.getIneligibleApplicationSummariesByCompetitionId(1L, null, 0, 20, empty(), empty()),
                 PROJECT_FINANCE, COMP_ADMIN);
     }
 
@@ -91,7 +91,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
         }
 
         @Override
-        public ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+        public ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<Boolean> informFilter) {
             return null;
         }
     }
