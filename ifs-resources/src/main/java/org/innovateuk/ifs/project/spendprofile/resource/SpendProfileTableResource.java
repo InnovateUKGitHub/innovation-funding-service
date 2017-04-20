@@ -1,34 +1,22 @@
-package org.innovateuk.ifs.project.resource;
+package org.innovateuk.ifs.project.spendprofile.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 public class SpendProfileTableResource {
-
     private Boolean markedAsComplete;
-
-    /*
-     * Dynamically holds the months for the duration of the project
-     */
     private List<LocalDateResource> months;
-
-    /*
-     * Holds the cost per category for each month, the first entry in the list representing the first month and so on.
-     */
     private Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap;
     private Map<Long, BigDecimal> eligibleCostPerCategoryMap;
-
     private ValidationMessages validationMessages;
-
     private Map<Long, CostCategoryResource> costCategoryResourceMap;
-
     private Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap;
 
     public List<LocalDateResource> getMonths() {
