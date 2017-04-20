@@ -40,7 +40,7 @@
                      questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                      currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
                      pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}">
+                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}, summary=false">
 
                     <th:block th:if="${formInput.type.displayableQuestionType}">
                         <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
@@ -113,7 +113,7 @@
 
                 <th:block th:if="${model.showReturnButtons}">
                     <th:block th:if="${model.application.allReadOnly}">
-                        <a th:href="${backURL}" class="button-secondary" name="submit-section" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
+                        <a th:href="${backURL}" class="button-secondary" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
                     </th:block>
                     <th:block th:unless="${model.application.allReadOnly}">
                         <button th:unless="${model.isSection}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>

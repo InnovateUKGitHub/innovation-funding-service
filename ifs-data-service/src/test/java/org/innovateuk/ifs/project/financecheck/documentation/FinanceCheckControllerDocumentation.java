@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.financecheck.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.projectdetails.controller.FinanceCheckController;
+import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
