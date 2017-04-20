@@ -27,7 +27,7 @@ import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;

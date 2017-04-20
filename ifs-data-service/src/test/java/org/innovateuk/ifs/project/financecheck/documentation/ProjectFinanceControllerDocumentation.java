@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.financecheck.documentation;
 
-import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -9,23 +8,17 @@ import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.EligibilityDocs.eligibilityResourceFields;
 import static org.innovateuk.ifs.documentation.ViabilityDocs.viabilityResourceFields;
@@ -43,7 +36,6 @@ import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WO
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.when;
@@ -298,50 +290,5 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         ),
                         PayloadDocumentation.responseFields(ProjectFinanceResponseFields.projectFinanceFields)
                 ));
-    }
-
-    private String generateTestCSVData(SpendProfileTableResource spendProfileTableResource) throws IOException {
-        Map<Long, BigDecimal> expectedCategoryToActualTotal = new LinkedHashMap<>();
-        expectedCategoryToActualTotal.put(1L, new BigDecimal("100"));
-        expectedCategoryToActualTotal.put(2L, new BigDecimal("180"));
-        expectedCategoryToActualTotal.put(3L, new BigDecimal("55"));
-
-        List<BigDecimal> expectedTotalForEachMonth = asList(new BigDecimal("150"), new BigDecimal("85"), new BigDecimal("100"));
-
-        BigDecimal expectedTotalOfAllActualTotals = new BigDecimal("335");
-        BigDecimal expectedTotalOfAllEligibleTotals = new BigDecimal("305");
-
-        StringWriter stringWriter = new StringWriter();
-        CSVWriter csvWriter = new CSVWriter(stringWriter);
-        ArrayList<String[]> rows = new ArrayList<>();
-        ArrayList<String> monthsRow = new ArrayList<>();
-        monthsRow.add("Month");
-        spendProfileTableResource.getMonths().forEach(
-                value -> monthsRow.add(value.getLocalDate().toString()));
-        monthsRow.add("TOTAL");
-        monthsRow.add("Eligible Costs Total");
-        rows.add(monthsRow.stream().toArray(String[]::new));
-
-        ArrayList<String> byCategory = new ArrayList<>();
-        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
-            byCategory.add(String.valueOf(category));
-            values.forEach(val -> {
-                byCategory.add(val.toString());
-            });
-            byCategory.add(expectedCategoryToActualTotal.get(category).toString());
-            byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
-            rows.add(byCategory.stream().toArray(String[]::new));
-            byCategory.clear();
-        });
-
-        ArrayList<String> totals = new ArrayList<>();
-        totals.add("TOTAL");
-        expectedTotalForEachMonth.forEach(value -> totals.add(value.toString()));
-        totals.add(expectedTotalOfAllActualTotals.toString());
-        totals.add(expectedTotalOfAllEligibleTotals.toString());
-        rows.add(totals.stream().toArray(String[]::new));
-        csvWriter.writeAll(rows);
-        csvWriter.close();
-        return stringWriter.toString();
     }
 }

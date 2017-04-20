@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.spendprofile.domain;
 
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.financecheck.domain.Cost;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
-import org.innovateuk.ifs.project.financecheck.domain.CostGroup;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;

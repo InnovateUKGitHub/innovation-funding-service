@@ -45,6 +45,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -89,7 +90,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.of(new UserResource()));
-        when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(serviceSuccess(new UserResource()));
+        when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(serviceSuccess(new UserResource()));
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
         inviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
@@ -329,7 +330,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong())).thenReturn(serviceFailure(error));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -410,7 +411,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 anyLong(),
                 anyString(),
                 eq(1L),
-                eq(null))).thenReturn(serviceSuccess(userResource));
+                eq(null),
+                anyBoolean())).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -462,7 +464,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 anyLong(),
                 anyString(),
                 eq(1L),
-                eq(null))).thenReturn(serviceSuccess(userResource));
+                eq(null),
+                anyBoolean())).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
 
@@ -539,6 +542,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
                 .withId(1L)
+                .withAllowMarketingEmails(true)
                 .build();
 
         Error error = new Error("errorname", BAD_REQUEST);
@@ -553,7 +557,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                1L, null)).thenReturn(serviceFailure(error));
+                1L, null, userResource.getAllowMarketingEmails())).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

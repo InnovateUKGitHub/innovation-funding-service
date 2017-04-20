@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 
 import java.math.BigDecimal;
 
