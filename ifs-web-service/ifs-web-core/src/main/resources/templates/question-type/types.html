@@ -218,7 +218,7 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" th:if="${#sets.size(model.questionApplicationViewModel.currentCompetition.innovationAreas) > 1}">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Innovation area</span>
