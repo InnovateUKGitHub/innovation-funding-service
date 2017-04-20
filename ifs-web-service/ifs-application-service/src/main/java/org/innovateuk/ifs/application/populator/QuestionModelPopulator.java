@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -102,7 +103,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         form = initializeApplicationForm(form);
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
 
-        QuestionApplicationViewModel questionApplicationViewModel = addApplicationDetails(application, competition, user.getId(), question, userOrganisation, form, userApplicationRoles);
+        QuestionApplicationViewModel questionApplicationViewModel = addApplicationDetails(application, competition, user.getId(), question, userOrganisation, form, userApplicationRoles, formInputs);
         NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question, application.getId());
         QuestionAssignableViewModel questionAssignableViewModel = addAssignableDetails(application, userOrganisation, user.getId(), question.getId());
 
@@ -125,12 +126,20 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                                                                QuestionResource questionResource,
                                                                Optional<OrganisationResource> userOrganisation,
                                                                ApplicationForm form,
-                                                               List<ProcessRoleResource> userApplicationRoles) {
+                                                               List<ProcessRoleResource> userApplicationRoles,
+                                                               List<FormInputResource> formInputs) {
         form.setApplication(application);
 
         List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
         Set<Long> completedDetails = getCompletedDetails(questionResource, application.getId(), questionStatuses);
-        Boolean allReadOnly = calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
+        Boolean isApplicationDetails = isApplicationDetails(formInputs, questionResource);
+        Boolean allReadOnly;
+
+        if(isApplicationDetails) {
+            allReadOnly = !userService.isLeadApplicant(userId, application) ? true : calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
+        } else {
+            allReadOnly = calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
+        }
 
         QuestionApplicationViewModel questionApplicationViewModel = new QuestionApplicationViewModel(completedDetails, allReadOnly
                 , application, competition, userOrganisation.orElse(null));
@@ -145,6 +154,10 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         addSelectedResearchCategoryName(application, questionApplicationViewModel);
 
         return questionApplicationViewModel;
+    }
+
+    private Boolean isApplicationDetails(List<FormInputResource> formInputs, QuestionResource questionResource) {
+        return formInputs.stream().anyMatch(formInput -> (questionResource.getFormInputs().contains(formInput.getId())) && formInput.getType().equals(FormInputType.APPLICATION_DETAILS));
     }
 
     private void addSelectedInnovationAreaName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
@@ -162,11 +175,12 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         }
     }
 
-    private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {
+    private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId,
+                                         Set<Long> completedDetails) {
         if(null != competition.getCompetitionStatus() && competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
             Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
-            return questionStatuses.size() > 0 &&
-                    (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
+            return (questionStatuses.size() > 0 &&
+                    (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId())));
         } else {
             return true;
         }
