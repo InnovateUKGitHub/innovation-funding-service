@@ -79,6 +79,7 @@ Guest user can apply to a Non-IFS competition at the FrontDoor
 
 Guest can see the Dates tab
     [Documentation]    INFUND-8554
+    [Tags]    MySQL
     Then the user clicks the button/link    link=Dates
     And The user should see the text in the page    Registration closes
 
