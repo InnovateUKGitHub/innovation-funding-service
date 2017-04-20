@@ -154,7 +154,7 @@ public class ApplicationOverviewModelPopulator {
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);
-        model.addAttribute("ableToSubmitApplication", userIsLeadApplicant && application.isSubmitable());
+        model.addAttribute("ableToSubmitApplication", userIsLeadApplicant && application.isSubmittable());
     }
 
     private void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
@@ -275,7 +275,4 @@ public class ApplicationOverviewModelPopulator {
         FileEntryResource fileEntry = fileEntryResult.getSuccessObject();
         return new FileDetailsViewModel(fileEntry);
     }
-
-
-
 }

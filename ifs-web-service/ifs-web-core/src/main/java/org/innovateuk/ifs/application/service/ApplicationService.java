@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
@@ -16,7 +16,7 @@ public interface ApplicationService {
     List<ApplicationResource> getInProgress(Long userId);
     List<ApplicationResource> getFinished(Long userId);
     Boolean isApplicationReadyForSubmit(Long applicationId);
-    ServiceResult<Void> updateStatus(Long applicationId, ApplicationStatus status);
+    ServiceResult<Void> updateState(Long applicationId, ApplicationState state);
     ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
     Integer getCompleteQuestionsPercentage(Long applicationId);
     ServiceResult<Void> save(ApplicationResource application);

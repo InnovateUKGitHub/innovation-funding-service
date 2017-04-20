@@ -5,7 +5,7 @@ import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,15 +15,17 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.ON_HOLD;
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.UNFUNDED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
@@ -114,7 +116,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Application app1 = mock(Application.class);
         Application app2 = mock(Application.class);
-        List<Application> applications = Arrays.asList(app1, app2);
+        List<Application> applications = asList(app1, app2);
 
         ApplicationSummaryResource sum1 = sumLead("b");
         ApplicationSummaryResource sum2 = sumLead("a");
@@ -140,7 +142,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Application app1 = mock(Application.class);
         Application app2 = mock(Application.class);
-        List<Application> applications = Arrays.asList(app1, app2);
+        List<Application> applications = asList(app1, app2);
 
         ApplicationSummaryResource sum1 = sumLead("a", 2L);
         ApplicationSummaryResource sum2 = sumLead("a", 1L);
@@ -193,7 +195,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Application app1 = mock(Application.class);
         Application app2 = mock(Application.class);
-        List<Application> applications = Arrays.asList(app1, app2);
+        List<Application> applications = asList(app1, app2);
 
         ApplicationSummaryResource sum1 = sumLead(null);
         ApplicationSummaryResource sum2 = sumLead(null);
@@ -215,7 +217,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         Application app1 = mock(Application.class);
         Application app2 = mock(Application.class);
         Application app3 = mock(Application.class);
-        List<Application> applications = Arrays.asList(app1, app2, app3);
+        List<Application> applications = asList(app1, app2, app3);
 
         ApplicationSummaryResource sum1 = sumLead(null);
         ApplicationSummaryResource sum2 = sumLead("a");
@@ -239,7 +241,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Application app1 = mock(Application.class);
         Application app2 = mock(Application.class);
-        List<Application> applications = Arrays.asList(app1, app2);
+        List<Application> applications = asList(app1, app2);
 
         ApplicationSummaryResource sum1 = sumLeadApplicant("b");
         ApplicationSummaryResource sum2 = sumLeadApplicant("a");
@@ -265,7 +267,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Application app1 = mock(Application.class);
         Application app2 = mock(Application.class);
-        List<Application> applications = Arrays.asList(app1, app2);
+        List<Application> applications = asList(app1, app2);
 
         ApplicationSummaryResource sum1 = sumLeadApplicant("a", 2L);
         ApplicationSummaryResource sum2 = sumLeadApplicant("a", 1L);
@@ -318,7 +320,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Application app1 = mock(Application.class);
         Application app2 = mock(Application.class);
-        List<Application> applications = Arrays.asList(app1, app2);
+        List<Application> applications = asList(app1, app2);
 
         ApplicationSummaryResource sum1 = sumLeadApplicant(null);
         ApplicationSummaryResource sum2 = sumLeadApplicant(null);
@@ -340,7 +342,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         Application app1 = mock(Application.class);
         Application app2 = mock(Application.class);
         Application app3 = mock(Application.class);
-        List<Application> applications = Arrays.asList(app1, app2, app3);
+        List<Application> applications = asList(app1, app2, app3);
 
         ApplicationSummaryResource sum1 = sumLeadApplicant(null);
         ApplicationSummaryResource sum2 = sumLeadApplicant("a");
@@ -368,9 +370,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusInAndIdLike(
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 eq(COMP_ID),
-                eq(Arrays.asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED, ApplicationStatus.SUBMITTED)),
+                eq(simpleMap(asList(APPROVED, REJECTED, SUBMITTED, INELIGIBLE, INELIGIBLE_INFORMED), ApplicationState::getBackingState)),
                 eq(""),
                 eq(UNFUNDED),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
@@ -399,7 +401,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(Arrays.asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED)), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(asList(APPROVED.getBackingState(), REJECTED.getBackingState())), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
 
