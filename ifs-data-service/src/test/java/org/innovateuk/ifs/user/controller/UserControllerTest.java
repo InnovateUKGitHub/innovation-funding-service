@@ -180,7 +180,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long userId = 1L;
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
-        when(registrationServiceMock.activateUser(1L)).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateUserAndSendDiversitySurvey(1L)).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))

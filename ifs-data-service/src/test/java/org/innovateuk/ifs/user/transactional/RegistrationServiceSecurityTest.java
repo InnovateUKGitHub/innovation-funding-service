@@ -107,6 +107,11 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         }
 
         @Override
+        public ServiceResult<Void> activateUserAndSendDiversitySurvey(Long userId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> activateUser(Long userId) {
             return null;
         }

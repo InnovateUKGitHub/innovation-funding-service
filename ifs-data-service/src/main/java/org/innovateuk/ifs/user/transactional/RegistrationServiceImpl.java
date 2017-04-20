@@ -93,6 +93,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private EthnicityMapper ethnicityMapper;
 
+    @Autowired
+    private UserSurveyService userSurveyService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -153,11 +156,27 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<Void> activateUser(Long userId) {
-        return getUser(userId).andOnSuccessReturnVoid(u -> {
-            idpService.activateUser(u.getUid());
-            u.setStatus(UserStatus.ACTIVE);
-            userRepository.save(u);
-        });
+        return getUser(userId).andOnSuccessReturnVoid(this::activateUser);
+    }
+
+    private ServiceResult<User> activateUser(User user) {
+        return idpService
+                .activateUser(user.getUid())
+                .andOnSuccessReturn(() -> {
+                        user.setStatus(UserStatus.ACTIVE);
+                        return userRepository.save(user);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> activateUserAndSendDiversitySurvey(Long userId) {
+        return getUser(userId)
+                .andOnSuccess(this::activateUser)
+                .andOnSuccessReturnVoid(this::sendDiversitySurvey);
+    }
+
+    private ServiceResult<Void> sendDiversitySurvey(User user) {
+        return userSurveyService.sendDiversitySurvey(user);
     }
 
     private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {

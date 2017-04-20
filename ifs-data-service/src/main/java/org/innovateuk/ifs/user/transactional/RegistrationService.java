@@ -28,4 +28,7 @@ public interface RegistrationService {
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'ACTIVATE')")
     ServiceResult<Void> activateUser(Long userId);
+
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'ACTIVATE')")
+    ServiceResult<Void> activateUserAndSendDiversitySurvey(Long userId);
 }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.util.MapFunctions.combineMaps;
 
@@ -48,6 +49,10 @@ public class Notification {
         this.to = to;
         this.messageKey = messageKey;
         this.globalArguments = globalArguments;
+    }
+
+    public Notification(NotificationSource from, NotificationTarget to, Enum<?> messageKey, Map<String, Object> globalArguments) {
+        this(from, singletonList(to), messageKey, globalArguments);
     }
 
     public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> globalArguments, Map<NotificationTarget, Map<String, Object>> perNotificationTargetArguments) {

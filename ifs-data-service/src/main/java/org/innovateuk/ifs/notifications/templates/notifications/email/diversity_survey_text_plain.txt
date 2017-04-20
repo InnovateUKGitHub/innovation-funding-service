@@ -1,0 +1,15 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+Thank you for applying for funding with Innovate UK. We would like to collect anonymous data on the diversity of our applicants. This is to make sure that the services we provide are appropriate and meet the needs of those applying.
+Your information is anonymous and will not be shared beyond Innovate UK.
+
+Please complete the diversity survey ${diversitySurveyUrl} which should take around one minute.
+
+Thank you for your cooperation.
+
+Yours sincerely,
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>
