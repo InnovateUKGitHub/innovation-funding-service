@@ -135,7 +135,7 @@ File upload mandatory for Academic partner to mark section as complete
     # This will also check the auto-save as we hvaen't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your funding
-    and the user clicks the button/link      jQuery=button:contains("Edit your funding")
+    and the user clicks the button/link      jQuery=button:contains("Edit")
     and the user clicks the button/link       jQuery=button:contains("Remove")
     When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
