@@ -118,10 +118,10 @@ the Applicant fills in the Labour costs for two rows
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     the user moves focus to the element    jQuery=button:contains('Add another role')
     the user clicks the button/link    jQuery=button:contains('Add another role')
-    the user should see the element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
-    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
-    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
-    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
+    the user should see the element    css=.labour-costs-table tr:nth-of-type(2) td:nth-of-type(4) input
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(2) td:nth-of-type(2) input    120000
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(2) td:nth-of-type(4) input    100
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(2) td:nth-of-type(1) input    test
 
 the applicant edits the working days field
     the user should see the element    css=[name^="labour-labourDaysYearly"]
