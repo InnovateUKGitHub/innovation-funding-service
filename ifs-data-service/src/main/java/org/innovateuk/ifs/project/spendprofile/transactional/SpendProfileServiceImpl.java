@@ -24,9 +24,6 @@ import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepositor
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.financechecks.domain.Cost;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -142,14 +139,14 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
-
-        return getProject(projectId).andOnSuccess(project ->
-                canSpendProfileCanBeGenerated(project).andOnSuccess(() ->
-                        projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
-                            List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
-                            return generateSpendProfileForPartnerOrganisations(project, organisationIds);
-                        }))
-        );
+        return getProject(projectId)
+                .andOnSuccess(project -> canSpendProfileCanBeGenerated(project)
+                        .andOnSuccess(() -> projectService.getProjectUsers(projectId)
+                                .andOnSuccess(projectUsers -> {
+                                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
+                                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
+                                }))
+                );
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
@@ -187,17 +184,12 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
-
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
         Optional<PartnerOrganisation> partnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                 spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getOrganisation().getId()).isPresent());
 
-        if (!partnerOrganisationWithSpendProfile.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
-        }
+        return partnerOrganisationWithSpendProfile.map(po -> serviceSuccess()).orElse(serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED));
     }
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
