@@ -97,6 +97,7 @@ Non-academic partner finance section
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
     and the user should not see the element     link=Your funding
+    and the user should not see the element     link=application details
 
 Academic partner finance section
     [Documentation]    INFUND-7522
