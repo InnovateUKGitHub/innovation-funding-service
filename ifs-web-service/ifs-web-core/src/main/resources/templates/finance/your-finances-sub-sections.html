@@ -114,8 +114,7 @@
             <div th:unless="${readonly}" class="form-footer">
                 <div class="form-footer__actions">
                     <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete</button>
-                    <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="buttonlink"
-                            th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit</button>
+                    <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="buttonlink">Edit</button>
                 </div>
             </div>
             <div>

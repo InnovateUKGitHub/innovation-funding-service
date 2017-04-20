@@ -32,6 +32,7 @@ public class AssessorProfileResourceDocs {
             fieldWithPath("user.status").description("Status of the user"),
             fieldWithPath("user.roles").description("Roles that the user is associated with"),
             fieldWithPath("user.gender").description("Gender of the user"),
+            fieldWithPath("user.allowMarketingEmails").description("allow marketing emails"),
             fieldWithPath("user.disability").description("Disability of the user"),
             fieldWithPath("user.ethnicity").description("Ethnic group of the user"),
             fieldWithPath("user.profileId").description("Profile id of the user"),

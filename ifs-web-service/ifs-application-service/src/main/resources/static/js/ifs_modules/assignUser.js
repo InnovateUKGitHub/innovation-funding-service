@@ -31,6 +31,7 @@ IFS.application.progressiveSelect = (function () {
     },
     selectToListHTML: function (el) {
       el = jQuery(el)
+      el.prev('label').remove()
       el.next('button').remove()
       var children = el.children('option')
       var name = el.attr('name')

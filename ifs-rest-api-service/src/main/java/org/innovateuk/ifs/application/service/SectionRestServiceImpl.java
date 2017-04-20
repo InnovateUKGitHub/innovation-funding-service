@@ -5,14 +5,14 @@ import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 
 /**
  * SectionRestServiceImpl is a utility for CRUD operations on {@link SectionResource}.
@@ -26,8 +26,7 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
 
     @Override
     public RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
-        return postWithRestResult(sectionRestURL + "/markAsComplete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, new ParameterizedTypeReference<List<ValidationMessages>>() {
-        });
+        return postWithRestResult(sectionRestURL + "/markAsComplete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, validationMessagesListType());
     }
 
     @Override
@@ -45,25 +44,24 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
         return getWithRestResult(sectionRestURL + "/" + sectionId, SectionResource.class);
     }
 
-    @Override public RestResult<List<SectionResource>> getByCompetition(final Long competitionId) {
-        return getWithRestResult(sectionRestURL + "/getByCompetition/" + competitionId, new ParameterizedTypeReference<List<SectionResource>>() {
-        });
+    @Override
+    public RestResult<List<SectionResource>> getByCompetition(final Long competitionId) {
+        return getWithRestResult(sectionRestURL + "/getByCompetition/" + competitionId, sectionResourceListType());
     }
 
     @Override
     public RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId) {
-        return getWithRestResult(sectionRestURL + "/getCompletedSectionsByOrganisation/" + applicationId, new ParameterizedTypeReference<Map<Long, Set<Long>>>() {
-        });
+        return getWithRestResult(sectionRestURL + "/getCompletedSectionsByOrganisation/" + applicationId, mapOfLongToLongsSetType());
     }
 
     @Override
     public RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId) {
-        return getWithRestResult(sectionRestURL + "/getCompletedSections/" + applicationId + "/" + organisationId, ParameterizedTypeReferences.longsListType());
+        return getWithRestResult(sectionRestURL + "/getCompletedSections/" + applicationId + "/" + organisationId, longsListType());
     }
 
     @Override
     public RestResult<List<Long>> getIncompletedSectionIds(Long applicationId) {
-        return getWithRestResult(sectionRestURL + "/getIncompleteSections/" + applicationId, ParameterizedTypeReferences.longsListType());
+        return getWithRestResult(sectionRestURL + "/getIncompleteSections/" + applicationId, longsListType());
     }
 
     @Override
@@ -88,18 +86,22 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
 
     @Override
     public RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId) {
-        return getWithRestResult(sectionRestURL + "/getQuestionsForSectionAndSubsections/" + sectionId, ParameterizedTypeReferences.longsSetType());
+        return getWithRestResult(sectionRestURL + "/getQuestionsForSectionAndSubsections/" + sectionId, longsSetType());
     }
 
     @Override
     public RestResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type) {
-        return getWithRestResult(sectionRestURL + "/getSectionsByCompetitionIdAndType/" + competitionId + "/" + type.name(), new ParameterizedTypeReference<List<SectionResource>>() {
-        });
+        return getWithRestResult(sectionRestURL + "/getSectionsByCompetitionIdAndType/" + competitionId + "/" + type.name(), sectionResourceListType());
     }
 
     @Override
     public RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId) {
         return getWithRestResult(sectionRestURL + "/getFinanceSectionByCompetitionId/" + competitionId, SectionResource.class);
 
+    }
+
+    @Override
+    public RestResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(Long competitionId) {
+        return getWithRestResult(sectionRestURL + "/getByCompetitionIdVisibleForAssessment/" + competitionId, sectionResourceListType());
     }
 }

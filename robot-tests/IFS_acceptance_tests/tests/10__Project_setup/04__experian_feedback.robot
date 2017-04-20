@@ -12,6 +12,8 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-7109 Bank Details Status - Internal user
 ...
 ...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
+...
+...               INFUND-9061 Internal server error on bank details being approved multiple times by proj finance
 Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
@@ -153,6 +155,17 @@ Project Finance approves the bank details
     And the user clicks the button/link            jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link            jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
     Then the user should see the text in the page  Bank details have already been approved and cannot be changed
+
+Project Finance cannot approve the bank details again
+    [Documentation]    INFUND-9061
+    [Tags]
+    Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Jetpulse_Id}/review-bank-details
+    And the user should see the text in the page  ${Jetpulse_Name} - Account details
+    When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
+    And the user clicks the button/link    jQuery=.button:contains("Approve account")
+    And the user goes back to the previous page
+    Then the user should not see the element   jQuery=.button:contains("Approve account")
+    And the user should see the text in the page    The bank details provided have been approved.
 
 Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109

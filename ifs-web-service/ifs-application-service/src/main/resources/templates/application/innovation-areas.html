@@ -44,7 +44,7 @@
                     </fieldset>
                 </div>
                 <button class="button" name="save-innovation-area">Save</button>
-                <a th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Cancel</a>
+                <a class="button button-clear" th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Cancel</a>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

@@ -71,7 +71,7 @@
                                         </td>
                                         <td>
                                             <label for="email-finance-contact" class="visuallyhidden">email</label>
-                                            <input type="email" class="form-control width-full" th:value="*{email}" th:classappend="${#fields.hasErrors('email') ? 'field-error' : ''}" name="email" id="email-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.email.required}" required="required"/>
+                                            <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail') ? 'field-error' : ''}" name="inviteEmail" id="email-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.email.required}" required="required"/>
                                         </td>
                                         <td class="alignright">
                                             <button class="buttonlink no-margin-bottom" name="invite_fc" id="invite-finance-contact">Invite to project</button>
