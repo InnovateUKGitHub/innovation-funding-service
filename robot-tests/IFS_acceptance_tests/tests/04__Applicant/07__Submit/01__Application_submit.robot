@@ -73,6 +73,8 @@ Submit flow (complete application)
     Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
     And the user should see the text in the page    you will be notified of our decision by
+    And The user should see the element         link=Finished
+    # TODO add check here once INFUND-9195 done
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
@@ -84,6 +86,9 @@ Submitted application is read only
     [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
+    and the user should see the element     link=Return to dashboard
+    and the user clicks the button/link     link=Return to dashboard
+    and the user clicks the button/link     link=${application_name}
     When the user clicks the button/link    link=View application
     And the user is on the page    summary
     Then the user can check that the sections are read only
