@@ -290,7 +290,7 @@
          saveName='upload_file'">
     <div class="upload-section">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
-        <p th:if="${viewmode=='edit'}" ifs:utext="${question.description}"/>
+        <p th:if="${viewmode=='edit'}" ifs:utext="${question.description}"></p>
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
     </div>
 </th:block>
