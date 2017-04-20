@@ -1,31 +1,18 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.populator.OpenApplicationFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +24,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -51,7 +37,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'comp_admin')")
-public class CompetitionManagementApplicationController extends BaseController {
+public class CompetitionManagementApplicationController {
 
     @Autowired
     private FormInputResponseService formInputResponseService;
@@ -72,12 +58,11 @@ public class CompetitionManagementApplicationController extends BaseController {
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
                                              @ModelAttribute("form") ApplicationForm form,
+                                             @ModelAttribute("loggedInUser") UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                              @RequestParam MultiValueMap<String, String> queryParams,
-                                             Model model,
-                                             HttpServletRequest request
+                                             Model model
     ) {
-        UserResource user = getLoggedUser(request);
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> competitionManagementApplicationService
                         .displayApplicationOverview(user, applicationId, competitionId, form, origin, queryParams, model, application));
@@ -100,12 +85,12 @@ public class CompetitionManagementApplicationController extends BaseController {
             @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
             @RequestParam MultiValueMap<String, String> queryParams,
             @ModelAttribute("form") ApplicationForm applicationForm,
+            @ModelAttribute("loggedInUser") UserResource user,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            Model model,
-            HttpServletRequest request) {
+            Model model) {
 
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, origin, queryParams, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -127,11 +112,11 @@ public class CompetitionManagementApplicationController extends BaseController {
                                              @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model,
                                              @ModelAttribute("form") ApplicationForm applicationForm,
+                                             @ModelAttribute("loggedInUser") UserResource user,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
-                                             ValidationHandler validationHandler,
-                                             HttpServletRequest request) {
+                                             ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, origin, queryParams, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -149,8 +134,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
-            HttpServletRequest request) throws ExecutionException, InterruptedException {
-        final UserResource user = getLoggedUser(request);
+            @ModelAttribute("loggedInUser") UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
         if (user.hasRole(UserRoleType.COMP_ADMIN)) {
             long processRoleId = formInputResponseService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
@@ -171,9 +155,10 @@ public class CompetitionManagementApplicationController extends BaseController {
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
-                                             Model model, HttpServletRequest request) {
+                                             @ModelAttribute("loggedInUser") UserResource user,
+                                             Model model) {
         return competitionManagementApplicationService
-                .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, request));
+                .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));
     }
 
     private String redirectToApplicationOverview(Long competitionId, Long applicationId) {

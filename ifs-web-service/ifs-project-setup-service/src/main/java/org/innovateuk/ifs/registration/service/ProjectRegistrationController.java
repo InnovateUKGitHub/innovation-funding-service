@@ -1,9 +1,5 @@
 package org.innovateuk.ifs.registration.service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -19,13 +15,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.INVITE_HASH;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.errorMessages;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.populateModelWithErrorsAndReturnErrorView;
+import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
 
 @Controller
 @PreAuthorize("permitAll")
@@ -117,6 +117,7 @@ public class ProjectRegistrationController {
                 registrationForm.getEmail(),
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
-                organisationId);
+                organisationId,
+                registrationForm.getAllowMarketingEmails());
     }
 }

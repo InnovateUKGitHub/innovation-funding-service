@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.thread.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.financecheck.controller.ProjectFinanceNotesController;
+import org.innovateuk.ifs.project.notes.controller.ProjectFinanceNotesController;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.junit.Test;
