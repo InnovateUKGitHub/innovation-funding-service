@@ -26,7 +26,6 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.UUID;
@@ -96,6 +95,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         inviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
         usedInviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("1"));
+        logoutCurrentUser();
     }
 
     @Test
@@ -302,6 +302,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void incorrectPasswordSizeShouldReturnError() throws Exception {
+        logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
@@ -320,6 +321,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void tooWeakPasswordSizeShouldReturnError() throws Exception {
+        logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
@@ -433,6 +435,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void validRegisterPostWithInvite() throws Exception {
+        logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         UserResource userResource = newUserResource()
@@ -484,6 +487,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void correctOrganisationNameIsAddedToModel() throws Exception {
+        logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(4L).withName("uniqueOrganisationName").build();
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(4L)).thenReturn(organisation);
@@ -498,11 +502,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
-        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
-                newUserResource().withRolesGlobal(singletonList(
-                        newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                )).build()
-        );
+
+
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(
+                newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
+        )).build());
 
         mockMvc.perform(get("/registration/register")
                 .cookie(organisationCookie)
@@ -513,11 +517,10 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
-        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
+        setLoggedInUser(
                 newUserResource().withRolesGlobal(singletonList(
                         newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                )).build()
-        );
+                )).build());
 
         mockMvc.perform(post("/registration/register")
                 .cookie(organisationCookie)

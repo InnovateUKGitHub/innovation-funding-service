@@ -177,7 +177,7 @@ Mark Organisation as complete when no
     Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link    link=Your organisation
     Then The user should not see the element      css=input
-    and the user should see the element    jQuery=button:contains("Edit your organisation")
+    and the user should see the element    jQuery=button:contains("Edit")
     And the user clicks the button/link    jQuery=a:contains("Return to finances")
 
 The Lead applicant is able to edit and re-submit when no
@@ -419,7 +419,7 @@ the user should view the project growth table
     the user should see the element    jQuery=td input[value="15000"]
 
 the user can edit the project growth table
-    the user clicks the button/link    jQuery=button.buttonlink:contains('Edit your organisation')
+    the user clicks the button/link    jQuery=button.buttonlink:contains('Edit')
     then the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
@@ -435,7 +435,7 @@ the applicant enters valid inputs
 the user can edit resubmit and read only of the organisation
     the user should see the element             jQuery=li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link             link=Your organisation
-    the user clicks the button/link             jQuery=button:contains("Edit your organisation")
+    the user clicks the button/link             jQuery=button:contains("Edit")
     the user enters text to a text field        jQuery=label:contains("employees") + input  2
     the user clicks the button/link             jQuery=button:contains("Mark as complete")
     the user should not see an error in the page

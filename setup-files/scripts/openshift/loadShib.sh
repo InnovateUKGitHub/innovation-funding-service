@@ -3,8 +3,8 @@
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 
 LDAP_VERSION=0.4.0
-IDP_VERSION=0.5.5
-SP_VERSION=0.5.2
+IDP_VERSION=0.4.1
+SP_VERSION=0.4.0
 
 docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
 
@@ -25,7 +25,7 @@ fi
 
 docker tag ${REGISTRY}/innovateuk/ifs-shib-idp:${IDP_VERSION} innovateuk/ifs-shib-idp:${IDP_VERSION}
 docker tag ${REGISTRY}/innovateuk/ifs-ldap:${LDAP_VERSION} innovateuk/ifs-ldap:${LDAP_VERSION}
-docker tag ${REGISTRY}/innovateuk/ifs-shib-sp:${SP_VERSION} innovateuk/ifs-shib-sp:${SP_VERSION}
+docker tag ${REGISTRY}/innovateuk/ifs-shib-idp:${SP_VERSION} innovateuk/ifs-shib-sp:${SP_VERSION}
 
 
 echo "SUCCESS"
