@@ -58,6 +58,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileController> {
     @Mock
     public SpendProfileCostValidator spendProfileCostValidator;
+
     @Spy
     public SpendProfileTableCalculator spendProfileTableCalculator;
 
@@ -270,7 +271,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void markAsCompleteSpendProfileWhenSpendHigherThanEligible() throws Exception {
-
         Long organisationId = 1L;
         Long projectId = 2L;
 
@@ -301,30 +301,27 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         expectedViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectResource.getId(), organisationId)
-        )
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(spendProfileService.markSpendProfileComplete(2L, 1L));
+        verify(spendProfileService).markSpendProfileComplete(2L, 1L);
 
     }
 
     @Test
     public void markAsCompleteSpendProfileSuccess() throws Exception {
-
-        Long projectId = 1L;
-        Long organisationId = 2L;
+        final Long projectId = 1L;
+        final Long organisationId = 2L;
 
         when(spendProfileService.markSpendProfileComplete(projectId, organisationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
-        )
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
 
-        verify(spendProfileService.markSpendProfileComplete(1L, 2L));
+        verify(spendProfileService).markSpendProfileComplete(1L, 2L);
     }
 
     @Test
@@ -340,7 +337,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
 
-        verify(spendProfileService.markSpendProfileIncomplete(1L, 2L));
+        verify(spendProfileService).markSpendProfileIncomplete(1L, 2L);
     }
 
     @Test
@@ -435,7 +432,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("redirect:/project/1/partner-organisation/2/spend-profile"));
 
-        verify(spendProfileService.markSpendProfileIncomplete(1L, 2L));
+        verify(spendProfileService).markSpendProfileIncomplete(1L, 2L);
     }
 
     @Test
@@ -497,7 +494,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         assertEquals(1, form.getObjectErrors().size());
 
         verify(projectService).getById(projectId);
-        verify(spendProfileService.getSpendProfileTable(projectId, organisationId));
+        verify(spendProfileService).getSpendProfileTable(projectId, organisationId);
         verify(organisationService).getOrganisationById(organisationId);
         verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
 
