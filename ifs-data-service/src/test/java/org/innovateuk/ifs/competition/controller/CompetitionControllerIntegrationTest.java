@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.workflow.resource.State.PENDING;
 import static org.junit.Assert.*;
 
 /**
- * Integration test for testing the rest servcies of the competition controller
+ * Integration test for testing the rest services of the competition controller
  */
 public class CompetitionControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionController> {
 
@@ -65,7 +65,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     private UserMapper userMapper;
 
-    private static final long EXISTING_CATEGORY_LINK_BEFORE_TEST = 2L;
     private static final Long COMPETITION_ID = 1L;
 
     private static final String COMPETITION_NAME_UPDATED = "Competition name updated";
@@ -96,7 +95,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private final ZonedDateTime fiveDaysAhead = now.plusDays(5);
     private final ZonedDateTime sixDaysAhead = now.plusDays(6);
     private final ZonedDateTime sevenDaysAhead = now.plusDays(7);
-    private final ZonedDateTime eightDaysAhead = now.plusDays(8);
 
     @Override
     @Autowired
@@ -677,10 +675,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         CompetitionResource competition = competitionsResult.getSuccessObject();
         assertThat(competition.getName(), isEmptyOrNullString());
         return competition;
-    }
-
-    private List<MilestoneType> populateMilestoneTypes() {
-        return new ArrayList<>(EnumSet.allOf(MilestoneType.class));
     }
 
     private void checkUpdatedCompetitionCategories(CompetitionResource savedCompetition) {

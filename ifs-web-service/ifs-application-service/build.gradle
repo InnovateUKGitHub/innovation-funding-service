@@ -1,4 +1,3 @@
-
 bootRun {
     addResources = false
 }
@@ -7,22 +6,12 @@ configurations {
     providedRuntime
 }
 
+
 jar {
     baseName = 'ifs-application-service'
 }
-
-//
-// Workaround for https://github.com/spring-projects/spring-boot/issues/8308
-// Can reinstate excludeDevtools in the bootRepackage task in next release
-//
-springBoot {
-    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
-
-bootRepackage {
-    mainClass = 'org.innovateuk.ifs.Application'
-//    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
+prepareDockerFile.appName = jar.baseName
+buildDocker.applicationName=jar.baseName.replaceAll(/ifs-/, "")
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
@@ -55,16 +44,3 @@ processTestResources {
 }
 
 
-task buildDocker( type:Docker, dependsOn: build) {
-    push = false
-    applicationName = jar.baseName.replaceAll(/ifs-/, "")
-    dockerfile = file('src/main/docker/Dockerfile')
-    doFirst {
-        copy {
-            from jar
-            into stageDir
-        }
-    }
-}
-
-buildDocker.dependsOn prepareDockerFile

@@ -3,7 +3,7 @@
 <head>
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details Partner progress'" />
 </head>
-<body th:with="context='project-management'" class="project-management application-overview">
+<body th:with="context='project'" class="project-management application-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -26,33 +26,23 @@
   <p>This overview shows whether each partner has submitted their bank details and if an additional review is required. When all bank details have been approved, this section will be marked as complete.</p>
   <h2 class="heading-medium">Partner progress</h2>
 
-    <table>
-    <thead>
-      <th scope="col">Partner</th>
-      <th scope="col">Progress</th>
-    </thead>
-    <tbody>
-      <tr th:each="partner : ${model.bankDetailsStatusResources}">
-          <td th:unless="${isCompAdminUser}">
-            <th:block th:unless="${partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
-                <a th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
-                <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
-            </th:block>
-            <th:block th:if="${partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
-                <span th:text="${partner.organisationName}"/>
-                <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
-            </th:block>
-          </td>
-          <td th:if="${isCompAdminUser}">
-            <div th:text="${partner.organisationName}" />
-            <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
-          </td>
-          <td>
-            <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
-          </td>
-      </tr>
-    </tbody>
-  </table>
+  <ul class="task-list">
+    <li th:each="partner : ${model.bankDetailsStatusResources}" th:class="${partner.bankDetailsStatus.name() == 'NOT_REQUIRED' ? 'read-only' : ''}">
+      <div class="task">
+        <h3 class="heading-small">
+          <th:block th:if="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
+            <span th:text="${partner.organisationName}"/>
+          </th:block>
+          <th:block th:unless="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
+            <a th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
+          </th:block>
+          <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
+        </h3>
+      </div>
+      <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
+    </li>
+  </ul>
+
 	<th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 <th:block th:insert="fragments/layout :: footer" />

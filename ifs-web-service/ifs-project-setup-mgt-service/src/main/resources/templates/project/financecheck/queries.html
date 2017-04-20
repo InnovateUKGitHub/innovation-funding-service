@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries'" />
 </head>
 
-<body th:with="context='project-management'" class="query-form">
+<body th:with="context='project'" class="query-form">
 
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
@@ -110,7 +110,8 @@
                 </div>
             </th:block>
             <th:block th:if="${!query.awaitingResponse and model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
-                <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+                <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
+                      th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                     <fieldset>
                         <legend class="heading-medium">Respond to query</legend>
                         <div th:class="${#fields.hasErrors('response')}? 'form-group error':'form-group'">
@@ -167,7 +168,7 @@
                     <input type="hidden" id="action" value="postResponse">
                     <div class="grid-row">
                         <div class="column-half">
-                            <button class="button button-large no-margin">Post response</button>
+                            <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
                         </div>
                         <div class="column-half alignright">
                             <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>

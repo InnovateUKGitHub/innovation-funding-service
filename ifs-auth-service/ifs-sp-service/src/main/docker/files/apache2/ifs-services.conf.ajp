@@ -1,0 +1,222 @@
+ServerName localhost
+<VirtualHost *:${HTTP_PORT}>
+  RewriteEngine On
+  RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+</VirtualHost>
+ShibCompatValidUser On
+<VirtualHost *:${HTTPS_PORT}>
+  ServerName ${SP_DOMAIN}
+
+  SSLProxyEngine on
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/certs/server.crt
+  SSLCertificateChainFile /etc/apache2/certs/DigiCertCA.crt
+  SSLCertificateKeyFile /etc/apache2/certs/server.key
+
+  Header always set Strict-Transport-Security "max-age=15768000"
+
+  Header set X-Frame-Options "DENY"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set X-Content-Type-Options "nosniff"
+  Header set Access-Control-Allow-Origin "https://${IDP_DOMAIN}"
+  Header set Content-Security-Policy-Report-Only "default-src 'none'; img-src 'self' https://assets.publishing.service.gov.uk; script-src 'self' 'unsafe-inline' data: https://ajax.googleapis.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'"
+
+  DocumentRoot /var/www/html
+
+  # Trusted hosts
+  SetEnvIfExpr "${TRUSTED_IP}" TrustedIP=1
+
+  RewriteEngine On
+
+  <Location /Shibboleth.sso>
+    Satisfy Any
+    Allow from all
+    ShibRequestSetting applicationId default
+    SetHandler shib
+  </Location>
+  <Location />
+      <RequireAll>
+          AuthType shibboleth
+          ShibRequireSession On
+          ShibRequestSetting applicationId default
+          require valid-user
+      </RequireAll>
+    # Manual Holding Page(s)
+    # Certain addresses are exempt
+    <If "(! reqenv('TrustedIP') == '1') && (! %{REQUEST_URI} -strmatch '/holding/*' )&& ( -f '/var/www/html/locking/bros' || -f 'var/www/html/locking/BROS' )">
+      RedirectMatch 504 ^
+    </If>
+  </Location>
+
+  # Errors & holding pages
+  <Location /holding>
+    ProxyPass !
+    <Limit GET HEAD>
+       Require all granted
+    </Limit>
+  </Location>
+  Alias /holding /var/www/html/locking
+  ErrorDocument 403 /holding/sorry.html
+  ErrorDocument 404 /holding/404.html
+  ErrorDocument 500 /holding/holding.html
+  ErrorDocument 502 /holding/holding.html
+  ErrorDocument 503 /holding/holding.html
+  ErrorDocument 504 /holding/holding.html
+
+  <Location ~ "/login/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/registration/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location /error>
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/(css|js|assets|images)/.+">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location /favicon.ico>
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "^/competition/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/application/(create|createApplicationByName)/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/organisation/(create|save|addAddress)/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/companyhouse/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/info/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/accept-invite/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/guest/organisation/create/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/public/application/create/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/assessment/invite/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location /project-setup/registration/accept-invite-user-exist-confirm>
+    AuthType shibboleth
+    ShibRequireSession On
+    ShibRequestSetting isPassive Off
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/alert/findAllVisibleByType/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+
+  # if that becomes a bigger requirement we might have to rethink it (using glusterfs?)
+  <Location /files>
+    ProxyPass !
+    Options -Indexes
+    <Limit GET HEAD>
+       Require all granted
+    </Limit>
+  </Location>
+  Alias /files /var/www/html/files
+
+  RewriteEngine On
+  RewriteCond %{REMOTE_USER} (.+)
+  RewriteRule . - [E=RU:%1]
+  RequestHeader set REMOTE_USER %{RU}e
+  ProxyPass /Shibboleth.sso !
+  ProxyPass /balancer-manager !
+  ProxyPass /Logout !
+
+  ProxyPass  /assessment/ ajp://assessment-svc:8009/assessment/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /management/ ajp://competition-mgt-svc:8009/management/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /project-setup-management/ ajp://project-setup-mgt-svc:8009/project-setup-management/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /project-setup/ ajp://project-setup-svc:8009/project-setup/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  / ajp://application-svc:8009/ timeout=30 connectiontimeout=30 retry=2
+
+  LogLevel warn proxy:info proxy_ajp:info
+  ErrorLog /dev/stderr
+  CustomLog /dev/stdout "%h %l %u %t \"%r\" %>s %b %T"
+</VirtualHost>

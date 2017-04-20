@@ -3,14 +3,14 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks overview'" />
 </head>
-<body th:with="context='project-management'" class="finance-checks-overview">
+<body th:with="context='project'" class="finance-checks-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${project.id},organisationId=${organisation})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${project.id})}" />
 
     <div class="page-title">
         <p class="subtitle"><th:block th:text="${project.name}" /></p>

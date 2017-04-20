@@ -8,7 +8,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0ba
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
-# This file uses the Application: Climate science the history of Greenland's ice  (Lead applcant: Steve.Smith)
+# This file uses the Application: Climate science the history of Greenland's ice    (Lead applcant: Steve.Smith)
 
 *** Test Cases ***
 Lead applicant details should show in the invite page
@@ -45,10 +45,10 @@ The type of organisation navigates to the correct page
     Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    This is the organisation that you work for, this will search all organisations available on Je-S.
-    And the user enters text to a text field     id=organisationSearchName   zoo
-    And the user clicks the button/link        jQuery=button:contains("Search")
-    Then the user should see the element     jQuery=p:contains("Choose your organisation:")
-    When the user clicks the button/link        jQuery=a:contains("Zoological Soc London Inst of Zoology")
+    And the user enters text to a text field    id=organisationSearchName    zoo
+    And the user clicks the button/link    jQuery=button:contains("Search")
+    Then the user should see the element    jQuery=p:contains("Choose your organisation:")
+    When the user clicks the button/link    jQuery=a:contains("Zoological Soc London Inst of Zoology")
     Then the user should see the text in the page    This is the address that your organisation works from
     When the user goes back to the previous page
     Then the user should see the text in the page    This is the organisation that you work for, this will search all organisations available on Je-S.
@@ -66,7 +66,7 @@ The type of organisation navigates to the correct page
     And the user should see the text in the page    Enter your organisation name or registration number.
     And the user goes back to the previous page
 
-Catapult search (empty, invalid & valid inputs)
+Research and technology organisations (RTOs) search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
     [Tags]    HappyPath
     Given the user navigates to the page    ${INVITE_LINK}
@@ -84,23 +84,23 @@ Catapult search (empty, invalid & valid inputs)
     And the user clicks the button/link    jQuery=.button:contains("Use selected address")
     Then the address fields should be filled
 
-Catapult search (accept invitation flow)
+Research and technology organisations (RTOs) search (accept invitation flow)
     [Documentation]    INFUND-1230
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
-    And the user clicks the button/link    jQuery=.button:contains("Confirm")
-    When the user navigates to the page  ${server}/registration/register
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    When the user navigates to the page    ${server}/registration/register
     Then the user fills the create account form    Thierry    Henry
 
-Catapult search (accept invitation flow with email step)
+Research and technology organisations (RTOs) search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]    Email    HappyPath
-    Given the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+invite1@gmail.com  Please verify your email address    Once verified you can sign into your account
+    Given the user reads his email from the default mailbox and clicks the link    ${test_mailbox_one}+invite1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in                   ${test_mailbox_one}+invite1@gmail.com  ${correct_password}
+    And guest user log-in    ${test_mailbox_one}+invite1@gmail.com    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Climate science the history of Greenland's ice
     And the user clicks the button/link    link=Your finances

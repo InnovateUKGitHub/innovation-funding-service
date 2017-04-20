@@ -2,10 +2,15 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * This class contains methods to retrieve and store {@link OrganisationResource} related data,
@@ -28,6 +38,9 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     @Autowired
     private ProcessRoleService processRoleService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Override
     public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
@@ -85,5 +98,26 @@ public class OrganisationServiceImpl implements OrganisationService {
             .filter(uar -> uar.getUser().equals(userId))
             .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
             .findFirst();
+    }
+
+    @Override
+    public boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId) {
+        if(userId == null) {
+            return false;
+        }
+
+        List<ProjectUserResource> thisProjectUsers = projectService.getProjectUsersForProject(projectId);
+        List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
+        List<ProjectUserResource> projectUsersForUserAndOrganisation = simpleFilter(projectUsersForOrganisation, user -> user.getUser().equals(userId));
+
+        return !projectUsersForUserAndOrganisation.isEmpty();
+    }
+
+    @Override
+    public Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
+                user.getId().equals(pu.getUser()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
+        return projectUser.map(ProjectUserResource::getOrganisation).orElseThrow(() -> new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(projectId)));
     }
 }

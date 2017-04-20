@@ -346,7 +346,8 @@
 
         <div class="assign-team">
             <!--/* Reassign question */-->
-            <select name="assign_question" class="prog-menu">
+            <label th:for="'assign'+${question.id}">Assign question to</label>
+            <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">
                 <th:block th:each="assignableUser : ${assignableUsers}">
                     <option th:value="${question.id}+'_'+${assignableUser.getId()}"
                             th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.id == assignableUser.getUser()))}"
@@ -471,9 +472,8 @@
             name="edit_question"
             th:unless="${appIsClosed}"
             th:value="${question.getId()}"
-            th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}">
-            Return and edit
-    </button>
+            th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}"
+            th:text="${summary ? 'Return and edit' : 'Edit'}" />
 </th:block>
 
 <!-- ========================= word count =========================== -->

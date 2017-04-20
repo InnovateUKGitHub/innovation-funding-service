@@ -236,7 +236,7 @@ Project Manager can see Spend Profile in Progress
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     Then the user should see the element     link=${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}
-    And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("In progress")
+    And the user should see the element      jQuery=.task-list li:nth-child(1):contains("In progress")
 
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765, INFUND-6138
@@ -468,8 +468,8 @@ Project Manager can see the button Allow edits
     [Documentation]    INFUND-6350
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
-    Then the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
-    And the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
+    Then the user should see the element    jQuery=.task-list li:nth-child(1):contains("Complete")
+    And the user should see the element     jQuery=.task-list li:nth-child(2):contains("Complete")
     Then the user clicks the button/link    link=${Meembee_Name}
     And the user should see the element     jQuery=.button:contains("Allow edits")
 
@@ -488,7 +488,7 @@ PM can return edit rights to partners
     When the user clicks the button/link     jQuery=.button:contains("Allow edits")
     And the user clicks the button/link      jQuery=.button:contains("Allow partner to edit")
     Then the user navigates to the page      ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
-    And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("In progress")
+    And the user should see the element      jQuery=.task-list li:nth-child(2):contains("In progress")
 
 Partner can receive edit rights to his SP
     [Documentation]    INFUND-6350
@@ -751,13 +751,18 @@ Status updates correctly for internal user's table after approval
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
 
 Project Finance still has a link to the spend profile after approval
-    [Documentation]    INFUND-6046
+    [Documentation]    INFUND-6046, INFUND-7540
     [Tags]
     When the user clicks the button/link           jQuery=td:nth-child(6) a
     Then the user should see the text in the page  Project spend profile
-    And the user clicks the button/link            link=${Katz_Name}-spend-profile.csv
-    And the user clicks the button/link            link=${Meembee_Name}-spend-profile.csv
-    And the user clicks the button/link            link=${Zooveo_Name}-spend-profile.csv
+    When the user clicks the button/link            link=${Katz_Name}-spend-profile.csv
+    Then the user should not see an error in the page
+    And the user should see the text in the page   The spend profile has been approved
+    When the user clicks the button/link            link=${Meembee_Name}-spend-profile.csv
+    Then the user should not see an error in the page
+    And the user should see the text in the page   The spend profile has been approved
+    When the user clicks the button/link            link=${Zooveo_Name}-spend-profile.csv
+    Then the user should not see an error in the page
     And the user should see the text in the page   The spend profile has been approved
 
 Project finance user cannot access external users' spend profile page
@@ -803,9 +808,9 @@ the field has value
     should be equal as strings    ${var}    ${value}
 
 the user should see all spend profiles as complete
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(3) td:nth-child(2):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(1):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(2):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(3):contains("Complete")
 
 all previous sections of the project are completed
     partners submit their finance contacts

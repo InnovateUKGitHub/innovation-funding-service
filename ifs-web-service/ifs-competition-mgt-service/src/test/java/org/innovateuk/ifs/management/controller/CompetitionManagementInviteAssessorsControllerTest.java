@@ -114,7 +114,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withDeclined(52)
                 .build();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(competitionInviteRestService.getInviteStatistics(competition.getId())).thenReturn(restSuccess(inviteStatistics));
     }
 
@@ -154,8 +154,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
         assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryRestServiceMock);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
@@ -189,8 +189,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
         assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryRestServiceMock);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
@@ -225,8 +225,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm form = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         assertFalse(form.isVisible());
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verify(categoryServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
@@ -268,8 +268,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionService, categoryRestServiceMock, competitionInviteRestService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, categoryRestServiceMock, competitionInviteRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationAreas();
         inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, innovationArea, status, compliant);
         inOrder.verifyNoMoreInteractions();
@@ -302,8 +302,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionService, categoryRestServiceMock, competitionInviteRestService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, categoryRestServiceMock, competitionInviteRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationAreas();
         inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), 0, empty(), empty(), empty());
         inOrder.verifyNoMoreInteractions();
@@ -433,8 +433,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(1, form.getInvites().size());
         assertEquals(expectedNewUserRow, form.getInvites().get(0));
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verify(categoryServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
@@ -478,8 +478,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(1, form.getInvites().size());
         assertEquals(expectedNewUserRow, form.getInvites().get(0));
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verify(categoryServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
@@ -514,8 +514,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertEquals(1, form.getInvites().size());
         assertEquals(expectedInviteRow, form.getInvites().get(0));
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryServiceMock);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryServiceMock);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verify(categoryServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();

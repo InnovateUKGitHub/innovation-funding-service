@@ -85,6 +85,22 @@ public class ExperianEndpointController {
         validationErrors.put(
                 fromJson("{\n" +
                         "  \"sortcode\":\"000003\",\n" +
+                        "  \"accountNumber\":\"00000012\"\n" +
+                        "}", SILBankDetails.class),
+                fromJson("{\n" +
+                        "  \"ValidationResult\": {\n" +
+                        "    \"checkPassed\": false,\n" +
+                        "    \"iban\": null,\n" +
+                        "    \"conditions\": {\n" +
+                        "      \"severity\": \"error\",\n" +
+                        "      \"code\": 4,\n" +
+                        "      \"description\": \"Account number format is incorrect\"\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}", ValidationResultWrapper.class));
+        validationErrors.put(
+                fromJson("{\n" +
+                        "  \"sortcode\":\"000003\",\n" +
                         "  \"accountNumber\":\"12345673\"\n" +
                         "}\n", SILBankDetails.class),
                 fromJson("{\n" +
@@ -218,6 +234,23 @@ public class ExperianEndpointController {
                         "      \"severity\": \"information\",\n" +
                         "      \"code\": 1,\n" +
                         "      \"description\": \"Alternate information is available for this account\"\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}", ValidationResultWrapper.class));
+
+        validationErrors.put(
+                fromJson("{\n" +
+                        "  \"sortcode\":\"000004\",\n" +
+                        "  \"accountNumber\":\"00000123\"\n" +
+                        "}", SILBankDetails.class),
+                fromJson("{\n" +
+                        "  \"ValidationResult\": {\n" +
+                        "    \"checkPassed\": false,\n" +
+                        "    \"iban\": null,\n" +
+                        "    \"conditions\": {\n" +
+                        "      \"severity\": \"error\",\n" +
+                        "      \"code\": 3,\n" +
+                        "      \"description\": \"\"" +
                         "    }\n" +
                         "  }\n" +
                         "}", ValidationResultWrapper.class));

@@ -53,7 +53,7 @@ import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -226,10 +226,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
-        return getProject(projectId).
+    public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+        return getProject(composite.getProjectId()).
                 andOnSuccess(this::validateProjectIsInSetup).
-                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
+                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
                             andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                                     andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }

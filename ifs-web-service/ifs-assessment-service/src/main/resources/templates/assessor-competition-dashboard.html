@@ -13,6 +13,14 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+                <h2 class="heading-medium error-summary-heading">There was a problem submitting some of your assessments</h2>
+
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
             <div class="page-title">
                 <h1 class="heading-xlarge" th:text="${model.competitionTitle}" />
             </div>
@@ -28,7 +36,7 @@
                 </div>
 
                 <div class="column-one-third">
-                    <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
+                    <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief</a> (opens in a new window)</p>
                 </div>
             </div>
 
@@ -45,14 +53,6 @@
                         <div class="progress-list">
                             <h2 class="heading-medium no-margin">Applications for assessment (<span
                             th:text="${#lists.size(model.outstanding)}"/>)</h2>
-
-                            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                                <h2 class="heading-medium error-summary-heading">There was a problem submitting some of your assessments.</h2>
-
-                                <ul class="error-summary-list">
-                                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                                </ul>
-                            </div>
 
                             <ul>
                                 <li th:each="app,iterStat : ${model.outstanding}"
