@@ -43,6 +43,6 @@ public class ProjectSpendProfileExportController {
     }
 
     private String getCSVAttachmentHeader(String fileName) {
-        return ATTACHMENT_HEADER + fileName; //TODO NUNO
+        return ATTACHMENT_HEADER + fileName;
     }
 }
