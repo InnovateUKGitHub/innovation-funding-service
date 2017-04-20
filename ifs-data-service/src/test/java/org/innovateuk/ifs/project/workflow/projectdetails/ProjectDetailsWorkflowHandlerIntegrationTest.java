@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.project.workflow.projectdetails;
 
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectDetailsProcess;
+import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.repository.ProjectDetailsProcessRepository;
+import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectDetailsOutcomes;
 import org.innovateuk.ifs.project.resource.ProjectDetailsState;
-import org.innovateuk.ifs.project.workflow.projectdetails.actions.BaseProjectDetailsAction;
-import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.project.projectdetails.workflow.actions.BaseProjectDetailsAction;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.domain.ActivityState;

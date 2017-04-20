@@ -26,6 +26,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -76,6 +77,10 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private MessageSource messageSource;
+
 
     public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
                                            final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
@@ -149,7 +154,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
     private void addSelectedInnovationAreaName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
         if(applicationResource.getNoInnovationAreaApplicable()) {
-            questionApplicationViewModel.setSelectedInnovationAreaName("Innovation area not listed.");
+            questionApplicationViewModel.setNoInnovationAreaApplicable(true);
         }
         else if(applicationResource.getInnovationArea() != null) {
             questionApplicationViewModel.setSelectedInnovationAreaName(applicationResource.getInnovationArea().getName());

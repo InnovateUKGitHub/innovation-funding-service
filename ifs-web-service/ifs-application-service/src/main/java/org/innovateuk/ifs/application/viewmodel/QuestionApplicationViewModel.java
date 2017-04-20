@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,6 +19,7 @@ public class QuestionApplicationViewModel {
     private OrganisationResource userOrganisation;
     private String selectedInnovationAreaName;
     private String selectedResearchCategoryName;
+    private boolean noInnovationAreaApplicable;
 
     public QuestionApplicationViewModel(Set<Long> markedAsComplete, Boolean allReadOnly, ApplicationResource currentApplication,
                                         CompetitionResource competitionResource, OrganisationResource userOrganisation) {
@@ -81,5 +80,13 @@ public class QuestionApplicationViewModel {
 
     public void setSelectedResearchCategoryName(String selectedResearchCategoryName) {
         this.selectedResearchCategoryName = selectedResearchCategoryName;
+    }
+
+    public boolean isNoInnovationAreaApplicable() {
+        return noInnovationAreaApplicable;
+    }
+
+    public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
+        this.noInnovationAreaApplicable = noInnovationAreaApplicable;
     }
 }

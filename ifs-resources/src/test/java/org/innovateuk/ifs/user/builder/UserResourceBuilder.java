@@ -98,4 +98,8 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     public UserResourceBuilder withProfile(Long... profiles) {
         return withArray((profile, user) -> setField("profileId", profile, user), profiles);
     }
+
+    public UserResourceBuilder withAllowMarketingEmails(Boolean... allowMarketingEmails) {
+        return withArray((allowMarketingEmail, user) -> setField("allowMarketingEmails", allowMarketingEmail, user), allowMarketingEmails);
+    }
 }

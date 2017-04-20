@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
@@ -46,6 +48,10 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     @Spy
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private CompetitionManagementApplicationServiceImpl competitionManagementApplicationServiceImpl;
 
 
     @Test

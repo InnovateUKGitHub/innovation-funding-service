@@ -72,7 +72,7 @@ Submit flow (complete application)
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
-    And the user should see the text in the page    you will be notified of our decision by
+    And the user should see the text in the page    You and your project partners will be emailed notification of the decision by
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
