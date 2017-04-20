@@ -51,7 +51,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
      */
     @Test
     public void testDashboardApplicant() throws Exception {
-        this.loginUser(applicant);
+        setLoggedInUser(applicant);
 
         ApplicantDashboardViewModel viewModel = new ApplicantDashboardViewModel();
         when(populator.populate(applicant)).thenReturn(viewModel);
@@ -69,7 +69,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
     @Test
     public void testDashboardCollaborator() throws Exception {
         UserResource collabUsers = this.users.get(1);
-        this.loginUser(collabUsers);
+        setLoggedInUser(collabUsers);
 
         ApplicantDashboardViewModel viewModel = new ApplicantDashboardViewModel();
         when(populator.populate(collabUsers)).thenReturn(viewModel);

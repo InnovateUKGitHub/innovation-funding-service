@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.assignment.controller;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
@@ -28,7 +27,7 @@ import static java.lang.String.format;
 @Controller
 @RequestMapping(value = "/{assessmentId}")
 @PreAuthorize("hasAuthority('assessor')")
-public class AssessmentAssignmentController extends BaseController {
+public class AssessmentAssignmentController {
 
     @Autowired
     private AssessmentAssignmentModelPopulator assessmentAssignmentModelPopulator;
