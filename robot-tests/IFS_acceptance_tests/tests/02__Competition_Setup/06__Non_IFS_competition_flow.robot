@@ -4,6 +4,8 @@ Documentation     INFUND-7963: Create Non-IFS tab in 'Competition dashboard' for
 ...               INFUND-7964: Create Non-IFS 'Competition details page' for adding non-IFS competitions to front door
 ...
 ...               INFUND-7965: Update 'Public content' for adding non-IFS competitions to front door
+...
+...               INFUND-8554 As a member of the Competition team I want to be able to publish a "Registration Closes" date in non-IFS public content...
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -66,15 +68,19 @@ Internal user can see the Non-IFS comp and its brief information
     [Teardown]  the user can log out
 
 Guest user can apply to a Non-IFS competition at the FrontDoor
-    [Documentation]  INFUND-7965
-    [Tags]  MySQL
-    Given the user navigates to the page       ${frontDoor}
-    When the user enters text to a text field  id=keywords  search
-    And the user clicks the button/link        jQuery=button:contains("Update results")
-    Given the competition is open              Test non-IFS competition
-    When the user clicks the button/link       link=Test non-IFS competition
-    Then the user clicks the button/link       link=Register and apply online
+    [Documentation]    INFUND-7965
+    [Tags]    MySQL
+    Given the user navigates to the page    ${frontDoor}
+    When the user enters text to a text field    id=keywords    search
+    And the user clicks the button/link    jQuery=button:contains("Update results")
+    Given the competition is open    Test non-IFS competition
+    When the user clicks the button/link    link=Test non-IFS competition
+    Then The user should see the element    link=Register and apply online
 
+Guest can see the Dates tab
+    [Documentation]    INFUND-8554
+    Then the user clicks the button/link    link=Dates
+    And The user should see the text in the page    Registration closes
 
 *** Keywords ***
 the user fills out the competition title and url
