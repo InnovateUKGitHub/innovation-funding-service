@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.resource;
+package org.innovateuk.ifs.project.spendprofile.resource;
 
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
