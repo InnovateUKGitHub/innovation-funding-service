@@ -471,9 +471,8 @@
             name="edit_question"
             th:unless="${appIsClosed}"
             th:value="${question.getId()}"
-            th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}">
-            Return and edit
-    </button>
+            th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}"
+            th:text="${summary ? 'Return and edit' : 'Edit'}" />
 </th:block>
 
 <!-- ========================= word count =========================== -->

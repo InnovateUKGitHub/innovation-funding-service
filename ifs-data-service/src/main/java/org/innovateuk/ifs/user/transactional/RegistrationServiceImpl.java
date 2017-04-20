@@ -36,7 +36,6 @@ import java.util.*;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
-import static java.util.Objects.requireNonNull;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -202,6 +201,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setDisability(userResource.getDisability());
         newUser.setGender(userResource.getGender());
         newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
+        newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
 
         return newUser;
     }

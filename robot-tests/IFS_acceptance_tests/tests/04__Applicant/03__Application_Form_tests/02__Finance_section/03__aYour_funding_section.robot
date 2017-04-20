@@ -58,7 +58,7 @@ If funding is complete. application details has a warning message
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     When the user clicks the button/link    link=Application details
-    And the user clicks the button/link    jQuery=button:contains(Return and edit)
+    And the user clicks the button/link    jQuery=button:contains(Edit)
     And the user clicks the button/link    jQuery=button:contains("Change your research category")
     Then the user should see the text in the page    Changing the research category will reset the funding level for all business participants
 
@@ -110,7 +110,7 @@ Read only view of the other funding
     Then the user should see the element   jQuery=dt:contains("Funding level") + dd:contains("43")
     And the user clicks the button/link    jQuery=th:contains("uncle") ~ td:contains("£ 15,000")
     And the user clicks the button/link    jQuery=th:contains("grandma") ~ td:contains("£ 200,000")
-    And the user should see the element    jQuery=button:contains("Edit your funding")
+    And the user should see the element    jQuery=button:contains("Edit")
 
 *** Keywords ***
 Custom Suite Setup
