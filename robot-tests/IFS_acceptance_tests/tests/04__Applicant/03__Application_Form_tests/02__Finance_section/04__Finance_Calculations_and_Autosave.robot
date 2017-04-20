@@ -255,7 +255,7 @@ Totals should be correct
     [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
     the user should see the element    ${total_field}
     the user should see the element    ${total_collapsible}
-    Textfield Value Should Be    ${TOTAL_FIELD}    ${FIELD_VALUE}
+    Textfield Should Contain    ${TOTAL_FIELD}    ${FIELD_VALUE}
     Wait Until Element Contains Without Screenshots    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
 
 Admin costs total should be correct
