@@ -86,7 +86,7 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects feasibility studies and no to resubmission and an innovation area
+    And the user selects feasibility studies and no to resubmission
     And the user enters text to a text field    css=#application_details-startdate_day    ${tomorrowday}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
@@ -177,7 +177,7 @@ Mark Organisation as complete when no
     Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link    link=Your organisation
     Then The user should not see the element      css=input
-    and the user should see the element    jQuery=button:contains("Edit your organisation")
+    and the user should see the element    jQuery=button:contains("Edit")
     And the user clicks the button/link    jQuery=a:contains("Return to finances")
 
 The Lead applicant is able to edit and re-submit when no
@@ -347,13 +347,10 @@ the the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
-the user selects feasibility studies and no to resubmission and an innovation area
+the user selects feasibility studies and no to resubmission
     the user clicks the button/link    jQuery=legend:contains("Research category")
     the user clicks the button/link    jQuery=button:contains("Choose your research")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-    the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=button:contains("Choose your innovation area")
-    the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
 
@@ -419,7 +416,7 @@ the user should view the project growth table
     the user should see the element    jQuery=td input[value="15000"]
 
 the user can edit the project growth table
-    the user clicks the button/link    jQuery=button.buttonlink:contains('Edit your organisation')
+    the user clicks the button/link    jQuery=button.buttonlink:contains('Edit')
     then the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
@@ -435,7 +432,7 @@ the applicant enters valid inputs
 the user can edit resubmit and read only of the organisation
     the user should see the element             jQuery=li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link             link=Your organisation
-    the user clicks the button/link             jQuery=button:contains("Edit your organisation")
+    the user clicks the button/link             jQuery=button:contains("Edit")
     the user enters text to a text field        jQuery=label:contains("employees") + input  2
     the user clicks the button/link             jQuery=button:contains("Mark as complete")
     the user should not see an error in the page

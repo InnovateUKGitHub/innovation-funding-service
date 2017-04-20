@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.registration;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -19,7 +18,7 @@ import static org.innovateuk.ifs.registration.OrganisationCreationController.ORG
 import static org.innovateuk.ifs.registration.RegistrationController.ORGANISATION_ID_PARAMETER_NAME;
 
 
-public class AbstractAcceptInviteController extends BaseController {
+public class AbstractAcceptInviteController {
 
     private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
     public static final String ORGANISATION_TYPE = "organisationType";

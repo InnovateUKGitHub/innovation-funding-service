@@ -6,10 +6,7 @@ import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
@@ -32,6 +29,9 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -133,12 +133,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
-        ApplicationStatus applicationStatus = ApplicationStatus.CREATED;
+        ApplicationState applicationState = ApplicationState.CREATED;
 
         Application application = ApplicationBuilder.newApplication().
                 withId(1L).
                 withName("testApplication").
-                withApplicationStatus(applicationStatus).
+                withApplicationState(applicationState).
                 withDurationInMonths(3L).
                 withCompetition(competition).
                 build();
@@ -155,7 +155,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
-            assertEquals(applicationStatus, created.getApplicationStatus());
+            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
             assertNull(created.getStartDate());
@@ -172,6 +172,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(applicationResource);
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created =
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
@@ -587,9 +588,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "testToken123abc", "my-uid");
         User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", "my-uid");
 
-        Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
-        Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
-        Application testApplication3 = new Application(null, "testApplication3Name", null, null, 3L);
+        Application testApplication1 = new Application(null, "testApplication1Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        testApplication1.setId(1L);
+        Application testApplication2 = new Application(null, "testApplication2Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        testApplication2.setId(2L);
+        Application testApplication3 = new Application(null, "testApplication3Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        testApplication3.setId(3L);
 
         ApplicationResource testApplication1Resource = newApplicationResource().with(id(1L)).withName("testApplication1Name").build();
         ApplicationResource testApplication2Resource = newApplicationResource().with(id(2L)).withName("testApplication2Name").build();
@@ -645,14 +649,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Role role = newRole().with(name(roleName)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         User user = newUser().with(id(userId)).build();
-        ApplicationStatus applicationStatus = ApplicationStatus.CREATED;
+        ApplicationState applicationState = ApplicationState.CREATED;
 
         String applicationName = "testApplication";
 
         Application application = ApplicationBuilder.newApplication().
                 withId(1L).
                 withName(applicationName).
-                withApplicationStatus(applicationStatus).
+                withApplicationState(applicationState).
                 withCompetition(competition).
                 build();
 
@@ -670,12 +674,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
-            assertEquals(applicationStatus, created.getApplicationStatus());
+            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
             assertEquals(competitionId, created.getCompetition().getId());
             return true;
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccessObject();
         assertEquals(newApplication, created);
@@ -756,7 +761,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -791,7 +796,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -888,7 +893,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -922,7 +927,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -1022,7 +1027,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()))).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -1054,7 +1059,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, Arrays.asList(ApplicationState.CREATED.getBackingState()));
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
