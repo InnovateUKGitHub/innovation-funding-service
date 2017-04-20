@@ -224,8 +224,11 @@
                         <span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span>
                     </button>
                 </div>
+                
+                <div class="form-group"
+                     th:if="${#sets.size(model.questionApplicationViewModel.currentCompetition.innovationAreas) > 1}"
+                     th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'error'">
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'error'">
                     <label for="researchArea">
                         <span class="heading-medium">Innovation area</span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
