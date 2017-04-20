@@ -83,6 +83,7 @@ import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.project.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -422,6 +423,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectService projectServiceMock;
+
+    @Mock
+    protected ProjectMonitoringOfficerService projectMonitoringOfficerServiceMock;
 
     @Mock
     protected ProjectGrantOfferService projectGrantOfferServiceMock;
