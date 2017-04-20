@@ -101,7 +101,7 @@ Successful Funding Decision
     [Tags]  HappyPath
     Given the internal user marks the application as  Successful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
     And the internal user sends an email notification  Successful  ${successSubject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
-    Then the external user reads his email and can see the correct status  Successful  ${successSubject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
+    Then the external user reads his email and can see the correct status  Project in setup  ${successSubject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
 
 Once Successful and Sent you cannot change your mind
     [Documentation]  INFUND-8651
