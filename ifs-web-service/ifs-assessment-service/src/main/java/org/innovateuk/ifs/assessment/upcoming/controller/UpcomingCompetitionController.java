@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.upcoming.controller;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.assessment.upcoming.populator.UpcomingCompetitionModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition")
 @PreAuthorize("hasAuthority('assessor')")
-public class UpcomingCompetitionController extends BaseController {
+public class UpcomingCompetitionController {
 
     @Autowired
     private UpcomingCompetitionModelPopulator upcomingCompetitionModelPopulator;

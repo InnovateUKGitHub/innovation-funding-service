@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.financecheck.viewmodel.FinanceCheckOverviewViewModel;
+import org.innovateuk.ifs.project.financechecks.controller.FinanceOverviewController;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.junit.Test;
 import org.mockito.Mockito;

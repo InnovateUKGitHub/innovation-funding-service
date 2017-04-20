@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.project.financecheck.service.FinanceCheckNotesServiceImpl;
+import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.threads.resource.NoteResource;

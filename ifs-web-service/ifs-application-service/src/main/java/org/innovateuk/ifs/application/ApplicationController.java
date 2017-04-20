@@ -116,38 +116,39 @@ public class ApplicationController {
     @Autowired
     private AssessmentRestService assessmentRestService;
 
-    public static String redirectToApplication(ApplicationResource application){
-        return "redirect:/application/"+application.getId();
+    public static String redirectToApplication(ApplicationResource application) {
+        return "redirect:/application/" + application.getId();
     }
 
     @ProfileExecution
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
+                                     @ModelAttribute("loggedInUser") UserResource user,
                                      HttpServletRequest request) {
 
-        Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
+        Long userId = user.getId();
         applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model);
         return "application-details";
     }
 
     @ProfileExecution
-    @PostMapping(value= "/{applicationId}")
-    public String applicationDetails(@PathVariable("applicationId") long applicationId, HttpServletRequest request) {
+    @PostMapping(value = "/{applicationId}")
+    public String applicationDetails(@PathVariable("applicationId") long applicationId,
+                                     @ModelAttribute("loggedInUser") UserResource user,
+                                     HttpServletRequest request) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
         questionService.assignQuestion(applicationId, request, assignedBy);
-        return "redirect:/application/"+applicationId;
+        return "redirect:/application/" + applicationId;
     }
 
     @ProfileExecution
     @GetMapping("/{applicationId}/section/{sectionId}")
     public String applicationDetailsOpenSection(ApplicationForm form, Model model,
-                                     @PathVariable("applicationId") long applicationId,
-                                     @PathVariable("sectionId") long sectionId,
-                                                HttpServletRequest request){
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+                                                @PathVariable("applicationId") long applicationId,
+                                                @PathVariable("sectionId") long sectionId,
+                                                @ModelAttribute("loggedInUser") UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         SectionResource section = sectionService.getById(sectionId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -166,12 +167,11 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     HttpServletRequest request) {
+                                     @ModelAttribute("loggedInUser") UserResource user) {
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
@@ -194,15 +194,14 @@ public class ApplicationController {
             );
 
             return "application-feedback-summary";
-        }
-        else {
+        } else {
             return "application-summary";
         }
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
-                                              @PathVariable("questionId") long questionId) {
+                                                      @PathVariable("questionId") long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         if (!applicationResource.getCompetitionStatus().isFeedbackReleased()) {
             return "redirect:/application/" + applicationId + "/summary";
@@ -215,8 +214,8 @@ public class ApplicationController {
     @ProfileExecution
     @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
+                                           @ModelAttribute("loggedInUser") UserResource user,
                                            HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         Map<String, String[]> params = request.getParameterMap();
 
@@ -241,8 +240,7 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                           HttpServletRequest request){
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+                                           @ModelAttribute("loggedInUser") UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
@@ -251,15 +249,15 @@ public class ApplicationController {
 
     @PostMapping("/{applicationId}/submit")
     public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                    HttpServletRequest request, HttpServletResponse response){
-    	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-    	ApplicationResource application = applicationService.getById(applicationId);
-    	
-    	if(!ableToSubmitApplication(user, application)){
-    		cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
-    		return "redirect:/application/" + applicationId + "/confirm-submit";
-    	}
-       
+                                    @ModelAttribute("loggedInUser") UserResource user,
+                                    HttpServletResponse response) {
+        ApplicationResource application = applicationService.getById(applicationId);
+
+        if (!ableToSubmitApplication(user, application)) {
+            cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
+            return "redirect:/application/" + applicationId + "/confirm-submit";
+        }
+
         applicationService.updateStatus(applicationId, SUBMITTED);
         application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -270,16 +268,16 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                    HttpServletRequest request){
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+                                   @ModelAttribute("loggedInUser") UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-track";
     }
+
     @ProfileExecution
     @GetMapping("/create/{competitionId}")
-    public String applicationCreatePage(){
+    public String applicationCreatePage() {
         return "application-create";
     }
 
@@ -288,33 +286,34 @@ public class ApplicationController {
     public String applicationCreate(Model model,
                                     @PathVariable("competitionId") long competitionId,
                                     @RequestParam(value = "application_name", required = true) String applicationName,
-                                    HttpServletRequest request){
-        Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
+                                    @ModelAttribute("loggedInUser") UserResource user) {
+        Long userId = user.getId();
 
-        String applicationNameWithoutWhiteSpace= applicationName.replaceAll("\\s","");
+        String applicationNameWithoutWhiteSpace = applicationName.replaceAll("\\s", "");
 
-        if(applicationNameWithoutWhiteSpace.length() > 0) {
+        if (applicationNameWithoutWhiteSpace.length() > 0) {
             ApplicationResource application = applicationService.createApplication(competitionId, userId, applicationName);
-            return "redirect:/application/"+application.getId();
-        }
-        else {
+            return "redirect:/application/" + application.getId();
+        } else {
             model.addAttribute("applicationNameEmpty", true);
             return "application-create";
         }
     }
+
     @ProfileExecution
     @GetMapping(value = "/create-confirm-competition")
-    public String competitionCreateApplication(){
+    public String competitionCreateApplication() {
         return "application-create-confirm-competition";
     }
 
     @GetMapping("/terms-and-conditions")
-    public String termsAndConditions(){
+    public String termsAndConditions() {
         return "application-terms-and-conditions";
     }
 
     @GetMapping("/{applicationId}/assessorFeedback")
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
             @PathVariable("applicationId") long applicationId) {
 
         ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
@@ -325,30 +324,32 @@ public class ApplicationController {
     /**
      * Printable version of the application
      */
-    @GetMapping(value="/{applicationId}/print")
+    @GetMapping(value = "/{applicationId}/print")
     public String printApplication(@PathVariable("applicationId") long applicationId,
-                                             Model model, HttpServletRequest request) {
-        return applicationPrintPopulator.print(applicationId, model, request);
+                                   Model model,
+                                   @ModelAttribute("loggedInUser") UserResource user) {
+        return applicationPrintPopulator.print(applicationId, model, user);
     }
 
     /**
      * Assign a question to a user
      *
      * @param applicationId the application for which the user is assigned
-     * @param sectionId section id for showing details
-     * @param request request parameters
+     * @param sectionId     section id for showing details
+     * @param request       request parameters
      * @return
      */
     @ProfileExecution
     @PostMapping("/{applicationId}/section/{sectionId}")
     public String assignQuestion(@PathVariable("applicationId") long applicationId,
                                  @PathVariable("sectionId") long sectionId,
+                                 @ModelAttribute("loggedInUser") UserResource user,
                                  HttpServletRequest request,
-                                 HttpServletResponse response){
+                                 HttpServletResponse response) {
 
-        doAssignQuestion(applicationId, request, response);
+        doAssignQuestion(applicationId, user, request, response);
 
-        return "redirect:/application/" + applicationId + "/section/" +sectionId;
+        return "redirect:/application/" + applicationId + "/section/" + sectionId;
     }
 
     private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
@@ -365,8 +366,7 @@ public class ApplicationController {
         }
     }
 
-    private void doAssignQuestion(Long applicationId, HttpServletRequest request, HttpServletResponse response) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    private void doAssignQuestion(Long applicationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
         questionService.assignQuestion(applicationId, request, assignedBy);

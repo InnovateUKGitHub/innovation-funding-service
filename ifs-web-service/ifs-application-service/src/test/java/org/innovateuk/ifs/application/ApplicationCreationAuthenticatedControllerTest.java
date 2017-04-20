@@ -85,8 +85,6 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/99/team"));
 
-        // application needs to be linked to current user
-        verify(userAuthenticationService, atLeastOnce()).getAuthenticatedUser(any());
         // application needs to be created.
         verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), eq(""));
         verify(userService).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
@@ -111,8 +109,6 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/99/team"));
 
-        // application needs to be linked to current user
-        verify(userAuthenticationService, atLeastOnce()).getAuthenticatedUser(any());
         // application needs to be created.
         verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), eq(""));
     }

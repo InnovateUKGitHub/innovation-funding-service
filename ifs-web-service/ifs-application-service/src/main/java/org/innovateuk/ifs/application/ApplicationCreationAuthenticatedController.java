@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -41,15 +38,11 @@ public class ApplicationCreationAuthenticatedController {
     @Autowired
     protected UserService userService;
 
-    @Autowired
-    protected UserAuthenticationService userAuthenticationService;
-
-
     @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
+                       @ModelAttribute("loggedInUser") UserResource user,
                        HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
         if (Boolean.TRUE.equals(userHasApplication)) {
@@ -63,11 +56,11 @@ public class ApplicationCreationAuthenticatedController {
     @PostMapping("/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
+                       @ModelAttribute("loggedInUser") UserResource user,
                        HttpServletRequest request) {
         String createNewApplication = request.getParameter(FORM_RADIO_NAME);
 
         if (RADIO_TRUE.equals(createNewApplication)) {
-            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
             return createApplicationAndShowInvitees(user, competitionId);
         } else if (RADIO_FALSE.equals(createNewApplication)) {
             // redirect to dashboard
