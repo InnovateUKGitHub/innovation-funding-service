@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.spendprofile.service;
+package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -10,6 +10,9 @@ import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
