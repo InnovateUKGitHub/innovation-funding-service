@@ -130,7 +130,7 @@ public class RegistrationController {
             return "redirect:/login";
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         if (!processOrganisation(request, model)) {
             destination = "redirect:/";

@@ -109,7 +109,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"));
+                .andExpect(view().name("registration/register"));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(inviteHashCookie, organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attribute("invitee", true))
         ;
     }
