@@ -260,7 +260,7 @@ Totals should be correct
 
 Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
+    Textfield Should Contain    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
 
 the total costs should reflect overheads
