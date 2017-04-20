@@ -173,8 +173,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Arsene    Wenger
-    #And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
-    And the user reads his email and clicks the link  ${test_mailbox_one}+academictest@gmail.com  Please verify your email address  Please click on the verification link to confirm your email address
+    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
@@ -235,6 +234,7 @@ invite a registered user
     the guest user inserts user email & password    ${EMAIL_LEAD}    ${correct_password}
     the guest user clicks the log-in button
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link    jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     the user enters text to a text field    name=organisationName    innovate
     the user enters text to a text field    name=applicants[0].name    Partner name

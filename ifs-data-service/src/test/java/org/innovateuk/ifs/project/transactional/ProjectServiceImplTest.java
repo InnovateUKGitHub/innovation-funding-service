@@ -30,9 +30,10 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
-import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
-import org.innovateuk.ifs.project.financecheck.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -517,7 +518,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
+        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 7L);
 
         assertTrue(updateResult.isSuccess());
 
@@ -542,7 +543,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
 
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
+        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 7L);
 
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
@@ -567,7 +568,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         User user = newUser().withId(7L).build();
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(anotherProject).withRole(PROJECT_PARTNER).build();
 
-        ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, userIdForUserNotOnProject);
+        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), userIdForUserNotOnProject);
 
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
@@ -592,7 +593,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        ServiceResult<Void> updateResult = service.updateFinanceContact(existingProject.getId(), organisation.getId(), anotherUser.getId());
+        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(existingProject.getId(), organisation.getId()), anotherUser.getId());
         assertTrue(updateResult.isSuccess());
 
         List<ProjectUser> organisationFinanceContacts = existingProject.getProjectUsers(pu -> pu.getRole().equals(PROJECT_FINANCE_CONTACT) &&
@@ -621,7 +622,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        ServiceResult<Void> updateResult = service.updateFinanceContact(existingProject.getId(), organisation.getId(), anotherUser.getId());
+        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(existingProject.getId(), organisation.getId()), anotherUser.getId());
 
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));

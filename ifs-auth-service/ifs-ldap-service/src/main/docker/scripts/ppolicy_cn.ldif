@@ -1,0 +1,7 @@
+dn: cn=PPolicy,ou=Policies,dc=nodomain
+cn: PPolicy
+objectClass: pwdPolicy
+objectClass: device
+objectClass: top
+pwdAttribute: userPassword
+

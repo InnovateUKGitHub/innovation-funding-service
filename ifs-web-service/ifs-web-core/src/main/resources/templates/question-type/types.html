@@ -161,7 +161,7 @@
     <!-- ===========================Form: application_details =========================== -->
 
     <th:block th:fragment="application_details">
-    	<th:block th:with="readonly=${readonly} or ${markedAsComplete?.contains(question.id)
+    	<th:block th:with="summary=${summary}, readonly=${readonly} or ${markedAsComplete?.contains(question.id)
                                                                        or (currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null)
                                                                        or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
             <th:block th:unless="${readonly or appIsClosed}">

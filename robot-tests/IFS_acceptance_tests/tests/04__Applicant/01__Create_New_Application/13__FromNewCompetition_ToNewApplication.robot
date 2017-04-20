@@ -35,7 +35,7 @@ Comp Admin starts a new Competition
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
     [Tags]
-    Given the user should see the element    jQuery=img[title$="is done"] + h3:contains("Milestones")
+    Given the user should see the element   jQuery=div:contains("Milestones") ~ .task-status-complete
     When the user clicks the button/link    link=Milestones
     Then the user should see the element    jQuery=button:contains("Edit")
     And the user should see the dates in full format
@@ -55,7 +55,7 @@ Comp admin completes ths competition setup
     When the user clicks the button/link  link=Public content
     Then the user fills in the Public content and publishes
     And the user clicks the button/link  link=Return to setup overview
-    And the user should see the element  css=img[title='The "Public content" section is done']
+    And the user should see the element  jQuery=div:contains("Public content") ~ .task-status-complete
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
@@ -120,7 +120,7 @@ Once the project growth table is selected
     When the user clicks the button/link  link=Public content
     Then the user fills in the Public content and publishes
     And the user clicks the button/link  link=Return to setup overview
-    And the user should see the element  css=img[title='The "Public content" section is done']
+    And the user should see the element  jQuery=div:contains("Public content") ~ .task-status-complete
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
@@ -176,9 +176,8 @@ Mark Organisation as complete when no
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link    link=Your organisation
-    # Then the user should see the fields in readonly mode, but currently they are missing this attribute
-    # TODO INFUND-8071
-    Then the user should see the element    jQuery=button:contains("Edit your organisation")
+    Then The user should not see the element      css=input
+    and the user should see the element    jQuery=button:contains("Edit")
     And the user clicks the button/link    jQuery=a:contains("Return to finances")
 
 The Lead applicant is able to edit and re-submit when no
@@ -232,7 +231,7 @@ Organisation client side validation when yes
     When the user enters value to field    Research and development spend    6666666666666666666666666666666666666666666
     And the user moves focus to the element    jQuery=label:contains("employees") + input
     Then the user should see an error message in the field    Research and development spend    This field should be 2147483647 or lower.
-    # TODO This error message will be different after INFUND-8080
+    # TODO This error message will be different after INFUND-8819
     And the user enters value to field    Research and development spend    2147483647
     When the user enters text to a text field    jQuery=label:contains("employees") + input    22.4
     Then the user should see a field and summary error      This field can only accept whole numbers.
@@ -420,7 +419,7 @@ the user should view the project growth table
     the user should see the element    jQuery=td input[value="15000"]
 
 the user can edit the project growth table
-    the user clicks the button/link    jQuery=button.buttonlink:contains('Edit your organisation')
+    the user clicks the button/link    jQuery=button.buttonlink:contains('Edit')
     then the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
@@ -436,7 +435,7 @@ the applicant enters valid inputs
 the user can edit resubmit and read only of the organisation
     the user should see the element             jQuery=li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link             link=Your organisation
-    the user clicks the button/link             jQuery=button:contains("Edit your organisation")
+    the user clicks the button/link             jQuery=button:contains("Edit")
     the user enters text to a text field        jQuery=label:contains("employees") + input  2
     the user clicks the button/link             jQuery=button:contains("Mark as complete")
     the user should not see an error in the page

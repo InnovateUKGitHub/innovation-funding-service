@@ -13,17 +13,16 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
 
+    <div class="error-summary" th:if="${#fields.hasErrors('${userDetailsForm.*}')}">
+        <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${userDetailsForm.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
     <h1 class="heading-large">Your details</h1>
 
     <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}">
-        <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-            <h1 class="heading-medium error-summary-heading">
-                We were unable to save your changes
-            </h1>
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-            </ul>
-        </div>
         <fieldset>
             <legend class="visuallyhidden">Your details</legend>
             <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
@@ -85,7 +84,12 @@
                 <p class="form-hint">Your email address cannot be changed in the system <br /><strong th:text="*{email}" /></p>
             </div>
             <p>To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
-
+            <div th:class="${#fields.hasErrors('allowMarketingEmails')}? 'form-group error':'form-group'">
+                <label class="block-label selection-button-checkbox" for="allow-marketing-emails">
+                    <input id="allow-marketing-emails" th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>
+                    Send me updates on Innovate UK competitions by email.
+                </label>
+            </div>
         </fieldset>
         <button class="button button-large extra-margin" name="create-account" type="submit">Save changes</button>
     </form>

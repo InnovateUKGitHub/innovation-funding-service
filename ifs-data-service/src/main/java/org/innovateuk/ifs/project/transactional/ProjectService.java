@@ -59,8 +59,8 @@ public interface ProjectService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findByUserId(Long userId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
-    ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
+    @PreAuthorize("hasPermission(#composite, 'UPDATE_FINANCE_CONTACT')")
+    ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
@@ -74,7 +74,7 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
     ServiceResult<Void> submitProjectDetails(Long projectId, ZonedDateTime date);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
+    @PreAuthorize("hasPermission(#projectId, 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'SUBMIT_OTHER_DOCUMENTS')")

@@ -17,6 +17,8 @@ public class UserDetailsForm {
 
     private String title;
 
+    private boolean allowMarketingEmails;
+
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
     @Size.List ({
@@ -180,5 +182,12 @@ public class UserDetailsForm {
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
 	}
-    
+
+    public boolean getAllowMarketingEmails() {
+        return allowMarketingEmails;
+    }
+
+    public void setAllowMarketingEmails(boolean allowMarketingEmails) {
+        this.allowMarketingEmails = allowMarketingEmails;
+    }
 }

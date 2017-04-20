@@ -10,8 +10,9 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start"/>
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=|Back to ${model.organisationName}|, linkClass='link-back',
-    linkUrl=@{/application/{applicationId}/team/update(applicationId=${model.applicationId})}"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=|Back to ${model.organisationName}|, linkClass='link-back', linkUrl=${model.inviteOrganisationId} ?
+    @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
+    @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}"/>
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})"/>

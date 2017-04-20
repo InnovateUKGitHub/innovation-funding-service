@@ -130,3 +130,9 @@ os-files-tmp/
 shib-init
 
 robot-tests/test-results-*
+ifs-data-service/tomcat/
+ifs-web-service/ifs-application-service/tomcat/
+ifs-web-service/ifs-assessment-service/tomcat/
+ifs-web-service/ifs-competition-mgt-service/tomcat/
+ifs-web-service/ifs-project-setup-mgt-service/tomcat/
+ifs-web-service/ifs-project-setup-service/tomcat/

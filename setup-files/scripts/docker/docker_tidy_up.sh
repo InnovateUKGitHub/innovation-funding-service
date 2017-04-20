@@ -13,6 +13,4 @@ docker rmi $(docker images | grep innovateuk/data-service | grep -v $VERSION)
 
 
 # Note if you are using docker toolbox this is not going to work.  Please consider upgrading.
-docker image prune -f
-docker container prune -f
-docker volume prune -f
+docker system prune -f

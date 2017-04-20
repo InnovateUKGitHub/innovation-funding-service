@@ -50,7 +50,7 @@ Details of the competition are visible
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
     And the user should see the text in the page    12:00pm Thursday 12 January 2068
-    And the user should see the text in the page    12:00am Saturday 28 January 2068
+    And the user should see the text in the page    12:00pm Saturday 28 January 2068
 
 Competition brief link can be seen
     [Documentation]    INFUND-5494

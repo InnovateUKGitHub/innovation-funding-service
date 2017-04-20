@@ -37,7 +37,7 @@ public interface SectionService {
                                                                   Long markedAsCompleteById);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_NOT_REQUIRED')")
-    ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById);
+    ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsNotRequiredById);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_INCOMPLETE')")
     ServiceResult<Void> markSectionAsInComplete(Long sectionId,
