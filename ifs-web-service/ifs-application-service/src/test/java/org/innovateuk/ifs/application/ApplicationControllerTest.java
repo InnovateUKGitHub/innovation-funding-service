@@ -5,7 +5,7 @@ import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.viewmodel.AssessQuestionFeedbackViewModel;
@@ -48,7 +48,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.SUBMITTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
@@ -498,7 +498,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app));
 
-        verify(applicationService).updateStatus(app.getId(), SUBMITTED);
+        verify(applicationService).updateState(app.getId(), SUBMITTED);
     }
 
     @Test
@@ -516,7 +516,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
-        verify(applicationService, never()).updateStatus(any(Long.class), any(ApplicationStatus.class));
+        verify(applicationService, never()).updateState(any(Long.class), any(ApplicationState.class));
     }
 
     @Test
@@ -627,5 +627,4 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(UserResource.class));
     }
-
 }

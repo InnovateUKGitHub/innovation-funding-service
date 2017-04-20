@@ -72,6 +72,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -276,7 +277,7 @@ public class ApplicationFormController {
 
             if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
                 viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(section, application.getId(),
-                        Collections.singletonList(SectionType.ORGANISATION_FINANCES)));
+                        asList(SectionType.ORGANISATION_FINANCES, SectionType.FUNDING_FINANCES)));
             }
 
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
