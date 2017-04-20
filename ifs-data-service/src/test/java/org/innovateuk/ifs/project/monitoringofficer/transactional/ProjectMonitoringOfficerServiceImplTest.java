@@ -49,7 +49,6 @@ import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectServiceImpl;
-import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;

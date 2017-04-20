@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerRe
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.security.ProjectPermissionRules;
-import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.SaveMonitoringOfficerResult;
 import org.junit.Before;
 import org.junit.Test;
 
