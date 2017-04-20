@@ -24,12 +24,12 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.APPROVED;
 
 @Service
 public class AssessorFeedbackServiceImpl extends BaseTransactionalService implements AssessorFeedbackService {
 
-    private static final Predicate<Application> applicationApprovedFilter = application -> APPROVED == application.getApplicationStatus();
+    private static final Predicate<Application> applicationApprovedFilter = application -> APPROVED == application.getApplicationProcess().getActivityState();
 
     enum Notifications {
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
@@ -125,5 +125,4 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     private void linkAssessorFeedbackFileEntryToApplication(FileEntry fileEntry, Application application) {
         application.setAssessorFeedbackFileEntry(fileEntry);
     }
-
 }

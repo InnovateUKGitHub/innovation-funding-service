@@ -277,8 +277,8 @@ public class BankDetailsServiceImpl implements BankDetailsService {
         return serviceSuccess();
     }
 
-    private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons) {
-        return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).
+    private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditions) {
+        return conditions.stream().filter(condition -> condition.getSeverity().equals("error")).
                 map(condition -> {
                     if (condition.getCode().equals(EXPERIAN_INVALID_ACC_NO_ERROR_ID)) {
                         return globalError(EXPERIAN_VALIDATION_FAILED_WITH_INCORRECT_ACC_NO);

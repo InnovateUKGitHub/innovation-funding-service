@@ -8,7 +8,7 @@
                 <h2 class="heading-medium no-margin-bottom">Finances</h2>
                 <p>Please complete your project finances.</p>
 
-                <details th:unless="${readonly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
+                <details th:unless="${readonly or model.isAcademicFinance}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                     <summary><span class="summary">Not requesting funding</span></summary>
                     <div class="panel-indent">
                         <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
@@ -110,26 +110,16 @@
 
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons">
-        <th:block th:if="${model.subFinanceSection}"
-                  th:with="markedAsComplete=${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}">
+        <th:block th:if="${model.subFinanceSection}">
             <div th:unless="${readonly}" class="form-footer">
                 <div class="form-footer__actions">
-                    <button id="mark-all-as-complete"
-                            th:unless="${markedAsComplete}"
-                            type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
-                    </button>
-                    <button th:if="${markedAsComplete}"
-                            type="submit" name="mark_section_as_incomplete" class="buttonlink"
-                            th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit
-                    </button>
+                    <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete</button>
+                    <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="buttonlink">Edit</button>
                 </div>
             </div>
             <div>
-                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.currentSection.getParentSection()})}"
-                   class="extra-margin"
-                   th:classappend="${markedAsComplete} ? 'button-secondary' : 'button'"
-                   th:text="${markedAsComplete} ? 'Return to finances' : 'Save and return to finances'">
-                        RETURN CTA TEXT
+                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.currentSection.getParentSection()})}" class="button-secondary extra-margin">
+                    Return to finances
                 </a>
             </div>
         </th:block>

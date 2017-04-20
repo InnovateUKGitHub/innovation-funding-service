@@ -72,6 +72,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -206,8 +207,7 @@ public class ApplicationFormController {
                                Model model,
                                @PathVariable(APPLICATION_ID) final Long applicationId,
                                @PathVariable(QUESTION_ID) final Long questionId,
-                               HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+                               @ModelAttribute("loggedInUser") UserResource user) {
 
         QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicationId);
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
@@ -224,8 +224,7 @@ public class ApplicationFormController {
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
-            HttpServletRequest request) {
-        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+            @ModelAttribute("loggedInUser") UserResource user) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         final FormInputResponseFileEntryResource fileDetails = formInputResponseService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
@@ -247,8 +246,7 @@ public class ApplicationFormController {
     public String applicationFormWithOpenSection(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
-                                                 HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+                                                 @ModelAttribute("loggedInUser") UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
@@ -279,7 +277,7 @@ public class ApplicationFormController {
 
             if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
                 viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(section, application.getId(),
-                        Collections.singletonList(SectionType.ORGANISATION_FINANCES)));
+                        asList(SectionType.ORGANISATION_FINANCES, SectionType.FUNDING_FINANCES)));
             }
 
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
@@ -295,10 +293,10 @@ public class ApplicationFormController {
                                      Model model,
                                      @PathVariable(APPLICATION_ID) final Long applicationId,
                                      @PathVariable(QUESTION_ID) final Long questionId,
+                                     @ModelAttribute("loggedInUser") UserResource user,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         Map<String, String[]> params = request.getParameterMap();
 
         // Check if the request is to just open edit view or to save
@@ -311,7 +309,7 @@ public class ApplicationFormController {
                 LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
             }
 
-            return showQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, request);
+            return showQuestion(form, bindingResult, validationHandler, model, applicationId, questionId, user);
 
         } else {
 
@@ -320,7 +318,7 @@ public class ApplicationFormController {
             CompetitionResource competition = competitionService.getById(application.getCompetition());
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-                assignQuestion(applicationId, request);
+                assignQuestion(applicationId, user, request);
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
             }
 
@@ -329,7 +327,7 @@ public class ApplicationFormController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors.addAll(saveApplicationForm(application, competition, form, null, question, request, response, bindingResult, true));
+                errors.addAll(saveApplicationForm(application, competition, form, null, question, user, request, response, bindingResult, true));
             }
 
             model.addAttribute("form", form);
@@ -402,10 +400,9 @@ public class ApplicationFormController {
                              Model model,
                              @PathVariable(APPLICATION_ID) final Long applicationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
-                             HttpServletRequest request) {
-        FinanceRowItem costItem = addCost(applicationId, questionId, request);
+                             @ModelAttribute("loggedInUser") UserResource user) {
+        FinanceRowItem costItem = addCost(applicationId, questionId, user);
         FinanceRowType costType = costItem.getCostType();
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
 
         Set<Long> markedAsComplete = new TreeSet<>();
@@ -427,8 +424,7 @@ public class ApplicationFormController {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
     }
 
-    private FinanceRowItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    private FinanceRowItem addCost(Long applicationId, Long questionId, UserResource user) {
         Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         return financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
     }
@@ -437,10 +433,10 @@ public class ApplicationFormController {
                                                    CompetitionResource competition,
                                                    ApplicationForm form,
                                                    Long sectionId, QuestionResource question,
+                                                   @ModelAttribute("loggedInUser") UserResource user,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response, BindingResult bindingResult, Boolean validFinanceTerms) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), application.getId());
 
         SectionResource selectedSection = null;
@@ -729,12 +725,12 @@ public class ApplicationFormController {
                                         Model model,
                                         @PathVariable(APPLICATION_ID) final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
+                                        @ModelAttribute("loggedInUser") UserResource user,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
 
         logSaveApplicationBindingErrors(validationHandler);
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
@@ -746,11 +742,11 @@ public class ApplicationFormController {
         Map<String, String[]> params = request.getParameterMap();
 
         Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, section, params, user.getId(), applicationId);
-        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, sectionId, null, request, response, bindingResult, validFinanceTerms);
+        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, sectionId, null, user, request, response, bindingResult, validFinanceTerms);
         logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-            assignQuestion(applicationId, request);
+            assignQuestion(applicationId, user, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
@@ -977,6 +973,7 @@ public class ApplicationFormController {
                                     @RequestParam("value") String value,
                                     @PathVariable(APPLICATION_ID) Long applicationId,
                                     @PathVariable("competitionId") Long competitionId,
+                                    @ModelAttribute("loggedInUser") UserResource user,
                                     HttpServletRequest request) {
         List<String> errors = new ArrayList<>();
         Long fieldId = null;
@@ -984,7 +981,6 @@ public class ApplicationFormController {
             String fieldName = request.getParameter("fieldName");
             LOG.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
-            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
             StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), competitionId, fieldName, inputIdentifier, value);
 
             fieldId = storeFieldResult.getFieldId();
@@ -1127,9 +1123,9 @@ public class ApplicationFormController {
     }
 
     private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
+                                @ModelAttribute("loggedInUser") UserResource user,
                                 HttpServletRequest request) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
         questionService.assignQuestion(applicationId, request, assignedBy);

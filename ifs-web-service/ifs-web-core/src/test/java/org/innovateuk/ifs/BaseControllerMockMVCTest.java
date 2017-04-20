@@ -147,4 +147,8 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     protected void setLoggedInUser(UserResource user) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
     }
+
+    protected void logoutCurrentUser() {
+        setLoggedInUser(null);
+    }
 }
