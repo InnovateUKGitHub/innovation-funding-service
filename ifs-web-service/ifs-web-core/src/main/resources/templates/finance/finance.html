@@ -392,11 +392,18 @@
                             />
                 </td>
                 <td class="numeric">
-                    <span class="heading-small" th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'},data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
-                           data-calculation-operations="/"
-                           th:id="${'cost-labour-'+costIdentifier+'-labourRate'}"
-                           th:text="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
-                           maxlength="255" />
+                    <label th:for="${'cost-labour-'+costIdentifier+'-labourRate'}">
+                        <span class="visuallyhidden">Rate (&pound;/day)</span>
+                    </label>
+                    <input type="text"
+                            class="form-control width-full"
+                            th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'},data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
+                            data-calculation-operations="/"
+                            readonly="readonly"
+                            th:id="${'cost-labour-'+costIdentifier+'-labourRate'}"
+                            th:name="${'labour-labourRate-' + question.id + '-' + costIdentifier}"
+                            th:value="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
+                            maxlength="255" />
                 </td>
                 <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-labourDays]}')} ? 'error' : ''">
                     <label th:for="${'cost-labour-'+costIdentifier+'-labourDays'}">
@@ -418,12 +425,18 @@
                             />
                 </td>
                 <td class="numeric">
-                    <span class="heading-small"
+                    <label th:for="${'cost-labour-'+costIdentifier+'-labourTotalCost'}">
+                        <span class="visuallyhidden">Total costs</span>
+                    </label>
+                    <input type="text"
+                           class="form-control width-medium"
                            data-calculation-operations="/,*"
+                           th:name="${'labour-total-' + question.id + '-' + costIdentifier}"
                            readonly="readonly"
                            th:id="${'cost-labour-'+costIdentifier+'-labourTotalCost'}"
                            th:attr="data-calculation-fields=${'#cost-labour-'+costIdentifier+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly,#cost-labour-'+costIdentifier+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
-                           th:text="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
+                           th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
+
                 </td>
                 <td class="buttoncolumn alignright" th:if="${viewmode == 'edit'}">
                     <button th:unless="${cost.id == null}"
