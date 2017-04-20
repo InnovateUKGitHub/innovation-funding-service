@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamOrganisationRowViewModel;
@@ -46,14 +46,14 @@ public class ApplicationTeamModelPopulator {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
-        boolean applicationCanBegin = isApplicationStatusCreated(applicationResource) && userIsLeadApplicant;
+        boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
         return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
                 userIsLeadApplicant, applicationCanBegin);
     }
 
-    private boolean isApplicationStatusCreated(ApplicationResource applicationResource) {
-        return ApplicationStatus.CREATED == applicationResource.getApplicationStatus();
+    private boolean isApplicationStateCreated(ApplicationResource applicationResource) {
+        return ApplicationState.CREATED == applicationResource.getApplicationState();
     }
 
     private List<ApplicationTeamOrganisationRowViewModel> getOrganisationViewModels(long applicationId, long loggedInUserId,

@@ -30,9 +30,9 @@ public class ApplicationResource {
 
     private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
-    private static final List<CompetitionStatus> SUBMITABLE_COMPETITION_STATES = asList(OPEN);
-    private static final List<ApplicationStatus> SUBMITTED_APPLICATION_STATES =
-            asList(ApplicationStatus.SUBMITTED, ApplicationStatus.APPROVED, ApplicationStatus.REJECTED);
+    private static final List<CompetitionStatus> SUBMITTABLE_COMPETITION_STATES = asList(OPEN);
+    private static final List<ApplicationState> SUBMITTED_APPLICATION_STATES =
+            asList(ApplicationState.SUBMITTED, ApplicationState.APPROVED, ApplicationState.REJECTED);
 
     private Long id;
 
@@ -47,7 +47,7 @@ public class ApplicationResource {
     @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
     @NotNull
     private Long durationInMonths;
-    private ApplicationStatus applicationStatus;
+    private ApplicationState applicationState;
     private Long competition;
     private String competitionName;
     private Long assessorFeedbackFileEntry;
@@ -99,12 +99,12 @@ public class ApplicationResource {
         this.durationInMonths = durationInMonths;
     }
 
-    public ApplicationStatus getApplicationStatus() {
-        return applicationStatus;
+    public ApplicationState getApplicationState() {
+        return applicationState;
     }
 
-    public void setApplicationStatus(ApplicationStatus applicationStatus) {
-        this.applicationStatus = applicationStatus;
+    public void setApplicationState(ApplicationState applicationState) {
+        this.applicationState = applicationState;
     }
 
     public Long getCompetition() {
@@ -135,11 +135,11 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean isOpen(){
-        return applicationStatus == ApplicationStatus.OPEN || applicationStatus == ApplicationStatus.CREATED;
+        return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
     }
     @JsonIgnore
     public void enableViewMode(){
-        setApplicationStatus(ApplicationStatus.SUBMITTED);
+        setApplicationState(ApplicationState.SUBMITTED);
     }
 
     public Long getAssessorFeedbackFileEntry() {
@@ -163,7 +163,7 @@ public class ApplicationResource {
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(durationInMonths, that.durationInMonths)
-                .append(applicationStatus, that.applicationStatus)
+                .append(applicationState, that.applicationState)
                 .append(competition, that.competition)
                 .append(assessorFeedbackFileEntry, that.assessorFeedbackFileEntry)
                 .isEquals();
@@ -176,7 +176,7 @@ public class ApplicationResource {
                 .append(name)
                 .append(startDate)
                 .append(durationInMonths)
-                .append(applicationStatus)
+                .append(applicationState)
                 .append(competition)
                 .append(assessorFeedbackFileEntry)
                 .toHashCode();
@@ -221,17 +221,17 @@ public class ApplicationResource {
     }
 
     @JsonIgnore
-    public boolean isSubmitable() {
-        return isInSubmitableCompetitionState() && !hasBeenSubmitted();
+    public boolean isSubmittable() {
+        return isInSubmittableCompetitionState() && !hasBeenSubmitted();
     }
 
     @JsonIgnore
     public boolean hasBeenSubmitted() {
-        return SUBMITTED_APPLICATION_STATES.contains(applicationStatus);
+        return SUBMITTED_APPLICATION_STATES.contains(applicationState);
     }
 
-    private boolean isInSubmitableCompetitionState() {
-        return SUBMITABLE_COMPETITION_STATES.contains(competitionStatus);
+    private boolean isInSubmittableCompetitionState() {
+        return SUBMITTABLE_COMPETITION_STATES.contains(competitionStatus);
     }
 
     public BigDecimal getCompletion() {
@@ -273,5 +273,4 @@ public class ApplicationResource {
     public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
     }
-
 }

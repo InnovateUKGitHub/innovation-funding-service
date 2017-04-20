@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.SUBMITTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
@@ -161,7 +161,7 @@ public class ApplicationController {
     }
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmitable();
+        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
     @ProfileExecution
@@ -258,7 +258,7 @@ public class ApplicationController {
             return "redirect:/application/" + applicationId + "/confirm-submit";
         }
 
-        applicationService.updateStatus(applicationId, SUBMITTED);
+        applicationService.updateState(applicationId, SUBMITTED);
         application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);

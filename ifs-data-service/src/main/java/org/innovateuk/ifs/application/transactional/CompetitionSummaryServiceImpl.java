@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -33,24 +33,24 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
         competitionSummaryResource.setCompetitionStatus(competition.getCompetitionStatus());
         competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
         competitionSummaryResource.setApplicationsStarted(
-                applicationRepository.countByCompetitionIdAndApplicationStatusInAndCompletionLessThanEqual(
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(
                         competitionId, CREATED_AND_OPEN_STATUSES, limit
                 )
         );
         competitionSummaryResource.setApplicationsInProgress(
-                applicationRepository.countByCompetitionIdAndApplicationStatusNotInAndCompletionGreaterThan(
-                        competitionId, SUBMITTED_STATUSES, limit
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(
+                        competitionId, SUBMITTED_STATES, limit
                 )
         );
         competitionSummaryResource.setApplicationsSubmitted(
-                applicationRepository.countByCompetitionIdAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES)
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)
         );
         competitionSummaryResource.setApplicationsNotSubmitted(
                 competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted()
         );
         competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
         competitionSummaryResource.setApplicationsFunded(
-                applicationRepository.countByCompetitionIdAndApplicationStatus(competitionId, ApplicationStatus.APPROVED)
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.APPROVED.getBackingState())
         );
         competitionSummaryResource.setAssessorsInvited(
                 competitionParticipantRepository.countByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.ASSESSOR)
