@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.transactional;
+package org.innovateuk.ifs.project.monitoringofficer.transactional;
 
 /**
  * Result for saving monitoring officer successfully

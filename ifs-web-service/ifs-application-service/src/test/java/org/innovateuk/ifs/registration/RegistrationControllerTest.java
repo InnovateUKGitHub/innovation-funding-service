@@ -109,7 +109,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"));
+                .andExpect(view().name("registration/register"));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(inviteHashCookie, organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attribute("invitee", true))
         ;
     }
@@ -237,7 +237,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("email", email)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
     }
 
@@ -259,7 +259,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("termsAndConditions", "")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"))
@@ -280,7 +280,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("email", "invalid email format")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
     }
 
@@ -295,7 +295,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("email", "{a|b}@test.test")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
 
         verifyNoMoreInteractions(userService);
@@ -314,7 +314,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("retypedPassword", "123456789012345678901234567890123")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
     }
@@ -348,7 +348,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("disability", Disability.NO.toString())
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"));
     }
 
@@ -364,7 +364,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("retypedPassword", "123456789")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
     }
 
@@ -378,7 +378,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"));
     }
 

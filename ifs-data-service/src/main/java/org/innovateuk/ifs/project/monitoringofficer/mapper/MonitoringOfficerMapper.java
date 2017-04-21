@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.project.mapper;
+package org.innovateuk.ifs.project.monitoringofficer.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.project.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.mapper.ProjectMapper;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.mapstruct.Mapper;
 
 @Mapper(
