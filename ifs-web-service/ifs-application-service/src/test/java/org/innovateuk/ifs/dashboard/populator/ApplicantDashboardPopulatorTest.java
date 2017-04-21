@@ -44,9 +44,9 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         this.setupCompetition();
 
         List<ApplicationResource> allApplications = newApplicationResource()
-                .withId(APPLICATION_ID_IN_PROGRESS,APPLICATION_ID_IN_FINISH)
-                .withCompetition(competitionResource.getId(),competitionResource.getId())
-                .withApplicationState(ApplicationState.OPEN,ApplicationState.REJECTED)
+                .withId(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_FINISH)
+                .withCompetition(competitionResource.getId(), competitionResource.getId())
+                .withApplicationState(ApplicationState.OPEN, ApplicationState.REJECTED)
                 .withCompetitionStatus(CompetitionStatus.OPEN, CompetitionStatus.CLOSED)
                 .withCompletion(BigDecimal.valueOf(50))
                 .build(2);

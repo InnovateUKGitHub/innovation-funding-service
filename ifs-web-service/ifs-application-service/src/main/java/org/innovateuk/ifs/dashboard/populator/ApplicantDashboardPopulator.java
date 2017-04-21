@@ -107,10 +107,9 @@ public class ApplicantDashboardPopulator {
     private Map<Long, CompetitionResource> createCompetitionApplicationMap(List<ApplicationResource> resources) {
         Map<Long, CompetitionResource> competitions = getCompetitions(resources);
         return resources.stream()
-                .collect(
-                        toMap(
-                                ApplicationResource::getId,
-                                application -> competitions.get(application.getCompetition()), (p1, p2) -> p1)
+                .collect(toMap(
+                        ApplicationResource::getId,
+                        application -> competitions.get(application.getCompetition()), (p1, p2) -> p1)
                 );
     }
 
