@@ -12,7 +12,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Applicant  Failing
+Force Tags        Applicant
 # TODO This fails because of Finance Summary/Summaries link
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
@@ -86,6 +86,13 @@ Green check should show when the finances are complete
     And the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_2_NAME}
     When the user clicks the button/link    link=Finances overview
     Then Green check should be visible
+
+Collaborator marks finances as complete
+    [Documentation]    INFUND-8397
+    [Tags]
+    log in as a different user    &{collaborator1_credentials}
+    When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    the user marks the finances as complete
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
