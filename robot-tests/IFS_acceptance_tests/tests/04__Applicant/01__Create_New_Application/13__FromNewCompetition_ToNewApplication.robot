@@ -477,8 +477,7 @@ Newly invited collaborator can create account and sign in
     the user completes the new account creation
 
 the user completes the new account creation
-    the user selects the radio button    organisationType  radio-1
-     #TODO change the radio button option to radio-4 once INFUND-9078 is fixed
+    the user selects the radio button    organisationType  radio-4
     the user clicks the button/link     jQuery=button:contains("Continue")
     the user should see the element     jQuery=span:contains("Create your account")
     the user enters text to a text field     id=organisationSearchName   innovate
@@ -487,7 +486,7 @@ the user completes the new account creation
     the user clicks the button/link        jQuery=a:contains("INNOVATE LTD")
     the user selects the checkbox     address-same
     wait for autosave
-    the user clicks the button/link     jQuery=button:contains("Save organisation and continue")
+    the user clicks the button/link     jQuery=button:contains("Continue")
     then the user should not see an error in the page
     the user clicks the button/link     jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
