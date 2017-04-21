@@ -216,7 +216,7 @@ public class RegistrationController {
             return getRedirectUrlForUser(user);
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
