@@ -457,9 +457,16 @@ public class OrganisationCreationController {
         BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
         organisationFormValidate(organisationForm, bindingResult, addressBindingResult);
 
+        boolean isLead = organisationTypeIsChosenByDefault(request);
+
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-            return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
+            if (isLead) {
+                return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
+            } else {
+                return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
+            }
+
         } else {
             organisationForm.setTriedToSave(true);
             organisationForm.getAddressForm().setTriedToSave(true);
