@@ -2,10 +2,9 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-Thank you for applying for funding with Innovate UK. We would like to collect anonymous data on the diversity of our applicants. This is to make sure that the services we provide are appropriate and meet the needs of those applying.
-Your information is anonymous and will not be shared beyond Innovate UK.
+Thank you for creating an account with the Innovation Funding Service. We would like to collect some information on the gender, ethnicity and disability of our users. The short survey is entirely optional and has no bearing on the outcome of your application for grant funding. Any data collected will be used solely for our records.
 
-Please complete the diversity survey ${diversitySurveyUrl} which should take around one minute.
+Please complete the short diversity survey ${diversitySurveyUrl}.
 
 Thank you for your cooperation.
 
