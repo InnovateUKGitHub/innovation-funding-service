@@ -4,18 +4,19 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
-import org.innovateuk.ifs.project.util.FinanceUtil;
-import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
+import org.innovateuk.ifs.project.util.FinanceUtil;
+import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -65,9 +66,6 @@ public class ProjectSpendProfileController {
     @Autowired
     @Qualifier("spendProfileCostValidator")
     private SpendProfileCostValidator spendProfileCostValidator;
-
-    @Autowired
-    private PartnerOrganisationService partnerOrganisationService;
 
     @Autowired
     private FinanceUtil financeUtil;
@@ -160,7 +158,7 @@ public class ProjectSpendProfileController {
     }
 
 
-    private final String saveSpendProfileSuccessView(Long projectId, Long organisationId, Long userId) {
+    private String saveSpendProfileSuccessView(Long projectId, Long organisationId, Long userId) {
         final String urlSuffix = projectService.isUserLeadPartner(projectId, userId) ? "/review" : "";
         return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + urlSuffix;
 
@@ -220,7 +218,7 @@ public class ProjectSpendProfileController {
                                       ProjectResource project, SpendProfileTableResource spendProfileTableResource) {
 
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().keySet().forEach(key -> {
-            List<BigDecimal> monthlyCostNullsReplacedWithZeros = new ArrayList();
+            List<BigDecimal> monthlyCostNullsReplacedWithZeros = new ArrayList<>();
             boolean monthlyCostNullsReplaced = false;
             for (BigDecimal mon : spendProfileTableResource.getMonthlyCostsPerCategoryMap().get(key)) {
                 if (null == mon) {
@@ -338,7 +336,7 @@ public class ProjectSpendProfileController {
 
     private Map<String, Boolean> determineEditablePartners(Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
         Map<String, Boolean> editablePartnersMap = new HashMap<>();
-        partnerOrganisations.stream().forEach(organisation -> {
+        partnerOrganisations.forEach(organisation -> {
             boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectId, organisation.getId(), loggedInUser);
             editablePartnersMap.put(organisation.getName(), isUserPartOfThisOrganisation);
         });

@@ -20,6 +20,7 @@ public class EligibilityForm extends CompetitionSetupForm {
 	private Set<Long> researchCategoryId;
 	@NotBlank(message = "{validation.eligibilityform.singleorcollaborative.required}")
 	private String singleOrCollaborative;
+	@NotEmpty(message = "{validation.eligibilityform.leadApplicantTypes.required}")
 	private List<Long> leadApplicantTypes;
 	@NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
 	private Integer researchParticipationAmountId;

@@ -70,7 +70,8 @@ get yesterday
     [Return]    ${yesterday}
 
 get today
-    ${today} =    Get Current Date    UTC    result_format=%-d %B %Y    exclude_millis=true
+    ${today} =    Get Current Date  UTC   result_format=%-d %B %Y    exclude_millis=true
+    # This format is like: 4 February 2017
     [Return]    ${today}
 
 get tomorrow full

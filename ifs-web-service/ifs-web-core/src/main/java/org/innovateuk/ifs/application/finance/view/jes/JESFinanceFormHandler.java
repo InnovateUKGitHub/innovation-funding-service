@@ -4,7 +4,6 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
@@ -17,6 +16,7 @@ import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 	private static final Log LOG = LogFactory.getLog(JESFinanceFormHandler.class);
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceRowRestService financeRowRestService;
 
     @Autowired
     private FinanceService financeService;
@@ -111,7 +111,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (costItem.getId().equals(0L)) {
             addFinanceRowItem(costItem, userId, applicationId, question);
         } else {
-            RestResult<ValidationMessages> messages = financeRowService.update(costItem);
+            RestResult<ValidationMessages> messages = financeRowRestService.update(costItem);
             ValidationMessages validationMessages = messages.getSuccessObject();
 
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
@@ -131,7 +131,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
-            financeRowService.add(applicationFinanceResource.getId(), questionId, costItem);
+            financeRowRestService.add(applicationFinanceResource.getId(), questionId, costItem).getSuccessObjectOrThrowException();
         }
     }
 

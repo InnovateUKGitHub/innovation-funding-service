@@ -19,7 +19,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -42,6 +42,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -70,7 +71,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -119,8 +120,8 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         addUserDetails(openSectionViewModel, application, userId);
         addApplicationFormDetailInputs(application, form);
 
-        if(null != competition) {
-            List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(competition.getId());
+        if (null != competition) {
+            List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
             addMappedSectionsDetails(openSectionViewModel, application, competition, section, userOrganisation, allSections, formInputResources, sectionService.filterParentSections(allSections));
         }
 
@@ -253,7 +254,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         addOrganisationDetails(viewModel, application, userApplicationRoles);
         addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections);
-        addSectionDetails(viewModel, section, formInputService.findApplicationInputsByCompetition(competition.getId()));
+        addSectionDetails(viewModel, section);
 
         viewModel.setCompletedQuestionsPercentage(application.getCompletion() == null ? 0 : application.getCompletion().intValue());
     }

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
-import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ import java.util.List;
  */
 @Service
 public class ProjectFinanceServiceImpl implements ProjectFinanceService {
-
-    @Autowired
-    private ProjectService projectService;
 
     @Autowired
     private ProjectFinanceRestService projectFinanceRestService;

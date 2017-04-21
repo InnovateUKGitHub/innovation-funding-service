@@ -2,6 +2,8 @@
 Documentation     INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
 ...
 ...               INFUND-6387 As an Applicant creating an account I will be invited to answer questions for diversity monitoring purposes so that InnovateUK complies with BEIS ministerial requirement
+...
+...               INFUND-9245 Add marketing email option tick box to the 'Your profile' > 'Your details' page
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -21,9 +23,7 @@ View and edit profile link redirects to the Your profile page
     Then the user should see the element    link=Edit your details
 
 Edit the profile and verify if the changes are saved
-    [Documentation]    INFUND-1042
-    ...
-    ...    INFUND-6387
+    [Documentation]    INFUND-1042, INFUND-6387, INFUND-9245
     [Tags]    HappyPath    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=view and edit your profile details
@@ -32,6 +32,8 @@ Edit the profile and verify if the changes are saved
     Then the user should see the text in the page    Chris
     And the user should see the text in the page    Brown
     And the user should see the text in the page    0123456789
+    When the user clicks the button/link    link=Edit your details
+    And the user should see that the checkbox is selected    allowMarketingEmails
     And the user can change their details back again
 
 Verify that the applicant's name has been changed on other parts of the site
@@ -44,6 +46,7 @@ Verify that the applicant's name has been changed on other parts of the site
     And the user navigates to the page    ${APPLICATION_TEAM_URL}
     Then the user should see the text in the page    Chris Brown
     And other contributors should see the applicant's updated name for the assignation options
+    And the user navigates to the page    ${EDIT_PROFILE_URL}
     And the user can change their details back again
 
 Display errors for invalid inputs of the First name
@@ -93,12 +96,15 @@ Display errors for invalid inputs of the Phone field
     And the user fills in the Phone field    12
     And the user should see an error    Input for your phone number has a minimum length of 8 characters.
 
+
 *** Keywords ***
 the user enters profile details
     The user enters text to a text field    id=firstName    Chris
     The user enters text to a text field    id=lastName    Brown
     The user enters text to a text field    id=phoneNumber    +-0123456789
+    the user selects the checkbox    allowMarketingEmails
     the user clicks the button/link    css=[name="create-account"]
+
 
 the user fills in the first name
     [Arguments]    ${first name}
@@ -122,20 +128,16 @@ the user fills in the phone field
     the user clicks the button/link    css=[name="create-account"]
 
 the user can change their details back again
-    Guest user log-in    &{lead_applicant_credentials}
-    the user navigates to the page    ${DASHBOARD_URL}
-    The user clicks the button/link    link=view and edit your profile details
-    The user clicks the button/link    link=Edit your details
-    the user enters their old profile details
-
-the user enters their old profile details
     The user enters text to a text field    id=firstName    Steve
     The user enters text to a text field    id=lastName    Smith
     The user enters text to a text field    id=phoneNumber    +-0123456789
+    the user unselects the checkbox    allowMarketingEmails
     the user clicks the button/link    css=[name="create-account"]
+
 
 other contributors should see the applicant's updated name for the assignation options
     Logout as user
     Guest user log-in    &{collaborator1_credentials}
     go to    ${APPLICATION_OVERVIEW_URL}
     The user should see the text in the page    Chris Brown
+    log in as a different user    &{lead_applicant_credentials}
