@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import org.innovateuk.ifs.form.service.FormInputService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,8 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,9 +33,6 @@ public class ApplicationProjectFormPopulatorTest {
 
     @Mock
     private QuestionService questionService;
-
-    @Mock
-    private FormInputService formInputService;
 
     private Long questionId = 7890L;
     private Long questionNotFoundId = 12904L;

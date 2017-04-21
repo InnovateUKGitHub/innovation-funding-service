@@ -83,10 +83,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withCompetition(competitionId)
                 .build());
 
-        when(formInputResponseService.getByApplicationIdAndQuestionName(applicationId, "Project summary"))
-                .thenReturn(newFormInputResponseResource()
+        when(formInputResponseRestService.getByApplicationIdAndQuestionName(applicationId, "Project summary"))
+                .thenReturn(restSuccess(newFormInputResponseResource()
                         .withValue("Project summary")
-                        .build());
+                        .build()));
 
         OrganisationResource collaboratorOrganisation1 = newOrganisationResource().build();
         OrganisationResource collaboratorOrganisation2 = newOrganisationResource().build();
@@ -122,9 +122,9 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/assessment-invitation")).andReturn();
 
-        InOrder inOrder = inOrder(assessmentService, formInputResponseService, processRoleService, organisationRestService);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleService, organisationRestService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
-        inOrder.verify(formInputResponseService).getByApplicationIdAndQuestionName(applicationId, "Project summary");
+        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(applicationId, "Project summary");
         inOrder.verify(processRoleService).findProcessRolesByApplicationId(applicationId);
         asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
                 inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
