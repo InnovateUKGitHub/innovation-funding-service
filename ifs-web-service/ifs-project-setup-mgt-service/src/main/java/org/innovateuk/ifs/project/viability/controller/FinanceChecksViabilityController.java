@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.viability.controller;
 
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.OrganisationSizeService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -53,9 +51,6 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private ProjectFinanceService financeService;
-
-    @Autowired
-    private OrganisationSizeService organisationSizeService;
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -165,7 +160,7 @@ public class FinanceChecksViabilityController {
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
 
-        List<OrganisationSizeResource> sizes = organisationSizeService.getOrganisationSizes();
+        List<OrganisationSizeResource> sizes = organisationDetailsService.getOrganisationSizes().getSuccessObjectOrThrowException();
         Optional<OrganisationSizeResource> organisationSizeResource = sizes.stream().filter(size -> size.getId().equals(financesForOrganisation.getOrganisationSize())).findAny();
         String organisationSizeDescription = organisationSizeResource.map(OrganisationSizeResource::getDescription).orElse(null);
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,

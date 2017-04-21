@@ -359,7 +359,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<ApplicationResource> updateApplicationStatus(Long id, ApplicationStatus status) {
+        public ServiceResult<ApplicationResource> updateApplicationState(Long id, ApplicationState state) {
             return null;
         }
 
@@ -384,8 +384,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId,
-                                                                                        Collection<ApplicationStatus> applicationStatusId) {
+        public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
             return null;
         }
 

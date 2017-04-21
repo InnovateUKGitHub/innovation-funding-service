@@ -86,7 +86,7 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects feasibility studies and no to resubmission and an innovation area
+    And the user selects feasibility studies and no to resubmission
     And the user enters text to a text field    css=#application_details-startdate_day    ${tomorrowday}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
@@ -347,13 +347,10 @@ the the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
-the user selects feasibility studies and no to resubmission and an innovation area
+the user selects feasibility studies and no to resubmission
     the user clicks the button/link    jQuery=legend:contains("Research category")
     the user clicks the button/link    jQuery=button:contains("Choose your research")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-    the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=button:contains("Choose your innovation area")
-    the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
 
@@ -480,8 +477,7 @@ Newly invited collaborator can create account and sign in
     the user completes the new account creation
 
 the user completes the new account creation
-    the user selects the radio button    organisationType  radio-1
-     #TODO change the radio button option to radio-4 once INFUND-9078 is fixed
+    the user selects the radio button    organisationType  radio-4
     the user clicks the button/link     jQuery=button:contains("Continue")
     the user should see the element     jQuery=span:contains("Create your account")
     the user enters text to a text field     id=organisationSearchName   innovate
@@ -490,7 +486,7 @@ the user completes the new account creation
     the user clicks the button/link        jQuery=a:contains("INNOVATE LTD")
     the user selects the checkbox     address-same
     wait for autosave
-    the user clicks the button/link     jQuery=button:contains("Save organisation and continue")
+    the user clicks the button/link     jQuery=button:contains("Continue")
     then the user should not see an error in the page
     the user clicks the button/link     jQuery=.button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register

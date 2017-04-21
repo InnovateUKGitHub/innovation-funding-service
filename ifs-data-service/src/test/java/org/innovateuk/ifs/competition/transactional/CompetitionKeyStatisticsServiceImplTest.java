@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
@@ -22,7 +22,7 @@ import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -83,9 +83,9 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusInAndCompletionLessThanEqual(competitionId, CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusNotInAndCompletionGreaterThan(competitionId, SUBMITTED_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsPastHalf());
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES)).thenReturn(keyStatisticsResource.getApplicationsSubmitted());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(competitionId, CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(competitionId, SUBMITTED_STATES, limit)).thenReturn(keyStatisticsResource.getApplicationsPastHalf());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(keyStatisticsResource.getApplicationsSubmitted());
 
         CompetitionOpenKeyStatisticsResource response = service.getOpenKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
         assertEquals(keyStatisticsResource, response);
@@ -132,7 +132,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(competitionParticipants);
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES)).thenReturn(applicationStatistics);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applicationStatistics);
         when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
 
@@ -168,7 +168,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .withAssessments(assessments, assessmentList)
                 .build(2);
 
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES)).thenReturn(applicationStatistics);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applicationStatistics);
         when(assessmentRepositoryMock.countByActivityStateStateAndTargetCompetitionId(PENDING, competitionId)).thenReturn(keyStatisticsResource.getAssignmentsWaiting());
         when(assessmentRepositoryMock.countByActivityStateStateAndTargetCompetitionId(ACCEPTED, competitionId)).thenReturn(keyStatisticsResource.getAssignmentsAccepted());
         when(assessmentRepositoryMock.countByActivityStateStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId)).thenReturn(keyStatisticsResource.getAssessmentsStarted());
@@ -185,11 +185,11 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         int applicationsAwaitingDecision = 2;
 
         List<Application> applications = newApplication()
-                .withApplicationStatus(ApplicationStatus.SUBMITTED)
+                .withApplicationState(ApplicationState.SUBMITTED)
                 .withFundingDecision(FundingDecisionStatus.FUNDED, FundingDecisionStatus.UNFUNDED, FundingDecisionStatus.ON_HOLD)
                 .build(3);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES)).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applications);
         when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId)).thenReturn(applicationsNotifiedOfDecision);
         when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(competitionId)).thenReturn(applicationsAwaitingDecision);
 
