@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.form.AcademicFinance;
 import org.innovateuk.ifs.application.finance.model.AcademicFinanceFormField;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
@@ -19,6 +18,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -30,30 +30,30 @@ import org.springframework.ui.Model;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.Arrays.asList;
-
 
 @Component
 public class JESFinanceModelManager implements FinanceModelManager {
 
     @Autowired
-    ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceRowRestService financeRowRestService;
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
 
     @Autowired
-    FinanceService financeService;
+    private FinanceService financeService;
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @Autowired
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
 
     private static Map<FormInputType, List<String>> TYPE_TO_COSTS = new ImmutableMap.Builder<FormInputType, List<String>>()
             .put(FormInputType.YOUR_FINANCE, asList("tsb_reference"))
@@ -136,7 +136,8 @@ public class JESFinanceModelManager implements FinanceModelManager {
                 if (costNames != null) {
                     costNames.forEach(costName -> {
                         FinanceRowItem financeRowItem = new AcademicCost(null, costName, BigDecimal.ZERO, null);
-                        financeRowService.add(applicationFinanceResource.getId(), questionResource.getId(), financeRowItem);
+                        financeRowRestService.add(applicationFinanceResource.getId(), questionResource.getId(), financeRowItem)
+                                .getSuccessObjectOrThrowException();
                     });
                 }
             }
@@ -152,7 +153,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         throw new NotImplementedException("JES forms dont have any cost data.");
     }
 
-    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
+    private ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         if(applicationFinanceResource == null) {
             financeService.addApplicationFinance(userId, applicationId);
@@ -161,12 +162,12 @@ public class JESFinanceModelManager implements FinanceModelManager {
         return applicationFinanceResource;
     }
 
-    protected AcademicFinance mapFinancesToFields(Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails) {
+    private AcademicFinance mapFinancesToFields(Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails) {
         AcademicFinance academicFinance = new AcademicFinance();
         organisationFinanceDetails.values()
                 .stream()
                 .flatMap(cc -> cc.getCosts().stream())
-                .filter(c -> c != null)
+                .filter(Objects::nonNull)
                 .forEach(c -> mapFinanceToField((AcademicCost) c, academicFinance));
         return academicFinance;
     }

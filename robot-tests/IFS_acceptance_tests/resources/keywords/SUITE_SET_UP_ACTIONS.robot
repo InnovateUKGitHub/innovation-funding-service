@@ -289,6 +289,7 @@ the user enters the details and clicks the create account
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
+    the user selects the checkbox    allowMarketingEmails
     Submit Form
 
 the user fills the create account form

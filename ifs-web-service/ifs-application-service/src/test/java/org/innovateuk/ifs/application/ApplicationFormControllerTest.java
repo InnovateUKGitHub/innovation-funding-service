@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
@@ -22,7 +21,6 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Assert;
@@ -44,7 +42,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -59,8 +56,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -113,12 +108,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
 
-    @Mock
-    private FundingLevelResetHandler fundingLevelResetHandler;
-
-    @Mock
-    private Model model;
-
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -154,8 +143,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         costId = 1L;
 
         // save actions should always succeed.
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(financeHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
@@ -253,7 +242,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
-        when(competitionService.getById(anyLong())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         // just check if these pages are not throwing errors.
@@ -346,7 +334,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testAjaxRemoveCost() throws Exception {
         ValidationMessages costItemMessages = new ValidationMessages();
-        when(financeRowService.add(anyLong(), anyLong(), any())).thenReturn(costItemMessages);
+        when(financeRowRestService.add(anyLong(), anyLong(), any())).thenReturn(restSuccess(costItemMessages));
         mockMvc.perform(
                 get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
         );
@@ -378,7 +366,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         QuestionResource financeQuestion = newQuestionResource().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
-        when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
+        when(financeRowRestService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.NOT_REQUESTING_FUNDING, "1")
@@ -387,7 +375,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
 
         ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
-        verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
+        verify(financeRowRestService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
         assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
         verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
     }
@@ -398,7 +386,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         QuestionResource financeQuestion = newQuestionResource().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
-        when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
+        when(financeRowRestService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.REQUESTING_FUNDING, "1")
@@ -407,7 +395,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
 
         ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
-        verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
+        verify(financeRowRestService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
         assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
         verify(sectionService, times(2)).markAsInComplete(anyLong(), anyLong(), anyLong());
     }
@@ -666,7 +654,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         MockMultipartFile file = new MockMultipartFile("formInput[" + formInputId +"]", "filename.txt", "text/plain", "someText".getBytes());
 
         long fileQuestionId = 31L;
-        when(formInputResponseService.createFile(formInputId, application.getId(), processRoleId,
+        when(formInputResponseRestService.createFileEntry(formInputId, application.getId(), processRoleId,
                 file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes()))
                 .thenReturn(restFailure(new Error(fileError,UNSUPPORTED_MEDIA_TYPE)));
 
@@ -684,7 +672,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFormSubmitGivesNoValidationErrorsIfNoQuestionIsEmptyOnSectionSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
-        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(new ValidationMessages(globalError("Please enter some text")));
+        when(formInputResponseRestService.saveQuestionResponse(userId, application.getId(), 1L, "", false)).thenReturn(restSuccess(new ValidationMessages(globalError("Please enter some text"))));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -699,7 +687,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFormSubmitGivesNoValidationErrorsIfQuestionIsEmptyOnSectionSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
-        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(new ValidationMessages(globalError("Please enter some text")));
+        when(formInputResponseRestService.saveQuestionResponse(userId, application.getId(), 1L, "", false)).thenReturn(restSuccess(new ValidationMessages(globalError("Please enter some text"))));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -713,7 +701,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
         // Question should not be marked as complete, since the input is not valid.
 
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(new ValidationMessages(globalError("please.enter.some.text")));
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(restSuccess(new ValidationMessages(globalError("please.enter.some.text"))));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         mockMvc.perform(
@@ -752,7 +740,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("value", value)
         ).andExpect(status().isOk());
 
-        Mockito.inOrder(formInputResponseService).verify(formInputResponseService, calls(1)).save(loggedInUser.getId(), application.getId(), formInputId, value, false);
+        Mockito.inOrder(formInputResponseRestService).verify(formInputResponseRestService, calls(1)).saveQuestionResponse(loggedInUser.getId(), application.getId(), formInputId, value, false);
     }
 
     @Test

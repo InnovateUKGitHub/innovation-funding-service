@@ -130,7 +130,7 @@ public class RegistrationController {
             return "redirect:/login";
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         if (!processOrganisation(request, model)) {
             destination = "redirect:/";
@@ -216,7 +216,7 @@ public class RegistrationController {
             return getRedirectUrlForUser(user);
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());

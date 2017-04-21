@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
-
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.DatesViewModel;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Collections;
-
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
@@ -32,7 +31,7 @@ import static org.mockito.Mockito.when;
 public class DatesViewModelPopulatorTest {
 
     @Mock
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @InjectMocks
     private DatesViewModelPopulator populator;
@@ -52,7 +51,7 @@ public class DatesViewModelPopulatorTest {
                 .withPublicContent(1L)
                 .build();
         publicContentResource = newPublicContentResource()
-                .with(contentResource ->  {
+                .with(contentResource -> {
                     contentResource.setId(89235L);
                 })
                 .withCompetitionId(5372L)
@@ -65,11 +64,11 @@ public class DatesViewModelPopulatorTest {
 
     @Test
     public void populateSectionWithMilestonesFound() {
-        when(milestoneService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
-                .thenReturn(newMilestoneResource()
+        when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
+                .thenReturn(restSuccess(newMilestoneResource()
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)
-                        .build(3));
-        publicContentResource.setContentEvents(Collections.emptyList());
+                        .build(3)));
+        publicContentResource.setContentEvents(emptyList());
 
         populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
@@ -78,9 +77,9 @@ public class DatesViewModelPopulatorTest {
 
     @Test
     public void populateSectionWithMilestonesNotFound() {
-        when(milestoneService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
-                .thenReturn(Collections.emptyList());
-        publicContentResource.setContentEvents(Collections.emptyList());
+        when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
+                .thenReturn(restSuccess(emptyList()));
+        publicContentResource.setContentEvents(emptyList());
 
         populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
@@ -89,9 +88,9 @@ public class DatesViewModelPopulatorTest {
 
     @Test
     public void populateSectionWithNoPublicContentDates() {
-        when(milestoneService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
-                .thenReturn(Collections.emptyList());
-        publicContentResource.setContentEvents(Collections.emptyList());
+        when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
+                .thenReturn(restSuccess(emptyList()));
+        publicContentResource.setContentEvents(emptyList());
 
         populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
@@ -100,10 +99,10 @@ public class DatesViewModelPopulatorTest {
 
     @Test
     public void populateSectionWithPublicContentDatesAndMilestones() {
-        when(milestoneService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
-                .thenReturn(newMilestoneResource()
+        when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
+                .thenReturn(restSuccess(newMilestoneResource()
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)
-                        .build(3));
+                        .build(3)));
         publicContentResource.setContentEvents(newContentEventResource().build(2));
 
         populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
