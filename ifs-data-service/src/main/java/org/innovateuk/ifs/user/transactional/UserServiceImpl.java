@@ -25,13 +25,11 @@ import java.util.*;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
-import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -157,21 +155,13 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         return String.format("%s/login/reset-password/hash/%s", webBaseUrl, hash);
     }
 
-    private List<UserResource> usersToResources(List<User> filtered) {
-        return simpleMap(filtered, user -> userMapper.mapToResource(user));
-    }
-
     @Override
     public ServiceResult<Void> updateDetails(UserResource userResource) {
-        if (userResource != null) {
-            return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()))
-                        .andOnSuccess( user -> {
-                        UserResource existingUserResource = userMapper.mapToResource(user);
-                        return updateUser(existingUserResource, userResource);
-                    });
-        } else {
-            return serviceFailure(badRequestError("User resource may not be null"));
-        }
+        return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()))
+                .andOnSuccess( user -> {
+                    UserResource existingUserResource = userMapper.mapToResource(user);
+                    return updateUser(existingUserResource, userResource);
+                });
     }
 
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
