@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
@@ -14,9 +13,8 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +25,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 
 /**
  * Class for populating the model for the "Your Finances" section
@@ -45,13 +44,7 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
     private SectionService sectionService;
 
     @Autowired
-    private FormInputService formInputService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
-    private OrganisationService organisationService;
+    private FormInputRestService formInputRestService;
 
     protected void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Integer organisationGrantClaimPercentage) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
@@ -151,11 +144,11 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
                                             SectionResource section,
                                             ApplicationForm form,
                                             List<SectionResource> allSections, Optional<OrganisationResource> userOrganisation) {
-        List<FormInputResource> inputs = formInputService.findApplicationInputsByCompetition(application.getCompetition());
+        List<FormInputResource> inputs = formInputRestService.getByCompetitionIdAndScope(application.getCompetition(), APPLICATION).getSuccessObjectOrThrowException();
         addSectionsMarkedAsComplete(viewModel, application, userOrganisation);
         addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, allSections, inputs, userOrganisation);
 
-        addSectionDetails(viewModel, section, inputs);
+        addSectionDetails(viewModel, section);
     }
 
     protected void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {

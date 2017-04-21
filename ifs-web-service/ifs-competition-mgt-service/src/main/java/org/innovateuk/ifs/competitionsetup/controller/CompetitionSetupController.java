@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
@@ -72,7 +72,7 @@ public class CompetitionSetupController {
     private CompetitionSetupService competitionSetupService;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     @Autowired
     private MessageSource messageSource;
@@ -351,8 +351,7 @@ public class CompetitionSetupController {
     @GetMapping("/getInnovationArea/{innovationSectorId}")
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
-
-        return categoryService.getInnovationAreasBySector(innovationSectorId);
+        return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
     }
 
     /* AJAX Function */

@@ -32,7 +32,6 @@ import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -70,7 +69,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@Ignore
 public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfileServiceImpl> {
 
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";

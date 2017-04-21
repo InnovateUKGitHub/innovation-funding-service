@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
@@ -48,17 +47,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupApplicationControllerTest extends BaseControllerMockMVCTest<CompetitionSetupApplicationController> {
 
-    private static final Long COMPETITION_ID = Long.valueOf(12);
-    private static final Long QUESTION_ID = Long.valueOf(1);
+    private static final Long COMPETITION_ID = 12L;
+    private static final Long QUESTION_ID = 1L;
     private static final String URL_PREFIX = "/competition/setup/"+COMPETITION_ID+"/section/application";
     private static final CompetitionResource UNEDITABLE_COMPETITION = newCompetitionResource()
             .withCompetitionStatus(CompetitionStatus.OPEN)
             .withSetupComplete(true)
             .withStartDate(ZonedDateTime.now().minusDays(1))
             .withFundersPanelDate(ZonedDateTime.now().plusDays(1)).build();
-
-    @Mock
-    private CategoryService categoryService;
 
     @Mock
     private CompetitionSetupService competitionSetupService;
