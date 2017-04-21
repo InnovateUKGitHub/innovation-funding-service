@@ -34,7 +34,7 @@ Non registered users CH route
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    LINK=INNOVATE LTD
     And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+${unique_email_number}@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
@@ -69,7 +69,7 @@ The email address does not stay in the cookie
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
     And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     Then the user should not see the text in the page    ${test_mailbox_one}+1@gmail.com
     [Teardown]    the user closes the browser
