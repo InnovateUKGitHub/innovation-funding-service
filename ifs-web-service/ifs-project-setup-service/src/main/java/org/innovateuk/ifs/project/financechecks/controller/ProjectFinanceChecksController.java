@@ -135,8 +135,7 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewFinanceChecks(Model model, @PathVariable("projectId") final Long projectId,
-                                    @ModelAttribute("loggedInUser") UserResource loggedInUser)
-    {
+                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
@@ -488,8 +487,7 @@ public class ProjectFinanceChecksController {
         String json = cookieUtil.getCookieValue(request, getCookieName(projectId, organisationId, queryId));
 
         if (json != null && !"".equals(json)) {
-            TypeReference<List<Long>> listType = new TypeReference<List<Long>>() {
-            };
+            TypeReference<List<Long>> listType = new TypeReference<List<Long>>() {};
             ObjectMapper mapper = new ObjectMapper();
             try {
                 attachments = mapper.readValue(json, listType);
