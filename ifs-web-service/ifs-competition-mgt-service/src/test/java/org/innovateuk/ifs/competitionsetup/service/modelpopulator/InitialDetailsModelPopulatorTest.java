@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,15 +19,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
-import org.innovateuk.ifs.application.service.CategoryService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.CollectionFunctions;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitialDetailsModelPopulatorTest {
@@ -34,7 +34,7 @@ public class InitialDetailsModelPopulatorTest {
 	private InitialDetailsModelPopulator populator;
 	
 	@Mock
-	private CategoryService categoryService;
+	private CategoryRestService categoryRestService;
 	
 	@Mock
 	private CompetitionService competitionService;
@@ -62,9 +62,9 @@ public class InitialDetailsModelPopulatorTest {
 		List<UserResource> compExecs = new ArrayList<>();
 		when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(compExecs);
 		List<InnovationSectorResource> innovationSectors = new ArrayList<>();
-		when(categoryService.getInnovationSectors()).thenReturn(innovationSectors);
+		when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
 		List<InnovationAreaResource> innovationAreas = new ArrayList<>();
-		when(categoryService.getInnovationAreas()).thenReturn(innovationAreas);
+		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreas));
 		List<CompetitionTypeResource> competitionTypes = new ArrayList<>();
 		when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypes);
 		List<UserResource> leadTechs = new ArrayList<>();

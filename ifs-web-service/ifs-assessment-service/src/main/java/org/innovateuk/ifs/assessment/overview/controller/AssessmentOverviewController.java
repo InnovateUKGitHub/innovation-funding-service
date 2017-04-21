@@ -9,7 +9,7 @@ import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelP
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -50,7 +50,7 @@ public class AssessmentOverviewController {
     private AssessmentService assessmentService;
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -79,10 +79,10 @@ public class AssessmentOverviewController {
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
 
-        final ByteArrayResource resource = formInputResponseService
+        final ByteArrayResource resource = formInputResponseRestService
                 .getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
 
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseService
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService
                 .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
 
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());

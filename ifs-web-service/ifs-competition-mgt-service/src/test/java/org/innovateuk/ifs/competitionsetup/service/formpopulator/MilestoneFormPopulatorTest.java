@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.junit.Assert.*;
@@ -29,7 +30,7 @@ public class MilestoneFormPopulatorTest extends BaseUnitTestMocksTest {
     private MilestonesFormPopulator service;
 
     @Mock
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @Test
     public void testSectionToFill() {
@@ -56,7 +57,7 @@ public class MilestoneFormPopulatorTest extends BaseUnitTestMocksTest {
                 .withMilestones(milestoneList)
                 .build();
 
-        when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(milestones);
+        when(milestoneRestService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(restSuccess(milestones));
 
         CompetitionSetupForm result = service.populateForm(competition);
 

@@ -4,19 +4,16 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -32,7 +29,7 @@ import java.util.stream.Collectors;
 
 /**
  * {@code DefaultFinanceFormHandler} retrieves the costs and handles the finance data retrieved from the request, so it can be
- * transfered to view or stored. The costs retrieved from the {@link FinanceRowService} are converted
+ * transfered to view or stored. The costs retrieved from the {@link FinanceRowRestService} are converted
  * to {@link FinanceRowItem}.
  */
 @Component
@@ -43,16 +40,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     private FinanceService financeService;
 
     @Autowired
-    private FinanceRowService financeRowService;
-
-    @Autowired
-    private SectionService sectionService;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
+    private FinanceRowRestService financeRowRestService;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -72,7 +60,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
 
         storeFinancePosition(request, applicationFinanceResource.getId(), competitionId, userId);
-        ValidationMessages errors = getAndStoreCostitems(request, applicationFinanceResource.getId(), (cost) -> financeRowService.update(cost));
+        ValidationMessages errors = getAndStoreCostitems(request, applicationFinanceResource.getId(), (cost) -> financeRowRestService.update(cost));
         addRemoveCostRows(request, applicationId, userId);
 
         return errors;
@@ -100,13 +88,13 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     @Override
     public ValidationMessages addCost(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-        return financeRowService.add(applicationFinance.getId(), questionId, null);
+        return financeRowRestService.add(applicationFinance.getId(), questionId, null).getSuccessObjectOrThrowException();
     }
 
     @Override
     public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-        return financeRowService.addWithoutPersisting(applicationFinance.getId(), questionId);
+        return financeRowRestService.addWithoutPersisting(applicationFinance.getId(), questionId).getSuccessObjectOrThrowException();
     }
 
     private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {
@@ -118,7 +106,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
         if (requestParams.containsKey("remove_cost")) {
             String removeCostParam = request.getParameter("remove_cost");
-            financeRowService.delete(Long.valueOf(removeCostParam));
+            financeRowRestService.delete(Long.valueOf(removeCostParam)).getSuccessObjectOrThrowException();
         }
     }
 
@@ -188,12 +176,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
                         if (costItem != null && fieldGroup.size() > 0) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
-                            ValidationMessages addResult = financeRowService.add(applicationFinanceId, questionId, costItem);
+                            ValidationMessages addResult = financeRowRestService.add(applicationFinanceId, questionId, costItem).getSuccessObjectOrThrowException();
                             Either<FinanceRowItem, ValidationMessages> either;
                             if(addResult.hasErrors()) {
                                 either = Either.right(addResult);
                             } else {
-                                FinanceRowItem added = financeRowService.findById(addResult.getObjectId());
+                                FinanceRowItem added = financeRowRestService.findById(addResult.getObjectId()).getSuccessObjectOrThrowException();
                                 either = Either.left(added);
                             }
 
@@ -238,7 +226,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         if (costItem.getId().equals(0L)) {
             return addFinanceRowItem(costItem, userId, applicationId, question);
         } else {
-            RestResult<ValidationMessages> messages = financeRowService.update(costItem);
+            RestResult<ValidationMessages> messages = financeRowRestService.update(costItem);
             ValidationMessages validationMessages = messages.getSuccessObject();
 
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
@@ -257,7 +245,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
-            return financeRowService.add(applicationFinanceResource.getId(), questionId, costItem);
+            return financeRowRestService.add(applicationFinanceResource.getId(), questionId, costItem).getSuccessObjectOrThrowException();
         }
         return null;
     }

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -21,7 +21,7 @@ public class ApplicationDocs {
             fieldWithPath("startDate").description("Estimated timescales: project start date"),
             fieldWithPath("submittedDate").description("The date the applicant has submitted this application."),
             fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-            fieldWithPath("applicationStatus").description("ApplicationStatus Id"),
+            fieldWithPath("applicationState").description("ApplicationState"),
             fieldWithPath("stateAidAgreed").description("Flag indicating if the user has accepted that they are eligible for state aid"),
             fieldWithPath("competition").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition Name"),
@@ -42,7 +42,7 @@ public class ApplicationDocs {
             .withStartDate(LocalDate.now())
             .withSubmittedDate(ZonedDateTime.now())
             .withDurationInMonths(1L)
-            .withApplicationStatus(ApplicationStatus.OPEN)
+            .withApplicationState(ApplicationState.OPEN)
             .withCompetition(1L)
             .withCompetitionName("competition name")
             .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)

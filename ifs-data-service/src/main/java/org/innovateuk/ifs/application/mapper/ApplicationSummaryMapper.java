@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.mapper;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -62,7 +62,7 @@ public abstract class ApplicationSummaryMapper {
         if (source.getFundingDecision() != null) {
             result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
         }
-        if (source.getApplicationStatus() == ApplicationStatus.APPROVED) {
+        if (source.getApplicationProcess().getActivityState() == ApplicationState.APPROVED) {
             result.setFundingDecision(FundingDecision.FUNDED);
         }
 
@@ -86,9 +86,9 @@ public abstract class ApplicationSummaryMapper {
 
     private String status(Application source, Integer completedPercentage) {
 
-        if (source.getApplicationStatus() == ApplicationStatus.SUBMITTED
-                || source.getApplicationStatus() == ApplicationStatus.APPROVED
-                || source.getApplicationStatus() == ApplicationStatus.REJECTED) {
+        if (source.getApplicationProcess().getActivityState() == ApplicationState.SUBMITTED
+                || source.getApplicationProcess().getActivityState() == ApplicationState.APPROVED
+                || source.getApplicationProcess().getActivityState() == ApplicationState.REJECTED) {
             return "Submitted";
         }
 
@@ -121,5 +121,4 @@ public abstract class ApplicationSummaryMapper {
         }
         return result;
     }
-
 }

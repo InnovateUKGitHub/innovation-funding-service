@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ public class AssessorQuestionFeedbackPopulator {
     private QuestionService questionService;
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private FeedbackNavigationPopulator feedbackNavigationPopulator;
@@ -37,7 +37,8 @@ public class AssessorQuestionFeedbackPopulator {
         QuestionResource questionResource = questionService.getById(questionId);
         long applicationId = applicationResource.getId();
 
-        List<FormInputResponseResource> responseResource = formInputResponseService.getByApplicationIdAndQuestionId(applicationId, questionResource.getId());
+        List<FormInputResponseResource> responseResource = formInputResponseRestService.getByApplicationIdAndQuestionId(
+                applicationId, questionResource.getId()).getSuccessObjectOrThrowException();
 
         AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService
                 .getAssessmentAggregateFeedback(applicationId, questionId)

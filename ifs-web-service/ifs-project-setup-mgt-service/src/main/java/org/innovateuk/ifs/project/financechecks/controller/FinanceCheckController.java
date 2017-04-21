@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceCheckSummaryForm;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class FinanceCheckController {
     private ProjectService projectService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private SpendProfileService spendProfileService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -64,7 +65,7 @@ public class FinanceCheckController {
                                        ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> doViewFinanceCheckSummary(projectId, model);
-        ServiceResult<Void> generateResult = projectFinanceService.generateSpendProfile(projectId);
+        ServiceResult<Void> generateResult = spendProfileService.generateSpendProfile(projectId);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
                 redirectToViewFinanceCheckSummary(projectId)

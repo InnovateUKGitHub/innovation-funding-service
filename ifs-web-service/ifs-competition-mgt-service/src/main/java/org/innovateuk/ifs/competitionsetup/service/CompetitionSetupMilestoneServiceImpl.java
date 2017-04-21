@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -29,20 +29,20 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
 
     @Autowired
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @Override
     public ServiceResult<List<MilestoneResource>> createMilestonesForCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
         Stream.of(MilestoneType.presetValues()).forEach(type ->
-            newMilestones.add(milestoneService.create(type, competitionId).getSuccessObjectOrThrowException())
+            newMilestones.add(milestoneRestService.create(type, competitionId).getSuccessObjectOrThrowException())
         );
         return serviceSuccess(newMilestones);
     }
 
     @Override
     public ServiceResult<Void> updateMilestonesForCompetition(List<MilestoneResource> milestones, Map<String, MilestoneRowForm> milestoneEntries, Long competitionId) {
-        List<MilestoneResource> updatedMilestones = new ArrayList();
+        List<MilestoneResource> updatedMilestones = new ArrayList<>();
 
         milestones.forEach(milestoneResource -> {
             MilestoneRowForm milestoneWithUpdate = milestoneEntries.getOrDefault(milestoneResource.getType().name(), null);
@@ -56,7 +56,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             }
         });
 
-        return milestoneService.updateMilestones(updatedMilestones);
+        return milestoneRestService.updateMilestones(updatedMilestones).toServiceResult();
     }
 
     @Override
@@ -94,10 +94,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     public Boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
         try{
             TimeZoneUtil.fromUkTimeZone(year, month, day);
-            if (year > 9999) {
-                    return false;
-            }
-            return true;
+            return year <= 9999;
         }
         catch(DateTimeException dte){
             return false;

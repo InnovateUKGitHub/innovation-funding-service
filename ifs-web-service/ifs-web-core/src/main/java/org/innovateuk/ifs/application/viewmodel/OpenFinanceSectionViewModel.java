@@ -5,11 +5,15 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
 /**
  * ViewModel for Finance open sections
  */
 public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
-
+    private static final List<SectionType> ACADEMIC_FINANCE_SUB_SECTIONS = asList(SectionType.PROJECT_COST_FINANCES);
     private boolean fundingSectionLocked;
     private Long applicationDetailsQuestionId;
     private Long yourOrganisationSectionId;
@@ -94,7 +98,7 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     }
 
     public boolean isSectionDisplayed(SectionResource subSection) {
-        return !getIsAcademicFinance() || !SectionType.ORGANISATION_FINANCES.equals(subSection.getType());
+        return !getIsAcademicFinance() || ACADEMIC_FINANCE_SUB_SECTIONS.contains(subSection.getType());
     }
 
     public boolean getIsAcademicFinance() {
