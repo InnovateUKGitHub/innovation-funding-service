@@ -43,6 +43,15 @@ the user should see that the checkbox is disabled
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
+the user should see that the checkbox is selected
+    [Arguments]    ${checkbox}
+     Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}" and @checked='checked']/ancestor::label[contains(@class,"selected")]
+     # Error checking
+     the user should not see an error in the page
+     # Header checking (INFUND-1892)
+     Element Should Be Visible    id=global-header
+     Page Should Contain    BETA
+
 
 the user should not see the checkbox
     [Arguments]    ${checkbox}

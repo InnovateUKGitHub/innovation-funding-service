@@ -21,9 +21,8 @@ import static javax.persistence.EnumType.STRING;
  */
 @Entity
 public class SpendProfile {
-
-    public static final String ELIGIBLE_COSTS_DESCRIPTION = "Eligible costs for Partner Organisation";
-    public static final String SPEND_PROFILE_DESCRIPTION = "Spend Profile figures for Partner Organisation";
+    private static final String ELIGIBLE_COSTS_DESCRIPTION = "Eligible costs for Partner Organisation";
+    private static final String SPEND_PROFILE_DESCRIPTION = "Spend Profile figures for Partner Organisation";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

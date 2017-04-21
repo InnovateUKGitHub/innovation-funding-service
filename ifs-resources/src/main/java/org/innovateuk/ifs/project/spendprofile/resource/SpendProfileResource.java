@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.project.resource;
+package org.innovateuk.ifs.project.spendprofile.resource;
 
 import org.innovateuk.ifs.project.finance.resource.CostGroupResource;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

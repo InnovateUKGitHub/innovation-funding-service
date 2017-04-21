@@ -56,6 +56,8 @@ Research Category : Autosave not applicable
 
 Application details: Innovation Area - Materials and manufacturing
     [Documentation]    INFUND-8115
+    [Tags]    Pending
+    #TODO INFUND-9151
     Given the user clicks the button/link    link=Application overview
     And the user clicks the button/link    link=Application details
     and the user should not see the element      jQuery=button:contains("Change your innovation area")
@@ -72,7 +74,8 @@ Application details: Innovation Area - Materials and manufacturing
 
 Application details: Innovation Area - Infrastructe
     [Documentation]    INFUND-8443
-    [Tags]  MySQL
+    [Tags]  MySQL    Pending
+    #TODO INFUND-9151
     [Setup]  Set the competition innovation sector to Infrastructure
     Given the user clicks the button/link   jQuery=button:contains("Change your innovation area")
     Then the user should see the element    jQuery=label:contains("Energy efficiency"):contains("Improve energy end-use efficiency, for example, in buildings, domestic appliances, industrial processes or vehicles.")
