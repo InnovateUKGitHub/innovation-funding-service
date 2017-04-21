@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.project.financecheck.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.project.financecheck.domain.Cost;
-import org.innovateuk.ifs.project.financecheck.domain.CostGroup;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
+import org.innovateuk.ifs.project.financechecks.repository.CostGroupRepository;
+import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;

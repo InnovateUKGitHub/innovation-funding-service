@@ -95,6 +95,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
+                .withAllowMarketingEmails(true)
                 .build();
 
         Long organisationId = 1L;
@@ -110,7 +111,8 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                organisationId
+                organisationId,
+                userResource.getAllowMarketingEmails()
         ).getSuccessObject();
 
         assertEquals(userResource, receivedResource);
@@ -132,6 +134,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withGender(Gender.MALE)
                 .withEthnicity(2L)
                 .withDisability(Disability.YES)
+                .withAllowMarketingEmails(true)
                 .build();
 
         Long organisationId = 1L;
@@ -147,7 +150,8 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                organisationId
+                organisationId,
+                userResource.getAllowMarketingEmails()
         ).getSuccessObject();
 
         assertEquals(userResource, receivedResource);
@@ -165,6 +169,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
+                .withAllowMarketingEmails(true)
                 .build();
 
         Long organisationId = 1L;
@@ -182,7 +187,8 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : "",
                 organisationId,
-                competitionId
+                competitionId,
+                userResource.getAllowMarketingEmails()
         ).getSuccessObject();
 
         assertEquals(userResource, receivedResource);
@@ -203,6 +209,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 .withDisability(Disability.YES)
                 .withEthnicity(2L)
                 .withGender(Gender.FEMALE)
+                .withAllowMarketingEmails(true)
                 .build();
 
         Long organisationId = 1L;
@@ -220,7 +227,8 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : "",
                 organisationId,
-                competitionId
+                competitionId,
+                userResource.getAllowMarketingEmails()
         ).getSuccessObject();
 
         assertEquals(userResource, receivedResource);

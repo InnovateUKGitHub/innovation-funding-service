@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.dashboard.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -44,11 +44,11 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         when(applicationService.getInProgress(loggedInUser.getId())).thenReturn(newApplicationResource()
                 .withId(APPLICATION_ID_IN_PROGRESS)
                 .withCompetition(COMPETITION_ID)
-                .withApplicationStatus(ApplicationStatus.OPEN)
+                .withApplicationState(ApplicationState.OPEN)
                 .build(1));
         when(applicationService.getFinished(loggedInUser.getId())).thenReturn(newApplicationResource()
                 .withId(APPLICATION_ID_IN_FINISH)
-                .withApplicationStatus(ApplicationStatus.REJECTED)
+                .withApplicationState(ApplicationState.REJECTED)
                 .withCompetition(COMPETITION_ID)
                 .build(1));
 
@@ -59,7 +59,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         when(applicationService.getById(APPLICATION_ID_IN_PROJECT)).thenReturn(newApplicationResource()
                 .withId(APPLICATION_ID_IN_PROJECT)
-                .withApplicationStatus(ApplicationStatus.SUBMITTED)
+                .withApplicationState(ApplicationState.SUBMITTED)
                 .withCompetition(COMPETITION_ID).build());
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);

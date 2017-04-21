@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -49,8 +49,8 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((status, application) -> application.setCompetitionStatus(status), competitionStatus);
     }
 
-    public ApplicationResourceBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {
-        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
+    public ApplicationResourceBuilder withApplicationState(ApplicationState... applicationStates) {
+        return withArray((applicationState, application) -> application.setApplicationState(applicationState), applicationStates);
     }
 
     public ApplicationResourceBuilder withStartDate(LocalDate... dates) {

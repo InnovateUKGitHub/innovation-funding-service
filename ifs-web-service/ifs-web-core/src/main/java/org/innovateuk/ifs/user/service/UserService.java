@@ -26,10 +26,11 @@ public interface UserService {
     ServiceResult<Void> resetPassword(String hash, String password);
     Optional<UserResource> findUserByEmail(String email);
     Set<UserResource> getAssignableUsers(ApplicationResource application);
-    ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
+    ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails);
     ServiceResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
-                                                                                    String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId);
-    ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
+                                                                                    String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId,
+                                                                                    Long competitionId, Boolean allowMarketingEmails);
+    ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails);
     ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
     List<UserResource> findUserByType(UserRoleType type);
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
