@@ -80,7 +80,7 @@ Project finance user selects the grant offer letter
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
     Then the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element     jQuery=h2:contains("Grant offer letter")
-    And the user should see the element     link=grant_offer_letter.pdf
+    And the user should see the element     link=grant_offer_letter.pdf (opens in a new window)
     And the user should see the element     jQuery=button:contains("Remove")
 
 Project Finance can download GOL
