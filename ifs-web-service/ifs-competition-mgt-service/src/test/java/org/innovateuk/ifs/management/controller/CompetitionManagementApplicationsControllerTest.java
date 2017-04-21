@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.management.model.AllApplicationsPageModelPopulator;
 import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
+import org.innovateuk.ifs.management.model.IneligibleApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Before;
@@ -46,6 +47,10 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     @InjectMocks
     @Spy
     private SubmittedApplicationsModelPopulator submittedApplicationsModelPopulator;
+
+    @InjectMocks
+    @Spy
+    private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
 
     @Override
     protected CompetitionManagementApplicationsController supplyControllerUnderTest() {
@@ -349,6 +354,125 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .andReturn();
 
         verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, 20, "", empty());
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+    }
+    @Test
+    public void ineligibleApplications() throws Exception {
+        Long[] ids = {1L, 2L, 3L};
+        String[] titles = {"Title 1", "Title 2", "Title 3"};
+        String[] leads = {"Lead 1", "Lead 2", "Lead 3"};
+        String[] applicant = {"LeadApplicant 1","LeadApplicant 2","LeadApplicant 3"};
+        Boolean[] informed = {true, true, false};
+
+        List<IneligibleApplicationsRowViewModel> expectedApplicationRows = asList(
+                new IneligibleApplicationsRowViewModel(ids[0], titles[0], leads[0], applicant[0], informed[0]),
+                new IneligibleApplicationsRowViewModel(ids[1], titles[1], leads[1], applicant[1], informed[1]),
+                new IneligibleApplicationsRowViewModel(ids[2], titles[2], leads[2], applicant[2], informed[2])
+        );
+
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .withId(ids)
+                .withName(titles)
+                .withLead(leads)
+                .withLeadApplicant(applicant)
+                .withIneligibleInformed(informed)
+                .build(3);
+
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(expectedSummaries);
+
+        when(applicationSummaryRestService.getIneligibleApplications(COMPETITION_ID, "", 0, 20, ""))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/ineligible", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/ineligible-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=INELIGIBLE_APPLICATIONS"))
+                .andReturn();
+
+        IneligibleApplicationsViewModel model = (IneligibleApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService).getIneligibleApplications(COMPETITION_ID, "", 0, 20, "");
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        assertEquals(expectedApplicationRows, model.getApplications());
+    }
+
+    @Test
+    public void ineligibleApplicationsPagedSortedFiltered() throws Exception {
+        Long[] ids = {1L, 2L, 3L};
+        String[] titles = {"Title 1", "Title 2", "Title 3"};
+        String[] leads = {"Lead 1", "Lead 2", "Lead 3"};
+        String[] applicant = {"LeadApplicant 1","LeadApplicant 2","LeadApplicant 3"};
+        Boolean[] informed = {true, true, false};
+
+        List<IneligibleApplicationsRowViewModel> expectedApplicationRows = asList(
+                new IneligibleApplicationsRowViewModel(ids[0], titles[0], leads[0], applicant[0], informed[0]),
+                new IneligibleApplicationsRowViewModel(ids[1], titles[1], leads[1], applicant[1], informed[1]),
+                new IneligibleApplicationsRowViewModel(ids[2], titles[2], leads[2], applicant[2], informed[2])
+        );
+
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .withId(ids)
+                .withName(titles)
+                .withLead(leads)
+                .withLeadApplicant(applicant)
+                .withIneligibleInformed(informed)
+                .build(3);
+
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource(50, 3,expectedSummaries, 1, 20);
+
+
+        when(applicationSummaryRestService.getIneligibleApplications(COMPETITION_ID, "id", 1, 20, "filter"))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/ineligible?page=1&sort=id&filterSearch=filter", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/ineligible-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=INELIGIBLE_APPLICATIONS&page=1&sort=id&filterSearch=filter"))
+                .andReturn();
+
+        IneligibleApplicationsViewModel model = (IneligibleApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService).getIneligibleApplications(COMPETITION_ID, "id", 1, 20, "filter");
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        PaginationViewModel actualPagination = model.getPagination();
+        assertEquals(1,actualPagination.getCurrentPage());
+        assertEquals(20,actualPagination.getPageSize());
+        assertEquals(3, actualPagination.getTotalPages());
+        assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
+        assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
+        assertEquals("41 to 50", actualPagination.getPageNames().get(2).getTitle());
+        assertEquals("?origin=INELIGIBLE_APPLICATIONS&sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals(expectedApplicationRows, model.getApplications());
+    }
+
+    @Test
+    public void ineligibleApplications_preservesQueryParams() throws Exception {
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(emptyList());
+
+        when(applicationSummaryRestService.getIneligibleApplications(COMPETITION_ID, "", 0, 20, ""))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        mockMvc.perform(get("/competition/{competitionId}/applications/ineligible?param1=abc&param2=def", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/ineligible-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=INELIGIBLE_APPLICATIONS&param1=abc&param2=def"))
+                .andReturn();
+
+        verify(applicationSummaryRestService).getIneligibleApplications(COMPETITION_ID, "", 0, 20, "");
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
 }

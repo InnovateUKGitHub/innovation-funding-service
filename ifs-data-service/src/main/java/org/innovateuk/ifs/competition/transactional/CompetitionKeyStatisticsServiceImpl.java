@@ -20,6 +20,7 @@ import java.util.List;
 
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_AND_INELIGIBLE_STATES;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -59,7 +60,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
         competitionKeyStatisticsResource.setAssessorsAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED));
         competitionKeyStatisticsResource.setApplicationsPerAssessor(competitionRepository.findById(competitionId).getAssessorCount());
         competitionKeyStatisticsResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(competitionId, CREATED_AND_OPEN_STATUSES, limit));
-        competitionKeyStatisticsResource.setApplicationsPastHalf(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(competitionId, SUBMITTED_STATES, limit));
+        competitionKeyStatisticsResource.setApplicationsPastHalf(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit));
         competitionKeyStatisticsResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES));
         return serviceSuccess(competitionKeyStatisticsResource);
     }
