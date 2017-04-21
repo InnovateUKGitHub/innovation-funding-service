@@ -191,7 +191,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=NOMENSA LTD
     And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Adrian    Booth
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
