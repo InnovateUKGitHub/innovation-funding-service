@@ -189,7 +189,11 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         Optional<PartnerOrganisation> partnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                 spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getOrganisation().getId()).isPresent());
 
-        return partnerOrganisationWithSpendProfile.map(po -> serviceSuccess()).orElse(serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED));
+        if (!partnerOrganisationWithSpendProfile.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
+        }
     }
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {

@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
 import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
@@ -23,7 +23,7 @@ import java.util.List;
 public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 
     @Autowired
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -37,7 +37,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        List<MilestoneResource> milestonesByCompetition = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
+        List<MilestoneResource> milestonesByCompetition = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
         if (milestonesByCompetition.isEmpty()) {
             milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
         } else {

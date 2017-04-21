@@ -3,17 +3,17 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
@@ -47,13 +47,13 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	private CompetitionService competitionService;
 
     @Autowired
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
 	@Autowired
 	private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
 	@Autowired
-	private CategoryService categoryService;
+	private CategoryRestService categoryRestService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -62,7 +62,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		
+
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {
             competition.setExecutive(initialDetailsForm.getExecutiveUserId());
@@ -87,7 +87,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
 
                 if (competition.getInnovationSector() != null) {
-                    List<InnovationAreaResource> children = categoryService.getInnovationAreasBySector(competition.getInnovationSector());
+                    List<InnovationAreaResource> children = categoryRestService.getInnovationAreasBySector(competition.getInnovationSector()).getSuccessObjectOrThrowException();
                     List<CategoryResource> matchingChildren =
                             children.stream().filter(child -> initialDetailsForm.getInnovationAreaCategoryIds().contains(child.getId())).collect(Collectors.toList());
 
@@ -145,7 +145,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, openingDate);
 
 
-        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
         if(milestones.isEmpty()) {
             milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId).getSuccessObjectOrThrowException();
         }
@@ -192,7 +192,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
     private void processInnovationAreas(String inputValue, CompetitionResource competitionResource) {
         List<String> valueList = Arrays.asList(inputValue.split("\\s*,\\s*"));
-        Set<Long> valueSet = valueList.stream().map( value -> Long.parseLong(value) ).collect(Collectors.toSet());
+        Set<Long> valueSet = valueList.stream().map(Long::parseLong).collect(Collectors.toSet());
         competitionResource.setInnovationAreas(valueSet);
 
     }

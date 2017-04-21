@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInvitePageResource;
@@ -27,7 +27,7 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     @Autowired
     private CompetitionsRestService competitionsRestService;
@@ -52,7 +52,7 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {
-        return categoryService.getInnovationSectors();
+        return categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
     }
 
 

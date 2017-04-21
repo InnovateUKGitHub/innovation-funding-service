@@ -4,12 +4,12 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.assessment.summary.form.AssessmentSummaryForm;
-import org.innovateuk.ifs.assessment.summary.populator.AssessmentSummaryModelPopulator;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.summary.form.AssessmentSummaryForm;
+import org.innovateuk.ifs.assessment.summary.populator.AssessmentSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryQuestionViewModel;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -38,9 +38,11 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.*;
@@ -123,6 +125,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .build();
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
 
+        setupQuestions(competitionResource.getId(), assessmentResource.getId());
+
         AssessmentSummaryForm expectedForm = new AssessmentSummaryForm();
         expectedForm.setFundingConfirmation(true);
         expectedForm.setFeedback(expectedFeedback);
@@ -138,10 +142,10 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save() throws Exception {
-        CompetitionResource competition = setupCompetitionResource();
+        CompetitionResource competitionResource = setupCompetitionResource();
 
         AssessmentResource assessmentResource = newAssessmentResource()
-                .withCompetition(competition.getId())
+                .withCompetition(competitionResource.getId())
                 .build();
 
         String feedback = String.join(" ", nCopies(100, "feedback"));
@@ -157,7 +161,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .param("feedback", feedback)
                 .param("comment", comment))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessor/dashboard/competition/" + competition.getId()));
+                .andExpect(redirectedUrl("/assessor/dashboard/competition/" + competitionResource.getId()));
 
         verify(assessmentService).recommend(assessmentResource.getId(), true, feedback, comment);
         verify(assessmentService).getById(assessmentResource.getId());
@@ -165,8 +169,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_noFundingConfirmation() throws Exception {
-        CompetitionResource competition = setupCompetitionResource();
-        AssessmentResource assessmentResource = setupAssessment(1L, competition.getId());
+        CompetitionResource competitionResource = setupCompetitionResource();
+        AssessmentResource assessmentResource = setupAssessment(1L, competitionResource.getId());
+        setupQuestions(competitionResource.getId(), assessmentResource.getId());
 
         String feedback = String.join(" ", nCopies(100, "feedback"));
         String comment = String.join(" ", nCopies(100, "comment"));
@@ -224,8 +229,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_noFeedbackAndFundingConfirmationIsFalse() throws Exception {
-        CompetitionResource competition = setupCompetitionResource();
-        AssessmentResource assessmentResource = setupAssessment(1L, competition.getId());
+        CompetitionResource competitionResource = setupCompetitionResource();
+        AssessmentResource assessmentResource = setupAssessment(1L, competitionResource.getId());
+        setupQuestions(competitionResource.getId(), assessmentResource.getId());
 
         String comment = String.join(" ", nCopies(100, "comment"));
 
@@ -281,8 +287,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_exceedsCharacterSizeLimit() throws Exception {
-        CompetitionResource competition = setupCompetitionResource();
-        AssessmentResource assessmentResource = setupAssessment(1L, competition.getId());
+        CompetitionResource competitionResource = setupCompetitionResource();
+        AssessmentResource assessmentResource = setupAssessment(1L, competitionResource.getId());
+        setupQuestions(competitionResource.getId(), assessmentResource.getId());
 
         String feedback = RandomStringUtils.random(5001);
         String comment = RandomStringUtils.random(5001);
@@ -327,8 +334,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_exceedsWordLimit() throws Exception {
-        CompetitionResource competition = setupCompetitionResource();
-        AssessmentResource assessmentResource = setupAssessment(1L, competition.getId());
+        CompetitionResource competitionResource = setupCompetitionResource();
+        AssessmentResource assessmentResource = setupAssessment(1L, competitionResource.getId());
+        setupQuestions(competitionResource.getId(), assessmentResource.getId());
 
         String feedback = String.join(" ", nCopies(101, "feedback"));
         String comment = String.join(" ", nCopies(101, "comment"));
@@ -433,19 +441,20 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .withType(anotherTypeOfFormInput, ASSESSOR_SCORE, TEXTAREA)
                 .withQuestion(question3.getId())
                 .build(3);
-        when(formInputService.findAssessmentInputsByCompetition(competitionId)).thenReturn(
-                combineLists(formInputsForQuestion1, formInputsForQuestion2, formInputsForQuestion3));
+        when(formInputRestService.getByCompetitionIdAndScope(competitionId, ASSESSMENT)).thenReturn(
+                restSuccess(combineLists(formInputsForQuestion1, formInputsForQuestion2, formInputsForQuestion3)));
 
         // The fourth question will have form inputs without a complete set of responses meaning that it should be incomplete
         List<FormInputResource> formInputsForQuestion4 = newFormInputResource()
                 .withType(anotherTypeOfFormInput, TEXTAREA)
                 .withQuestion(question4.getId())
                 .build(2);
-        when(formInputService.findAssessmentInputsByCompetition(competitionId)).thenReturn(
-                concat(
+        when(formInputRestService.getByCompetitionIdAndScope(competitionId, ASSESSMENT)).thenReturn(
+                restSuccess(
                         concat(
-                                concat(formInputsForQuestion1.stream(), formInputsForQuestion2.stream()),
-                                formInputsForQuestion3.stream()), formInputsForQuestion4.stream()).collect(toList()));
+                                concat(
+                                        concat(formInputsForQuestion1.stream(), formInputsForQuestion2.stream()),
+                                        formInputsForQuestion3.stream()), formInputsForQuestion4.stream()).collect(toList())));
 
         List<AssessorFormInputResponseResource> assessorResponses = newAssessorFormInputResponseResource()
                 .withQuestion(
