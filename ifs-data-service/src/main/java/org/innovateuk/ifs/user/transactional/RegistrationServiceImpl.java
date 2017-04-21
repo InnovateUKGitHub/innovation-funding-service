@@ -130,7 +130,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<UserResource> createOrganisationUser(Long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
         String roleName;
         if (isUserCompAdmin(userResource.getEmail())) {
             roleName = COMP_ADMIN.getName();
@@ -154,7 +154,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> activateUser(Long userId) {
+    public ServiceResult<Void> activateUser(long userId) {
         return getUser(userId).andOnSuccessReturnVoid(this::activateUser);
     }
 
@@ -168,7 +168,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> activateUserAndSendDiversitySurvey(Long userId) {
+    public ServiceResult<Void> activateUserAndSendDiversitySurvey(long userId) {
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
                 .andOnSuccessReturnVoid(this::sendDiversitySurvey);
