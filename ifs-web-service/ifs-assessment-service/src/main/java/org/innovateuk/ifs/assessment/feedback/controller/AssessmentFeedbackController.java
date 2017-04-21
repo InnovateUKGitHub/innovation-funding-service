@@ -3,24 +3,24 @@ package org.innovateuk.ifs.assessment.feedback.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
+import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentNavigationViewModel;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,12 +33,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.innovateuk.ifs.util.MapFunctions.toListOfPairs;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/{assessmentId}")
@@ -48,7 +50,7 @@ public class AssessmentFeedbackController {
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -112,7 +114,7 @@ public class AssessmentFeedbackController {
         Supplier<String> failureView = () -> doViewQuestion(model, assessmentId, getQuestionForAssessment(questionId, assessmentId));
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            List<FormInputResource> formInputs = formInputService.findAssessmentInputsByQuestion(questionId);
+            List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT).getSuccessObjectOrThrowException();
             List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
             formInputResponses.stream().forEach(responsePair -> {
                 // TODO INFUND-4105 optimise this to save multiple responses at a time
@@ -168,7 +170,7 @@ public class AssessmentFeedbackController {
     }
 
     private List<FormInputResource> getApplicationFormInputs(Long questionId) {
-        return formInputService.findApplicationInputsByQuestion(questionId);
+        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
     }
 
     private List<Pair<Long, String>> getFormInputResponses(Form form, List<FormInputResource> formInputs) {

@@ -69,8 +69,7 @@ public interface ApplicationService {
     ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@P("applicationId") final Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
-    ServiceResult<ApplicationResource> updateApplicationStatus(@P("applicationId") final Long id,
-                                                               final ApplicationStatus status);
+    ServiceResult<ApplicationResource> updateApplicationState(@P("applicationId") final Long id, final ApplicationState state);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'APPLICATION_SUBMITTED_NOTIFICATION')")
     ServiceResult<Void> sendNotificationApplicationSubmitted(@P("applicationId") Long application);
@@ -88,7 +87,7 @@ public interface ApplicationService {
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the applications")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<ApplicationStatus> applicationStatuses);
+	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);

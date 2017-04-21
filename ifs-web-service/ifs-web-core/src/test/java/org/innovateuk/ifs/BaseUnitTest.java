@@ -2,13 +2,12 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.agreement.service.AgreementService;
+import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.model.UserRole;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
@@ -17,7 +16,6 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
-import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
@@ -34,11 +32,13 @@ import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
+import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -47,13 +47,15 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.project.status.ProjectStatusService;
+import org.innovateuk.ifs.project.service.ProjectStatusRestService;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
@@ -99,6 +101,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
@@ -137,23 +140,21 @@ public class BaseUnitTest {
     @Mock
     public FormInputResponseService formInputResponseService;
     @Mock
-    public FormInputService formInputService;
+    public FormInputResponseRestService formInputResponseRestService;
     @Mock
     public ApplicationService applicationService;
     @Mock
     protected CompetitionsRestService competitionRestService;
     @Mock
-    public AgreementService agreementService;
+    protected FormInputRestService formInputRestService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
     public UserService userService;
     @Mock
-    protected AlertService alertService;
+    protected AlertRestService alertRestService;
     @Mock
     protected FinanceService financeService;
-    @Mock
-    protected FinanceRowService financeRowService;
     @Mock
     public FinanceRowRestService financeRowRestService;
     @Mock
@@ -168,6 +169,8 @@ public class BaseUnitTest {
     private OrganisationTypeRestService organisationTypeRestService;
     @Mock
     protected OrganisationAddressRestService organisationAddressRestService;
+    @Mock
+    protected PartnerOrganisationRestService partnerOrganisationRestService;
     @Mock
     public SectionService sectionService;
     @Mock
@@ -197,13 +200,17 @@ public class BaseUnitTest {
     @Mock
     public ProjectService projectService;
     @Mock
+    public ProjectMonitoringOfficerService projectMonitoringOfficerService;
+    @Mock
     public ProjectFinanceService projectFinanceService;
+    @Mock
+    protected ProjectFinanceRowRestService projectFinanceRowRestService;
     @Mock
     public ProjectRestService projectRestService;
     @Mock
-    protected BankDetailsRestService bankDetailsRestService;
+    public SpendProfileService spendProfileService;
     @Mock
-    protected BankDetailsService bankDetailsService;
+    protected BankDetailsRestService bankDetailsRestService;
     @Mock
     protected RejectionReasonRestService rejectionReasonRestService;
     @Mock
@@ -211,19 +218,13 @@ public class BaseUnitTest {
     @Mock
     protected FinanceUtil financeUtilMock;
     @Mock
-    protected ProjectStatusService projectStatusServiceMock;
-    @Mock
-    protected PartnerOrganisationService partnerOrganisationServiceMock;
+    protected ProjectStatusRestService projectStatusRestService;
     @Mock
     private CookieUtil cookieUtil;
-    @Mock
-    protected CategoryService categoryServiceMock;
     @Mock
     protected UserRestService userRestServiceMock;
     @Mock
     protected AssessmentRestService assessmentRestService;
-    @Mock
-    public MilestoneService milestoneServiceMock;
     @Mock
     protected AssessorRestService assessorRestService;
     @Mock
@@ -533,6 +534,8 @@ public class BaseUnitTest {
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(competitionRestService.getAll()).thenReturn(restSuccess(competitionResources));
         when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+
+        when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn(restSuccess(new ArrayList<>()));
     }
 
     public void setupUserRoles() {
@@ -550,15 +553,15 @@ public class BaseUnitTest {
 
         List<ApplicationResource> applicationResources = asList(
                 newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatus.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
-                        .withApplicationStatus(ApplicationStatus.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
-                        .withApplicationStatus(ApplicationStatus.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
-                        .withApplicationStatus(ApplicationStatus.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationState(ApplicationState.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatus.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
+                        .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
@@ -676,9 +679,9 @@ public class BaseUnitTest {
     public void setupApplicationResponses() {
         ApplicationResource application = applications.get(0);
 
-        when(formInputService.getOne(anyLong())).thenAnswer(invocation -> {
+        when(formInputRestService.getById(anyLong())).thenAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            return newFormInputResource().with(id((Long) args[0])).build();
+            return restSuccess(newFormInputResource().with(id((Long) args[0])).build());
         });
 
         List<Long> formInputIds = questionResources.get(1L).getFormInputs();
@@ -686,7 +689,7 @@ public class BaseUnitTest {
                 with(idBasedValues("Value "))
                 .build(formInputIds.size());
 
-        when(formInputResponseService.getByApplication(application.getId())).thenReturn(formInputResponses);
+        when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(formInputResponses));
         formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponseResource -> formInputResponseResource.getFormInput(), identity()));
         when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponses)).thenReturn(formInputsToFormInputResponses);
     }
@@ -797,7 +800,7 @@ public class BaseUnitTest {
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
         when(questionService.getById(questionResource.getId())).thenReturn(questionResource);
-        when(formInputService.findApplicationInputsByQuestion(questionResource.getId())).thenReturn(formInputs);
+        when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn(restSuccess(formInputs));
         return questionResource;
     }
 
@@ -810,7 +813,7 @@ public class BaseUnitTest {
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
         when(questionService.getById(questionResource.getId())).thenReturn(questionResource);
-        when(formInputService.findApplicationInputsByQuestion(questionResource.getId())).thenReturn(formInputs);
+        when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn(restSuccess(formInputs));
         return questionResource;
     }
 }

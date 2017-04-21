@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.project.financecheck.domain.Cost;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 
 import java.math.BigDecimal;
 import java.util.List;

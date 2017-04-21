@@ -1812,7 +1812,7 @@ Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
      [Tags]      HappyPath
      [Setup]    log in as a different user   &{Comp_admin1_credentials}
-     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
+     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status       # Bank details
@@ -1904,13 +1904,13 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     bank details are approved for all businesses
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-    guest user log-in  &{internal_finance_credentials}
-    the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
+    guest user log-in  &{lead_applicant_credentials}
+    ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
+    log in as a different user    &{internal_finance_credentials}
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
     the user moves focus to the element     jQuery=label[for="app-row-1"]
     the user selects the checkbox       app-row-1
     the user moves focus to the element     jQuery=label[for="app-row-2"]

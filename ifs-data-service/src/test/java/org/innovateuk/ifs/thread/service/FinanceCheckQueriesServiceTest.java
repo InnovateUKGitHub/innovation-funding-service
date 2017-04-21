@@ -9,7 +9,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.financecheck.service.FinanceCheckQueriesServiceImpl;
+import org.innovateuk.ifs.project.queries.service.FinanceCheckQueriesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.builder.RoleBuilder;

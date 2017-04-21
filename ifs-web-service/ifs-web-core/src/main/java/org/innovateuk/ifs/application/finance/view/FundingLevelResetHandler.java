@@ -2,12 +2,12 @@ package org.innovateuk.ifs.application.finance.view;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -35,7 +35,7 @@ public class FundingLevelResetHandler {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceRowRestService financeRowRestService;
 
     public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
 
@@ -65,7 +65,7 @@ public class FundingLevelResetHandler {
     private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
         if (applicationFinance.getGrantClaim() != null) {
             applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-            financeRowService.add(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim());
+            financeRowRestService.add(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim()).getSuccessObjectOrThrowException();
         }
     }
 }

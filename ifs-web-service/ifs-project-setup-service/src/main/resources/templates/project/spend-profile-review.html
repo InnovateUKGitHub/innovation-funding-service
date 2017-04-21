@@ -41,52 +41,31 @@
             You may view these profiles.</p>
     </div>
 
-
     <h2 class="heading-medium">Partner progress</h2>
 
-
-    <div class="extra-margin-bottom">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col" style="width: 50%">Partner</th>
-                <th scope="col" style="width: 50%">Progress</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            <tr th:unless="${#lists.isEmpty(model.partnerOrganisations) and partnerSpendProfileProgress != null}"
-                th:each="partnerProgress : ${model.partnerSpendProfileProgress}">
-
-                <td>
-                    <div th:each="partner : ${model.partnerOrganisations}" th:if="${partner.name.equals(partnerProgress.key) }">
-                        <div th:if="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}" th:remove="tag">
-                            <a th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}"
-                               th:text="${partnerProgress.key}"/>
-                            <th:block th:if="${partner.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
-                        </div>
-
-                        <div th:unless="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}" th:remove="tag">
-                            <span th:text="${partnerProgress.key}"></span>
-                            <th:block th:if="${partner.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
-                        </div>
-                    </div>
-                </td>
-
-                <td th:if="${!partnerProgress.value}">
-                    In progress
-                </td>
-                <div th:if="${partnerProgress.value }" th:remove="tag">
-                    <td>
-                        <span class="yes">Complete</span>
-                    </td>
-                </div>
-
-            </tr>
-
-            </tbody>
-        </table>
-    </div>
+    <ul class="task-list">
+        <li th:unless="${#lists.isEmpty(model.partnerOrganisations) and partnerSpendProfileProgress != null}"
+            th:each="partnerProgress : ${model.partnerSpendProfileProgress}">
+            <div th:each="partner : ${model.partnerOrganisations}"
+                 th:if="${partner.name.equals(partnerProgress.key)}"
+                 class="task">
+                <h3 class="heading-small">
+                    <a th:if="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}"
+                       th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}"
+                       th:text="${partnerProgress.key}" />
+                    <th:block th:unless="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}"
+                              th:text="${partnerProgress.key}" />
+                    <th:block th:if="${partner.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                </h3>
+            </div>
+            <div th:unless="${partnerProgress.value}" class="notification">
+                In progress
+            </div>
+            <div th:if="${partnerProgress.value}" class="task-status-complete">
+                <span>Complete</span>
+            </div>
+        </li>
+    </ul>
 
     <div th:if="${model.markAsComplete and !model.submitted}" th:remove="tag">
 

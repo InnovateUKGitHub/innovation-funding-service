@@ -37,7 +37,7 @@ create new account for submitting
     And the user clicks the button/link    jQuery=.button:contains("Search")
     And the user clicks the button/link    link=HIVE IT LIMITED
     And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user selects the radio button  organisationTypeId  radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
@@ -226,7 +226,7 @@ invite a registered user
     the user clicks the button/link    id=org-search
     the user clicks the button/link    LINK=INNOVATE LTD
     the user selects the checkbox    address-same
-    the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user selects the radio button  organisationTypeId  radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     the user clicks the button/link    jQuery=.button:contains("Save and continue")
@@ -259,7 +259,7 @@ we create a new user
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
     The user selects the checkbox    address-same
-    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    The user clicks the button/link    jQuery=.button:contains("Continue")
     And the user selects the radio button  organisationTypeId  radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     The user clicks the button/link    jQuery=.button:contains("Save and continue")
@@ -281,7 +281,7 @@ the user follows the flow to register their organisation
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
     And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user selects the radio button  organisationTypeId  radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
@@ -297,6 +297,7 @@ the user enters the details and clicks the create account
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
+    the user selects the checkbox    allowMarketingEmails
     Submit Form
 
 the user fills the create account form

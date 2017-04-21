@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.dashboard.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -51,7 +51,7 @@ public class ApplicantDashboardPopulator {
         List<ApplicationResource> applicationsForProjectsInSetup = getApplicationsForProjectsInSetup(projectsInSetup);
 
         Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished, applicationsForProjectsInSetup);
-        Map<Long, ApplicationStatus> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
+        Map<Long, ApplicationState> applicationStatusMap = createApplicationStateMap(inProgress, finished);
 
         List<Long> applicationsAssigned = getAssignedApplications(inProgress, user);
 
@@ -73,14 +73,13 @@ public class ApplicantDashboardPopulator {
         ).mapToLong(ApplicationResource::getId).boxed().collect(Collectors.toList());
     }
 
-    // TODO DW - INFUND-1555 - handle rest result
     @SafeVarargs
-    private final Map<Long, ApplicationStatus> createApplicationStatusMap(List<ApplicationResource>... resources){
+    private final Map<Long, ApplicationState> createApplicationStateMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> application.getApplicationStatus()
+                    application -> application.getApplicationState()
                 )
             );
     }

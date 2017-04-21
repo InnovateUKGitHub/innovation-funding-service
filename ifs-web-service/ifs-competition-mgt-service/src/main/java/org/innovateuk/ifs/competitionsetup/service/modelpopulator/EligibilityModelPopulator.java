@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -25,14 +25,14 @@ import static java.util.stream.Collectors.toList;
 public class EligibilityModelPopulator implements CompetitionSetupSectionModelPopulator {
 
 	@Autowired
-	private CategoryService categoryService;
+	private CategoryRestService categoryRestService;
 	
 	@Autowired
 	private CategoryFormatter categoryFormatter;
 
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
-	
+
 	@Override
 	public CompetitionSetupSection sectionToPopulateModel() {
 		return CompetitionSetupSection.ELIGIBILITY;
@@ -53,7 +53,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
                 .filter(organisationTypeResource -> competitionResource.getLeadApplicantTypes().contains(organisationTypeResource.getId()))
                 .map(organisationTypeResource -> organisationTypeResource.getName())
                 .collect(Collectors.joining(", ")));
-		List<ResearchCategoryResource> researchCategories = categoryService.getResearchCategories();
+		List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
 		model.addAttribute("researchCategories",researchCategories);
 		model.addAttribute("researchCategoriesFormatted", categoryFormatter.format(competitionResource.getResearchCategories(), researchCategories));
 	}

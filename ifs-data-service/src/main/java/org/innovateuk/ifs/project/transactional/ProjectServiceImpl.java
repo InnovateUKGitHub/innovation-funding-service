@@ -34,26 +34,26 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
-import org.innovateuk.ifs.project.financecheck.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.financecheck.transactional.CostCategoryTypeStrategy;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
-import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
-import org.innovateuk.ifs.project.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -107,9 +107,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectMapper projectMapper;
-
-    @Autowired
-    private MonitoringOfficerMapper monitoringOfficerMapper;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -181,8 +178,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private String webBaseUrl;
 
     enum Notifications {
-        MONITORING_OFFICER_ASSIGNED,
-        MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
         INVITE_FINANCE_CONTACT,
         INVITE_PROJECT_MANAGER,
         GRANT_OFFER_LETTER_PROJECT_MANAGER,
@@ -327,34 +322,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
                         serviceSuccess(true) :
                         serviceSuccess(false));
-    }
-
-    @Override
-    public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
-        return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
-
-        return validateMonitoringOfficer(projectId, monitoringOfficerResource).
-                andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
-                andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
-    }
-
-    @Override
-    public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
-
-        Project project = projectRepository.findOne(monitoringOfficer.getProject());
-        User projectManager = getExistingProjectManager(project).get().getUser();
-
-        NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
-        NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
-
-        ServiceResult<Void> moAssignedEmailSendResult = projectEmailService.sendEmail(singletonList(moTarget), createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager), ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED);
-        ServiceResult<Void> pmAssignedEmailSendResult = projectEmailService.sendEmail(singletonList(pmTarget), createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager), ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER);
-
-        return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult, pmAssignedEmailSendResult));
     }
 
     @Override
@@ -564,96 +531,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
     }
 
-
-    private NotificationTarget createMonitoringOfficerNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
-
-        String fullName = getMonitoringOfficerFullName(monitoringOfficer);
-
-        return new ExternalUserNotificationTarget(fullName, monitoringOfficer.getEmail());
-
-    }
-
-    private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
-        // At this stage, validation has already been done to ensure that first name and last name are not empty
-        return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
-    }
-
     private String getProjectManagerFullName(User projectManager) {
         // At this stage, validation has already been done to ensure that first name and last name are not empty
         return projectManager.getFirstName() + " " + projectManager.getLastName();
-    }
-
-    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer, Project project, User projectManager) {
-        Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("dashboardUrl", webBaseUrl);
-        globalArguments.put("projectName", project.getName());
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-        globalArguments.put("leadOrganisation", leadOrganisation.getName());
-        globalArguments.put("projectManagerName", getProjectManagerFullName(projectManager));
-        globalArguments.put("projectManagerEmail", projectManager.getEmail());
-        globalArguments.put("monitoringOfficerName", getMonitoringOfficerFullName(monitoringOfficer));
-        globalArguments.put("monitoringOfficerTelephone", monitoringOfficer.getPhoneNumber());
-        globalArguments.put("monitoringOfficerEmail", monitoringOfficer.getEmail());
-        return globalArguments;
-
-    }
-
-    private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
-
-        if (!projectId.equals(monitoringOfficerResource.getProject())) {
-            return serviceFailure(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE);
-        } else {
-            return serviceSuccess();
-        }
-    }
-
-    private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
-
-        return getProject(projectId).andOnSuccess(project -> {
-            if (!projectDetailsWorkflowHandler.isSubmitted(project)) {
-                return serviceFailure(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED);
-            } else {
-                return serviceSuccess();
-            }
-        });
-    }
-
-    private ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
-
-        return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
-                noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
-                existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
-        );
-    }
-
-    private boolean isMonitoringOfficerDetailsChanged(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
-        return !existingMonitoringOfficer.getFirstName().equals(updateDetails.getFirstName()) ||
-                !existingMonitoringOfficer.getLastName().equals(updateDetails.getLastName()) ||
-                !existingMonitoringOfficer.getEmail().equals(updateDetails.getEmail()) ||
-                !existingMonitoringOfficer.getPhoneNumber().equals(updateDetails.getPhoneNumber());
-    }
-
-    private ServiceResult<SaveMonitoringOfficerResult> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
-        SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
-
-        if (isMonitoringOfficerDetailsChanged(existingMonitoringOfficer, updateDetails)) {
-            existingMonitoringOfficer.setFirstName(updateDetails.getFirstName());
-            existingMonitoringOfficer.setLastName(updateDetails.getLastName());
-            existingMonitoringOfficer.setEmail(updateDetails.getEmail());
-            existingMonitoringOfficer.setPhoneNumber(updateDetails.getPhoneNumber());
-        } else {
-            result.setMonitoringOfficerSaved(false);
-        }
-
-        return serviceSuccess(result);
-    }
-
-    private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
-        SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
-        MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
-        monitoringOfficerRepository.save(monitoringOfficer);
-        return serviceSuccess(result);
     }
 
     @Override

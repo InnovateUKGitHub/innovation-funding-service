@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.junit.Assert.assertArrayEquals;
@@ -33,23 +34,23 @@ public class EligibilityModelPopulatorTest {
 
 	@InjectMocks
 	private EligibilityModelPopulator populator;
-	
+
 	@Mock
-	private CategoryService categoryService;
-	
+	private CategoryRestService categoryRestService;
+
 	@Mock
 	private CategoryFormatter categoryFormatter;
 
 	@Mock
 	private OrganisationTypeRestService organisationTypeRestService;
-	
+
 	@Test
 	public void testSectionToPopulateModel() {
 		CompetitionSetupSection result = populator.sectionToPopulateModel();
-		
+
 		assertEquals(CompetitionSetupSection.ELIGIBILITY, result);
 	}
-	
+
 	@Test
 	public void testPopulateModel() {
 		Model model = new ExtendedModelMap();
@@ -60,9 +61,9 @@ public class EligibilityModelPopulatorTest {
                 .withLeadApplicantType(asList(1L, 2L))
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
 				.build();
-		
+
 		List<ResearchCategoryResource> researchCategories = new ArrayList<>();
-		when(categoryService.getResearchCategories()).thenReturn(researchCategories);
+		when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(researchCategories));
 		when(categoryFormatter.format(CollectionFunctions.asLinkedSet(2L, 3L), researchCategories)).thenReturn("formattedcategories");
 
 		when(organisationTypeRestService.getAll()).thenReturn(RestResult.restSuccess(newOrganisationTypeResource()

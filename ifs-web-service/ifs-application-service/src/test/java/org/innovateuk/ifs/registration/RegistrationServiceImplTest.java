@@ -13,8 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Optional;
-
 import static java.util.Optional.of;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -23,7 +21,6 @@ import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteR
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
-
 
 /**
  * Test Class for functionality in {@link org.innovateuk.ifs.registration.service.RegistrationServiceImpl}

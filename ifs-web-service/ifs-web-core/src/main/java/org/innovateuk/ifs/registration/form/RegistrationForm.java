@@ -13,7 +13,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * a
  * This object is used for the account registration form. When the form is submitted the data is
  * injected into a RegistrationForm instance, so it is easy to use and you don't need to
  * read all the request attributes to get to the form data.
@@ -80,6 +79,8 @@ public class RegistrationForm {
     @NotBlank(message = "{validation.account.termsandconditions.required}")
     private String termsAndConditions;
 
+    private Boolean allowMarketingEmails;
+
     public String getPassword() {
         return password;
     }
@@ -143,6 +144,14 @@ public class RegistrationForm {
 
     public void setTermsAndConditions(String termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
+    }
+
+    public Boolean getAllowMarketingEmails() {
+        return allowMarketingEmails;
+    }
+
+    public void setAllowMarketingEmails(Boolean allowMarketingEmails) {
+        this.allowMarketingEmails = allowMarketingEmails;
     }
 
     public String getGender() {

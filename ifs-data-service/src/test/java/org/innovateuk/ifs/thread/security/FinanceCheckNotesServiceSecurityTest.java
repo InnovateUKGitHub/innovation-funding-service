@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.financecheck.service.FinanceCheckNotesService;
+import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
 import org.innovateuk.ifs.threads.security.NoteLookupStrategy;
 import org.innovateuk.ifs.threads.security.ProjectFinanceNotePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;

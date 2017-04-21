@@ -35,7 +35,7 @@ User creates new account verifies email and login
     the user clicks the button/link         id=org-search
     the user clicks the button/link         LINK=INNOVATE LTD
     the user selects the checkbox           address-same
-    the user clicks the button/link         jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link         jQuery=.button:contains("Continue")
     And the user selects the radio button   organisationTypeId  radio-1
     And the user clicks the button/link     jQuery=.button:contains("Save and continue")
     the user clicks the button/link         jQuery=.button:contains("Save and continue")

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
