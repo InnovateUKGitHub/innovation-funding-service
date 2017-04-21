@@ -10,26 +10,75 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application submitted',size='heading-xlarge'" />
-        <h2 class="heading-large" th:text="${currentApplication.name}"></h2>
+     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application status',subTitle=|${currentApplication.id} : {currentApplication.name}|,size='heading-xlarge'" />
 
-        <p>Thank you for entering the '<th:block th:text="${currentCompetition.name}" />' competition. You have now submitted your application.</p>
-
-        <h2 class="heading-large">Next steps:</h2>
-        <ul class="list list-bullet">
-          <li>once the competition submission deadline is reached, submitted applications are sent for assessment</li>
-          <li>your application is assessed independently by experts taken from both business and academia</li>
+    <div class="submitted-panel">
+        <h2 class="heading-xlarge no-margin">Application submitted</h2>
+        <ul>
+            <li>Application number: <span th:text="${currentApplication.id}" /></li>
+            <li>
+                Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
+                <th:block th:if="${currentApplication.submittedDate != null}">
+                    on
+                    <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
+                    at
+                    <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}" />.
+                </th:block>
+            </li>
         </ul>
-
-        <h2 class="heading-large">Key dates:</h2>
-        <ul class="list list-bullet">
-            <li th:text="'you will be notified of our decision by '+${currentCompetition.assessmentEndDateDisplay()}"></li>
+        <ul class="panel-links">
+            <li><a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">View application</a></li>
+            <li><a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print application</a></li>
         </ul>
+    </div>
 
-        <p><a class="button" tabindex="0" role="button" th:href="${userDashboardLink}">Finished</a></p>
+    <h2 class="heading-large">What happens next?</h2>
 
+    <h3 class="heading-medium">Assessment process</h3>
+    <p>Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
+    <ul class="list list-bullet">
+        <li>eligible applications will be assessed independently by expert assessors</li>
+        <li>each application is assessed by up to 5 assessors and against the same set criteria</li>
+        <li>the assessor will score each question and provide feedback to justify those scores</li>
+        <li>a panel process is held to moderate and ratify the outcome of the decision</li>
+    </ul>
+
+    <h3 class="heading-medium">Decision notification</h3>
+    <p>You and your project partners will be emailed notification of the decision by
+        <strong th:if="${currentCompetition.fundersPanelEndDate != null}" th:text="${#temporals.format(currentCompetition.fundersPanelEndDate, 'd MMM yyyy')}"></strong>.
+    </p>
+
+    <div class="grid-row">
+        <div class="column-half">
+            <h3 class="heading-medium">If your application is successful</h3>
+            <p>If you are successful with this application you
+                will be asked to set up your project. The Project Manager and finance contacts for each organisation in your project will be asked for further information including:</p>
+            <ul class="list list-bullet">
+                <li>project location</li>
+                <li>your organisation’s bank (BACS) details</li>
+                <li>a profile of your project spend</li>
+                <li>collaboration agreement (collaborative projects only)</li>
+                <li>exploitation plan</li>
+            </ul>
+        </div>
+        <div class="column-half">
+            <h3 class="heading-medium">If your application is unsuccessful</h3>
+            <p>If you are unsuccessful with your application, you will be able to view the feedback from the assessors.</p>
+            <p>Sometimes your application will have scored well and will receive positive comments from the assessors. The average score however, will not be above the funding threshold for the competition.</p>
+        </div>
+    </div>
+
+    <h3 class="heading-medium">Application feedback</h3>
+    <p>Application feedback will be provided by
+        <strong th:if="${currentCompetition.releaseFeedbackDate != null}" th:text="${#temporals.format(currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
+        <br />We will email you when this becomes available.
+    </p>
+
+    <div class="extra-margin">
+        <a href="/applicant/dashboard" class="button" role="button" th:href="${userDashboardLink}">Finished</a>
+    </div>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

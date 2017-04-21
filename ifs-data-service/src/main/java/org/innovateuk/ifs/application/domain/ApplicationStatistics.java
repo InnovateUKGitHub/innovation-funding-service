@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.domain;
 
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Where;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -33,9 +33,8 @@ public class ApplicationStatistics {
 
     private Long competition;
 
-    @Column(name="status")
-    @Enumerated(EnumType.STRING)
-    private ApplicationStatus applicationStatus;
+    @OneToOne(mappedBy = "target", optional=false)
+    private ApplicationProcess applicationProcess;
 
     @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
@@ -57,8 +56,8 @@ public class ApplicationStatistics {
         return competition;
     }
 
-    public ApplicationStatus getApplicationStatus() {
-        return applicationStatus;
+    public ApplicationState getApplicationState() {
+        return applicationProcess.getActivityState();
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {

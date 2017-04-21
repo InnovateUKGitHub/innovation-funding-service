@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.project.domain.Project;
@@ -74,7 +74,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
         assessorProcessRole = newProcessRole().withRole(assessorRole).build();
-        applicationResource1 = newApplicationResource().withApplicationStatus(ApplicationStatus.OPEN).build();
+        applicationResource1 = newApplicationResource().withApplicationState(ApplicationState.OPEN).build();
         applicationResource2 = newApplicationResource().build();
         application1 = newApplication().withId(applicationResource1.getId()).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +17,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 @PreAuthorize("hasAuthority('comp_admin')")
-public class CompetitionManagementAssessorProfileController extends BaseController {
+public class CompetitionManagementAssessorProfileController {
 
     @Autowired
     private AssessorProfileModelPopulator assessorProfileModelPopulator;

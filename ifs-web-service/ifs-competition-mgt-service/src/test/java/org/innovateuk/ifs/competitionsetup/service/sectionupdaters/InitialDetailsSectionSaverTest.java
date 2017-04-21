@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
-import com.google.common.collect.Lists;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -25,10 +24,11 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -44,10 +44,10 @@ public class InitialDetailsSectionSaverTest {
     private CompetitionService competitionService;
 
     @Mock
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @Mock
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     @Mock
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -90,8 +90,8 @@ public class InitialDetailsSectionSaverTest {
         competition.setMilestones(milestonesIds);
         competition.setSetupComplete(false);
 
-        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(milestones);
-        when(categoryService.getInnovationAreasBySector(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
+        when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(milestones));
+        when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(innovationArea)));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
         when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(milestones));
@@ -118,12 +118,11 @@ public class InitialDetailsSectionSaverTest {
 
     @Test
     public void testAutoSaveCompetitionSetupSection() {
-        when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
-
         CompetitionResource competition = newCompetitionResource().build();
-        competition.setMilestones(asList(10L));
+        competition.setMilestones(singletonList(10L));
+        when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(singletonList(getMilestone())));
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
-        when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(asList(getMilestone())));
+        when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(singletonList(getMilestone())));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.autoSaveSectionField(competition, null, "openingDate", "20-10-" + (ZonedDateTime.now().getYear() + 1), null);

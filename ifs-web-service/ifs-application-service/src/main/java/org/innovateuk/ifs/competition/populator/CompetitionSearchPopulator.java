@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.populator;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
-import org.innovateuk.ifs.application.service.CategoryService;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
@@ -24,11 +24,11 @@ public class CompetitionSearchPopulator {
     private PublicContentItemRestServiceImpl publicContentItemRestService;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     public CompetitionSearchViewModel createItemSearchViewModel(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Integer> pageNumber) {
         CompetitionSearchViewModel viewModel = new CompetitionSearchViewModel();
-        viewModel.setInnovationAreas(categoryService.getInnovationAreas());
+        viewModel.setInnovationAreas(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException());
 
         PublicContentItemPageResource pageResource = publicContentItemRestService.getByFilterValues(
                 innovationAreaId,

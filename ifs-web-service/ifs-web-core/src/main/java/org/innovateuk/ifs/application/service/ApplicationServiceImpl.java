@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -68,30 +68,30 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
     
     private boolean applicationInProgress(ApplicationResource a) {
-    	boolean applicationInProgressForOpenCompetition = applicationStatusInProgress(a) && competitionOpen(a);
-    	boolean applicationSubmittedForCompetitionNotYetFinishedFunding = applicationStatusSubmitted(a) && competitionFundingNotYetComplete(a);
+    	boolean applicationInProgressForOpenCompetition = applicationStateInProgress(a) && competitionOpen(a);
+    	boolean applicationSubmittedForCompetitionNotYetFinishedFunding = applicationStateSubmitted(a) && competitionFundingNotYetComplete(a);
 
     	return applicationInProgressForOpenCompetition || applicationSubmittedForCompetitionNotYetFinishedFunding;
     }
    
     private boolean applicationFinished(ApplicationResource a) {
-    	boolean applicationInProgressForClosedCompetition = applicationStatusInProgress(a) && competitionClosed(a);
-    	boolean applicationSubmittedForCompetitionFinishedFunding = applicationStatusSubmitted(a) && competitionFundingComplete(a);
-    	boolean applicationFinished = applicationStatusFinished(a);
+    	boolean applicationInProgressForClosedCompetition = applicationStateInProgress(a) && competitionClosed(a);
+    	boolean applicationSubmittedForCompetitionFinishedFunding = applicationStateSubmitted(a) && competitionFundingComplete(a);
+    	boolean applicationFinished = applicationStateFinished(a);
     	
     	return applicationInProgressForClosedCompetition || applicationSubmittedForCompetitionFinishedFunding || applicationFinished;
     }
     
-    private boolean applicationStatusInProgress(ApplicationResource a) {
-    	return appStatusIn(a, ApplicationStatus.CREATED, ApplicationStatus.OPEN);
+    private boolean applicationStateInProgress(ApplicationResource a) {
+    	return appStatusIn(a, ApplicationState.CREATED, ApplicationState.OPEN);
     }
 
-	private boolean applicationStatusFinished(ApplicationResource a) {
-		return appStatusIn(a, ApplicationStatus.APPROVED, ApplicationStatus.REJECTED);
+	private boolean applicationStateFinished(ApplicationResource a) {
+		return appStatusIn(a, ApplicationState.APPROVED, ApplicationState.REJECTED);
     }
 	
-    private boolean applicationStatusSubmitted(ApplicationResource a) {
-    	return a.getApplicationStatus() == ApplicationStatus.SUBMITTED;
+    private boolean applicationStateSubmitted(ApplicationResource a) {
+    	return a.getApplicationState() == ApplicationState.SUBMITTED;
     }
     
     private boolean competitionOpen(ApplicationResource a) {
@@ -109,9 +109,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     	return compStatusIn(competition, CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
 	}
     
-    private boolean appStatusIn(ApplicationResource app, ApplicationStatus... statuses) {
-    	for(ApplicationStatus status: statuses) {
-    		if (status == app.getApplicationStatus()) {
+    private boolean appStatusIn(ApplicationResource app, ApplicationState... states) {
+    	for(ApplicationState state: states) {
+    		if (state == app.getApplicationState()) {
     			return true;
     		}
     	}
@@ -150,8 +150,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ServiceResult<Void> updateStatus(Long applicationId, ApplicationStatus status) {
-        return applicationRestService.updateApplicationStatus(applicationId, status).toServiceResult();
+    public ServiceResult<Void> updateState(Long applicationId, ApplicationState state) {
+        return applicationRestService.updateApplicationState(applicationId, state).toServiceResult();
     }
 
     @Override

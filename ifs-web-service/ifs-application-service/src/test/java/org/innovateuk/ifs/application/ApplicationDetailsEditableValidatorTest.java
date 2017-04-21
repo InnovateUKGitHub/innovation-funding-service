@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -25,7 +25,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
 
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationStatus(ApplicationStatus.OPEN).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPEN).build();
 
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
@@ -41,7 +41,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
 
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationStatus(ApplicationStatus.SUBMITTED).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.SUBMITTED).build();
 
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
@@ -57,7 +57,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
 
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationStatus(ApplicationStatus.OPEN).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.OPEN).build();
 
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(true).build(2);
 
@@ -73,7 +73,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
 
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationStatus(ApplicationStatus.SUBMITTED).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withApplicationState(ApplicationState.SUBMITTED).build();
 
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(true).build(2);
 
@@ -83,5 +83,4 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         assertFalse(result);
     }
-
 }

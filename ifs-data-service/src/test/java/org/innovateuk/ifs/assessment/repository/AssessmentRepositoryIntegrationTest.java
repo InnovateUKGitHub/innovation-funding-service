@@ -77,7 +77,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    @Rollback
     public void findAll() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();

@@ -7,8 +7,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputScope;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,8 +23,11 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +41,7 @@ public class ApplicationLandingModelPopulatorTest {
 	private QuestionService questionService;
 
 	@Mock
-	private FormInputService formInputService;
+	private FormInputRestService formInputRestService;
 
 	@Mock
 	private SectionService sectionService;
@@ -67,10 +69,10 @@ public class ApplicationLandingModelPopulatorTest {
 		List<QuestionResource> questionResources = asList(newQuestionResource().withId(questionId).build());
 		when(questionService.findByCompetition(competition.getId())).thenReturn(questionResources);
 
-		List<FormInputResource> formInputResources = newFormInputResource().withScope(FormInputScope.APPLICATION).build(1);
-		when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(formInputResources);
-		List<FormInputResource> formInputResourcesAssessment = newFormInputResource().withScope(FormInputScope.ASSESSMENT).build(1);
-		when(formInputService.findAssessmentInputsByQuestion(questionId)).thenReturn(formInputResourcesAssessment);
+		List<FormInputResource> formInputResources = newFormInputResource().withScope(APPLICATION).build(1);
+		when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(formInputResources));
+		List<FormInputResource> formInputResourcesAssessment = newFormInputResource().withScope(ASSESSMENT).build(1);
+		when(formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)).thenReturn(restSuccess(formInputResourcesAssessment));
 
 		populator.populateModel(model, competition);
 		
