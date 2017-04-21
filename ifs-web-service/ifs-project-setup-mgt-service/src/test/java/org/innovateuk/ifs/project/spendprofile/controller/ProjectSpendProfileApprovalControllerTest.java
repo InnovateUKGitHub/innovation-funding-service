@@ -45,7 +45,7 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
         when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummary));
         when(competitionService.getById(competitionId)).thenReturn(competition);
         when(userService.findById(userId)).thenReturn(user);
-        when(projectFinanceService.getSpendProfileStatusByProjectId(projectId)).thenReturn(ApprovalType.APPROVED);
+        when(spendProfileService.getSpendProfileStatusByProjectId(projectId)).thenReturn(ApprovalType.APPROVED);
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
 
         ProjectSpendProfileApprovalViewModel expectedProjectSpendProfileApprovalViewModel =

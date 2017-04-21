@@ -11,8 +11,8 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -26,6 +26,7 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -45,10 +46,10 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     private UserService userService;
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
@@ -74,7 +75,7 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     }
 
     protected List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
-        return formInputResponseService.getByApplication(application.getId());
+        return formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
     }
 
     protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
@@ -126,12 +127,15 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    protected void addSectionDetails(BaseSectionViewModel viewModel, SectionResource currentSection, List<FormInputResource> inputs) {
+    protected void addSectionDetails(BaseSectionViewModel viewModel, SectionResource currentSection) {
         List<QuestionResource> questions = getQuestionsBySection(currentSection.getQuestions(), questionService.findByCompetition(currentSection.getCompetition()));
         questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
         sectionQuestions.put(currentSection.getId(), questions);
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toMap(QuestionResource::getId, question ->
+                        formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException()));
 
         viewModel.setQuestionFormInputs(questionFormInputs);
         viewModel.setCurrentSection(currentSection);

@@ -48,7 +48,7 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     @Autowired
     private CostCategoryTypeRepository costCategoryTypeRepository;
 
-    protected static String DESCRIPTION_PREFIX = "Cost Category Type for Categories ";
+    public final static String DESCRIPTION_PREFIX = "Cost Category Type for Categories ";
 
     @Override
     public ServiceResult<CostCategoryType> getOrCreateCostCategoryTypeForSpendProfile(Long projectId, Long organisationId) {

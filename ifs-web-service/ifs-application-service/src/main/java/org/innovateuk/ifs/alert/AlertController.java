@@ -2,7 +2,7 @@ package org.innovateuk.ifs.alert;
 
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
-import org.innovateuk.ifs.application.service.AlertService;
+import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,14 +16,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/alert")
 @PreAuthorize("permitAll")
-public class  AlertController {
+public class AlertController {
 
     @Autowired
-    private AlertService alertService;
+    private AlertRestService alertRestService;
 
     @GetMapping("/findAllVisibleByType/{type}")
-    public @ResponseBody
+    public
+    @ResponseBody
     List<AlertResource> getAlertByTypeJSON(@PathVariable("type") AlertType type) {
-        return alertService.findAllVisibleByType(type);
+        return alertRestService.findAllVisibleByType(type).getSuccessObjectOrThrowException();
     }
 }

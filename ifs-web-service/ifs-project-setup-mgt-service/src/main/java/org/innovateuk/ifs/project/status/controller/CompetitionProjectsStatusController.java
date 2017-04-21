@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
-import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.project.status.ProjectStatusService;
+import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
+import org.innovateuk.ifs.project.service.ProjectStatusRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionProjectsStatusViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -29,18 +29,19 @@ import java.time.format.DateTimeFormatter;
 @Controller
 @RequestMapping("/competition/{competitionId}/status")
 public class CompetitionProjectsStatusController {
-    @Autowired
-    private ProjectStatusService projectStatusService;
 
     @Autowired
-    private BankDetailsService bankDetailsService;
+    private ProjectStatusRestService projectStatusRestService;
+
+    @Autowired
+    private BankDetailsRestService bankDetailsRestService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String viewCompetitionStatus(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                         @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new PopulatedCompetitionProjectsStatusViewModel(projectStatusService.getCompetitionStatus(competitionId), loggedInUser).get());
+                new PopulatedCompetitionProjectsStatusViewModel(projectStatusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(), loggedInUser).get());
         return "project/competition-status";
     }
 
@@ -55,7 +56,7 @@ public class CompetitionProjectsStatusController {
         response.setContentType("text/csv");
         response.setHeader("Content-Transfer-Encoding", "binary");
         response.setHeader("Content-Disposition", "attachment;filename=" + filename);
-        final ByteArrayResource resource = bankDetailsService.downloadByCompetition(competitionId);
+        final ByteArrayResource resource = bankDetailsRestService.downloadByCompetition(competitionId).getSuccessObjectOrThrowException();
         IOUtils.copy(resource.getInputStream(), response.getOutputStream());
         response.flushBuffer();
     }

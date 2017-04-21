@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.util;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.PartnerOrganisationService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +14,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 public class ControllersUtil {
 
-    public static boolean isLeadPartner(final PartnerOrganisationService partnerOrganisationService, final Long projectId, final Long organisationId) {
-        ServiceResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getPartnerOrganisations(projectId);
+    public static boolean isLeadPartner(final PartnerOrganisationRestService partnerOrganisationService, final Long projectId, final Long organisationId) {
+        RestResult<List<PartnerOrganisationResource>> result = partnerOrganisationService.getProjectPartnerOrganisations(projectId);
         if(null != result && result.isSuccess()) {
             Optional<PartnerOrganisationResource> partnerOrganisationResource = simpleFindFirst(result.getSuccessObject(), PartnerOrganisationResource::isLeadOrganisation);
             return partnerOrganisationResource.isPresent() && partnerOrganisationResource.get().getOrganisation().equals(organisationId);

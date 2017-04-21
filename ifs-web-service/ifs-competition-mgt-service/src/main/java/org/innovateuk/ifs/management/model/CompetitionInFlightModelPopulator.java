@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.innovateuk.ifs.management.viewmodel.MilestonesRowViewModel;
@@ -34,14 +33,14 @@ public class CompetitionInFlightModelPopulator {
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
 
     @Autowired
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     public CompetitionInFlightViewModel populateModel(Long competitionId) {
         return populateModel(competitionService.getById(competitionId));
     }
 
     public CompetitionInFlightViewModel populateModel(CompetitionResource competition) {
-        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competition.getId());
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
         CompetitionInFlightStatsViewModel statsViewModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competition);
 
         long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competition.getId()).getSuccessObjectOrThrowException();
