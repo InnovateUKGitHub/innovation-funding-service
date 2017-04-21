@@ -11,7 +11,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.domain.FormValidator;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.validator.MinRowCountValidator;
 import org.innovateuk.ifs.validator.NotEmptyValidator;

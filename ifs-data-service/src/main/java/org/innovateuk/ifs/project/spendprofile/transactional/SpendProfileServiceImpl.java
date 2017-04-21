@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.spendprofile.service;
+package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Lists;
@@ -26,11 +26,15 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
-import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.spendprofile.domain.*;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummaries;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileCostCategorySummaryStrategy;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -79,67 +83,13 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class SpendProfileServiceImpl extends BaseTransactionalService implements SpendProfileService {
 
+    public static final String EMPTY_CELL = "";
     private static final String CSV_MONTH = "Month";
     private static final String CSV_TOTAL = "TOTAL";
     private static final String CSV_ELIGIBLE_COST_TOTAL = "Eligible Costs Total";
     private static final String CSV_FILE_NAME_FORMAT = "%s_Spend_Profile_%s.csv";
     private static final String CSV_FILE_NAME_DATE_FORMAT = "yyyy-MM-dd_HH-mm-ss";
     private static final List<String> RESEARCH_CAT_GROUP_ORDER = new LinkedList<>();
-    public static final String EMPTY_CELL = "";
-
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private PartnerOrganisationRepository partnerOrganisationRepository;
-
-    @Autowired
-    private SpendProfileRepository spendProfileRepository;
-
-    @Autowired
-    private CostCategoryTypeRepository costCategoryTypeRepository;
-
-    @Autowired
-    private CostCategoryRepository costCategoryRepository;
-
-    @Autowired
-    private ProjectFinanceRepository projectFinanceRepository;
-
-    @Autowired
-    private ProjectFinanceRowService financeRowService;
-
-    @Autowired
-    private ViabilityWorkflowHandler viabilityWorkflowHandler;
-
-    @Autowired
-    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private ValidationUtil validationUtil;
-
-    @Autowired
-    private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
-
-    @Autowired
-    private ProjectGrantOfferService projectGrantOfferService;
-
-    @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
-
-    @Autowired
-    private ProjectUsersHelper projectUsersHelper;
-
-    @Autowired
-    private EmailService projectEmailService;
 
     static {
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
@@ -148,23 +98,55 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF.getLabel());
     }
 
-    public enum Notifications {
-        FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE
-    }
-
+    @Autowired
+    private ProjectService projectService;
+    @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
+    private OrganisationRepository organisationRepository;
+    @Autowired
+    private PartnerOrganisationRepository partnerOrganisationRepository;
+    @Autowired
+    private SpendProfileRepository spendProfileRepository;
+    @Autowired
+    private CostCategoryTypeRepository costCategoryTypeRepository;
+    @Autowired
+    private CostCategoryRepository costCategoryRepository;
+    @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
+    @Autowired
+    private ProjectFinanceRowService financeRowService;
+    @Autowired
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
+    @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private ValidationUtil validationUtil;
+    @Autowired
+    private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+    @Autowired
+    private ProjectGrantOfferService projectGrantOfferService;
+    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    @Autowired
+    private ProjectUsersHelper projectUsersHelper;
+    @Autowired
+    private EmailService projectEmailService;
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
-
-        return getProject(projectId).andOnSuccess(project ->
-               canSpendProfileCanBeGenerated(project).andOnSuccess(() ->
-               projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
-                   List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
-                   return generateSpendProfileForPartnerOrganisations(project, organisationIds);
-               }))
-        );
+        return getProject(projectId)
+                .andOnSuccess(project -> canSpendProfileCanBeGenerated(project)
+                        .andOnSuccess(() -> projectService.getProjectUsers(projectId)
+                                .andOnSuccess(projectUsers -> {
+                                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
+                                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
+                                }))
+                );
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
@@ -202,7 +184,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
-
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
         Optional<PartnerOrganisation> partnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
@@ -236,8 +217,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             Calendar generatedDate) {
 
         return find(project(projectId), organisation(organisationId)).andOnSuccess((project, organisation) ->
-                generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation, generatedBy, generatedDate).andOnSuccess(() ->
-                             sendFinanceContactEmail(project, organisation)
+                generateSpendProfileForOrganisation(spendProfileCostCategorySummaries, project, organisation, generatedBy, generatedDate).andOnSuccess(() ->
+                        sendFinanceContactEmail(project, organisation)
                 )
         );
     }
@@ -256,7 +237,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         if (financeContact.isPresent() && financeContact.get().getUser() != null) {
             NotificationTarget financeContactTarget = new ExternalUserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
             Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail();
-            return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+            return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         }
         return serviceFailure(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
     }
@@ -321,9 +302,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
         List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
 
-        if(spendProfiles.isEmpty()) {
+        if (spendProfiles.isEmpty()) {
             return serviceSuccess(ApprovalType.EMPTY);
-        } else if(spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
+        } else if (spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
             return serviceSuccess(ApprovalType.REJECTED);
         } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
             return serviceSuccess(ApprovalType.APPROVED);
@@ -340,47 +321,47 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 project(projectOrganisationCompositeId.getProjectId())).
                 andOnSuccess((spendProfile, project) -> {
 
-            List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
-            Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
-            CostGroup eligibleCosts = spendProfile.getEligibleCosts();
-            CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
+                    List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
+                    Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
+                    CostGroup eligibleCosts = spendProfile.getEligibleCosts();
+                    CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
-            Map<Long, BigDecimal> eligibleCostsPerCategory =
-                    simpleToLinkedMap(
-                            costCategories,
-                            CostCategory::getId,
-                            category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
+                    Map<Long, BigDecimal> eligibleCostsPerCategory =
+                            simpleToLinkedMap(
+                                    costCategories,
+                                    CostCategory::getId,
+                                    category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
 
-            Map<Long, List<Cost>> spendProfileCostsPerCategory =
-                    simpleToLinkedMap(
-                            costCategories,
-                            CostCategory::getId,
-                            category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
+                    Map<Long, List<Cost>> spendProfileCostsPerCategory =
+                            simpleToLinkedMap(
+                                    costCategories,
+                                    CostCategory::getId,
+                                    category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
 
-            LocalDate startDate = spendProfile.getProject().getTargetStartDate();
-            int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
+                    LocalDate startDate = spendProfile.getProject().getTargetStartDate();
+                    int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
 
-            List<LocalDate> months = IntStream.range(0, durationInMonths).mapToObj(startDate::plusMonths).collect(toList());
-            List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
+                    List<LocalDate> months = IntStream.range(0, durationInMonths).mapToObj(startDate::plusMonths).collect(toList());
+                    List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
 
-            Map<Long, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
-                    simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
+                    Map<Long, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
+                            simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
 
-            SpendProfileTableResource table = new SpendProfileTableResource();
-            table.setCostCategoryResourceMap(buildCostCategoryIdMap(costCategories));
-            table.setMonths(monthResources);
-            table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
-            table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
-            table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
-            checkTotalForMonthsAndAddToTable(table);
+                    SpendProfileTableResource table = new SpendProfileTableResource();
+                    table.setCostCategoryResourceMap(buildCostCategoryIdMap(costCategories));
+                    table.setMonths(monthResources);
+                    table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
+                    table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
+                    table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
+                    checkTotalForMonthsAndAddToTable(table);
 
-           boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
-            if (isResearch) {
-                table.setCostCategoryGroupMap(groupCategories(table));
-            }
+                    boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
+                    if (isResearch) {
+                        table.setCostCategoryGroupMap(groupCategories(table));
+                    }
 
-            return serviceSuccess(table);
-        });
+                    return serviceSuccess(table);
+                });
     }
 
     private Map<Long, CostCategoryResource> buildCostCategoryIdMap(List<CostCategory> costCategories) {
@@ -398,7 +379,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private Map<String, List<Map<Long, List<BigDecimal>>>> groupCategories(SpendProfileTableResource spendProfileTableResource) {
         Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap = new HashMap<>();
-        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
+        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
             CostCategory costCategory = costCategoryRepository.findOne(category);
             if (costCategory.getLabel() == null) {
                 costCategory.setLabel("DEFAULT");
@@ -441,13 +422,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())
                 .andOnSuccessReturn(profile -> {
 
-            SpendProfileResource resource = new SpendProfileResource();
-            resource.setId(profile.getId());
-            resource.setGeneratedBy(userMapper.mapToResource(profile.getGeneratedBy()));
-            resource.setGeneratedDate(profile.getGeneratedDate());
-            resource.setMarkedAsComplete(profile.isMarkedAsComplete());
-            return resource;
-        });
+                    SpendProfileResource resource = new SpendProfileResource();
+                    resource.setId(profile.getId());
+                    resource.setGeneratedBy(userMapper.mapToResource(profile.getGeneratedBy()));
+                    resource.setGeneratedDate(profile.getGeneratedDate());
+                    resource.setMarkedAsComplete(profile.isMarkedAsComplete());
+                    return resource;
+                });
     }
 
     @Override
@@ -459,7 +440,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-        if(table.getValidationMessages().hasErrors()) { // validate before marking as complete
+        if (table.getValidationMessages().hasErrors()) { // validate before marking as complete
             return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
         } else {
             return saveSpendProfileData(projectOrganisationCompositeId, table, true);
@@ -469,7 +450,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
-            return saveSpendProfileData(projectOrganisationCompositeId, table, false);
+        return saveSpendProfileData(projectOrganisationCompositeId, table, false);
     }
 
     @Override
@@ -510,13 +491,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> validateCreditReport(PartnerOrganisation partnerOrganisation) {
 
         return getViabilityProcess(partnerOrganisation)
-        .andOnSuccess(viabilityProcess -> {
-                        if (ViabilityState.APPROVED == viabilityProcess.getActivityState()) {
-                            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
-                        } else {
-                            return serviceSuccess();
-                        }
-                    });
+                .andOnSuccess(viabilityProcess -> {
+                    if (ViabilityState.APPROVED == viabilityProcess.getActivityState()) {
+                        return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+                    } else {
+                        return serviceSuccess();
+                    }
+                });
     }
 
     @Override
@@ -530,7 +511,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -591,7 +572,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+    public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -651,20 +632,20 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
-                .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
-                        .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getActivityState(), viability, viabilityRagStatus))
-                        .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability)
-                                .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
-                        )
-                ));
+                        .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
+                                .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getActivityState(), viability, viabilityRagStatus))
+                                .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
+                                .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability)
+                                        .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
+                                )
+                        ));
     }
 
     private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, Viability viability, ViabilityRagStatus viabilityRagStatus) {
@@ -699,7 +680,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus){
+    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -757,9 +738,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> saveSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table, boolean markAsComplete) {
         return getSpendProfileEntity(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId()).
-                andOnSuccess (
+                andOnSuccess(
                         spendProfile -> {
-                            if(spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
+                            if (spendProfile.getProject().getSpendProfileSubmittedDate() != null) {
                                 return serviceFailure(SPEND_PROFILE_HAS_BEEN_SUBMITTED_AND_CANNOT_BE_EDITED);
                             }
 
@@ -805,7 +786,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
         List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
         spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
-        if(ApprovalType.REJECTED.equals(approvalType)) {
+        if (ApprovalType.REJECTED.equals(approvalType)) {
             rejectSpendProfileSubmission(projectId);
         }
 
@@ -883,10 +864,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         monthsRow.add(CSV_ELIGIBLE_COST_TOTAL);
 
         final int[] columnSize = new int[1];
-        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values)-> {
+        spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
 
             CostCategory cc = costCategoryRepository.findOne(category);
-            if ( cc.getLabel() != null ) {
+            if (cc.getLabel() != null) {
                 byCategory.add(cc.getLabel());
             }
             byCategory.add(String.valueOf(cc.getName()));
@@ -896,10 +877,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             byCategory.add(categoryToActualTotal.get(category).toString());
             byCategory.add(spendProfileTableResource.getEligibleCostPerCategoryMap().get(category).toString());
 
-            if ( monthsRow.size() > byCategory.size() && monthsRow.contains(EMPTY_CELL)) {
+            if (monthsRow.size() > byCategory.size() && monthsRow.contains(EMPTY_CELL)) {
                 monthsRow.remove(EMPTY_CELL);
                 rows.add(monthsRow.stream().toArray(String[]::new));
-            } else if (monthsRow.size() > 0 ){
+            } else if (monthsRow.size() > 0) {
                 rows.add(monthsRow.stream().toArray(String[]::new));
             }
             monthsRow.clear();
@@ -914,7 +895,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         totalForEachMonth.forEach(value -> totals.add(value.toString()));
         totals.add(totalOfAllActualTotals.toString());
         totals.add(totalOfAllEligibleTotals.toString());
-        if ( totals.size() > columnSize[0] && totals.contains(EMPTY_CELL)) {
+        if (totals.size() > columnSize[0] && totals.contains(EMPTY_CELL)) {
             totals.remove(EMPTY_CELL);
         }
         rows.add(totals.stream().toArray(String[]::new));
@@ -929,7 +910,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private String generateSpendProfileFileName(String organisationName) {
-        Date date = new Date() ;
+        Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat(CSV_FILE_NAME_DATE_FORMAT);
         return String.format(CSV_FILE_NAME_FORMAT, organisationName, dateFormat.format(date));
     }
