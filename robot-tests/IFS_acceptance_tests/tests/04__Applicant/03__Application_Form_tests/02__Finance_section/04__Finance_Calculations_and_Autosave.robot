@@ -268,11 +268,6 @@ Totals should be correct with the old styling
 
 Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    Wait Until Element Contains Without Screenshots    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
-
-Admin costs total should be correct with the old styling
-    [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Textfield Should Contain    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
 
