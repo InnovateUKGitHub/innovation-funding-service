@@ -117,8 +117,7 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Katz_Name} - Spend profile
-    # And the user clicks the button/link    link=Spend profile overview    # TODO please enable this line and delete the following one when working on INFUND-8132
-    And the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
+    And the user clicks the button/link    link=Spend profile overview
     And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
     [Teardown]    the user goes back to the previous page
 
