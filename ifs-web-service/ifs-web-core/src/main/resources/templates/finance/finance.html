@@ -338,16 +338,14 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another role', question=${question},rowcontainer='.labour-costs-table tbody')" />
                     </p>
                 </div>
-                <h3 class="alignright">
+                <h3 class="alignright section-total-summary">
                     Total labour costs
-                    <strong
+                    <span class="heading-small"
                            data-calculation-fields="[id*=labourTotalCost]"
                            data-calculation-operations="+"
                            th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
                            th:id="${'section-total-'+subSection.id}"
-                           th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}">
-                                TOTAL LABOUR COSTS
-                    </strong>
+                           th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
                 </h3>
             </div>
         </th:block>
@@ -578,19 +576,15 @@
                 <div id="overhead-default-percentage">
                     <h3 class="heading-medium">20% of labour costs</h3>
                     <p>There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
-                    <div class="alignright inline form-group">
-                        <label th:for="${'section-total-'+subSection.id+'-default'}">
-                            <span>Total overhead costs</span>
-                        </label>
-                        <input type="text"
-                               th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
-                               class="form-control form-control-1-4 alignright"
-                               readonly="readonly"
-                               th:id="${'section-total-'+subSection.id+'-default'}"
-                               th:attr="data-calculation-fields=${'#section-total-'+labourQuestion.section+',0.2'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
-                               data-calculation-operations="*"
-                               th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'" />
-                    </div>
+                    <h4 class="alignright section-total-summary">
+                        Total overhead costs
+                        <span class="heading-small"
+                              th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
+                              th:id="${'section-total-'+subSection.id+'-default'}"
+                              th:attr="data-calculation-fields=${'#section-total-'+labourQuestion.section+',0.2'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                              data-calculation-operations="*"
+                              th:text="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'" />
+                    </h4>
                 </div>
                 <div th:unless="${overheadCosts?.getUseTotalOption()}" id="overhead-custom-percentage">
                     <h3 class="heading-medium">Custom overhead costs</h3>
@@ -745,17 +739,15 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another materials cost', question=${question},rowcontainer='#material-costs-table tbody')" />
                     </p>
                 </div>
-                <div class="form-group alignright inline">
-                    <label th:for="${'section-total-'+subSection.id}">Total materials costs</label>
-                    <input class="form-control alignright form-control-1-4"
-                           readonly="readonly"
-                           type="text"
+                <h4 class="alignright section-total-summary">
+                    Total materials costs
+                    <span class="heading-small"
                            data-calculation-fields="[id*=materialTotal]"
                            data-calculation-operations="+"
                            th:id="${'section-total-'+subSection.id}"
                            th:attr="data-calculation-rawvalue=${costCategory.total}"
-                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-                </div>
+                           th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                </h4>
             </div>
         </th:block>
     </th:block>
@@ -888,16 +880,14 @@
             <p class="alignright" th:if="${viewmode == 'edit'}">
                 <th:block th:insert="question-type/types :: add_row(text='Add another asset', question=${question},rowcontainer='#capital_usage')" />
             </p>
-            <div class="form-group alignright extra-margin inline">
-                <label th:for="${'section-total-'+subSection.id}">Total capital usage costs</label>
-                <input class="form-control form-control-1-4 alignright"
-                       readonly="readonly"
-                       type="text"
+            <h4 class="alignright section-total-summary">
+                Total capital usage costs
+                <span class="heading-small"
                        th:id="${'section-total-'+subSection.id}"
                        data-calculation-fields="[id*=netCost]"
                        data-calculation-operations="+"
-                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total &lt; 0 ? 0 : costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-            </div>
+                       th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total &lt; 0 ? 0 : costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+            </h4>
         </th:block>
     </th:block>
 
@@ -1083,17 +1073,15 @@
             <p class="alignright" th:if="${viewmode == 'edit'}">
               <th:block th:insert="question-type/types :: add_row(text='Add another subcontractor', question=${question},rowcontainer='#subcontracting')" />
             </p>
-            <div class="form-group alignright extra-margin inline">
-                <label th:for="${'section-total-'+subSection.id}">Total subcontracting costs</label>
-                <input class="form-control form-control-1-4 alignright"
-                       readonly="readonly"
-                       type="text"
+            <h4 class="alignright section-total-summary">
+                Total subcontracting costs
+                <span class="heading-small"
                        th:id="${'section-total-'+subSection.id}"
                        data-calculation-fields="[id*=subcontractingCost]"
                        data-calculation-operations="+"
                        th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-            </div>
+                       th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+            </h4>
         </th:block>
     </th:block>
 
@@ -1227,17 +1215,14 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another travel cost', question=${question},rowcontainer='#travel-costs-table tbody')" />
                     </p>
                 </div>
-                <div class="form-group alignright inline">
-                    <label th:for="${'section-total-'+subSection.id}">Total travel &amp; subsistence costs</label>
-                    <input class="form-control form-control-1-4 alignright"
-                           readonly="readonly"
-                           type="text"
+                <h4 class="alignright section-total-summary">
+                    Total travel and subsistence costs
+                    <span class="heading-small"
                            data-calculation-fields="[id*=travelCostTotal]"
                            data-calculation-operations="+"
                            th:id="${'section-total-'+subSection.id}"
-                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"
-                           title="Total travel and subsistence costs" />
-                </div>
+                           th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
+                </h4>
             </div>
         </th:block>
     </th:block>
@@ -1370,15 +1355,14 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another cost', question=${question},rowcontainer='#other-costs-table tbody')" />
                     </p>
                 </div>
-                <div class="form-group alignright inline">
-                    <label th:for="${'section-total-'+subSection.id}"> Total other costs</label>
-                    <input class="form-control form-control-1-4 alignright"
-                           readonly="readonly" type="text"
+                <h4 class="alignright section-total-summary">
+                    Total other costs
+                    <span class="heading-small"
                            th:id="${'section-total-'+subSection.id}"
                            data-calculation-fields="[id*=otherCost]"
                            data-calculation-operations="+"
-                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
-                </div>
+                           th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
+                </h4>
             </div>
         </th:block>
     </th:block>
