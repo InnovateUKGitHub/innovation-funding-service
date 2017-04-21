@@ -305,8 +305,7 @@ Invited project manager receives an email
 
 Invited project manager registration flow
     [Documentation]    INFUND-3554
-    [Tags]    HappyPath    Email  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath  Email
     Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -322,8 +321,7 @@ Invited project manager registration flow
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
-    [Tags]    Email  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  Email
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project Manager
@@ -331,8 +329,7 @@ Invited project manager shows on the project manager selection screen
 
 Lead partner selects a project manager
     [Documentation]    INFUND-2616 INFUND-2996 INFUND-5610
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project Manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
@@ -351,8 +348,7 @@ Lead partner selects a project manager
 
 Lead partner can change the project address
     [Documentation]    INFUND-3157 INFUND-2165
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.button:contains("Save")
@@ -373,8 +369,7 @@ Lead partner can change the project address
 
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     Given the user should see the element    css=#start-date-status.yes
     And the user should see the element    css=#project-address-status.yes
     And the user should see the element    css=#project-manager-status.yes
@@ -382,8 +377,7 @@ Project details can be submitted with PM, project address and start date
 
 Non lead partner nominates finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     When Log in as a different user        &{collaborator1_credentials}
     Then the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
@@ -407,8 +401,7 @@ Non lead partner nominates finance contact
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
@@ -420,8 +413,7 @@ Non lead partner not eligible for funding
 
 Other partners can see who needs to provide Bank Details
     [Documentation]    INFUND-7090
-    [Tags]  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
     Then the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
@@ -429,8 +421,7 @@ Other partners can see who needs to provide Bank Details
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     [Setup]    Log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
@@ -445,8 +436,7 @@ Option to invite a finance contact
 
 Inviting finance contact server side validations
     [Documentation]    INFUND-3483, INFUND-9062
-    [Tags]  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]
     When the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
@@ -457,8 +447,7 @@ Inviting finance contact server side validations
 
 Inviting finance contact client side validations
     [Documentation]    INFUND-3483
-    [Tags]  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]
     When the user enters text to a text field    id=name-finance-contact    John Smith
     And the user moves focus to the element    jQuery=.button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
@@ -474,8 +463,7 @@ Inviting finance contact client side validations
 
 Partner invites a finance contact
     [Documentation]    INFUND-3579
-    [Tags]    HappyPath    Email  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath  Email
     When the user enters text to a text field    id=name-finance-contact    John Smith
     And the user enters text to a text field    id=email-finance-contact    ${test_mailbox_one}+invitedfinancecontact@gmail.com
     And the user clicks the button/link    id=invite-finance-contact
@@ -484,15 +472,13 @@ Partner invites a finance contact
 
 Invited finance contact receives an email
     [Documentation]    INFUND-3524
-    [Tags]    HappyPath    Email  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath  Email
     When the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Finance contact invitation    Dear John Smith
     Then the user should see the text in the page    Empire Ltd
 
 Invited finance contact registration flow
     [Documentation]    INFUND-3530
-    [Tags]    HappyPath    Email  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath  Email
     Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -506,8 +492,7 @@ Invited finance contact registration flow
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
-    [Tags]    Email  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  Email
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Empire Ltd
@@ -515,8 +500,7 @@ Invited finance contact shows on the finance contact selection screen
 
 Lead partner selects a finance contact
     [Documentation]    INFUND-2620, INFUND-5571, INFUND-5898
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     Then the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -533,8 +517,7 @@ Lead partner selects a finance contact
 
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
-    [Tags]  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]
     [Setup]
     Given log in as a different user    &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
@@ -544,8 +527,7 @@ Non-lead partner cannot change start date, project manager or project address
 
 Internal user should see project details are incomplete
     [Documentation]    INFUND-6781
-    [Tags]  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page     ${internal_project_summary}
     When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting
@@ -553,8 +535,7 @@ Internal user should see project details are incomplete
 
 Academic Partner nominates Finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     [Setup]    Log in as a different user   &{collaborator2_credentials}
     Then the user navigates to the page     ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
@@ -578,8 +559,7 @@ Academic Partner nominates Finance contact
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
@@ -592,8 +572,7 @@ Project details submission flow
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     [Setup]    Log in as a different user  &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=ul li.complete:nth-child(2)
@@ -606,8 +585,7 @@ Lead partner can see the status update when all Project details are submitted
 
 Project details read only after submission
     [Documentation]    INFUND-3381
-    [Tags]  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]
     Given the user navigates to the page    ${project_in_setup_details_page}
     Then all the fields are completed
     And The user should not see the element    link=Target start date
@@ -616,8 +594,7 @@ Project details read only after submission
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
-    [Tags]    HappyPath  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]  HappyPath
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    Ludlow
@@ -637,8 +614,7 @@ All partners can view submitted project details
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
-    [Tags]  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
@@ -660,8 +636,7 @@ Non-lead partner cannot change any project details
 
 Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856
-    [Tags]  Pending
-    # TODO this test case fails due to INFUND-9278
+    [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page     ${internal_project_summary}
     When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(2) td.status.ok a
