@@ -338,15 +338,17 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another role', question=${question},rowcontainer='.labour-costs-table tbody')" />
                     </p>
                 </div>
-                <h3 class="alignright section-total-summary">
+                <h4 class="alignright section-total-summary">
                     Total labour costs
                     <span class="heading-small"
-                           data-calculation-fields="[id*=labourTotalCost]"
-                           data-calculation-operations="+"
-                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                           th:id="${'section-total-'+subSection.id}"
-                           th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
-                </h3>
+                          th:attr="data-mirror='#section-total-'+${subSection.id}" />
+                </h4>
+                <input data-calculation-fields="[id*=labourTotalCost]"
+                       data-calculation-operations="+"
+                       th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                       type="hidden"
+                       th:id="${'section-total-'+subSection.id}"
+                       th:value="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
             </div>
         </th:block>
     </th:block>
@@ -579,12 +581,15 @@
                     <h4 class="alignright section-total-summary">
                         Total overhead costs
                         <span class="heading-small"
-                              th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
-                              th:id="${'section-total-'+subSection.id+'-default'}"
-                              th:attr="data-calculation-fields=${'#section-total-'+labourQuestion.section+',0.2'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
-                              data-calculation-operations="*"
-                              th:text="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'" />
+                              th:attr="data-mirror='#section-total-'+${subSection.id}" />
                     </h4>
+                    <input type="hidden"
+                           th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
+                           th:id="${'section-total-'+subSection.id+'-default'}"
+                           th:attr="data-calculation-fields=${'#section-total-'+labourQuestion.section+',0.2'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                           data-calculation-operations="*"
+                           th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'" />
+
                 </div>
                 <div th:unless="${overheadCosts?.getUseTotalOption()}" id="overhead-custom-percentage">
                     <h3 class="heading-medium">Custom overhead costs</h3>
@@ -742,12 +747,14 @@
                 <h4 class="alignright section-total-summary">
                     Total materials costs
                     <span class="heading-small"
-                           data-calculation-fields="[id*=materialTotal]"
-                           data-calculation-operations="+"
-                           th:id="${'section-total-'+subSection.id}"
-                           th:attr="data-calculation-rawvalue=${costCategory.total}"
-                           th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                          th:attr="data-mirror='#section-total-'+${subSection.id}" />
                 </h4>
+                <input type="hidden"
+                       data-calculation-fields="[id*=materialTotal]"
+                       data-calculation-operations="+"
+                       th:id="${'section-total-'+subSection.id}"
+                       th:attr="data-calculation-rawvalue=${costCategory.total}"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
             </div>
         </th:block>
     </th:block>
@@ -883,11 +890,13 @@
             <h4 class="alignright section-total-summary">
                 Total capital usage costs
                 <span class="heading-small"
-                       th:id="${'section-total-'+subSection.id}"
-                       data-calculation-fields="[id*=netCost]"
-                       data-calculation-operations="+"
-                       th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total &lt; 0 ? 0 : costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                      th:attr="data-mirror='#section-total-'+${subSection.id}" />
             </h4>
+            <input type="hidden"
+                  th:id="${'section-total-'+subSection.id}"
+                  data-calculation-fields="[id*=netCost]"
+                  data-calculation-operations="+"
+                  th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total &lt; 0 ? 0 : costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
         </th:block>
     </th:block>
 
@@ -1076,12 +1085,14 @@
             <h4 class="alignright section-total-summary">
                 Total subcontracting costs
                 <span class="heading-small"
-                       th:id="${'section-total-'+subSection.id}"
-                       data-calculation-fields="[id*=subcontractingCost]"
-                       data-calculation-operations="+"
-                       th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                       th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+                      th:attr="data-mirror='#section-total-'+${subSection.id}" />
             </h4>
+            <input type="hidden"
+                  th:id="${'section-total-'+subSection.id}"
+                  data-calculation-fields="[id*=subcontractingCost]"
+                  data-calculation-operations="+"
+                  th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                  th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
         </th:block>
     </th:block>
 
@@ -1218,11 +1229,13 @@
                 <h4 class="alignright section-total-summary">
                     Total travel and subsistence costs
                     <span class="heading-small"
-                           data-calculation-fields="[id*=travelCostTotal]"
-                           data-calculation-operations="+"
-                           th:id="${'section-total-'+subSection.id}"
-                           th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
+                          th:attr="data-mirror='#section-total-'+${subSection.id}" />
                 </h4>
+                <input type="hidden"
+                      data-calculation-fields="[id*=travelCostTotal]"
+                      data-calculation-operations="+"
+                      th:id="${'section-total-'+subSection.id}"
+                      th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
             </div>
         </th:block>
     </th:block>
@@ -1358,11 +1371,13 @@
                 <h4 class="alignright section-total-summary">
                     Total other costs
                     <span class="heading-small"
-                           th:id="${'section-total-'+subSection.id}"
-                           data-calculation-fields="[id*=otherCost]"
-                           data-calculation-operations="+"
-                           th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
+                          th:attr="data-mirror='#section-total-'+${subSection.id}" />
                 </h4>
+                <input type="hidden"
+                      th:id="${'section-total-'+subSection.id}"
+                      data-calculation-fields="[id*=otherCost]"
+                      data-calculation-operations="+"
+                      th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
             </div>
         </th:block>
     </th:block>
