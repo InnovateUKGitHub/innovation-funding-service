@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.monitoringofficer.viewmodel;
+package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;

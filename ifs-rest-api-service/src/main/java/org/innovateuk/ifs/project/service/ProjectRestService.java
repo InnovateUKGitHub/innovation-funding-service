@@ -41,10 +41,6 @@ public interface ProjectRestService {
 
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
-
-    RestResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
-
     RestResult<Optional<ByteArrayResource>> getCollaborationAgreementFile(Long projectId);
 
     RestResult<Optional<FileEntryResource>> getCollaborationAgreementFileDetails(Long projectId);
