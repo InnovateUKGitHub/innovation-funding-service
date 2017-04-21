@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration;
 
 import org.apache.commons.lang3.CharEncoding;
-import org.hamcrest.*;
+import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,11 +34,12 @@ import java.util.Arrays;
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -297,7 +299,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .header("referer", "/organisation/create/find-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/confirm-organisation"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/lead-organisation-type"));
     }
 
     @Test
@@ -472,7 +474,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSelectedBusinessSaveBusiness() throws Exception {
+    public void testSelectedBusinessConfirmRegisteredAddress() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/selected-organisation/" + COMPANY_ID)
                 .param("useSearchResultAddress", "true")
                 .param("_useSearchResultAddress", "on")
@@ -480,6 +482,16 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .param("searchOrganisationId", COMPANY_ID)
                 .header("referer", "/organisation/create/selected-organisation/")
                 .cookie(organisationTypeBusiness)
+                .cookie(organisationForm)
+        )
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/lead-organisation-type"));
+    }
+
+    @Test
+    public void testSelectedBusinessSaveBusiness() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/lead-organisation-type")
+                .param("organisationTypeId", OrganisationTypeEnum.RTO.getId().toString())
                 .cookie(organisationForm)
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
