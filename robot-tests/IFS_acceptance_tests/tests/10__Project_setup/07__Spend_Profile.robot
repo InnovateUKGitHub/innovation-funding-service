@@ -149,7 +149,7 @@ Calculations in the spend profile table
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
     [Tags]    Failing
-    #TODO this test case needs to be moved, to another project where the PM != Lead partner.
+    #TODO this test case needs to be moved, to another project where the PM != Lead partner. INFUND-9289
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
@@ -158,9 +158,6 @@ Lead Partner can see Spend profile summary
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
     [Tags]
-    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    And the user navigates to the page            ${external_spendprofile_summary}/review
-    # TODO please delete the above two lines when INFUND-8138 is completed
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
     And the text box should be editable               css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour-June17
