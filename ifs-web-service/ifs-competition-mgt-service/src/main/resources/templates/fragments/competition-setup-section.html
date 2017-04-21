@@ -632,7 +632,9 @@
                                name="leadApplicantTypes"
                                th:value="${leadApplicantType.id}"
                                type="checkbox"
-                               th:checked="${competitionSetupForm.includesLeadApplicantType(leadApplicantType.id)}"/>
+                               required="required"
+                               th:checked="${competitionSetupForm.includesLeadApplicantType(leadApplicantType.id)}"
+                               th:attr="data-required-errormessage=#{validation.eligibilityform.leadApplicantTypes.required}"/>
                         <th:block th:text="${leadApplicantType.name}" />
                      </label>
                 </fieldset>
