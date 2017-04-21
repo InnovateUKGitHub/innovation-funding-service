@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -45,27 +44,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
             description = "A partner can update the finance contact for their own organisation")
     public boolean submitIsAllowed(Long projectId, UserResource user) {
         return isPartner(projectId, user.getId());
-    }
-
-    @PermissionRule(
-            value = "VIEW_MONITORING_OFFICER",
-            description = "Internal users can view Monitoring Officers on any Project")
-    public boolean internalUsersCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_MONITORING_OFFICER",
-            description = "Partners can view monitoring officers on Projects that they are partners on")
-    public boolean partnersCanViewMonitoringOfficersOnTheirProjects(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "ASSIGN_MONITORING_OFFICER",
-            description = "Internal users can assign Monitoring Officers on any Project")
-    public boolean internalUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isInternal(user);
     }
 
     @PermissionRule(

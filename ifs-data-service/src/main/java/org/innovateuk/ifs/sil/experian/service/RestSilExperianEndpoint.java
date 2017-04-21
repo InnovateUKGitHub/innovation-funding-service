@@ -38,7 +38,7 @@ public class RestSilExperianEndpoint implements SilExperianEndpoint {
 
     @Override
     public ServiceResult<ValidationResult> validate(SILBankDetails bankDetails) {
-        final Either<ResponseEntity<SilError>, ResponseEntity<ValidationResultWrapper>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, bankDetails, ValidationResultWrapper.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
+        final Either<ResponseEntity<SilExperianError>, ResponseEntity<ValidationResultWrapper>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianValidate, bankDetails, ValidationResultWrapper.class, SilExperianError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
         if(response.isLeft()){
             return serviceFailure(new Error(EXPERIAN_VALIDATION_FAILED));
         } else {
@@ -48,7 +48,7 @@ public class RestSilExperianEndpoint implements SilExperianEndpoint {
 
     @Override
     public ServiceResult<VerificationResult> verify(AccountDetails accountDetails) {
-        final Either<ResponseEntity<SilError>, ResponseEntity<VerificationResultWrapper>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianVerify, accountDetails, VerificationResultWrapper.class, SilError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
+        final Either<ResponseEntity<SilExperianError>, ResponseEntity<VerificationResultWrapper>> response = adaptor.restPostWithEntity(silRestServiceUrl + silExperianVerify, accountDetails, VerificationResultWrapper.class, SilExperianError.class, HttpStatus.OK, HttpStatus.ACCEPTED);
         if(response.isLeft()){
             return serviceFailure(new Error(EXPERIAN_VERIFICATION_FAILED));
         } else {
