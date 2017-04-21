@@ -66,7 +66,7 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
     public static class TestAffiliationService implements AffiliationService {
 
         @Override
-        public ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
+        public ServiceResult<List<AffiliationResource>> getUserAffiliations(long userId) {
             return serviceSuccess(newAffiliationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 

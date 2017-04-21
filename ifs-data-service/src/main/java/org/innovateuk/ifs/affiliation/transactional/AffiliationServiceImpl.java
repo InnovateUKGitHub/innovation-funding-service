@@ -26,7 +26,7 @@ public class AffiliationServiceImpl extends BaseTransactionalService implements 
     private AffiliationMapper affiliationMapper;
 
     @Override
-    public ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
+    public ServiceResult<List<AffiliationResource>> getUserAffiliations(long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccessReturn(user -> user.getAffiliations().stream().map(affiliation -> affiliationMapper.mapToResource(affiliation)).collect(toList()));
     }
 

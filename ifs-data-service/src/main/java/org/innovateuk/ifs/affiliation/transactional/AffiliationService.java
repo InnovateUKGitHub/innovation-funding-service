@@ -13,7 +13,7 @@ import java.util.List;
 public interface AffiliationService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId);
+    ServiceResult<List<AffiliationResource>> getUserAffiliations(long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE')")
     ServiceResult<Void> updateUserAffiliations(long userId, List<AffiliationResource> affiliations);
