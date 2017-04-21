@@ -187,4 +187,3 @@ the user can see the option to upload a file on the question
 The applicant opens the uploaded file
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Run Keyword And Ignore Error Without Screenshots    Confirm Action
-    # TODO Nuno - should it go back?
