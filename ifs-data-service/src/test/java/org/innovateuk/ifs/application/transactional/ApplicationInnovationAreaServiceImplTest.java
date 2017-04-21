@@ -10,18 +10,22 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -36,25 +40,31 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
 
     @Test
     public void getAvailableInnovationAreas() throws Exception {
-       Long applicationId = 1L;
+        Long applicationId = 1L;
 
-       List<InnovationArea> innovationAreas = newInnovationArea().withId(1L,2L,3L).build(3);
-       InnovationSector innovationSector = newInnovationSector().withChildren(innovationAreas).build();
-       Competition competition = newCompetition().withInnovationSector(innovationSector).build();
+        List<InnovationArea> innovationAreas = newInnovationArea()
+                .withName("Innovation Area A", "Innovation Area B")
+                .build(2);
+        InnovationSector innovationSector = newInnovationSector().withChildren(innovationAreas).build();
+        Competition competition = newCompetition().withInnovationSector(innovationSector).build();
+        competition.addInnovationArea(innovationAreas.get(0));
+        competition.addInnovationArea(innovationAreas.get(1));
 
-       List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource().withId(1L,2L,3L).build(3);
+        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
+                .withName("Innovation Area A", "Innovation Area B")
+                .build(2);
 
-       Application application = newApplication()
-               .withId(1L)
-               .withCompetition(competition).build();
+        Application application = newApplication()
+                .withId(1L)
+                .withCompetition(competition).build();
 
-       when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-       when(innovationAreaMapperMock.mapToResource(innovationAreas)).thenReturn(expectedInnovationAreas);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(innovationAreaMapperMock.mapToResource(innovationAreas)).thenReturn(expectedInnovationAreas);
 
-       ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(applicationId);
+        ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(applicationId);
 
-       assertTrue(result.isSuccess());
-       assertEquals(expectedInnovationAreas, result.getSuccessObject());
+        assertTrue(result.isSuccess());
+        assertEquals(expectedInnovationAreas, result.getSuccessObject());
     }
 
     @Test
@@ -124,20 +134,23 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
     @Test
     public void setApplicationInnovationArea() throws Exception {
         Long applicationId = 1L;
-        Long innovationAreaIdOne = 1L;
-        Long innovationAreaIdTwo = 2L;
 
-        List<InnovationArea> innovationAreas = newInnovationArea().withId(innovationAreaIdOne,innovationAreaIdTwo).build(2);
-
+        List<InnovationArea> innovationAreas = newInnovationArea()
+                .withName("Innovation Area A", "Innovation Area B")
+                .build(2);
         InnovationSector innovationSector = newInnovationSector().withChildren(innovationAreas).build();
         Competition competition = newCompetition().withInnovationSector(innovationSector).build();
+
+        competition.addInnovationArea(innovationAreas.get(0));
+        competition.addInnovationArea(innovationAreas.get(1));
+
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withInnovationArea(innovationAreas.get(1)).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
 
-        ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId, innovationAreaIdOne);
+        ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId, innovationAreas.get(0).getId());
 
         assertTrue(result.isSuccess());
 
