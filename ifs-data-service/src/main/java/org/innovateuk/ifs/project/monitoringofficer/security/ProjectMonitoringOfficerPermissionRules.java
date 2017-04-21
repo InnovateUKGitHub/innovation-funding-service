@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.security;
+package org.innovateuk.ifs.project.monitoringofficer.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.monitoringofficer.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.security.ProjectMonitoringOfficerPermissionRules;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
