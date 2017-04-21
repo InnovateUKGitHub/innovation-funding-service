@@ -6,8 +6,9 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...               INFUND-1904 As a user registering an account and submitting the data I expect to receive a verification email so I can be sure that the provided email address is correct
 ...
 ...               INFUND-1920 As an applicant once I am accessing my dashboard and clicking on the newly created application for the first time, it will allow me to invite contributors and partners
+...
+...               INFUND-9243 Add marketing email option tick box to 'Your details' page in the 'Create your account' journey
 Suite Setup       Delete the emails from both test mailboxes
-Test Teardown     The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
@@ -47,7 +48,6 @@ Non registered users CH route (email step)
     ...
     ...    INFUND-1785
     [Tags]    HappyPath    Email    SmokeTest
-    [Setup]    The guest user opens the browser
     Given the user reads his email and clicks the link    ${test_mailbox_one}+${unique_email_number}@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
@@ -56,11 +56,11 @@ Non registered users CH route (email step)
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user should see the text in the page    Application overview
+    [Teardown]    logout as user
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
     [Tags]
-    [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -72,6 +72,8 @@ The email address does not stay in the cookie
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     Then the user should not see the text in the page    ${test_mailbox_one}+1@gmail.com
+    [Teardown]    the user closes the browser
+
 
 Non registered users non CH route
     [Documentation]    INFUND-669
@@ -80,7 +82,7 @@ Non registered users non CH route
     ...
     ...    INFUND-1920
     [Tags]    HappyPath
-    [Setup]    The guest user opens the browser
+    [Setup]    the guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -90,6 +92,7 @@ Non registered users non CH route
     And the user enters the details and clicks the create account    ${test_mailbox_one}+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
+
 Non registered users non CH route (email step)
     [Documentation]    INFUND-669
     ...
@@ -97,7 +100,6 @@ Non registered users non CH route (email step)
     ...
     ...    INFUND-1920
     [Tags]    Email    HappyPath
-    [Setup]    The guest user opens the browser
     Given the user reads his email and clicks the link    ${test_mailbox_one}+2@gmail.com    Please verify your email address    Once verified you can sign into your account
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+2@gmail.com    Passw0rd123
@@ -111,8 +113,7 @@ Verify the name of the new application
     ...
     ...    INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
-    [Setup]    The guest user opens the browser
-    When guest user log-in    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
+    When log in as a different user    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     And the user edits the competition title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
@@ -123,10 +124,18 @@ Verify the name of the new application
     And the user clicks the button/link    link=${test_title}
     And the user should see the text in the page    ${test_title}
 
+Marketing emails information should have updated on the profile
+    [Documentation]    INFUND-9243
+    [Tags]    HappyPath
+    When the user navigates to the page    ${edit_profile_url}
+    Then the user should see that the checkbox is selected    allowMarketingEmails
+    [Teardown]    the user closes the browser
+
+
 Special Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
-    [Setup]    The guest user opens the browser
+    [Setup]    the guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -139,13 +148,12 @@ Special Project Finance role
 Special Project Finance role (email step)
     [Documentation]    INFUND-2609
     [Tags]    Email
-    [Setup]    The guest user opens the browser
     Given the user reads his email from the default mailbox and clicks the link    ${test_mailbox_one}+project.finance1@gmail.com    Please verify your email address    Once verified you can sign into your account
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
-    [Teardown]    Logout as user
+
 
 *** Keywords ***
 the new application should be visible in the dashboard page
