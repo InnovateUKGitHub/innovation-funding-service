@@ -11,7 +11,7 @@ COPY certificate /certificate
 WORKDIR $JAVA_HOME
 RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
 WORKDIR /
-VOLUME /tmp
+VOLUME /mnt/ifs_storage
 
 ADD ifs-data-service-@version@.jar app.jar
 RUN sh -c 'touch /app.jar'
