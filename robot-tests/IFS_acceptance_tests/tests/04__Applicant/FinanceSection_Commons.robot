@@ -110,6 +110,7 @@ the user fills in the project costs
 
 the user has read only view once section is marked complete
     the user should not see the element   css=input
+    the user should see the element     jQuery=button:contains("Edit")
     the user clicks the button/link     jQuery=a:contains("Return to finances")
 
 the user fills in Labour
