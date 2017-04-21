@@ -31,7 +31,7 @@ public class AffiliationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
+    public ServiceResult<Void> updateUserAffiliations(long userId, List<AffiliationResource> affiliations) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
             List<Affiliation> targetAffiliations = user.getAffiliations();
             targetAffiliations.clear();

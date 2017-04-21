@@ -16,5 +16,5 @@ public interface AffiliationService {
     ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE')")
-    ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
+    ServiceResult<Void> updateUserAffiliations(long userId, List<AffiliationResource> affiliations);
 }

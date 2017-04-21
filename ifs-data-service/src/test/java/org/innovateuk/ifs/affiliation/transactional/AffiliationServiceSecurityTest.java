@@ -27,14 +27,13 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
     private UserPermissionRules rules;
     private UserLookupStrategies userLookupStrategies;
 
-    private static int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
+    private static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
     @Before
     public void lookupPermissionRules() {
         rules = getMockPermissionRulesBean(UserPermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
     }
-
 
     @Test
     public void getUserAffiliations() {
@@ -72,7 +71,7 @@ public class AffiliationServiceSecurityTest extends BaseServiceSecurityTest<Affi
         }
 
         @Override
-        public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> userProfile) {
+        public ServiceResult<Void> updateUserAffiliations(long userId, List<AffiliationResource> userProfile) {
             return null;
         }
     }
