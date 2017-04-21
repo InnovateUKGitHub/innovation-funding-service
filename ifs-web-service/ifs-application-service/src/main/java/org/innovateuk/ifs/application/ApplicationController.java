@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.application;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.*;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
+import org.innovateuk.ifs.application.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
@@ -11,14 +12,13 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -54,8 +54,6 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @RequestMapping("/application")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationController {
-    private static final Log LOG = LogFactory.getLog(ApplicationController.class);
-
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
 
@@ -64,9 +62,6 @@ public class ApplicationController {
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
-
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
     private QuestionService questionService;
@@ -96,16 +91,13 @@ public class ApplicationController {
     private FormInputResponseService formInputResponseService;
 
     @Autowired
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
-
-    @Autowired
-    private FormInputService formInputService;
 
     @Autowired
     private UserRestService userRestService;
@@ -123,8 +115,7 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource user,
-                                     HttpServletRequest request) {
+                                     @ModelAttribute("loggedInUser") UserResource user) {
 
         Long userId = user.getId();
         applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model);
@@ -168,7 +159,7 @@ public class ApplicationController {
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute("loggedInUser") UserResource user) {
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 

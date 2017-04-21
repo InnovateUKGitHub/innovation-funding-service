@@ -9,8 +9,9 @@ import org.springframework.core.io.ByteArrayResource;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.innovateuk.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
 import static org.hamcrest.Matchers.any;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,7 +25,7 @@ public class CompetitionProjectsStatusControllerTest extends BaseControllerMockM
 
         CompetitionProjectsStatusResource competitionProjectsStatus = newCompetitionProjectsStatusResource().build();
 
-        when(projectStatusServiceMock.getCompetitionStatus(competitionId)).thenReturn(competitionProjectsStatus);
+        when(projectStatusRestService.getCompetitionStatus(competitionId)).thenReturn(restSuccess(competitionProjectsStatus));
 
         mockMvc.perform(get("/competition/" + competitionId + "/status"))
                 .andExpect(view().name("project/competition-status"))
@@ -39,7 +40,7 @@ public class CompetitionProjectsStatusControllerTest extends BaseControllerMockM
 
         ByteArrayResource result = new ByteArrayResource("My content!".getBytes());
 
-        when(bankDetailsService.downloadByCompetition(competitionId)).thenReturn(result);
+        when(bankDetailsRestService.downloadByCompetition(competitionId)).thenReturn(restSuccess(result));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
 
@@ -50,7 +51,7 @@ public class CompetitionProjectsStatusControllerTest extends BaseControllerMockM
                 .andExpect(header().string("Content-disposition", "attachment;filename=" + String.format("Bank_details_%s_%s.csv", competitionId, ZonedDateTime.now().format(formatter))))
                 .andExpect(content().string("My content!"));
 
-        verify(bankDetailsService).downloadByCompetition(123L);
+        verify(bankDetailsRestService).downloadByCompetition(123L);
     }
 
     @Override

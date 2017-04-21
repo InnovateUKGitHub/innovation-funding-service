@@ -21,7 +21,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;

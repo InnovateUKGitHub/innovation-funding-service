@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.assignment.populator;
 
 import org.innovateuk.ifs.application.UserApplicationRole;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -30,7 +30,7 @@ public class AssessmentAssignmentModelPopulator {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -65,8 +65,8 @@ public class AssessmentAssignmentModelPopulator {
     }
 
     private String getProjectSummary(AssessmentResource assessmentResource) {
-        FormInputResponseResource formInputResponseResource = formInputResponseService
-                .getByApplicationIdAndQuestionName(assessmentResource.getApplication(), "Project summary");
+        FormInputResponseResource formInputResponseResource = formInputResponseRestService.getByApplicationIdAndQuestionName(
+                assessmentResource.getApplication(), "Project summary").getSuccessObjectOrThrowException();
         return formInputResponseResource.getValue();
     }
 }

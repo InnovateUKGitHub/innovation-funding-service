@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,6 +46,9 @@ public class ApplicationPrintPopulatorTest {
 
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -78,7 +83,7 @@ public class ApplicationPrintPopulatorTest {
 
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
-        when(formInputResponseService.getByApplication(applicationId)).thenReturn(responses);
+        when(formInputResponseRestService.getResponsesByApplicationId(applicationId)).thenReturn(restSuccess(responses));
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
         when(applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles)).thenReturn(userOrganisation);
         when(formInputResponseService.mapFormInputResponsesToFormInput(responses)).thenReturn(mappedResponses);
