@@ -48,8 +48,11 @@ the days remaining should be correct (Top of the page)
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
+    #Get the text from the deadline element
     ${string}=  Get Text  css=.sub-header .deadline
+    #Extract the numbers from the string with regexp
     ${SCREEN_NO_OF_DAYS_LEFT_LIST}=    get regexp matches    ${string}    \\d+
+    #Get the first item from the matched array of numbers
     ${SCREEN_NO_OF_DAYS_LEFT}=    Get From List    ${SCREEN_NO_OF_DAYS_LEFT_LIST}    0
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
