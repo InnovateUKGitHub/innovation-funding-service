@@ -38,11 +38,6 @@ public class RestResultExceptionHandlingAdviceIntegrationTestRestController {
         return restSuccess("Success");
     }
 
-    @RequestMapping("/failure-test")
-    public RestResult<String> failingRequestMethod() {
-        return restFailure(internalServerErrorError());
-    }
-
     @GetMapping("/failure-test")
     public RestResult<String> failingGetMethod() {
         return restFailure(internalServerErrorError());
@@ -61,11 +56,6 @@ public class RestResultExceptionHandlingAdviceIntegrationTestRestController {
     @DeleteMapping("/failure-test")
     public RestResult<String> failingDeleteMethod() {
         return restFailure(internalServerErrorError());
-    }
-
-    @RequestMapping("/null-test")
-    public RestResult<String> nullReturningRequestMethod() {
-        return null;
     }
 
     @GetMapping("/null-test")
@@ -88,11 +78,6 @@ public class RestResultExceptionHandlingAdviceIntegrationTestRestController {
         return null;
     }
 
-    @RequestMapping("/exception-test")
-    public RestResult<String> exceptionThrowingRequestMethod() {
-        throw new RuntimeException();
-    }
-
     @GetMapping("/exception-test")
     public RestResult<String> exceptionThrowingGetMethod() {
         throw new RuntimeException();
@@ -111,11 +96,6 @@ public class RestResultExceptionHandlingAdviceIntegrationTestRestController {
     @DeleteMapping("/exception-test")
     public RestResult<String> exceptionThrowingDeleteMethod() {
         throw new RuntimeException();
-    }
-
-    @RequestMapping("/package-private-exception-test")
-    RestResult<String> packagePrivateRequestMethod() {
-        return null;
     }
 
     @GetMapping("/package-private-exception-test")
