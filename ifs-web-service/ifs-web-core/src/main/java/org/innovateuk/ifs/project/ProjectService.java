@@ -46,10 +46,6 @@ public interface ProjectService {
 
     OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
-
-    ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
-
     Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId);
 
     Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId);
