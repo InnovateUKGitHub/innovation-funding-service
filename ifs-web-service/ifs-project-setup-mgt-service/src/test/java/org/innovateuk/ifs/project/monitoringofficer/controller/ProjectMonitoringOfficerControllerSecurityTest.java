@@ -1,6 +1,5 @@
-package org.innovateuk.ifs.project.monitoringofficer;
+package org.innovateuk.ifs.project.monitoringofficer.controller;
 
-import org.innovateuk.ifs.monitoringofficer.controller.ProjectMonitoringOfficerController;
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;

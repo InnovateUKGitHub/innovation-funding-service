@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.util.Optional;

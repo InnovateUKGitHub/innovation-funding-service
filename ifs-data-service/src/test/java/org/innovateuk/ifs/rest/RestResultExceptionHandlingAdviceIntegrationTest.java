@@ -30,7 +30,6 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
 
     @Test
     public void testFailureMethodsReturnFailureNormally() {
-        assertFailedRestResult(() -> applicableController.failingRequestMethod());
         assertFailedRestResult(() -> applicableController.failingGetMethod());
         assertFailedRestResult(() -> applicableController.failingPostMethod());
         assertFailedRestResult(() -> applicableController.failingPutMethod());
@@ -39,7 +38,6 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
 
     @Test
     public void testNullReturningMethodsReturnDefaultFailure() {
-        assertFailedRestResult(() -> applicableController.nullReturningRequestMethod());
         assertFailedRestResult(() -> applicableController.nullReturningGetMethod());
         assertFailedRestResult(() -> applicableController.nullReturningPostMethod());
         assertFailedRestResult(() -> applicableController.nullReturningPutMethod());
@@ -48,7 +46,6 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
 
     @Test
     public void testExceptionThrowingMethodsReturnDefaultFailure() {
-        assertFailedRestResult(() -> applicableController.exceptionThrowingRequestMethod());
         assertFailedRestResult(() -> applicableController.exceptionThrowingGetMethod());
         assertFailedRestResult(() -> applicableController.exceptionThrowingPostMethod());
         assertFailedRestResult(() -> applicableController.exceptionThrowingPutMethod());
@@ -57,7 +54,6 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
 
     @Test
     public void testPackagePrivateMethodsNotAffectedByAdvice() {
-        assertNull(applicableController.packagePrivateRequestMethod());
         assertNull(applicableController.packagePrivateGetMethod());
         assertNull(applicableController.packagePrivatePostMethod());
         assertNull(applicableController.packagePrivatePutMethod());
