@@ -6,10 +6,7 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.user.transactional.BaseUserService;
-import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.UserProfileService;
-import org.innovateuk.ifs.user.transactional.UserService;
+import org.innovateuk.ifs.user.transactional.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +47,10 @@ public class UserController {
 
     @Autowired
     private UserProfileService userProfileService;
+
+    @Autowired
+    private CrmService crmService;
+
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable("uid") final String uid) {
@@ -114,6 +115,7 @@ public class UserController {
                     registrationService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
                         tokenService.handleExtraAttributes(token);
                         tokenService.removeToken(token);
+                        crmService.syncCrmContact(token.getClassPk());
                     });
                     return restSuccess();
                 });
@@ -148,7 +150,7 @@ public class UserController {
 
     @PostMapping("/updateDetails")
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
-        return userProfileService.updateDetails(userResource).toPutResponse();
+        return userProfileService.updateDetails(userResource).andOnSuccessReturnVoid(() -> crmService.syncCrmContact(userResource.getId())).toPutResponse();
     }
 
     @GetMapping("/id/{userId}/getProfileSkills")
