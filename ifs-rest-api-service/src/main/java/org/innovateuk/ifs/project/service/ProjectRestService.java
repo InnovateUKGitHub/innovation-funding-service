@@ -103,7 +103,7 @@ public interface ProjectRestService {
 
     RestResult<ProjectUserResource> getProjectManager(Long projectId);
 
-    RestResult<Void> sendGrantOfferLetter(Long projectId);
+   /* RestResult<Void> sendGrantOfferLetter(Long projectId);
 
     RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
 
@@ -113,5 +113,5 @@ public interface ProjectRestService {
 
     RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
-    RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
+    RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);*/
 }

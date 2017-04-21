@@ -247,7 +247,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return getWithRestResult(projectRestURL + "/" + projectId + "/project-manager", ProjectUserResource.class);
     }
 
-    @Override
+/*    @Override
     public RestResult<Void> sendGrantOfferLetter(Long projectId) {
         return  postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/send", Void.class);
     }
@@ -275,5 +275,5 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/state", GOLState.class);
-    }
+    }*/
 }

@@ -309,6 +309,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectRestService.addAdditionalContractFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+
+    /* @Override
     public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
         return projectRestService.sendGrantOfferLetter(projectId).toServiceResult();
     }
@@ -316,11 +322,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
         return projectRestService.isSendGrantOfferLetterAllowed(projectId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
-        return projectRestService.addAdditionalContractFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
     @Override
@@ -342,7 +343,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
         return projectRestService.getGrantOfferLetterWorkflowState(projectId).toServiceResult();
     }
-
+*/
     @Override
     public Optional<ProjectUserResource> getProjectManager(Long projectId) {
         return projectRestService.getProjectManager(projectId).toServiceResult().getOptionalSuccessObject();
