@@ -93,7 +93,12 @@ public class ApplicantDashboardViewModel {
     }
 
     public boolean applicationIsSubmitted(Long applicationId) {
-        return ApplicationState.SUBMITTED.equals(getApplicationState(applicationId));
+        return ApplicationState.SUBMITTED.equals(getApplicationState(applicationId)) ||
+                ApplicationState.INELIGIBLE.equals(getApplicationState(applicationId));
+    }
+
+    public boolean applicationIsInformedIneligible(Long applicationId) {
+        return ApplicationState.INELIGIBLE_INFORMED.equals(getApplicationState(applicationId));
     }
 
     public boolean applicationIsCreated(Long applicationId) {

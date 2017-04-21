@@ -642,8 +642,6 @@ public class BaseUnitTest {
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(1).getId())).thenReturn(completedMap);
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(2).getId())).thenReturn(completedMap);
 
-        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(ServiceResult.serviceSuccess(idsToApplicationResources.get(pr.getApplicationId()))));
-
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
         when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));
