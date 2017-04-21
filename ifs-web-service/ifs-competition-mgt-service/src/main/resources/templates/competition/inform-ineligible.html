@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to be an assessor'" />
+</head>
+
+<body th:with="context='comp-management'" class="competition-management competition-overview">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Ineligible applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications/ineligible(competitionId=${model.competitionId})}" />
+
+    <div class="page-title">
+        <h1 class="heading-xlarge">
+            <span class="heading-secondary" th:text="${model.competitionName}">Technology inspired</span>
+            Inform lead applicant
+        </h1>
+    </div>
+
+    <p class="heading-medium">Application:</p>
+    <p th:text="${model.applicationName}"/>
+
+    <p>The following email will be sent to the lead applicant, after which this application will be no longer available for assessment.</p>
+
+    <p class="heading-medium" th:text="|Recipient: ${model.leadApplicant}|">Dave smith</p>
+
+    <form th:action="@{/competition/application/{applicationId}/ineligible/send(applicationId=${model.applicationId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+        <div class="form-group">
+            <label class="form-label-bold" for="subject">Subject</label>
+            <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label-bold" for="message">Message</label>
+            <textarea id="message" rows="16" class="form-control width-full" th:field="*{content}"></textarea>
+        </div>
+
+        <div class="alignright">
+            <button type="submit" class="button button-large">Send invite</button>
+        </div>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
