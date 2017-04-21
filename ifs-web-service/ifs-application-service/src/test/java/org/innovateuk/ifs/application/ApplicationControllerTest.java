@@ -5,7 +5,7 @@ import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.viewmodel.AssessQuestionFeedbackViewModel;
@@ -48,10 +48,11 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.SUBMITTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -115,6 +116,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.setupFinances();
         this.setupInvites();
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }
 
     @Test
@@ -316,7 +318,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getById(questionId)).thenReturn(questionResource);
         when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
         when(applicationService.getById(applicationId)).thenReturn(applicationResource);
-        when(formInputResponseService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(responseResources);
+        when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(restSuccess(responseResources));
         when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
                 .thenReturn(restSuccess(aggregateResource));
 
@@ -498,7 +500,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app));
 
-        verify(applicationService).updateStatus(app.getId(), SUBMITTED);
+        verify(applicationService).updateState(app.getId(), SUBMITTED);
     }
 
     @Test
@@ -516,7 +518,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
-        verify(applicationService, never()).updateStatus(any(Long.class), any(ApplicationStatus.class));
+        verify(applicationService, never()).updateState(any(Long.class), any(ApplicationState.class));
     }
 
     @Test
@@ -627,5 +629,4 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(UserResource.class));
     }
-
 }

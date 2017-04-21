@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -32,7 +32,7 @@ public class ApplicantDashboardViewModelTest {
     private List<ApplicationResource> applicationsFinished;
     private List<ProjectResource> projectsInSetup;
     private Map<Long, CompetitionResource> competitions;
-    private Map<Long, ApplicationStatus> applicationStatuses;
+    private Map<Long, ApplicationState> applicationStates;
 
     private ApplicantDashboardViewModel viewModel;
 
@@ -50,12 +50,12 @@ public class ApplicantDashboardViewModelTest {
         this.applicationsInProgress = newApplicationResource()
                 .withId(APPLICATION_ID_IN_PROGRESS)
                 .withCompetition(COMPETITION_ID)
-                .withApplicationStatus(ApplicationStatus.OPEN)
+                .withApplicationState(ApplicationState.OPEN)
                 .build(1);
         this.applicationsAssigned = asList(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IS_FINISH, APPLICATION_ID_IN_PROJECT);
         this.applicationsFinished = newApplicationResource()
                 .withId(APPLICATION_ID_IS_FINISH)
-                .withApplicationStatus(ApplicationStatus.REJECTED)
+                .withApplicationState(ApplicationState.REJECTED)
                 .withCompetition(COMPETITION_ID)
                 .build(1);
         this.projectsInSetup = newProjectResource()
@@ -63,14 +63,14 @@ public class ApplicantDashboardViewModelTest {
                 .withApplication(APPLICATION_ID_IN_PROJECT)
                 .build(1);
         this.competitions = asMap(COMPETITION_ID, newCompetitionResource().withId(COMPETITION_ID).build());
-        this.applicationStatuses = asMap(APPLICATION_ID_IN_PROGRESS, ApplicationStatus.OPEN,
-                APPLICATION_ID_IN_PROJECT, ApplicationStatus.SUBMITTED,
-                APPLICATION_ID_IS_FINISH, ApplicationStatus.REJECTED,
-                APPLICATION_ID_IS_CREATED, ApplicationStatus.CREATED,
-                APPLICATION_ID_IS_APPROVED, ApplicationStatus.APPROVED);
+        this.applicationStates = asMap(APPLICATION_ID_IN_PROGRESS, ApplicationState.OPEN,
+                APPLICATION_ID_IN_PROJECT, ApplicationState.SUBMITTED,
+                APPLICATION_ID_IS_FINISH, ApplicationState.REJECTED,
+                APPLICATION_ID_IS_CREATED, ApplicationState.CREATED,
+                APPLICATION_ID_IS_APPROVED, ApplicationState.APPROVED);
 
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStatuses);
+                applicationsFinished, projectsInSetup, competitions, applicationStates);
     }
 
     @Test
@@ -152,8 +152,8 @@ public class ApplicantDashboardViewModelTest {
 
     @Test
     public void getApplicationStatusTest() {
-        assertEquals(ApplicationStatus.CREATED, viewModel.getApplicationStatus(APPLICATION_ID_IS_CREATED));
-        assertEquals(ApplicationStatus.OPEN, viewModel.getApplicationStatus(APPLICATION_ID_IN_PROGRESS));
+        assertEquals(ApplicationState.CREATED, viewModel.getApplicationState(APPLICATION_ID_IS_CREATED));
+        assertEquals(ApplicationState.OPEN, viewModel.getApplicationState(APPLICATION_ID_IN_PROGRESS));
     }
 
     @Test
@@ -205,6 +205,6 @@ public class ApplicantDashboardViewModelTest {
 
     private void resetViewModel() {
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStatuses);
+                applicationsFinished, projectsInSetup, competitions, applicationStates);
     }
 }

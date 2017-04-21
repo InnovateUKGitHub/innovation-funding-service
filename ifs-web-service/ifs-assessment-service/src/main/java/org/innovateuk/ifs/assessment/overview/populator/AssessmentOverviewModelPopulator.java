@@ -3,25 +3,23 @@ package org.innovateuk.ifs.assessment.overview.populator;
 import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewAppendixViewModel;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewQuestionViewModel;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewSectionViewModel;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewViewModel;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +33,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -61,10 +60,10 @@ public class AssessmentOverviewModelPopulator {
     private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     public AssessmentOverviewViewModel populateModel(long assessmentId) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
@@ -127,7 +126,7 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private List<AssessmentOverviewAppendixViewModel> getAppendices(long applicationId, List<QuestionResource> questions) {
-        List<FormInputResponseResource> applicantResponses = formInputResponseService.getByApplication(applicationId);
+        List<FormInputResponseResource> applicantResponses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
         return applicantResponses.stream()
                 .filter(formInputResponseResource -> formInputResponseResource.getFileEntry() != null)
@@ -136,8 +135,8 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private Map<Long, List<FormInputResource>> getFormInputsByQuestion(long competitionId) {
-        return formInputService.
-                findAssessmentInputsByCompetition(competitionId).stream().collect(groupingBy(FormInputResource::getQuestion));
+        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(competitionId, ASSESSMENT).getSuccessObjectOrThrowException();
+        return formInputResources.stream().collect(groupingBy(FormInputResource::getQuestion));
     }
 
     private Map<Long, AssessorFormInputResponseResource> getResponsesByFormInput(long assessmentId) {

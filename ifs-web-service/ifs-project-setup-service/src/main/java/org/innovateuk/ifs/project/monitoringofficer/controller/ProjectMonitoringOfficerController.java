@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,9 @@ public class ProjectMonitoringOfficerController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectMonitoringOfficerService projectMonitoringOfficerService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
@@ -46,7 +50,7 @@ public class ProjectMonitoringOfficerController {
 
     private ProjectMonitoringOfficerViewModel getMonitoringOfficerViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);
+        Optional<MonitoringOfficerResource> monitoringOfficer = projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId);
         return new ProjectMonitoringOfficerViewModel(project, monitoringOfficer);
     }
 }
