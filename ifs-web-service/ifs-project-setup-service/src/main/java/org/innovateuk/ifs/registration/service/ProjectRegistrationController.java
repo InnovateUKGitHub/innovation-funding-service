@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,21 +35,12 @@ public class ProjectRegistrationController {
     private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
-    protected UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    protected ProjectRestService projectRestService;
-
-    @Autowired
-    protected OrganisationRestService organisationRestService;
-
-    @Autowired
     private CookieUtil cookieUtil;
 
     private final static String EMAIL_FIELD_NAME = "email";
     public static final String REGISTER_MAPPING = "/registration/register";
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
-    private static final String REGISTRATION_REGISTER_VIEW = "project/registration/register";
+    private static final String REGISTRATION_REGISTER_VIEW = "registration/register";
 
     @GetMapping(REGISTER_MAPPING)
     public String registerForm(Model model,
