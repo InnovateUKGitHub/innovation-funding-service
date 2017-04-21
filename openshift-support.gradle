@@ -15,6 +15,11 @@ task dbResetSysint(type:Exec) {
     args = [openshiftEnv, "sysint", project.version]
 }
 
+task dbResetUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
 task osDeployLocal(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local"]
