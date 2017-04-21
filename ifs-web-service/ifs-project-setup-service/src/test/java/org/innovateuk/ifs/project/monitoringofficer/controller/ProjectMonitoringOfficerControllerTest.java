@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -35,7 +35,6 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -149,7 +148,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 build();
 
         Optional<MonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
+        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);

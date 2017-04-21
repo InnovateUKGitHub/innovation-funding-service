@@ -1,4 +1,6 @@
-package org.innovateuk.ifs.project.domain;
+package org.innovateuk.ifs.project.monitoringofficer.domain;
+
+import org.innovateuk.ifs.project.domain.Project;
 
 import javax.persistence.*;
 

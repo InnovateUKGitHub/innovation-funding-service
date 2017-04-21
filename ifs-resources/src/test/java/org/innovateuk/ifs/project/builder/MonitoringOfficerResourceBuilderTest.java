@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.commons.test.BaseTest;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.junit.Test;
 
 import java.util.List;
