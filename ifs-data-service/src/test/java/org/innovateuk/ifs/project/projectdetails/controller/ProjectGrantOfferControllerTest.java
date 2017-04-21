@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,12 +15,16 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Collections.emptyMap;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -128,6 +133,21 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
 
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
                 andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void getGrantOfferLetterWorkflowState() throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectGrantOfferServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
+
+        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(GOLState.APPROVED)))
+                .andReturn();
+
+        verify(projectGrantOfferServiceMock).getGrantOfferLetterWorkflowState(projectId);
     }
 
     @Override

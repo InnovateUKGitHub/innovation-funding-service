@@ -1,13 +1,9 @@
 package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 
-/**
- * Created by arif on 20/04/2017.
- */
 public interface GrantOfferLetterService {
 
     ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);

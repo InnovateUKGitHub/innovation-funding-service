@@ -4,17 +4,23 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -25,9 +31,11 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,23 +44,30 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newInvite;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -65,6 +80,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -80,12 +96,22 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private Application application;
     private List<Organisation> organisations;
     private Organisation nonAcademicUnfunded;
+    //private Organisation o;
     private Role leadApplicantRole;
     private User user;
+    //private User u;
     private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
     private Project project;
+    //private Project p;
     private List<OrganisationResource> organisationResources;
+    //private Role partnerRole;
+    //private MonitoringOfficerResource monitoringOfficerResource;
+    //private BankDetails bankDetails;
+    //private SpendProfile spendProfile;
+
+    @Mock
+    private EmailService projectEmailService;
 
     private Address address;
 
@@ -127,6 +153,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         user = newUser().
                 withId(userId).
                 build();
+        //projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisations.get(0).getId()).
@@ -661,4 +688,327 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
 
     }
+
+
+    @Test
+    public void testSendGrantOfferLetterNoGol(){
+
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).withGrantOfferLetter(null).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testSendGrantOfferLetterSendFails(){
+
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
+        FileEntry golFile = newFileEntry().withMediaType("application/pdf").withFilesizeBytes(10).build();
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).withGrantOfferLetter(golFile).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testSendGrantOfferLetterNoProject(){
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isFailure());
+    }
+    @Test
+    public void testSendGrantOfferLetterSuccess(){
+
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).withGrantOfferLetter(golFile).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
+
+        User user = UserBuilder.newUser().build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Ignore
+    @Test
+   public void testSendGrantOfferLetterFailure(){
+
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).withGrantOfferLetter(golFile).build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
+
+        User user = UserBuilder.newUser().build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowed() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.isSendAllowed(project)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowedFails() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.isSendAllowed(project)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
+
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowedNoProject() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testIsGrantOfferLetterAlreadySent() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.isAlreadySent(project)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testIsGrantOfferLetterAlreadySentFails() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.isAlreadySent(project)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
+
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+    }
+
+    @Test
+    public void testIsGrantOfferLetterAlreadySentNoProject() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testApproveSignedGrantOfferLetterSuccess(){
+
+        User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
+        setLoggedInUser(newUserResource().withId(u.getId()).build());
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).build();
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
+        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.TRUE);
+        when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        verify(projectRepositoryMock, atLeast(2)).findOne(projectId);
+        verify(golWorkflowHandlerMock).isReadyToApprove(p);
+        verify(golWorkflowHandlerMock).grantOfferLetterApproved(p, u);
+        verify(projectWorkflowHandlerMock).grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
+        verify(projectEmailService).sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testDuplicateEmailsAreNotSent(){
+
+        User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
+        setLoggedInUser(newUserResource().withId(u.getId()).build());
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
+        List<ProjectUser> fc = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
+        pu.addAll(fc);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).build();
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
+        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.TRUE);
+        when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        verify(projectRepositoryMock, atLeast(2)).findOne(projectId);
+        verify(golWorkflowHandlerMock).isReadyToApprove(p);
+        verify(golWorkflowHandlerMock).grantOfferLetterApproved(p, u);
+        verify(projectWorkflowHandlerMock).grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE)).thenReturn(serviceSuccess());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testApproveSignedGrantOfferLetterFailure(){
+        User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
+        setLoggedInUser(newUserResource().withId(u.getId()).build());
+
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        project.setGrantOfferLetter(golFile);
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.TRUE);
+        when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(project, u)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isReadyToApprove(project);
+        verify(golWorkflowHandlerMock).grantOfferLetterApproved(project, u);
+        verify(projectWorkflowHandlerMock, never()).grantOfferLetterApproved(any(), any());
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
+    }
+
+    @Test
+    public void testApproveSignedGrantOfferLetterFailureNotReadyToApprove(){
+
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        project.setGrantOfferLetter(golFile);
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isReadyToApprove(project);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE));
+    }
+
+    @Test
+    public void testGetSignedGrantOfferLetterApprovalStatusSuccess(){
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isApproved(project);
+
+        assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetSignedGrantOfferLetterApprovalStatusFailure(){
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(golWorkflowHandlerMock).isApproved(project);
+
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetGrantOfferLetterWorkflowStateWhenProjectDoesNotExist() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
+    }
+
+    @Test
+    public void testGetGrantOfferLetterWorkflowState() {
+
+        Project projectInDB = newProject().build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(golWorkflowHandlerMock.getState(projectInDB)).thenReturn(GOLState.APPROVED);
+
+        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(GOLState.APPROVED, result.getSuccessObject());
+
+    }
+
 }

@@ -152,7 +152,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(
+/*    @PermissionRule(
             value = "SEND_GRANT_OFFER_LETTER",
             description = "Internal users can send the Grant Offer Letter notification")
     public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user) {
@@ -188,6 +188,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "Internal users can see grant offer approval status")
     public boolean internalUsersCanViewGrantOfferApprovedStatus(ProjectResource project, UserResource user) {
         return isInternal(user);
-    }
+    }*/
 
 }

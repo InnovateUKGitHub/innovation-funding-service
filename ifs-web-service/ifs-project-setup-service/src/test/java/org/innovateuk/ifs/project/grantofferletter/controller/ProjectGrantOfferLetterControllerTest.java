@@ -70,8 +70,8 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
         when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
-        when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
                 andExpect(status().isOk()).
@@ -208,8 +208,8 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         when(projectService.getAdditionalContractFileDetails(123L)).thenReturn(Optional.empty());
         when(projectService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
-        when(projectService.isGrantOfferLetterAlreadySent(123L)).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(projectService.isSignedGrantOfferLetterApproved(project.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(grantOfferLetterService.isGrantOfferLetterAlreadySent(123L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(grantOfferLetterService.isSignedGrantOfferLetterApproved(project.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         MvcResult mvcResult = mockMvc.perform(
                 fileUpload("/project/123/offer").

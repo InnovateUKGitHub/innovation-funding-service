@@ -20,18 +20,29 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -48,10 +59,14 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static java.io.File.separator;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService {
@@ -67,6 +82,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
 
     public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
+
+    private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
+
+    private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
+
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -91,6 +111,15 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
+
+    @Autowired
+    private  EmailService projectEmailService;
+
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private ProjectUserMapper projectUserMapper;
 
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
@@ -398,5 +427,161 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         }
 
         return serviceSuccess(project);
+    }
+
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
+    @Override
+    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
+
+        return getProject(projectId).andOnSuccess( project -> {
+            if (project.getGrantOfferLetter() == null) {
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
+            }
+
+            User projectManager = getExistingProjectManager(project).get().getUser();
+            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
+
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("dashboardUrl", webBaseUrl);
+
+            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER);
+
+            if (notificationResult != null && !notificationResult.isSuccess()) {
+                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+            }
+            return sendGrantOfferLetterSuccess(project);
+        });
+    }
+
+    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterSent(project, user)) {
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
+
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isSendAllowed(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
+        return getProject(projectId)
+                .andOnSuccess(project -> {
+                    if(!golWorkflowHandler.isAlreadySent(project)) {
+                        return serviceSuccess(Boolean.FALSE);
+                    }
+                    return serviceSuccess(Boolean.TRUE);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+
+        return getProject(projectId).andOnSuccess( project -> {
+            if(golWorkflowHandler.isReadyToApprove(project)) {
+                if(ApprovalType.APPROVED == approvalType) {
+                    return approveGOL(project)
+                            .andOnSuccess(() -> {
+
+                                        if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
+                                            LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
+                                            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                                        }
+                                        notifyProjectIsLive(projectId);
+                                        return serviceSuccess();
+                                    }
+                            );
+                }
+            }
+            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
+        });
+    }
+
+    private ServiceResult<Void> approveGOL(Project project) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterApproved(project, user)) {
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
+    }
+
+    @Override
+    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
+    }
+
+
+    private Optional<ProjectUser> getExistingProjectManager(Project project) {
+        List<ProjectUser> projectUsers = project.getProjectUsers();
+        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
+        return getOnlyElementOrEmpty(projectManagers);
+    }
+
+
+    private List<NotificationTarget> getLiveProjectNotificationTarget(Project project) {
+        List<NotificationTarget> notificationTargets = new ArrayList<>();
+        User projectManager = getExistingProjectManager(project).get().getUser();
+        NotificationTarget projectManagerTarget = createProjectManagerNotificationTarget(projectManager);
+        List<NotificationTarget> financeTargets = simpleMap(simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()), pu -> new UserNotificationTarget(pu.getUser()));
+        List<NotificationTarget> uniqueFinanceTargets = simpleFilterNot(financeTargets, target -> target.getEmailAddress().equals(projectManager.getEmail()));
+        notificationTargets.add(projectManagerTarget);
+        notificationTargets.addAll(uniqueFinanceTargets);
+
+        return notificationTargets;
+    }
+
+    private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
+        String fullName = getProjectManagerFullName(projectManager);
+
+        return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
+    }
+
+    private String getProjectManagerFullName(User projectManager) {
+        // At this stage, validation has already been done to ensure that first name and last name are not empty
+        return projectManager.getFirstName() + " " + projectManager.getLastName();
+    }
+
+    private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
+
+        Project project = projectRepository.findOne(projectId);
+        List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
+
+        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE);
+
+        return processAnyFailuresOrSucceed(sendEmailResult);
+    }
+
+    @Override
+    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
+                notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
     }
 }

@@ -9,8 +9,10 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -28,6 +30,12 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
+import static java.util.stream.Collectors.toList;
+import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -35,12 +43,6 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.of;
-import static java.util.stream.Collectors.toList;
-import static junit.framework.TestCase.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -331,9 +333,9 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
     @Test
     public void testAddPartnerAllowedIfSystemRegistrar() {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build())).build());
-            classUnderTest.addPartner(1L, 2L, 3L);
-            // There should be no exception thrown
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build())).build());
+        classUnderTest.addPartner(1L, 2L, 3L);
+        // There should be no exception thrown
     }
 
     @Test
@@ -363,7 +365,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
-    @Test
+ /*   @Test
     public void testSendGrantOfferLetter(){
         ProjectResource project = newProjectResource().build();
 
@@ -430,7 +432,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
-    }
+    }*/
 
     @Test
     public void testGetProjectManager(){
@@ -482,12 +484,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
-		@Override
-		public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
-			return null;
-		}
+        @Override
+        public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+            return null;
+        }
 
-		@Override
+        @Override
         public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
             return null;
         }
@@ -502,10 +504,10 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
-		@Override
-		public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
-			return null;
-		}
+        @Override
+        public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+            return null;
+        }
 
         @Override
         public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
@@ -609,25 +611,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
-            return null;
-        }
-        @Override
-        public ServiceResult<Void> sendGrantOfferLetter(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
             return null;
         }
 

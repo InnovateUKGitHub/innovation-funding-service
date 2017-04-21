@@ -4,7 +4,10 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.InputStream;
@@ -64,4 +67,27 @@ public interface ProjectGrantOfferService {
 
     @PreAuthorize("hasPermission(#projectId, 'SUBMIT_GRANT_OFFER_LETTER')")
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'SEND_GRANT_OFFER_LETTER')")
+    ServiceResult<Void> sendGrantOfferLetter(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'SEND_GRANT_OFFER_LETTER')")
+    ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
+    ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_SIGNED_GRANT_OFFER_LETTER')")
+    ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS')")
+    ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
+    ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
+    ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
+
+
 }
