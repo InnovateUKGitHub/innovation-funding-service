@@ -299,7 +299,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .header("referer", "/organisation/create/find-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/lead-organisation-type"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/confirm-organisation"));
     }
 
     @Test
@@ -474,7 +474,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSelectedBusinessConfirmRegisteredAddress() throws Exception {
+    public void testSelectedBusinessSaveBusiness() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/selected-organisation/" + COMPANY_ID)
                 .param("useSearchResultAddress", "true")
                 .param("_useSearchResultAddress", "on")
@@ -485,11 +485,11 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .cookie(organisationForm)
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/lead-organisation-type"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/confirm-organisation"));
     }
 
     @Test
-    public void testSelectedBusinessSaveBusiness() throws Exception {
+    public void testSelectedBusinessSaveLeadBusiness() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/lead-organisation-type")
                 .param("organisationTypeId", OrganisationTypeEnum.RTO.getId().toString())
                 .cookie(organisationForm)
