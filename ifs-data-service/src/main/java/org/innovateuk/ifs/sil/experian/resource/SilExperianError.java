@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.sil.experian.resource;
 
-public class SilError {
+public class SilExperianError {
     private String code;
     private String type;
     private String message;
     private String fields;
     private String description;
 
-    public SilError() {}
+    public SilExperianError() {}
 
-    public SilError(String code, String type, String message, String fields, String description) {
+    public SilExperianError(String code, String type, String message, String fields, String description) {
         this.code = code;
         this.type = type;
         this.message = message;

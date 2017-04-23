@@ -16,6 +16,7 @@ project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
 
 ext.silRestBaseURL="http://localhost:8080/silstub"
+ext.silRestCrmBaseURL="http://localhost:8080/silstub"
 
 //
 // The production application will use the SIL to send emails out.  For non-production environments, the IFS application
