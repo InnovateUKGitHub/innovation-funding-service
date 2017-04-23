@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.user.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
@@ -12,17 +10,20 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
+import org.innovateuk.ifs.user.transactional.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -46,6 +47,9 @@ public class UserController {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private CrmService crmService;
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable("uid") final String uid) {
@@ -110,6 +114,7 @@ public class UserController {
                     registrationService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
                         tokenService.handleExtraAttributes(token);
                         tokenService.removeToken(token);
+                        crmService.syncCrmContact(token.getClassPk());
                     });
                     return restSuccess();
                 });
@@ -144,6 +149,6 @@ public class UserController {
 
     @PostMapping("/updateDetails")
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
-        return userService.updateDetails(userResource).toPutResponse();
+        return userService.updateDetails(userResource).andOnSuccessReturnVoid(() -> crmService.syncCrmContact(userResource.getId())).toPutResponse();
     }
-}
+ }
