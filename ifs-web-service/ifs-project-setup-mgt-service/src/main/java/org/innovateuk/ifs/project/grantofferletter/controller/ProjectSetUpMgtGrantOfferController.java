@@ -10,7 +10,7 @@ import org.innovateuk.ifs.controller.CaseInsensitiveConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterSendForm;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterSendViewModel;
 import org.innovateuk.ifs.project.ProjectService;
@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/project/{projectId}/grant-offer-letter")
-public class ProjectGrantOfferLetterSendController {
+public class ProjectSetUpMgtGrantOfferController {
     @Autowired
     private ProjectService projectService;
 
@@ -51,7 +51,7 @@ public class ProjectGrantOfferLetterSendController {
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
-    private GrantOfferLetterService grantOfferLetterService;
+    private ProjectGrantOfferService projectGrantOfferService;
 
     private static final String FORM_ATTR = "form";
 
@@ -75,7 +75,7 @@ public class ProjectGrantOfferLetterSendController {
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
-        ServiceResult<Void> generateResult = grantOfferLetterService.sendGrantOfferLetter(projectId);
+        ServiceResult<Void> generateResult = projectGrantOfferService.sendGrantOfferLetter(projectId);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> {return doViewGrantOfferLetterSend(projectId, model, form);}
         );
@@ -129,7 +129,7 @@ public class ProjectGrantOfferLetterSendController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model) {
-        grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
+        projectGrantOfferService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
         return doViewGrantOfferLetterSend(projectId, model, form);
     }
 
@@ -178,7 +178,7 @@ public class ProjectGrantOfferLetterSendController {
     ResponseEntity<ByteArrayResource> downloadSignedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectService.getSignedGrantOfferLetterFile(projectId);
+        final Optional<ByteArrayResource> content = projectGrantOfferService.getSignedGrantOfferLetterFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
@@ -214,7 +214,7 @@ public class ProjectGrantOfferLetterSendController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
 
-        GOLState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
+        GOLState golState = projectGrantOfferService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
 
         return new ProjectGrantOfferLetterSendViewModel(competitionSummary,
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,

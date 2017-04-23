@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.ProjectGrantOfferLetterViewModelPopulator;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -33,7 +34,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  **/
 @Controller
 @RequestMapping("/project/{projectId}/offer")
-public class ProjectGrantOfferLetterController {
+public class ProjectSetUpGrantOfferController {
 
     private static final String FORM_ATTR = "form";
     public static final String BASE_DIR = "project";
@@ -41,6 +42,9 @@ public class ProjectGrantOfferLetterController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectGrantOfferService projectGrantOfferService;
 
     @Autowired
     private ProjectGrantOfferLetterViewModelPopulator grantOfferLetterViewModelPopulator;
@@ -128,7 +132,7 @@ public class ProjectGrantOfferLetterController {
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
-        final Optional<ByteArrayResource> content = projectService.getSignedGrantOfferLetterFile(projectId);
+        final Optional<ByteArrayResource> content = projectGrantOfferService.getSignedGrantOfferLetterFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }

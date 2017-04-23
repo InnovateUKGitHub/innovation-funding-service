@@ -65,8 +65,6 @@ public interface ProjectRestService {
 
     RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
 
-    RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId);
-
     RestResult<Optional<FileEntryResource>> getSignedGrantOfferLetterFileDetails(Long projectId);
 
     RestResult<FileEntryResource> addSignedGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
@@ -99,15 +97,4 @@ public interface ProjectRestService {
 
     RestResult<ProjectUserResource> getProjectManager(Long projectId);
 
-   /* RestResult<Void> sendGrantOfferLetter(Long projectId);
-
-    RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
-
-    RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
-
-    RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
-
-    RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
-
-    RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);*/
 }

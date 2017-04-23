@@ -4,10 +4,13 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class GrantOfferLetterRestServiceImpl extends BaseRestService implements GrantOfferLetterRestService {
+public class ProjectGrantOfferLetterRestServiceImpl extends BaseRestService implements ProjectGrantOfferLetterRestService {
 
     private String projectRestURL = "/project";
 
@@ -39,5 +42,10 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     @Override
     public RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/state", GOLState.class);
+    }
+
+    @Override
+    public RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer", ByteArrayResource.class).toOptionalIfNotFound();
     }
 }

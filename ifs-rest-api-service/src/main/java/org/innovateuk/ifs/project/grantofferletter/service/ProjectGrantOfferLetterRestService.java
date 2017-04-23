@@ -3,8 +3,13 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.springframework.core.io.ByteArrayResource;
 
-public interface GrantOfferLetterRestService {
+import java.util.Optional;
+
+public interface ProjectGrantOfferLetterRestService {
+
+    RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId);
 
     RestResult<Void> sendGrantOfferLetter(Long projectId);
 

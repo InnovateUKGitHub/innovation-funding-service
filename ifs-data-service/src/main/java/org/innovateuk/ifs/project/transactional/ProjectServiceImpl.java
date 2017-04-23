@@ -957,42 +957,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return notificationTargets;
     }
 
- /*   @Override
-    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
-
-        return getProject(projectId).andOnSuccess( project -> {
-            if (project.getGrantOfferLetter() == null) {
-                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
-            }
-
-            User projectManager = getExistingProjectManager(project).get().getUser();
-            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
-
-            Map<String, Object> notificationArguments = new HashMap<>();
-            notificationArguments.put("dashboardUrl", webBaseUrl);
-
-            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER);
-
-            if (!notificationResult.isSuccess()) {
-                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
-            }
-            return sendGrantOfferLetterSuccess(project);
-        });
-    }
-
-    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-
-            if (golWorkflowHandler.grantOfferLetterSent(project, user)) {
-                return serviceSuccess();
-            } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-            }
-        });
-    }*/
-
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
         Project project = projectRepository.findOne(projectId);
@@ -1002,75 +966,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return processAnyFailuresOrSucceed(sendEmailResult);
     }
-
-/*    @Override
-    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
-
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isSendAllowed(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
-    }
-
-    @Override
-    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isAlreadySent(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
-    }
-
-    @Override
-    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
-
-        return getProject(projectId).andOnSuccess( project -> {
-            if(golWorkflowHandler.isReadyToApprove(project)) {
-                if(ApprovalType.APPROVED == approvalType) {
-                    return approveGOL(project)
-                        .andOnSuccess(() -> {
-
-                            if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
-                                LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
-                                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                            }
-                            notifyProjectIsLive(projectId);
-                            return serviceSuccess();
-                        }
-                    );
-                }
-            }
-            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
-        });
-    }
-
-    private ServiceResult<Void> approveGOL(Project project) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-
-            if (golWorkflowHandler.grantOfferLetterApproved(project, user)) {
-                return serviceSuccess();
-            } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-            }
-        });
-    }
-
-    @Override
-    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
-    }
-
-    @Override
-    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
-    }*/
 
     @Override
     public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {

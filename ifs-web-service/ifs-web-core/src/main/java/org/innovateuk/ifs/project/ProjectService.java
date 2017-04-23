@@ -76,7 +76,7 @@ public interface ProjectService {
 
     ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
-    Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId);
+  /*  Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId);*/
 
     Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId);
 
@@ -113,18 +113,6 @@ public interface ProjectService {
     ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
 
     ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-  /*  ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
-
-    ServiceResult<Void> sendGrantOfferLetter(Long projectId);
-
-    ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
-
-    ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
-
-    ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
-
-    ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);*/
 
     Optional<ProjectUserResource> getProjectManager(Long projectId);
 
