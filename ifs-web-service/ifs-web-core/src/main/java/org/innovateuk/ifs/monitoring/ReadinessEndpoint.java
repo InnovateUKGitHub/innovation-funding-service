@@ -12,7 +12,7 @@ public class ReadinessEndpoint extends AbstractMonitoringEndpoint {
 
     @Override
     protected boolean isReady() {
-        // TODO: return false if this container should not receive requests at this time
+        // TODO: return false if this container should not receive requests at this time INFUND-9296
         return true;
     }
 }

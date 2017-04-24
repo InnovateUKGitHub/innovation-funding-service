@@ -12,7 +12,7 @@ public class LivenessEndpoint extends AbstractMonitoringEndpoint {
 
     @Override
     protected boolean isReady() {
-        // TODO: return false if this container should be replaced
+        // TODO: return false if this container should be replaced INFUND-9296
         return true;
     }
 }
