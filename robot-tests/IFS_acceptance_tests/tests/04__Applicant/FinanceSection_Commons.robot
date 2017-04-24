@@ -133,7 +133,6 @@ the user chooses Calculate overheads option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     and the user clicks the button/link     jQuery=label:contains("Calculate overheads")
     then the user should see the element     jQuery=h3:contains("Calculate overheads")
-    and the user moves focus to the element     css=label[for="overheadfile"].button-secondary.extra-margin
     and the user uploads the file      css=input[id="overheadfile"]   ${excel_file}
     wait for autosave
     and the user enters text to a text field    jQuery=input[name^="overheads-total"][id^="cost-overheads"]   40
