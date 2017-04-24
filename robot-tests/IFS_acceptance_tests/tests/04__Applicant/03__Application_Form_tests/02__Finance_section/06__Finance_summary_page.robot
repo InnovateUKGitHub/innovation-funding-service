@@ -15,7 +15,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Applicant  Pending
+Force Tags        Applicant
 # This Suite is failing due to INFUND-9145
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
