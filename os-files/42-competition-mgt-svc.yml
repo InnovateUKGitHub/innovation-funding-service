@@ -24,11 +24,23 @@ items:
       spec:
         containers:
         - image: innovateuk/competition-management-service:1.0-SNAPSHOT
+          name: competition-mgt-svc
+          livenessProbe:
+            httpGet:
+              path: /management/monitoring/live
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /management/health
+              path: /management/monitoring/ready
               port: 8080
-          name: competition-mgt-svc
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           imagePullPolicy: Always
           env:
           - name: SPRING_APPLICATION_JSON
