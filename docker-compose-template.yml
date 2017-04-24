@@ -41,7 +41,7 @@ services:
   ldap:
     image: innovateuk/ifs-ldap:0.4.0
     healthcheck:
-      test: ["CMD", "ldapsearch", "-h", "localhost", "-p", "389", "-b", "dc=nodomain", "-x", "-LLL", "-s" "base"]
+      test: ["CMD", "ldapsearch", "-h", "localhost", "-p", "389", "-b", "dc=nodomain", "-x", "-LLL", "-s", "base"]
       interval: 15s
       timeout: 8s
     ports:
