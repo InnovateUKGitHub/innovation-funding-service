@@ -1,0 +1,41 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'docker'
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath "se.transmode.gradle:gradle-docker:1.2"
+    }
+}
+
+def String ldap_password = project.properties['auth.ldap.password'] ?:"default"
+
+task prepareDockerFile(type: Copy) {
+    outputs.upToDateWhen { false }
+
+    from 'src/main/docker/'
+    into 'src/main/docker/'
+    include 'Dockerfile-template'
+    rename 'Dockerfile-template', 'Dockerfile'
+    filter(ReplaceTokens, tokens: [auth_ldap_password: ldap_password])
+}
+
+task buildDocker(type: Docker) {
+    dependsOn prepareDockerFile
+
+    push = false
+    applicationName = 'ifs-ldap-service'
+    tagVersion = '1.0.0'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from fileTree('src/main/docker/scripts')
+            into "${stageDir}/scripts"
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}
