@@ -28,7 +28,7 @@
             </legend>
             <div th:class="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-block error' : 'form-block'">
                 <span class="error-message" th:if="${#fields.hasErrors('*{organisationTypeId}')}" th:errors="*{organisationTypeId}"></span>
-                <label class="block-label selection-button-radio" th:each="type : ${model.types}" th:for="'radio-'+ ${type.id}">
+                <label class="block-label selection-button-radio" th:each="type : ${model.types}" th:for="'radio-'+ ${type.id}" th:attr="data-target=${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
                     <input th:id="'radio-'+ ${type.id}" type="radio"
                            th:field="*{organisationTypeId}"
                            required="required"
@@ -39,7 +39,7 @@
                 </label>
             </div>
         </fieldset>
-        <div class="message-alert">
+        <div id="rto-guidance" class="panel">
             <h2 class="heading-small">You can only lead an application as an RTO if both the following rules are met:</h2>
             <ul class="list-bullet">
                 <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>
