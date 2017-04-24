@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.model.InformIneligibleModelPopulator;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -59,7 +58,8 @@ public class CompetitionManagementSendIneligibleController {
         Supplier<String> failureView = () -> getSendIneligible(model, applicationId, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> sendResult = applicationRestService.updateApplicationState(applicationId, ApplicationState.INELIGIBLE_INFORMED)
+            ServiceResult<Void> sendResult = applicationRestService.informIneligible(applicationId,
+                    new ApplicationIneligibleSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
             return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> getRedirect(applicationResource));
