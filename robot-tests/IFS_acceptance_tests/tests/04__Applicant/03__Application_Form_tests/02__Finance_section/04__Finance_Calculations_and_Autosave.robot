@@ -251,15 +251,14 @@ The applicant selects 'Yes' and fills two rows
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
     the user moves focus to the element    jQuery=button:contains(Add another source of funding)
 
+*** Totals should be correct
+***    [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
+***    the user should see the element    ${total_field}
+***    the user should see the element    ${total_collapsible}
+***    Wait Until Element Contains Without Screenshots     ${TOTAL_FIELD}    ${FIELD_VALUE}
+***    Wait Until Element Contains Without Screenshots    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
+
 Totals should be correct
-    [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
-    the user should see the element    ${total_field}
-    the user should see the element    ${total_collapsible}
-    Wait Until Element Contains Without Screenshots     ${TOTAL_FIELD}    ${FIELD_VALUE}
-    Wait Until Element Contains Without Screenshots    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
-
-
-Totals should be correct with the old styling
     [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
     the user should see the element    ${total_field}
     the user should see the element    ${total_collapsible}
