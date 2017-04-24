@@ -36,7 +36,6 @@ import java.util.*;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
-import static java.util.Objects.requireNonNull;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -93,6 +92,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private EthnicityMapper ethnicityMapper;
 
+    @Autowired
+    private UserSurveyService userSurveyService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -128,7 +130,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<UserResource> createOrganisationUser(Long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
         String roleName;
         if (isUserCompAdmin(userResource.getEmail())) {
             roleName = COMP_ADMIN.getName();
@@ -152,12 +154,28 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> activateUser(Long userId) {
-        return getUser(userId).andOnSuccessReturnVoid(u -> {
-            idpService.activateUser(u.getUid());
-            u.setStatus(UserStatus.ACTIVE);
-            userRepository.save(u);
-        });
+    public ServiceResult<Void> activateUser(long userId) {
+        return getUser(userId).andOnSuccessReturnVoid(this::activateUser);
+    }
+
+    private ServiceResult<User> activateUser(User user) {
+        return idpService
+                .activateUser(user.getUid())
+                .andOnSuccessReturn(() -> {
+                        user.setStatus(UserStatus.ACTIVE);
+                        return userRepository.save(user);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> activateUserAndSendDiversitySurvey(long userId) {
+        return getUser(userId)
+                .andOnSuccess(this::activateUser)
+                .andOnSuccessReturnVoid(this::sendDiversitySurvey);
+    }
+
+    private ServiceResult<Void> sendDiversitySurvey(User user) {
+        return userSurveyService.sendDiversitySurvey(user);
     }
 
     private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
@@ -202,6 +220,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setDisability(userResource.getDisability());
         newUser.setGender(userResource.getGender());
         newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
+        newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
 
         return newUser;
     }

@@ -26,7 +26,6 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,6 +45,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -90,12 +90,13 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.of(new UserResource()));
-        when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(serviceSuccess(new UserResource()));
+        when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(serviceSuccess(new UserResource()));
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
         inviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
         usedInviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("1"));
+        logoutCurrentUser();
     }
 
     @Test
@@ -108,7 +109,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"));
+                .andExpect(view().name("registration/register"));
     }
 
     @Test
@@ -120,7 +121,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(inviteHashCookie, organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attribute("invitee", true))
         ;
     }
@@ -236,7 +237,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("email", email)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
     }
 
@@ -258,7 +259,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("termsAndConditions", "")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"))
@@ -279,7 +280,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("email", "invalid email format")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
     }
 
@@ -294,7 +295,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("email", "{a|b}@test.test")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
 
         verifyNoMoreInteractions(userService);
@@ -302,6 +303,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void incorrectPasswordSizeShouldReturnError() throws Exception {
+        logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
@@ -312,7 +314,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("retypedPassword", "123456789012345678901234567890123")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
     }
@@ -320,6 +322,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void tooWeakPasswordSizeShouldReturnError() throws Exception {
+        logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
@@ -327,7 +330,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong())).thenReturn(serviceFailure(error));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -345,7 +348,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("disability", Disability.NO.toString())
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"));
     }
 
@@ -361,7 +364,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("retypedPassword", "123456789")
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
     }
 
@@ -375,7 +378,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(organisationCookie)
         )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration-register"))
+                .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"));
     }
 
@@ -408,7 +411,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 anyLong(),
                 anyString(),
                 eq(1L),
-                eq(null))).thenReturn(serviceSuccess(userResource));
+                eq(null),
+                anyBoolean())).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -433,6 +437,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void validRegisterPostWithInvite() throws Exception {
+        logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         UserResource userResource = newUserResource()
@@ -459,7 +464,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 anyLong(),
                 anyString(),
                 eq(1L),
-                eq(null))).thenReturn(serviceSuccess(userResource));
+                eq(null),
+                anyBoolean())).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
 
@@ -484,6 +490,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void correctOrganisationNameIsAddedToModel() throws Exception {
+        logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(4L).withName("uniqueOrganisationName").build();
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(4L)).thenReturn(organisation);
@@ -498,11 +505,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
-        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
-                newUserResource().withRolesGlobal(singletonList(
-                        newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                )).build()
-        );
+
+
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(
+                newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
+        )).build());
 
         mockMvc.perform(get("/registration/register")
                 .cookie(organisationCookie)
@@ -513,11 +520,10 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
-        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
+        setLoggedInUser(
                 newUserResource().withRolesGlobal(singletonList(
                         newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                )).build()
-        );
+                )).build());
 
         mockMvc.perform(post("/registration/register")
                 .cookie(organisationCookie)
@@ -536,6 +542,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
                 .withId(1L)
+                .withAllowMarketingEmails(true)
                 .build();
 
         Error error = new Error("errorname", BAD_REQUEST);
@@ -550,7 +557,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                1L, null)).thenReturn(serviceFailure(error));
+                1L, null, userResource.getAllowMarketingEmails())).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

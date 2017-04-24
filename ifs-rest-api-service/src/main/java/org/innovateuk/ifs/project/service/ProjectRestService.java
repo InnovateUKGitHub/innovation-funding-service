@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
@@ -39,10 +40,6 @@ public interface ProjectRestService {
     RestResult<Boolean> isSubmitAllowed(Long projectId);
 
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
-
-    RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
-
-    RestResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
 
     RestResult<Optional<ByteArrayResource>> getCollaborationAgreementFile(Long projectId);
 

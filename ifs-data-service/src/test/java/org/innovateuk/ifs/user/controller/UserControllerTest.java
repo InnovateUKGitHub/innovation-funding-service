@@ -6,7 +6,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.transactional.CrmService;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     protected UserController supplyControllerUnderTest() {
         return new UserController();
     }
+
+    @Mock
+    private CrmService crmService;
 
     @Test
     public void resendEmailVerificationNotification() throws Exception {
@@ -180,7 +185,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long userId = 1L;
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
-        when(registrationServiceMock.activateUser(1L)).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateUserAndSendDiversitySurvey(1L)).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -189,6 +194,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                                 parameterWithName("hash").description("The hash to validate the legitimacy of the request")
                         ))
                 );
+
+        verify(crmService).syncCrmContact(userId);
     }
 
 

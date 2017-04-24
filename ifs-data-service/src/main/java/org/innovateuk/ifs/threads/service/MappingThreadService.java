@@ -18,7 +18,7 @@ public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R
     private final PostMapper postMapper;
 
     public MappingThreadService(ThreadRepository<D> threadRepository, M threadMapper, PostMapper postMapper, Class<C> context) {
-        this.service = new GenericThreadService(threadRepository, context);
+        this.service = new GenericThreadService<>(threadRepository, context);
         this.threadMapper = threadMapper;
         this.postMapper = postMapper;
     }

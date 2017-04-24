@@ -117,8 +117,7 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Katz_Name} - Spend profile
-    # And the user clicks the button/link    link=Spend profile overview    # TODO please enable this line and delete the following one when working on INFUND-8132
-    And the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
+    And the user clicks the button/link    link=Spend profile overview
     And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
     [Teardown]    the user goes back to the previous page
 
@@ -150,7 +149,7 @@ Calculations in the spend profile table
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
     [Tags]    Failing
-    #TODO this test case needs to be moved, to another project where the PM != Lead partner.
+    #TODO this test case needs to be moved, to another project where the PM != Lead partner. INFUND-9289
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
@@ -159,9 +158,6 @@ Lead Partner can see Spend profile summary
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
     [Tags]
-    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    And the user navigates to the page            ${external_spendprofile_summary}/review
-    # TODO please delete the above two lines when INFUND-8138 is completed
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
     And the text box should be editable               css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour-June17
@@ -236,7 +232,7 @@ Project Manager can see Spend Profile in Progress
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     Then the user should see the element     link=${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}
-    And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("In progress")
+    And the user should see the element      jQuery=.task-list li:nth-child(1):contains("In progress")
 
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765, INFUND-6138
@@ -468,8 +464,8 @@ Project Manager can see the button Allow edits
     [Documentation]    INFUND-6350
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
-    Then the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
-    And the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
+    Then the user should see the element    jQuery=.task-list li:nth-child(1):contains("Complete")
+    And the user should see the element     jQuery=.task-list li:nth-child(2):contains("Complete")
     Then the user clicks the button/link    link=${Meembee_Name}
     And the user should see the element     jQuery=.button:contains("Allow edits")
 
@@ -488,7 +484,7 @@ PM can return edit rights to partners
     When the user clicks the button/link     jQuery=.button:contains("Allow edits")
     And the user clicks the button/link      jQuery=.button:contains("Allow partner to edit")
     Then the user navigates to the page      ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
-    And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("In progress")
+    And the user should see the element      jQuery=.task-list li:nth-child(2):contains("In progress")
 
 Partner can receive edit rights to his SP
     [Documentation]    INFUND-6350
@@ -808,9 +804,9 @@ the field has value
     should be equal as strings    ${var}    ${value}
 
 the user should see all spend profiles as complete
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(3) td:nth-child(2):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(1):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(2):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(3):contains("Complete")
 
 all previous sections of the project are completed
     partners submit their finance contacts

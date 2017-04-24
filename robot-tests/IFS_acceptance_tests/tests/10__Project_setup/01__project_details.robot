@@ -44,6 +44,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-6882 Email validation done when valid is input selected for PM selection in project details
 ...
 ...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
+...
+...               INFUND-9062 Validation missing when inviting self as finance contact or PM
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -256,11 +258,15 @@ Option to invite a project manager
     [Teardown]    the user selects the radio button    projectManager    new
 
 Inviting project manager server side validations
-    [Documentation]    INFUND-3483
+    [Documentation]    INFUND-3483, INFUND-9062
     [Tags]
     When the user clicks the button/link    id=invite-project-manager
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
+    When the user enters text to a text field    id=name-project-manager    Steve Smith
+    And the user enters text to a text field     id=email-project-manager    steve.smith@empire.com
+    And the user clicks the button/link    id=invite-project-manager
+    Then the user should see the text in the page    You cannot invite yourself to the project.
 
 Inviting project manager client side validations
     [Documentation]    INFUND-3483, INFUND-6882
@@ -299,7 +305,7 @@ Invited project manager receives an email
 
 Invited project manager registration flow
     [Documentation]    INFUND-3554
-    [Tags]    HappyPath    Email
+    [Tags]  HappyPath  Email
     Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -315,18 +321,15 @@ Invited project manager registration flow
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
-    [Tags]    Email
+    [Tags]  Email
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project Manager
     Then the user should see the text in the page    Bob Jones
 
 Lead partner selects a project manager
-    [Documentation]    INFUND-2616
-    ...
-    ...    INFUND-2996
-    ...    INFUND-5610
-    [Tags]    HappyPath
+    [Documentation]    INFUND-2616 INFUND-2996 INFUND-5610
+    [Tags]  HappyPath
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project Manager
     When the user clicks the button/link    jQuery=.button:contains("Save")
@@ -344,10 +347,8 @@ Lead partner selects a project manager
     And the matching status checkbox is updated    project-details    3    yes
 
 Lead partner can change the project address
-    [Documentation]    INFUND-3157
-    ...
-    ...    INFUND-2165
-    [Tags]    HappyPath
+    [Documentation]    INFUND-3157 INFUND-2165
+    [Tags]  HappyPath
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.button:contains("Save")
@@ -368,7 +369,7 @@ Lead partner can change the project address
 
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     Given the user should see the element    css=#start-date-status.yes
     And the user should see the element    css=#project-address-status.yes
     And the user should see the element    css=#project-manager-status.yes
@@ -376,7 +377,7 @@ Project details can be submitted with PM, project address and start date
 
 Non lead partner nominates finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     When Log in as a different user        &{collaborator1_credentials}
     Then the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
@@ -400,7 +401,7 @@ Non lead partner nominates finance contact
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
@@ -420,7 +421,7 @@ Other partners can see who needs to provide Bank Details
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     [Setup]    Log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
@@ -434,11 +435,15 @@ Option to invite a finance contact
     [Teardown]    the user selects the radio button    financeContact    new
 
 Inviting finance contact server side validations
-    [Documentation]    INFUND-3483
+    [Documentation]    INFUND-3483, INFUND-9062
     [Tags]
     When the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
+    When the user enters text to a text field    id=name-finance-contact    Steve Smith
+    And the user enters text to a text field     id=email-finance-contact    steve.smith@empire.com
+    And the user clicks the button/link    id=invite-finance-contact
+    Then the user should see the text in the page    You cannot invite yourself to the project.
 
 Inviting finance contact client side validations
     [Documentation]    INFUND-3483
@@ -458,7 +463,7 @@ Inviting finance contact client side validations
 
 Partner invites a finance contact
     [Documentation]    INFUND-3579
-    [Tags]    HappyPath    Email
+    [Tags]  HappyPath  Email
     When the user enters text to a text field    id=name-finance-contact    John Smith
     And the user enters text to a text field    id=email-finance-contact    ${test_mailbox_one}+invitedfinancecontact@gmail.com
     And the user clicks the button/link    id=invite-finance-contact
@@ -467,13 +472,13 @@ Partner invites a finance contact
 
 Invited finance contact receives an email
     [Documentation]    INFUND-3524
-    [Tags]    HappyPath    Email
+    [Tags]  HappyPath  Email
     When the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Finance contact invitation    Dear John Smith
     Then the user should see the text in the page    Empire Ltd
 
 Invited finance contact registration flow
     [Documentation]    INFUND-3530
-    [Tags]    HappyPath    Email
+    [Tags]  HappyPath  Email
     Given the user should see the text in the page    You have been invited to join a project
     And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
@@ -487,7 +492,7 @@ Invited finance contact registration flow
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
-    [Tags]    Email
+    [Tags]  Email
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Empire Ltd
@@ -495,7 +500,7 @@ Invited finance contact shows on the finance contact selection screen
 
 Lead partner selects a finance contact
     [Documentation]    INFUND-2620, INFUND-5571, INFUND-5898
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     Then the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -530,7 +535,7 @@ Internal user should see project details are incomplete
 
 Academic Partner nominates Finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     [Setup]    Log in as a different user   &{collaborator2_credentials}
     Then the user navigates to the page     ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
@@ -554,7 +559,7 @@ Academic Partner nominates Finance contact
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
@@ -567,7 +572,7 @@ Project details submission flow
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     [Setup]    Log in as a different user  &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=ul li.complete:nth-child(2)
@@ -589,7 +594,7 @@ Project details read only after submission
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
-    [Tags]    HappyPath
+    [Tags]  HappyPath
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    Ludlow
@@ -609,6 +614,7 @@ All partners can view submitted project details
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
+    [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details

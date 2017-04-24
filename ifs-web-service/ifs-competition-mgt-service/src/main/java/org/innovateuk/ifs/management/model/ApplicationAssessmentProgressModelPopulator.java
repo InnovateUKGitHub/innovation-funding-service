@@ -4,23 +4,17 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResou
 import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
-import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.defaultString;
-import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -34,7 +28,7 @@ public class ApplicationAssessmentProgressModelPopulator {
     private ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, Long filterInnovationArea, int page, String assessorOrigin) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
@@ -60,7 +54,9 @@ public class ApplicationAssessmentProgressModelPopulator {
                 new PaginationViewModel(availableAssessors, assessorOrigin));
     }
 
-    private List<InnovationSectorResource> getInnovationSectors() { return categoryService.getInnovationSectors(); }
+    private List<InnovationSectorResource> getInnovationSectors() {
+        return categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
+    }
 
     private List<ApplicationAssessmentProgressAssignedRowViewModel> getAssignedAssessors(List<ApplicationAssessorResource> assessors) {
         return assessors.stream()

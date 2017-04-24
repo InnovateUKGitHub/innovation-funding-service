@@ -83,17 +83,8 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
-    ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
-    ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(Long projectId, MonitoringOfficerResource monitoringOfficerResource);
-
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
-
-    @PreAuthorize("hasPermission(#monitoringOfficer.project, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ASSIGN_MONITORING_OFFICER')")
-    ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPLOAD_OTHER_DOCUMENTS')")
     ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);

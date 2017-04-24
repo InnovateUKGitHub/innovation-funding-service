@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -22,7 +22,7 @@ public class ApplicantDashboardViewModel {
     private List<ApplicationResource> applicationsFinished;
     private List<ProjectResource> projectsInSetup;
     private Map<Long, CompetitionResource> competitions;
-    private Map<Long, ApplicationStatus> applicationStatuses;
+    private Map<Long, ApplicationState> applicationStates;
 
     public ApplicantDashboardViewModel() {
     }
@@ -30,14 +30,14 @@ public class ApplicantDashboardViewModel {
     public ApplicantDashboardViewModel(Map<Long, Integer> applicationProgress, List<ApplicationResource> applicationsInProgress,
                                        List<Long> applicationsAssigned, List<ApplicationResource> applicationsFinished,
                                        List<ProjectResource> projectsInSetup, Map<Long, CompetitionResource> competitions,
-                                       Map<Long, ApplicationStatus> applicationStatuses) {
+                                       Map<Long, ApplicationState> applicationStates) {
         this.applicationProgress = applicationProgress;
         this.applicationsInProgress = applicationsInProgress;
         this.applicationsAssigned = applicationsAssigned;
         this.applicationsFinished = applicationsFinished;
         this.projectsInSetup = projectsInSetup;
         this.competitions = competitions;
-        this.applicationStatuses = applicationStatuses;
+        this.applicationStates = applicationStates;
     }
 
     public Map<Long, Integer> getApplicationProgress() {
@@ -64,8 +64,8 @@ public class ApplicantDashboardViewModel {
         return competitions;
     }
 
-    public Map<Long, ApplicationStatus> getApplicationStatuses() {
-        return applicationStatuses;
+    public Map<Long, ApplicationState> getApplicationStates() {
+        return applicationStates;
     }
 
     public boolean getProjectsInSetupNotEmpty() {
@@ -93,32 +93,32 @@ public class ApplicantDashboardViewModel {
     }
 
     public boolean applicationIsSubmitted(Long applicationId) {
-        return ApplicationStatus.SUBMITTED.equals(getApplicationStatus(applicationId));
+        return ApplicationState.SUBMITTED.equals(getApplicationState(applicationId));
     }
 
     public boolean applicationIsCreated(Long applicationId) {
-        return ApplicationStatus.CREATED.equals(getApplicationStatus(applicationId));
+        return ApplicationState.CREATED.equals(getApplicationState(applicationId));
     }
 
     public boolean applicationIsApproved(Long applicationId) {
-        return ApplicationStatus.APPROVED.equals(getApplicationStatus(applicationId));
+        return ApplicationState.APPROVED.equals(getApplicationState(applicationId));
     }
 
     public boolean applicationIsRejected(Long applicationId) {
-        return ApplicationStatus.REJECTED.equals(getApplicationStatus(applicationId));
+        return ApplicationState.REJECTED.equals(getApplicationState(applicationId));
     }
 
     public boolean applicationIsOpen(Long applicationId) {
-        return ApplicationStatus.OPEN.equals(getApplicationStatus(applicationId));
+        return ApplicationState.OPEN.equals(getApplicationState(applicationId));
     }
 
     public boolean applicationIsCreatedOrOpen(Long applicationId) {
         return applicationIsCreated(applicationId) || applicationIsOpen(applicationId);
     }
 
-    public ApplicationStatus getApplicationStatus(Long applicationId) {
-        if(applicationStatuses.containsKey(applicationId)) {
-            return applicationStatuses.get(applicationId);
+    public ApplicationState getApplicationState(Long applicationId) {
+        if(applicationStates.containsKey(applicationId)) {
+            return applicationStates.get(applicationId);
         }
 
         return null;

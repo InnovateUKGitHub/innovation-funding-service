@@ -72,9 +72,6 @@ public class RegistrationController {
     private EthnicityRestService ethnicityRestService;
 
     @Autowired
-    protected UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
@@ -112,9 +109,11 @@ public class RegistrationController {
     }
 
     @GetMapping("/register")
-    public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String registerForm(Model model,
+                               @ModelAttribute("loggedInUser") UserResource user,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
@@ -131,7 +130,7 @@ public class RegistrationController {
             return "redirect:/login";
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         if (!processOrganisation(request, model)) {
             destination = "redirect:/";
@@ -193,6 +192,7 @@ public class RegistrationController {
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
+                                     @ModelAttribute("loggedInUser") UserResource user,
                                      HttpServletRequest request,
                                      Model model) {
 
@@ -212,12 +212,11 @@ public class RegistrationController {
             validator.validate(registrationForm, bindingResult);
         }
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
@@ -323,7 +322,8 @@ public class RegistrationController {
                 Long.parseLong(registrationForm.getEthnicity()),
                 registrationForm.getDisability(),
                 organisationId,
-                competitionId);
+                competitionId,
+                registrationForm.getAllowMarketingEmails());
     }
 
     private void addOrganisationNameToModel(Model model, OrganisationResource organisation) {

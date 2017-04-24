@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.invite.controller;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.assessment.invite.form.RejectCompetitionForm;
 import org.innovateuk.ifs.assessment.invite.populator.CompetitionInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.populator.RejectCompetitionModelPopulator;
@@ -34,7 +33,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @PreAuthorize("permitAll")
-public class CompetitionInviteController extends BaseController {
+public class CompetitionInviteController {
 
     @Autowired
     private CompetitionInviteRestService inviteRestService;
