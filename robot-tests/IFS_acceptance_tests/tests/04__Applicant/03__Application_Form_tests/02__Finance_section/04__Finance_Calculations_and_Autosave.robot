@@ -49,7 +49,7 @@ Overhead costs
     # Check for 20% Labour costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     then the user chooses 20% overheads option
-    and admin costs total should be correct    id=section-total-190-default    £ 9,600
+    and admin costs total should be correct    css=.section-total-summary > [data-mirror="#section-total-190"]    £ 9,600
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
@@ -66,10 +66,10 @@ Capital usage
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the applicant fills the 'capital usage' field
-    Then Totals should be correct   css=#section-total-192    £ 200    css=[data-mirror="#section-total-192"]    £ 200
+    Then Totals should be correct   css=.section-total-summary > [data-mirror="#section-total-192"]    £ 200    css=button > [data-mirror="#section-total-192"]    £ 200
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
-    Then Totals should be correct   css=#section-total-192    £ 100    css=[data-mirror="#section-total-192"]    £ 100
+    Then Totals should be correct   css=.section-total-summary > [data-mirror="#section-total-192"]    £ 100    css=button > [data-mirror="#section-total-192"]    £ 100
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
@@ -77,7 +77,7 @@ Capital usage - negative total
     [Documentation]    INFUND-4879, INFUND-6390
     [Tags]
     When the applicant fills the 'capital usage' field to a negative value
-    Then Totals should be correct   css=#section-total-192    £ 0    css=[data-mirror="#section-total-192"]    £ 0
+    Then Totals should be correct   css=.section-total-summary > [data-mirror="#section-total-192"]    £ 0    css=button > [data-mirror="#section-total-192"]    £ 0
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
@@ -92,19 +92,19 @@ Travel and subsistence
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the Applicant fills the Travel fields
-    Then Totals should be correct    css=#section-total-194    £ 2,000    css=[data-mirror="#section-total-194"]    £ 2,000
+    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-194"]    £ 2,000    css=button > [data-mirror="#section-total-194"]    £ 2,000
     And the user clicks the button/link    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
-    Then Totals should be correct    css=#section-total-194    £ 1,000    css=[data-mirror="#section-total-194"]    £ 1,000
+    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-194"]    £ 1,000    css=[button > [data-mirror="#section-total-194"]    £ 1,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
 
 Other costs
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the applicant adds one row for the other costs
-    Then Totals should be correct    id=section-total-195    £ 200    css=[data-mirror="#section-total-195"]    £ 200
+    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-195"]    £ 200    css=button > [data-mirror="#section-total-195"]    £ 200
     Then the user reloads the page
-    Then Totals should be correct    id=section-total-195    £ 200    css=[data-mirror="#section-total-195"]    £ 200
+    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-195"]    £ 200    css=button > [data-mirror="#section-total-195"]    £ 200
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Other costs")
 
 *** Keywords ***
