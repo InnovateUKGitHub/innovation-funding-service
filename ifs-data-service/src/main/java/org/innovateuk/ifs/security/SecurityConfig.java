@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -23,6 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private StatelessAuthenticationFilter statelessAuthenticationFilter;
 
+    @Value("management.contextPath")
+    private String monitoringEndpoint;
+
     public SecurityConfig() {
         super(true);
     }
@@ -35,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .anonymous().and()
             .authorizeRequests()
                 .antMatchers("/silstub/**").permitAll()
-                .antMatchers("/service-monitoring/**").permitAll()
+                .antMatchers(monitoringEndpoint+"/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling().and()

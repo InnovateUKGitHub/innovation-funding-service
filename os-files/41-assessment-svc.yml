@@ -27,7 +27,7 @@ items:
           name: assessment-svc
           livenessProbe:
             httpGet:
-              path: /assessment/service-monitoring/live
+              path: /assessment/monitoring/live
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -35,7 +35,7 @@ items:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /assessment/service-monitoring/ready
+              path: /assessment/monitoring/ready
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
     @Autowired
     private UserAuthenticationService userAuthenticationService;
 
+    @Value("management.contextPath")
+    private String monitoringEndpoint;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
@@ -38,10 +42,10 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         filterChain.doFilter(request, response);
     }
 
-    private static boolean shouldBeAuthenticated(final HttpServletRequest httpRequest) {
+    private boolean shouldBeAuthenticated(final HttpServletRequest httpRequest) {
         String uri = httpRequest.getRequestURI();
         return !(
-            uri.startsWith("/service-monitoring/") ||
+            uri.startsWith(monitoringEndpoint) ||
             uri.startsWith("/js/") ||
             uri.startsWith("/css/") ||
             uri.startsWith("/images/") ||

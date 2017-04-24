@@ -27,7 +27,7 @@ items:
           name: application-svc
           livenessProbe:
             httpGet:
-              path: /service-monitoring/live
+              path: /monitoring/live
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -35,7 +35,7 @@ items:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /service-monitoring/ready
+              path: /monitoring/ready
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30

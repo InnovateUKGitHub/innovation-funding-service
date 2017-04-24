@@ -27,7 +27,7 @@ items:
           name: project-setup-mgt-svc
           livenessProbe:
             httpGet:
-              path: /project-setup-management/service-monitoring/live
+              path: /project-setup-management/monitoring/live
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
@@ -35,7 +35,7 @@ items:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /project-setup-management/service-monitoring/ready
+              path: /project-setup-management/monitoring/ready
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30
