@@ -18,7 +18,7 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
-${applicationName}  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
 # ${OPEN_COMPETITION_APPLICATION_2_NAME} == Planetary science Pluto\'s telltale heart
 
 *** Test Cases ***
@@ -137,7 +137,7 @@ File upload mandatory for Academic partner to mark section as complete
 
 Applicant chooses Calculate overheads option
     [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
-    [Tags]
+    [Tags]      Pending
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page  ${applicationName}
