@@ -3,11 +3,11 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.management.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -20,12 +20,11 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.service.Futures.settable;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
@@ -69,9 +68,11 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_backUrlPreservesQueryParams() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupResearchCategories();
 
         String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?param1=abc&param2=def%26ghi";
 
@@ -87,9 +88,11 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_backUrlEncodesReservedChars() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupResearchCategories();
 
         String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?p1=%26&p2=%3D&p3=%25&p4=%20";
 
@@ -107,9 +110,11 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_submittedApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupResearchCategories();
 
         mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId())
                 .param("origin", "SUBMITTED_APPLICATIONS"))
@@ -122,9 +127,11 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_manageApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupResearchCategories();
 
         mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId())
                 .param("origin", "MANAGE_APPLICATIONS"))
@@ -137,9 +144,11 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_applicationProgressOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupResearchCategories();
 
         long competitionId = competitionResource.getId();
         long applicationId = applications.get(0).getId();
@@ -155,9 +164,11 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void displayApplicationOverview_fundingApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
+        this.setupResearchCategories();
 
         long competitionId = competitionResource.getId();
         long applicationId = applications.get(0).getId();
@@ -288,13 +299,17 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     private void assertApplicationOverviewExpectations(OptionalFileDetailsViewModel expectedAssessorFeedback) {
+        when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
         Map<Long, FormInputResponseResource> mappedFormInputResponsesToFormInput = new HashMap<>();
 
-        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(defaultFinanceModelManager);
+        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
 
         try {
             mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()))
@@ -304,10 +319,15 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                     .andExpect(model().attribute("isCompManagementDownload", true))
                     .andExpect(model().attribute("responses", mappedFormInputResponsesToFormInput))
                     .andExpect(model().attribute("assessorFeedback", expectedAssessorFeedback))
+                    .andExpect(model().attribute("researchCategories", researchCategories))
                     .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setupResearchCategories() {
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(3)));
     }
 
     @Override

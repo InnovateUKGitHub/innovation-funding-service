@@ -4,7 +4,6 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
@@ -128,25 +127,6 @@ public class ProjectController {
     @GetMapping("/{projectId}/isSubmitAllowed")
     public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
         return projectService.isSubmitAllowed(projectId).toGetResponse();
-    }
-
-    @GetMapping("/{projectId}/monitoring-officer")
-    public RestResult<MonitoringOfficerResource> getMonitoringOfficer(@PathVariable("projectId") final Long projectId) {
-        return projectService.getMonitoringOfficer(projectId).toGetResponse();
-    }
-
-    @PutMapping("/{projectId}/monitoring-officer")
-    public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
-                                                  @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
-        final boolean[] sendNotification = new boolean[1];
-        ServiceResult<Boolean> result = projectService.saveMonitoringOfficer(projectId, monitoringOfficerResource)
-                .andOnSuccessReturn(r -> r.isMonitoringOfficerSaved() ? (sendNotification[0] = true) : (sendNotification[0] = false));
-
-        if (sendNotification[0]) {
-            return projectService.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource).toPutResponse();
-        }
-
-        return result.toPutResponse();
     }
 
     @GetMapping("/{projectId}/getOrganisationByUser/{userId}")

@@ -5,9 +5,10 @@ import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditSkills
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
+import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 public class AssessorProfileSkillsController {
 
     @Autowired
-    private UserService userService;
+    private ProfileRestService profileRestService;
 
     @Autowired
     private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
@@ -43,7 +44,7 @@ public class AssessorProfileSkillsController {
     @GetMapping
     public String getReadonlySkills(Model model,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProfileSkillsResource profileSkillsResource = userService.getProfileSkills(loggedInUser.getId());
+        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccessObjectOrThrowException();
         model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(profileSkillsResource));
         return "profile/skills";
     }
@@ -66,7 +67,10 @@ public class AssessorProfileSkillsController {
         Supplier<String> failureView = () -> doViewEditSkills(model, loggedInUser, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> result = userService.updateProfileSkills(loggedInUser.getId(), form.getAssessorType(), form.getSkillAreas());
+            ProfileSkillsEditResource profileSkillsEditResource = new ProfileSkillsEditResource();
+            profileSkillsEditResource.setBusinessType(form.getAssessorType());
+            profileSkillsEditResource.setSkillsAreas(form.getSkillAreas());
+            ServiceResult<Void> result = profileRestService.updateProfileSkills(loggedInUser.getId(), profileSkillsEditResource).toServiceResult();
 
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> "redirect:/profile/skills");
@@ -75,7 +79,7 @@ public class AssessorProfileSkillsController {
 
     private String doViewEditSkills(Model model, UserResource loggedInUser,
                                     AssessorProfileSkillsForm form, BindingResult bindingResult) {
-        ProfileSkillsResource profileSkillsResource = userService.getProfileSkills(loggedInUser.getId());
+        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccessObjectOrThrowException();
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(profileSkillsResource, form);
         }

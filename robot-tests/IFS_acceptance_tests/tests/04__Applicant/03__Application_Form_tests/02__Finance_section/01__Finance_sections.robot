@@ -11,7 +11,6 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-2961: ‘Working days per year’ in Labour Costs do not default to 232.
 ...
 ...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
-...
 Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -19,7 +18,8 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
-${applicationName}  Planetary science Pluto's telltale heart
+${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
+# ${OPEN_COMPETITION_APPLICATION_2_NAME} == Planetary science Pluto\'s telltale heart
 
 *** Test Cases ***
 Finance sub-sections
@@ -139,13 +139,9 @@ Applicant chooses Calculate overheads option
     [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
     [Tags]      Pending
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    #TODO Pending due to INFUND-8706
     # This test also checks read only view of the overheads once section is marked as complete
-    When the user navigates to Your-finances page     ${Competition_E2E}
-    then the user fills in the project costs       ${Competition_E2E}
-    When the user clicks the button/link    link=Your project costs
-    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    then the user should not see the element      css=input
+    When the user navigates to Your-finances page  ${applicationName}
+    then the user fills in the project costs       ${applicationName}
 
 *** Keywords ***
 Custom Suite Setup

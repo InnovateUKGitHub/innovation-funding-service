@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
-
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicContentSectionViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.DatesViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.submodel.DateViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_D
 public class DatesViewModelPopulator extends AbstractPublicContentSectionViewModelPopulator<DatesViewModel> {
 
     @Autowired
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @Override
     protected DatesViewModel createInitial() {
@@ -43,10 +42,11 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     }
 
     private List<DateViewModel> getMilestonesAsDatesViewModel(Boolean nonIFS, Long competitionId) {
-        List<MilestoneResource> milestones = milestoneService.getAllPublicMilestonesByCompetitionId(competitionId);
+        List<MilestoneResource> milestones = milestoneRestService.getAllPublicMilestonesByCompetitionId(competitionId)
+                .getSuccessObjectOrThrowException();
 
         List<DateViewModel> mileStonesMapped = mapMilestoneToDateViewModel(milestones, nonIFS);
-        if(nonIFS) {
+        if (nonIFS) {
             mileStonesMapped.add(addRegistrationCloseDateForNonIFSComp(
                     milestones.stream().filter(resource -> SUBMISSION_DATE.equals(resource.getType())).findFirst()));
         }
@@ -56,7 +56,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
 
     private DateViewModel addRegistrationCloseDateForNonIFSComp(Optional<MilestoneResource> competitionCloseDateMilestone) {
         DateViewModel registrationClosesDate = new DateViewModel();
-        if(competitionCloseDateMilestone.isPresent()) {
+        if (competitionCloseDateMilestone.isPresent()) {
             registrationClosesDate.setMustBeStrong(false);
             registrationClosesDate.setContent("Registration closes");
             registrationClosesDate.setDateTime(competitionCloseDateMilestone.get().getDate().minusDays(7));
@@ -86,7 +86,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
                     break;
             }
 
-            if(!(nonIfs && SUBMISSION_DATE.equals(milestoneResource.getType()))) {
+            if (!(nonIfs && SUBMISSION_DATE.equals(milestoneResource.getType()))) {
                 publicContentDates.add(publicContentDate);
             }
         });
