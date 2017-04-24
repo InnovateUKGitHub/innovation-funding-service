@@ -23,6 +23,8 @@ import java.util.Map;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * Populator for the applicant dashboard, it populates an {@link org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel}
@@ -58,21 +60,14 @@ public class ApplicantDashboardPopulator {
         Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionApplicationMap(allApplications);
         Map<Long, ApplicationState> applicationStatusMap = createApplicationStateMap(allApplications);
 
-        List<ApplicationResource> inProgress =
-                allApplications.stream()
-                        .filter(this::applicationInProgress)
-                        .collect(toList());
+        List<ApplicationResource> inProgress = simpleFilter(allApplications, this::applicationInProgress);
 
         Map<Long, Integer> applicationProgress =
-                inProgress.stream()
-                        .collect(toMap(ApplicationResource::getId, a -> a.getCompletion().intValue()));
+                simpleToMap(inProgress, ApplicationResource::getId, a -> a.getCompletion().intValue());
 
-        List<ApplicationResource> finished =
-                allApplications.stream()
-                        .filter(this::applicationFinished)
-                        .collect(toList());
+        List<ApplicationResource> finished = simpleFilter(allApplications, this::applicationFinished);
 
-        List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObject();
+        List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObjectOrThrowException();
 
         List<Long> applicationsAssigned = getAssignedApplications(inProgress, user);
 
@@ -97,11 +92,7 @@ public class ApplicantDashboardPopulator {
     }
 
     private Map<Long, ApplicationState> createApplicationStateMap(List<ApplicationResource> resources) {
-        return resources.stream()
-                .collect(toMap(
-                        ApplicationResource::getId,
-                        ApplicationResource::getApplicationState
-                ));
+        return simpleToMap(resources, ApplicationResource::getId, ApplicationResource::getApplicationState);
     }
 
     private Map<Long, CompetitionResource> createCompetitionApplicationMap(List<ApplicationResource> resources) {
