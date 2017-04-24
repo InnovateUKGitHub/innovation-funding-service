@@ -42,7 +42,7 @@ services:
   application-svc:
     image: innovateuk/application-service:@version@
     healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/health"]
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
       interval: 15s
       timeout: 8s
     networks:
@@ -51,7 +51,7 @@ services:
   assessment-svc:
     image: innovateuk/assessment-service:@version@
     healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/assessment/health"]
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/assessment/monitoring/health"]
       interval: 15s
       timeout: 8s
     networks:
@@ -60,7 +60,7 @@ services:
   competition-mgt-svc:
     image: innovateuk/competition-management-service:@version@
     healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/management/health"]
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/management/monitoring/health"]
       interval: 15s
       timeout: 8s
     networks:
@@ -69,7 +69,7 @@ services:
   project-setup-mgt-svc:
     image: innovateuk/project-setup-management-service:@version@
     healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup-management/health"]
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup-management/monitoring/health"]
       interval: 15s
       timeout: 8s
     networks:
@@ -78,12 +78,11 @@ services:
   project-setup-svc:
     image: innovateuk/project-setup-service:@version@
     healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup/health"]
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup/monitoring/health"]
       interval: 15s
       timeout: 8s
     networks:
       - ifs
-
 
   data-service:
     image: innovateuk/data-service:@version@

@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private StatelessAuthenticationFilter statelessAuthenticationFilter;
 
-    @Value("management.contextPath")
+    @Value("${management.contextPath}")
     private String monitoringEndpoint;
 
     public SecurityConfig() {
@@ -44,8 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .exceptionHandling().and()
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .headers()
-                    .addHeaderWriter(new StaticHeadersWriter("server","server"))
-                    .cacheControl();
+            .headers()
+                .addHeaderWriter(new StaticHeadersWriter("server","server"))
+                .cacheControl();
     }
 }
