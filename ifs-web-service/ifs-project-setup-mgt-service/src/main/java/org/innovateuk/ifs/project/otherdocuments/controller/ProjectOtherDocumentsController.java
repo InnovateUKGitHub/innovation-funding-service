@@ -7,8 +7,8 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.otherdocuments.form.ProjectPartnerDocumentsForm;
-import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectPartnerDocumentsViewModel;
+import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
+import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -48,7 +48,7 @@ public class ProjectOtherDocumentsController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
-    public String viewOtherDocumentsPage(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
+    public String viewOtherDocumentsPage(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                          @PathVariable("projectId") Long projectId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
@@ -56,7 +56,7 @@ public class ProjectOtherDocumentsController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping
-    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
+    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                                BindingResult bindingResult,
                                                ValidationHandler validationhandler,
                                                @PathVariable("projectId") Long projectId,
@@ -93,15 +93,15 @@ public class ProjectOtherDocumentsController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-    private String doViewOtherDocumentsPage(Model model, ProjectPartnerDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private String doViewOtherDocumentsPage(Model model, ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
-        ProjectPartnerDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR, form);
         return "project/other-documents";
     }
 
-    private ProjectPartnerDocumentsViewModel getOtherDocumentsViewModel(ProjectPartnerDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
         Optional<FileEntryResource> collaborationAgreement = projectService.getCollaborationAgreementFileDetails(projectId);
@@ -120,7 +120,7 @@ public class ProjectOtherDocumentsController {
                 .map(OrganisationResource::getName)
                 .collect(Collectors.toList());
 
-        return new ProjectPartnerDocumentsViewModel(projectId, applicationResource.getId(), project.getName(), applicationResource.getCompetition(), leadPartnerOrganisation.getName(),
+        return new ProjectOtherDocumentsViewModel(projectId, applicationResource.getId(), project.getName(), applicationResource.getCompetition(), leadPartnerOrganisation.getName(),
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
