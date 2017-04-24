@@ -152,7 +152,7 @@ Collaborator: read only view of Application details
     And the user clicks the button/link    link=${Competition_E2E}
     When the user clicks the button/link    link=Application details
     then the user should not see the element      css=input
-    and the user should see the element      jQuery=button:contains("Save and return to application overview")
+    and the user should see the element      jQuery=button:contains("Return to application overview")
 
 *** Keywords ***
 the text should be visible
