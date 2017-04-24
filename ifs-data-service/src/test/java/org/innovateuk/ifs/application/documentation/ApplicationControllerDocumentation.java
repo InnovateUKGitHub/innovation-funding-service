@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.documentation;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationController;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
@@ -216,5 +218,21 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         ),
                         responseFields(applicationResourceFields)
                 ));
+    }
+
+    @Test
+    public void informIneligible() throws Exception {
+        long applicationId = 1L;
+        ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
+
+        when(applicationServiceMock.informIneligible(applicationId, applicationIneligibleSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
+        .contentType(APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(applicationIneligibleSendResource)))
+                .andDo(document("application/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to inform of being ineligible")
+                        )));
     }
 }

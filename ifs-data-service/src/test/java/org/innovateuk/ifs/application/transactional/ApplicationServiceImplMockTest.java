@@ -2,14 +2,12 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.email.resource.EmailAddress;
@@ -20,15 +18,14 @@ import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.notifications.resource.*;
-import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
-import org.innovateuk.ifs.user.builder.RoleBuilder;
-import org.innovateuk.ifs.user.builder.UserBuilder;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -41,7 +38,10 @@ import org.mockito.Mock;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -49,6 +49,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.Notifications.APPLICATION_SUBMITTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -68,9 +69,9 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -94,9 +95,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     protected ApplicationService supplyServiceUnderTest() {
         return new ApplicationServiceImpl();
     }
-
-    @Mock
-    private SystemNotificationSource systemNotificationSourceMock;
 
     private FormInput formInput;
     private FormInputType formInputType;
@@ -134,7 +132,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testSendNotificationApplicationSubmitted(){
+    public void testSendNotificationApplicationSubmitted() {
         // Expectations
         User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
         Role leadRole = newRole().withType(LEADAPPLICANT).build();
@@ -1153,5 +1151,60 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void informIneligible() throws Exception {
+        long applicationId = 1L;
+        String subject = "subject";
+        String content = "content";
+        String email = "email@address.com";
+        String firstName = "first";
+        String lastName = "last";
+        String fullName = String.format("%s %s", firstName, lastName);
+
+        ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
+                .withSubject(subject)
+                .withContent(content)
+                .build();
+
+        User[] users = newUser()
+                .withFirstName(firstName, "other")
+                .withLastName(lastName, "other")
+                .withEmailAddress(email, "other@email.com")
+                .buildArray(2, User.class);
+
+        ProcessRole[] processRoles = newProcessRole()
+                .withUser(users)
+                .withRole(LEADAPPLICANT, COLLABORATOR)
+                .buildArray(2, ProcessRole.class);
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withProcessRoles(processRoles)
+                .build();
+
+        Map<String, Object> expetedNotificationArguments = asMap(
+                "subject", subject,
+                "bodyPlain", content,
+                "bodyHtml", content
+        );
+
+        SystemNotificationSource from = systemNotificationSourceMock;
+        NotificationTarget to = new ExternalUserNotificationTarget(fullName, email);
+        Notification notification = new Notification(from, singletonList(to), ApplicationServiceImpl.Notifications.APPLICATION_INELIGIBLE, expetedNotificationArguments);
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(notificationSender.sendNotification(notification)).thenReturn(serviceSuccess(notification));
+
+        ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
+        assertTrue(serviceResult.isSuccess());
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findOne(applicationId);
+        inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
+        inOrder.verify(applicationRepositoryMock).save(application);
+        inOrder.verify(notificationSender).sendNotification(notification);
+        inOrder.verifyNoMoreInteractions();
     }
 }

@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
@@ -41,7 +42,7 @@ public class CompetitionManagementSendIneligibleController {
                                     @PathVariable("applicationId") long applicationId,
                                     @ModelAttribute("form") InformIneligibleForm form) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
-        if (applicationResource.getApplicationState() != ApplicationState.INELIGIBLE) {
+        if (applicationResource.getApplicationState() != INELIGIBLE) {
             return getRedirect(applicationResource);
         }
         model.addAttribute("model", informIneligibleModelPopulator.populateModel(applicationResource));

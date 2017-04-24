@@ -2,10 +2,12 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
+import static org.innovateuk.ifs.application.resource.ApplicationOutcome.INFORM_INELIGIBLE;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.*;
 
@@ -163,5 +167,18 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();
         assertTrue(application.isPresent());
         assertEquals(competitionId, application.get().getCompetition());
+    }
+
+    @Test
+    public void informIneligible() throws Exception {
+        loginCompAdmin();
+        ApplicationIneligibleSendResource applicationIneligibleSendResource =
+                newApplicationIneligibleSendResource()
+                        .withSubject("Subject")
+                        .withContent("Message")
+                        .build();
+
+        RestResult<Void> result = controller.informIneligible(APPLICATION_ID, applicationIneligibleSendResource);
+        assertTrue(result.isSuccess());
     }
 }
