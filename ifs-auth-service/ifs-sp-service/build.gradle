@@ -1,0 +1,77 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'docker'
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath "se.transmode.gradle:gradle-docker:1.2"
+    }
+}
+
+// if there is no key/cert provided, we generate a self-signed certificate
+def String sp_proxy_key_file = "${buildDir}/sp_proxy_key.pem"
+def String sp_proxy_certificate_file = "${buildDir}/sp_proxy_certificate.pem"
+def String sp_proxy_cacertificate_file = "${buildDir}/sp_proxy_cacertificate.pem"
+
+if ( project.hasProperty('auth.sp.proxy.key') ) { file(sp_proxy_key_file).text = project.hasProperty['auth.sp.proxy.key'] }
+if ( project.hasProperty('auth.sp.proxy.certificate') ) { file(sp_proxy_certificate_file).text = project.hasProperty['auth.sp.proxy.certificate'] }
+if ( project.hasProperty('auth.sp.proxy.cacertificate') ) { file(sp_proxy_cacertificate_file).text = project.hasProperty['auth.sp.proxy.cacertificate'] }
+
+task prepareSecrets(type: Exec) {
+    onlyIf { !file(sp_proxy_key_file).exists() || !file(sp_proxy_certificate_file).exists() || !file(sp_proxy_cacertificate_file).exists() }
+    buildDir.mkdir()
+
+    executable = 'openssl'
+    args = ['req', '-x509',
+            '-newkey', 'rsa:4096',
+            '-keyout', sp_proxy_key_file,
+            '-out', sp_proxy_certificate_file,
+            '-days', '3650',
+            '-nodes',
+            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ifs.local-dev'
+    ]
+    doLast {
+        copy {
+            from file(sp_proxy_certificate_file)
+            into buildDir
+            rename 'sp_proxy_certificate.pem', 'sp_proxy_cacertificate.pem'
+        }
+    }
+}
+
+task prepareDockerFile(type: Copy) {
+    dependsOn prepareSecrets
+    outputs.upToDateWhen { false }
+
+    from 'src/main/docker/'
+    into 'src/main/docker/'
+    include 'Dockerfile-template'
+    rename 'Dockerfile-template', 'Dockerfile'
+    filter(ReplaceTokens, tokens: [auth_service_trusted_ip: '-R \'127.0.0.1\''])
+}
+
+task buildDocker(type: Docker) {
+    dependsOn prepareDockerFile
+
+    push = false
+    applicationName = 'ifs-sp-service'
+    tagVersion = '1.0.0'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from fileTree('src/main/docker/files')
+            into "${stageDir}/files"
+        }
+        copy {
+            from file(sp_proxy_key_file)
+            from file(sp_proxy_certificate_file)
+            from file(sp_proxy_cacertificate_file)
+            into "${stageDir}/files/apache2"
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}

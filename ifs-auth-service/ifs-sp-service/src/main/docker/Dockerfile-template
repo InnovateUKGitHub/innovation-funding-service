@@ -8,10 +8,10 @@ ENV HTTP_PORT=9080 \
     SP_DOMAIN=ifs.local-dev \
     IDP_DOMAIN=idp \
     IDP_PORT=8443 \
-    TRUSTED_IP=@auth_service_trusted_ip@ \
-    PROXY_CERTIFICATE=@auth_sp_proxy_certificate@ \
-    PROXY_KEY=@auth_sp_proxy_key@ \
-    PROXY_CA_CERTIFICATE=@auth_sp_proxy_ca_certificate@
+    TRUSTED_IP="@auth_service_trusted_ip@" \
+    PROXY_CERTIFICATE="sp_proxy_certificate.pem" \
+    PROXY_KEY="sp_proxy_key.pem" \
+    PROXY_CA_CERTIFICATE="sp_proxy_cacertificate.pem"
 
 WORKDIR /usr/local/bin
 
@@ -25,9 +25,8 @@ RUN apt-get update --fix-missing && \
 
 # put certificates in place \
   mkdir /etc/apache2/certs && \
-  echo "$PROXY_CERTIFICATE" > /etc/apache2/certs/server.crt && \
-  echo "$PROXY_KEY" > /etc/apache2/certs/server.key && \
-  echo "$PROXY_CA_CERTIFICATE" > /etc/apache2/certs/DigiCertCA.crt && \
+  mv "/usr/local/files/apache2/$PROXY_KEY" "/usr/local/files/apache2/$PROXY_CERTIFICATE" /etc/apache2/certs/ && \
+  mv "/usr/local/files/apache2/$PROXY_CA_CERTIFICATE" /etc/apache2/certs/ && \
 
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
@@ -59,6 +58,7 @@ RUN apt-get update --fix-missing && \
   sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml && \
   sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/shibboleth2.xml /etc/shibboleth/metadata.xml /var/www/html/Logout/index.html && \
   sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
+  cp /etc/apache2/certs/* /etc/shibboleth/ && \
 
 # run shibboleth sp as its own user (same as apache)
   mkdir -p /var/run/shibboleth && \
