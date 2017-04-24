@@ -19,7 +19,6 @@ import javax.validation.constraints.Size;
  * read all the request attributes to get to the form data.
  */
 
-@FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class RegistrationForm {
 
 
@@ -33,12 +32,6 @@ public class RegistrationForm {
         @Size(min=8, message="{validation.standard.password.length.min}"),
     })
     private String password;
-
-    @NotEmpty(message = "{validation.standard.retypedpassword.required}")
-    @Size.List ({
-        @Size(min=8, message="{validation.standard.password.length.min}"),
-    })
-    private String retypedPassword;
 
     private String title;
 
@@ -97,14 +90,6 @@ public class RegistrationForm {
     public RegistrationForm withEmail(String email) {
         this.email = email;
         return this;
-    }
-
-    public String getRetypedPassword() {
-        return retypedPassword;
-    }
-
-    public void setRetypedPassword(String retypedPassword) {
-        this.retypedPassword = retypedPassword;
     }
 
     public String getTitle() {
