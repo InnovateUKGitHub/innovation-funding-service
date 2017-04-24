@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 //TODO - INFUND-7482 - remove usages of Model model
@@ -28,17 +29,17 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelManager {
     private SectionService sectionService;
     private QuestionService questionService;
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
     private ProjectFinanceService financeService;
 
     @Autowired
     public ProjectFinanceOverviewModelManager(SectionService sectionService,
                                               QuestionService questionService,
-                                              FormInputService formInputService,
+                                              FormInputRestService formInputRestService,
                                               ProjectFinanceService financeService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
-        this.formInputService = formInputService;
+        this.formInputRestService = formInputRestService;
         this.financeService = financeService;
     }
 
@@ -57,11 +58,11 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
 
     private void addFinanceSections(Long competitionId, Model model) {
     	SectionResource section = sectionService.getFinanceSection(competitionId);
-    	
+
     	if(section == null) {
     		return;
     	}
-    	
+
         sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
 
         model.addAttribute("financeSection", section);
@@ -77,7 +78,7 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
                 ));
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
 
-        List<FormInputResource> formInputs = formInputService.findApplicationInputsByCompetition(competitionId);
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObjectOrThrowException();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
@@ -124,7 +125,7 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
                 ));
         viewModel.setFinanceSectionChildrenQuestionsMap(financeSectionChildrenQuestionsMap);
 
-        List<FormInputResource> formInputs = formInputService.findApplicationInputsByCompetition(competitionId);
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObjectOrThrowException();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())

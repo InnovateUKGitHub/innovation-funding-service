@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interceptors;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.application.service.AlertService;
+import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -21,17 +21,17 @@ import static java.util.Collections.emptyList;
  */
 public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
 
-    public static final String ALERT_MESSAGES = "alertMessages";
+    private static final String ALERT_MESSAGES = "alertMessages";
 
     private static final Cache<String, List<AlertResource>> ALERT_CACHE
             = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).build();
 
     @Autowired
-    private AlertService alertService;
+    private AlertRestService alertRestService;
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        if(modelAndView != null) {
+        if (modelAndView != null) {
             addAlertMessages(modelAndView);
         }
     }
@@ -39,12 +39,12 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
     private void addAlertMessages(ModelAndView modelAndView) {
         List<AlertResource> alerts;
         try {
-            alerts = ALERT_CACHE.get(ALERT_MESSAGES, () -> alertService.findAllVisible());
+            alerts = ALERT_CACHE.get(ALERT_MESSAGES, () -> alertRestService.findAllVisible().getSuccessObjectOrThrowException());
         } catch (ExecutionException e) {
             alerts = emptyList();
         }
 
-        if(!alerts.isEmpty()) {
+        if (!alerts.isEmpty()) {
             modelAndView.getModelMap().addAttribute(ALERT_MESSAGES, alerts);
         }
     }

@@ -10,10 +10,9 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Test;
 
-import java.util.Collections;
-
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksOverviewController.PROJECT_FINANCE_CHECKS_BASE_URL;
@@ -37,7 +36,7 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
                 .withName("Industrial Org")
                 .withCompanyHouseNumber("123456789")
                 .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
         FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
@@ -47,7 +46,7 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
 
         when(organisationService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(partnerOrganisationServiceMock.getPartnerOrganisations(project.getId())).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId())).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         mockMvc.perform(get(PROJECT_FINANCE_CHECKS_BASE_URL, project.getId()))
                 .andExpect(status().isOk())

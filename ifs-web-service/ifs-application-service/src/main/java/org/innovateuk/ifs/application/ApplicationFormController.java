@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
@@ -34,10 +33,11 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -83,6 +83,7 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -126,7 +127,7 @@ public class ApplicationFormController {
     public static final String APPLICATION_START_DATE = "application.startDate";
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceRowRestService financeRowRestService;
 
     @Autowired
     private FinanceService financeService;
@@ -162,7 +163,7 @@ public class ApplicationFormController {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private SectionService sectionService;
@@ -180,16 +181,13 @@ public class ApplicationFormController {
     private CompetitionService competitionService;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private CategoryService categoryService;
 
     @Autowired
     private OverheadFileSaver overheadFileSaver;
@@ -226,8 +224,8 @@ public class ApplicationFormController {
             @PathVariable("formInputId") final Long formInputId,
             @ModelAttribute("loggedInUser") UserResource user) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
-        final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
@@ -418,7 +416,7 @@ public class ApplicationFormController {
     @GetMapping("/remove_cost/{costId}")
     public @ResponseBody
     String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
-        financeRowService.delete(costId);
+        financeRowRestService.delete(costId).getSuccessObjectOrThrowException();
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
@@ -519,7 +517,7 @@ public class ApplicationFormController {
         if (finance.getGrantClaim() != null) {
             finance.getGrantClaim().setGrantClaimPercentage(0);
         }
-        errors.addAll(financeRowService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()));
+        errors.addAll(financeRowRestService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()));
 
         if (!errors.hasErrors()) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
@@ -537,7 +535,7 @@ public class ApplicationFormController {
     private void markOrganisationFinancesAsNotRequired(Long organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
 
         if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
-                && OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationType)) {
+                && OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
             sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
         }
@@ -783,7 +781,7 @@ public class ApplicationFormController {
         if (SectionType.ORGANISATION_FINANCES.equals(section.getType())) {
             List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);
-            if (financePositionKeys.isEmpty() && !OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationType)) {
+            if (financePositionKeys.isEmpty() && !OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {
                 bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
                 valid = Boolean.FALSE;
             }
@@ -829,10 +827,9 @@ public class ApplicationFormController {
                                                           boolean ignoreEmpty) {
 
         ValidationMessages allErrors = new ValidationMessages();
-        questions.stream()
-                .forEach(question ->
+        questions.forEach(question ->
                         {
-                            List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
+                            List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException();
                             formInputs
                                     .stream()
                                     .filter(formInput1 -> FILEUPLOAD != formInput1.getType())
@@ -840,7 +837,8 @@ public class ApplicationFormController {
                                         String formInputKey = "formInput[" + formInput.getId() + "]";
 
                                         requestParameterPresent(formInputKey, request).ifPresent(value -> {
-                                            ValidationMessages errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value, ignoreEmpty);
+                                            ValidationMessages errors = formInputResponseRestService.saveQuestionResponse(
+                                                    userId, applicationId, formInput.getId(), value, ignoreEmpty).getSuccessObjectOrThrowException();
                                             allErrors.addAll(errors, toField(formInputKey));
                                         });
                                     });
@@ -855,9 +853,8 @@ public class ApplicationFormController {
                                                             Long applicationId,
                                                             Long processRoleId) {
         ValidationMessages allErrors = new ValidationMessages();
-        questions.stream()
-                .forEach(question -> {
-                    List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(question.getId());
+        questions.forEach(question -> {
+                    List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException();
                     formInputs
                             .stream()
                             .filter(formInput1 -> FILEUPLOAD == formInput1.getType() && request instanceof MultipartHttpServletRequest)
@@ -870,14 +867,14 @@ public class ApplicationFormController {
 
     private ValidationMessages processFormInput(Long formInputId, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request) {
         if (params.containsKey(REMOVE_UPLOADED_FILE)) {
-            formInputResponseService.removeFile(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
+            formInputResponseRestService.removeFileEntry(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
             return noErrors();
         } else {
             final Map<String, MultipartFile> fileMap = ((MultipartHttpServletRequest) request).getFileMap();
             final MultipartFile file = fileMap.get("formInput[" + formInputId + "]");
             if (file != null && !file.isEmpty()) {
                 try {
-                    RestResult<FileEntryResource> result = formInputResponseService.createFile(formInputId,
+                    RestResult<FileEntryResource> result = formInputResponseRestService.createFileEntry(formInputId,
                             applicationId,
                             processRoleId,
                             file.getContentType(),
@@ -1040,7 +1037,8 @@ public class ApplicationFormController {
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
-            ValidationMessages saveErrors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
+            ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
+                    formInputId, value, false).getSuccessObjectOrThrowException();
             List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
             return new StoreFieldResult(lookedUpErrorMessages);
         }

@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.assessment.feedback.populator;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
@@ -14,8 +14,8 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +24,8 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
@@ -41,13 +43,13 @@ public class AssessmentFeedbackModelPopulator {
     private CompetitionService competitionService;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     public AssessmentFeedbackViewModel populateModel(Long assessmentId, QuestionResource question) {
         AssessmentResource assessment = getAssessment(assessmentId);
@@ -57,7 +59,7 @@ public class AssessmentFeedbackModelPopulator {
                 applicationFormInputs);
         List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(question.getId());
         List<ResearchCategoryResource> researchCategories = hasFormInputWithType(assessmentFormInputs, ASSESSOR_RESEARCH_CATEGORY)
-                ? categoryService.getResearchCategories()
+                ? categoryRestService.getResearchCategories().getSuccessObjectOrThrowException()
                 : null;
 
         String applicantResponseValue = getApplicantResponseValue(applicationFormInputs, applicantResponses);
@@ -114,17 +116,17 @@ public class AssessmentFeedbackModelPopulator {
     }
 
     private List<FormInputResource> getApplicationFormInputs(Long questionId) {
-        return formInputService.findApplicationInputsByQuestion(questionId);
+        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
     }
 
     private List<FormInputResource> getAssessmentFormInputs(Long questionId) {
-        return formInputService.findAssessmentInputsByQuestion(questionId);
+        return formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT).getSuccessObjectOrThrowException();
     }
 
     private Map<Long, FormInputResponseResource> getApplicantResponses(Long applicationId, List<FormInputResource> applicationFormInputs) {
         RestResult<List<List<FormInputResponseResource>>> applicantResponses = aggregate(applicationFormInputs
                 .stream()
-                .map(formInput -> formInputResponseService.getByFormInputIdAndApplication(formInput.getId(), applicationId))
+                .map(formInput -> formInputResponseRestService.getByFormInputIdAndApplication(formInput.getId(), applicationId))
                 .collect(toList()));
         return simpleToMap(
                 flattenLists(applicantResponses.getSuccessObjectOrThrowException()),

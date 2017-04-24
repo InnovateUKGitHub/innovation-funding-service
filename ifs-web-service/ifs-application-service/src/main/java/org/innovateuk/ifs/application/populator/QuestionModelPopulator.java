@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -15,8 +16,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -34,13 +36,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_FORM;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 
 /**
  * View model for the single question pages
  */
 @Component
 public class QuestionModelPopulator extends BaseModelPopulator {
-    private static final Log LOG = LogFactory.getLog(QuestionModelPopulator.class);
 
     @Autowired
     private ApplicationService applicationService;
@@ -64,24 +66,21 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private SectionService sectionService;
-
-    @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private FormInputResponseService formInputResponseService;
 
     @Autowired
-    private ApplicationNavigationPopulator applicationNavigationPopulator;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
-    private CategoryService categoryService;
+    private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
                                            final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
         QuestionResource question = questionService.getById(questionId);
-        List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
+        List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
@@ -145,9 +144,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                 , application, competition, userOrganisation.orElse(null));
 
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
-        leadOrganisation.ifPresent(org ->
-                questionApplicationViewModel.setLeadOrganisation(org)
-        );
+        leadOrganisation.ifPresent(questionApplicationViewModel::setLeadOrganisation);
 
         addApplicationFormDetailInputs(application, form);
         addSelectedInnovationAreaName(application, questionApplicationViewModel);
@@ -241,7 +238,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     }
 
     private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
-        return formInputResponseService.getByApplication(application.getId());
+        return formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
     }
 
     private List<QuestionStatusResource> getQuestionStatuses(Long questionId, Long applicationId) {
