@@ -42,11 +42,10 @@ Back button takes you to the previous page
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     [Teardown]    the user clicks the button/link    jQuery=a:contains("your assessor agreement")
 
-Assessor agreement    # Nuno - failing as it doesn't read the headers cause it's in wrong page.
+Assessor agreement
     [Documentation]    INFUND-1481
     [Tags]
     When the user clicks the button/link    link=Download assessor agreement (opens in a new window)
-    #Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/New%20simple%20assessor%20agreement.pdf
     And the user goes back to the previous tab
 
 Client-side validations and Submit

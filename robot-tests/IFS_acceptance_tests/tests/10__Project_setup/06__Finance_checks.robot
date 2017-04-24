@@ -363,8 +363,6 @@ Finance checks section status updated for finance contact
     And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
 
-
-
 Finance contact can view query
     [Documentation]    INFUND-4843
     [Tags]
@@ -500,8 +498,6 @@ Project finance user can view the response
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the text in the page    this is some response text
-
-#From here down - NUNO
 
 Project finance user can view the finance contact's uploaded files
     [Documentation]    INFUND-4843

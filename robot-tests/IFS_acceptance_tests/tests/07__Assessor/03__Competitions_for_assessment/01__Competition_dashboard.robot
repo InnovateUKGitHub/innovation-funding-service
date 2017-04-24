@@ -56,7 +56,6 @@ Competition brief link can be seen
     [Documentation]    INFUND-5494
     [Tags]
     Then the user should see the element    link=View competition brief (opens in a new window)
-#    And the user should see the text in the page    View competition brief (opens in a new window) # NUNO - I guess this is ok to remove?
 
 User can view the competition brief
     [Documentation]    INFUND-5494
