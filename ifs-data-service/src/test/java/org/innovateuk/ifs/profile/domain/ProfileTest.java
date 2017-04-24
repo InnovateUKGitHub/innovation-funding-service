@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.domain;
+package org.innovateuk.ifs.profile.domain;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
-import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

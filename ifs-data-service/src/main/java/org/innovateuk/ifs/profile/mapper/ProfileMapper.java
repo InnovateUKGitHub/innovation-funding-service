@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.user.mapper;
+package org.innovateuk.ifs.profile.mapper;
 
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.user.domain.Profile;
-import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
