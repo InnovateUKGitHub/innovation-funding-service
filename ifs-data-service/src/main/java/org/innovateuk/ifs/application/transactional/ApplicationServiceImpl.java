@@ -417,7 +417,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
             notificationArguments.put("webBaseUrl", webBaseUrl);
-            
+
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
         });
