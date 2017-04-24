@@ -10,24 +10,18 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.user.domain.Profile;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
