@@ -119,9 +119,12 @@
                   <label for="password">
                     <span class="form-label">#springMessageText("idp.login.password", "Password")</span>
                   </label>
-                  <input class="form-control field-error" id="password" name="j_password" type="password" value=""
+                  <div class="password-toggle">
+                    <input class="form-control field-error" id="password" name="j_password" type="password" value=""
                          required="required"
                          data-required-errormessage="Please enter your password.">
+                    <button role="switch" aria-checked="false" aria-label="Show password">Show</button>
+                  </div>
                 </div>
               #else
                 <div class="form-group">
@@ -138,9 +141,12 @@
                   <label for="password">
                     <span class="form-label">#springMessageText("idp.login.password", "Password")</span>
                   </label>
-                  <input class="form-control" id="password" name="j_password" type="password" value=""
+                  <div class="password-toggle">
+                    <input class="form-control" id="password" name="j_password" type="password" value=""
                          required="required"
                          data-required-errormessage="Please enter your password.">
+                    <button role="switch" aria-checked="false" aria-label="Show password">Show</button>
+                  </div>
                 </div>
               #end
             #end
@@ -252,7 +258,21 @@
                     button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
                 }
             });
-
+            jQuery(".password-toggle button").on("click", function(event){
+                event.preventDefault();
+                var button = jQuery(this);
+                var passwordInput = jQuery(this).prev();
+                var inputType = passwordInput.attr('type');
+                if (inputType === 'password') {
+                    passwordInput.prop("type", "text");
+                    button.text("Hide");
+                    button.attr("aria-checked", true);
+                } else {
+                    passwordInput.prop("type", "password");
+                    button.text("Show");
+                    button.attr("aria-checked", false);
+                }
+            });
             jQuery.ajax({
                 url: '$resourcesDomain/alert/findAllVisibleByType/MAINTENANCE',
                 method: 'GET'
