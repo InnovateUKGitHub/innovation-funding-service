@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.assessment.profile.populator;
 
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +25,10 @@ import static org.innovateuk.ifs.user.resource.AffiliationType.PERSONAL;
 public class AssessorProfileDeclarationFormPopulator extends AssessorProfileDeclarationBasePopulator {
 
     @Autowired
-    private UserService userService;
+    private AffiliationRestService affiliationRestService;
 
     public AssessorProfileDeclarationForm populateForm(AssessorProfileDeclarationForm form, UserResource user) {
-        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(userService.getUserAffiliations(user.getId()));
+        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccessObjectOrThrowException());
 
         form.setPrincipalEmployer(getPrincipalEmployer(affiliations).map(AffiliationResource::getOrganisation).orElse(null));
         form.setRole(getPrincipalEmployer(affiliations).map(AffiliationResource::getPosition).orElse(null));

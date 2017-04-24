@@ -102,59 +102,15 @@ public class UserServiceImpl implements UserService {
         return createUserForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId, allowMarketingEmails);
     }
 
-
     @Override
     public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails) {
         return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability, allowMarketingEmails).toServiceResult();
     }
 
     @Override
-    public ProfileSkillsResource getProfileSkills(Long userId) {
-        return userRestService.getProfileSkills(userId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> updateProfileSkills(Long userId, BusinessType businessType, String skillsAreas) {
-        ProfileSkillsEditResource profileSkillsEditResource = new ProfileSkillsEditResource();
-        profileSkillsEditResource.setBusinessType(businessType);
-        profileSkillsEditResource.setSkillsAreas(skillsAreas);
-        return userRestService.updateProfileSkills(userId, profileSkillsEditResource).toServiceResult();
-    }
-
-    @Override
-    public UserProfileResource getUserProfile(Long userId) {
-        return userRestService.getUserProfile(userId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile) {
-        return userRestService.updateUserProfile(userId, userProfile).toServiceResult();
-    }
-
-    @Override
     public Long getUserOrganisationId(Long userId, Long applicationId) {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
         return userApplicationRole.getOrganisationId();
-    }
-
-    @Override
-    public List<AffiliationResource> getUserAffiliations(Long userId) {
-        return userRestService.getUserAffiliations(userId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
-        return userRestService.updateUserAffiliations(userId, affiliations).toServiceResult();
-    }
-
-    @Override
-    public ProfileAgreementResource getProfileAgreement(Long userId) {
-        return userRestService.getProfileAgreement(userId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> updateProfileAgreement(Long userId) {
-        return userRestService.updateProfileAgreement(userId).toServiceResult();
     }
 
     @Override
@@ -207,5 +163,4 @@ public class UserServiceImpl implements UserService {
     public Optional<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email).getOptionalSuccessObject();
     }
-    
 }
