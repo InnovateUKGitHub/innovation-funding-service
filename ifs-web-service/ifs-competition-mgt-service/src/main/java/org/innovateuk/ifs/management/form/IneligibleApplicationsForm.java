@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 
+/**
+ * Form for handling filtering on the ineligible applications page.
+ */
 public class IneligibleApplicationsForm {
     private String filterSearch = "";
     private Optional<Boolean> filterInform = empty();
