@@ -34,14 +34,22 @@ import static java.util.Arrays.asList;
 @Service
 @Configurable
 public class CookieFlashMessageFilter extends GenericFilterBean {
+
     public static final String COOKIE_NAME = "flashMessage";
     private static final Integer COOKIE_LIFETIME = 60;
 
-    private static final OrRequestMatcher IGNORED_REQUESTS = new OrRequestMatcher(asList(
+    private static String monitoringEndpoint;
+
+    @Value("${management.contextPath}")
+    public static void setMonitoringEndpoint(String monitoringEndpoint) {
+        CookieFlashMessageFilter.monitoringEndpoint = monitoringEndpoint;
+    }
+
+    private static OrRequestMatcher IGNORED_REQUESTS = new OrRequestMatcher(asList(
         new AntPathRequestMatcher("/css/**"),
         new AntPathRequestMatcher("/js/**"),
         new AntPathRequestMatcher("/images/**"),
-        new AntPathRequestMatcher("/monitoring/**"),
+        new AntPathRequestMatcher(monitoringEndpoint+"/**"),
         new AntPathRequestMatcher("/error"),
         new AntPathRequestMatcher("/"),
         new AntPathRequestMatcher("/favicon.ico")
