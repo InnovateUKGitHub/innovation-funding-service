@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.transactional;
+package org.innovateuk.ifs.profile.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -8,23 +8,22 @@ import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
+
 
 /**
  * Tests around the integration of this service and Spring Security
  */
-public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<UserProfileService> {
+public class ProfileServiceSecurityTest extends BaseServiceSecurityTest<ProfileService> {
 
     private UserPermissionRules rules;
     private UserLookupStrategies userLookupStrategies;
@@ -91,39 +90,6 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     }
 
     @Test
-    public void updateDetails() {
-        UserResource user = newUserResource().build();
-
-        assertAccessDenied(() -> classUnderTest.updateDetails(user), () -> {
-            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
-    @Test
-    public void getUserAffiliations() {
-        Long userId = 1L;
-
-        classUnderTest.getUserAffiliations(userId);
-        verify(rules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).usersCanViewTheirOwnAffiliations(isA(AffiliationResource.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(rules);
-    }
-
-    @Test
-    public void updateUserAffiliations() {
-        Long userId = 1L;
-        List<AffiliationResource> affiliations = newAffiliationResource().build(2);
-
-        UserResource user = newUserResource().build();
-        when(userLookupStrategies.findById(userId)).thenReturn(user);
-
-        assertAccessDenied(() -> classUnderTest.updateUserAffiliations(userId, affiliations), () -> {
-            verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
-    @Test
     public void getUserProfileDetails() {
         Long userId = 1L;
 
@@ -164,11 +130,11 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     }
 
     @Override
-    protected Class<? extends UserProfileService> getClassUnderTest() {
-        return TestUserProfileService.class;
+    protected Class<? extends ProfileService> getClassUnderTest() {
+        return org.innovateuk.ifs.profile.transactional.ProfileServiceSecurityTest.TestProfileService.class;
     }
 
-    public static class TestUserProfileService implements UserProfileService {
+    public static class TestProfileService implements ProfileService {
 
         @Override
         public ServiceResult<ProfileSkillsResource> getProfileSkills(long userId) {
@@ -191,21 +157,6 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
 
         @Override
-        public ServiceResult<Void> updateDetails(UserResource userResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
-            return serviceSuccess(newAffiliationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> userProfile) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<UserProfileResource> getUserProfile(Long userId) {
             return serviceSuccess(newUserProfileResource().build());
         }
@@ -221,3 +172,4 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
     }
 }
+

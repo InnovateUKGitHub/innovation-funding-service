@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.transactional.AddressLookupService;
 import org.innovateuk.ifs.address.transactional.AddressService;
+import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.alert.mapper.AlertMapper;
 import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
@@ -67,6 +68,8 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -345,7 +348,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected UserService userServiceMock;
 
     @Mock
-    protected UserProfileService userProfileServiceMock;
+    protected ProfileService profileServiceMock;
+
+    @Mock
+    protected AffiliationService affiliationServiceMock;
 
     @Mock
     protected ApplicationFinanceRowRepository applicationFinanceRowRepositoryMock;
