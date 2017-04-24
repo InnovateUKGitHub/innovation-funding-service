@@ -171,6 +171,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
         this.applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
         this.projectService = serviceLocator.getBean(ProjectService.class);
+        this.projectMonitoringOfficerService = serviceLocator.getBean(ProjectMonitoringOfficerService.class);
         this.financeRowService = serviceLocator.getBean(FinanceRowService.class);
         this.sectionService = serviceLocator.getBean(SectionService.class);
         this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
