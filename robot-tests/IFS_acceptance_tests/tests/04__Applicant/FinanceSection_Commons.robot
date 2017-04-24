@@ -131,8 +131,8 @@ the user fills in Overhead costs
 
 the user chooses Calculate overheads option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    and the user clicks the button/link     jQuery=label:contains("Custom overhead costs")
-    then the user should see the element     jQuery=h3:contains("Custom overhead costs")
+    and the user clicks the button/link     jQuery=label:contains("Calculate overheads")
+    then the user should see the element     jQuery=h3:contains("Calculate overheads")
     and the user enters text to a text field    jQuery=input[name^="overheads-customRate"]   40
     wait for autosave
     and the total overhead costs should reflect rate entered    jQuery=input[name^="overheads-totalCosts"]   £ 28,261

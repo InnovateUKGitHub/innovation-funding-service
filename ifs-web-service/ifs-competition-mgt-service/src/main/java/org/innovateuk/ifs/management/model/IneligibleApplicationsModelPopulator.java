@@ -21,13 +21,22 @@ public class IneligibleApplicationsModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public IneligibleApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, IneligibleApplicationsForm filterForm) {
+    public IneligibleApplicationsViewModel populateModel(long competitionId,
+                                                         String origin,
+                                                         int page,
+                                                         String sorting,
+                                                         IneligibleApplicationsForm filterForm) {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
 
         ApplicationSummaryPageResource summaryPageResource = applicationSummaryRestService
-                .getIneligibleApplications(competitionId, sorting, page, 20, filterForm.getFilterSearch(),filterForm.getFilterInform())
+                .getIneligibleApplications(competitionId,
+                        sorting,
+                        page,
+                        20,
+                        filterForm.getFilterSearch(),
+                        filterForm.getFilterInform())
                 .getSuccessObjectOrThrowException();
 
         return new IneligibleApplicationsViewModel(

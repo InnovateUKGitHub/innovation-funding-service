@@ -24,8 +24,16 @@ public class OrganisationTypeResourceBuilder extends BaseBuilder<OrganisationTyp
                 with(idBasedNames("OrganisationTypeResource "));
     }
 
+    public OrganisationTypeResourceBuilder withId(Long... ids) {
+        return withArray((id, organisationTypeResource) -> organisationTypeResource.setId(id), ids);
+    }
+
     public OrganisationTypeResourceBuilder withName(String... names) {
         return withArray((name, organisationTypeResource) -> organisationTypeResource.setName(name), names);
+    }
+
+    public OrganisationTypeResourceBuilder withVisibleInSetup(Boolean... visibleInSetups) {
+        return withArray((visibleInSetup, organisationTypeResource) -> organisationTypeResource.setVisibleInSetup(visibleInSetup), visibleInSetups);
     }
 
     @Override

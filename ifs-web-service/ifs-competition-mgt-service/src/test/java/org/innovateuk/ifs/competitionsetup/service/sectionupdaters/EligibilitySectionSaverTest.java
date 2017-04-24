@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -41,7 +43,7 @@ public class EligibilitySectionSaverTest {
 	@Test
 	public void testSaveCompetitionSetupSection() {
 		EligibilityForm competitionSetupForm = new EligibilityForm();
-		competitionSetupForm.setLeadApplicantType("business");
+		competitionSetupForm.setLeadApplicantTypes(asList(1L, 2L));
 		competitionSetupForm.setMultipleStream("yes");
 		competitionSetupForm.setStreamName("streamname");
 		competitionSetupForm.setResubmission("yes");
@@ -52,8 +54,8 @@ public class EligibilitySectionSaverTest {
 		CompetitionResource competition = newCompetitionResource().build();
 
 		service.saveSection(competition, competitionSetupForm);
-		
-		assertEquals(LeadApplicantType.BUSINESS, competition.getLeadApplicantType());
+
+		assertEquals(asList(OrganisationTypeEnum.BUSINESS.getId(), OrganisationTypeEnum.RESEARCH.getId()), competition.getLeadApplicantTypes());
 		assertTrue(competition.isMultiStream());
 		assertEquals("streamname", competition.getStreamName());
 		assertEquals(CollectionFunctions.asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());

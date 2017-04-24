@@ -617,25 +617,25 @@
             </div>
 
 
-            <div th:class="${#fields.hasErrors('leadApplicantType')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('leadApplicantTypes')}? 'form-group error':'form-group'">
                 <fieldset class="inline">
                     <legend>
                        <span class="form-label-bold">Lead applicant</span>
                        <span class="hint">Select the lead applicant type required.</span>
-                       <span th:if="${#fields.hasErrors('leadApplicantType')}" th:remove="tag">
-                         <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantType')}" th:text="${err}" />
+                       <span th:if="${#fields.hasErrors('leadApplicantTypes')}" th:remove="tag">
+                         <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantTypes')}" th:text="${err}" />
                        </span>
                     </legend>
 
-                     <label th:each="leadApplicantType : ${leadApplicantTypes}" class="block-label selection-button-radio" th:for="${'lead-applicant-type-' + leadApplicantType.code}">
-                        <input th:id="${'lead-applicant-type-' + leadApplicantType.code}"
-                               name="leadApplicantType"
-                               th:value="${leadApplicantType.code}"
-                               type="radio"
-                               th:checked="${competitionSetupForm.leadApplicantType == leadApplicantType.code}"
+                     <label th:each="leadApplicantType : ${leadApplicantTypes}" class="block-label selection-button-checkbox" th:for="${'lead-applicant-type-' + leadApplicantType.id}">
+                        <input th:id="${'lead-applicant-type-' + leadApplicantType.id}"
+                               name="leadApplicantTypes"
+                               th:value="${leadApplicantType.id}"
+                               type="checkbox"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.eligibilityform.leadapplicanttype.required}" />
-                        <span th:text="${leadApplicantType.name}" th:remove="tag" />
+                               th:checked="${competitionSetupForm.includesLeadApplicantType(leadApplicantType.id)}"
+                               th:attr="data-required-errormessage=#{validation.eligibilityform.leadApplicantTypes.required}"/>
+                        <th:block th:text="${leadApplicantType.name}" />
                      </label>
                 </fieldset>
             </div>
@@ -713,7 +713,7 @@
                 <dd th:text="${researchCategoriesFormatted}"></dd>
 
                 <dt>Lead applicant</dt>
-                <dd th:each="(leadApplicantType : ${leadApplicantTypes})" th:if="${leadApplicantType.code == competitionSetupForm.leadApplicantType}" th:text="${leadApplicantType.name}">Lead applicant type</dd>
+                <dd th:text="${leadApplicantTypesText}"></dd>
 
                 <dt>Research participation</dt>
                 <dd th:each="(researchParticipationAmount : ${researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
