@@ -12,9 +12,9 @@ import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusView
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,9 +59,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Mock
     private CompetitionParticipantRestService competitionParticipantRestService;
 
-    @Mock
-    private UserRestService userRestService;
-
     @Override
     protected AssessorDashboardController supplyControllerUnderTest() {
         return new AssessorDashboardController();
@@ -96,7 +93,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
-        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -146,7 +143,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
-        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -190,7 +187,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
-        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -234,7 +231,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
-        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -270,7 +267,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
-        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -314,7 +311,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
-        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -364,7 +361,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(participantResources));
-        when(userRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.user.domain;
+package org.innovateuk.ifs.profile.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -6,6 +6,8 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ProfileInnovationAreaLink;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import javax.persistence.*;
