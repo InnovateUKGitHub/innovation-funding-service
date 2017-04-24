@@ -550,9 +550,9 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page    Peter Freeman
     When the user should see the text in the page    Project spend profile
-    Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv (opens in a new window)
-    And the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv (opens in a new window)
-    And the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
+    Then the user opens the link in new window       ${Katz_Name}-spend-profile.csv
+    And the user opens the link in new window        ${Meembee_Name}-spend-profile.csv
+    And the user opens the link in new window        ${Zooveo_Name}-spend-profile.csv
     When the user should see the text in the page    Approved by Innovate UK
     Then the element should be disabled    jQuery=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
@@ -751,9 +751,9 @@ Project Finance still has a link to the spend profile after approval
     [Tags]
     When the user clicks the button/link           jQuery=td:nth-child(6) a
     Then the user should see the text in the page  Project spend profile
-    And the user clicks the button/link            link=${Katz_Name}-spend-profile.csv (opens in a new window)
-    And the user clicks the button/link            link=${Meembee_Name}-spend-profile.csv (opens in a new window)
-    And the user clicks the button/link            link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
+    And the user opens the link in new window      ${Katz_Name}-spend-profile.csv
+    And the user opens the link in new window      ${Meembee_Name}-spend-profile.csv
+    And the user opens the link in new window      ${Zooveo_Name}-spend-profile.csv
     And the user should see the text in the page   The spend profile has been approved
 
 Project finance user cannot access external users' spend profile page

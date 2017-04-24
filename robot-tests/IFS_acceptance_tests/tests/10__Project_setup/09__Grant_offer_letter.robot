@@ -80,7 +80,7 @@ Project finance user selects the grant offer letter
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
     Then the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element     jQuery=h2:contains("Grant offer letter")
-    And the user should see the element     link=grant_offer_letter.pdf (opens in a new window)
+    And the user opens the link in new window   grant_offer_letter.pdf
     And the user should see the element     jQuery=button:contains("Remove")
 
 Project Finance can download GOL
@@ -288,7 +288,7 @@ PM can view the uploaded Annex file
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
-    When the user clicks the button/link     link=${valid_pdf} (opens in a new window)
+    When the user opens the link in new window   ${valid_pdf}
     Then the user goes back to the previous tab
 
 PM can download the annex

@@ -45,7 +45,7 @@ Back button takes you to the previous page
 Assessor agreement
     [Documentation]    INFUND-1481
     [Tags]
-    When the user clicks the button/link    link=Download assessor agreement (opens in a new window)
+    When The user opens the link in new window  Download assessor agreement
     And the user goes back to the previous tab
 
 Client-side validations and Submit

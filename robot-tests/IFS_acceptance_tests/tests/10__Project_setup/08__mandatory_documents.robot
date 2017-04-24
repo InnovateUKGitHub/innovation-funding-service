@@ -103,9 +103,9 @@ Lead partner can view both documents
     Given log in as a different user       &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user opens the link in new window   ${valid_pdf}
     Then the user goes back to the previous tab
-    When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
+    When the user opens the link in new window   ${valid_pdf}
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=status of my partners
