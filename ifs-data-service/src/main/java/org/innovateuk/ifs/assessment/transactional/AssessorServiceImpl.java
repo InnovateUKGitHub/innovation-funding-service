@@ -32,6 +32,7 @@ import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.RoleService;
+import org.innovateuk.ifs.user.transactional.UserSurveyService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -101,6 +102,9 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Autowired
     private AssessmentRepository assessmentRepository;
 
+    @Autowired
+    private UserSurveyService userSurveyService;
+
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
 
@@ -110,6 +114,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
             return getAssessorRoleResource().andOnSuccess(assessorRole -> {
                 userRegistrationResource.setRoles(singletonList(assessorRole));
                 return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
+                    userSurveyService.sendDiversitySurvey(created);
                     assignCompetitionParticipantsToUser(created);
                     Profile profile = profileRepository.findOne(created.getProfileId());
                     // profile is guaranteed to have been created by createUser(...)
@@ -121,7 +126,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     @Override
-    public ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId) {
+    public ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId) {
         return getAssessor(assessorId)
                 .andOnSuccess(user -> getProfile(user.getProfileId())
                         .andOnSuccessReturn(
@@ -207,7 +212,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {
         return registrationService.createUser(userRegistrationResource).andOnSuccess(
-                created -> registrationService.activateUser(created.getId()).andOnSuccessReturn(result -> userRepository.findOne(created.getId())));
+                created -> registrationService.activateUserAndSendDiversitySurvey(created.getId()).andOnSuccessReturn(result -> userRepository.findOne(created.getId())));
     }
 
     enum Notifications {

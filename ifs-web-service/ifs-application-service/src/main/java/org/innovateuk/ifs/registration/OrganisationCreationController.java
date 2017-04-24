@@ -301,7 +301,7 @@ public class OrganisationCreationController {
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
-        if (OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -340,7 +340,7 @@ public class OrganisationCreationController {
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
-        if (OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -365,7 +365,7 @@ public class OrganisationCreationController {
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
-        if (OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -481,7 +481,7 @@ public class OrganisationCreationController {
     public String createOrganisationAsLeadApplicant(HttpServletRequest request, HttpServletResponse response) {
         //This is the first endpoint when creating a new account as lead applicant.
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
-        organisationTypeForm.setOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        organisationTypeForm.setOrganisationType(OrganisationTypeEnum.BUSINESS.getId());
         organisationTypeForm.setSelectedByDefault(true);
         String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
         cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
@@ -498,7 +498,7 @@ public class OrganisationCreationController {
         organisationResource.setName(organisationForm.getOrganisationName());
         organisationResource.setOrganisationType(organisationForm.getOrganisationType().getId());
 
-        if (!OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
+        if (!OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
         }
 

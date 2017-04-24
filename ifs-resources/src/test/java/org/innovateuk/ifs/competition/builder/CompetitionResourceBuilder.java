@@ -156,8 +156,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("collaborationLevel", collaborationLevels);
     }
 
-    public CompetitionResourceBuilder withLeadApplicantType(LeadApplicantType... leadApplicantTypes) {
-        return withArraySetFieldByReflection("leadApplicantType", leadApplicantTypes);
+    public CompetitionResourceBuilder withLeadApplicantType(List<Long>... leadApplicantTypes) {
+        return withArraySetFieldByReflection("leadApplicantTypes", leadApplicantTypes);
     }
 
     public CompetitionResourceBuilder withActivityCode(String... activityCodes) {

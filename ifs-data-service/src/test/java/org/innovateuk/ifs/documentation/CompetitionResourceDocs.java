@@ -45,7 +45,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("multiStream").description("indicates if the competition has multiple streams"),
             fieldWithPath("streamName").description("the name of the stream"),
             fieldWithPath("collaborationLevel").description("collaboration level (single, collaborative...)"),
-            fieldWithPath("leadApplicantType").description("permitted type of lead applicant (business, research...)"),
+            fieldWithPath("leadApplicantTypes").description("permitted organisation types of lead applicant (business, research...)"),
             fieldWithPath("researchCategories").description("the research categories entered during competition setup"),
             fieldWithPath("sectionSetupStatus").description("the completion status of competition setup sections"),
             fieldWithPath("activityCode").description("the activity code entered during competition setup"),
@@ -81,6 +81,7 @@ public class CompetitionResourceDocs {
             .withInnovationAreaNames(singleton("Tech"))
             .withInnovationSector(2L)
             .withInnovationSectorName("IT")
+            .withLeadApplicantType(asList(1L, 2L))
             .withPafCode("PAF-123")
             .withBudgetCode("BUDGET-456")
             .withActivityCode("Activity-Code")

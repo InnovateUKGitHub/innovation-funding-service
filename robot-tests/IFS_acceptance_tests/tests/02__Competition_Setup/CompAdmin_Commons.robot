@@ -65,8 +65,7 @@ the user fills in the CS Eligibility
     the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
     the user clicks the button/link  jQuery=label[for="research-categories-33"]
     the user clicks the button/link  jQuery=label[for="research-categories-33"]
-    the user clicks the button/link  jQuery=label[for="lead-applicant-type-research"]
-    the user clicks the button/link  jQuery=label[for="lead-applicant-type-research"]
+    the user clicks the button twice  jQuery=label[for="lead-applicant-type-3"]
     the user selects the option from the drop-down menu  1  researchParticipation
     the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
