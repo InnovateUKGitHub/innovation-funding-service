@@ -131,7 +131,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         when(registrationServiceMock.createUser(userRegistrationResource)).thenReturn(serviceSuccess(createdUserResource));
 
-        when(registrationServiceMock.activateUser(createdUserResource.getId())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateUserAndSendDiversitySurvey(createdUserResource.getId())).thenReturn(serviceSuccess());
         when(competitionInviteServiceMock.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
         when(userRepositoryMock.findOne(createdUserResource.getId())).thenReturn(createdUser);
         when(competitionParticipantRepositoryMock.getByInviteEmail(email)).thenReturn(participantsForOtherInvites);
@@ -145,7 +145,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(competitionInviteServiceMock).getInvite(hash);
         inOrder.verify(roleServiceMock).findByUserRoleType(ASSESSOR);
         inOrder.verify(registrationServiceMock).createUser(userRegistrationResource);
-        inOrder.verify(registrationServiceMock).activateUser(createdUserResource.getId());
+        inOrder.verify(registrationServiceMock).activateUserAndSendDiversitySurvey(createdUserResource.getId());
         inOrder.verify(userRepositoryMock).findOne(createdUserResource.getId());
         inOrder.verify(competitionParticipantRepositoryMock).getByInviteEmail(email);
         inOrder.verify(competitionParticipantRepositoryMock).save(participantsForOtherInvites);
