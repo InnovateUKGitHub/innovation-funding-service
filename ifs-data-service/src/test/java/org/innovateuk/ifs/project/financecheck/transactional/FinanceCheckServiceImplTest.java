@@ -825,8 +825,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FormInputResponse turnover = newFormInputResponse().withValue("2").withUpdatedBy(updatedBy).build();
 
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(staffCountFormInputId).withResponses(!isIncludeGrowthTable ? asList(headcount) : emptyList()).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(!isIncludeGrowthTable ? asList(turnover) : emptyList()).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(noInput ? emptyList() : asList(staffTurnoverFormInput));
+        FormInput staffTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(!isIncludeGrowthTable ? asList(turnover) : emptyList()).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(noInput ? emptyList() : asList(staffTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(staffCountFormInput));
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));

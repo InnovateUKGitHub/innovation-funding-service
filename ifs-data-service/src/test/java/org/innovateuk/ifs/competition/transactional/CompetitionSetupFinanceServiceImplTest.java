@@ -53,7 +53,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(isIncludeGrowthTable).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(isIncludeGrowthTable).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(isIncludeGrowthTable).build();
         // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
         FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(!isIncludeGrowthTable).build();
         List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(!isIncludeGrowthTable).build(4);
@@ -92,7 +92,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         FormInputResponse turnover = newFormInputResponse().withValue("2").build();
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).build();
         // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
         FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withResponses(asList(turnover)).build();
         List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
