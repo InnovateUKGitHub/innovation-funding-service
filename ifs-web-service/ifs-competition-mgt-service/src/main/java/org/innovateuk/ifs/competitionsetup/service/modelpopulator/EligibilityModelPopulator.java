@@ -51,7 +51,6 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
         Predicate<OrganisationTypeResource> notResearchFilter = organisationTypeResource -> !"Research".equals(organisationTypeResource.getName());
 		List<OrganisationTypeResource> leadApplicantTypes = simpleFilter(organisationTypes, CollectionFunctions.and(OrganisationTypeResource::getVisibleInSetup, notResearchFilter));
 
-
 		model.addAttribute("leadApplicantTypes", leadApplicantTypes);
         model.addAttribute("leadApplicantTypesText", leadApplicantTypes.stream()
                 .filter(organisationTypeResource -> competitionResource.getLeadApplicantTypes().contains(organisationTypeResource.getId()))

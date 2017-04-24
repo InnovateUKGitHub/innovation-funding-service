@@ -87,7 +87,7 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
         .andExpect(view().name("redirect:/organisation/create/find-organisation"))
         .andReturn();
 
-        assertEquals(URLEncoder.encode("{\"organisationType\":1,\"selectedByDefault\":false}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
+        assertEquals(URLEncoder.encode("{\"organisationType\":1,\"isLeadApplicant\":false}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
 
     }
 
@@ -107,6 +107,6 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("redirect:/organisation/create/find-organisation"))
                 .andReturn();
 
-        assertEquals(URLEncoder.encode("{\"organisationType\":2,\"selectedByDefault\":false}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
+        assertEquals(URLEncoder.encode("{\"organisationType\":2,\"isLeadApplicant\":false}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
     }
 }
