@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVCTest<ProjectSetUpGrantOfferController> {
+public class ProjectSetupGrantOfferControllerTest extends BaseControllerMockMVCTest<ProjectSetupGrantOfferController> {
 
     @Spy
     @InjectMocks
@@ -59,9 +59,9 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.isProjectManager(userId, projectId)).thenReturn(true);
         when(projectService.isUserLeadPartner(projectId, userId)).thenReturn(true);
-        when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
-        when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
-        when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
+        when(projectGrantOfferService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
+        when(projectGrantOfferService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
+        when(projectGrantOfferService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
         when(projectGrantOfferService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
         when(projectGrantOfferService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
@@ -89,10 +89,10 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
         ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
 
-        when(projectService.getGrantOfferFile(123L)).
+        when(projectGrantOfferService.getGrantOfferFile(123L)).
                 thenReturn(Optional.of(fileContents));
 
-        when(projectService.getGrantOfferFileDetails(123L)).
+        when(projectGrantOfferService.getGrantOfferFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/grant-offer-letter", 123L)).
@@ -113,7 +113,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         when(projectGrantOfferService.getSignedGrantOfferLetterFile(123L)).
                 thenReturn(Optional.of(fileContents));
 
-        when(projectService.getSignedGrantOfferLetterFileDetails(123L)).
+        when(projectGrantOfferService.getSignedGrantOfferLetterFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
         when(projectService.isUserLeadPartner(123L, 1L)).thenReturn(true);
@@ -140,10 +140,10 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
         ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
 
-        when(projectService.getAdditionalContractFile(123L)).
+        when(projectGrantOfferService.getAdditionalContractFile(123L)).
                 thenReturn(Optional.of(fileContents));
 
-        when(projectService.getAdditionalContractFileDetails(123L)).
+        when(projectGrantOfferService.getAdditionalContractFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/additional-contract", 123L)).
@@ -169,8 +169,8 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
 
         when(projectService.getById(123L)).thenReturn(project);
         when(projectService.getProjectUsersForProject(123L)).thenReturn(puRes);
-        when(projectService.getGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
-        when(projectService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        when(projectGrantOfferService.getGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
+        when(projectGrantOfferService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         mockMvc.perform(
@@ -195,10 +195,10 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
 
         when(projectService.getById(123L)).thenReturn(project);
         when(projectService.getProjectUsersForProject(123L)).thenReturn(puRes);
-        when(projectService.getSignedGrantOfferLetterFileDetails(123L)).thenReturn(Optional.empty());
-        when(projectService.getGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
-        when(projectService.getAdditionalContractFileDetails(123L)).thenReturn(Optional.empty());
-        when(projectService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        when(projectGrantOfferService.getSignedGrantOfferLetterFileDetails(123L)).thenReturn(Optional.empty());
+        when(projectGrantOfferService.getGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
+        when(projectGrantOfferService.getAdditionalContractFileDetails(123L)).thenReturn(Optional.empty());
+        when(projectGrantOfferService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
         when(projectGrantOfferService.isGrantOfferLetterAlreadySent(123L)).thenReturn(serviceSuccess(Boolean.TRUE));
         when(projectGrantOfferService.isSignedGrantOfferLetterApproved(project.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
@@ -227,19 +227,19 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
     public void testSubmitOfferLetter() throws Exception {
         long projectId = 123L;
 
-        when(projectService.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+        when(projectGrantOfferService.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/" + projectId + "/offer").
                 param("confirmSubmit", "")).
                 andExpect(status().is3xxRedirection());
 
-        verify(projectService).submitGrantOfferLetter(projectId);
+        verify(projectGrantOfferService).submitGrantOfferLetter(projectId);
     }
 
     @Test
     public void testRemoveSignedGrantOfferLetter() throws Exception {
 
-        when(projectService.removeSignedGrantOfferLetter(123L)).
+        when(projectGrantOfferService.removeSignedGrantOfferLetter(123L)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
@@ -250,7 +250,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
     }
 
     @Override
-    protected ProjectSetUpGrantOfferController supplyControllerUnderTest() {
-        return new ProjectSetUpGrantOfferController();
+    protected ProjectSetupGrantOfferController supplyControllerUnderTest() {
+        return new ProjectSetupGrantOfferController();
     }
 }

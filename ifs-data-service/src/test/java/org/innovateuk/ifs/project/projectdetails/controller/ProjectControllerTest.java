@@ -341,21 +341,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andReturn();
     }
 
-  /*  @Test
-    public void getGrantOfferLetterWorkflowState() throws Exception {
-
-        Long projectId = 123L;
-
-        when(projectGrantOfferServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
-
-        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(GOLState.APPROVED)))
-                .andReturn();
-
-        verify(projectGrantOfferServiceMock).getGrantOfferLetterWorkflowState(projectId);
-    }*/
-
     @Test
     public void tetsGetProjectManager() throws Exception {
         Long project1Id = 1L;

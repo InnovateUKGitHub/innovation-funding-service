@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  **/
 @Controller
 @RequestMapping("/project/{projectId}/offer")
-public class ProjectSetUpGrantOfferController {
+public class ProjectSetupGrantOfferController {
 
     private static final String FORM_ATTR = "form";
     public static final String BASE_DIR = "project";
@@ -78,7 +78,7 @@ public class ProjectSetUpGrantOfferController {
         return validationHandler.performActionOrBindErrorsToField("",
                 () -> createGrantOfferLetterPage(projectId, model, loggedInUser, form),
                 () -> "redirect:/project/" + projectId,
-                () -> projectService.submitGrantOfferLetter(projectId));
+                () -> projectGrantOfferService.submitGrantOfferLetter(projectId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
@@ -94,7 +94,7 @@ public class ProjectSetUpGrantOfferController {
 
             MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
 
-            return projectService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
+            return projectGrantOfferService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
                     signedGrantOfferLetter.getOriginalFilename(), getMultipartFileBytes(signedGrantOfferLetter));
         });
     }
@@ -109,7 +109,7 @@ public class ProjectSetUpGrantOfferController {
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
-            return projectService.removeSignedGrantOfferLetter(projectId);
+            return projectGrantOfferService.removeSignedGrantOfferLetter(projectId);
         });
     }
 
@@ -120,8 +120,8 @@ public class ProjectSetUpGrantOfferController {
     ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectService.getGrantOfferFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getGrantOfferFileDetails(projectId);
+        final Optional<ByteArrayResource> content = projectGrantOfferService.getGrantOfferFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getGrantOfferFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
@@ -133,7 +133,7 @@ public class ProjectSetUpGrantOfferController {
     ResponseEntity<ByteArrayResource> downloadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
         final Optional<ByteArrayResource> content = projectGrantOfferService.getSignedGrantOfferLetterFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
+        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getSignedGrantOfferLetterFileDetails(projectId);
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
@@ -144,8 +144,8 @@ public class ProjectSetUpGrantOfferController {
     ResponseEntity<ByteArrayResource> downloadAdditionalContractFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectService.getAdditionalContractFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getAdditionalContractFileDetails(projectId);
+        final Optional<ByteArrayResource> content = projectGrantOfferService.getAdditionalContractFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getAdditionalContractFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }

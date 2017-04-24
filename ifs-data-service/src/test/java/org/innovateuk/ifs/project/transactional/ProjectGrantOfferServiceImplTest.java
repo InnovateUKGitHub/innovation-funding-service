@@ -92,23 +92,15 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private Long projectId = 123L;
     private Long applicationId = 456L;
     private Long userId = 7L;
-
     private Application application;
     private List<Organisation> organisations;
     private Organisation nonAcademicUnfunded;
-    //private Organisation o;
     private Role leadApplicantRole;
     private User user;
-    //private User u;
     private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
     private Project project;
-    //private Project p;
     private List<OrganisationResource> organisationResources;
-    //private Role partnerRole;
-    //private MonitoringOfficerResource monitoringOfficerResource;
-    //private BankDetails bankDetails;
-    //private SpendProfile spendProfile;
 
     @Mock
     private EmailService projectEmailService;
@@ -765,7 +757,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Ignore
     @Test
-   public void testSendGrantOfferLetterFailure(){
+    public void testSendGrantOfferLetterFailure(){
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);

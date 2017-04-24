@@ -130,42 +130,4 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-/*    @PermissionRule(
-            value = "SEND_GRANT_OFFER_LETTER",
-            description = "Internal users can send the Grant Offer Letter notification")
-    public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "APPROVE_SIGNED_GRANT_OFFER_LETTER",
-            description = "Internal users can approve the signed Grant Offer Letter")
-    public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
-            description = "Internal users can view the send status of Grant Offer Letter for a project")
-    public boolean internalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
-            description = "Partners can view the send status of Grant Offer Letter for a project")
-    public boolean externalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "A user can see grant offer approval status that they are partners on")
-    public boolean partnersOnProjectCanViewGrantOfferApprovedStatus(ProjectResource project, UserResource user) {
-        return project != null && isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "Internal users can see grant offer approval status")
-    public boolean internalUsersCanViewGrantOfferApprovedStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }*/
-
 }

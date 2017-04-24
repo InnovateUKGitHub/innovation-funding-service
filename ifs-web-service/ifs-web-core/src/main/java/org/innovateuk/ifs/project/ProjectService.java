@@ -76,28 +76,6 @@ public interface ProjectService {
 
     ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
-  /*  Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId);*/
-
-    Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId);
-
-    Optional<ByteArrayResource> getAdditionalContractFile(Long projectId);
-
-    Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId);
-
-    Optional<ByteArrayResource> getGrantOfferFile(Long projectId);
-
-    Optional<FileEntryResource> getGrantOfferFileDetails(Long projectId);
-
-    ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    ServiceResult<Void> removeGrantOfferLetter(Long projectId);
-
-    ServiceResult<Void> removeSignedGrantOfferLetter(Long projectId);
-
-    ServiceResult<Void> submitGrantOfferLetter(Long projectId);
-
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
     ProjectStatusResource getProjectStatus(Long projectId);
@@ -111,8 +89,6 @@ public interface ProjectService {
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 
     ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
-
-    ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
     Optional<ProjectUserResource> getProjectManager(Long projectId);
 

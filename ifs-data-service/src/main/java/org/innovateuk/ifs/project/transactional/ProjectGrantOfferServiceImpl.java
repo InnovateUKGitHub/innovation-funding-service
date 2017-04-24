@@ -115,11 +115,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Autowired
     private  EmailService projectEmailService;
 
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private ProjectUserMapper projectUserMapper;
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
@@ -429,10 +426,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return serviceSuccess(project);
     }
 
-
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
-
     @Override
     public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
 
@@ -577,11 +570,5 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE);
 
         return processAnyFailuresOrSucceed(sendEmailResult);
-    }
-
-    @Override
-    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
-        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
-                notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
     }
 }

@@ -10,11 +10,11 @@ import java.util.function.Consumer;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectSignedGrantOfferLetterControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectSetUpGrantOfferController> {
+public class ProjectSignedGrantOfferLetterControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectSetupGrantOfferController> {
 
     @Override
-    protected Class<? extends ProjectSetUpGrantOfferController> getClassUnderTest() {
-        return ProjectSetUpGrantOfferController.class;
+    protected Class<? extends ProjectSetupGrantOfferController> getClassUnderTest() {
+        return ProjectSetupGrantOfferController.class;
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -19,6 +20,46 @@ public class ProjectGrantOfferServiceImpl implements ProjectGrantOfferService {
     @Override
     public Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId) {
         return projectGrantOfferLetterRestService.getSignedGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId) {
+        return projectGrantOfferLetterRestService.getSignedGrantOfferLetterFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getGrantOfferFile(Long projectId) {
+        return projectGrantOfferLetterRestService.getGrantOfferFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getGrantOfferFileDetails(Long projectId) {
+        return projectGrantOfferLetterRestService.getGrantOfferFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectGrantOfferLetterRestService.addSignedGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectGrantOfferLetterRestService.addGrantOfferLetterFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> removeGrantOfferLetter(Long projectId) {
+        return projectGrantOfferLetterRestService.removeGrantOfferLetter(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> removeSignedGrantOfferLetter(Long projectId) {
+        return projectGrantOfferLetterRestService.removeSignedGrantOfferLetter(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
+        return projectGrantOfferLetterRestService.submitGrantOfferLetter(projectId).toServiceResult();
     }
 
     @Override
@@ -49,6 +90,21 @@ public class ProjectGrantOfferServiceImpl implements ProjectGrantOfferService {
     @Override
     public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
         return projectGrantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId).toServiceResult();
+    }
+
+    @Override
+    public Optional<ByteArrayResource> getAdditionalContractFile(Long projectId) {
+        return projectGrantOfferLetterRestService.getAdditionalContractFile(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId) {
+        return projectGrantOfferLetterRestService.getAdditionalContractFileDetails(projectId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
+        return projectGrantOfferLetterRestService.addAdditionalContractFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
     }
 
 }

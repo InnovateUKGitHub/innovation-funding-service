@@ -411,9 +411,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
             return null;
         }
 
-        @Override
+ /*       @Override
         public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
             return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
-        }
+        }*/
     }
 }

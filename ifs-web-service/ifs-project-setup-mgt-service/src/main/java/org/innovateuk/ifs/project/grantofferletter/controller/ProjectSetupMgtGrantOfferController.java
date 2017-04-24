@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/project/{projectId}/grant-offer-letter")
-public class ProjectSetUpMgtGrantOfferController {
+public class ProjectSetupMgtGrantOfferController {
     @Autowired
     private ProjectService projectService;
 
@@ -102,7 +102,7 @@ public class ProjectSetUpMgtGrantOfferController {
 
             MultipartFile file = form.getGrantOfferLetter();
 
-            return projectService.addGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
+            return projectGrantOfferService.addGrantOfferLetter(projectId, file.getContentType(), file.getSize(),
                     file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
@@ -115,7 +115,7 @@ public class ProjectSetUpMgtGrantOfferController {
                                              ValidationHandler validationHandler,
                                              Model model) {
 
-        projectService.removeGrantOfferLetter(projectId);
+        projectGrantOfferService.removeGrantOfferLetter(projectId);
 
         return doViewGrantOfferLetterSend(projectId, model, form);
     }
@@ -152,8 +152,8 @@ public class ProjectSetUpMgtGrantOfferController {
     ResponseEntity<ByteArrayResource> downloadAdditionalContractFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectService.getAdditionalContractFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getAdditionalContractFileDetails(projectId);
+        final Optional<ByteArrayResource> content = projectGrantOfferService.getAdditionalContractFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getAdditionalContractFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
@@ -165,8 +165,8 @@ public class ProjectSetUpMgtGrantOfferController {
     ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectService.getGrantOfferFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getGrantOfferFileDetails(projectId);
+        final Optional<ByteArrayResource> content = projectGrantOfferService.getGrantOfferFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getGrantOfferFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
@@ -179,7 +179,7 @@ public class ProjectSetUpMgtGrantOfferController {
             @PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = projectGrantOfferService.getSignedGrantOfferLetterFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
+        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getSignedGrantOfferLetterFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
@@ -198,7 +198,7 @@ public class ProjectSetUpMgtGrantOfferController {
 
             MultipartFile file = form.getAnnex();
 
-            return projectService.addAdditionalContractFile(projectId, file.getContentType(), file.getSize(),
+            return projectGrantOfferService.addAdditionalContractFile(projectId, file.getContentType(), file.getSize(),
                     file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
@@ -208,11 +208,11 @@ public class ProjectSetUpMgtGrantOfferController {
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
 
-        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGrantOfferFileDetails(projectId);
+        Optional<FileEntryResource> grantOfferFileDetails = projectGrantOfferService.getGrantOfferFileDetails(projectId);
 
-        Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
+        Optional<FileEntryResource> additionalContractFile = projectGrantOfferService.getAdditionalContractFileDetails(projectId);
 
-        Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
+        Optional<FileEntryResource> signedGrantOfferLetterFile = projectGrantOfferService.getSignedGrantOfferLetterFileDetails(projectId);
 
         GOLState golState = projectGrantOfferService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
 

@@ -27,9 +27,9 @@ public class ProjectGrantOfferLetterViewModelPopulator {
         ProjectResource project = projectService.getById(projectId);
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        Optional<FileEntryResource> signedGrantOfferLetterFile = projectService.getSignedGrantOfferLetterFileDetails(projectId);
-        Optional<FileEntryResource> grantOfferFileDetails = projectService.getGrantOfferFileDetails(projectId);
-        Optional<FileEntryResource> additionalContractFile = projectService.getAdditionalContractFileDetails(projectId);
+        Optional<FileEntryResource> signedGrantOfferLetterFile = projectGrantOfferService.getSignedGrantOfferLetterFileDetails(projectId);
+        Optional<FileEntryResource> grantOfferFileDetails = projectGrantOfferService.getGrantOfferFileDetails(projectId);
+        Optional<FileEntryResource> additionalContractFile = projectGrantOfferService.getAdditionalContractFileDetails(projectId);
         Boolean grantOfferLetterApproved = projectGrantOfferService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
         boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
         boolean isGrantOfferLetterSent = projectGrantOfferService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);

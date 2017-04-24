@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
-import org.innovateuk.ifs.project.grantofferletter.controller.ProjectSetUpMgtGrantOfferController;
+import org.innovateuk.ifs.project.grantofferletter.controller.ProjectSetupMgtGrantOfferController;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectGrantOfferControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectSetUpMgtGrantOfferController> {
+public class ProjectGrantOfferControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectSetupMgtGrantOfferController> {
 
     @Override
-    protected Class<? extends ProjectSetUpMgtGrantOfferController> getClassUnderTest() {
-        return ProjectSetUpMgtGrantOfferController.class;
+    protected Class<? extends ProjectSetupMgtGrantOfferController> getClassUnderTest() {
+        return ProjectSetupMgtGrantOfferController.class;
     }
 
     @Test
@@ -38,13 +38,6 @@ public class ProjectGrantOfferControllerSecurityTest extends BaseProjectSetupCon
     public void testSendGrantOfferLetterPage() {
         assertSecured(() -> classUnderTest.sendGrantOfferLetter(123L, null, null, null, null));
     }
-
-    /* disabled GOL received by post INFUND-6377
-    @Test
-    public void testGrantOfferLetterReceivedByPostPage() {
-        assertSecured(() -> classUnderTest.grantOfferLetterReceivedByPost(123L, null, null, null, null));
-    }
-    */
 
     @Test
     public void testUploadGrantOfferLetterFile() {

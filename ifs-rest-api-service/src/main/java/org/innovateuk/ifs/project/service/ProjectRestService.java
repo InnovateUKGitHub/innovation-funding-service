@@ -65,28 +65,6 @@ public interface ProjectRestService {
 
     RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
 
-    RestResult<Optional<FileEntryResource>> getSignedGrantOfferLetterFileDetails(Long projectId);
-
-    RestResult<FileEntryResource> addSignedGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    RestResult<Void> removeGrantOfferLetter(Long projectId);
-
-    RestResult<Void> removeSignedGrantOfferLetter(Long projectId);
-
-    RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);
-
-    RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId);
-
-    RestResult<Optional<ByteArrayResource>> getGrantOfferFile(Long projectId);
-
-    RestResult<Optional<FileEntryResource>> getGrantOfferFileDetails(Long projectId);
-
-    RestResult<Void> submitGrantOfferLetter(Long projectId);
-
-    RestResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 
     RestResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);
