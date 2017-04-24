@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static javax.persistence.EnumType.STRING;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -65,6 +64,9 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
+
+    @Column(name = "allow_marketing_emails")
+    private boolean allowMarketingEmails = false;
 
     @Column(unique = true)
     private Long profileId;
@@ -249,5 +251,13 @@ public class User implements Serializable {
 
     public boolean hasId(Long id) {
         return this.id.equals(id);
+    }
+
+    public boolean isAllowMarketingEmails() {
+        return allowMarketingEmails;
+    }
+
+    public void setAllowMarketingEmails(boolean allowMarketingEmails) {
+        this.allowMarketingEmails = allowMarketingEmails;
     }
 }

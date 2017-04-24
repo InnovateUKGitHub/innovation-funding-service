@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.project.util;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
-
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -19,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class ControllersUtilTest extends BaseUnitTestMocksTest{
 
     @Mock
-    private PartnerOrganisationService partnerOrganisationService;
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Test
     public void testIsLeadPartner() {
@@ -28,9 +27,9 @@ public class ControllersUtilTest extends BaseUnitTestMocksTest{
         PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
         partnerOrganisationResource.setOrganisation(organisationId);
         partnerOrganisationResource.setLeadOrganisation(true);
-        when(partnerOrganisationService.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
 
-        assertTrue(ControllersUtil.isLeadPartner(partnerOrganisationService, projectId, organisationId));
+        assertTrue(ControllersUtil.isLeadPartner(partnerOrganisationRestService, projectId, organisationId));
 
     }
 
@@ -41,14 +40,14 @@ public class ControllersUtilTest extends BaseUnitTestMocksTest{
         PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
         partnerOrganisationResource.setOrganisation(organisationId);
         partnerOrganisationResource.setLeadOrganisation(false);
-        when(partnerOrganisationService.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
 
-        assertFalse(ControllersUtil.isLeadPartner(partnerOrganisationService, projectId, organisationId));
+        assertFalse(ControllersUtil.isLeadPartner(partnerOrganisationRestService, projectId, organisationId));
 
         Long mismatchOrganisationId = 3L;
         partnerOrganisationResource.setOrganisation(mismatchOrganisationId);
         partnerOrganisationResource.setLeadOrganisation(true);
 
-        assertFalse(ControllersUtil.isLeadPartner(partnerOrganisationService, projectId, organisationId));
+        assertFalse(ControllersUtil.isLeadPartner(partnerOrganisationRestService, projectId, organisationId));
     }
 }

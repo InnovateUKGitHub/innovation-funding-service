@@ -12,7 +12,6 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -31,7 +30,6 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -192,44 +190,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).internalUsersCanViewProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetMonitoringOfficer() {
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getMonitoringOfficer(123L), () -> {
-            verify(projectPermissionRules).internalUsersCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
-            verify(projectPermissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testSaveMonitoringOfficer() {
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.saveMonitoringOfficer(123L, newMonitoringOfficerResource().build()), () -> {
-            verify(projectPermissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testNotifyMonitoringOfficer() {
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.notifyStakeholdersOfMonitoringOfficerChange(newMonitoringOfficerResource().withProject(123L).build()),
-                () -> {
-                    verify(projectPermissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-                    verifyNoMoreInteractions(projectPermissionRules);
         });
     }
 
@@ -573,17 +533,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
-            return null;
-        }
-
-		@Override
-        public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
             return null;
         }
 
@@ -594,11 +544,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
             return null;
         }
 

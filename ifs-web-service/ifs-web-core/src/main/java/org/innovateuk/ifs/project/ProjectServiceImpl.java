@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project;
 
-import org.innovateuk.ifs.project.*;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -14,7 +13,6 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -26,7 +24,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -130,17 +127,6 @@ public class ProjectServiceImpl implements ProjectService {
         RestResult<List<OrganisationResource>> organisationResultsCombined = aggregate(organisationResults);
 
         return organisationResultsCombined.getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber) {
-        return projectRestService.updateMonitoringOfficer(projectId, firstName, lastName, emailAddress, phoneNumber).toServiceResult();
-    }
-
-    @Override
-    public Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId) {
-        return projectRestService.getMonitoringOfficerForProject(projectId).toOptionalIfNotFound().
-                getSuccessObjectOrThrowException();
     }
 
     @Override

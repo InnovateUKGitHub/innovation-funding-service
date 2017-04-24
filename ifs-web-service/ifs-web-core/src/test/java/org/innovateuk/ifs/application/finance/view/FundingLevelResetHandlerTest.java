@@ -2,8 +2,6 @@ package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
@@ -13,6 +11,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
@@ -31,6 +30,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -55,10 +56,7 @@ public class FundingLevelResetHandlerTest {
     private QuestionService questionService;
 
     @Mock
-    private FinanceRowService financeRowService;
-
-    @Mock
-    private FinanceService financeService;
+    private FinanceRowRestService financeRowRestService;
 
     @Test
     public void tetsResetFundingAndMarkAsIncomplete() throws ExecutionException, InterruptedException {
@@ -79,14 +77,15 @@ public class FundingLevelResetHandlerTest {
         when(processRoleService.findAssignableProcessRoles(1L)).thenReturn(future);
         when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)).thenReturn(sectionResources);
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(questionResource));
+        when(financeRowRestService.add(eq(applicationFinanceResource.getId()), eq(questionResource.getId()), isA(FinanceRowItem.class))).thenReturn(restSuccess(noErrors()));
 
         target.resetFundingAndMarkAsIncomplete(applicationFinanceResource, competitionId, userId);
 
-        InOrder inOrder = Mockito.inOrder(sectionService, financeRowService);
+        InOrder inOrder = Mockito.inOrder(sectionService, financeRowRestService);
 
         inOrder.verify(sectionService).markAsInComplete(sectionResources.get(0).getId(),
                 applicationId, processRoles.get(0).getId());
-        inOrder.verify(financeRowService).add(eq(applicationFinanceResource.getId()),
+        inOrder.verify(financeRowRestService).add(eq(applicationFinanceResource.getId()),
                 eq(questionResource.getId()), isA(FinanceRowItem.class));
     }
 }

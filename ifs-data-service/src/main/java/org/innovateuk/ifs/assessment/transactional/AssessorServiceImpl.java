@@ -20,17 +20,19 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.RoleService;
+import org.innovateuk.ifs.user.transactional.UserSurveyService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,6 +102,9 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Autowired
     private AssessmentRepository assessmentRepository;
 
+    @Autowired
+    private UserSurveyService userSurveyService;
+
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
 
@@ -109,6 +114,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
             return getAssessorRoleResource().andOnSuccess(assessorRole -> {
                 userRegistrationResource.setRoles(singletonList(assessorRole));
                 return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
+                    userSurveyService.sendDiversitySurvey(created);
                     assignCompetitionParticipantsToUser(created);
                     Profile profile = profileRepository.findOne(created.getProfileId());
                     // profile is guaranteed to have been created by createUser(...)
@@ -120,7 +126,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     @Override
-    public ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId) {
+    public ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId) {
         return getAssessor(assessorId)
                 .andOnSuccess(user -> getProfile(user.getProfileId())
                         .andOnSuccessReturn(
@@ -206,7 +212,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {
         return registrationService.createUser(userRegistrationResource).andOnSuccess(
-                created -> registrationService.activateUser(created.getId()).andOnSuccessReturn(result -> userRepository.findOne(created.getId())));
+                created -> registrationService.activateUserAndSendDiversitySurvey(created.getId()).andOnSuccessReturn(result -> userRepository.findOne(created.getId())));
     }
 
     enum Notifications {

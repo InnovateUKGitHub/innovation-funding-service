@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsInviteViewModel;
@@ -26,9 +27,16 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
-    public InviteAssessorsInviteViewModel populateModel(CompetitionResource competition, int page, String originQuery) {
+    @Autowired
+    private CompetitionsRestService competitionsRestService;
+
+    public InviteAssessorsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
+        CompetitionResource competition = competitionsRestService
+                .getCompetitionById(competitionId)
+                .getSuccessObjectOrThrowException();
+
         InviteAssessorsInviteViewModel model = super.populateModel(competition);
 
         AssessorCreatedInvitePageResource pageResource = competitionInviteRestService.getCreatedInvites(competition.getId(), page)
@@ -44,7 +52,7 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {
-        return categoryService.getInnovationSectors();
+        return categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
     }
 
 

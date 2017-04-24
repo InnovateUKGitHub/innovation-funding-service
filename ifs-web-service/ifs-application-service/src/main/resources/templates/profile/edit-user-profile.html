@@ -84,7 +84,12 @@
                 <p class="form-hint">Your email address cannot be changed in the system <br /><strong th:text="*{email}" /></p>
             </div>
             <p>To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
-
+            <div th:class="${#fields.hasErrors('allowMarketingEmails')}? 'form-group error':'form-group'">
+                <label class="block-label selection-button-checkbox" for="allow-marketing-emails">
+                    <input id="allow-marketing-emails" th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>
+                    Send me updates on Innovate UK competitions by email.
+                </label>
+            </div>
         </fieldset>
         <button class="button button-large extra-margin" name="create-account" type="submit">Save changes</button>
     </form>

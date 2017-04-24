@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.project.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 
 import java.util.List;
 import java.util.function.BiConsumer;
