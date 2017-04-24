@@ -417,12 +417,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
             notificationArguments.put("webBaseUrl", webBaseUrl);
-            LocalDateTime assesmentEndDate = null;
-            if (competition.getFundersPanelDate() != null) {
-                assesmentEndDate = TimeZoneUtil.toUkTimeZone(competition.getFundersPanelDate()).toLocalDateTime();
-            }
-            notificationArguments.put("assesmentEndDate", assesmentEndDate);
-
+            
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
         });
