@@ -41,6 +41,7 @@ import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -111,6 +112,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -412,11 +416,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
-            LocalDateTime assesmentEndDate = null;
-            if (competition.getFundersPanelDate() != null) {
-                assesmentEndDate = TimeZoneUtil.toUkTimeZone(competition.getFundersPanelDate()).toLocalDateTime();
-            }
-            notificationArguments.put("assesmentEndDate", assesmentEndDate);
+            notificationArguments.put("webBaseUrl", webBaseUrl);
 
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
