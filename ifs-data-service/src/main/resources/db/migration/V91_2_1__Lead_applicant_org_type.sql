@@ -5,12 +5,12 @@ CREATE TABLE `lead_applicant_type` (
   INDEX `competition_id_fk_idx` (`competition_id` ASC),
   CONSTRAINT `competition_id_fk`
     FOREIGN KEY (`competition_id`)
-    REFERENCES `ifs`.`competition` (`id`)
+    REFERENCES `competition` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `org_type_id_fk`
     FOREIGN KEY (`organisation_type_id`)
-    REFERENCES `ifs`.`organisation_type` (`id`)
+    REFERENCES `organisation_type` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE);
 

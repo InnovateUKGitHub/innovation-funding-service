@@ -143,18 +143,14 @@ Eligibility server-side validations
     And the user should see the text in the page    Please select a resubmission option
 
 Eligibility client-side validations
-    [Documentation]    INFUND-2986
-    ...
-    ...    IINFUND-2988
-    ...
-    ...    INFUND-3888
+    [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
     [Tags]    HappyPath
     When the user selects the checkbox    research-categories-33
     And the user selects the checkbox    research-categories-34
     And the user selects the checkbox    research-categories-35
     And the user moves focus and waits for autosave
     When the user selects the radio button    singleOrCollaborative    single
-    And the user selects the radio button    leadApplicantType    business
+    And the user selects the checkbox  lead-applicant-type-1  #business
     And the user moves focus and waits for autosave
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
     And the user moves focus and waits for autosave
@@ -379,7 +375,7 @@ the user should see the correct details in the eligibility form
     Checkbox Should Be Selected    id=research-categories-33
     Checkbox Should Be Selected    id=research-categories-34
     Checkbox Should Be Selected    id=research-categories-35
-    the user sees that the radio button is selected    leadApplicantType    business
+    the user should see that the checkbox is selected  lead-applicant-type-1  # business
     Page Should Contain    50%
     the user sees that the radio button is selected    resubmission    no
 

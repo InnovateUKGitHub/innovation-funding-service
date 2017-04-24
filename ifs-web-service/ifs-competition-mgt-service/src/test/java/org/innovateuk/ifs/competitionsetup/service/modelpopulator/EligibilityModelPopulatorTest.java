@@ -73,12 +73,12 @@ public class EligibilityModelPopulatorTest {
                 .build(3)));
 
 		populator.populateModel(model, competition);
-		
+
 		assertEquals(6, model.asMap().size());
 		assertArrayEquals(ResearchParticipationAmount.values(), (Object[])model.asMap().get("researchParticipationAmounts"));
 		assertArrayEquals(CollaborationLevel.values(), (Object[])model.asMap().get("collaborationLevels"));
 		assertEquals(researchCategories, model.asMap().get("researchCategories"));
-		assertEquals("Business, Research", model.asMap().get("leadApplicantTypesText"));
+		assertEquals("Business", model.asMap().get("leadApplicantTypesText"));
         assertEquals("formattedcategories", model.asMap().get("researchCategoriesFormatted"));
 	}
 }
