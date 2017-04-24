@@ -16,6 +16,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
+# This Suite is failing due to INFUND-9145
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
@@ -29,8 +30,7 @@ Resource          ../../FinanceSection_Commons.robot
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]      Pending
-    #TODO Failing due to INFUND-9145
+    [Tags]
     When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
     And the user expands the Finance summaries
     Then the finance summary calculations should be correct
@@ -38,8 +38,7 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]      Pending
-    #TODO Failing due to INFUND-9145
+    [Tags]
     [Setup]  log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
     And the user expands the Finance summaries

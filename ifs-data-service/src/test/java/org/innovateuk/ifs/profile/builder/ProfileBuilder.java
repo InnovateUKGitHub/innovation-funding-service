@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.user.builder;
+package org.innovateuk.ifs.profile.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.user.domain.Agreement;
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.time.ZonedDateTime;
