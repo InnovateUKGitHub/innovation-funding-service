@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.user.repository;
+package org.innovateuk.ifs.profile.repository;
 
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.springframework.data.repository.CrudRepository;
 
 /**

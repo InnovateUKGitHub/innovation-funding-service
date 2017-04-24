@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.assessment.profile.populator;
 
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +19,10 @@ import java.util.Optional;
 public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDeclarationBasePopulator {
 
     @Autowired
-    private UserService userService;
+    private AffiliationRestService affiliationRestService;
 
     public AssessorProfileDeclarationViewModel populateModel(UserResource user) {
-        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(userService.getUserAffiliations(user.getId()));
+        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccessObjectOrThrowException());
 
         Optional<AffiliationResource> principalEmployer = getPrincipalEmployer(affiliations);
 
