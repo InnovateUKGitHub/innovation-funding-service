@@ -65,7 +65,7 @@
                         <tr th:each="assessor : ${model.assigned}">
                             <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
                                    th:text="${assessor.name}">Oliver Romero</a></td>
-                            <td th:text="${assessor.businessType}">Academic</td>
+                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
@@ -120,7 +120,7 @@
                     <tr th:each="assessor : ${model.rejected}">
                         <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
                                th:text="${assessor.name}">Irving Wolfe</a></td>
-                            <td th:text="${assessor.businessType}">Academic</td>
+                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
@@ -144,16 +144,23 @@
                             <th scope="col">Innovation area</th>
                             <th class="aligncentre" scope="col">Total applications</th>
                             <th class="aligncentre" scope="col">Assigned</th>
+                            <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.previouslyAssigned}">
                             <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
                                    th:text="${assessor.name}">Dave Smith</a></td>
-                            <td th:text="${assessor.businessType}">Business</td>
+                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
+                            <td class="alignright">
+                                <form method="post"
+                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id})}">
+                                    <button type="submit" class="button-secondary no-margin">Re-assign</button>
+                                </form>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
