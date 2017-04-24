@@ -24,13 +24,13 @@ Labour
     [Setup]    Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link    link=Your project costs
     When the Applicant fills in the Labour costs for two rows
-    Then Totals should be correct with the old styling    css=.section-total-summary > [data-mirror="#section-total-189"]    £ 104,348    css=button > [data-mirror="#section-total-189"]    £ 104,348
+    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-189"]    £ 104,348    css=button > [data-mirror="#section-total-189"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
     And The row should be removed    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     And the user reloads the page
-    Then Totals should be correct with the old styling    css=.section-total-summary > [data-mirror="#section-total-189"]    £ 52,174    css=button > [data-mirror="#section-total-189"]    £ 52,174
+    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-189"]    £ 52,174    css=button > [data-mirror="#section-total-189"]    £ 52,174
     And the applicant edits the working days field
-    Then Totals should be correct with the old styling    css=.section-total-summary > [data-mirror="#section-total-189"]   £ 48,000    css=button > [data-mirror="#section-total-189"]    £ 48,000
+    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-189"]   £ 48,000    css=button > [data-mirror="#section-total-189"]    £ 48,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
 Overhead costs
