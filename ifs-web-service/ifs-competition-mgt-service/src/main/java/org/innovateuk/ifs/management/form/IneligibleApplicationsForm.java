@@ -5,8 +5,8 @@ import java.util.Optional;
 import static java.util.Optional.empty;
 
 public class IneligibleApplicationsForm {
-    String filterSearch = "";
-    Optional<Boolean> filterInform = empty();
+    private String filterSearch = "";
+    private Optional<Boolean> filterInform = empty();
 
     public String getFilterSearch() {
         return filterSearch;
