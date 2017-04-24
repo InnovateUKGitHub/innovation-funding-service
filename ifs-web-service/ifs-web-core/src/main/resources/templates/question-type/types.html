@@ -214,7 +214,7 @@
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
                     </label>
-                    <div th:if="${model.questionApplicationViewModel.selectedResearchCategoryName != null}">
+                    <div th:if="${model.questionApplicationViewModel.researchCategoryHasBeenSelected()}">
                         Chosen research category: <th:block th:text="${model.questionApplicationViewModel.selectedResearchCategoryName}"/>
 
                         <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
@@ -224,7 +224,7 @@
                         <span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span>
                     </button>
                 </div>
-                
+
                 <div class="form-group"
                      th:if="${#sets.size(model.questionApplicationViewModel.currentCompetition.innovationAreas) > 1}"
                      th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'error'">
@@ -234,18 +234,18 @@
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.innovationArea')" />
                     </label>
-                    <div th:if="${model.questionApplicationViewModel.selectedInnovationAreaName != null || model.questionApplicationViewModel.noInnovationAreaApplicable}">
+                    <div th:if="${model.questionApplicationViewModel.innovationAreaHasBeenSelected()}">
                         Chosen innovation area:
                         <th:block th:unless="${model.questionApplicationViewModel.noInnovationAreaApplicable}" th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
                         <th:block th:if="${model.questionApplicationViewModel.noInnovationAreaApplicable}" th:text="#{ifs.application.no_innovation_area}"/>
-
-                        <!--/* Input is used here to easily check if a Innovation Area has been selected for mark as complete validation */-->
-                        <input type="hidden" th:field="*{__application.innovationArea.name__}" value="Innovation area name has been selected"/>
                     </div>
                     <button id="researchArea" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">
                         <span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span>
                     </button>
                 </div>
+                <!--/* Input is used here to easily check if a Innovation Area has been selected for mark as complete validation */-->
+                <input type="hidden" th:if="${model.questionApplicationViewModel.innovationAreaHasBeenSelected()}" th:field="*{__application.innovationArea.name__}" value="Innovation area name has been selected"/>
+
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                     <fieldset>
                         <legend>

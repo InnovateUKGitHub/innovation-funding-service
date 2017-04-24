@@ -89,4 +89,12 @@ public class QuestionApplicationViewModel {
     public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
     }
+
+    public boolean researchCategoryHasBeenSelected() {
+        return this.selectedResearchCategoryName != null;
+    }
+
+    public boolean innovationAreaHasBeenSelected() {
+        return this.noInnovationAreaApplicable == true || selectedInnovationAreaName != null;
+    }
 }
