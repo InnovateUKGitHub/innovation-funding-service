@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,7 +28,8 @@ import org.mapstruct.Mappings;
                 MilestoneMapper.class,
                 CompetitionTypeMapper.class,
                 SectionMapper.class,
-                CompetitionFunderMapper.class
+                CompetitionFunderMapper.class,
+                OrganisationTypeMapper.class
         }
 )
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
