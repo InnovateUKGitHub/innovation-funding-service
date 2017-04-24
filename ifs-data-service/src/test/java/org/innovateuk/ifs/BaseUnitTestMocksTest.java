@@ -653,6 +653,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected ApplicationWorkflowHandler applicationWorkflowHandlerMock;
 
+    @Mock
+    protected UserSurveyService userSurveyServiceMock;
+
     @Before
     public void setupMockInjection() {
         // Process mock annotations

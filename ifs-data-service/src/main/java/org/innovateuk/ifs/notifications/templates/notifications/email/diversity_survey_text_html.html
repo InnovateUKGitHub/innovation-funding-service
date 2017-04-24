@@ -1,0 +1,9 @@
+<#import "layout/default.html" as layout>
+    <@layout.default>
+    <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+    <p style="margin: 0 0 1em 0;">Thank you for creating an account with the Innovation Funding Service. We would like to collect some information on the gender, ethnicity and disability of our users. The short survey is entirely optional and has no bearing on the outcome of your application for grant funding. Any data collected will be used solely for our records.</p>
+    <p style="margin: 0 0 1em 0;">Please complete the short diversity survey <a href="${diversitySurveyUrl}">diversity survey</a>.</p>
+    <p style="margin: 0 0 1em 0;">Thank you for your cooperation.</p>
+    <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+    <@layout.senderHTML />
+</@layout.default>
