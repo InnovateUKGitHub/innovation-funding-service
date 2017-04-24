@@ -406,7 +406,7 @@ class CsvUtils {
         String name;
         String description;
         String type;
-        String innovationArea;
+        List<String> innovationAreas;
         String innovationSector;
         String researchCategory;
         String collaborationLevel;
@@ -456,7 +456,7 @@ class CsvUtils {
             name = nullable(line.get(i++));
             description = nullable(line.get(i++));
             type = nullable(line.get(i++));
-            innovationArea = nullable(line.get(i++));
+            innovationAreas = nullableSplitOnNewLines(line.get(i++));
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
             collaborationLevel = nullable(line.get(i++));
@@ -789,5 +789,9 @@ class CsvUtils {
 
         return Splitter.on("!").trimResults().omitEmptyStrings().splitToList(s)
                 .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
+    }
+
+    private static List<String> nullableSplitOnNewLines(String s) {
+        return nullable(s) != null ? simpleMap(s.split("\n"), String::trim) : null;
     }
 }

@@ -91,7 +91,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@Ignore
+//@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
@@ -246,6 +246,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         when(idpServiceMock.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
+        when(idpServiceMock.activateUser(isA(String.class))).thenAnswer(uuid -> serviceSuccess(uuid));
 
         when(emailServiceMock.sendEmail(isA(EmailAddress.class), isA(List.class), isA(String.class), isA(String.class), isA(String.class))).
                 thenReturn(serviceSuccess(emptyList()));
@@ -763,7 +764,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CsvUtils.CompetitionLine line) {
         return competitionDataBuilder
                 .createNonIfsCompetition()
-                .withBasicData(line.name, null, null, line.innovationArea,
+                .withBasicData(line.name, null, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null,
                         null, null, null, line.nonIfsUrl)
@@ -777,7 +778,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
         return existingCompetitionId.map(id -> competitionDataBuilder.
                 withExistingCompetition(1L).
-                withBasicData(line.name, line.description, line.type, line.innovationArea,
+                withBasicData(line.name, line.description, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                         line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
@@ -789,7 +790,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         ).orElse(competitionDataBuilder.
                 createCompetition().
-                withBasicData(line.name, line.description, line.type, line.innovationArea,
+                withBasicData(line.name, line.description, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                         line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
