@@ -202,7 +202,7 @@ Lead partner can see the application overview
 Lead partner is able to see finances without an error
     [Documentation]  INFUND-7634
     [Tags]
-    Given the user clicks the button/link  jQuery=button:contains("Finances summaries")
+    Given the user clicks the button/link  jQuery=button:contains("Finances summary")
     When the user clicks the button/link   link=Detailed Organisation Finances
     Then the user should not see an error in the page
     And the user should see the element    jQuery=h2:contains("Finance summary")
