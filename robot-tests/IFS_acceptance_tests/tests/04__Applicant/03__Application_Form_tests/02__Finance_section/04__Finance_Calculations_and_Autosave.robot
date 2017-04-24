@@ -24,13 +24,13 @@ Labour
     [Setup]    Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link    link=Your project costs
     When the Applicant fills in the Labour costs for two rows
-    Then Totals should be correct    css=#section-total-189    £ 104,348    css=[data-mirror="#section-total-189"]    £ 104,348
+    Then Totals should be correct with the old styling    css=#section-total-189    £ 104,348    css=[data-mirror="#section-total-189"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
     And The row should be removed    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     And the user reloads the page
-    Then Totals should be correct    css=#section-total-189    £ 52,174    css=[data-mirror="#section-total-189"]    £ 52,174
+    Then Totals should be correct with the old styling    css=#section-total-189    £ 52,174    css=[data-mirror="#section-total-189"]    £ 52,174
     And the applicant edits the working days field
-    Then Totals should be correct    css=#section-total-189    £ 48,000    css=[data-mirror="#section-total-189"]    £ 48,000
+    Then Totals should be correct with the old styling    css=#section-total-189    £ 48,000    css=[data-mirror="#section-total-189"]    £ 48,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
 Overhead costs
@@ -251,14 +251,14 @@ The applicant selects 'Yes' and fills two rows
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
     the user moves focus to the element    jQuery=button:contains(Add another source of funding)
 
-*** Totals should be correct
-***    [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
-***    the user should see the element    ${total_field}
-***    the user should see the element    ${total_collapsible}
-***    Wait Until Element Contains Without Screenshots     ${TOTAL_FIELD}    ${FIELD_VALUE}
-***    Wait Until Element Contains Without Screenshots    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
-
 Totals should be correct
+    [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
+    the user should see the element    ${total_field}
+    the user should see the element    ${total_collapsible}
+    Wait Until Element Contains Without Screenshots     ${TOTAL_FIELD}    ${FIELD_VALUE}
+    Wait Until Element Contains Without Screenshots    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
+
+Totals should be correct with the old styling
     [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
     the user should see the element    ${total_field}
     the user should see the element    ${total_collapsible}
