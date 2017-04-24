@@ -51,6 +51,8 @@ items:
             EOF
             flyway clean
             flyway migrate
+            flyway info
+            flyway validate
             . /ldap-sync-from-ifs-db.sh
           env:
           - name: DB_HOST
