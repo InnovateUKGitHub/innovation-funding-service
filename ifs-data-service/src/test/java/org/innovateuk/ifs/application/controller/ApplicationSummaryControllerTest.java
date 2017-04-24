@@ -312,7 +312,6 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         long competitionId = 3L;
         int page = 6;
         String strFilter = "filter";
-        FundingDecisionStatus fundingFilter = FUNDED;
         Boolean informFilter = false;
 
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
@@ -322,7 +321,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible",competitionId)
                 .param("page",Integer.toString(page))
                 .param("filter", strFilter)
-                .param("fundingFilter", fundingFilter.toString()))
+                .param("informFilter", informFilter.toString()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 

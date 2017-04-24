@@ -117,7 +117,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/ineligible?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getIneligibleApplications(123L, null, 6, 20, null, null);
+        RestResult<ApplicationSummaryPageResource> result = service.getIneligibleApplications(123L, null, 6, 20, null, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(responseBody, result.getSuccessObject());
@@ -128,7 +128,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/ineligible?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getIneligibleApplications(123L, "id", 6, 20, null, null);
+        RestResult<ApplicationSummaryPageResource> result = service.getIneligibleApplications(123L, "id", 6, 20, null, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(responseBody, result.getSuccessObject());

@@ -22,6 +22,7 @@ import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_AND_INELIGIBLE_STATES;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
@@ -84,7 +85,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(competitionId, CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(competitionId, SUBMITTED_STATES, limit)).thenReturn(keyStatisticsResource.getApplicationsPastHalf());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit)).thenReturn(keyStatisticsResource.getApplicationsPastHalf());
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(keyStatisticsResource.getApplicationsSubmitted());
 
         CompetitionOpenKeyStatisticsResource response = service.getOpenKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();

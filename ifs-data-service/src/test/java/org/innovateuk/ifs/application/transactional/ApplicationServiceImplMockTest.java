@@ -41,10 +41,7 @@ import org.mockito.Mock;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -69,7 +66,9 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
@@ -82,7 +81,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  */
 public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationService> {
 
-    private static final Collection<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMap(asList(
+    private static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED), ApplicationState::getBackingState);
 

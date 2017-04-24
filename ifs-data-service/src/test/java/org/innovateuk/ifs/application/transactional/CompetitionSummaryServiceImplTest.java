@@ -15,6 +15,7 @@ import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.application.builder.CompletedPercentageResourceBuilder.newCompletedPercentageResource;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_AND_INELIGIBLE_STATES;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -56,7 +57,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                         newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
                 ));
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(
-                COMP_ID, SUBMITTED_STATES, new BigDecimal(50L))
+                COMP_ID, SUBMITTED_AND_INELIGIBLE_STATES, new BigDecimal(50L))
         )
                 .thenReturn(1);
         when(applicationServiceMock.getProgressPercentageByApplicationId(3L))
