@@ -16,11 +16,12 @@ import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Assert;
@@ -56,7 +57,7 @@ import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -420,7 +421,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.YOUR_FINANCE).build();
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(Collections.singletonList(resource));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
 
@@ -542,7 +543,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsWithEmptyFields() throws Exception {
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(Collections.singletonList(resource));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
@@ -567,7 +568,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsWithResubmissionSelected() throws Exception {
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(Collections.singletonList(resource));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         LocalDate yesterday = LocalDate.now().minusDays(1L);
 
         MvcResult result = mockMvc.perform(
@@ -589,7 +590,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsForPastDate() throws Exception {
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(Collections.singletonList(resource));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         LocalDate yesterday = LocalDate.now().minusDays(1L);
 
         MvcResult result = mockMvc.perform(
@@ -609,7 +610,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorForTooFewMonths() throws Exception {
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(Collections.singletonList(resource));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
@@ -624,7 +625,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorForTooManyMonths() throws Exception {
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(Collections.singletonList(resource));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
@@ -639,7 +640,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsWithInvalidValues() throws Exception {
         FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(Collections.singletonList(resource));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         LocalDate yesterday = LocalDate.now().minusDays(1L);
 
         MvcResult result = mockMvc.perform(
@@ -668,8 +669,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(formInputResponseRestService.createFileEntry(formInputId, application.getId(), processRoleId,
                 file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes()))
                 .thenReturn(restFailure(new Error(fileError,UNSUPPORTED_MEDIA_TYPE)));
-        FormInputResource resource = newFormInputResource().withId(formInputId).withType(FormInputType.APPLICATION_DETAILS).build();
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(Collections.singletonList(resource));
+        FormInputResource resource = newFormInputResource().withId(formInputId).withType(FormInputType.FILEUPLOAD).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
 
         MvcResult result = mockMvc.perform(
             fileUpload("/application/{applicationId}/form/question/{questionId}", application.getId(), fileQuestionId)
