@@ -41,10 +41,9 @@ public class CookieFlashMessageFilter extends GenericFilterBean {
         new AntPathRequestMatcher("/css/**"),
         new AntPathRequestMatcher("/js/**"),
         new AntPathRequestMatcher("/images/**"),
-        new AntPathRequestMatcher("/health"),
+        new AntPathRequestMatcher("/monitoring/**"),
         new AntPathRequestMatcher("/error"),
         new AntPathRequestMatcher("/"),
-        new AntPathRequestMatcher("/assets/**"),
         new AntPathRequestMatcher("/favicon.ico")
     ));
 
