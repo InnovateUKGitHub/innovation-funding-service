@@ -112,14 +112,12 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
 
     private boolean isResourceRequest(final HttpServletRequest request) {
         final String uri = request.getRequestURI();
-        return uri.equals("/health") ||
-                uri.startsWith("/js/") ||
+        return uri.startsWith("/js/") ||
                 uri.startsWith("/css/") ||
                 uri.startsWith("/images/") ||
                 uri.startsWith("/favicon.ico") ||
                 uri.startsWith("/prototypes") ||
-                uri.startsWith("/error")  ||
-                uri.startsWith("/jolokia/");
+                uri.startsWith("/error");
     }
 
     private void setTokenAsCookie(final HttpServletResponse response, final CsrfToken token) {

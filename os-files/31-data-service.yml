@@ -24,11 +24,23 @@ items:
       spec:
         containers:
         - image: innovateuk/data-service:1.0-SNAPSHOT
+          name: data-service
+          livenessProbe:
+            httpGet:
+              path: /monitoring/live
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /monitoring/health
+              path: /monitoring/ready
               port: 8080
-          name: data-service
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           imagePullPolicy: Always
           lifecycle:
             postStart:
