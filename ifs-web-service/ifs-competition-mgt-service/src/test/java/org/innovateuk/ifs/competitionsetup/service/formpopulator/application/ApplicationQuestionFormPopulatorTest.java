@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator.application;
 
-import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.commons.error.exception.*;
-import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competitionsetup.form.*;
-import org.innovateuk.ifs.competitionsetup.form.application.*;
-import org.innovateuk.ifs.competitionsetup.service.*;
-import org.innovateuk.ifs.form.service.*;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,7 +18,8 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,9 +33,6 @@ public class ApplicationQuestionFormPopulatorTest {
 
     @Mock
     private QuestionService questionService;
-
-    @Mock
-    private FormInputService formInputService;
 
     private Long questionId = 7890L;
     private Long questionNotFoundId = 12904L;

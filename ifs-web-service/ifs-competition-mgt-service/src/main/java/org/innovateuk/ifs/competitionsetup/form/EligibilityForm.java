@@ -20,7 +20,7 @@ public class EligibilityForm extends CompetitionSetupForm {
 	private Set<Long> researchCategoryId;
 	@NotBlank(message = "{validation.eligibilityform.singleorcollaborative.required}")
 	private String singleOrCollaborative;
-	@NotEmpty(message = "{validation.eligibilityform.leadapplicanttype.required}")
+	@NotEmpty(message = "{validation.eligibilityform.leadApplicantTypes.required}")
 	private List<Long> leadApplicantTypes;
 	@NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
 	private Integer researchParticipationAmountId;
@@ -74,14 +74,10 @@ public class EligibilityForm extends CompetitionSetupForm {
 	}
 	
 	public boolean includesResearchCategory(Long id) {
-		if(this.researchCategoryId != null) {
-			for(Long cat: this.researchCategoryId) {
-				if(cat.equals(id)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return researchCategoryId != null && researchCategoryId.contains(id);
 	}
-	
+
+	public boolean includesLeadApplicantType(Long id) {
+		return leadApplicantTypes != null && leadApplicantTypes.contains(id);
+	}
 }

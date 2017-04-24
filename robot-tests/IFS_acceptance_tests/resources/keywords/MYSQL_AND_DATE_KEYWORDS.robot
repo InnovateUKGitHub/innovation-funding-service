@@ -15,7 +15,7 @@ the calculation of the remaining days should be correct
     [Arguments]    ${END_DATE}
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
-    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
+    ${CURRENT_DATE}=    Get Current Date    UTC    result_format=%Y-%m-%d    exclude_millis=true
     ${STARTING_DATE}=    Run keyword if    ${TIME} >= 12    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
     ...    exclude_millis=true
     ...    ELSE    set variable    ${CURRENT_DATE}
@@ -41,21 +41,26 @@ the days remaining should be correct (Top of the page)
     [Arguments]    ${END_DATE}
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
-    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
+    ${CURRENT_DATE}=    Get Current Date    UTC    result_format=%Y-%m-%d    exclude_millis=true
     ${STARTING_DATE}=    Run keyword if    ${TIME} >= 12    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
-        ...    exclude_millis=true
-        ...    ELSE    set variable    ${CURRENT_DATE}
+    ...    exclude_millis=true
+    ...    ELSE    set variable    ${CURRENT_DATE}
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .deadline span
+    #Get the text from the deadline element
+    ${string}=  Get Text  css=.sub-header .deadline
+    #Extract the numbers from the string with regexp
+    ${SCREEN_NO_OF_DAYS_LEFT_LIST}=    get regexp matches    ${string}    \\d+
+    #Get the first item from the matched array of numbers
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get From List    ${SCREEN_NO_OF_DAYS_LEFT_LIST}    0
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 the days remaining should be correct (Applicant's dashboard)
     [Arguments]    ${END_DATE}
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
-    ${CURRENT_DATE}=    Get Current Date    result_format=%Y-%m-%d    exclude_millis=true
+    ${CURRENT_DATE}=    Get Current Date    UTC    result_format=%Y-%m-%d    exclude_millis=true
     ${STARTING_DATE}=    Run keyword if    ${TIME} >= 11    Add Time To Date    ${CURRENT_DATE}    1 day    result_format=%Y-%m-%d
     ...    exclude_millis=true
     ...    ELSE    set variable    ${CURRENT_DATE}
@@ -70,7 +75,8 @@ get yesterday
     [Return]    ${yesterday}
 
 get today
-    ${today} =    Get Current Date    result_format=%-d %B %Y    exclude_millis=true
+    ${today} =    Get Current Date  UTC   result_format=%-d %B %Y    exclude_millis=true
+    # This format is like: 4 February 2017
     [Return]    ${today}
 
 get tomorrow full

@@ -12,6 +12,9 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...               INFUND-3107 When clicking the "X", the form submits and doesn't cancel the action when using a modal popup
 ...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
+...
+...               INFUND-9058 Update 'Application submitted' and 'Application status' pages to the same view
+
 Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -53,7 +56,7 @@ Your Project costs section is read-only once application is submitted
     then the user should not see the element    css=input
 
 Submit flow (complete application)
-    [Documentation]    INFUND-205
+    [Documentation]    INFUND-205  INFUND-9058
     ...
     ...    INFUND-1887
     ...
@@ -72,7 +75,8 @@ Submit flow (complete application)
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
-    And the user should see the text in the page    You and your project partners will be emailed notification of the decision by
+    And The user should see the element         link=Finished
+    # TODO add check here once INFUND-9195 done
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
@@ -80,10 +84,12 @@ The applicant should get a confirmation email
     Then the user reads his email    ${test_mailbox_one}+submittest@gmail.com    Successful submission of application    you have successfully submitted an application
 
 Submitted application is read only
-    [Documentation]    INFUND-1938
+    [Documentation]    INFUND-1938  INFUND-9058
     [Tags]    Email    SmokeTest
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
+    and the user clicks the button/link     link=Return to dashboard
+    and the user clicks the button/link     link=${application_name}
     When the user clicks the button/link    link=View application
     And the user is on the page    summary
     Then the user can check that the sections are read only

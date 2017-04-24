@@ -299,7 +299,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -338,7 +338,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -363,7 +363,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType(), organisationTypeIsChosenByDefault(request)));
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;

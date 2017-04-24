@@ -18,7 +18,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -60,7 +60,8 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -131,7 +132,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         when(registrationServiceMock.createUser(userRegistrationResource)).thenReturn(serviceSuccess(createdUserResource));
 
-        when(registrationServiceMock.activateUser(createdUserResource.getId())).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateUserAndSendDiversitySurvey(createdUserResource.getId())).thenReturn(serviceSuccess());
         when(competitionInviteServiceMock.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
         when(userRepositoryMock.findOne(createdUserResource.getId())).thenReturn(createdUser);
         when(competitionParticipantRepositoryMock.getByInviteEmail(email)).thenReturn(participantsForOtherInvites);
@@ -145,7 +146,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(competitionInviteServiceMock).getInvite(hash);
         inOrder.verify(roleServiceMock).findByUserRoleType(ASSESSOR);
         inOrder.verify(registrationServiceMock).createUser(userRegistrationResource);
-        inOrder.verify(registrationServiceMock).activateUser(createdUserResource.getId());
+        inOrder.verify(registrationServiceMock).activateUserAndSendDiversitySurvey(createdUserResource.getId());
         inOrder.verify(userRepositoryMock).findOne(createdUserResource.getId());
         inOrder.verify(competitionParticipantRepositoryMock).getByInviteEmail(email);
         inOrder.verify(competitionParticipantRepositoryMock).save(participantsForOtherInvites);

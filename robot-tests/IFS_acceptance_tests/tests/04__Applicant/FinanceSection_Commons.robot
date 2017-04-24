@@ -72,11 +72,6 @@ the applicant completes the application details
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=button:contains("innovation area")
-    the user should see the element       jQuery=a:contains("Project details")
-    the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
-    the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
-    the user clicks the button/link       jQuery=button:contains(Save)
     the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.
@@ -110,10 +105,12 @@ the user fills in the project costs
     the user selects the checkbox    agree-state-aid-page
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
+    the user should see the element       jQuery=button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user has read only view once section is marked complete
     the user should not see the element   css=input
+    the user should see the element     jQuery=button:contains("Edit")
     the user clicks the button/link     jQuery=a:contains("Return to finances")
 
 the user fills in Labour
@@ -134,8 +131,8 @@ the user fills in Overhead costs
 
 the user chooses Calculate overheads option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    and the user clicks the button/link     jQuery=label:contains("Custom overhead costs")
-    then the user should see the element     jQuery=h3:contains("Custom overhead costs")
+    and the user clicks the button/link     jQuery=label:contains("Calculate overheads")
+    then the user should see the element     jQuery=h3:contains("Calculate overheads")
     and the user enters text to a text field    jQuery=input[name^="overheads-customRate"]   40
     wait for autosave
     and the total overhead costs should reflect rate entered    jQuery=input[name^="overheads-totalCosts"]   £ 28,261
@@ -213,6 +210,7 @@ the user fills in the organisation information
     the user enters text to a text field    jQuery=label:contains("employees") + input    0
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your organisation
+    the user should see the element       jQuery=button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user checks Your Funding section
@@ -235,6 +233,7 @@ the user fills in the funding information
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your funding
+    the user should see the element       jQuery=button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
