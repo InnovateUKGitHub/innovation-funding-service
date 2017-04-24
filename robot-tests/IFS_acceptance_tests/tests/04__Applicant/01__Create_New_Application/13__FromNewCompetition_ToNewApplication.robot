@@ -499,7 +499,6 @@ the user completes the new account creation
     the user enters text to a text field     JQuery=input[id="lastName"]   smithson
     the user enters text to a text field     jQuery=input[id="phoneNumber"]   077712567890
     the user enters text to a text field     jQuery=input[id="password"]  ${correct_password}
-    the user enters text to a text field    jQuery=input[id="retypedPassword"]  ${correct_password}
     the user selects the checkbox      termsAndConditions
     the user clicks the button/link     jQuery=button:contains("Create account")
     the user should see the text in the page    Please verify your email address

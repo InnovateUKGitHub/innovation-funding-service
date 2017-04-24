@@ -73,7 +73,6 @@ Create assessor account: client-side validations
     And the user should not see the validation error in the create assessor form    Please enter a valid phone number.
     And the user should not see the validation error in the create assessor form    Input for your phone number has a minimum length of 8 characters.
     When The user enters text to a text field    id=password    Passw0rd123
-    And The user enters text to a text field    id=retypedPassword    Passw0rd123
     Then the user should not see the validation error in the create assessor form    Please enter your password.
     And the user should not see the validation error in the create assessor form    Password must at least be 8 characters.
     When the user clicks the button/link    id=postcode-lookup
@@ -88,7 +87,6 @@ Create assessor account: Postcode lookup and save
     And the user clicks the button/link    css=#select-address-block button
     And the address fields should be filled
     And The user enters text to a text field    id=password    Passw0rd123
-    And The user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see the text in the page    Your account has been created
     And the user clicks the button/link    jQuery=a:contains("Sign into your account")

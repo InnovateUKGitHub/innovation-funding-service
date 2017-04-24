@@ -721,7 +721,6 @@ the user creates the account
     the user enters text to a text field    id=lastName    ${last_name}
     the user enters text to a text field    id=phoneNumber    0987654321
     the user enters text to a text field    id=password    Passw0rd123
-    the user enters text to a text field    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")
 

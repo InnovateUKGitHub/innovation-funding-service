@@ -52,6 +52,5 @@ the user enters the details and clicks the create account
     Input Text    id=phoneNumber    0505050508
     Input Text    id=email    ${CREATE_ACCOUNT_EMAIL}
     Input Password    id=password    Passw0rd123
-    Input Password    id=retypedPassword    Passw0rd123
     And the user selects the checkbox    termsAndConditions
     Submit Form
