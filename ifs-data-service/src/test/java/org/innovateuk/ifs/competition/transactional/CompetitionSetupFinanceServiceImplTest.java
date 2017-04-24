@@ -53,14 +53,14 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(isIncludeGrowthTable).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(isIncludeGrowthTable).build();
+        FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(isIncludeGrowthTable).build();
         // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
         FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(!isIncludeGrowthTable).build();
         List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(!isIncludeGrowthTable).build(4);
         FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
 
         when(competitionSetupTransactionalServiceMock.countInput(competitionId)).thenReturn(serviceSuccess(staffCountFormInput));
-        when(competitionSetupTransactionalServiceMock.turnoverInput(competitionId)).thenReturn(serviceSuccess(staffTurnoverFormInput));
+        when(competitionSetupTransactionalServiceMock.turnoverInput(competitionId)).thenReturn(serviceSuccess(organisationTurnoverFormInput));
         when(competitionSetupTransactionalServiceMock.financeYearEnd(competitionId)).thenReturn(serviceSuccess(financialYearEnd));
         when(competitionSetupTransactionalServiceMock.financeCount(competitionId)).thenReturn(serviceSuccess(financialCount));
         when(competitionSetupTransactionalServiceMock.financeOverviewRow(competitionId)).thenReturn(serviceSuccess(financialOverviewRows));
@@ -72,7 +72,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         assertTrue(save.isSuccess());
         assertEquals(isFullFinance, c.isFullApplicationFinance());
         assertEquals(isIncludeGrowthTable, !staffCountFormInput.getActive());
-        assertEquals(isIncludeGrowthTable, !staffTurnoverFormInput.getActive());
+        assertEquals(isIncludeGrowthTable, !organisationTurnoverFormInput.getActive());
         assertEquals(isIncludeGrowthTable, financialYearEnd.getActive());
         assertTrue(!simpleMap(financialOverviewRows, FormInput::getActive).contains(!isIncludeGrowthTable));
         assertEquals(isIncludeGrowthTable, financialYearEnd.getActive());
@@ -92,7 +92,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         FormInputResponse turnover = newFormInputResponse().withValue("2").build();
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).build();
+        FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).build();
         // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
         FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withResponses(asList(turnover)).build();
         List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);

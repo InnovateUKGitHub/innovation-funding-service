@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class CompetitionSetupTransactionalServiceTest extends BaseServiceUnitTest<CompetitionSetupTransactionalService> {
     private Long competitionId = 123L;
     private FormInput staffCountFormInput;
-    private FormInput staffTurnoverFormInput;
+    private FormInput organisationTurnoverFormInput;
     private FormInput yearEnd;
     private List<FormInput> overviewRows;
     private FormInput count;
@@ -33,7 +33,7 @@ public class CompetitionSetupTransactionalServiceTest extends BaseServiceUnitTes
     @Before
     public void setUp() throws Exception {
         staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(true).build();
-        staffTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(true).build();
+        organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(true).build();
         yearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(true).build();
         overviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(true, true, true, true).build(4);
         count = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(true).build();
@@ -45,10 +45,10 @@ public class CompetitionSetupTransactionalServiceTest extends BaseServiceUnitTes
         // becomes inconsistent
 
         // Turnover and count - these should always be in sync - but here we test when they are not.
-        staffTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(false).build();
+        organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(false).build();
 
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(asList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(count));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(yearEnd));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(overviewRows);
@@ -72,7 +72,7 @@ public class CompetitionSetupTransactionalServiceTest extends BaseServiceUnitTes
         overviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(true, true, true, false /*Inconsistent*/).build(4);
 
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(asList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(count));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(yearEnd));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(overviewRows);
@@ -93,7 +93,7 @@ public class CompetitionSetupTransactionalServiceTest extends BaseServiceUnitTes
 
         // Not consistent
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(asList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(count));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(yearEnd));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(overviewRows);
