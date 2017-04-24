@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -43,12 +45,12 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         Long applicationId = 1L;
 
         List<InnovationArea> innovationAreas = newInnovationArea()
-                .withName("Innovation Area A", "Innovation Area B")
-                .build(2);
+                .withName("Innovation Area B", "Innovation Area C", "Innovation Area A")
+                .build(3);
         InnovationSector innovationSector = newInnovationSector().withChildren(innovationAreas).build();
         Competition competition = newCompetition().withInnovationSector(innovationSector).build();
         competition.addInnovationArea(innovationAreas.get(0));
-        competition.addInnovationArea(innovationAreas.get(1));
+        competition.addInnovationArea(innovationAreas.get(2));
 
         List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
                 .withName("Innovation Area A", "Innovation Area B")
@@ -59,7 +61,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
                 .withCompetition(competition).build();
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(innovationAreaMapperMock.mapToResource(innovationAreas)).thenReturn(expectedInnovationAreas);
+        when(innovationAreaMapperMock.mapToResource(asList( innovationAreas.get(2), innovationAreas.get(0)))).thenReturn(expectedInnovationAreas);
 
         ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(applicationId);
 
