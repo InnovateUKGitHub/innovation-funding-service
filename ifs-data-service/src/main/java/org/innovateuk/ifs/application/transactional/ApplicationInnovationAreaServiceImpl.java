@@ -13,11 +13,11 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -71,10 +71,10 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
         if (application.getCompetition() !=null
                 && application.getCompetition().getInnovationSector() !=null
                 && application.getCompetition().getInnovationSector().getChildren() !=null) {
-            List<InnovationArea> innovationAreas = new ArrayList<>();
-            innovationAreas.addAll(application.getCompetition().getInnovationAreas());
-            innovationAreas.sort(comparing(InnovationArea::getName));
-            return serviceSuccess(innovationAreas);
+            return serviceSuccess(application.getCompetition().getInnovationAreas()
+                    .stream()
+                    .sorted(comparing(InnovationArea::getName))
+                    .collect(toList()));
         } else {
             return serviceFailure(GENERAL_NOT_FOUND);
         }
