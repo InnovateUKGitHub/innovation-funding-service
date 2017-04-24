@@ -177,8 +177,7 @@ Milestone date for assessment submission is visible
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    MySQL    Pending
-    #TO DO Pending due to infund-8925
+    [Tags]    MySQL
     Then the assessor should see the number of days remaining
     And the calculation of the remaining days should be correct    2068-01-28
 
