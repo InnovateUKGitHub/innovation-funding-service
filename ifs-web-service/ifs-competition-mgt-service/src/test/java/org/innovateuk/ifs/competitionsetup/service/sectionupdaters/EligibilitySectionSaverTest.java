@@ -19,6 +19,7 @@ import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
