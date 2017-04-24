@@ -1304,6 +1304,26 @@ Project finance user can see the Eligibility check page for the partner
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
+# The below test deviates to a different project to check 0% funding for a partner
+Project finance user can see the partner's zero funding request
+    [Documentation]    INFUND-9269
+    [Tags]
+    When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 200,903   # Total costs
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)     £ 0         # Funding sought
+
+External user sees zero funding request in finance checks
+    [Documentation]    INFUND-9269
+    [Tags]
+    [Setup]    log in as a different user               &{collaborator1_credentials}
+    When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/finance-checks
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 200,903   # Total costs
+    And the user should see the text in the element     jQuery=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
+    And the user should see the text in the element     jQuery=.table-overview tr:nth-child(1) td:nth-child(4)     £ 0         # Funding sought
+    [Teardown]    the user navigates to the page        ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
+
+
 Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
