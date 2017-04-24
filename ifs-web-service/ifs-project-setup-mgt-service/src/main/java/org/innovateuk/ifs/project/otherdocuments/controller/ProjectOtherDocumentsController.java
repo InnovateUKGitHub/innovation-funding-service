@@ -58,45 +58,6 @@ public class ProjectOtherDocumentsController {
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @PostMapping
-    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
-                                               BindingResult bindingResult,
-                                               ValidationHandler validationhandler,
-                                               @PathVariable("projectId") Long projectId,
-                                               @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
-        return validationhandler.performActionOrBindErrorsToField("approved",
-                () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
-                () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
-                () -> projectOtherDocumentsService.acceptOrRejectOtherDocuments(projectId, form.isApproved()));
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @GetMapping("/collaboration-agreement")
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
-            @PathVariable("projectId") final Long projectId) {
-
-        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getCollaborationAgreementFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
-
-        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @GetMapping("/exploitation-plan")
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
-            @PathVariable("projectId") final Long projectId) {
-
-        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getExploitationPlanFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getExploitationPlanFileDetails(projectId);
-        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
-    }
-
     private String doViewOtherDocumentsPage(Model model, ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
@@ -131,6 +92,40 @@ public class ProjectOtherDocumentsController {
                 partnerOrganisationNames, project.getOtherDocumentsApproved());
     }
 
+    private Optional<ProjectUserResource> getProjectManagerResource(ProjectResource project) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
+        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+
+        return projectManager;
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PostMapping
+    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                               BindingResult bindingResult,
+                                               ValidationHandler validationhandler,
+                                               @PathVariable("projectId") Long projectId,
+                                               @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        return validationhandler.performActionOrBindErrorsToField("approved",
+                () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
+                () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
+                () -> projectOtherDocumentsService.acceptOrRejectOtherDocuments(projectId, form.isApproved()));
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @GetMapping("/collaboration-agreement")
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
+            @PathVariable("projectId") final Long projectId) {
+
+        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getCollaborationAgreementFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+
+        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
+    }
+
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Long projectId, Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
         if (content.isPresent() && fileDetails.isPresent()) {
             return getFileResponseEntity(content.get(), fileDetails.get());
@@ -139,10 +134,15 @@ public class ProjectOtherDocumentsController {
         }
     }
 
-    private Optional<ProjectUserResource> getProjectManagerResource(ProjectResource project) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
-        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @GetMapping("/exploitation-plan")
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
+            @PathVariable("projectId") final Long projectId) {
 
-        return projectManager;
+        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getExploitationPlanFile(projectId);
+        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getExploitationPlanFileDetails(projectId);
+        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 }
