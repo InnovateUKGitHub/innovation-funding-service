@@ -3,6 +3,10 @@ services:
 
   shib:
     image: innovateuk/ifs-shib-sp:0.5.2
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:443/Shibboleth.sso/Metadata"]
+      interval: 15s
+      timeout: 8s
     ports:
       - "443:443"
     environment:
@@ -17,6 +21,10 @@ services:
 
   idp:
     image: innovateuk/ifs-shib-idp:0.5.2
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/"]
+      interval: 15s
+      timeout: 8s
     ports:
       - "9443:9443"
     environment:
@@ -32,6 +40,10 @@ services:
 
   ldap:
     image: innovateuk/ifs-ldap:0.4.0
+    healthcheck:
+      test: ["CMD", "ldapsearch", "-h", "localhost", "-p", "389", "-b", "dc=nodomain", "-x", "-LLL", "-s" "base"]
+      interval: 15s
+      timeout: 8s
     ports:
       - "389:389"
     environment:
