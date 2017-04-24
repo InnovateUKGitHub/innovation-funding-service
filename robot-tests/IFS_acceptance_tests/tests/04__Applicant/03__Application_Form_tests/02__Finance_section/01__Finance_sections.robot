@@ -11,6 +11,8 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-2961: ‘Working days per year’ in Labour Costs do not default to 232.
 ...
 ...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
+...
+...               INFUND-8355: Project finance team - overheads
 Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -136,12 +138,17 @@ File upload mandatory for Academic partner to mark section as complete
     then the user should see a field error     css=a.uploaded-file
 
 Applicant chooses Calculate overheads option
-    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
-    [Tags]      Pending
+    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405 , INFUND-8355
+    [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page  ${applicationName}
     then the user fills in the project costs       ${applicationName}
+    When the user clicks the button/link      link=Your project costs
+    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    # This need to be clicked twice to expand dropdown
+    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    then the user should see the text in the page       ${excel_file}
 
 *** Keywords ***
 Custom Suite Setup
