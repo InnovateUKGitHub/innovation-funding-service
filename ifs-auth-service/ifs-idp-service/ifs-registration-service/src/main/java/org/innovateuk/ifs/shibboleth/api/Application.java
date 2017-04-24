@@ -13,12 +13,7 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.repository.config.EnableLdapRepositories;
 
 
-// TODO: @SpringBootApplication is an alternative to @Configuration, @EnableAutoConfiguration and @ComponentScan - why have both?
-
 @SpringBootApplication
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan
 @EnableConfigurationProperties
 @EnableLdapRepositories
 public class Application extends SpringBootServletInitializer {
