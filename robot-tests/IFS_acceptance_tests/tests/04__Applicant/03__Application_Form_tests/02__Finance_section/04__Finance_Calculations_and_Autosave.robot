@@ -49,7 +49,7 @@ Overhead costs
     # Check for 20% Labour costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     then the user chooses 20% overheads option
-    and admin costs total should be correct    css=.section-total-summary > [data-mirror="#section-total-190"]    £ 9,600
+    and admin costs total should be correct    css=button > [data-mirror="#section-total-190"]    £ 9,600
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
@@ -95,7 +95,7 @@ Travel and subsistence
     Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-194"]    £ 2,000    css=button > [data-mirror="#section-total-194"]    £ 2,000
     And the user clicks the button/link    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
-    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-194"]    £ 1,000    css=[button > [data-mirror="#section-total-194"]    £ 1,000
+    Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-194"]    £ 1,000    css=button > [data-mirror="#section-total-194"]    £ 1,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
 
 Other costs
