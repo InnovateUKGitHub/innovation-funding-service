@@ -62,6 +62,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -205,9 +206,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(competitionService.getById(competition.getId())).thenReturn(competition);
         when(sectionRestService.getByCompetitionIdVisibleForAssessment(competition.getId())).thenReturn(restSuccess(sections));
         when(questionService.findByCompetition(competition.getId())).thenReturn(questions);
-        when(formInputService.findAssessmentInputsByCompetition(competition.getId())).thenReturn(assessorFormInputs);
+        when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), ASSESSMENT)).thenReturn(restSuccess(assessorFormInputs));
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
-        when(formInputResponseService.getByApplication(applicationId)).thenReturn(applicantResponses);
+        when(formInputResponseRestService.getResponsesByApplicationId(applicationId)).thenReturn(restSuccess(applicantResponses));
 
         List<AssessmentOverviewSectionViewModel> expectedSections = asList(
                 new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
@@ -293,15 +294,15 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/application-overview"));
 
-        InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService, formInputService,
-                assessorFormInputResponseService, formInputResponseService);
+        InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
+                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
-        inOrder.verify(formInputService).findAssessmentInputsByCompetition(competition.getId());
+        inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
         inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
-        inOrder.verify(formInputResponseService).getByApplication(applicationId);
+        inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(applicationId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -639,11 +640,11 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         UserResource assessor = getLoggedInUser();
 
         when(processRoleService.findProcessRole(assessor.getId(), applicationId)).thenReturn(assessorRole);
-        when(formInputResponseService.getFile(formInputId,
+        when(formInputResponseRestService.getFile(formInputId,
                 applicationId,
                 assessorRole.getId()))
                 .thenReturn(restSuccess(fileContents));
-        when(formInputResponseService.getFileDetails(formInputId, applicationId, assessorRole.getId()))
+        when(formInputResponseRestService.getFileDetails(formInputId, applicationId, assessorRole.getId()))
                 .thenReturn(restSuccess(formInputResponseFileEntry));
 
         mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download",
@@ -656,8 +657,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
 
         verify(processRoleService).findProcessRole(assessor.getId(), applicationId);
-        verify(formInputResponseService).getFile(formInputId, applicationId, assessorRole.getId());
-        verify(formInputResponseService).getFileDetails(formInputId, applicationId, assessorRole.getId());
+        verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId());
+        verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId());
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {

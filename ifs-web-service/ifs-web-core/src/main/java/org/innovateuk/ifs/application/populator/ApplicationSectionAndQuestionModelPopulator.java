@@ -2,16 +2,17 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -28,6 +29,7 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
@@ -35,10 +37,13 @@ public class ApplicationSectionAndQuestionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
-    protected FormInputService formInputService;
+    protected FormInputRestService formInputRestService;
 
     @Autowired
     protected FormInputResponseService formInputResponseService;
+
+    @Autowired
+    protected FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     protected QuestionService questionService;
@@ -56,7 +61,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
     protected OrganisationService organisationService;
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     public void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                          Optional<SectionResource> currentSection,
@@ -72,7 +77,8 @@ public class ApplicationSectionAndQuestionModelPopulator {
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
-        List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(competition.getId());
+        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
+                competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
 
         model.addAttribute("sections", sections);
         Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
@@ -97,7 +103,10 @@ public class ApplicationSectionAndQuestionModelPopulator {
             questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
             Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
-            Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
+            Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toMap(QuestionResource::getId, question ->
+                            formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException()));
 
             model.addAttribute("questionFormInputs", questionFormInputs);
             model.addAttribute("sectionQuestions", sectionQuestions);
@@ -156,7 +165,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
-        model.addAttribute("researchCategories", categoryService.getResearchCategories());
+        model.addAttribute("researchCategories", categoryRestService.getResearchCategories().getSuccessObjectOrThrowException());
 
         addFinanceDetails(model, application);
 
@@ -196,7 +205,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
-        return formInputResponseService.getByApplication(application.getId());
+        return formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {

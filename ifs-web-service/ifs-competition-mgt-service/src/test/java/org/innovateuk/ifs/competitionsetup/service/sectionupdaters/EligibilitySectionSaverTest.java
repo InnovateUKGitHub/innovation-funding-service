@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,12 +19,14 @@ import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static java.util.Arrays.asList;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EligibilitySectionSaverTest {
@@ -32,7 +35,7 @@ public class EligibilitySectionSaverTest {
 	private EligibilitySectionSaver service;
 
 	@Mock
-	private MilestoneService milestoneService;
+	private MilestoneRestService milestoneRestService;
 	
 	@Mock
 	private CompetitionService competitionService;
@@ -40,7 +43,7 @@ public class EligibilitySectionSaverTest {
 	@Test
 	public void testSaveCompetitionSetupSection() {
 		EligibilityForm competitionSetupForm = new EligibilityForm();
-		competitionSetupForm.setLeadApplicantType("business");
+		competitionSetupForm.setLeadApplicantTypes(asList(1L, 2L));
 		competitionSetupForm.setMultipleStream("yes");
 		competitionSetupForm.setStreamName("streamname");
 		competitionSetupForm.setResubmission("yes");
@@ -51,8 +54,8 @@ public class EligibilitySectionSaverTest {
 		CompetitionResource competition = newCompetitionResource().build();
 
 		service.saveSection(competition, competitionSetupForm);
-		
-		assertEquals(LeadApplicantType.BUSINESS, competition.getLeadApplicantType());
+
+		assertEquals(asList(OrganisationTypeEnum.BUSINESS.getId(), OrganisationTypeEnum.RESEARCH.getId()), competition.getLeadApplicantTypes());
 		assertTrue(competition.isMultiStream());
 		assertEquals("streamname", competition.getStreamName());
 		assertEquals(CollectionFunctions.asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());
@@ -64,7 +67,7 @@ public class EligibilitySectionSaverTest {
 
 	@Test
 	public void testAutoSaveResearchCategoryCheck() {
-		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		when(milestoneRestService.getAllMilestonesByCompetitionId(1L)).thenReturn(restSuccess(singletonList(getMilestone())));
 		EligibilityForm form = new EligibilityForm();
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);
@@ -72,7 +75,7 @@ public class EligibilitySectionSaverTest {
 
 
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
-		competition.setMilestones(asList(10L));
+		competition.setMilestones(singletonList(10L));
 		when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
 		ServiceResult<Void> result = service.autoSaveSectionField(competition, form, "researchCategoryId", "35", null);
@@ -85,7 +88,7 @@ public class EligibilitySectionSaverTest {
 
 	@Test
 	public void testAutoSaveResearchCategoryUncheck() {
-		when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(asList(getMilestone()));
+		when(milestoneRestService.getAllMilestonesByCompetitionId(1L)).thenReturn(restSuccess(singletonList(getMilestone())));
 		EligibilityForm form = new EligibilityForm();
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);
@@ -93,7 +96,7 @@ public class EligibilitySectionSaverTest {
 		researchCategories.add(35L);
 
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
-		competition.setMilestones(asList(10L));
+		competition.setMilestones(singletonList(10L));
 		when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
 		ServiceResult<Void> result = service.autoSaveSectionField(competition, form, "researchCategoryId", "35", null);

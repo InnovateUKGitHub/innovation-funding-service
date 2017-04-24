@@ -7,6 +7,5 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
  * Organisation
  */
 public interface SpendProfileCostCategorySummaryStrategy {
-
     ServiceResult<SpendProfileCostCategorySummaries> getCostCategorySummaries(Long projectId, Long organisationId);
 }

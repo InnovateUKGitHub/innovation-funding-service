@@ -24,10 +24,10 @@ import static org.hibernate.jpa.internal.QueryImpl.LOG;
 @Profile("local")
 public class ExperianEndpointController {
     public static HashMap<SILBankDetails, ValidationResultWrapper> validationErrors;
-    public static HashMap<SILBankDetails, SilError> otherErrorsDuringValidation;
+    public static HashMap<SILBankDetails, SilExperianError> otherErrorsDuringValidation;
     public static ValidationResultWrapper defaultValidationResult;
     public static HashMap<AccountDetails, VerificationResultWrapper> verificationResults;
-    public static HashMap<AccountDetails, SilError> otherErrorsDuringVerification;
+    public static HashMap<AccountDetails, SilExperianError> otherErrorsDuringVerification;
     public static VerificationResultWrapper defaultVerificationResult;
 
     static {
@@ -40,7 +40,7 @@ public class ExperianEndpointController {
         LOG.info("Stubbing out SIL experian validation: " + bankDetails);
         ValidationResultWrapper validationResultWrapper = validationErrors.get(bankDetails);
         if (validationResultWrapper == null) {
-            SilError silError = otherErrorsDuringValidation.get(bankDetails);
+            SilExperianError silError = otherErrorsDuringValidation.get(bankDetails);
             if(silError == null) {
                 validationResultWrapper = defaultValidationResult;
             } else {
@@ -54,7 +54,7 @@ public class ExperianEndpointController {
     public RestResult<Object> experianVerify(@RequestBody AccountDetails accountDetails) {
         VerificationResultWrapper verificationResultWrapper = verificationResults.get(accountDetails);
         if (verificationResultWrapper == null) {
-            SilError silError = otherErrorsDuringVerification.get(accountDetails);
+            SilExperianError silError = otherErrorsDuringVerification.get(accountDetails);
             if(silError == null) {
                 verificationResultWrapper = defaultVerificationResult;
             } else {
@@ -505,7 +505,7 @@ public class ExperianEndpointController {
                         "  \"type\": \"Status report\",\n" +
                         "  \"message\": \"Invalid Parameter\",\n" +
                         "  \"description\": \"Invalid Parameter\"\n" +
-                        "}", SilError.class)
+                        "}", SilExperianError.class)
         );
 
         defaultVerificationResult = new VerificationResultWrapper(new VerificationResult("1", "7", "3", "No Match", singletonList(new Condition("warning", 2, "Modulus check algorithm is unavailable for these account details"))));
