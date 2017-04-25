@@ -936,9 +936,9 @@ Lead-Partner can review only the external version of Finance Checks Eligibility 
     When the user clicks the button/link    link=View finances
     Then the user should see the text in the element    jQuery=h2:nth-of-type(2)      Detailed finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
-    And the user should see the text in the element     jQuery=div:nth-of-type(4) div:nth-of-type(1) label        Total project costs
-    And the user moves focus to the element     jQuery=div:nth-of-type(4) div:nth-of-type(2)
-    Then the user should see the element        jQuery=div:nth-of-type(4) div:nth-child(2) #total-cost
+    And the user should see the text in the element     jQuery=label[for="total-cost"]        Total project costs
+    And the user moves focus to the element     jQuery=input[id^='total-cost']
+    Then the user should see the element        css=#total-cost
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
@@ -951,9 +951,9 @@ Partner can review only the external version of Finance Checks Eligibility table
     When the user clicks the button/link    link=View finances
     Then the user should see the text in the element    jQuery=h2:nth-of-type(2)      Detailed finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
-    And the user should see the text in the element     jQuery=div:nth-of-type(4) div:nth-of-type(1) label        Total project costs
-    And the user moves focus to the element     jQuery=div:nth-of-type(4) div:nth-of-type(2)
-    Then the user should see the element        jQuery=div:nth-of-type(4) div:nth-child(2) #total-cost
+    And the user should see the text in the element     jQuery=label[for="total-cost"]        Total project costs
+    And the user moves focus to the element     jQuery=input[id^='total-cost']
+    Then the user should see the element        css=#total-cost
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
@@ -1855,8 +1855,8 @@ Lead-Partner can view only the external version of Finance Checks Eligibility ta
     When the user clicks the button/link    link=View finances
     Then the user should see the text in the element    jQuery=h2:nth-of-type(2)      Detailed finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
-    And the user should see the text in the element     jQuery=div:nth-of-type(5) div:nth-of-type(1) label        Total project costs
-    Then the user should see the element                jQuery=div:nth-of-type(5) div:nth-child(2) #total-cost
+    And the user should see the text in the element     jQuery=label[for="total-cost"]        Total project costs
+    Then the user should see the element                jQuery=input[id^='total-cost']
 
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787, INFUND-8880
@@ -1867,9 +1867,7 @@ Academic user can view Finance checks page
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     Then the user clicks the button/link    link=Finance checks
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
-    Then the user navigates to the page      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/40/finance-checks/eligibility
-    And the user should see the text in the page    Page not found
-    Then the user clicks the button/link    link=your dashboard
+    And the user should not see the text in the page    View finances
 
 Non Lead Partner can view Finance checks page
     [Documentation]     INFUND-8787
@@ -1887,8 +1885,8 @@ Non Lead-Partner can view only the external version of Finance Checks Eligibilit
     When the user clicks the button/link    link=View finances
     Then the user should see the text in the element    jQuery=h2:nth-of-type(2)      Detailed finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
-    And the user should see the text in the element     jQuery=div:nth-of-type(5) div:nth-of-type(1) label        Total project costs
-    Then the user should see the element                jQuery=div:nth-of-type(5) div:nth-child(2) #total-cost
+    And the user should see the text in the element     jQuery=label[for="total-cost"]        Total project costs
+    Then the user should see the element                jQuery=input[id^='total-cost']
 
 *** Keywords ***
 
