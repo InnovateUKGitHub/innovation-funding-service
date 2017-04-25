@@ -71,4 +71,40 @@ public class ApplicationSummaryControllerDocumentation extends BaseControllerMoc
                         ),
                         responseFields(ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_FIELDS)));
     }
+
+    @Test
+    public void getIneligibleApplicationsSummariesByCompetitionId() throws Exception {
+        long competitionId = 1L;
+        String sort = "id";
+        int pageIndex = 0;
+        int size = 20;
+        String filter = "filter";
+        Boolean informFilter = true;
+        int totalPages = pageIndex + 2;
+
+        List<ApplicationSummaryResource> applications = APPLICATION_SUMMARY_RESOURCE_BUILDER.build(5);
+
+        ApplicationSummaryPageResource pageResource = new ApplicationSummaryPageResource(totalPages * size, totalPages, applications, pageIndex, size);
+
+        when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, sort, pageIndex, size, Optional.of(filter), Optional.of(informFilter))).thenReturn(serviceSuccess(pageResource));
+
+        mockMvc.perform(
+                get(baseUrl + "/findByCompetition/{competitionId}/ineligible", competitionId)
+                        .param("page", pageIndex + "")
+                        .param("sort", sort)
+                        .param("size", size + "")
+                        .param("filter", filter)
+                        .param("informFilter", informFilter.toString())
+                        .contentType(APPLICATION_JSON))
+                .andDo(document("application-summary/{method-name}",
+                        pathParameters(parameterWithName("competitionId").description("The competition id")),
+                        requestParameters(
+                                parameterWithName("sort").description("Sort on entity field name"),
+                                parameterWithName("page").description("Page number - zero indexed"),
+                                parameterWithName("size").description("Page size"),
+                                parameterWithName("filter").description("String based filter"),
+                                parameterWithName("informFilter").description("Filter on whether the applicant has been informed")
+                        ),
+                        responseFields(ApplicationSummaryDocs.APPLICATION_SUMMARY_RESOURCE_FIELDS)));
+    }
 }

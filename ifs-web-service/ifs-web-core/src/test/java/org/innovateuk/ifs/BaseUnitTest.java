@@ -106,6 +106,7 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -805,7 +806,7 @@ public class BaseUnitTest {
     }
 
     private QuestionResource setupQuestionResource(Long id, String name, QuestionResourceBuilder questionResourceBuilder) {
-        List<FormInputResource> formInputs = newFormInputResource().with(incrementingIds(1)).build(1);
+        List<FormInputResource> formInputs = newFormInputResource().with(incrementingIds(1)).withType(TEXTAREA).build(1);
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
@@ -817,7 +818,7 @@ public class BaseUnitTest {
     private QuestionResource setupFileQuestionResource(Long id, String name, QuestionResourceBuilder questionResourceBuilder) {
         List<FormInputResource> formInputs = newFormInputResource()
                 .with(incrementingIds(1))
-                .withType(null, FILEUPLOAD)
+                .withType(TEXTAREA, FILEUPLOAD)
                 .build(2);
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).

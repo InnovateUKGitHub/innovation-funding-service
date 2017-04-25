@@ -20,6 +20,7 @@ public class ApplicationSummaryResource {
     private FundingDecision fundingDecision;
     private String innovationArea;
     private ZonedDateTime manageFundingEmailDate;
+    private boolean ineligibleInformed;
 
     public ZonedDateTime getManageFundingEmailDate() {
         return manageFundingEmailDate;
@@ -27,6 +28,14 @@ public class ApplicationSummaryResource {
 
     public void setManageFundingEmailDate(ZonedDateTime manageFundingEmailDate) {
         this.manageFundingEmailDate = manageFundingEmailDate;
+    }
+
+    public boolean isIneligibleInformed() {
+        return ineligibleInformed;
+    }
+
+    public void setIneligibleInformed(boolean ineligibleInformed) {
+        this.ineligibleInformed = ineligibleInformed;
     }
 
     public long getId() {
