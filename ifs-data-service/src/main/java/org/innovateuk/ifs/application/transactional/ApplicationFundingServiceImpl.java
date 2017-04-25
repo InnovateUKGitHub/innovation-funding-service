@@ -5,9 +5,10 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -61,6 +62,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private CompetitionService competitionService;
 
+    @Autowired
+    private ApplicationWorkflowHandler applicationWorkflowHandler;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -81,7 +85,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource) {
 
         List<Application> applications = getFundingApplications(fundingNotificationResource.getFundingDecisions());
-        setApplicationStatus(fundingNotificationResource.getFundingDecisions(), applications);
+        setApplicationState(fundingNotificationResource.getFundingDecisions(), applications);
 
         List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(fundingNotificationResource.calculateApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
@@ -118,12 +122,12 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         return applications;
     }
 
-    private void setApplicationStatus(Map<Long, FundingDecision> applicationFundingDecisions, List<Application> applications) {
+    private void setApplicationState(Map<Long, FundingDecision> applicationFundingDecisions, List<Application> applications) {
 
         applications.forEach(app -> {
             FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
-            ApplicationStatus status = statusFromDecision(applicationFundingDecision);
-            app.setApplicationStatus(status);
+            ApplicationState state = stateFromDecision(applicationFundingDecision);
+            applicationWorkflowHandler.notifyFromApplicationState(app, state);
         });
     }
 
@@ -201,13 +205,13 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
+    private ApplicationState stateFromDecision(FundingDecision applicationFundingDecision) {
         if (FUNDED.equals(applicationFundingDecision)) {
-            return ApplicationStatus.APPROVED;
+            return ApplicationState.APPROVED;
         } else if (UNFUNDED.equals(applicationFundingDecision)) {
-            return ApplicationStatus.REJECTED;
+            return ApplicationState.REJECTED;
         } else {
-            return ApplicationStatus.SUBMITTED;
+            return ApplicationState.SUBMITTED;
         }
     }
 }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -37,6 +38,9 @@ public class ApplicationPrintPopulator {
     private FormInputResponseService formInputResponseService;
 
     @Autowired
+    private FormInputResponseRestService formInputResponseRestService;
+
+    @Autowired
     private ProcessRoleService processRoleService;
 
     @Autowired
@@ -53,12 +57,11 @@ public class ApplicationPrintPopulator {
 
 
     public String print(final Long applicationId,
-                           Model model, HttpServletRequest request) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+                           Model model, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);

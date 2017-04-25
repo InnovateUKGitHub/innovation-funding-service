@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -330,7 +330,7 @@ class CsvUtils {
         String leadApplicant;
         List<String> collaborators;
         ZonedDateTime submittedDate;
-        ApplicationStatus status;
+        ApplicationState status;
         boolean markFinancesComplete;
         String researchCategory;
         String innovationArea;
@@ -347,7 +347,7 @@ class CsvUtils {
             String collaboratorString = nullable(line.get(i++));
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
-            status = ApplicationStatus.valueOf(line.get(i++).toUpperCase());
+            status = ApplicationState.valueOf(line.get(i++).toUpperCase());
             markFinancesComplete = nullableBoolean(line.get(i++));
             researchCategory = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));
@@ -410,7 +410,6 @@ class CsvUtils {
         String innovationSector;
         String researchCategory;
         String collaborationLevel;
-        String leadApplicantType;
         Integer researchRatio;
         Boolean resubmission;
         Boolean multiStream;
@@ -461,7 +460,6 @@ class CsvUtils {
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
             collaborationLevel = nullable(line.get(i++));
-            leadApplicantType = nullable(line.get(i++));
             researchRatio = nullableInteger(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             multiStream = nullableBoolean(line.get(i++));
@@ -792,7 +790,4 @@ class CsvUtils {
         return Splitter.on("!").trimResults().omitEmptyStrings().splitToList(s)
                 .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
     }
-
 }
-
-

@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 public class OrganisationTypeForm {
     @NotNull(message="{validation.standard.organisationtype.required}")
     private Long organisationType;
-    private boolean selectedByDefault;
+    private boolean isLeadApplicant;
 
     public Long getOrganisationType() {
         return organisationType;
@@ -15,11 +15,11 @@ public class OrganisationTypeForm {
         this.organisationType = organisationType;
     }
 
-    public boolean isSelectedByDefault() {
-        return selectedByDefault;
+    public boolean isLeadApplicant() {
+        return isLeadApplicant;
     }
 
-    public void setSelectedByDefault(boolean selectedByDefault) {
-        this.selectedByDefault = selectedByDefault;
+    public void setLeadApplicant(boolean leadApplicant) {
+        this.isLeadApplicant = leadApplicant;
     }
 }

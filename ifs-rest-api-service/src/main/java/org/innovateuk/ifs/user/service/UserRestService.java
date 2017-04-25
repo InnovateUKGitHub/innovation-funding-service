@@ -32,17 +32,9 @@ public interface UserRestService {
     RestResult<Void> resetPassword(String hash, String password);
 
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
-                                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId);
+                                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId,
+                                                                                 Long competitionId, Boolean allowMarketingEmails);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId);
-    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
-    RestResult<ProfileSkillsResource> getProfileSkills(Long userId);
-    RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkills);
-    RestResult<ProfileAgreementResource> getProfileAgreement(Long userId);
-    RestResult<Void> updateProfileAgreement(Long userId);
-    RestResult<List<AffiliationResource>> getUserAffiliations(Long userId);
-    RestResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
-    RestResult<UserProfileResource> getUserProfile(Long userId);
-    RestResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile);
-    RestResult<UserProfileStatusResource> getUserProfileStatus(Long userId);
+                                                                String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Boolean allowMarketingEmails);
+    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
 }

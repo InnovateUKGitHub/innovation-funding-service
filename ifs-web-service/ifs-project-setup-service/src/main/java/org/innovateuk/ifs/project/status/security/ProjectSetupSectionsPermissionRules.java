@@ -117,7 +117,7 @@ public class ProjectSetupSectionsPermissionRules {
             ProjectSetupSectionAccessibilityHelper sectionAccessor = accessorSupplier.apply(teamStatus);
             OrganisationResource organisation = new OrganisationResource();
             organisation.setId(partnerStatusForUser.getOrganisationId());
-            organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getOrganisationTypeId());
+            organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getId());
 
             return sectionCheckFn.apply(sectionAccessor, organisation) == ACCESSIBLE;
         } catch (ForbiddenActionException e) {

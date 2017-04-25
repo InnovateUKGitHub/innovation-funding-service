@@ -4,7 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
@@ -492,8 +492,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
         List<ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
-        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED).contains(a.status));
-        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatus.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
+        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
+        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
     private void createCompetitionWithApplications(CompetitionLine competitionLine, Optional<Long> competitionId) {
@@ -585,7 +585,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     invite.status, invite.ownerName);
         }
 
-        if (line.status != ApplicationStatus.CREATED) {
+        if (line.status != ApplicationState.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
 
@@ -766,7 +766,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 .withBasicData(line.name, null, null, line.innovationArea,
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null,
-                        null, null, null, null, line.nonIfsUrl)
+                        null, null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
@@ -780,7 +780,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withBasicData(line.name, line.description, line.type, line.innovationArea,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                        line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                        line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
@@ -792,7 +792,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withBasicData(line.name, line.description, line.type, line.innovationArea,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                        line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                        line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
                 withNewMilestones()).
                 withOpenDate(line.openDate).

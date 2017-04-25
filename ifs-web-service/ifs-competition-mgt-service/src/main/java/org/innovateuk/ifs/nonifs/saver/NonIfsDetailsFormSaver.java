@@ -2,12 +2,12 @@ package org.innovateuk.ifs.nonifs.saver;
 
 import org.hibernate.validator.internal.util.CollectionHelper;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
@@ -34,8 +34,9 @@ public class NonIfsDetailsFormSaver {
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
     @Autowired
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     public ServiceResult<Void> save(NonIfsDetailsForm form, CompetitionResource competitionResource) {
         if(!competitionResource.isNonIfs()) {
@@ -51,16 +52,16 @@ public class NonIfsDetailsFormSaver {
     }
 
     private List<MilestoneResource> getPublicMilestones(CompetitionResource competitionResource) {
-        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
         if (milestones.isEmpty()) {
             createPublicMilestones(competitionResource.getId());
-            milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
+            milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
         }
         return milestones;
     }
 
     private void createPublicMilestones(Long competitionId) {
-        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneService.create(type, competitionId));
+        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneRestService.create(type, competitionId).getSuccessObjectOrThrowException());
     }
 
     private void mapFormFields(NonIfsDetailsForm form, CompetitionResource competitionResource) {

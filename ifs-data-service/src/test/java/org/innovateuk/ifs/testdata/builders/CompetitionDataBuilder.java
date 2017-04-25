@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -73,7 +72,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
                                                 String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay,
-                                                Boolean multiStream, String collaborationLevelCode, String leadApplicantTypeCode, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
+                                                Boolean multiStream, String collaborationLevelCode, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
 
         return asCompAdmin(data -> {
 
@@ -88,7 +87,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 Long researchCategory = getResearchCategoryIdOrNull(researchCategoryName);
 
                 CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
-                LeadApplicantType leadApplicantType = LeadApplicantType.BUSINESS.fromCode(leadApplicantTypeCode);
 
                 competition.setName(name);
                 competition.setDescription(description);
@@ -104,7 +102,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setBudgetCode(budgetCode);
                 competition.setActivityCode(activityCode);
                 competition.setCollaborationLevel(collaborationLevel);
-                competition.setLeadApplicantType(leadApplicantType);
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);

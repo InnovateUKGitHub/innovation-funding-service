@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import MySQLdb
+import pymysql
 import os
 config = ''
 
@@ -44,7 +44,7 @@ _application_list = { _open_competition_application_name, _open_competition_appl
 _formatted_app_list = ','.join(['%s'] * len(_application_list))
 
 # Open database connection
-db = MySQLdb.connect(**config)
+db = pymysql.connect(**config)
 
 # prepare a cursor object using cursor() method
 cursor = db.cursor()
@@ -70,4 +70,5 @@ for app in cursor.fetchall():
     application_ids[app[1]] = int(app[0])
 
 # disconnect from server
+cursor.close()
 db.close()

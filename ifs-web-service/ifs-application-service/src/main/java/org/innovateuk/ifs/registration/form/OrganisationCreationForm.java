@@ -21,6 +21,9 @@ public class OrganisationCreationForm implements Serializable {
     private AddressForm addressForm = new AddressForm();
     private boolean triedToSave = false;
 
+    @NotNull(message = "{validation.standard.organisationtype.required}")
+    private Long organisationTypeId;
+
     @NotNull(message = "{validation.standard.organisationtyperesource.required}")
     private OrganisationTypeResource organisationType;
     private OrganisationTypeEnum organisationTypeEnum;
@@ -37,7 +40,6 @@ public class OrganisationCreationForm implements Serializable {
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
-
     }
 
     public OrganisationCreationForm(List<OrganisationSearchResult> companyHouseList) {
@@ -50,6 +52,14 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setManualEntry(boolean manualEntry) {
         this.manualEntry = manualEntry;
+    }
+
+    public Long getOrganisationTypeId() {
+        return organisationTypeId;
+    }
+
+    public void setOrganisationTypeId(Long organisationTypeId) {
+        this.organisationTypeId = organisationTypeId;
     }
 
     public OrganisationTypeResource getOrganisationType() {

@@ -3,11 +3,11 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.spendprofile.form.TotalSpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalProjectSpendProfileTableViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalSpendProfileViewModel;
@@ -41,7 +41,7 @@ public class TotalProjectSpendProfileController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private SpendProfileService spendProfileService;
     @Autowired
     private SpendProfileTableCalculator spendProfileTableCalculator;
 
@@ -70,7 +70,7 @@ public class TotalProjectSpendProfileController {
                     return SPEND_PROFILE_TOTALS_TEMPLATE;
                 },
                 () -> "redirect:/project/" + projectId,
-                () -> projectFinanceService.completeSpendProfilesReview(projectId));
+                () -> spendProfileService.completeSpendProfilesReview(projectId));
 
     }
 
@@ -87,7 +87,7 @@ public class TotalProjectSpendProfileController {
                 leadOrganisation, OrganisationResource::getName).unwrap();
 
         Map<Long, SpendProfileTableResource> organisationSpendProfiles = simpleToLinkedMap(organisations, OrganisationResource::getId,
-                organisation -> projectFinanceService.getSpendProfileTable(projectId, organisation.getId()));
+                organisation -> spendProfileService.getSpendProfileTable(projectId, organisation.getId()));
 
         Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap = simpleLinkedMapValue(organisationSpendProfiles, spendTableResource ->
                 spendProfileTableCalculator.calculateMonthlyTotals(spendTableResource.getMonthlyCostsPerCategoryMap(), spendTableResource.getMonths().size()));

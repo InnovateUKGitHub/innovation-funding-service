@@ -6,20 +6,21 @@ import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -43,6 +44,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyMap;
@@ -56,10 +59,13 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     private ApplicationSectionAndQuestionModelPopulator target;
 
     @Mock
-    protected FormInputService formInputService;
+    protected FormInputRestService formInputRestService;
 
     @Mock
-    protected FormInputResponseService formInputResponseService;
+    private FormInputResponseService formInputResponseService;
+
+    @Mock
+    protected FormInputResponseRestService formInputResponseRestService;
 
     @Mock
     protected QuestionService questionService;
@@ -77,13 +83,12 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     protected OrganisationService organisationService;
 
     @Mock
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     @Test
     public void testAddMappedSectionsDetails() {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
-        Long userId = 1L;
         Long organisationId = 3L;
         List<SectionResource> allSections = newSectionResource().build(3);
         SectionResource parentSection = newSectionResource()
@@ -96,6 +101,8 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         Model model = mock(Model.class);
         when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(allSections);
         when(sectionService.filterParentSections(allSections)).thenReturn(asList(parentSection));
+        when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), APPLICATION)).thenReturn(restSuccess(
+                newFormInputResource().build(1)));
 
         allSections.forEach(loopSection -> when(sectionService.getById(loopSection.getId())).thenReturn(loopSection));
 
@@ -114,7 +121,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     @Test
     public void testAddAssignableDetails() {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
-                .withApplicationStatus(ApplicationStatus.OPEN).build();
+                .withApplicationState(ApplicationState.OPEN).build();
         Long userId = 1L;
         Long organisationId = 3L;
         Optional<SectionResource> section = Optional.of(newSectionResource().build());
@@ -156,7 +163,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         List<FormInputResponseResource> responses = FormInputResponseResourceBuilder.newFormInputResponseResource().build(2);
         Map<Long, FormInputResponseResource> mappedResponses = simpleToMap(responses, FormInputResponseResource::getId, Function.identity());
 
-        when(formInputResponseService.getByApplication(application.getId())).thenReturn(responses);
+        when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(responses));
         when(formInputResponseService.mapFormInputResponsesToFormInput(responses)).thenReturn(mappedResponses);
 
         target.addQuestionsDetails(model, application, form);
@@ -196,7 +203,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         when(sectionService.allSectionsMarkedAsComplete(application.getId())).thenReturn(allQuestionsCompleted);
         when(sectionService.getFinanceSection(application.getCompetition())).thenReturn(financeSection);
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
-        when(categoryService.getResearchCategories()).thenReturn(categoryResources);
+        when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(categoryResources));
 
         target.addCompletedDetails(model, application, Optional.of(userOrganisation));
 
@@ -220,13 +227,13 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         SectionResource currentSection = newSectionResource()
                 .withCompetition(competitionId)
                 .withQuestions(simpleMap(sectionQuestions, QuestionResource::getId)).build();
-        List<FormInputResource> responses = FormInputResourceBuilder.newFormInputResource().build(1);
+        List<FormInputResource> responses = newFormInputResource().build(1);
         Map<Long, List<FormInputResource>> questionFormInputs = simpleToMap(sectionQuestions, QuestionResource::getId, question -> responses);
         Map<Long, List<QuestionResource>> currentSectionQuestions = new HashMap<>();
         currentSectionQuestions.put(currentSection.getId(), sectionQuestions);
 
         when(questionService.findByCompetition(competitionId)).thenReturn(sectionQuestions);
-        when(formInputService.findApplicationInputsByQuestion(sectionQuestions.get(0).getId())).thenReturn(responses);
+        when(formInputRestService.getByQuestionIdAndScope(sectionQuestions.get(0).getId(), APPLICATION)).thenReturn(restSuccess(responses));
 
         target.addSectionDetails(model, Optional.of(currentSection));
 

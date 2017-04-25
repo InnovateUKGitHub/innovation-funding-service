@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
@@ -201,21 +201,21 @@ public class ApplicationNavigationPopulatorTest {
 
     private void setupApplicationOpen(Long applicationId) {
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
-                .withApplicationStatus(ApplicationStatus.OPEN)
+                .withApplicationState(ApplicationState.OPEN)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build());
     }
 
     private void setupApplicationClosed(Long applicationId) {
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
-                .withApplicationStatus(ApplicationStatus.SUBMITTED)
+                .withApplicationState(ApplicationState.SUBMITTED)
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build());
     }
 
     private void setupApplicationCompetitionClosed(Long applicationId) {
         when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
-                .withApplicationStatus(ApplicationStatus.OPEN)
+                .withApplicationState(ApplicationState.OPEN)
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .build());
     }

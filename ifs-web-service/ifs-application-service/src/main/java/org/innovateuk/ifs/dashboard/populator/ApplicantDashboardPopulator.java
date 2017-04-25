@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.dashboard.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Populator for the applicant dashboard, it populates an {@link org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel}
@@ -51,36 +51,44 @@ public class ApplicantDashboardPopulator {
         List<ApplicationResource> applicationsForProjectsInSetup = getApplicationsForProjectsInSetup(projectsInSetup);
 
         Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished, applicationsForProjectsInSetup);
-        Map<Long, ApplicationStatus> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
+        Map<Long, ApplicationState> applicationStatusMap = createApplicationStateMap(inProgress, finished);
 
-        List<Long> applicationsAssigned = getAssignedApplications(inProgress, user);
+
+        Map<Long, ProcessRoleResource> inProgressProcessRoles = simpleToMap(inProgress, ApplicationResource::getId,
+                applicationResource ->  processRoleService.findProcessRole(user.getId(), applicationResource.getId()));
+
+        List<Long> applicationsAssigned = getAssignedApplications(inProgressProcessRoles, user);
+        List<Long> leadApplicantApplications = getLeadApplicantApplications(inProgressProcessRoles, user);
 
         return new ApplicantDashboardViewModel(applicationProgress, inProgress,
                 applicationsAssigned, finished,
-                projectsInSetup, competitions, applicationStatusMap);
+                projectsInSetup, competitions, applicationStatusMap, leadApplicantApplications);
     }
 
-    private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, UserResource user){
-        return inProgress.stream().filter(applicationResource -> {
-                    ProcessRoleResource role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
-                    if(!UserRoleType.LEADAPPLICANT.getName().equals(role.getRoleName())) {
-                        int count = applicationService.getAssignedQuestionsCount(applicationResource.getId(), role.getId());
-                        return count != 0;
-                    }else{
-                        return false;
-                    }
-                }
-        ).mapToLong(ApplicationResource::getId).boxed().collect(Collectors.toList());
+    private List<Long> getAssignedApplications(Map<Long, ProcessRoleResource> inProgressProcessRoles, UserResource user) {
+        return inProgressProcessRoles.entrySet().stream().filter(entry -> {
+            if(!UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().getRoleName())) {
+                int count = applicationService.getAssignedQuestionsCount(entry.getKey(), entry.getValue().getId());
+                return count != 0;
+            } else {
+                return false;
+            }
+        }).map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
-    // TODO DW - INFUND-1555 - handle rest result
+    private List<Long> getLeadApplicantApplications(Map<Long, ProcessRoleResource> inProgressProcessRoles, UserResource user){
+        return inProgressProcessRoles.entrySet().stream()
+                .filter(entry -> UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().getRoleName()))
+                .map(Map.Entry::getKey).collect(Collectors.toList());
+    }
+
     @SafeVarargs
-    private final Map<Long, ApplicationStatus> createApplicationStatusMap(List<ApplicationResource>... resources){
+    private final Map<Long, ApplicationState> createApplicationStateMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> application.getApplicationStatus()
+                    application -> application.getApplicationState()
                 )
             );
     }

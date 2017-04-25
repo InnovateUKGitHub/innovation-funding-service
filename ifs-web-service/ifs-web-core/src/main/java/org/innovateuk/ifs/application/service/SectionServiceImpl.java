@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.application.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * This class contains methods to retrieve and store {@link SectionResource} related data,
@@ -32,7 +33,7 @@ public class SectionServiceImpl implements SectionService {
     private SectionRestService sectionRestService;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -127,7 +128,7 @@ public class SectionServiceImpl implements SectionService {
     public void removeSectionsQuestionsWithType(SectionResource section, FormInputType type) {
         List<QuestionResource> questions = questionService.findByCompetition(section.getCompetition());
         List<SectionResource> sections = this.getAllByCompetitionId(section.getCompetition());
-        List<FormInputResource> formInputResources = formInputService.findApplicationInputsByCompetition(section.getCompetition());
+        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(section.getCompetition(), APPLICATION).getSuccessObjectOrThrowException();
         filterByIdList(section.getChildSections(), sections).stream()
                 .forEach(
                 s -> s.setQuestions(

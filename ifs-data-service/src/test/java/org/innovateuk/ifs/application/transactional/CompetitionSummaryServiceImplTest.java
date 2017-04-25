@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -14,8 +14,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.application.builder.CompletedPercentageResourceBuilder.newCompletedPercentageResource;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -43,7 +42,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
 
         when(competitionRepositoryMock.findById(COMP_ID)).thenReturn(competition);
         when(applicationRepositoryMock.countByCompetitionId(COMP_ID)).thenReturn(83);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusInAndCompletionLessThanEqual(
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(
                 COMP_ID, CREATED_AND_OPEN_STATUSES, new BigDecimal(50L))
         )
                 .thenReturn(1);
@@ -55,8 +54,8 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 .thenReturn(serviceSuccess(
                         newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
                 ));
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusNotInAndCompletionGreaterThan(
-                COMP_ID, SUBMITTED_STATUSES, new BigDecimal(50L))
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(
+                COMP_ID, SUBMITTED_AND_INELIGIBLE_STATES, new BigDecimal(50L))
         )
                 .thenReturn(1);
         when(applicationServiceMock.getProgressPercentageByApplicationId(3L))
@@ -67,8 +66,9 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 .thenReturn(serviceSuccess(
                         newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
                 ));
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIn(COMP_ID, SUBMITTED_STATUSES)).thenReturn(5);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatus(COMP_ID, ApplicationStatus.APPROVED)).thenReturn(8);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(COMP_ID, SUBMITTED_AND_INELIGIBLE_STATES)).thenReturn(5);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(COMP_ID, INELIGIBLE_STATES)).thenReturn(2);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMP_ID, ApplicationState.APPROVED.getBackingState())).thenReturn(8);
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRole(COMP_ID, ASSESSOR)).thenReturn(10);
     }
 
@@ -87,10 +87,10 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(1, summaryResource.getApplicationsStarted());
         assertEquals(1, summaryResource.getApplicationsInProgress());
         assertEquals(5, summaryResource.getApplicationsSubmitted());
+        assertEquals(2, summaryResource.getIneligibleApplications());
         assertEquals(78, summaryResource.getApplicationsNotSubmitted());
         assertEquals(ZonedDateTime.of(2016, 5, 23, 8, 30, 0, 0, ZoneId.systemDefault()), summaryResource.getApplicationDeadline());
         assertEquals(10, summaryResource.getAssessorsInvited());
         assertEquals(8, summaryResource.getApplicationsFunded());
     }
-
 }
