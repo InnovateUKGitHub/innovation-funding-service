@@ -190,8 +190,3 @@ the user edits the competition title
 
 the progress indicator should show 0
     Element Should Contain    css=.progress-indicator    0
-
-the user closes the diversity survey window
-    Select Window    Innovation Funding Service - Diversity Information Survey
-    Close Window
-    Select Window
