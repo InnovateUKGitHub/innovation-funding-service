@@ -767,7 +767,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 .withBasicData(line.name, null, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null,
-                        null, null, null, line.nonIfsUrl)
+                        null, null, null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
@@ -781,7 +781,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withBasicData(line.name, line.description, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                        line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
+                        line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
@@ -793,7 +793,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withBasicData(line.name, line.description, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                        line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
+                        line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
                 withNewMilestones()).
                 withOpenDate(line.openDate).

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
@@ -74,7 +75,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, List<String> innovationAreaNames,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
                                                 String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay,
-                                                Boolean multiStream, String collaborationLevelCode, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
+                                                Boolean multiStream, String collaborationLevelCode, List<OrganisationTypeEnum> leadApplicantTypes, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
 
         return asCompAdmin(data -> {
 
@@ -91,6 +92,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
 
+                List<Long> leadApplicantTypeIds = simpleMap(leadApplicantTypes, OrganisationTypeEnum::getId);
+
                 competition.setName(name);
                 competition.setDescription(description);
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
@@ -105,6 +108,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setBudgetCode(budgetCode);
                 competition.setActivityCode(activityCode);
                 competition.setCollaborationLevel(collaborationLevel);
+                competition.setLeadApplicantTypes(leadApplicantTypeIds);
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);

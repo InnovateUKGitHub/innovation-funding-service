@@ -12,10 +12,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.io.File;
@@ -410,6 +407,7 @@ class CsvUtils {
         String innovationSector;
         String researchCategory;
         String collaborationLevel;
+        List<OrganisationTypeEnum> leadApplicantTypes;
         Integer researchRatio;
         Boolean resubmission;
         Boolean multiStream;
@@ -460,6 +458,7 @@ class CsvUtils {
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
             collaborationLevel = nullable(line.get(i++));
+            leadApplicantTypes = simpleMap(nullableSplitOnNewLines(line.get(i++)), OrganisationTypeEnum::valueOf);
             researchRatio = nullableInteger(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             multiStream = nullableBoolean(line.get(i++));
@@ -784,7 +783,7 @@ class CsvUtils {
         String value = nullable(s);
 
         if (value == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         return Splitter.on("!").trimResults().omitEmptyStrings().splitToList(s)
@@ -792,6 +791,6 @@ class CsvUtils {
     }
 
     private static List<String> nullableSplitOnNewLines(String s) {
-        return nullable(s) != null ? simpleMap(s.split("\n"), String::trim) : null;
+        return nullable(s) != null ? simpleMap(s.split("\n"), String::trim) : emptyList();
     }
 }
