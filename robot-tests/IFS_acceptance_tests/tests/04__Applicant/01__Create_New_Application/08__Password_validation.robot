@@ -71,21 +71,6 @@ Password with personal information
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password should not contain either your first or last name.
 
-Password is too long
-    [Documentation]    INFUND-885
-    ...
-    ...    INFUND-2497
-    [Tags]
-    And browser validations have been disabled
-    When the user enters text to a text field    id=firstName    John
-    And the user enters text to a text field    id=lastName    Smith
-    And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    ${valid_email2}
-    And the user enters text to a text field    id=password    ${long_password}
-    And the user submits their information
-    Then the user should see an error    Password must not be more than 30 characters.
-    And The user should see the text in the page    We were unable to create your account
-
 Password is too short
     [Documentation]    INFUND-885
     ...
@@ -97,7 +82,7 @@ Password is too short
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${short_password}
     And the user submits their information
-    Then the user should see an error    Password must at least be 10 characters.
+    Then the user should see an error    Password must at least be 8 characters.
     And The user should see the text in the page    We were unable to create your account
 
 Password left blank
