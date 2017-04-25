@@ -528,11 +528,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         assertTrue(result.isSuccess());
     }
 
-/*    @Override
-    protected ProjectGrantOfferService supplyServiceUnderTest() {
-        return new ProjectGrantOfferServiceImpl();
-    }*/
-
     private Map<String, Object> setupTemplateArguments() {
         Map<String, Object> templateArgs = new HashMap();
         templateArgs.put("ProjectLength", 10L);
@@ -999,12 +994,13 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         assertEquals(GOLState.APPROVED, result.getSuccessObject());
 
     }
+
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
 
     @Override
     protected ProjectGrantOfferService supplyServiceUnderTest() {
 
-        ProjectGrantOfferServiceImpl projectGrantOfferService =  new ProjectGrantOfferServiceImpl();
+        ProjectGrantOfferServiceImpl projectGrantOfferService = new ProjectGrantOfferServiceImpl();
         ReflectionTestUtils.setField(projectGrantOfferService, "webBaseUrl", webBaseUrl);
         return projectGrantOfferService;
     }

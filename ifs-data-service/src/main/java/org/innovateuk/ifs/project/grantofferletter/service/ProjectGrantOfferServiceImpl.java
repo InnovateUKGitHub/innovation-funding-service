@@ -63,7 +63,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService {
