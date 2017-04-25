@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 /**
  * Form field model for the Assessor Registration
  */
-@FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
@@ -39,17 +38,9 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.password.required}")
     @Size.List ({
-            @Size(min=10, message="{validation.standard.password.length.min}"),
-            @Size(max=30, message="{validation.standard.password.length.max}"),
+            @Size(min=8, message="{validation.standard.password.length.min}"),
     })
     private String password;
-
-    @NotEmpty(message = "{validation.standard.retypedpassword.required}")
-    @Size.List ({
-            @Size(min=10, message="{validation.standard.password.length.min}"),
-            @Size(max=30, message="{validation.standard.password.length.max}"),
-    })
-    private String retypedPassword;
 
     @NotNull(message = "{validation.standard.gender.selectionrequired}")
     private Gender gender = Gender.NOT_STATED;
@@ -98,14 +89,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRetypedPassword() {
-        return retypedPassword;
-    }
-
-    public void setRetypedPassword(String retypedPassword) {
-        this.retypedPassword = retypedPassword;
     }
 
     public Gender getGender() {
@@ -161,7 +144,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(password, that.password)
-                .append(retypedPassword, that.retypedPassword)
                 .append(gender, that.gender)
                 .append(ethnicity, that.ethnicity)
                 .append(disability, that.disability)
@@ -176,7 +158,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(firstName)
                 .append(lastName)
                 .append(password)
-                .append(retypedPassword)
                 .append(gender)
                 .append(ethnicity)
                 .append(disability)
