@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -656,6 +657,42 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertNull(bindingResult.getFieldError("application.previousApplicationNumber"));
         assertNull(bindingResult.getFieldError("application.previousApplicationTitle"));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+    }
+
+    @Test
+    public void testApplicationDetailsForm_leadCanEdit() throws Exception {
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
+        MvcResult result = mockMvc.perform(
+                get("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId))
+                .andExpect(view().name("application-form"))
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(QuestionViewModel.class, viewModelResult.getClass());
+        QuestionViewModel viewModel = (QuestionViewModel) viewModelResult;
+
+        assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
+        assertEquals(users.get(0), viewModel.getLeadApplicant());
+        assertEquals(Boolean.FALSE, viewModel.getQuestionApplicationViewModel().getAllReadOnly());
+    }
+
+    @Test
+    public void testApplicationDetailsForm_nonLeadReadOnly() throws Exception {
+        setLoggedInUser(users.get(1));
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
+        MvcResult result = mockMvc.perform(
+                get("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId))
+                .andExpect(view().name("application-form"))
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(QuestionViewModel.class, viewModelResult.getClass());
+        QuestionViewModel viewModel = (QuestionViewModel) viewModelResult;
+
+        assertEquals(Boolean.FALSE, viewModel.getUserIsLeadApplicant());
+        assertEquals(Boolean.TRUE, viewModel.getQuestionApplicationViewModel().getAllReadOnly());
     }
 
     @Test

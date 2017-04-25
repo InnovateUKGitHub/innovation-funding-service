@@ -130,12 +130,12 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         form.setApplication(application);
 
         List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
-        Set<Long> completedDetails = getCompletedDetails(questionResource, application.getId(), questionStatuses);
+        Set<Long> completedDetails = getCompletedDetails(questionResource, questionStatuses);
         Boolean isApplicationDetails = isApplicationDetails(formInputs, questionResource);
         Boolean allReadOnly;
 
-        if(isApplicationDetails) {
-            allReadOnly = !userService.isLeadApplicant(userId, application) ? true : calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
+        if(isApplicationDetails && !userService.isLeadApplicant(userId, application)) {
+            allReadOnly = true;
         } else {
             allReadOnly = calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
         }
@@ -175,12 +175,16 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId,
                                          Set<Long> completedDetails) {
         if(null != competition.getCompetitionStatus() && competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
-            Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
-            return (questionStatuses.size() > 0 &&
-                    (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId())));
+            return isReadOnly(questionStatuses, questionResource, completedDetails, userId);
         } else {
             return true;
         }
+    }
+
+    private Boolean isReadOnly(List<QuestionStatusResource> questionStatuses, QuestionResource questionResource, Set<Long> completedDetails, Long userId) {
+        Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
+        return (questionStatuses.size() > 0 &&
+                (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId())));
     }
 
     private void addQuestionsDetails(QuestionViewModel questionViewModel, ApplicationResource application, ApplicationForm form) {
@@ -261,7 +265,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         return assigned;
     }
 
-    private Set<Long> getCompletedDetails(QuestionResource question, Long applicationId, List<QuestionStatusResource> questionStatuses) {
+    private Set<Long> getCompletedDetails(QuestionResource question, List<QuestionStatusResource> questionStatuses) {
         Set<Long> markedAsComplete = new HashSet<Long>();
 
         if(question.getMarkAsCompletedEnabled() && !question.getMultipleStatuses()) {

@@ -682,7 +682,7 @@ public class BaseUnitTest {
 
         when(formInputRestService.getById(anyLong())).thenAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            return restSuccess(newFormInputResource().with(id((Long) args[0])).withType(TEXTAREA).build());
+            return restSuccess(newFormInputResource().with(id((Long) args[0])).build());
         });
 
         List<Long> formInputIds = questionResources.get(1L).getFormInputs();
