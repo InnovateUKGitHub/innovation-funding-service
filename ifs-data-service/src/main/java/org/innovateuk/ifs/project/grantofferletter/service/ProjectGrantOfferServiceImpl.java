@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.transactional;
+package org.innovateuk.ifs.project.grantofferletter.service;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
@@ -20,21 +20,18 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
-import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
-import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -117,6 +114,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
+    public enum NotificationsGol {
+        GRANT_OFFER_LETTER_PROJECT_MANAGER,
+        PROJECT_LIVE
+    }
+
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
@@ -133,6 +135,14 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         });
     }
 
+    @Override
+    public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+            FileEntry fileEntry = project.getAdditionalContractFile();
+            return getFileAndContentsResult(fileEntry);
+        });
+    }
+
     private FailingOrSucceedingResult<FileAndContents, ServiceFailure> getFileAndContentsResult(FileEntry fileEntry) {
         if (fileEntry == null) {
             return serviceFailure(notFoundError(FileEntry.class));
@@ -140,14 +150,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
         return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
-    }
-
-    @Override
-    public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-            FileEntry fileEntry = project.getAdditionalContractFile();
-            return getFileAndContentsResult(fileEntry);
-        });
     }
 
     @Override
@@ -220,23 +222,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                                         andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
-    private boolean isProjectReadyForGrantOffer(Long projectId) {
-        Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
-        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
-
-        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
-    }
-
-    @Override
-    public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
-        if (isProjectReadyForGrantOffer(projectId)) {
-            FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
-            return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
-                    .andOnSuccess(() -> serviceSuccess()).
-                            andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
-        } else {
-            return serviceSuccess();
-        }
+    private String getTemplatePath() {
+        return GOL_TEMPLATES_PATH;
     }
 
     private Map<String, Object> getTemplateData(Project project) {
@@ -259,19 +246,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         return templateReplacements;
-    }
-
-    private List<String> getAddresses(Project project) {
-        List<String> addressLines = new ArrayList<>();
-        if (project.getAddress() != null) {
-            Address address = project.getAddress();
-            addressLines.add(address.getAddressLine1() != null ? address.getAddressLine1() : "");
-            addressLines.add(address.getAddressLine2() != null ? address.getAddressLine2() : "");
-            addressLines.add((address.getAddressLine3() != null ? address.getAddressLine3() : ""));
-            addressLines.add(address.getTown() != null ? address.getTown() : "");
-            addressLines.add(address.getPostcode() != null ? address.getPostcode() : "");
-        }
-        return addressLines;
     }
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
@@ -307,6 +281,38 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             fileEntryResource.setFilesizeBytes(os.toByteArray().length);
             return ServiceResult.serviceSuccess(() -> new ByteArrayInputStream(os.toByteArray()));
         }
+    }
+
+    private List<String> getAddresses(Project project) {
+        List<String> addressLines = new ArrayList<>();
+        if (project.getAddress() != null) {
+            Address address = project.getAddress();
+            addressLines.add(address.getAddressLine1() != null ? address.getAddressLine1() : "");
+            addressLines.add(address.getAddressLine2() != null ? address.getAddressLine2() : "");
+            addressLines.add((address.getAddressLine3() != null ? address.getAddressLine3() : ""));
+            addressLines.add(address.getTown() != null ? address.getTown() : "");
+            addressLines.add(address.getPostcode() != null ? address.getPostcode() : "");
+        }
+        return addressLines;
+    }
+
+    @Override
+    public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
+        if (isProjectReadyForGrantOffer(projectId)) {
+            FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
+            return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
+                    .andOnSuccess(() -> serviceSuccess()).
+                            andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
+        } else {
+            return serviceSuccess();
+        }
+    }
+
+    private boolean isProjectReadyForGrantOffer(Long projectId) {
+        Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
+        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
+
+        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
     }
 
     private FileEntryResource linkGrantOfferLetterFileToProject(Project project, Pair<File, FileEntry> fileDetails, boolean signed) {
@@ -380,6 +386,12 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     }
 
+    private FileEntryResource linkAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
+        FileEntry fileEntry = fileDetails.getValue();
+        project.setAdditionalContractFile(fileEntry);
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
+
     @Override
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup).
@@ -407,16 +419,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         });
     }
 
-    private FileEntryResource linkAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
-        FileEntry fileEntry = fileDetails.getValue();
-        project.setAdditionalContractFile(fileEntry);
-        return fileEntryMapper.mapToResource(fileEntry);
-    }
-
-    private String getTemplatePath() {
-        return GOL_TEMPLATES_PATH;
-    }
-
     private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
         if (!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
@@ -439,7 +441,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("dashboardUrl", webBaseUrl);
 
-            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER);
+            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER);
 
             if (notificationResult != null && !notificationResult.isSuccess()) {
                 return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
@@ -564,7 +566,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         Project project = projectRepository.findOne(projectId);
         List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
 
-        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE);
+        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, emptyMap(), NotificationsGol.PROJECT_LIVE);
 
         return processAnyFailuresOrSucceed(sendEmailResult);
     }

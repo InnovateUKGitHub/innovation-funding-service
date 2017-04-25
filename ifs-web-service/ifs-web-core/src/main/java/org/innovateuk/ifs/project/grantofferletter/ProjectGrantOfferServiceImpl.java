@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 /**
  * A view model that backs the Project grant offer letter page
  **/
-public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsViewModel {
+public class ProjectGrantOfferModel implements BasicProjectDetailsViewModel {
 
     private final Long projectId;
     private final String projectName;
@@ -21,9 +21,9 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     private boolean offerApproved;
     private boolean isGrantOfferLetterSent;
 
-    public ProjectGrantOfferLetterViewModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
-                                            FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                            ZonedDateTime submitDate, boolean offerApproved, boolean projectManager, boolean isGrantOfferLetterSent) {
+    public ProjectGrantOfferModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
+                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
+                                  ZonedDateTime submitDate, boolean offerApproved, boolean projectManager, boolean isGrantOfferLetterSent) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;

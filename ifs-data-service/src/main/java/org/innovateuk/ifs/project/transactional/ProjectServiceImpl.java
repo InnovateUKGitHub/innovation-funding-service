@@ -40,7 +40,8 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.grantofferletter.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
@@ -495,8 +496,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void removeCollaborationAgreementFileFromProject(Project project) {
-        validateProjectIsInSetup(project).
-                andOnSuccess(() -> project.setCollaborationAgreement(null));
+        validateProjectIsInSetup(project).andOnSuccess(() -> project.setCollaborationAgreement(null));
     }
 
     private ServiceResult<FileEntry> getExploitationPlan(Project project) {

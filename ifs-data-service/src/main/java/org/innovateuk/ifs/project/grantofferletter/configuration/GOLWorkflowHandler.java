@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.project.gol.workflow.configuration;
+package org.innovateuk.ifs.project.grantofferletter.configuration;
 
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.gol.domain.GOLProcess;
-import org.innovateuk.ifs.project.gol.repository.GrantOfferLetterProcessRepository;
-import org.innovateuk.ifs.project.gol.resource.GOLOutcomes;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
+import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.

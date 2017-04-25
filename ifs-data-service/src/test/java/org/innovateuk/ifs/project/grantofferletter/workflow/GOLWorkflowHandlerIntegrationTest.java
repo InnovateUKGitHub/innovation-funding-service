@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.project.gol.workflow;
+package org.innovateuk.ifs.project.grantofferletter.workflow;
 
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.gol.domain.GOLProcess;
-import org.innovateuk.ifs.project.gol.repository.GrantOfferLetterProcessRepository;
-import org.innovateuk.ifs.project.gol.resource.GOLOutcomes;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
+import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;

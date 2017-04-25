@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.*;

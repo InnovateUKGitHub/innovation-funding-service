@@ -4,8 +4,8 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
-import org.innovateuk.ifs.project.grantofferletter.populator.ProjectGrantOfferLetterViewModelPopulator;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
+import org.innovateuk.ifs.project.grantofferletter.populator.ProjectGrantOfferModelPopulator;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -39,11 +39,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectSetupGrantOfferControllerTest extends BaseControllerMockMVCTest<ProjectSetupGrantOfferController> {
+public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<ProjectGrantOfferController> {
 
     @Spy
     @InjectMocks
-    private ProjectGrantOfferLetterViewModelPopulator grantOfferLetterViewModelPopulator;
+    private ProjectGrantOfferModelPopulator grantOfferLetterViewModelPopulator;
 
     @Test
     public void testViewGrantOfferLetterPageWithSignedOffer() throws Exception {
@@ -70,7 +70,7 @@ public class ProjectSetupGrantOfferControllerTest extends BaseControllerMockMVCT
                 andExpect(view().name("project/grant-offer-letter")).
                 andReturn();
 
-        ProjectGrantOfferLetterViewModel model = (ProjectGrantOfferLetterViewModel) result.getModelAndView().getModel().get("model");
+        ProjectGrantOfferModel model = (ProjectGrantOfferModel) result.getModelAndView().getModel().get("model");
 
         // test the view model
         assertEquals(project.getId(), model.getProjectId());
@@ -250,7 +250,7 @@ public class ProjectSetupGrantOfferControllerTest extends BaseControllerMockMVCT
     }
 
     @Override
-    protected ProjectSetupGrantOfferController supplyControllerUnderTest() {
-        return new ProjectSetupGrantOfferController();
+    protected ProjectGrantOfferController supplyControllerUnderTest() {
+        return new ProjectGrantOfferController();
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Empty form to handle validation errors
  */
-public class ProjectGrantOfferLetterSendForm extends BaseBindingResultTarget {
+public class ProjectGrantOfferSendLetterForm extends BaseBindingResultTarget {
 
     private MultipartFile annex;
 

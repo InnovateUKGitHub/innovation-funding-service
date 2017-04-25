@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.gol.resource;
+package org.innovateuk.ifs.project.grantofferletter.resource;
 
 import org.innovateuk.ifs.workflow.resource.ProcessStates;
 import org.innovateuk.ifs.workflow.resource.State;

@@ -4,11 +4,9 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
-import org.innovateuk.ifs.project.grantofferletter.populator.ProjectGrantOfferLetterViewModelPopulator;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.grantofferletter.populator.ProjectGrantOfferModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -20,34 +18,29 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+
 /**
  * Controller for the grant offer letter
  **/
 @Controller
 @RequestMapping("/project/{projectId}/offer")
-public class ProjectSetupGrantOfferController {
+public class ProjectGrantOfferController {
 
     private static final String FORM_ATTR = "form";
     public static final String BASE_DIR = "project";
     public static final String TEMPLATE_NAME = "grant-offer-letter";
 
     @Autowired
-    private ProjectService projectService;
-
-    @Autowired
     private ProjectGrantOfferService projectGrantOfferService;
 
     @Autowired
-    private ProjectGrantOfferLetterViewModelPopulator grantOfferLetterViewModelPopulator;
+    private ProjectGrantOfferModelPopulator grantOfferLetterViewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
@@ -175,11 +168,5 @@ public class ProjectSetupGrantOfferController {
         } else {
             throw new ObjectNotFoundException("Could not find Collaboration Agreement for project " + projectId, singletonList(projectId));
         }
-    }
-
-
-    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 }

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import static java.util.function.Function.identity;
 
 @Service
-public class ProjectGrantOfferLetterViewModelPopulator {
+public class ProjectGrantOfferModelPopulator {
 
     @Autowired
     public ProjectService projectService;
@@ -23,7 +23,7 @@ public class ProjectGrantOfferLetterViewModelPopulator {
     @Autowired
     public ProjectGrantOfferService projectGrantOfferService;
 
-    public ProjectGrantOfferLetterViewModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
+    public ProjectGrantOfferModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
@@ -34,7 +34,7 @@ public class ProjectGrantOfferLetterViewModelPopulator {
         boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
         boolean isGrantOfferLetterSent = projectGrantOfferService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);
 
-        return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
+        return new ProjectGrantOfferModel(projectId, project.getName(),
                 leadPartner,
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,

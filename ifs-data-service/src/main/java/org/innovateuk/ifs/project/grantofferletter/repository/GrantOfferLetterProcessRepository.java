@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.project.gol.repository;
+package org.innovateuk.ifs.project.grantofferletter.repository;
 
-import org.innovateuk.ifs.project.gol.domain.GOLProcess;
+import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

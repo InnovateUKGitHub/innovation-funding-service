@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.project.gol.workflow.configuration;
+package org.innovateuk.ifs.project.grantofferletter.configuration;
 
-import org.innovateuk.ifs.project.gol.resource.GOLOutcomes;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
@@ -12,8 +12,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
-import static org.innovateuk.ifs.project.gol.resource.GOLOutcomes.*;
-import static org.innovateuk.ifs.project.gol.resource.GOLState.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GOLState.*;
 
 /**
  * Describes the workflow for the GOL section for Project Setup.
