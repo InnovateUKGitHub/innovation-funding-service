@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -39,11 +38,14 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
         );
         competitionSummaryResource.setApplicationsInProgress(
                 applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(
-                        competitionId, SUBMITTED_STATES, limit
+                        competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit
                 )
         );
         competitionSummaryResource.setApplicationsSubmitted(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES)
+        );
+        competitionSummaryResource.setIneligibleApplications(
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, INELIGIBLE_STATES)
         );
         competitionSummaryResource.setApplicationsNotSubmitted(
                 competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted()

@@ -9,23 +9,29 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.ON_HOLD;
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.UNFUNDED;
 import static org.innovateuk.ifs.application.resource.ApplicationState.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
@@ -37,6 +43,10 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     private static final Long COMP_ID = Long.valueOf(123L);
+
+    private static final Collection<State> INELIGIBLE_STATES = simpleMapSet(asLinkedSet(
+            ApplicationState.INELIGIBLE,
+            ApplicationState.INELIGIBLE_INFORMED), ApplicationState::getBackingState);
 
     @InjectMocks
     private ApplicationSummaryService applicationSummaryService = new ApplicationSummaryServiceImpl();
@@ -52,7 +62,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     public void findByCompetitionNoSortWillSortById() throws Exception {
 
         Page<Application> page = mock(Page.class);
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("filter"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(eq(COMP_ID), eq(INELIGIBLE_STATES), eq("filter"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
 
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
@@ -68,8 +78,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     public void findByCompetitionNoFilterWillFilterByEmptyString() throws Exception {
 
         Page<Application> page = mock(Page.class);
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq(""), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
-
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(eq(COMP_ID), eq(INELIGIBLE_STATES), eq(""), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
@@ -84,7 +93,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     public void findByCompetitionSortById() throws Exception {
 
         Page<Application> page = mock(Page.class);
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("filter"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(eq(COMP_ID), eq(INELIGIBLE_STATES), eq("filter"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
 
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
@@ -100,7 +109,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     public void findByCompetitionSortByName() throws Exception {
 
         Page<Application> page = mock(Page.class);
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("filter"), argThat(new PageableMatcher(6, 20, srt("name", ASC), srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(eq(COMP_ID), eq(INELIGIBLE_STATES), eq("filter"), argThat(new PageableMatcher(6, 20, srt("name", ASC), srt("id", ASC))))).thenReturn(page);
 
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
@@ -123,7 +132,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
         when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
@@ -149,7 +158,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
         when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
@@ -176,7 +185,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Collections.reverse(applications);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 1, 20, of("filter"));
 
@@ -202,7 +211,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
         when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
@@ -226,7 +235,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
         when(applicationSummaryMapper.mapToResource(app3)).thenReturn(sum3);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
@@ -248,7 +257,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
         when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
@@ -274,7 +283,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
         when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
@@ -301,7 +310,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Collections.reverse(applications);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 1, 20, of("filter"));
 
@@ -327,7 +336,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
         when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
@@ -351,7 +360,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
         when(applicationSummaryMapper.mapToResource(app3)).thenReturn(sum3);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(COMP_ID, INELIGIBLE_STATES, "filter")).thenReturn(applications);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
@@ -372,7 +381,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 eq(COMP_ID),
-                eq(simpleMap(asList(APPROVED, REJECTED, SUBMITTED, INELIGIBLE, INELIGIBLE_INFORMED), ApplicationState::getBackingState)),
+                eq(simpleMapSet(asLinkedSet(APPROVED, REJECTED, SUBMITTED), ApplicationState::getBackingState)),
                 eq(""),
                 eq(UNFUNDED),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
@@ -394,6 +403,69 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @SuppressWarnings("unchecked")
     @Test
+    public void findByCompetitionIneligibleApplications() throws Exception {
+
+        Page<Application> page = mock(Page.class);
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                eq(COMP_ID),
+                eq(simpleMapSet(asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED), ApplicationState::getBackingState)),
+                eq(""),
+                eq(null),
+                argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
+                .thenReturn(page);
+
+        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService
+                .getIneligibleApplicationSummariesByCompetitionId(
+                        COMP_ID,
+                        "id",
+                        0,
+                        20,
+                        of(""),
+                        empty());
+
+        assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccessObject().getNumber());
+        assertEquals(resource, result.getSuccessObject());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void findByCompetitionIneligibleApplications_informFiltered() throws Exception {
+
+        Page<Application> page = mock(Page.class);
+
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                eq(COMP_ID),
+                eq(singleton(ApplicationState.INELIGIBLE_INFORMED.getBackingState())),
+                eq(""),
+                eq(null),
+                argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
+                .thenReturn(page);
+
+        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService
+                .getIneligibleApplicationSummariesByCompetitionId(
+                        COMP_ID,
+                        "id",
+                        0,
+                        20,
+                        of(""),
+                        of(true));
+
+        assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccessObject().getNumber());
+        assertEquals(resource, result.getSuccessObject());
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Test
     public void findByCompetitionFeedbackRequiredApplications() throws Exception {
 
         Page<Application> page = mock(Page.class);
@@ -401,7 +473,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(asList(APPROVED.getBackingState(), REJECTED.getBackingState())), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(asLinkedSet(APPROVED.getBackingState(), REJECTED.getBackingState())), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
 
