@@ -44,6 +44,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
+import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_ID;
 
 @Controller
 @RequestMapping("/registration")
@@ -76,7 +77,6 @@ public class RegistrationController {
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
-    public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
     public final static String EMAIL_FIELD_NAME = "email";
 
     @GetMapping("/success")
@@ -228,7 +228,7 @@ public class RegistrationController {
             if (createUserResult.isSuccess()) {
                 removeCompetitionIdCookie(response);
                 acceptInvite(response, request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
-                cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
+                cookieUtil.removeCookie(response, ORGANISATION_ID);
                 destination = "redirect:/registration/success";
             } else {
                 if (!processOrganisation(request, model)) {
@@ -331,7 +331,7 @@ public class RegistrationController {
     }
 
     private Long getOrganisationId(HttpServletRequest request) {
-        String organisationParameter = cookieUtil.getCookieValue(request, ORGANISATION_ID_PARAMETER_NAME);
+        String organisationParameter = cookieUtil.getCookieValue(request, ORGANISATION_ID);
         Long organisationId = null;
 
         try {
@@ -348,7 +348,7 @@ public class RegistrationController {
     private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
         if(organisationId != null) {
-            cookieUtil.saveToCookie(response, ORGANISATION_ID_PARAMETER_NAME, Long.toString(organisationId));
+            cookieUtil.saveToCookie(response, ORGANISATION_ID, Long.toString(organisationId));
         }
     }
 

@@ -39,6 +39,16 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
+    public T getOrElse(ExceptionThrowingFunction<FailureType, T> failureHandler) {
+        return handleSuccessOrFailure(failureHandler, i -> i);
+    }
+
+    @Override
+    public T getOrElse(T orElse) {
+        return getOrElse(failureType -> orElse);
+    }
+
+    @Override
     public <R> BaseEitherBackedResult<R, FailureType> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> successHandler) {
         return map(successHandler);
     }
