@@ -764,7 +764,7 @@ public class ApplicationFormController {
             }
         }
 
-        if (SectionType.PROJECT_COST_FINANCES.equals(section.getType())) {
+        if (SectionType.PROJECT_COST_FINANCES.equals(section.getType()) && !userIsResearch(userId)) {
             if (!form.isStateAidAgreed()) {
                 bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
                 valid = Boolean.FALSE;
@@ -781,6 +781,10 @@ public class ApplicationFormController {
         }
 
         return valid;
+    }
+
+    private boolean userIsResearch(Long userId) {
+        return organisationService.getOrganisationForUser(userId).getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
     }
 
     private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {
