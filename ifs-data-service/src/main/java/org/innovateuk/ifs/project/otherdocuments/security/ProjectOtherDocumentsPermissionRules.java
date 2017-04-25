@@ -68,11 +68,4 @@ public class ProjectOtherDocumentsPermissionRules extends BasePermissionRules {
     public boolean internalUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
         return isInternal(user);
     }
-
-    @PermissionRule(
-            value = "VIEW_TEAM_STATUS",
-            description = "All partners can view team status")
-    public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
 }
