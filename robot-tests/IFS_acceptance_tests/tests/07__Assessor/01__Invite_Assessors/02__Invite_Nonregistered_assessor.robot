@@ -110,6 +110,7 @@ Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
     [Tags]
     [Setup]    Guest user log-in    &{Comp_admin1_credentials}
+    #Note opening a new browser here as the end of the previous test is on survery monkey page.
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    jQuery=a:contains(81 to)
