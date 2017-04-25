@@ -105,11 +105,12 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the text in the page    There are currently no assessments for you to review.
     And the user reads his email and clicks the link    ${test_mailbox_one}+thomas.fister@gmail.com    Innovate UK survey    Please complete the short diversity survey
+    [Teardown]      the user navigates to the page    ${LOGIN_URL}
 
 Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
     [Tags]
-    [Setup]    Guest user log-in    &{Comp_admin1_credentials}
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     #Note opening a new browser here as the end of the previous test is on survery monkey page.
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
