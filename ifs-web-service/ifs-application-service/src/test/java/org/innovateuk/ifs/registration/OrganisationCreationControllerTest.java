@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
@@ -18,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -55,6 +57,10 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
 
     @Mock
     private AddressRestService addressRestService;
+
+    @Spy
+    @InjectMocks
+    private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
@@ -496,6 +502,17 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/confirm-organisation"));
+    }
+
+
+    @Test
+    public void testSelectedInvalidLeadOrganisationType() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/lead-organisation-type")
+                .param("organisationTypeId", OrganisationTypeEnum.RESEARCH.getId().toString())
+                .cookie(organisationForm)
+        )
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/lead-organisation-type"))
+                .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationType"));
     }
 
     /**

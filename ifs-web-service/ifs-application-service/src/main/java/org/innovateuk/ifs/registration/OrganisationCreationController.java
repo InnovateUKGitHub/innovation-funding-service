@@ -16,6 +16,7 @@ import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
+import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -31,9 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
+import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
 
@@ -458,10 +457,11 @@ public class OrganisationCreationController {
         BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
         organisationFormValidate(organisationForm, bindingResult, addressBindingResult);
 
-        boolean isLead = checkOrganisationIsLead(request);
+
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+            boolean isLead = checkOrganisationIsLead(request);
             if (isLead) {
                 return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
             } else {
@@ -494,6 +494,12 @@ public class OrganisationCreationController {
                                                 BindingResult bindingResult,
                                                 Model model,
                                                 HttpServletRequest request, HttpServletResponse response) {
+
+        OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
+        if (!isValidLeadOrganisationType(selectOrgTypeViewModel, organisationForm.getOrganisationTypeId())) {
+            bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "{validation.standard.organisationtype.required}"));
+        }
+
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
             OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
             organisationTypeForm.setOrganisationType(OrganisationTypeEnum.getFromId(organisationForm.getOrganisationTypeId()).getId());
@@ -505,10 +511,16 @@ public class OrganisationCreationController {
             return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);
-            model.addAttribute(MODEL, organisationCreationSelectTypePopulator.populate());
-
+            model.addAttribute(MODEL, selectOrgTypeViewModel);
             return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
         }
+    }
+
+    private boolean isValidLeadOrganisationType(OrganisationCreationSelectTypeViewModel viewModel, Long organisationTypeId) {
+
+        return viewModel.getTypes()
+                .stream()
+                .anyMatch(validOrganisationType -> validOrganisationType.getId() == organisationTypeId);
     }
 
 
