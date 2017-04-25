@@ -71,22 +71,21 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService {
 
-    static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
-
     public static final String GOL_CONTENT_TYPE = "application/pdf";
 
     public static final String DEFAULT_GOL_NAME = "grant_offer_letter.pdf";
 
     public static final Long DEFAULT_GOL_SIZE = 1L;
 
-    private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
-
     public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
+
+    private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
 
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
 
     private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
+    private static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -113,7 +112,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private  EmailService projectEmailService;
+    private EmailService projectEmailService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -429,7 +428,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
 
-        return getProject(projectId).andOnSuccess( project -> {
+        return getProject(projectId).andOnSuccess(project -> {
             if (project.getGrantOfferLetter() == null) {
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
             }
@@ -467,7 +466,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         return getProject(projectId)
                 .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isSendAllowed(project)) {
+                    if (!golWorkflowHandler.isSendAllowed(project)) {
                         return serviceSuccess(Boolean.FALSE);
                     }
                     return serviceSuccess(Boolean.TRUE);
@@ -478,7 +477,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
         return getProject(projectId)
                 .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isAlreadySent(project)) {
+                    if (!golWorkflowHandler.isAlreadySent(project)) {
                         return serviceSuccess(Boolean.FALSE);
                     }
                     return serviceSuccess(Boolean.TRUE);
@@ -488,9 +487,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
 
-        return getProject(projectId).andOnSuccess( project -> {
-            if(golWorkflowHandler.isReadyToApprove(project)) {
-                if(ApprovalType.APPROVED == approvalType) {
+        return getProject(projectId).andOnSuccess(project -> {
+            if (golWorkflowHandler.isReadyToApprove(project)) {
+                if (ApprovalType.APPROVED == approvalType) {
                     return approveGOL(project)
                             .andOnSuccess(() -> {
 
@@ -531,13 +530,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
     }
 
-
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
         List<ProjectUser> projectUsers = project.getProjectUsers();
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
     }
-
 
     private List<NotificationTarget> getLiveProjectNotificationTarget(Project project) {
         List<NotificationTarget> notificationTargets = new ArrayList<>();

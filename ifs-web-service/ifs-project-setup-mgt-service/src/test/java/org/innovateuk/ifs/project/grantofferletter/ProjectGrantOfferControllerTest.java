@@ -10,7 +10,7 @@ import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.grantofferletter.controller.ProjectSetupMgtGrantOfferController;
+import org.innovateuk.ifs.project.grantofferletter.controller.ProjectGrantOfferController;
 import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterSendForm;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterSendViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectSetupMgtGrantOfferControllerTest extends BaseControllerMockMVCTest<ProjectSetupMgtGrantOfferController> {
+public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<ProjectGrantOfferController> {
     @Test
     public void testView() throws Exception {
         Long competitionId = 1L;
@@ -653,7 +653,7 @@ public class ProjectSetupMgtGrantOfferControllerTest extends BaseControllerMockM
     }
 
     @Override
-    protected ProjectSetupMgtGrantOfferController supplyControllerUnderTest() {
-        return new ProjectSetupMgtGrantOfferController();
+    protected ProjectGrantOfferController supplyControllerUnderTest() {
+        return new ProjectGrantOfferController();
     }
 }

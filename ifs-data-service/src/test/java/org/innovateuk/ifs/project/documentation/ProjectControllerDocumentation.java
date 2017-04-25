@@ -399,7 +399,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         ),
                         responseFields(projectTeamStatusResourceFields)));
     }
-    
+
     private ProjectTeamStatusResource buildTeamStatus(){
         ProjectLeadStatusResource projectLeadStatusResource = newProjectLeadStatusResource().build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);

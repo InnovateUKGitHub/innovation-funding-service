@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.security;
 
-
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -55,7 +54,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -73,13 +72,12 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
     }
-
 
     @Test
     public void testGetAdditionalContractFileEntryDetails() {
@@ -92,7 +90,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.getAdditionalContractFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project,getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -124,7 +122,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -142,7 +140,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -160,7 +158,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.getAdditionalContractFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -235,7 +233,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testSendGrantOfferLetter(){
+    public void testSendGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -246,7 +244,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testIsSendGrantOfferLetterAllowed(){
+    public void testIsSendGrantOfferLetterAllowed() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -257,7 +255,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testIsSendGrantOfferLetterAlreadySent(){
+    public void testIsSendGrantOfferLetterAlreadySent() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -269,7 +267,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testApproveSignedGrantOfferLetter(){
+    public void testApproveSignedGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -280,7 +278,7 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void testSignedGrantOfferLetterApproved(){
+    public void testSignedGrantOfferLetterApproved() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -376,10 +374,14 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) { return null; }
+        public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
+            return null;
+        }
 
         @Override
-        public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) { return null; }
+        public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
+            return null;
+        }
 
         @Override
         public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
@@ -411,9 +413,5 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
             return null;
         }
 
- /*       @Override
-        public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
-            return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
-        }*/
     }
 }

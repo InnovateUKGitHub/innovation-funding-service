@@ -9,7 +9,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
+
 import java.util.Optional;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -122,7 +124,7 @@ public class ProjectGrantOfferServiceImplTest {
     }
 
     @Test
-    public void testAddAdditionalContractFile()  throws Exception {
+    public void testAddAdditionalContractFile() throws Exception {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 

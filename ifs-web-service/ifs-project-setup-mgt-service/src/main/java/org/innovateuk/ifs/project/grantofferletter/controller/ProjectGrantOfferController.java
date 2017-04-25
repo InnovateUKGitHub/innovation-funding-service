@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/project/{projectId}/grant-offer-letter")
-public class ProjectSetupMgtGrantOfferController {
+public class ProjectGrantOfferController {
     @Autowired
     private ProjectService projectService;
 

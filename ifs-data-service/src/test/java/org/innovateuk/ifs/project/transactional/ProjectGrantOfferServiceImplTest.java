@@ -87,7 +87,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-
 public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
 
     private Long projectId = 123L;
@@ -117,7 +116,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private Pair<File, FileEntry> fileEntryPair;
 
     @Captor
-    ArgumentCaptor<Map<String, Object> > templateArgsCaptor;
+    ArgumentCaptor<Map<String, Object>> templateArgsCaptor;
 
     @Captor
     ArgumentCaptor<String> templateCaptor;
@@ -146,7 +145,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         user = newUser().
                 withId(userId).
                 build();
-        //projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisations.get(0).getId()).
@@ -564,7 +562,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         result &= expectedTemplateArgs.get("Address3").equals(templateArgs.get("Address3"));
         result &= expectedTemplateArgs.get("TownCity").equals(templateArgs.get("TownCity"));
         result &= expectedTemplateArgs.get("PostCode").equals(templateArgs.get("PostCode"));
-        result &= ZonedDateTime.parse((String) expectedTemplateArgs.get("Date")).isBefore(ZonedDateTime.parse((String)templateArgs.get("Date"))) || ZonedDateTime.parse((String)expectedTemplateArgs.get("Date")).isEqual(ZonedDateTime.parse((String)templateArgs.get("Date")));
+        result &= ZonedDateTime.parse((String) expectedTemplateArgs.get("Date")).isBefore(ZonedDateTime.parse((String) templateArgs.get("Date"))) || ZonedDateTime.parse((String) expectedTemplateArgs.get("Date")).isEqual(ZonedDateTime.parse((String) templateArgs.get("Date")));
         return result;
     }
 
@@ -604,11 +602,10 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         String startOfGeneratedFileString = null;
         try {
             int n = supplierCaptor.getAllValues().get(0).get().available();
-            byte [] startOfGeneratedFile = new byte[n];
-            supplierCaptor.getAllValues().get(0).get().read(startOfGeneratedFile, 0, n <9 ? n : 9);
+            byte[] startOfGeneratedFile = new byte[n];
+            supplierCaptor.getAllValues().get(0).get().read(startOfGeneratedFile, 0, n < 9 ? n : 9);
             startOfGeneratedFileString = new String(startOfGeneratedFile, StandardCharsets.UTF_8);
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
 
         }
         String pdfHeader = "%PDF-1.4\n";
@@ -682,9 +679,8 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     }
 
-
     @Test
-    public void testSendGrantOfferLetterNoGol(){
+    public void testSendGrantOfferLetterNoGol() {
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(nonAcademicUnfunded).build(1)).withGrantOfferLetter(null).build();
@@ -698,7 +694,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testSendGrantOfferLetterSendFails(){
+    public void testSendGrantOfferLetterSendFails() {
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
         FileEntry golFile = newFileEntry().withMediaType("application/pdf").withFilesizeBytes(10).build();
@@ -720,7 +716,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testSendGrantOfferLetterNoProject(){
+    public void testSendGrantOfferLetterNoProject() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
 
@@ -728,8 +724,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         assertTrue(result.isFailure());
     }
+
     @Test
-    public void testSendGrantOfferLetterSuccess(){
+    public void testSendGrantOfferLetterSuccess() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
@@ -756,9 +753,8 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         assertTrue(result.isSuccess());
     }
 
-    @Ignore
     @Test
-    public void testSendGrantOfferLetterFailure(){
+    public void testSendGrantOfferLetterFailure() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(user).withOrganisation(nonAcademicUnfunded).withInvite(newInvite().build()).build(1);
@@ -784,7 +780,6 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         assertTrue(result.isFailure());
     }
-
 
     @Test
     public void testIsSendGrantOfferLetterAllowed() {
@@ -844,14 +839,12 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     public void testIsGrantOfferLetterAlreadySentNoProject() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
-
         ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
-
         assertTrue(result.isFailure());
     }
 
     @Test
-    public void testApproveSignedGrantOfferLetterSuccess(){
+    public void testApproveSignedGrantOfferLetterSuccess() {
 
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
@@ -879,7 +872,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testDuplicateEmailsAreNotSent(){
+    public void testDuplicateEmailsAreNotSent() {
 
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
@@ -909,7 +902,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testApproveSignedGrantOfferLetterFailure(){
+    public void testApproveSignedGrantOfferLetterFailure() {
         User u = newUser().withFirstName("A").withLastName("B").withEmailAddress("a@b.com").build();
         setLoggedInUser(newUserResource().withId(u.getId()).build());
 
@@ -933,7 +926,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testApproveSignedGrantOfferLetterFailureNotReadyToApprove(){
+    public void testApproveSignedGrantOfferLetterFailureNotReadyToApprove() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         project.setGrantOfferLetter(golFile);
@@ -951,7 +944,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testGetSignedGrantOfferLetterApprovalStatusSuccess(){
+    public void testGetSignedGrantOfferLetterApprovalStatusSuccess() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.TRUE);
@@ -965,7 +958,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
-    public void testGetSignedGrantOfferLetterApprovalStatusFailure(){
+    public void testGetSignedGrantOfferLetterApprovalStatusFailure() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(golWorkflowHandlerMock.isApproved(project)).thenReturn(Boolean.FALSE);
