@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks overview'" />
 </head>
-<body th:with="context='project-management'" class="finance-checks-overview">
+<body th:with="context='project'" class="finance-checks-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -18,7 +18,7 @@
     </div>
     <p>This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
 
-    <h3 class="heading-medium">Finance summaries</h3>
+    <h3 class="heading-medium">Finances summary</h3>
     <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
 
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />

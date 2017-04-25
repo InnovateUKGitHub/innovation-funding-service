@@ -21,11 +21,10 @@
             <!--/* TODO INFUND-8899 ifs:utext is stripping relative links in the text. Switching to using th:utext. */-->
             <div th:utext="${model.text}" />
 
-            <p class="form-hint">You can access this assessor agreement at any time from your profile. <a href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement</a>.</p>
+            <p class="form-hint">You can access this assessor agreement at any time from your profile. <a target="_blank" href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement (opens in a new window)</a>.</p>
 
             <form class="extra-margin" th:action="@{/profile/agreement}" method="post" th:unless="${model.currentAgreement}">
                 <p>By creating an account with us you agree to the terms and conditions contained in this assessor agreement.</p>
-
                 <button class="button button-large extra-margin-right" type="submit">Save and return to assessor dashboard</button>
                 <a th:href="@{/assessor/dashboard}">Cancel</a>
             </form>

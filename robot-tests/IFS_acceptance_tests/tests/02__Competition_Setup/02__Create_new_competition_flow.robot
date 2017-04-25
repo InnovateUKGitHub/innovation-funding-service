@@ -51,6 +51,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-6773 As a Competitions team member I want to see Finances form defaulted to Full application finances
 ...
 ...               INFUND-6922 Update 'Competition setup' menu page to include a link to new 'Public content' page
+...
+...               INFUND-9225 Update 'Eligibility' > 'Lead applicant' to enable single or multi-selection
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -232,9 +234,7 @@ Funding information: should have a green check
     And the user should not see the element    jQuery=.button:contains("Save")
 
 Eligibility: Contain the correct options
-    [Documentation]    INFUND-2989
-    ...
-    ...    INFUND-2990
+    [Documentation]    INFUND-2989 INFUND-2990 INFUND-9225
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
@@ -243,7 +243,6 @@ Eligibility: Contain the correct options
     When the user should see the element    jQuery=label:contains(Collaborative)
     And the user should see the element    jQuery=label:contains(Business)
     And the user should see the element    jQuery=label:contains(Research)
-    And the user should see the element    jQuery=label:contains(Either)
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
     And the user should see the element    jQuery=label:contains(Feasibility studies)
@@ -252,17 +251,13 @@ Eligibility: Contain the correct options
     And the resubmission should not have a default selection
 
 Eligibility: Mark as Done then Edit again
-    [Documentation]    INFUND-3051
-    ...
-    ...    INFUND-3872
-    ...
-    ...    INFUND-3002
+    [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225
     [Tags]    HappyPath
     Given the user selects the checkbox    research-categories-33
     And the user selects the checkbox    research-categories-34
     And the user selects the checkbox    research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
-    And the user selects the radio button    leadApplicantType    business
+    And the user selects the checkbox  lead-applicant-type-1  # business
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
     And the user moves focus and waits for autosave
     And the user selects the radio button    resubmission    no

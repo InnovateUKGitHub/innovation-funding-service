@@ -1,0 +1,446 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.1"
+  title: Identity Provider API
+  description: An API for maintaining identity records for an identity provider for the purpose of offering single sign-on to supported service providers.
+
+schemes:
+  - https
+
+basePath: /v1
+
+produces:
+  - application/json;charset=UTF-8
+
+consumes:
+  - application/json;charset=UTF-8
+
+security:
+  - ApiKey: []
+
+paths:
+  /identities:
+    post:
+      summary: Create a new identity
+      description: 
+        This endpoint is responsible for creating an identity record in the appropriate repository as used by the Identify Provider.  This endpoint will validate that the email address provided is unique (as this will be used in the identities login credentials) and additionally that the password adheres to the password policy.  Finally, this call will return a unique id that can be used to later reference this identity record.
+      
+      parameters:
+        - in: body
+          name: body
+          description: Details of the new identity to create
+          required: true
+          schema:
+            $ref: "#/definitions/NewIdentity"
+      
+      responses:
+        201:
+          description: Identity successfully created
+          schema:
+            $ref: "#/definitions/Identity"
+
+        400:
+          description: Validation failures
+          schema:
+            $ref: "#/definitions/Errors"
+
+        401:
+          description: Unauthorised
+        
+        409:
+          description: Identity already exists with email
+          schema:
+            $ref: "#/definitions/Errors"
+        
+        422:
+          description: Unable to process json in body
+          schema:
+            $ref: "#/definitions/Exception"
+        
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+      
+      security:
+        - ApiKey: []
+        
+  /identities/{uuid}:
+    get:
+      summary: Retrieve details for an identity
+      
+      parameters:
+        - name: uuid
+          in: path
+          description: The identity's UUID
+          type: string
+          required: true
+          
+      responses:
+        200:
+          description: The identity
+          schema:
+            $ref: "#/definitions/Identity"
+        
+        401:
+          description: Unauthorised
+        
+        404:
+          description: Unable to find identity by UUID
+            
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+      
+      security:
+        - ApiKey: []
+
+    delete:
+      summary: Delete an identity
+      
+      parameters:
+        - name: uuid
+          in: path
+          description: The identity's UUID
+          type: string
+          required: true
+          
+      responses:
+        200:
+          description: Identity deleted successfully
+        
+        401:
+          description: Unauthorised
+        
+        404:
+          description: Unable to find identity by UUID
+            
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+      
+      security:
+        - ApiKey: []
+
+  /identities/{uuid}/email:
+    put:
+      summary: Update an identity's email
+      
+      parameters:
+        - name: uuid
+          in: path
+          description: The identity's UUID
+          type: string
+          required: true
+        
+        - in: body
+          name: body
+          description: The email to update the identity with
+          required: true
+          schema:
+            $ref: "#/definitions/ChangeEmail"
+      
+      responses:
+        200:
+          description: Updated the email successfully
+        
+        400:
+          description: Validation failures
+          schema:
+            $ref: "#/definitions/Errors"
+        
+        401:
+          description: Unauthorised
+            
+        404:
+          description: Unable to find identity by UUID
+        
+        409:
+          description: Identity already exists with email
+          schema:
+            $ref: "#/definitions/Errors"
+        
+        422:
+          description: Unable to process json in body
+          schema:
+            $ref: "#/definitions/Exception"
+        
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+  
+      security:
+        - ApiKey: []
+  
+  /identities/{uuid}/password:
+    put:
+      summary: Update an identity's password
+    
+      parameters:
+        - name: uuid
+          in: path
+          description: The identity's UUID
+          type: string
+          required: true
+        
+        - in: body
+          name: body
+          description: The password to update the identity with
+          required: true
+          schema:
+            $ref: "#/definitions/ChangePassword"
+
+      responses:
+        200:
+          description: Updated password successfully
+        
+        400:
+          description: Validation failures
+          schema:
+            $ref: "#/definitions/Errors"
+        
+        401:
+          description: Unauthorised
+            
+        404:
+          description: Unable to find identity by UUID
+        
+        422:
+          description: Unable to process json in body
+          schema:
+            $ref: "#/definitions/Exception"
+        
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+
+      security:
+        - ApiKey: []
+
+  /identities/{uuid}/activateUser:
+    put:
+      summary: Activate an identity
+
+      parameters:
+        - name: uuid
+          in: path
+          description: The identity's UUID
+          type: string
+          required: true
+
+      responses:
+        200:
+          description: Identity already active or activated successfully
+
+        400:
+          description: Validation failures
+          schema:
+            $ref: "#/definitions/Errors"
+
+        401:
+          description: Unauthorised
+
+        404:
+          description: Unable to find identity by UUID
+
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+
+      security:
+        - ApiKey: []
+
+  /identities/{uuid}/deactivateUser:
+    put:
+      summary: Deactivate an identity
+
+      parameters:
+        - name: uuid
+          in: path
+          description: The identity's UUID
+          type: string
+          required: true
+
+      responses:
+        200:
+          description: Identity already inactive or deactivated successfully
+
+        400:
+          description: Validation failures
+          schema:
+            $ref: "#/definitions/Errors"
+
+        401:
+          description: Unauthorised
+
+        404:
+          description: Unable to find identity by UUID
+
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+
+      security:
+        - ApiKey: []
+
+
+  /identities/{uuid}/lock:
+    delete:
+      summary: Unlock an identity's account
+
+      parameters:
+        - name: uuid
+          in: path
+          description: The identity's UUID
+          type: string
+          required: true
+
+      responses:
+        200:
+          description: Identity already unlocked or unlocked successfully
+
+        400:
+          description: Validation failures
+          schema:
+            $ref: "#/definitions/Errors"
+
+        401:
+          description: Unauthorised
+
+        404:
+          description: Unable to find identity by UUID
+
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+
+      security:
+        - ApiKey: []
+
+    get:
+      summary: Check whether an account is locked
+
+      parameters:
+        - name: uuid
+          in: path
+          description: The identity's UUID
+          type: string
+          required: true
+
+      responses:
+        200:
+          description: Whether the account is locked
+          schema:
+            type: boolean
+
+        400:
+          description: Validation failures
+          schema:
+            $ref: "#/definitions/Errors"
+
+        401:
+          description: Unauthorised
+
+        404:
+          description: Unable to find identity by UUID
+
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/Exception"
+
+      security:
+        - ApiKey: []
+
+
+definitions:
+  
+  ##
+  # Parameter Definitions
+  ##
+  
+  NewIdentity:
+    type: object
+    properties:
+      email:
+        type: string
+        pattern: '^.+@.+$'
+      password:
+        type: string
+        format: password
+    required:
+      - email
+      - password
+
+  ChangeEmail:
+    type: object
+    properties:
+      email:
+        type: string
+        pattern: '^.+@.+$'
+    required:
+      - email
+        
+  ChangePassword:
+    type: object
+    properties:
+      password:
+        type: string
+        format: password
+    required:
+      - password
+      
+  ##
+  # Response Definitions
+  ##
+  
+  Identity:
+    type: object
+    properties:
+      uuid:
+        type: string
+      email:
+        type: string
+      created:
+        type: string
+        format: date-time
+      modified:
+        type: string
+        format: date-time
+
+  Errors:
+    type: array
+    items:
+      $ref: '#/definitions/Error'
+
+  Error:
+    type: object
+    properties:
+      key:
+        type: string
+      arguments:
+        type: array
+        items:
+          type: string
+
+  Exception:
+    type: object
+    properties:
+      message:
+        type: string
+      stacktrace:
+        type: string
+
+securityDefinitions:
+  ApiKey:
+    type: apiKey
+    name: api-key
+    in: header

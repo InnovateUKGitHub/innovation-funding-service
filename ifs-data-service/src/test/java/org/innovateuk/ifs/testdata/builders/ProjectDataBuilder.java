@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.CostResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.testdata.builders.data.ProjectData;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -90,7 +90,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
             MonitoringOfficerResource mo = new MonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
-            projectService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccessObjectOrThrowException();
+            projectMonitoringOfficerService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccessObjectOrThrowException();
         }));
     }
 

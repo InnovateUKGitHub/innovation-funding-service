@@ -37,7 +37,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         }
 
         @Override
-        public ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId) {
+        public ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId) {
             return null;
         }
 

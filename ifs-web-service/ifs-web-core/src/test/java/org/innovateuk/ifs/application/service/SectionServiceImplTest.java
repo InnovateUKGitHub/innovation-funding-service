@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,16 +16,16 @@ import org.mockito.Mock;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.EMPTY;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceImpl> {
@@ -35,7 +35,7 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     @Mock
     private QuestionService questionService;
     @Mock
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     private CompetitionResource competition;
     private SectionResource parentSection;
@@ -73,10 +73,10 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
 
         childSection1.setQuestions(Arrays.asList(question1.getId(), question2.getId()));
         when(questionService.findByCompetition(childSection1.getCompetition())).thenReturn(asList(question1, question2));
-        when(formInputService.getOne(formInputResource1.getId())).thenReturn(formInputResource1);
-        when(formInputService.getOne(formInputResource2.getId())).thenReturn(formInputResource2);
+        when(formInputRestService.getById(formInputResource1.getId())).thenReturn(restSuccess(formInputResource1));
+        when(formInputRestService.getById(formInputResource2.getId())).thenReturn(restSuccess(formInputResource2));
 
-        when(formInputService.findApplicationInputsByCompetition(anyLong())).thenReturn(asList(formInputResource1, formInputResource2));
+        when(formInputRestService.getByCompetitionIdAndScope(isA(Long.class), eq(APPLICATION))).thenReturn(restSuccess(asList(formInputResource1, formInputResource2)));
     }
 
     @Test

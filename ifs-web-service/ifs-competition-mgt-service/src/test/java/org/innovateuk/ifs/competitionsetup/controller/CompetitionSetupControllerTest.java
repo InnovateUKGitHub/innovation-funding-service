@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -30,12 +30,14 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -57,11 +59,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<CompetitionSetupController> {
 
-    private static final Long COMPETITION_ID = Long.valueOf(12);
+    private static final Long COMPETITION_ID = 12L;
     private static final String URL_PREFIX = "/competition/setup";
 
     @Mock
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     @Mock
     private CompetitionSetupService competitionSetupService;
@@ -86,14 +88,14 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withName("A Innovation Sector")
                 .withId(1L)
                 .build(1);
-        when(categoryService.getInnovationSectors()).thenReturn(innovationSectorResources);
+        when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(innovationSectorResources));
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
                 .withName("A Innovation Area")
                 .withId(2L)
                 .withSector(1L)
                 .build(1);
-        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
+        when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaResources));
 
         List<CompetitionTypeResource> competitionTypeResources = newCompetitionTypeResource()
                 .withId(1L)
@@ -154,7 +156,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withName("Innovation Area 1")
                 .build();
 
-        when(categoryService.getInnovationAreasBySector(innovationSectorId)).thenReturn(asList(category));
+        when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(category)));
 
         mockMvc.perform(get(URL_PREFIX + "/getInnovationArea/" + innovationSectorId))
                 .andExpect(status().isOk())
@@ -548,7 +550,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
                 .param("singleOrCollaborative", "collaborative")
-                .param("leadApplicantType", "business")
+                .param("leadApplicantTypes", "1", "2", "3")
                 .param("researchParticipationAmountId", "1")
                 .param("resubmission", "yes"))
                 .andExpect(status().is3xxRedirection())

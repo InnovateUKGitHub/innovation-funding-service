@@ -4,9 +4,8 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,91 +22,6 @@ public class ProjectFinanceController {
 
     @Autowired
     private SpendProfileService spendProfileService;
-
-    @Autowired
-    private ProjectGrantOfferService projectGrantOfferService;
-
-    @PostMapping("/{projectId}/spend-profile/generate")
-    public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId) {
-        return spendProfileService.generateSpendProfile(projectId).toPostCreateResponse();
-    }
-
-    /**
-     * This method was written to recreate Spend Profile for one of the partner organisations on Production.
-     *
-     * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
-     * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
-     * Eligibility is approved or if the Spend Profile is already generated.
-     */
-    @PostMapping("/{projectId}/partner-organisation/{organisationId}/user/{userId}/spend-profile/generate")
-    public RestResult<Void> generateSpendProfileForPartnerOrganisation(@PathVariable("projectId") final Long projectId,
-                                                                       @PathVariable("organisationId") final Long organisationId,
-                                                                       @PathVariable("userId") final Long userId) {
-        return spendProfileService.generateSpendProfileForPartnerOrganisation(projectId, organisationId, userId).toPostCreateResponse();
-    }
-
-    @PostMapping("/{projectId}/spend-profile/approval/{approvalType}")
-    public RestResult<Void> approveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
-                                                        @PathVariable("approvalType") final ApprovalType approvalType) {
-        return spendProfileService.approveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
-    }
-
-    @GetMapping("/{projectId}/spend-profile/approval")
-    public RestResult<ApprovalType> getSpendProfileStatusByProjectId(@PathVariable("projectId") final Long projectId) {
-        return spendProfileService.getSpendProfileStatusByProjectId(projectId).toGetResponse();
-    }
-
-    @GetMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile-table")
-    public RestResult<SpendProfileTableResource> getSpendProfileTable(@PathVariable("projectId") final Long projectId,
-                                                                      @PathVariable("organisationId") final Long organisationId) {
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-
-        return spendProfileService.getSpendProfileTable(projectOrganisationCompositeId).toGetResponse();
-    }
-
-    @GetMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile-csv")
-    public RestResult<SpendProfileCSVResource> getSpendProfileCSV(@PathVariable("projectId") final Long projectId,
-                                                                  @PathVariable("organisationId") final Long organisationId) {
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return spendProfileService.getSpendProfileCSV(projectOrganisationCompositeId).toGetResponse();
-    }
-
-    @GetMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile")
-    public RestResult<SpendProfileResource> getSpendProfile(@PathVariable("projectId") final Long projectId,
-                                                            @PathVariable("organisationId") final Long organisationId) {
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return spendProfileService.getSpendProfile(projectOrganisationCompositeId).toGetResponse();
-    }
-
-    @PostMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile")
-    public RestResult<Void> saveSpendProfile(@PathVariable("projectId") final Long projectId,
-                                             @PathVariable("organisationId") final Long organisationId,
-                                             @RequestBody SpendProfileTableResource table) {
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return spendProfileService.saveSpendProfile(projectOrganisationCompositeId, table).toPostResponse();
-    }
-
-    @PostMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile/complete")
-    public RestResult<Void> markSpendProfileComplete(@PathVariable("projectId") final Long projectId,
-                                                    @PathVariable("organisationId") final Long organisationId) {
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return spendProfileService.markSpendProfileComplete(projectOrganisationCompositeId).toPostResponse();
-    }
-
-    @PostMapping("/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete")
-    public RestResult<Void> markSpendProfileIncomplete(@PathVariable("projectId") final Long projectId,
-                                                    @PathVariable("organisationId") final Long organisationId) {
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return spendProfileService.markSpendProfileIncomplete(projectOrganisationCompositeId).toPostResponse();
-    }
-
-    @PostMapping("/{projectId}/complete-spend-profiles-review")
-    public RestResult<Void> completeSpendProfilesReview(@PathVariable("projectId") final Long projectId) {
-        return spendProfileService.completeSpendProfilesReview(projectId).toPostResponse();
-    }
 
     @GetMapping("/{projectId}/project-finances")
     public RestResult<List<ProjectFinanceResource>> getProjectFinances(@PathVariable("projectId") final Long projectId) {

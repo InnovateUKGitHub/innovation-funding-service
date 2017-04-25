@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.validator.transactional.ValidatorService;
 import org.junit.Test;
 import org.mockito.InjectMocks;

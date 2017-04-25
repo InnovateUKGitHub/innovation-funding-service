@@ -1,0 +1,74 @@
+== Retrieve Profile Agreement
+=== Success case
+=== Request
+include::{snippets}/profile/get-profile-agreement/http-request.adoc[]
+include::{snippets}/profile/get-profile-agreement/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/profile/get-profile-agreement/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/profile/get-profile-agreement/curl-request.adoc[]
+
+== Update Profile Agreement
+=== Success case
+=== Request
+include::{snippets}/profile/update-profile-agreement/http-request.adoc[]
+include::{snippets}/profile/update-profile-agreement/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/profile/update-profile-agreement/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/profile/update-profile-agreement/curl-request.adoc[]
+
+== Retrieve Profile Skills
+=== Success case
+=== Request
+include::{snippets}/profile/get-profile-skills/http-request.adoc[]
+include::{snippets}/profile/get-profile-skills/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/profile/get-profile-skills/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/profile/get-profile-skills/curl-request.adoc[]
+
+== Update Profile Skills
+=== Success case
+=== Request
+include::{snippets}/profile/update-profile-skills/http-request.adoc[]
+include::{snippets}/profile/update-profile-skills/path-parameters.adoc[]
+include::{snippets}/profile/update-profile-skills/request-fields.adoc[]
+
+=== Response
+include::{snippets}/profile/update-profile-skills/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/profile/update-profile-skills/curl-request.adoc[]
+
+== Retrieve Profile details
+=== Success case
+=== Request
+include::{snippets}/profile/get-profile-details/http-request.adoc[]
+include::{snippets}/profile/get-profile-details/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/profile/get-profile-details/http-response.adoc[]
+include::{snippets}/profile/get-profile-details/response-fields.adoc[]
+
+=== Curl Example
+include::{snippets}/profile/get-profile-details/curl-request.adoc[]
+
+== Update Profile details
+=== Success case
+=== Request
+include::{snippets}/profile/update-profile-details/http-request.adoc[]
+include::{snippets}/profile/update-profile-details/path-parameters.adoc[]
+include::{snippets}/profile/update-profile-details/request-fields.adoc[]
+
+=== Response
+include::{snippets}/profile/update-profile-details/http-response.adoc[]
+
+=== Curl Example
+include::{snippets}/profile/update-profile-details/curl-request.adoc[]
