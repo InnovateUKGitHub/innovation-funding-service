@@ -1507,9 +1507,9 @@ Project finance user can view Lead-partner's Changes to finances during the Fina
     When the user clicks the button/link        css=a.eligibility-0
     Then the user clicks the button/link        link=View changes to finances
     And the user should see the element         jQuery=h1:contains("Changes to finances")
-    And the user should see the element         css=h2:contains("Project finances")
-    And the user should see the element         css=h2:contains("Section changes")
-    And the user should see the element         css=h2:contains("Changes from submitted finances")
+    And the user should see the element         jQuery=h2:contains("Project finances")
+    And the user should see the element         jQuery=h2:contains("Section changes")
+    And the user should see the element         jQuery=h2:contains("Changes from submitted finances")
 
 Project finance user can view Lead-partner's Project finances in Changes-to-finances page
     [Documentation]    INFUND-4837
