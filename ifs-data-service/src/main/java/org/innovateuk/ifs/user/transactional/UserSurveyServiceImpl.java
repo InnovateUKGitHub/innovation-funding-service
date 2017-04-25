@@ -14,15 +14,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.transactional.UserSurveyServiceImpl.Notifications.DIVERSITY_SURVEY;
+import static org.innovateuk.ifs.user.transactional.UserSurveyServiceImpl.UserSurveyNotificationType.DIVERSITY_SURVEY_APPLICANT;
+import static org.innovateuk.ifs.user.transactional.UserSurveyServiceImpl.UserSurveyNotificationType.DIVERSITY_SURVEY_ASSESSOR;
 
 @Service
 public class UserSurveyServiceImpl implements UserSurveyService {
 
     static final String DIVERSITY_SURVEY_URL_KEY = "diversitySurveyUrl";
 
-    enum Notifications {
-        DIVERSITY_SURVEY;
+    enum UserSurveyNotificationType {
+        DIVERSITY_SURVEY_APPLICANT,
+        DIVERSITY_SURVEY_ASSESSOR
     }
 
     @Value("${ifs.data.survey.diversity.url}")
@@ -35,13 +37,30 @@ public class UserSurveyServiceImpl implements UserSurveyService {
     private SystemNotificationSource systemNotificationSource;
 
     @Override
-    public ServiceResult<Void> sendDiversitySurvey(User user) {
-        return notificationService.sendNotification(surveyNotification(user), EMAIL);
+    public ServiceResult<Void> sendApplicantDiversitySurvey(User user) {
+        return notificationService.sendNotification(surveyNotification(user, DIVERSITY_SURVEY_APPLICANT), EMAIL);
     }
 
-    private Notification surveyNotification(User user) {
+    @Override
+    public ServiceResult<Void> sendAssessorDiversitySurvey(User user) {
+        return notificationService.sendNotification(surveyNotification(user, DIVERSITY_SURVEY_ASSESSOR), EMAIL);
+    }
+
+//    private Notification applicantSurveyNotification(User user) {
+//        final Map<String, Object> notificationArguments = new HashMap<>();
+//        notificationArguments.put(DIVERSITY_SURVEY_URL_KEY, diversitySurveyUrl);
+//        return new Notification(systemNotificationSource, new UserNotificationTarget(user), DIVERSITY_SURVEY_APPLICANT, notificationArguments);
+//    }
+//
+//    private Notification assessorSurveyNotification(User user) {
+//        final Map<String, Object> notificationArguments = new HashMap<>();
+//        notificationArguments.put(DIVERSITY_SURVEY_URL_KEY, diversitySurveyUrl);
+//        return new Notification(systemNotificationSource, new UserNotificationTarget(user), DIVERSITY_SURVEY_ASSESSOR, notificationArguments);
+//    }
+
+    private Notification surveyNotification(User user, UserSurveyNotificationType notificationType) {
         final Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put(DIVERSITY_SURVEY_URL_KEY, diversitySurveyUrl);
-        return new Notification(systemNotificationSource, new UserNotificationTarget(user), DIVERSITY_SURVEY, notificationArguments);
+        return new Notification(systemNotificationSource, new UserNotificationTarget(user), notificationType, notificationArguments);
     }
 }

@@ -176,7 +176,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> sendDiversitySurvey(User user) {
-        return userSurveyService.sendDiversitySurvey(user);
+        return userSurveyService.sendApplicantDiversitySurvey(user);
     }
 
     private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
