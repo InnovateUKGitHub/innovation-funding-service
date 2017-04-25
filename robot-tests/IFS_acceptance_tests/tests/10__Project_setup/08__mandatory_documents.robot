@@ -525,7 +525,7 @@ Project Finance user can click the link and go back to the Competition Dashboard
     [Teardown]    the user goes back to the previous page
 
 # This is a bank details test but has been placed here as the required project is used here
-Project finance can see zero funding for Ludlow in bank details
+Project finance can see zero funding for partner in bank details
     [Documentation]    INFUND-9269
     [Tags]
     When the user navigates to the page   ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
