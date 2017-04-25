@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Object holding organisation details
  */
@@ -7,13 +10,13 @@ public class OrganisationReviewDetails {
 
     private String organisationName;
     private boolean isMarkedComplete;
-    private boolean isUserPartofThisOrganisation;
+    private boolean isUserPartOfThisOrganisation;
     private boolean showEditLinkToUser;
 
-    public OrganisationReviewDetails(String organisationName, boolean isMarkedComplete, boolean isUserPartofThisOrganisation, boolean showEditLinkToUser) {
+    public OrganisationReviewDetails(String organisationName, boolean isMarkedComplete, boolean isUserPartOfThisOrganisation, boolean showEditLinkToUser) {
         this.organisationName = organisationName;
         this.isMarkedComplete = isMarkedComplete;
-        this.isUserPartofThisOrganisation = isUserPartofThisOrganisation;
+        this.isUserPartOfThisOrganisation = isUserPartOfThisOrganisation;
         this.showEditLinkToUser = showEditLinkToUser;
     }
 
@@ -33,12 +36,12 @@ public class OrganisationReviewDetails {
         isMarkedComplete = markedComplete;
     }
 
-    public boolean isUserPartofThisOrganisation() {
-        return isUserPartofThisOrganisation;
+    public boolean isUserPartOfThisOrganisation() {
+        return isUserPartOfThisOrganisation;
     }
 
-    public void setUserPartofThisOrganisation(boolean userPartofThisOrganisation) {
-        isUserPartofThisOrganisation = userPartofThisOrganisation;
+    public void setUserPartOfThisOrganisation(boolean userPartOfThisOrganisation) {
+        isUserPartOfThisOrganisation = userPartOfThisOrganisation;
     }
 
     public boolean isShowEditLinkToUser() {
@@ -52,23 +55,26 @@ public class OrganisationReviewDetails {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         OrganisationReviewDetails that = (OrganisationReviewDetails) o;
 
-        if (isMarkedComplete != that.isMarkedComplete) return false;
-        if (isUserPartofThisOrganisation != that.isUserPartofThisOrganisation) return false;
-        if (showEditLinkToUser != that.showEditLinkToUser) return false;
-        return organisationName.equals(that.organisationName);
-
+        return new EqualsBuilder()
+                .append(organisationName, that.organisationName)
+                .append(isMarkedComplete, that.isMarkedComplete)
+                .append(isUserPartOfThisOrganisation, that.isUserPartOfThisOrganisation)
+                .append(showEditLinkToUser, that.showEditLinkToUser)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = organisationName.hashCode();
-        result = 31 * result + (isMarkedComplete ? 1 : 0);
-        result = 31 * result + (isUserPartofThisOrganisation ? 1 : 0);
-        result = 31 * result + (showEditLinkToUser ? 1 : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .append(organisationName)
+                .append(isMarkedComplete)
+                .append(isUserPartOfThisOrganisation)
+                .append(showEditLinkToUser)
+                .toHashCode();
     }
 }
