@@ -69,7 +69,7 @@ import static org.springframework.web.util.UriUtils.encodeQueryParam;
 public class OrganisationCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationCreationController.class);
 
-    static final String ORGANISATION_ID = "organisationId";
+    public static final String ORGANISATION_ID = "organisationId";
     static final String ORGANISATION_FORM = "organisationForm";
     private static final String TEMPLATE_PATH = "registration/organisation";
     private static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
