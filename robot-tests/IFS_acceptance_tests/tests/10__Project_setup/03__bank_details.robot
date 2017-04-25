@@ -29,8 +29,7 @@ Resource          PS_Variables.robot
 # Another valid B account pair: 51406795 - 404745 #
 
 # Note that the Bank details scenario where the Partner is not eligible for funding
-# and thus doesn't need to fill in his Bank details, will be tested in the File 01__project_details.robot
-# whith use of project id = 3 TODO
+# and thus doesn't need to fill in his Bank details, is tested in the File 01__project_details.robot
 
 *** Variables ***
 
@@ -38,7 +37,7 @@ Resource          PS_Variables.robot
 Links to other sections in Project setup dependent on project details for partners
     [Documentation]    INFUND-4428
     [Tags]
-    [Setup]   guest user log-in                   ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    [Setup]  log in as a different user           ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user navigates to the page           ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element           jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page  Successful application
@@ -136,14 +135,14 @@ Bank details experian validations
     When the user submits the bank account details    12345673    000003
     Then the user should see the text in the page    Bank account details are incorrect, please check and try again
     When the user submits the bank account details    00000123    000004 
-    Then the user views the error response from the stub
+    Then the user should see the element  jQuery=.error-summary-list:contains("Bank details cannot be validated.")
 
 Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given the user submits the bank account details   00000123    000004 
-    Then the user views the error response from the stub
+    Then the user should see the element              jQuery=.error-summary-list:contains("Bank details cannot be validated.")
     When the user enters text to a text field         name=accountNumber    12345677
     And the user enters text to a text field          name=sortCode    000004
     When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
@@ -168,7 +167,7 @@ Bank details for Academic
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
-    Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
+    Then the user should see the element           jQuery=li.require-action:contains("Bank details")
     When the user clicks the button/link           link=status of my partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page   Project team status
@@ -176,7 +175,7 @@ Bank details for Academic
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
     When the user submits the bank account details along with the organisation address     00000123    000004
-    Then the user views the error response from the stub
+    Then wait until element is visible  jQuery=.error-summary-list:contains("Bank details cannot be validated.")
     When the user enters text to a text field      name=accountNumber  51406795
     And the user enters text to a text field       name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -227,7 +226,7 @@ Bank details for non-lead partner
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
     When the user submits the bank account details along with the organisation address     00000123    000004
-    Then the user views the error response from the stub
+    Then the user should see the element  jQuery=.error-summary-list:contains("Bank details cannot be validated.")
     When the user enters text to a text field      name=accountNumber  51406795
     Then the user enters text to a text field      name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -327,22 +326,15 @@ the user submits the bank account details along with the organisation address
     [Arguments]    ${account_number}    ${sort_code}
     the user enters text to a text field    name=accountNumber    ${account_number}
     the user enters text to a text field    name=sortCode    ${sort_code}
-    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link     jQuery=.button:contains("Submit")
-
-the user views the error response from the stub
-    the user should see the text in the page    Bank details cannot be validated. 
-    the user should see the text in the page    please check your account number 
-    the user should see the text in the page    please check your sort code 
+    the user clicks the button twice        jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user should see the element         jQuery=#registeredAddress h3:contains("Confirm billing address")
+    wait until keyword succeeds without screenshots  30  200ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
+    wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
 
 finance contacts are submitted by all users
     user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Npath_Id}
     user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${Bluezoom_Id}
     user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Eadel_Id}
-    logout as user
-    close any open browsers
 
 user submits his finance contacts
     [Arguments]  ${user}  ${id}
