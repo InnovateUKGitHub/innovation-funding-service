@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
@@ -192,6 +195,9 @@ public class ApplicationFormController {
     @Autowired
     private OverheadFileSaver overheadFileSaver;
 
+    @Autowired
+    private ApplicantRestService applicantRestService;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
@@ -207,8 +213,10 @@ public class ApplicationFormController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                @ModelAttribute("loggedInUser") UserResource user) {
 
-        QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicationId);
-        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
+        ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+
+        QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(question);
+        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form, organisationDetailsViewModel);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
@@ -245,13 +253,8 @@ public class ApplicationFormController {
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  @ModelAttribute("loggedInUser") UserResource user) {
-        ApplicationResource application = applicationService.getById(applicationId);
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
-
-        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
-
-        populateSection(model, form, bindingResult, application, user, organisationId, section, allSections);
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
+        populateSection(model, form, bindingResult, applicantSection);
 
         return APPLICATION_FORM;
     }
@@ -259,22 +262,18 @@ public class ApplicationFormController {
     private void populateSection(Model model,
                                  ApplicationForm form,
                                  BindingResult bindingResult,
-                                 ApplicationResource application,
-                                 UserResource user,
-                                 Long organisationId,
-                                 SectionResource section,
-                                 List<SectionResource> allSections) {
-        if (SectionType.GENERAL.equals(section.getType())
-                || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
+                                 ApplicantSectionResource applicantSection) {
+        if (SectionType.GENERAL.equals(applicantSection.getSection().getType())
+                || SectionType.OVERVIEW_FINANCES.equals(applicantSection.getSection().getType())) {
             OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(
-                    form, model, application, section, user, bindingResult, allSections, organisationId);
+                    form, model, bindingResult, applicantSection);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         } else {
             OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(
-                    form, model, application, section, user, bindingResult, allSections, organisationId);
+                    form, model, bindingResult, applicantSection);
 
             if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
-                viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(section, application.getId(),
+                viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(applicantSection.getSection(), applicantSection.getApplication().getId(),
                         asList(SectionType.ORGANISATION_FINANCES, SectionType.FUNDING_FINANCES)));
             }
 
@@ -335,8 +334,9 @@ public class ApplicationFormController {
                 validationHandler.addAnyErrors(errors);
 
                 // Add any validated fields back in invalid entries are displayed on re-render
-                QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicationId);
-                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
+                ApplicantQuestionResource applicantQuestion = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
+                QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicantQuestion);
+                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(applicantQuestion, model, form, organisationDetailsViewModel);
 
                 model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
                 applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);

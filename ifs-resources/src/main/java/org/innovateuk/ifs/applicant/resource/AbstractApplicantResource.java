@@ -2,8 +2,12 @@ package org.innovateuk.ifs.applicant.resource;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by luke.harper on 25/04/2017.
@@ -14,9 +18,11 @@ public abstract class AbstractApplicantResource {
 
     private CompetitionResource competition;
 
-    private ApplicantResource user;
+    private ApplicantResource currentApplicant;
 
-    private List<ApplicantResource> applicants;
+    private List<ApplicantResource> applicants = new ArrayList<>();
+
+    private List<ProcessRoleResource> assignableProcessRoles = new ArrayList<>();
 
     public ApplicationResource getApplication() {
         return application;
@@ -34,12 +40,16 @@ public abstract class AbstractApplicantResource {
         this.competition = competition;
     }
 
-    public ApplicantResource getUser() {
-        return user;
+    public ApplicantResource getCurrentApplicant() {
+        return currentApplicant;
     }
 
-    public void setUser(ApplicantResource user) {
-        this.user = user;
+    public void setCurrentApplicant(ApplicantResource user) {
+        this.currentApplicant = user;
+    }
+
+    public void addApplicant(ApplicantResource applicant) {
+        this.applicants.add(applicant);
     }
 
     public List<ApplicantResource> getApplicants() {
@@ -48,5 +58,17 @@ public abstract class AbstractApplicantResource {
 
     public void setApplicants(List<ApplicantResource> applicants) {
         this.applicants = applicants;
+    }
+
+    public List<ProcessRoleResource> getAssignableProcessRoles() {
+        return assignableProcessRoles;
+    }
+
+    public void setAssignableProcessRoles(List<ProcessRoleResource> assignableProcessRoles) {
+        this.assignableProcessRoles = assignableProcessRoles;
+    }
+
+    public Stream<OrganisationResource> allOrganisations() {
+        return applicants.stream().map(ApplicantResource::getOrganisation);
     }
 }

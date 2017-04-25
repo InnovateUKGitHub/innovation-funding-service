@@ -8,28 +8,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * ViewModel for the assignable part of the question
  */
 public class QuestionAssignableViewModel {
     private QuestionStatusResource questionAssignee;
-    private Future<List<ProcessRoleResource>> assignableUsers;
+    private List<ProcessRoleResource> assignableUsers;
     private List<ApplicationInviteResource> pendingAssignableUsers;
     private Map<Long, QuestionStatusResource> questionAssignees;
     private List<QuestionStatusResource> notifications;
 
     public QuestionAssignableViewModel() {
-        this.assignableUsers = CompletableFuture.completedFuture(new ArrayList<ProcessRoleResource>());
+        this.assignableUsers = new ArrayList<ProcessRoleResource>();
         this.pendingAssignableUsers = new ArrayList<ApplicationInviteResource>();
         this.questionAssignees = new HashMap<Long, QuestionStatusResource>();
         this.notifications = new ArrayList<QuestionStatusResource>();
     }
 
-    public QuestionAssignableViewModel(QuestionStatusResource questionAssignee, Future<List<ProcessRoleResource>> assignableUsers,
+    public QuestionAssignableViewModel(QuestionStatusResource questionAssignee, List<ProcessRoleResource> assignableUsers,
                                        List<ApplicationInviteResource> pendingAssignableUsers, Map<Long, QuestionStatusResource> questionAssignees,
                                        List<QuestionStatusResource> notifications) {
         this.questionAssignee = questionAssignee;
@@ -43,8 +40,8 @@ public class QuestionAssignableViewModel {
         return questionAssignee;
     }
 
-    public List<ProcessRoleResource> getAssignableUsers() throws ExecutionException, InterruptedException {
-        return assignableUsers.get();
+    public List<ProcessRoleResource> getAssignableUsers() {
+        return assignableUsers;
     }
 
     public List<ApplicationInviteResource> getPendingAssignableUsers() {

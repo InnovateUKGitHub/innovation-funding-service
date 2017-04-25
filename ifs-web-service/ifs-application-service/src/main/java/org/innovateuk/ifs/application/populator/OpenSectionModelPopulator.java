@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -86,21 +88,17 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     private FinanceHandler financeHandler;
 
     @Override
-    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId){
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-
+    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection){
         OpenSectionViewModel openSectionViewModel = new OpenSectionViewModel();
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        if(null != competition) {
-            addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
-            addOrganisationAndUserFinanceDetails(openSectionViewModel, competition.getId(), application.getId(), user, model, form, allSections, organisationId);
-        }
+        addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, form, applicantSection);
+        addOrganisationAndUserFinanceDetails(openSectionViewModel, model, form, applicantSection);
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
 
-        openSectionViewModel.setNavigationViewModel(addNavigation(section, application.getId()));
+        openSectionViewModel.setNavigationViewModel(addNavigation(applicantSection.getSection(),applicantSection.getApplication().getId()));
         openSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -108,24 +106,19 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         return openSectionViewModel;
     }
 
-    private void addApplicationDetails(OpenSectionViewModel openSectionViewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application,
-                                       CompetitionResource competition, Long userId, SectionResource section,
-                                       ApplicationForm form, List<ProcessRoleResource> userApplicationRoles, List<SectionResource> allSections) {
-        Optional<OrganisationResource> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
+    private void addApplicationDetails(OpenSectionViewModel openSectionViewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationForm form,
+                                       ApplicantSectionResource applicantSection) {
 
         form = initializeApplicationForm(form);
-        form.setApplication(application);
+        form.setApplication(applicantSection.getApplication());
 
-        addQuestionsDetails(openSectionViewModel, application, form);
-        addUserDetails(openSectionViewModel, application, userId);
-        addApplicationFormDetailInputs(application, form);
+        addQuestionsDetails(openSectionViewModel, applicantSection, form);
+        addUserDetails(openSectionViewModel, applicantSection);
+        addApplicationFormDetailInputs(applicantSection.getApplication(), form);
 
-        if (null != competition) {
-            List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
-            addMappedSectionsDetails(openSectionViewModel, application, competition, section, userOrganisation, allSections, formInputResources, sectionService.filterParentSections(allSections));
-        }
+        addMappedSectionsDetails(openSectionViewModel, applicantSection);
 
-        addCompletedDetails(openSectionViewModel, sectionApplicationViewModel, application, userOrganisation, allSections);
+        addCompletedDetails(openSectionViewModel, sectionApplicationViewModel, applicantSection);
 
         openSectionViewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
         sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition, section.getId(), openSectionViewModel.getSectionsMarkedAsComplete()));
@@ -134,14 +127,15 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         sectionApplicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
     }
 
-    private void addOrganisationDetails(OpenSectionViewModel viewModel, ApplicationResource application, List<ProcessRoleResource> userApplicationRoles) {
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        viewModel.setAcademicOrganisations(getAcademicOrganisations(organisations));
-        viewModel.setApplicationOrganisations(organisations);
+    private void addOrganisationDetails(OpenSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
+        viewModel.setAcademicOrganisations(applicantSection.allOrganisations()
+                .filter(organisation -> organisation.getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId()))
+                .collect(Collectors.toSet()));
+        viewModel.setApplicationOrganisations(applicantSection.allOrganisations().collect(Collectors.toSet()));
 
-        List<String> activeApplicationOrganisationNames = organisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
+        List<String> activeApplicationOrganisationNames = applicantSection.allOrganisations().map(OrganisationResource::getName).collect(Collectors.toList());
 
-        List<String> pendingOrganisationNames = pendingInvitations(application).stream()
+        List<String> pendingOrganisationNames = pendingInvitations(applicantSection.getApplication()).stream()
             .map(ApplicationInviteResource::getInviteOrganisationName)
             .distinct()
             .filter(orgName -> StringUtils.hasText(orgName)
@@ -149,25 +143,10 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         viewModel.setPendingOrganisationNames(pendingOrganisationNames);
 
-        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
-        leadOrganisation.ifPresent(organisationResource ->
-            viewModel.setLeadOrganisation(organisationResource)
-        );
-    }
-
-    private void addQuestionsDetails(OpenSectionViewModel openSectionViewModel, ApplicationResource application, Form form) {
-        List<FormInputResponseResource> responses = getFormInputResponses(application);
-        Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
-        openSectionViewModel.setResponses(mappedResponses);
-
-        if(form == null){
-            form = new Form();
-        }
-        Map<String, String> values = form.getFormInput();
-        mappedResponses.forEach((k, v) ->
-            values.put(k.toString(), v.getValue())
-        );
-        form.setFormInput(values);
+        viewModel.setLeadOrganisation(applicantSection.getApplicants().stream()
+                .filter(ApplicantResource::isLead)
+                .map(ApplicantResource::getOrganisation)
+                .findAny().orElse(null));
     }
 
     private SectionAssignableViewModel addAssignableDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation,
@@ -199,20 +178,11 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
                 .collect(Collectors.toList()));
     }
 
-    private void addCompletedDetails(OpenSectionViewModel openSectionViewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<SectionResource> allSections) {
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-
-        List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
-
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
+    private void addCompletedDetails(OpenSectionViewModel openSectionViewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicantSectionResource applicantSection) {
+        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(applicantSection.getApplication().getId());
         Set<Long> sectionsMarkedAsComplete = convertToCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 
-        boolean hasFinanceSection = false;
-        Long financeSectionId = null;
-        if (!financeSections.isEmpty()) {
-            hasFinanceSection = true;
-            financeSectionId = financeSections.get(0).getId();
-        }
+        Optional<ApplicantSectionResource> optionalSection = applicantSection.allSections().filter(section -> section.getSection().getType().equals(FINANCE)).findAny();
 
         List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, FINANCE);
         Long eachCollaboratorFinanceSectionId;
@@ -222,7 +192,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
             eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
         }
 
-        sectionApplicationViewModel.setMarkedAsComplete(markedAsComplete);
+        addSectionsMarkedAsComplete(openSectionViewModel, applicantSection);
         openSectionViewModel.setCompletedSectionsByOrganisation(completedSectionsByOrganisation);
         openSectionViewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
         openSectionViewModel.setAllQuestionsCompleted(sectionService.allSectionsMarkedAsComplete(application.getId()));
@@ -244,17 +214,12 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         return simpleFilter(list, s -> type.equals(s.getType()));
     }
 
-    private void addApplicationAndSections(OpenSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application,
-                                           CompetitionResource competition,
-                                           Long userId,
-                                           SectionResource section,
-                                           ApplicationForm form,
-                                           List<SectionResource> allSections) {
+    private void addApplicationAndSections(OpenSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel,
+                                           ApplicationForm form, ApplicantSectionResource applicantSection) {
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        addOrganisationDetails(viewModel, application, userApplicationRoles);
-        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections);
-        addSectionDetails(viewModel, section);
+        addOrganisationDetails(viewModel, applicantSection);
+        addApplicationDetails(viewModel, sectionApplicationViewModel, form, applicantSection);
+        addSectionDetails(viewModel, applicantSection);
 
         viewModel.setCompletedQuestionsPercentage(application.getCompletion() == null ? 0 : application.getCompletion().intValue());
     }
@@ -282,28 +247,6 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         }
     }
 
-    private SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRoleResource> userApplicationRoles) {
-        Comparator<OrganisationResource> compareById =
-            Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-
-        return userApplicationRoles.stream()
-            .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
-                || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
-            .collect(Collectors.toCollection(supplier));
-    }
-
-    private SortedSet<OrganisationResource> getAcademicOrganisations(SortedSet<OrganisationResource> organisations) {
-        Comparator<OrganisationResource> compareById =
-            Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-        ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
-
-        return organisationList.stream()
-            .filter(o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()))
-            .collect(Collectors.toCollection(supplier));
-    }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
 

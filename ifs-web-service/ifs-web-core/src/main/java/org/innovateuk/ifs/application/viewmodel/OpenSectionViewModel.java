@@ -5,14 +5,13 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * View model extending the {@link BaseSectionViewModel} for open sections (not finance, but used by finances overview)
  */
 public class OpenSectionViewModel extends BaseSectionViewModel {
-    private SortedSet<OrganisationResource> academicOrganisations;
-    private SortedSet<OrganisationResource> applicationOrganisations;
+    private Set<OrganisationResource> academicOrganisations;
+    private Set<OrganisationResource> applicationOrganisations;
     private List<String> pendingOrganisationNames;
     private OrganisationResource leadOrganisation;
 
@@ -27,19 +26,19 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
         subFinanceSection = Boolean.FALSE;
     }
 
-    public SortedSet<OrganisationResource> getAcademicOrganisations() {
+    public Set<OrganisationResource> getAcademicOrganisations() {
         return academicOrganisations;
     }
 
-    public void setAcademicOrganisations(SortedSet<OrganisationResource> academicOrganisations) {
+    public void setAcademicOrganisations(Set<OrganisationResource> academicOrganisations) {
         this.academicOrganisations = academicOrganisations;
     }
 
-    public SortedSet<OrganisationResource> getApplicationOrganisations() {
+    public Set<OrganisationResource> getApplicationOrganisations() {
         return applicationOrganisations;
     }
 
-    public void setApplicationOrganisations(SortedSet<OrganisationResource> applicationOrganisations) {
+    public void setApplicationOrganisations(Set<OrganisationResource> applicationOrganisations) {
         this.applicationOrganisations = applicationOrganisations;
     }
 

@@ -1,18 +1,20 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.QuestionType;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class for populating the model for the "Your Finances" section
@@ -45,20 +46,18 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
     private OrganisationService organisationService;
 
     @Override
-    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId){
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
-        Optional<OrganisationResource> organisationResource = Optional.of(organisationService.getOrganisationById(organisationId));
+    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection){
+        List<ApplicantQuestionResource> costsQuestions = applicantSection.questionsWithType(QuestionType.COST);
 
-        OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(section, application.getId()),
-                section, true, section.getId(), user, isSubFinanceSection(section));
+        OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(applicantSection.getSection(), applicantSection.getApplication().getId()),
+                applicantSection.getSection(), true, applicantSection.getSection().getId(), applicantSection.getCurrentApplicant().getUser(), isSubFinanceSection(applicantSection.getSection()));
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        sectionApplicationViewModel.setCurrentApplication(application);
-        sectionApplicationViewModel.setCurrentCompetition(competition);
+        sectionApplicationViewModel.setCurrentApplication(applicantSection.getApplication());
+        sectionApplicationViewModel.setCurrentCompetition(applicantSection.getCompetition());
 
-        addQuestionsDetails(openFinanceSectionViewModel, application, form);
-        addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections, organisationResource);
+        addQuestionsDetails(openFinanceSectionViewModel, applicantSection, form);
+        addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, form, applicantSection;
         addOrganisationAndUserFinanceDetails(openFinanceSectionViewModel, application.getCompetition(), application.getId(), costsQuestions, user, form, organisationId);
         addFundingSection(openFinanceSectionViewModel, application.getCompetition());
 

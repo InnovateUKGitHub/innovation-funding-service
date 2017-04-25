@@ -1,20 +1,20 @@
 package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionStatusResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.form.Form;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * Class for populating the model for the "Your Finances" section
@@ -74,89 +73,58 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
         return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
     }
 
-    private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application,
-                                       CompetitionResource competition, Long userId, SectionResource section,
-                                       ApplicationForm form,
-                                       List<SectionResource> allSections, List<FormInputResource> inputs,
-                                       Optional<OrganisationResource> userOrganisation) {
+    private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel,
+                                       ApplicationForm form, ApplicantSectionResource applicantSection) {
 
         form = initializeApplicationForm(form);
-        form.setApplication(application);
+        form.setApplication(applicantSection.getApplication());
 
         //Parent finance section has no assignable or question details.
-        if (!SectionType.FINANCE.equals(section.getType())) {
-            addQuestionsDetails(viewModel, application, form);
+        if (!SectionType.FINANCE.equals(applicantSection.getSection().getType())) {
+            addQuestionsDetails(viewModel, applicantSection, form);
         }
-        addUserDetails(viewModel, application, userId);
-        if(null != competition) {
-            addMappedSectionsDetails(viewModel, application, competition, section, userOrganisation, allSections, inputs, singletonList(section));
-        }
+        addUserDetails(viewModel, applicantSection);
+        addMappedSectionsDetails(viewModel, applicantSection);
 
-        if (!SectionType.FINANCE.equals(section.getType())) {
-            viewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
+        if (!SectionType.FINANCE.equals(applicantSection.getSection().getType())) {
+            viewModel.setSectionAssignableViewModel(addAssignableDetails(applicantSection));
         }
-        addCompletedDetails(sectionApplicationViewModel, application, userOrganisation);
+        addCompletedDetails(sectionApplicationViewModel, applicantSection);
 
-        sectionApplicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
+        sectionApplicationViewModel.setUserOrganisation(applicantSection.getCurrentApplicant().getOrganisation());
     }
 
-    protected void addQuestionsDetails(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Form form) {
-        List<FormInputResponseResource> responses = getFormInputResponses(application);
-        Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
+    private SectionAssignableViewModel addAssignableDetails(ApplicantSectionResource applicantSection) {
 
-        viewModel.setResponses(mappedResponses);
-
-        if(form == null){
-            form = new Form();
-        }
-        Map<String, String> values = form.getFormInput();
-        mappedResponses.forEach((k, v) ->
-            values.put(k.toString(), v.getValue())
-        );
-        form.setFormInput(values);
-    }
-
-    private SectionAssignableViewModel addAssignableDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation, Long userId, SectionResource currentSection) {
-
-        if (isApplicationInViewMode(application, userOrganisation)) {
+        if (isApplicationInViewMode(applicantSection.getApplication(), Optional.of(applicantSection.getCurrentApplicant().getOrganisation()))) {
             return new SectionAssignableViewModel();
         }
 
         Map<Long, QuestionStatusResource> questionAssignees;
 
-        questionAssignees = questionService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(currentSection.getQuestions(), application.getId(), getUserOrganisationId(userOrganisation));
+        questionAssignees = simpleToMap(applicantSection.allQuestionStatuses().filter(status -> status.getAssignee().isSameUser(applicantSection.getCurrentApplicant())).collect(Collectors.toList()),
+            status -> status.getStatus().getQuestion(), ApplicantQuestionStatusResource::getStatus);
 
-        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
+        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), applicantSection.getCurrentApplicant().getUser().getId());
         questionService.removeNotifications(notifications);
 
         return new SectionAssignableViewModel(questionAssignees, notifications);
     }
 
-    private void addCompletedDetails(SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
+    private void addCompletedDetails(SectionApplicationViewModel sectionApplicationViewModel, ApplicantSectionResource applicantSection) {
+        Set<Long> markedAsComplete = applicantSection.allQuestionStatuses()
+                .filter(status -> status.getMarkedAsCompleteBy().hasSameOrganisation(applicantSection.getCurrentApplicant()))
+                .map(status -> status.getStatus().getQuestion())
+                .collect(Collectors.toSet());
         sectionApplicationViewModel.setMarkedAsComplete(markedAsComplete);
     }
 
-    protected void addApplicationAndSections(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel,
-                                           ApplicationResource application,
-                                            CompetitionResource competition,
-                                            Long userId,
-                                            SectionResource section,
-                                            ApplicationForm form,
-                                            List<SectionResource> allSections, Optional<OrganisationResource> userOrganisation) {
-        List<FormInputResource> inputs = formInputRestService.getByCompetitionIdAndScope(application.getCompetition(), APPLICATION).getSuccessObjectOrThrowException();
-        addSectionsMarkedAsComplete(viewModel, application, userOrganisation);
-        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, allSections, inputs, userOrganisation);
+    protected void addApplicationAndSections(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicantSectionResource applicantSection,
+                                            ApplicationForm form) {
+        addSectionsMarkedAsComplete(viewModel, applicantSection);
+        addApplicationDetails(viewModel, sectionApplicationViewModel, form, applicantSection);
 
-        addSectionDetails(viewModel, section);
-    }
-
-    protected void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId)
-                .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
-
-        viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
+        addSectionDetails(viewModel, applicantSection);
     }
 
     protected void addFundingSection(OpenFinanceSectionViewModel viewModel, Long competitionId) {

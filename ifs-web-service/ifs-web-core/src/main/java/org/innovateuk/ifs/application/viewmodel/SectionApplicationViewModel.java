@@ -5,24 +5,22 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * Shared Application viewModel used by {@link BaseSectionViewModel}
  */
 public class SectionApplicationViewModel {
-    private Future<Set<Long>> markedAsComplete;
+    private Set<Long> markedAsComplete;
     private Boolean allReadOnly;
     private ApplicationResource currentApplication;
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
 
-    public Set<Long> getMarkedAsComplete() throws ExecutionException, InterruptedException {
-        return markedAsComplete.get();
+    public Set<Long> getMarkedAsComplete() {
+        return markedAsComplete;
     }
 
-    public void setMarkedAsComplete(Future<Set<Long>> markedAsComplete) {
+    public void setMarkedAsComplete(Set<Long> markedAsComplete) {
         this.markedAsComplete = markedAsComplete;
     }
 

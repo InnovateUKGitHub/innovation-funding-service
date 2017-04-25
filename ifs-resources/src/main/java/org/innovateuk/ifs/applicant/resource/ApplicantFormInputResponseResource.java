@@ -5,7 +5,7 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 /**
  * Created by luke.harper on 25/04/2017.
  */
-public class ApplicantFormInputResponseResource extends AbstractApplicantResource {
+public class ApplicantFormInputResponseResource {
 
     private FormInputResponseResource response;
 

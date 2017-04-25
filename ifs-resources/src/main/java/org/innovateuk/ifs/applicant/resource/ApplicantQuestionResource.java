@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.applicant.resource;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 
 import java.util.List;
 
@@ -14,7 +13,29 @@ public class ApplicantQuestionResource extends AbstractApplicantResource {
 
     private List<ApplicantFormInputResource> formInputs;
 
-    private QuestionStatusResource questionStatusResource;
+    private List<ApplicantQuestionStatusResource> questionStatuses;
 
+    public QuestionResource getQuestion() {
+        return question;
+    }
 
+    public void setQuestion(QuestionResource question) {
+        this.question = question;
+    }
+
+    public List<ApplicantFormInputResource> getFormInputs() {
+        return formInputs;
+    }
+
+    public void setFormInputs(List<ApplicantFormInputResource> formInputs) {
+        this.formInputs = formInputs;
+    }
+
+    public List<ApplicantQuestionStatusResource> getQuestionStatuses() {
+        return questionStatuses;
+    }
+
+    public void setQuestionStatuses(List<ApplicantQuestionStatusResource> questionStatuses) {
+        this.questionStatuses = questionStatuses;
+    }
 }
