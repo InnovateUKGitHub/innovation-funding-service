@@ -238,7 +238,7 @@ public class ApplicationOverviewModelPopulator {
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId=0L;
+        Long organisationId = 0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
         }

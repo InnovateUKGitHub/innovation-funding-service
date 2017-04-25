@@ -52,4 +52,8 @@ public class ApplicationOverviewSectionViewModel {
     public Long getFinanceSectionId() {
         return financeSectionId;
     }
+
+    public Boolean hasSubSection(Long sectionId) {
+        return subSections.get(sectionId).size() != 0;
+    }
 }

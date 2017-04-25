@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * View model for the application overview
@@ -72,8 +73,8 @@ public class ApplicationOverviewViewModel {
         return completedQuestionsPercentage;
     }
 
-    public FileDetailsViewModel getAssessorFeedback() {
-        return assessorFeedback;
+    public Optional<FileDetailsViewModel> getAssessorFeedback() {
+        return Optional.ofNullable(assessorFeedback);
     }
 
     public List<ResearchCategoryResource> getResearchCategories() {

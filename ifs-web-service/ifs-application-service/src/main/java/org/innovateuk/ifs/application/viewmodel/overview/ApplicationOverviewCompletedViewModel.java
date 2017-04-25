@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.application.viewmodel.overview;
 
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
+
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -29,19 +33,20 @@ public class ApplicationOverviewCompletedViewModel {
         return allQuestionsCompleted;
     }
 
-    public Future<Set<Long>> getMarkedAsComplete() {
-        return markedAsComplete;
+    public Set<Long> getMarkedAsComplete() throws ExecutionException, InterruptedException {
+        return markedAsComplete.get();
     }
 
     public void setCompletedSections(Set<Long> completedSections) {
         this.completedSections = completedSections;
     }
 
-    public Set<Long> getCompletedSections() {
-        return completedSections;
-    }
-
     public Boolean getUserFinanceSectionCompleted() {
         return userFinanceSectionCompleted;
+    }
+
+    public Boolean completedOrMarkedAsComplete(QuestionResource questionResource, SectionResource sectionResource) throws ExecutionException, InterruptedException {
+        return (questionResource.isMarkAsCompletedEnabled() && getMarkedAsComplete().contains(questionResource.getId()))
+                || completedSections.contains(sectionResource.getId());
     }
 }
