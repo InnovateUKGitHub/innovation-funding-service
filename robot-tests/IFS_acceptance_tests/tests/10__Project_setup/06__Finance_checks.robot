@@ -2077,12 +2077,12 @@ the user adds data into materials row
 
 the user adds capital usage data into row
     [Arguments]  ${row_number}  ${description}  ${net_value}  ${residual_value}  ${utilization}
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(1) textarea   ${description}
-    Click Element                               css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(2) label:nth-of-type(1)
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(3) input    12
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) h2:contains("Section changes") + div input  ${net_value}
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_numbejQuery h2:contains("Changes from submitted finances") + * input   ${residual_value}
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(6) input   ${utilization}
+    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(1) textarea   ${description}
+    Click Element                               jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(2) label:nth-of-type(1)
+    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(3) input    12
+    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) h2:contains("Section changes") + div input  ${net_value}
+    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) h2:contains("Changes from submitted finances") + * input   ${residual_value}
+    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(6) input   ${utilization}
 
 the user adds subcontracting data into row
     [Arguments]  ${row_number}  ${name}  ${cost}
