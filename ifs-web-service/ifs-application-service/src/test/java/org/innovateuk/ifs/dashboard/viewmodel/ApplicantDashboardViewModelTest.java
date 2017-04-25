@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class ApplicantDashboardViewModelTest {
                 APPLICATION_ID_IS_APPROVED, ApplicationState.APPROVED);
 
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStates);
+                applicationsFinished, projectsInSetup, competitions, applicationStates, new ArrayList<>());
     }
 
     @Test
@@ -200,11 +201,11 @@ public class ApplicantDashboardViewModelTest {
     private void setupEmptyViewModel() {
         viewModel = new ApplicantDashboardViewModel(null, null,
                 null, null,
-                null,null,null);
+                null,null,null, null);
     }
 
     private void resetViewModel() {
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStates);
+                applicationsFinished, projectsInSetup, competitions, applicationStates, new ArrayList<>());
     }
 }
