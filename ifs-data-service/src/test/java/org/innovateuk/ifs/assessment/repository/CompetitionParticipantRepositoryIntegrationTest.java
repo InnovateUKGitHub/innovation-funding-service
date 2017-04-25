@@ -11,6 +11,8 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
+import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.resource.AffiliationType;
@@ -46,7 +48,7 @@ import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESS
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;

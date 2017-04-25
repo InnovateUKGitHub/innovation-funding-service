@@ -90,6 +90,7 @@ Resource          ../04__Applicant/FinanceSection_Commons.robot
 
 *** Variables ***
 ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+${opens_in_new_window}    (opens in a new window)
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
@@ -192,11 +193,10 @@ Project finance can re-upload the file
 Project finance user can view the file
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
     And the file has been scanned for viruses
-    When the user clicks the button/link    link=${valid_pdf}
-    Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    When the user opens the link in new window   ${valid_pdf}
+    Then the user goes back to the previous tab
 
 
 Project finance user can upload more than one file
@@ -208,13 +208,11 @@ Project finance user can upload more than one file
 Project finance user can still view and delete both files
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
-    Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
-    Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Post new query server side validations
@@ -376,12 +374,10 @@ Finance contact can view query
 Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    Then the user goes back to the previous tab
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    Then the user goes back to the previous tab
 
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
@@ -413,38 +409,38 @@ Finance contact can remove the file
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
     And the user should not see an error in the page
 
 Finance contact can re-upload the file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
 
 Finance contact can view the file
     [Documentation]    INFUND-4843
     [Tags]
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
-    Then the user goes back to the initial page after having checked the attachment
+    When the user opens the link in new window   ${valid_pdf}
+    Then the user goes back to the previous tab
 
 Finance contact can upload more than one file
     [Documentation]    INFUND-4843
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
+    And the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
 
 Finance contact can still view both files
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
 
 Response to query server side validations
     [Documentation]    INFUND-4843
@@ -507,12 +503,10 @@ Project finance user can view the response
 Project finance user can view the finance contact's uploaded files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf}"):nth-of-type(1)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
-    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf}"):nth-of-type(2)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    Then the user goes back to the previous tab
+    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    Then the user goes back to the previous tab
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -586,23 +580,22 @@ Project finance can remove the file from notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
     And the user should not see an error in the page
 
 Project finance can re-upload the file to notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
 
 Project finance can view the file in notes
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
-    Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    When The user opens the link in new window   ${valid_pdf}
+    Then the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save note")
 
 Project finance can upload more than one file to notes
@@ -616,10 +609,10 @@ Project finance can still view both files in notes
     [Tags]
     When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     When the user clicks the button/link    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Create new note server side validations
@@ -706,22 +699,22 @@ Project finance can remove the file from note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
     And the user should not see an error in the page
 
 Project finance can re-upload the file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
 
 Project finance can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}")
-    And the user goes back to the initial page after having checked the attachment
+    When the user opens the link in new window   ${valid_pdf}
+    And the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save comment")
 
 Project finance can upload more than one file to note comments
@@ -735,10 +728,10 @@ Project finance can still view both files in note comments
     [Tags]
     When the user clicks the button/link    jQuery=form li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     When the user clicks the button/link    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save comment")
 
 Note comments server side validations
@@ -782,8 +775,8 @@ Project Finance user can view academic Jes form
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    css=a.eligibility-1
     Then the user should see the text in the page    Download Je-S form
-    When the user clicks the button/link    link=jes-form80.pdf
-    Then the user should not see an error in the page
+    When the user opens the link in new window   jes-form80.pdf
+    Then the user goes back to the previous tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can see the within limit research participation level
@@ -2308,10 +2301,6 @@ Project finance user amends other costs details in eligibility for lead
     Then verify total costs of project            £ 204,913
     And the user should see the element           jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
-
-the user goes back to the initial page after having checked the attachment
-    the user should not see an error in the page
-    Select Window    #this goes back to the initial page
 
 the user verifies the table heading for Overview section
     the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(1)      Start date
