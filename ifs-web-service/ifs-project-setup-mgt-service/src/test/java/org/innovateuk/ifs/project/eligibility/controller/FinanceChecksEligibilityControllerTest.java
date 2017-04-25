@@ -114,14 +114,14 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 .withName("Industrial Org")
                 .withCompanyHouseNumber("123456789")
                 .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
 
         academicOrganisation = newOrganisationResource()
                 .withId(1L)
                 .withName("Academic Org")
                 .withOrganisationTypeName(OrganisationTypeEnum.RESEARCH.name())
-                .withOrganisationType(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())
+                .withOrganisationType(OrganisationTypeEnum.RESEARCH.getId())
                 .build();
 
         // save actions should always succeed.
@@ -138,11 +138,11 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         when(organisationService.getOrganisationById(academicOrganisation.getId())).thenReturn(academicOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
-        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(projectFinanceFormHandler);
+        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(projectFinanceFormHandler);
 
-        when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(Boolean.FALSE);
-        when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(Boolean.TRUE);
+        when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(Boolean.FALSE);
+        when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(Boolean.TRUE);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().withFinanceFileEntry(123L).build();
         when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), 2L)).thenReturn(appFinanceResource);
@@ -201,8 +201,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(projectFinanceFormHandler);
+        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), academicOrganisation.getId())).
@@ -222,8 +222,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(projectFinanceFormHandler);
+        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().build();
         when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), 1L)).thenReturn(appFinanceResource);

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.category.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
  * Links a {@link Profile} to an {@link InnovationArea}.
  */
 @Entity
-@DiscriminatorValue("org.innovateuk.ifs.user.domain.Profile")
+@DiscriminatorValue("org.innovateuk.ifs.profile.domain.Profile")
 public class ProfileInnovationAreaLink extends CategoryLink<Profile, InnovationArea> {
 
     @ManyToOne(optional = false)

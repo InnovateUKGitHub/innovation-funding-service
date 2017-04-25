@@ -25,6 +25,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"a.competition.id = :compId " +
 			"AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
+	String COMP_NOT_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
+			"a.competition.id = :compId " +
+			"AND (a.applicationProcess.activityState.state NOT IN :states) " +
+			"AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+
 	String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
 			"AND (a.applicationProcess.activityState.state IN :states) " +
@@ -54,8 +59,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(COMP_FILTER)
     List<Application> findByCompetitionIdAndIdLike(@Param("compId") long competitionId, @Param("filter") String filter);
-	
-	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(@Param("compId") long competitionId,
@@ -70,11 +73,18 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																							@Param("filter") String filter,
 																							@Param("funding") FundingDecisionStatus funding);
 
-	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
+	@Query(COMP_NOT_STATUS_FILTER)
+	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(@Param("compId") long competitionId,
+																					  @Param("states") Collection<State> applicationStates,
+																					  @Param("filter") String filter,
+																					  Pageable pageable);
 
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
-	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(long competitionId, Collection<State> applicationStates);
+	@Query(COMP_NOT_STATUS_FILTER)
+	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(@Param("compId") long competitionId,
+																					  @Param("states") Collection<State> applicationStates,
+																					  @Param("filter") String filter);
 
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(long competitionId, Collection<State> applicationStates, Pageable pageable);
 

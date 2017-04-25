@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks overview'" />
 </head>
-<body th:with="context='project'" class="finance-checks-overview">
+<body class="finance-checks-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -28,7 +28,7 @@
 
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
 
-    <h3 class="heading-medium">Finance summaries</h3>
+    <h3 class="heading-medium">Finances summary</h3>
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
 
     <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>

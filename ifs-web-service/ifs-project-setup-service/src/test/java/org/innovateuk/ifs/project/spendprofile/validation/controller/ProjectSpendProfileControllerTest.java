@@ -184,7 +184,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .build(1);
 
         OrganisationResource organisation = newOrganisationResource().withId(organisationId)
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .withOrganisationTypeName("BUSINESS")
                 .build();
 
@@ -456,7 +456,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .build(1);
 
         OrganisationResource organisation = newOrganisationResource().withId(organisationId)
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .withOrganisationTypeName("BUSINESS")
                 .build();
 

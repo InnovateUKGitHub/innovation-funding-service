@@ -18,7 +18,7 @@ public interface RegistrationService {
     ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'CREATE')")
-    ServiceResult<UserResource> createOrganisationUser(Long organisationId, @P("user") UserResource userResource);
+    ServiceResult<UserResource> createOrganisationUser(long organisationId, @P("user") UserResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
     ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId);
@@ -27,5 +27,8 @@ public interface RegistrationService {
     ServiceResult<Void> resendUserVerificationEmail(@P("user") final UserResource user);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'ACTIVATE')")
-    ServiceResult<Void> activateUser(Long userId);
+    ServiceResult<Void> activateUser(long userId);
+
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'ACTIVATE')")
+    ServiceResult<Void> activateUserAndSendDiversitySurvey(long userId);
 }

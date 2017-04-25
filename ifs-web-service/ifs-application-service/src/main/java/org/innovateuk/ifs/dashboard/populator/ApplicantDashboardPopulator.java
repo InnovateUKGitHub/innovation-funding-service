@@ -25,6 +25,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Populator for the applicant dashboard, it populates an {@link org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel}
@@ -69,26 +70,33 @@ public class ApplicantDashboardPopulator {
 
         List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObjectOrThrowException();
 
-        List<Long> applicationsAssigned = getAssignedApplications(inProgress, user);
+
+        Map<Long, ProcessRoleResource> inProgressProcessRoles = simpleToMap(inProgress, ApplicationResource::getId,
+                applicationResource ->  processRoleService.findProcessRole(user.getId(), applicationResource.getId()));
+
+        List<Long> applicationsAssigned = getAssignedApplications(inProgressProcessRoles, user);
+        List<Long> leadApplicantApplications = getLeadApplicantApplications(inProgressProcessRoles, user);
 
         return new ApplicantDashboardViewModel(applicationProgress, inProgress,
                 applicationsAssigned, finished,
-                projectsInSetup, competitionApplicationMap, applicationStatusMap);
+                projectsInSetup, competitionApplicationMap, applicationStatusMap, leadApplicantApplications);
     }
 
-    private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, UserResource user) {
-        return inProgress.stream().filter(applicationResource -> {
-                    ProcessRoleResource role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
-                    if (!UserRoleType.LEADAPPLICANT.getName().equals(role.getRoleName())) {
-                        int count = applicationRestService
-                                .getAssignedQuestionsCount(applicationResource.getId(), role.getId())
-                                .getSuccessObjectOrThrowException();
-                        return count != 0;
-                    } else {
+    private List<Long> getAssignedApplications(Map<Long, ProcessRoleResource> inProgressProcessRoles, UserResource user){
+        return inProgressProcessRoles.entrySet().stream().filter(entry -> {
+                    if(!UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().getRoleName())) {
+                        int count = applicationRestService.getAssignedQuestionsCount(entry.getKey(), entry.getValue().getId())
+                        .getSuccessObjectOrThrowException();return count != 0;
+                    }else{
                         return false;
                     }
-                }
-        ).mapToLong(ApplicationResource::getId).boxed().collect(toList());
+                }).map(Map.Entry::getKey).collect(Collectors.toList());
+        }
+
+    private List<Long> getLeadApplicantApplications(Map<Long, ProcessRoleResource> inProgressProcessRoles, UserResource user){
+        return inProgressProcessRoles.entrySet().stream()
+                .filter(entry -> UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().getRoleName()))
+                .map(Map.Entry::getKey).collect(toList());
     }
 
     private Map<Long, ApplicationState> createApplicationStateMap(List<ApplicationResource> resources) {

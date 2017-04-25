@@ -1,20 +1,16 @@
 package org.innovateuk.ifs.project.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectController;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -27,7 +23,6 @@ import java.util.Optional;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.MonitoringOfficerDocs.monitoringOfficerResourceFields;
 import static org.innovateuk.ifs.documentation.ProjectDocs.*;
 import static org.innovateuk.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
@@ -55,21 +50,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<ProjectController> {
 
     private RestDocumentationResultHandler document;
-
-    private MonitoringOfficerResource monitoringOfficerResource;
-
-    @Before
-    public void setUp() {
-
-        monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withId(null)
-                .withProject(1L)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
-    }
 
     @Override
     protected ProjectController supplyControllerUnderTest() {
@@ -254,121 +234,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         ),
                         responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
                 ));
-    }
-
-    @Test
-    public void saveMoWithDiffProjectIdInUrlAndMoResource() throws Exception {
-
-        Long projectId = 1L;
-
-        MonitoringOfficerResource monitoringOfficerResource = MonitoringOfficerResourceBuilder.newMonitoringOfficerResource()
-                .withId(null)
-                .withProject(3L)
-                .withFirstName("abc")
-                .withLastName("xyz")
-                .withEmail("abc.xyz@gmail.com")
-                .withPhoneNumber("078323455")
-                .build();
-
-        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
-                thenReturn(serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE)));
-
-
-        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
-                        ),
-                        requestFields(monitoringOfficerResourceFields)
-                ));
-
-        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-
-        // Ensure that notification is not sent when there is error whilst saving
-        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
-
-    }
-
-    @Test
-    public void saveMoWhenProjectDetailsNotYetSubmitted() throws Exception {
-
-        Long projectId = 1L;
-
-        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
-                thenReturn(serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED)));
-
-        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
-                        ),
-                        requestFields(monitoringOfficerResourceFields)
-                ));
-
-        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-
-        // Ensure that notification is not sent when there is error whilst saving
-        verify(projectServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
-
-    }
-
-    @Test
-    public void saveMoWhenUnableToSendNotifications() throws Exception {
-
-        Long projectId = 1L;
-
-        SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
-        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
-        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
-                thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
-
-        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
-                .andExpect(status().isInternalServerError())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
-                        ),
-                        requestFields(monitoringOfficerResourceFields)
-                ));
-
-        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
-
-    }
-
-    @Test
-    public void saveMonitoringOfficer() throws Exception {
-
-        Long projectId = 1L;
-
-        SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
-        when(projectServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
-        when(projectServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
-                thenReturn(serviceSuccess());
-
-
-        mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
-                        ),
-                        requestFields(monitoringOfficerResourceFields)
-                ));
-
-        verify(projectServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
-
     }
 
     @Test

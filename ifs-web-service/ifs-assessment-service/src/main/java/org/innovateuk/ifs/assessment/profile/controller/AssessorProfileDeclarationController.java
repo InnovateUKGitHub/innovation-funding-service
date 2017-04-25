@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
@@ -10,7 +11,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 public class AssessorProfileDeclarationController {
 
     @Autowired
-    private UserService userService;
+    private AffiliationRestService affiliationRestService;
 
     @Autowired
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
@@ -82,7 +82,7 @@ public class AssessorProfileDeclarationController {
         validateLists(form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> updateResult = userService.updateUserAffiliations(loggedInUser.getId(), populateAffiliationsFromForm(form));
+            ServiceResult<Void> updateResult = affiliationRestService.updateUserAffiliations(loggedInUser.getId(), populateAffiliationsFromForm(form)).toServiceResult();
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> "redirect:/profile/declaration");
         });
