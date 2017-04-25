@@ -96,14 +96,26 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     }
 
     @Override
-    public String markApplicationAsIneligible(long applicationId, String reason) {
-        ServiceResult<Void> result = applicationService.markAsIneligible(applicationId, reason);
+    public String markApplicationAsIneligible(long applicationId,
+                                              long competitionId,
+                                              String origin,
+                                              MultiValueMap<String, String> queryParams,
+                                              ApplicationForm applicationForm,
+                                              UserResource user,
+                                              Model model) {
+        ServiceResult<Void> result = applicationService.markAsIneligible(applicationId, applicationForm.getIneligibleReason());
 
         if (result != null && result.isSuccess()) {
-            return "competition-mgt-application-overview";
+            return "redirect:/competition/" + competitionId + "/applications/submitted";
         } else {
-            //TODO
-            return "";
+            return displayApplicationOverview(user,
+                    applicationId,
+                    competitionId,
+                    applicationForm,
+                    origin,
+                    queryParams,
+                    model,
+                    applicationService.getById(applicationId));
         }
     }
 

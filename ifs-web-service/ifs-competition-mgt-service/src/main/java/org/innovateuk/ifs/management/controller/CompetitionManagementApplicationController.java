@@ -65,12 +65,22 @@ public class CompetitionManagementApplicationController {
     }
 
     @PostMapping("/{applicationId}/markIneligible")
-    public String markAsIneligible(@PathVariable("applicationId") final Long applicationId,
-                                   @PathVariable("competitionId") final Long competitionId,
+    public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
+                                   @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                    @RequestParam MultiValueMap<String, String> queryParams,
-                                   @RequestBody String reason) {
-        return competitionManagementApplicationService.markApplicationAsIneligible(applicationId, reason);
+                                   @ModelAttribute("form") ApplicationForm applicationForm,
+                                   @ModelAttribute("loggedInUser") UserResource user,
+                                   Model model) {
+        return competitionManagementApplicationService
+                .markApplicationAsIneligible(
+                        applicationId,
+                        competitionId,
+                        origin,
+                        queryParams,
+                        applicationForm,
+                        user,
+                        model);
     }
 
     @GetMapping("/{applicationId}/assessorFeedback")

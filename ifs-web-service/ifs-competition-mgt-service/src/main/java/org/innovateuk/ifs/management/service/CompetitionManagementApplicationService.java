@@ -28,5 +28,11 @@ public interface CompetitionManagementApplicationService {
                                       Model model,
                                       ApplicationResource application);
 
-    String markApplicationAsIneligible(long applicationId, String reason);
+    String markApplicationAsIneligible(long applicationId,
+                                       long competitionId,
+                                       String origin,
+                                       MultiValueMap<String, String> queryParams,
+                                       ApplicationForm applicationForm,
+                                       UserResource user,
+                                       Model model);
 }

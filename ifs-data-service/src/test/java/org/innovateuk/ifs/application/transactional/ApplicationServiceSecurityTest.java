@@ -33,8 +33,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -290,6 +289,14 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         verify(fileUploadRules, never()).applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser());
+    }
+
+    @Test
+    public void markAsIneligible() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.markAsIneligible(1L, "reason"),
+                COMP_ADMIN
+        );
     }
 
     @Override
