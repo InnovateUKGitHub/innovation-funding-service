@@ -6,26 +6,26 @@ import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -36,13 +36,15 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.gol.resource.GOLState.READY_TO_APPROVE;
+import static org.innovateuk.ifs.project.gol.resource.GOLState.SENT;
+import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
+import static org.innovateuk.ifs.project.resource.ApprovalType.UNSET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Abstract service for handling project service functionality.
@@ -97,19 +99,13 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
 
-        if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
+        if (APPROVED.equals(project.getOtherDocumentsApproved())) {
             return COMPLETE;
-        }
-
-        if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved())) {
+        } else if (UNSET.equals(project.getOtherDocumentsApproved()) && project.getDocumentsSubmittedDate() != null) {
+            return PENDING;
+        } else {
             return ACTION_REQUIRED;
         }
-
-        if (ApprovalType.UNSET.equals(project.getOtherDocumentsApproved()) && project.getDocumentsSubmittedDate() != null) {
-            return PENDING;
-        }
-
-        return ACTION_REQUIRED;
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
@@ -131,38 +127,36 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         } else {
             return NOT_STARTED;
         }
-
     }
 
     protected ProjectActivityStates createBankDetailStatus(Long projectId, Long applicationId, Long organisationId, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
+        } else if (!isSeekingFunding(projectId, applicationId, organisationId)) {
+            return NOT_REQUIRED;
+        } else if (COMPLETE.equals(financeContactStatus)) {
+            return ACTION_REQUIRED;
         } else {
-            Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
-
-            boolean seeksFunding = result.map(Boolean::booleanValue).orElse(false);
-
-            if (!seeksFunding) {
-                return NOT_REQUIRED;
-            } else {
-                if (COMPLETE.equals(financeContactStatus)) {
-                    return ACTION_REQUIRED;
-                } else {
-                    return NOT_STARTED;
-                }
-            }
+            return NOT_STARTED;
         }
+    }
+
+    private boolean isSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
+        return financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId)
+                .getOptionalSuccessObject()
+                .map(Boolean::booleanValue)
+                .orElse(false);
     }
 
     protected ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, boolean isAwaitingResponse) {
         PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
             if (financeChecksApproved(partnerOrg)) {
                 return COMPLETE;
-            }
-            if (isAwaitingResponse) {
+            } else if (isAwaitingResponse) {
                 return ACTION_REQUIRED;
+            } else {
+                return PENDING;
             }
-            return PENDING;
     }
 
     private boolean financeChecksApproved(PartnerOrganisation partnerOrg) {
@@ -171,47 +165,35 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus, final Optional<SpendProfile> spendProfile) {
-        ProjectActivityStates state = spendProfileStatus;
-
-        if (spendProfileStatus == COMPLETE || spendProfileStatus == PENDING) {
-            if (spendProfile.get().getApproval().equals(ApprovalType.REJECTED) || project.getSpendProfileSubmittedDate() == null) {
-                state = ACTION_REQUIRED;
-            } else if (project.getSpendProfileSubmittedDate() != null && !spendProfile.get().getApproval().equals(ApprovalType.APPROVED)) {
-                state = PENDING;
-            }
+        if (COMPLETE.equals(spendProfileStatus) && !APPROVED.equals(spendProfile.get().getApproval())) {
+            return project.getSpendProfileSubmittedDate() != null ? PENDING : ACTION_REQUIRED;
+        } else {
+            return spendProfileStatus;
         }
-        return state;
     }
 
     protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
-        if (spendProfile != null && spendProfile.isPresent() && financeCheckStatus.equals(COMPLETE)) {
-            if (spendProfile.get().isMarkedAsComplete()) {
-                return COMPLETE;
-            } else {
-                return ACTION_REQUIRED;
-            }
+        if (!spendProfile.isPresent()) {
+            return NOT_STARTED;
+        } else if (financeCheckStatus.equals(COMPLETE) && spendProfile.get().isMarkedAsComplete()) {
+            return COMPLETE;
+        } else {
+            return ACTION_REQUIRED;
         }
-        return NOT_STARTED;
     }
 
-    protected ProjectActivityStates createGrantOfferLetterStatus(final ProjectActivityStates leadSpendProfileState,
-                                                                 final ProjectActivityStates otherDocumentsState,
-                                                                 final Project project,
+    protected ProjectActivityStates createGrantOfferLetterStatus(final Project project,
                                                                  final boolean isLeadPartner) {
-        ProjectActivityStates golState = NOT_REQUIRED;
-        if (COMPLETE.equals(leadSpendProfileState) && COMPLETE.equals(otherDocumentsState)) {
-            golState = isLeadPartner ? PENDING : NOT_REQUIRED;
-            if (golWorkflowHandler.isAlreadySent(project)) {
-                golState = isLeadPartner ? ACTION_REQUIRED : PENDING;
-                if (golWorkflowHandler.isReadyToApprove(project)) {
-                    golState = PENDING;
-                }
-                if (golWorkflowHandler.isApproved(project)) {
-                    golState = COMPLETE;
-                }
-            }
+        GOLState state = golWorkflowHandler.getState(project);
+        if (SENT.equals(state) && isLeadPartner) {
+            return ACTION_REQUIRED;
+        } else if (GOLState.APPROVED.equals(state)) {
+            return COMPLETE;
+        } else if (GOLState.PENDING.equals(state)){
+            return NOT_REQUIRED;
+        } else {
+            return PENDING;
         }
-        return golState;
     }
 
     protected ServiceResult<ProjectUser> getCurrentlyLoggedInPartner(Project project) {

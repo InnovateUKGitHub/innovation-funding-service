@@ -618,7 +618,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(project, spendProfileStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(leadSpendProfileStatus, otherDocumentsStatus, project, partnerOrganisation.equals(leadOrganisation));
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project, partnerOrganisation.equals(leadOrganisation));
 
         ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
 
