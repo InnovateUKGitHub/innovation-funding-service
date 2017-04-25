@@ -493,7 +493,7 @@ public class OrganisationCreationController {
     public String confirmSelectOrganisationType(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 BindingResult bindingResult,
                                                 Model model,
-                                                HttpServletRequest request, HttpServletResponse response) {
+                                                HttpServletResponse response) {
 
         OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
         if (!isValidLeadOrganisationType(selectOrgTypeViewModel, organisationForm.getOrganisationTypeId())) {
@@ -520,7 +520,7 @@ public class OrganisationCreationController {
 
         return viewModel.getTypes()
                 .stream()
-                .anyMatch(validOrganisationType -> validOrganisationType.getId() == organisationTypeId);
+                .anyMatch(validOrganisationType -> organisationTypeId.equals(validOrganisationType.getId()));
     }
 
 
