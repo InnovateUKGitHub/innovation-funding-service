@@ -16,12 +16,11 @@ public class ChangePassword {
      */
     @JsonProperty(required = true)
     @NotBlank(message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.blank}")
-    @Size(min = 10, message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.min}")
+    @Size(min = 8, message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.min}")
     @Pattern.List({
         @Pattern(regexp = ".*\\p{N}+.*", message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.complexity.number}"),
         @Pattern(regexp = ".*\\p{Lu}+.*", message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.complexity.uppercase}"),
-        @Pattern(regexp = ".*\\p{Ll}+.*", message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.complexity.lowercase}"),
-        @Pattern(regexp = "^.{0,30}$", message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.max}")
+        @Pattern(regexp = ".*\\p{Ll}+.*", message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.complexity.lowercase}")
     })
     private String password;
 
