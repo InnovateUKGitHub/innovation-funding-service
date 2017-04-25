@@ -27,26 +27,26 @@ public class ProjectOtherDocumentsViewModelPopulator {
     @Autowired
     private ProjectOtherDocumentsService projectOtherDocumentsService;
 
-      public ProjectOtherDocumentsViewModel populate(Long projectId, UserResource loggedInUser) {
+    public ProjectOtherDocumentsViewModel populate(Long projectId, UserResource loggedInUser) {
 
-        ProjectResource project = projectService.getById(projectId);
-        Optional<FileEntryResource> collaborationAgreement = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
-        Optional<FileEntryResource> exploitationPlan = projectOtherDocumentsService.getExploitationPlanFileDetails(projectId);
-        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+    ProjectResource project = projectService.getById(projectId);
+    Optional<FileEntryResource> collaborationAgreement = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+    Optional<FileEntryResource> exploitationPlan = projectOtherDocumentsService.getExploitationPlanFileDetails(projectId);
+    List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
 
-        List<String> partnerOrganisationNames = simpleMap(partnerOrganisations, OrganisationResource::getName);
-        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
-        boolean isSubmitAllowed = projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId);
-        List<String> rejectionReasons = emptyList();
+    List<String> partnerOrganisationNames = simpleMap(partnerOrganisations, OrganisationResource::getName);
+    boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
+    boolean isSubmitAllowed = projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId);
+    List<String> rejectionReasons = emptyList();
 
-        boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
-        ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();
+    boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
+    ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();
 
-        return new ProjectOtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
-                collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
-                exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
-                partnerOrganisationNames, rejectionReasons,
-                isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
-                isSubmitAllowed, project.getDocumentsSubmittedDate());
+    return new ProjectOtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
+            collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
+            exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
+            partnerOrganisationNames, rejectionReasons,
+            isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
+            isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 }
