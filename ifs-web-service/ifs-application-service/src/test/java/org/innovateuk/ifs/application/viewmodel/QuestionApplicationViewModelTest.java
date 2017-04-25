@@ -17,6 +17,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionApplicationViewModelTest {
@@ -40,5 +42,49 @@ public class QuestionApplicationViewModelTest {
     @Test
     public void testGetApplicationIsClosed() {
         assertEquals(Boolean.TRUE, viewModel.getApplicationIsClosed());
+    }
+
+    @Test
+    public void testResearchCategoryHasBeenSelected_nullResearchCategoryShouldResultInNoResearchCategorySelected() {
+        viewModel.setSelectedResearchCategoryName(null);
+
+        assertFalse(viewModel.researchCategoryHasBeenSelected());
+    }
+
+    @Test
+    public void testResearchCategoryHasBeenSelected_researchCategoryShouldResultInResearchCategorySelected() {
+        viewModel.setSelectedResearchCategoryName("A category name");
+
+        assertTrue(viewModel.researchCategoryHasBeenSelected());
+    }
+
+    @Test
+    public void testInnovationAreaHasBeenSelected_nullInnovationAreaAndApplicableShouldResultInNoInnovationAreaSelected() {
+        viewModel.setNoInnovationAreaApplicable(false);
+
+        assertFalse(viewModel.innovationAreaHasBeenSelected());
+    }
+
+    @Test
+    public void testInnovationAreaHasBeenSelected_nullInnovationAreaAndNotApplicableShouldResultInInnovationAreaSelected() {
+        viewModel.setNoInnovationAreaApplicable(true);
+
+        assertTrue(viewModel.innovationAreaHasBeenSelected());
+    }
+
+    @Test
+    public void testInnovationAreaHasBeenSelected_innovationAreaAndApplicableShouldResultInInnovationAreaSelected() {
+        viewModel.setNoInnovationAreaApplicable(false);
+        viewModel.setSelectedInnovationAreaName("An innovation area name");
+
+        assertTrue(viewModel.innovationAreaHasBeenSelected());
+    }
+
+    @Test
+    public void testInnovationAreaHasBeenSelected_innovationAreaAndNotApplicableShouldResultInInnovationAreaSelected() {
+        viewModel.setNoInnovationAreaApplicable(true);
+        viewModel.setSelectedInnovationAreaName("An innovation area name");
+
+        assertTrue(viewModel.innovationAreaHasBeenSelected());
     }
 }
