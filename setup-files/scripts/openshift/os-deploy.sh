@@ -10,6 +10,7 @@ if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
 if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
 if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
 if [[ ${TARGET} == "sysint" ]]; then PROJECT="sysint"; fi
+if [[ ${TARGET} == "perf" ]]; then PROJECT="perf"; fi
 
 if [[ (${TARGET} == "local") ]]; then HOST=ifs-local; else HOST=prod.ifs-test-clusters.com; fi
 
@@ -31,7 +32,7 @@ function deploy() {
         oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
     fi
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
     then
         oc create -f os-files-tmp/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
@@ -79,7 +80,7 @@ function createProject() {
 cleanUp
 cloneConfig
 tailorAppInstance
-if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "sysint" ]]
+if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "sysint" && ${TARGET} != "perf" ]]
 then
     createProject
 fi
