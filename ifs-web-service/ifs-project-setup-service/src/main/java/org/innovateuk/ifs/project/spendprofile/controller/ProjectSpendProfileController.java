@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -247,12 +246,6 @@ public class ProjectSpendProfileController {
         return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
     }
 
-    private Map<String, Boolean> getPartnersSpendProfileProgress(Long projectId, List<OrganisationResource> partnerOrganisations) {
-        return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getName,
-                o -> spendProfileService.getSpendProfile(projectId, o.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false),
-                (v1,v2)->v1, LinkedHashMap::new));
-    }
-
     private String markSpendProfileComplete(Model model,
                                             Long projectId,
                                             Long organisationId,
@@ -315,13 +308,11 @@ public class ProjectSpendProfileController {
         List<OrganisationResource> organisations = new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectId),
                 leadOrganisation, OrganisationResource::getName).unwrap();
 
-        Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, organisations);
 
-        Map<String, Boolean> editablePartners = determineEditablePartners(projectId, organisations, loggedInUser);
+        Map<Long, OrganisationReviewDetails> editablePartners = determineEditablePartners(projectId, organisations, loggedInUser);
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectId,
                 projectResource.getApplication(), projectResource.getName(),
-                partnersSpendProfileProgress,
                 organisations,
                 leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
@@ -334,13 +325,14 @@ public class ProjectSpendProfileController {
         return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
-    private Map<String, Boolean> determineEditablePartners(Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
-        Map<String, Boolean> editablePartnersMap = new HashMap<>();
+    private Map<Long, OrganisationReviewDetails> determineEditablePartners(Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
+        Map<Long, OrganisationReviewDetails> editablePartners = new HashMap<>();
         partnerOrganisations.forEach(organisation -> {
             boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectId, organisation.getId(), loggedInUser);
-            editablePartnersMap.put(organisation.getName(), isUserPartOfThisOrganisation);
+            boolean isMarkedComplete = spendProfileService.getSpendProfile(projectId, organisation.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false);
+            editablePartners.put(organisation.getId(), new OrganisationReviewDetails(organisation.getName(), isMarkedComplete, isUserPartOfThisOrganisation, true));
         });
-        return editablePartnersMap;
+        return editablePartners;
     }
 
     private boolean isUserPartOfThisOrganisation(final Long projectId, final Long organisationId, final UserResource loggedInUser) {
