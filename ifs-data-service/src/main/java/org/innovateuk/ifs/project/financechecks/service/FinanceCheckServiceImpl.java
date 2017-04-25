@@ -204,7 +204,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<Long> getTurnoverByOrganisationId(Long applicationId, Long organisationId) {
-        return getByApplicationAndOrganisationId(applicationId, organisationId, FINANCIAL_YEAR_END, STAFF_TURNOVER);
+        return getByApplicationAndOrganisationId(applicationId, organisationId, FINANCIAL_YEAR_END, ORGANISATION_TURNOVER);
     }
 
     @Override

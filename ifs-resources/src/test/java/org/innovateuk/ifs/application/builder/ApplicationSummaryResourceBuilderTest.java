@@ -26,6 +26,7 @@ public class ApplicationSummaryResourceBuilderTest {
     private Long[] durations = {200L, 400L};
     private FundingDecision[] fundingDecisions = {FUNDED, UNDECIDED};
     private String[] innovationAreas = {"Innovation Area 1", "Innovation Area 2"};
+    private Boolean[] ineligibleInformeds = { true, false};
 
     @Test
     public void buildOne() throws Exception {
@@ -42,6 +43,7 @@ public class ApplicationSummaryResourceBuilderTest {
                 .withDuration(durations[0])
                 .withFundingDecision(fundingDecisions[0])
                 .withInnovationArea(innovationAreas[0])
+                .withIneligibleInformed(ineligibleInformeds[0])
                 .build();
 
         assertEquals(ids[0].longValue(), summaryResource.getId());
@@ -56,6 +58,7 @@ public class ApplicationSummaryResourceBuilderTest {
         assertEquals(durations[0].longValue(), summaryResource.getDuration());
         assertEquals(fundingDecisions[0], summaryResource.getFundingDecision());
         assertEquals(innovationAreas[0], summaryResource.getInnovationArea());
+        assertEquals(ineligibleInformeds[0], summaryResource.isIneligibleInformed());
     }
 
     @Test
@@ -73,6 +76,7 @@ public class ApplicationSummaryResourceBuilderTest {
                 .withDuration(durations)
                 .withFundingDecision(fundingDecisions)
                 .withInnovationArea(innovationAreas)
+                .withIneligibleInformed(ineligibleInformeds)
                 .build(2);
 
         assertEquals(ids[0].longValue(), summaryResources.get(0).getId());
@@ -87,6 +91,7 @@ public class ApplicationSummaryResourceBuilderTest {
         assertEquals(durations[0].longValue(), summaryResources.get(0).getDuration());
         assertEquals(fundingDecisions[0], summaryResources.get(0).getFundingDecision());
         assertEquals(innovationAreas[0], summaryResources.get(0).getInnovationArea());
+        assertEquals(ineligibleInformeds[0], summaryResources.get(0).isIneligibleInformed());
 
         assertEquals(ids[1].longValue(), summaryResources.get(1).getId());
         assertEquals(names[1], summaryResources.get(1).getName());
@@ -100,5 +105,6 @@ public class ApplicationSummaryResourceBuilderTest {
         assertEquals(durations[1].longValue(), summaryResources.get(1).getDuration());
         assertEquals(fundingDecisions[1], summaryResources.get(1).getFundingDecision());
         assertEquals(innovationAreas[1], summaryResources.get(1).getInnovationArea());
+        assertEquals(ineligibleInformeds[1], summaryResources.get(1).isIneligibleInformed());
     }
 }
