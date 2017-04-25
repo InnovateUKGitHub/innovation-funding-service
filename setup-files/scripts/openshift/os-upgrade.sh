@@ -81,6 +81,7 @@ cloneConfig
 tailorAppInstance
 
 useContainerRegistry
+pushApplicationImages
 upgradeServices
 
 if [[ ${bamboo_openshift_force_reload} == "true" ]]
