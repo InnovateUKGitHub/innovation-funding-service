@@ -29,6 +29,7 @@ public class ApplicantDashboardViewModelTest {
     private Map<Long, Integer> applicationProgress;
     private List<ApplicationResource> applicationsInProgress;
     private List<Long> applicationsAssigned;
+    private List<Long> leadApplicantApplications;
     private List<ApplicationResource> applicationsFinished;
     private List<ProjectResource> projectsInSetup;
     private Map<Long, CompetitionResource> competitions;
@@ -68,9 +69,10 @@ public class ApplicantDashboardViewModelTest {
                 APPLICATION_ID_IS_FINISH, ApplicationState.REJECTED,
                 APPLICATION_ID_IS_CREATED, ApplicationState.CREATED,
                 APPLICATION_ID_IS_APPROVED, ApplicationState.APPROVED);
+        this.leadApplicantApplications = asList(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IS_FINISH);
 
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStates);
+                applicationsFinished, projectsInSetup, competitions, applicationStates, leadApplicantApplications);
     }
 
     @Test
@@ -200,11 +202,11 @@ public class ApplicantDashboardViewModelTest {
     private void setupEmptyViewModel() {
         viewModel = new ApplicantDashboardViewModel(null, null,
                 null, null,
-                null,null,null);
+                null,null,null, null);
     }
 
     private void resetViewModel() {
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStates);
+                applicationsFinished, projectsInSetup, competitions, applicationStates, leadApplicantApplications);
     }
 }

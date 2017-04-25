@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Ineligible applications - ${model.competitionName}|" />
+    </head>
+
+    <body class="dashboard-internal full-width">
+        <th:block th:insert="fragments/layout :: body-start" />
+       <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+
+            <div th:include="fragments/layout :: header-sub"
+                 th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
+                 th:remove="tag" />
+
+            <h1 class="heading-xlarge">
+                <span class="heading-secondary">
+                    <th:block th:text="|${model.competitionId}: ${model.competitionName}|">00000001: Connected digital additive manufacturing</th:block>
+                </span>
+                Ineligible applications
+            </h1>
+
+            <form method="GET" th:object="${filterForm}">
+                <div class="search-filters extra-margin">
+                    <fieldset>
+                        <legend class="heading-medium">Filter applications</legend>
+                        <div class="grid-row">
+                            <div class="column-half">
+                                <label class="form-label" for="filterSearch">Search by application number.</label>
+                                <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:field="*{filterSearch}"/>
+                            </div>
+                            <div class="column-half">
+                                <label class="form-label" for="filterInform">Informed</label>
+                                <select name="filterInform" id="filterInform" class="form-control" th:field="*{filterInform}">
+                                    <option value="">All</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="grid-row">
+                        <div class="column-half">
+                            <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                        </div>
+                        <div class="column-half alignright">
+                            <button class="button no-margin" type="submit">Filter</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="grid-row sorting">
+                    <div class="column-half">
+                        <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
+                            <span class="heading-small">applications</span>
+                        </p>
+                    </div>
+                    <div class="column-half alignright">
+                        <label for="sort-by">Sort by</label>
+                        <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                            <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
+                            <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
+                        </select>
+                        <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-overflow">
+                <table id="application-list">
+                    <thead>
+                        <tr>
+                            <th scope="col">Application number</th>
+                            <th scope="col">Project title</th>
+                            <th scope="col">Lead organisation</th>
+                            <th scope="col">Lead applicant</th>
+                            <th scope="col"><span class="hidden">Informed</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
+                            <td>
+                                <a
+                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
+                                th:text="${row.id}">194731</a>
+                            </td>
+                            <td th:text="${row.projectTitle}">Machine learning in robots</td>
+                            <td th:text="${row.lead}">PWC</td>
+                            <td th:text="${row.leadApplicant}">HVM</td>
+                            <td>
+                                <span th:if="${row.informed}">informed</span>
+                                <button class="button" th:if="${!row.informed}">Inform applicant</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

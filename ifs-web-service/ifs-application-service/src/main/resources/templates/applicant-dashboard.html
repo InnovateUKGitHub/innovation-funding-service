@@ -54,8 +54,8 @@
                         <li class="status-2-col" th:each="app : ${model.applicationsInProgress}" th:classappend="${model.applicationIsAssignedToMe(app.id) ? 'assigned-to-me' : '' }">
                             <th:block th:unless="${model.applicationIsSubmitted(app.id)}">
                                 <div class="task">
-                                    <h3 class="heading-small" th:with="formUrl=@{/application/{id}(id=${app.getId()})}, noTitle=#{ifs.application.dashboard.no_title}">
-                                        <a th:href="${formUrl}"
+                                    <h3 class="heading-small" th:with="teamUrl=@{/application/{id}/team(id=${app.getId()})}, formUrl=@{/application/{id}(id=${app.getId()})}, noTitle=#{ifs.application.dashboard.no_title}">
+                                        <a th:href="${model.navigateUserToTeamPage(app.id) ? teamUrl : formUrl}"
                                             th:text="${#strings.isEmpty(app.name) ? noTitle : app.name}"/>
                                     </h3>
                                     <ul class="application-details">
@@ -124,6 +124,7 @@
                                 <p th:if="${model.applicationIsRejected(app.id)}" class="status-msg msg-progress">Unsuccessful</p>
                                 <p th:if="${model.applicationIsApproved(app.id)}" class="status-msg msg-progress">Successful</p>
                                 <p th:if="${model.applicationIsCreatedOrOpen(app.id)}" class="status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${model.applicationIsInformedIneligible(app.id)}" class="status-msg msg-progress">Ineligible</p>
                             </div>
                         </li>
                     </ul>
