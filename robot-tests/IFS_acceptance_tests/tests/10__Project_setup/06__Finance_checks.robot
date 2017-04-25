@@ -936,8 +936,8 @@ Lead-Partner can review only the external version of Finance Checks Eligibility 
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
-    And the user should see the text in the element     jQuery=label[for="total-cost"]        Total project costs
-    Then the user should see the element    jQuery=input[id="total-cost"][value="£ 301,355"]
+    And the user should see the text in the element     css=label[for="total-cost"]        Total project costs
+    Then the user should see the element    css=input[id="total-cost"][value="£ 301,355"]
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
@@ -950,8 +950,8 @@ Partner can review only the external version of Finance Checks Eligibility table
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
-    And the user should see the text in the element     jQuery=label[for="total-cost"]        Total project costs
-    Then the user should see the element        jQuery=input[id="total-cost"][value="£ 200,903"]
+    And the user should see the text in the element     css=label[for="total-cost"]        Total project costs
+    Then the user should see the element        css=input[id="total-cost"][value="£ 200,903"]
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
@@ -1853,8 +1853,8 @@ Lead-Partner can view only the external version of Finance Checks Eligibility ta
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
-    And the user should see the text in the element     jQuery=label[for="total-cost"]        Total project costs
-    Then the user should see the element                jQuery=input[id="total-cost"][value="£ 206,867"]
+    And the user should see the text in the element     css=label[for="total-cost"]        Total project costs
+    Then the user should see the element                css=input[id="total-cost"][value="£ 206,867"]
 
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787, INFUND-8880
@@ -1886,8 +1886,8 @@ Non Lead-Partner can view only the external version of Finance Checks Eligibilit
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
-    And the user should see the text in the element     jQuery=label[for="total-cost"]        Total project costs
-    Then the user should see the element                jQuery=input[id="total-cost"][value="£ 114,256"]
+    And the user should see the text in the element     css=label[for="total-cost"]        Total project costs
+    Then the user should see the element                css=input[id="total-cost"][value="£ 114,256"]
 
 *** Keywords ***
 
