@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -25,7 +26,9 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
@@ -34,7 +37,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -308,17 +310,38 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupInvites();
         this.setupOrganisationTypes();
 
-        String reason = "reason";
+        when(applicationService.markAsIneligible(applications.get(0).getId(), null)).thenReturn(serviceSuccess());
 
-        when(applicationService.markAsIneligible(applications.get(0).getId(), reason)).thenReturn(serviceSuccess());
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/markIneligible"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/applications/submitted"));
 
-        mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/markIneligible")
-                .contentType(APPLICATION_JSON)
-                .content(reason))
+        verify(applicationService).markAsIneligible(applications.get(0).getId(), null);
+    }
+
+    @Test
+    public void markAsIneligible_notSubmitted() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
+
+        when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
+        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+        when(applicationService.markAsIneligible(applications.get(0).getId(), null)).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
+
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/markIneligible"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition-mgt-application-overview"));
 
-        verify(applicationService).markAsIneligible(applications.get(0).getId(), reason);
+        verify(applicationService).markAsIneligible(applications.get(0).getId(), null);
     }
 
     private void assertApplicationOverviewExpectations(OptionalFileDetailsViewModel expectedAssessorFeedback) {

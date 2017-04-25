@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleReasonResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -91,6 +92,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public RestResult<Void> markAsIneligible(long applicationId, String reason) {
-        return postWithRestResult(applicationRestURL + "/" + applicationId + "/ineligible", reason, Void.class);
+        return postWithRestResult(applicationRestURL + "/" + applicationId + "/ineligible", new IneligibleReasonResource(reason), Void.class);
     }
 }

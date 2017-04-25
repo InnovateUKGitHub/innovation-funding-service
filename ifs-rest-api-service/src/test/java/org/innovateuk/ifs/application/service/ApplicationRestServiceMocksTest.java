@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleReasonResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
@@ -162,11 +163,11 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void markAsIneligible() {
         long applicationId = 123L;
-        String reason = "reason";
+        IneligibleReasonResource reason = new IneligibleReasonResource("reason");
         String expectedUrl = applicationRestURL + "/" + applicationId + "/ineligible";
 
         setupPostWithRestResultExpectations(expectedUrl, reason, HttpStatus.OK);
 
-        service.markAsIneligible(applicationId, reason);
+        service.markAsIneligible(applicationId, reason.getReason());
     }
 }

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.resource.IneligibleReasonResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -170,9 +171,12 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
-        controller.markAsIneligible(APPLICATION_ID, "Test reason");
+
+        IneligibleReasonResource reason = new IneligibleReasonResource("Test reason");
+
+        controller.markAsIneligible(APPLICATION_ID, reason);
         ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
         assertEquals(ApplicationState.INELIGIBLE, applicationAfter.getApplicationState());
-        assertEquals("Test reason", applicationAfter.getIneligibleReason());
+        assertEquals(reason.getReason(), applicationAfter.getIneligibleReason());
     }
 }

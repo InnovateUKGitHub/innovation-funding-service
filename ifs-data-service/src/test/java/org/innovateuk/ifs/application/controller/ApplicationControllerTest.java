@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.IneligibleReasonResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
@@ -113,13 +114,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void markAsIneligible() throws Exception {
         Long applicationId = 1L;
-        String reason = "Reason";
+        IneligibleReasonResource reason = new IneligibleReasonResource("Reason");
 
-        when(applicationServiceMock.markAsIneligible(applicationId, reason)).thenReturn(serviceSuccess());
+        when(applicationServiceMock.markAsIneligible(applicationId, reason.getReason())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/ineligible", applicationId)
                 .contentType(APPLICATION_JSON)
-                .content(reason))
+                .content(objectMapper.writeValueAsString(reason)))
                 .andExpect(status().isOk());
     }
 }
