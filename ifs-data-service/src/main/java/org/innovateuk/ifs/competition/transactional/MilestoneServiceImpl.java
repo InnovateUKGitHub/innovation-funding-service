@@ -19,10 +19,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -32,12 +32,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
  */
 @Service
 public class MilestoneServiceImpl extends BaseTransactionalService implements MilestoneService {
-
     private static final Log LOG = LogFactory.getLog(MilestoneServiceImpl.class);
     private static final List<MilestoneType> PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE);
     @Autowired
     private MilestoneRepository milestoneRepository;
-    
+
     @Autowired
     private CompetitionRepository competitionRepository;
 
@@ -46,7 +45,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
-        return serviceSuccess ((List<MilestoneResource>)
+        return serviceSuccess((List<MilestoneResource>)
                 milestoneMapper.mapToResource(milestoneRepository
                         .findByCompetitionIdAndTypeIn(id, PUBLIC_MILESTONES)));
     }
@@ -61,25 +60,27 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long id) {
-        return serviceSuccess ((List<MilestoneResource>) milestoneMapper.mapToResource(milestoneRepository.findAllByCompetitionId(id)));
+        return serviceSuccess((List<MilestoneResource>) milestoneMapper.mapToResource(milestoneRepository.findAllByCompetitionId(id)));
     }
 
     @Override
     public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
-        return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.findByTypeAndCompetitionId(type, id)));
+        return milestoneRepository.findByTypeAndCompetitionId(type, id)
+                .map(milestoneMapper::mapToResource).map(ServiceResult::serviceSuccess)
+                .orElse(serviceFailure(notFoundError(MilestoneResource.class, type, id)));
     }
 
     @Override
     public ServiceResult<Void> updateMilestones(List<MilestoneResource> milestones) {
-    	ValidationMessages messages = validate(milestones);
-        
-        if (!messages.hasErrors()) {
-            List<Milestone> milestoneEntities = milestones.stream().map(milestoneMapper::mapToDomain).collect(Collectors.toList());
-            milestoneEntities.forEach(m -> milestoneRepository.save(m));
-            return serviceSuccess();
+        ValidationMessages messages = validate(milestones);
+
+        if (messages.hasErrors()) {
+            return serviceFailure(messages.getErrors());
         }
 
-        return serviceFailure(messages.getErrors());
+        milestones.forEach(milestone -> milestoneRepository.save(milestoneMapper.mapToDomain(milestone)));
+        return serviceSuccess();
+
     }
 
     @Override
@@ -115,7 +116,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
         vm.addAll(validateDateNotNull(milestones));
 
-        if(!competition.isNonIfs()) {
+        if (!competition.isNonIfs()) {
             vm.addAll(validateDateInFuture(milestones));
         }
 
@@ -126,7 +127,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages vm = new ValidationMessages();
 
         milestones.forEach(m -> {
-            if(m.getDate() != null && m.getDate().isBefore(ZonedDateTime.now())) {
+            if (m.getDate() != null && m.getDate().isBefore(ZonedDateTime.now())) {
                 Error error = new Error("error.milestone.pastdate", HttpStatus.BAD_REQUEST);
                 vm.addError(error);
             }
@@ -139,7 +140,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages vm = new ValidationMessages();
 
         milestones.forEach(m -> {
-            if(m.getDate() == null) {
+            if (m.getDate() == null) {
                 Error error = new Error("error.milestone.nulldate", HttpStatus.BAD_REQUEST);
                 vm.addError(error);
             }
@@ -159,8 +160,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             MilestoneResource previous = presetMilestones.get(i - 1);
             MilestoneResource current = presetMilestones.get(i);
 
-            if(current.getDate() != null && previous.getDate() != null) {
-                if(previous.getDate().isAfter(current.getDate())) {
+            if (current.getDate() != null && previous.getDate() != null) {
+                if (previous.getDate().isAfter(current.getDate())) {
                     Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
                     vm.addError(error);
                 }
@@ -176,7 +177,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
         boolean allCompetitionIdsMatch = milestones.stream().allMatch(milestone -> milestone.getCompetitionId().equals(firstMilestoneCompetitionId));
 
-        if(!allCompetitionIdsMatch) {
+        if (!allCompetitionIdsMatch) {
             Error error = new Error("error.title.status.400", HttpStatus.BAD_REQUEST);
             vm.addError(error);
         }
