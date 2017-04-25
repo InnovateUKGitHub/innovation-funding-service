@@ -397,6 +397,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
+        @Override
+        public ServiceResult<Void> markAsIneligible(long applicationId, String reason) {
+            return null;
+        }
+
         @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final ZonedDateTime fundingEmailDate) {
             return null;
         }

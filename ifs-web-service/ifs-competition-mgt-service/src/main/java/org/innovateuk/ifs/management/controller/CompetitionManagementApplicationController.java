@@ -40,17 +40,13 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 public class CompetitionManagementApplicationController {
 
     @Autowired
-    private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
-
-    @Autowired
     protected ProcessRoleService processRoleService;
-
     @Autowired
     protected ApplicationPrintPopulator applicationPrintPopulator;
-
+    @Autowired
+    private FormInputResponseRestService formInputResponseRestService;
+    @Autowired
+    private AssessorFeedbackRestService assessorFeedbackRestService;
     @Autowired
     private CompetitionManagementApplicationService competitionManagementApplicationService;
 
@@ -66,6 +62,15 @@ public class CompetitionManagementApplicationController {
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> competitionManagementApplicationService
                         .displayApplicationOverview(user, applicationId, competitionId, form, origin, queryParams, model, application));
+    }
+
+    @PostMapping("/{applicationId}/markIneligible")
+    public String markAsIneligible(@PathVariable("applicationId") final Long applicationId,
+                                   @PathVariable("competitionId") final Long competitionId,
+                                   @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                   @RequestParam MultiValueMap<String, String> queryParams,
+                                   @RequestBody String reason) {
+        return competitionManagementApplicationService.markApplicationAsIneligible(applicationId, reason);
     }
 
     @GetMapping("/{applicationId}/assessorFeedback")

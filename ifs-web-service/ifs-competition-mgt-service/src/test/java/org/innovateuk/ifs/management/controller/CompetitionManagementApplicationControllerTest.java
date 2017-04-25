@@ -26,6 +26,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -33,6 +34,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -296,6 +298,27 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()));
 
         verify(assessorFeedbackRestService).removeAssessorFeedbackDocument(applications.get(0).getId());
+    }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        String reason = "reason";
+
+        when(applicationService.markAsIneligible(applications.get(0).getId(), reason)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/markIneligible")
+                .contentType(APPLICATION_JSON)
+                .content(reason))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition-mgt-application-overview"));
+
+        verify(applicationService).markAsIneligible(applications.get(0).getId(), reason);
     }
 
     private void assertApplicationOverviewExpectations(OptionalFileDetailsViewModel expectedAssessorFeedback) {

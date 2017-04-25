@@ -109,4 +109,17 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()));
     }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        Long applicationId = 1L;
+        String reason = "Reason";
+
+        when(applicationServiceMock.markAsIneligible(applicationId, reason)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/{applicationId}/ineligible", applicationId)
+                .contentType(APPLICATION_JSON)
+                .content(reason))
+                .andExpect(status().isOk());
+    }
 }

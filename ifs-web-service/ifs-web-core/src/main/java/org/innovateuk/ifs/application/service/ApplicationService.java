@@ -25,4 +25,5 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> findByProcessRoleId(Long id);
     OrganisationResource getLeadOrganisation(Long applicationId);
     ServiceResult<Void> removeCollaborator(Long applicationInviteId);
+    ServiceResult<Void> markAsIneligible(long applicationId, String reason);
 }

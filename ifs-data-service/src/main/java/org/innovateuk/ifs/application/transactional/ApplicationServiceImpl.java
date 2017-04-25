@@ -56,8 +56,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
@@ -72,20 +71,13 @@ import static org.innovateuk.ifs.util.MathFunctions.percentage;
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
-    enum Notifications {
-        APPLICATION_SUBMITTED,
-        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED
-    }
-
-    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
-
     // TODO DW - INFUND-1555 - put into a DTO
     public static final String READY_FOR_SUBMIT = "readyForSubmit";
     public static final String PROGRESS = "progress";
     public static final String RESEARCH_PARTICIPATION = "researchParticipation";
     public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
     public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
-
+    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
     @Autowired
     private FileService fileService;
     @Autowired
@@ -111,6 +103,16 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
+    private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
+        boolean contains = false;
+        int i = 0;
+        while (!contains && i < roles.size()) {
+            contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
+            i++;
+        }
+
+        return contains;
+    }
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -434,17 +436,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(filteredResource);
     }
 
-    private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
-        boolean contains = false;
-        int i = 0;
-        while (!contains && i < roles.size()) {
-            contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
-            i++;
-        }
-
-        return contains;
-    }
-
     @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
         return getProcessRole(id).andOnSuccessReturn(processRole -> {
@@ -507,6 +498,18 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 .collect(toList()));
     }
 
+    @Override
+    public ServiceResult<Void> markAsIneligible(long applicationId, String reason) {
+        return find(application(applicationId)).andOnSuccess((application) -> {
+            if (!applicationWorkflowHandler.markIneligible(application)) {
+                return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
+            }
+            application.setIneligibleReason(reason);
+            applicationRepository.save(application);
+            return serviceSuccess();
+        });
+    }
+
     private ServiceResult<List<EmailAddress>> sendNotification(ProcessRole processRole) {
         Application application = applicationRepository.findOne(processRole.getApplicationId());
 
@@ -538,8 +541,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<ProcessRole> processRoles = application.getProcessRoles();
 
         Set<Organisation> organisations = processRoles.stream()
-                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName()) 
-					|| p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) 
+                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName())
+					|| p.getRole().getName().equals(UserRoleType.APPLICANT.getName())
 					|| p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
                 .map(processRole -> {
                     return organisationRepository.findOne(processRole.getOrganisationId());
@@ -575,5 +578,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus());
         }
         return true;
+    }
+
+    enum Notifications {
+        APPLICATION_SUBMITTED,
+        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED
     }
 }

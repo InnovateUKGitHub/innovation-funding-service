@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
 </head>
@@ -48,6 +48,33 @@
             </div>
         </th:block>
     </th:block>
+
+    <div th:unless="${param.status}">
+        <a href="?status="
+           class="button button-secondary">
+            Mark application as ineligible
+        </a>
+    </div>
+
+    <div th:if="${param.status}">
+        <form th:action="@{/competition/{competitionId}/application/{applicationId}/markIneligible(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" id="removeApp">
+            <div class="form-group no-margin-bottom">
+                <label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>
+                <textarea name="remove-application-reason" id="remove-application-reason" class="width-full" cols="30" rows="10"></textarea>
+                <div class="textarea-footer">
+                            <span class="count-label">
+                                <span class="count-down">Words remaining: 400</span>
+                            </span>
+                </div>
+            </div>
+
+            <div class="alignright">
+                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="extra-margin-right">Cancel</a>
+                <input type="submit" class="button" value="Mark application as ineligible"/>
+            </div>
+
+        </form>
+    </div>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

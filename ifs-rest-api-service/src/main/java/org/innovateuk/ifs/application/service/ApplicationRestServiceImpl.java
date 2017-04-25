@@ -88,4 +88,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return getWithRestResult(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
     }
+
+    @Override
+    public RestResult<Void> markAsIneligible(long applicationId, String reason) {
+        return postWithRestResult(applicationRestURL + "/" + applicationId + "/ineligible", reason, Void.class);
+    }
 }

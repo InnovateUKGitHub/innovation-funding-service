@@ -164,4 +164,15 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertTrue(application.isPresent());
         assertEquals(competitionId, application.get().getCompetition());
     }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        loginCompAdmin();
+        controller.markAsIneligible(APPLICATION_ID, "Test reason");
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        assertEquals(ApplicationState.INELIGIBLE, applicationAfter.getApplicationState());
+        assertEquals("Test reason", applicationAfter.getIneligibleReason());
+    }
 }

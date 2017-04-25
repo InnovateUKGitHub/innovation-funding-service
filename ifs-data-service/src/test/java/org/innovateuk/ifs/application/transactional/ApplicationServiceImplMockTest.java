@@ -6,7 +6,10 @@ import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
@@ -55,6 +58,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -81,15 +85,8 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationService> {
 
     private Application openApplication;
-
-    @Override
-    protected ApplicationService supplyServiceUnderTest() {
-        return new ApplicationServiceImpl();
-    }
-
     @Mock
     private SystemNotificationSource systemNotificationSourceMock;
-
     private FormInput formInput;
     private FormInputType formInputType;
     private Question question;
@@ -100,6 +97,11 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
     private Long organisationId = 456L;
+
+    @Override
+    protected ApplicationService supplyServiceUnderTest() {
+        return new ApplicationServiceImpl();
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -1120,5 +1122,50 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        long applicationId = 1L;
+        String reason = "reason";
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withId(applicationId)
+                .build();
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.markIneligible(application)).thenReturn(true);
+        when(applicationRepositoryMock.save(application)).thenReturn(application);
+
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, reason);
+
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationWorkflowHandlerMock).markIneligible(application);
+        verify(applicationRepositoryMock).save(application);
+    }
+
+    @Test
+    public void markAsIneligible_applicationNotSubmitted() throws Exception {
+        long applicationId = 1L;
+        String reason = "reason";
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.OPEN)
+                .withId(applicationId)
+                .build();
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.markIneligible(application)).thenReturn(false);
+
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, reason);
+
+        assertTrue(result.isFailure());
+        assertEquals(APPLICATION_MUST_BE_SUBMITTED.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationWorkflowHandlerMock).markIneligible(application);
     }
 }

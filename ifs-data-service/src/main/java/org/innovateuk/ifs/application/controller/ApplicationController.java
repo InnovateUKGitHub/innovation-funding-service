@@ -91,4 +91,10 @@ public class ApplicationController {
                 applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
         return applicationResult.toPostCreateResponse();
     }
+
+    @PostMapping("/{applicationId}/ineligible")
+    public RestResult<Void> markAsIneligible(@PathVariable("applicationId") long applicationId,
+                                             @RequestBody String reason) {
+        return applicationService.markAsIneligible(applicationId, reason).toPostWithBodyResponse();
+    }
 }

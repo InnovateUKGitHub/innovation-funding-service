@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
@@ -156,5 +157,16 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         // now run the method under test
         Integer actualCount = service.getAssignedQuestionsCount(applicationId, assigneeId).getSuccessObject();
         assertEquals(actualCount, Integer.valueOf(count));
+    }
+
+    @Test
+    public void markAsIneligible() {
+        long applicationId = 123L;
+        String reason = "reason";
+        String expectedUrl = applicationRestURL + "/" + applicationId + "/ineligible";
+
+        setupPostWithRestResultExpectations(expectedUrl, reason, HttpStatus.OK);
+
+        service.markAsIneligible(applicationId, reason);
     }
 }

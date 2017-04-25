@@ -22,4 +22,5 @@ public interface ApplicationRestService {
     Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
+    RestResult<Void> markAsIneligible(long applicationId, String reason);
 }

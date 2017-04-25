@@ -33,7 +33,8 @@ public class ApplicationDocs {
             fieldWithPath("previousApplicationTitle").description("the application title of the previous submission"),
             fieldWithPath("researchCategory").description("Research category"),
             fieldWithPath("innovationArea").description("applicable Innovation Area"),
-            fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable")
+            fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable"),
+            fieldWithPath("ineligibleReason").description("Reason for the application being marked as ineligible")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
@@ -50,5 +51,6 @@ public class ApplicationDocs {
             .withCompletion(new BigDecimal(30L))
             .withResearchCategory(new ResearchCategoryResource())
             .withInnovationArea(new InnovationAreaResource())
-            .withNoInnovationAreaApplicable(false);
+            .withNoInnovationAreaApplicable(false)
+            .withIneligibleReason("reason");
 }

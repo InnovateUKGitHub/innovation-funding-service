@@ -112,4 +112,8 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     public ApplicationBuilder withResearchCategory(ResearchCategory... researchCategories) {
         return withArray((researchCategory, application) -> application.setResearchCategory(researchCategory), researchCategories);
     }
+
+    public ApplicationBuilder withIneligibleReason(String... reasons) {
+        return withArray((reason, application) -> application.setIneligibleReason(reason), reasons);
+    }
 }

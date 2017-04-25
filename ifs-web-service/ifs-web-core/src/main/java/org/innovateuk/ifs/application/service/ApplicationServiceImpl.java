@@ -189,4 +189,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ServiceResult<Void> removeCollaborator(Long applicationInviteId) {
         return inviteRestService.removeApplicationInvite(applicationInviteId).toServiceResult();
     }
+
+    @Override
+    public ServiceResult<Void> markAsIneligible(long applicationId, String reason) {
+        return applicationRestService.markAsIneligible(applicationId, reason).toServiceResult();
+    }
 }
