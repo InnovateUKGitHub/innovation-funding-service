@@ -49,43 +49,38 @@
                 </th:block>
             </th:block>
 
-            <div th:unless="${param.status}">
-                <a href="?status=#ineligible"
-                   class="button button-secondary">
-                    Mark application as ineligible
-                </a>
-            </div>
+            <div class="collapsible collapsible-eligibility">
+                <h2>Mark application as ineligible</h2>
+                <div>
+                    <form th:action="@{/competition/{competitionId}/application/{applicationId}/markIneligible(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" th:object="${form}">
 
-            <div th:if="${param.status}">
-                <form th:action="@{/competition/{competitionId}/application/{applicationId}/markIneligible(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" id="ineligible">
-
-                    <div class="form-group word-count">
-                        <label class="form-label" th:for="${#ids.next('form.ineligibleReason')}">
-                            Please enter the reason for removing this application from assessment
-                            <span th:if="${#fields.hasErrors('form.ineligibleReason')}" th:remove="tag">
-                                <span class="error-message"  th:each="err : ${#fields.errors('form.ineligibleReason')}" th:text="${err}" />
-                            </span>
-                        </label>
-                        <textarea class="form-control width-full"
-                                  maxlength="5000"
-                                  data-max_words="400"
-                                  data-maxwordslength="400"
-                                  data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
-                                  th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                  th:errorclass="field-error"
-                                  rows="4"
-                                  th:field="*{form.ineligibleReason}"></textarea>
-                        <div class="textarea-footer" th:with="content=*{form.ineligibleReason}">
-                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, content)})" />
+                        <div class="form-group word-count">
+                            <label class="form-label" th:for="ineligibleReason">
+                                Please enter the reason for removing this application from assessment
+                                <span th:if="${#fields.hasErrors('ineligibleReason')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}" />
+                                </span>
+                            </label>
+                            <textarea class="form-control width-full"
+                                      maxlength="5000"
+                                      data-max_words="400"
+                                      data-maxwordslength="400"
+                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                      th:errorclass="field-error"
+                                      rows="10"
+                                      th:field="*{ineligibleReason}"></textarea>
+                            <div class="textarea-footer" th:with="content=*{ineligibleReason}">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, content)})" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="alignright">
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button button-clear">Cancel</a>
-                        <button type="submit" class="button no-margin">Mark application as ineligible</button>
-                    </div>
-
-                </form>
+                        <div class="alignright">
+                            <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button button-clear">Cancel</a>
+                            <button type="submit" class="button no-margin">Mark application as ineligible</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
