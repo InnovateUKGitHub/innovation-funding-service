@@ -146,7 +146,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
     private void addSelectedInnovationAreaName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
         if(applicationResource.getNoInnovationAreaApplicable()) {
-            questionApplicationViewModel.setSelectedInnovationAreaName("No Innovation Area applicable.");
+            questionApplicationViewModel.setNoInnovationAreaApplicable(true);
         }
         else if(applicationResource.getInnovationArea() != null) {
             questionApplicationViewModel.setSelectedInnovationAreaName(applicationResource.getInnovationArea().getName());

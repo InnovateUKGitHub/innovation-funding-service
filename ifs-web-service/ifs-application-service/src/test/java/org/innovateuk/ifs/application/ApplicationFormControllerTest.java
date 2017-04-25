@@ -627,6 +627,32 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorForNoResearchCategorySelected() throws Exception {
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
+                        .param("mark_as_complete", questionId.toString())
+                        .param("application.name", "random")
+        ).andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        assertEquals("NotNull", bindingResult.getFieldError("application.researchCategory").getCode());
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+    }
+
+    @Test
+    public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorForNoInnovationAreaSelected() throws Exception {
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
+                        .param("mark_as_complete", questionId.toString())
+                        .param("application.name", "random")
+        ).andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        assertEquals("NotNull", bindingResult.getFieldError("application.innovationArea").getCode());
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+    }
+
+    @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsWithInvalidValues() throws Exception {
 
         LocalDate yesterday = LocalDate.now().minusDays(1L);
