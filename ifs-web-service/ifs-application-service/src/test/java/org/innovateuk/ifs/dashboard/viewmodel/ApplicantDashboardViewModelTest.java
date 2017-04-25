@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +29,7 @@ public class ApplicantDashboardViewModelTest {
     private Map<Long, Integer> applicationProgress;
     private List<ApplicationResource> applicationsInProgress;
     private List<Long> applicationsAssigned;
+    private List<Long> leadApplicantApplications;
     private List<ApplicationResource> applicationsFinished;
     private List<ProjectResource> projectsInSetup;
     private Map<Long, CompetitionResource> competitions;
@@ -69,9 +69,10 @@ public class ApplicantDashboardViewModelTest {
                 APPLICATION_ID_IS_FINISH, ApplicationState.REJECTED,
                 APPLICATION_ID_IS_CREATED, ApplicationState.CREATED,
                 APPLICATION_ID_IS_APPROVED, ApplicationState.APPROVED);
+        this.leadApplicantApplications = asList(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IS_FINISH);
 
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStates, new ArrayList<>());
+                applicationsFinished, projectsInSetup, competitions, applicationStates, leadApplicantApplications);
     }
 
     @Test
@@ -206,6 +207,6 @@ public class ApplicantDashboardViewModelTest {
 
     private void resetViewModel() {
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStates, new ArrayList<>());
+                applicationsFinished, projectsInSetup, competitions, applicationStates, leadApplicantApplications);
     }
 }

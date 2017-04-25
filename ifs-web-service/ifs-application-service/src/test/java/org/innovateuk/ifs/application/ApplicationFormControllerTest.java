@@ -24,6 +24,7 @@ import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -59,6 +60,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -437,13 +439,14 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void testApplicationFinanceMarkAsCompleteFailWithStateAid() throws Exception {
+    public void testApplicationFinanceMarkAsCompleteFailWithoutStateAid() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).build());
 
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
 
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -452,6 +455,22 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.STATE_AID_AGREED_KEY));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+    }
+
+    @Test
+    public void testApplicationFinanceMarkAsCompleteSuccessWithoutStateAidForAcademic() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).build());
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build());
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
     }
 
     @Test
