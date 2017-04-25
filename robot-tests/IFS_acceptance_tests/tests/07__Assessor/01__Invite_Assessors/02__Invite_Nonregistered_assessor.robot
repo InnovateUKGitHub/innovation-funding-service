@@ -109,7 +109,7 @@ Create assessor account: Accepted competitions should be displayed in dashboard
 Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
     [Tags]
-    [Setup]    Guest user log-in    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Guest user log-in    &{Comp_admin1_credentials}
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    jQuery=a:contains(81 to)
