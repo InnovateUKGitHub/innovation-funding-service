@@ -10,30 +10,30 @@ buildscript {
 }
 
 // if there is no key/cert provided, we generate a self-signed certificate
-def String sp_proxy_key_file = "${buildDir}/sp_proxy_key.pem"
-def String sp_proxy_certificate_file = "${buildDir}/sp_proxy_certificate.pem"
-def String sp_proxy_cacertificate_file = "${buildDir}/sp_proxy_cacertificate.pem"
+def String spProxyKeyFile = "${buildDir}/sp_proxy_key.pem"
+def String spProxyCertificateFile = "${buildDir}/sp_proxy_certificate.pem"
+def String spProxyCacertificateFile = "${buildDir}/sp_proxy_cacertificate.pem"
 
-if ( project.hasProperty('auth.sp.proxy.key') ) { file(sp_proxy_key_file).text = project.hasProperty['auth.sp.proxy.key'] }
-if ( project.hasProperty('auth.sp.proxy.certificate') ) { file(sp_proxy_certificate_file).text = project.hasProperty['auth.sp.proxy.certificate'] }
-if ( project.hasProperty('auth.sp.proxy.cacertificate') ) { file(sp_proxy_cacertificate_file).text = project.hasProperty['auth.sp.proxy.cacertificate'] }
+if ( project.hasProperty('auth.sp.proxy.key') ) { file(spProxyKeyFile).text = project['auth.sp.proxy.key'] }
+if ( project.hasProperty('auth.sp.proxy.certificate') ) { file(spProxyCertificateFile).text = project['auth.sp.proxy.certificate'] }
+if ( project.hasProperty('auth.sp.proxy.cacertificate') ) { file(spProxyCacertificateFile).text = project['auth.sp.proxy.cacertificate'] }
 
 task prepareSecrets(type: Exec) {
-    onlyIf { !file(sp_proxy_key_file).exists() || !file(sp_proxy_certificate_file).exists() || !file(sp_proxy_cacertificate_file).exists() }
+    onlyIf { !file(spProxyKeyFile).exists() || !file(spProxyCertificateFile).exists() || !file(spProxyCacertificateFile).exists() }
     buildDir.mkdir()
 
     executable = 'openssl'
     args = ['req', '-x509',
             '-newkey', 'rsa:4096',
-            '-keyout', sp_proxy_key_file,
-            '-out', sp_proxy_certificate_file,
+            '-keyout', spProxyKeyFile,
+            '-out', spProxyCertificateFile,
             '-days', '3650',
             '-nodes',
             '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ifs.local-dev'
     ]
     doLast {
         copy {
-            from file(sp_proxy_certificate_file)
+            from file(spProxyCertificateFile)
             into buildDir
             rename 'sp_proxy_certificate.pem', 'sp_proxy_cacertificate.pem'
         }
@@ -64,9 +64,9 @@ task buildDocker(type: Docker) {
             into "${stageDir}/files"
         }
         copy {
-            from file(sp_proxy_key_file)
-            from file(sp_proxy_certificate_file)
-            from file(sp_proxy_cacertificate_file)
+            from file(spProxyKeyFile)
+            from file(spProxyCertificateFile)
+            from file(spProxyCacertificateFile)
             into "${stageDir}/files/apache2"
         }
     }
