@@ -7,11 +7,10 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.monitoringofficer.controller.ProjectMonitoringOfficerController;
-import org.innovateuk.ifs.monitoringofficer.form.ProjectMonitoringOfficerForm;
-import org.innovateuk.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.form.ProjectMonitoringOfficerForm;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -290,7 +289,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         ProjectResource project = projectBuilder.build();
 
-        when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/confirm").
@@ -371,7 +370,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         when(projectService.getById(123L)).thenReturn(projectBuilder.build());
         when(projectService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
 
-        when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/123/monitoring-officer/assign").
                 param("firstName", "First").
@@ -380,7 +379,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 param("phoneNumber", "1234567890")).
                 andExpect(view().name("redirect:/project/123/monitoring-officer"));
 
-        verify(projectService).updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890");
+        verify(projectMonitoringOfficerService).updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890");
     }
 
     @Test
@@ -390,7 +389,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         ServiceResult<Void> failureResponse = serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
 
-        when(projectService.updateMonitoringOfficer(123L, "First2", "Last2", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
+        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First2", "Last2", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
@@ -455,7 +454,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         ProjectResource project = projectBuilder.build();
 
-        when(projectService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
@@ -518,7 +517,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 build();
 
         Optional<MonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
-        when(projectService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
+        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);

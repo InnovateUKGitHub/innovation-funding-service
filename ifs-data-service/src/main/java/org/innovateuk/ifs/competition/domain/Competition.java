@@ -6,9 +6,8 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -96,8 +95,12 @@ public class Competition implements ProcessActivity {
     private String streamName;
     @Enumerated(EnumType.STRING)
     private CollaborationLevel collaborationLevel;
-    @Enumerated(EnumType.STRING)
-    private LeadApplicantType leadApplicantType;
+
+    @ManyToMany
+    @JoinTable(name = "lead_applicant_type",
+            joinColumns = @JoinColumn(name = "competition_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
+    private List<OrganisationType> leadApplicantTypes;
 
     @ElementCollection
     @JoinTable(name = "competition_setup_status", joinColumns = @JoinColumn(name = "competition_id"))
@@ -525,12 +528,12 @@ public class Competition implements ProcessActivity {
         this.collaborationLevel = collaborationLevel;
     }
 
-    public LeadApplicantType getLeadApplicantType() {
-        return leadApplicantType;
+    public List<OrganisationType> getLeadApplicantTypes() {
+        return leadApplicantTypes;
     }
 
-    public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
-        this.leadApplicantType = leadApplicantType;
+    public void setLeadApplicantTypes(List<OrganisationType> leadApplicantTypes) {
+        this.leadApplicantTypes = leadApplicantTypes;
     }
 
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {

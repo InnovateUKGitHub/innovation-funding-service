@@ -12,7 +12,6 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionStatus.displayName},subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
-
     <div class="grid-row">
         <form action="#" th:action="@{/competition}" method="post">
             <div class="column-two-thirds">
@@ -70,9 +69,9 @@
                 <ul class="link-list">
                     <li>
                         <a class="disabled" aria-disabled="true"
-                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}">Applications: All, submitted</a>
+                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}">Applications: All, submitted, ineligible</a>
                         <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
-                           th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications: All, submitted</a>
+                           th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications: All, submitted, ineligible</a>
                     </li>
                     <li>
                         <a th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}">Invite assessors to assess the competition</a>

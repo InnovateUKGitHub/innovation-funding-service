@@ -6,9 +6,6 @@ import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.CommonErrors;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.ErrorTemplate;
-import org.innovateuk.ifs.commons.error.ErrorTemplateImpl;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Academic;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -92,7 +89,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         Organisation organisation = organisationMapper.mapToDomain(organisationResource);
 
         if (organisation.getOrganisationType() == null) {
-            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
+            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getId()));
         }
 
         Organisation savedOrganisation = organisationRepository.save(organisation);

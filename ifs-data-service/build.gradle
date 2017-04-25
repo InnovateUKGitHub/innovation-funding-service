@@ -42,7 +42,8 @@ ext {
     generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
 }
 
-ext.idpRestKey=project.properties['idp.rest.key'] ?:"123456789"
+ext.silRestCrmBaseURL="http://data-service:8080/silstub"
+ext.idpRestKey=project.properties['idp.rest.key'] ?:"1234567890"
 ext.companyHouseKey=ext.get('ifs.company-house.key')
 ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
 
@@ -153,6 +154,7 @@ task buildDocker(type: Docker, dependsOn: build) {
     }
 }
 
+
 task prepareDockerFile (type: Copy) {
     outputs.upToDateWhen { false }
     from 'src/main/docker/'
@@ -160,6 +162,23 @@ task prepareDockerFile (type: Copy) {
     include 'Dockerfile-template'
     rename 'Dockerfile-template', 'Dockerfile'
     filter(ReplaceTokens, tokens: [version: project.properties['version']])
+}
+
+task dbResetDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = 'dbreset'
+    dockerfile = file('src/main/docker/Dockerfile-dbreset')
+    doFirst {
+        copy{
+            from file('src/main/resources')
+            include 'db/**/*.sql'
+            into stageDir
+        }
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
+            into stageDir
+        }
+    }
 }
 
 buildDocker.dependsOn prepareDockerFile

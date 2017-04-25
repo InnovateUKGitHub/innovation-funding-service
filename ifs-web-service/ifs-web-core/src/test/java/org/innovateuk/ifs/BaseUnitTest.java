@@ -2,6 +2,7 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.alert.service.AlertRestService;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
@@ -47,10 +48,12 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStatusRestService;
@@ -102,6 +105,7 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -151,6 +155,10 @@ public class BaseUnitTest {
     @Mock
     public UserService userService;
     @Mock
+    public ProfileRestService profileRestService;
+    @Mock
+    public AffiliationRestService affiliationRestService;
+    @Mock
     protected AlertRestService alertRestService;
     @Mock
     protected FinanceService financeService;
@@ -198,6 +206,8 @@ public class BaseUnitTest {
     protected AssessorFeedbackRestService assessorFeedbackRestService;
     @Mock
     public ProjectService projectService;
+    @Mock
+    public ProjectMonitoringOfficerService projectMonitoringOfficerService;
     @Mock
     public ProjectFinanceService projectFinanceService;
     @Mock
@@ -653,7 +663,7 @@ public class BaseUnitTest {
 
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
-        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
@@ -792,7 +802,7 @@ public class BaseUnitTest {
     }
 
     private QuestionResource setupQuestionResource(Long id, String name, QuestionResourceBuilder questionResourceBuilder) {
-        List<FormInputResource> formInputs = newFormInputResource().with(incrementingIds(1)).build(1);
+        List<FormInputResource> formInputs = newFormInputResource().with(incrementingIds(1)).withType(TEXTAREA).build(1);
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
@@ -804,7 +814,7 @@ public class BaseUnitTest {
     private QuestionResource setupFileQuestionResource(Long id, String name, QuestionResourceBuilder questionResourceBuilder) {
         List<FormInputResource> formInputs = newFormInputResource()
                 .with(incrementingIds(1))
-                .withType(null, FILEUPLOAD)
+                .withType(TEXTAREA, FILEUPLOAD)
                 .build(2);
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).

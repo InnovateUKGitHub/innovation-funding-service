@@ -5,7 +5,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
 import org.innovateuk.ifs.user.domain.Ethnicity;
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
@@ -150,7 +150,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                 profileSkillsEditResource.setSkillsAreas(skillAreas);
                 profileSkillsEditResource.setUser(data.getUser().getId());
 
-                userProfileService.updateProfileSkills(data.getUser().getId(), profileSkillsEditResource);
+                profileService.updateProfileSkills(data.getUser().getId(), profileSkillsEditResource);
                 testService.flushAndClearSession();
             });
         });
@@ -187,14 +187,14 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     AffiliationResourceBuilder.createFamilyFinancialInterests(!familyFinancialInterests.isEmpty(), familyFinancialInterests)
             );
 
-            doAs(data.getUser(), () -> userProfileService.updateUserAffiliations(data.getUser().getId(), allAffiliations));
+            doAs(data.getUser(), () -> affiliationService.updateUserAffiliations(data.getUser().getId(), allAffiliations));
         });
     }
 
     public AssessorDataBuilder addAgreementSigned() {
         return with((AssessorData data) ->
                 doAs(data.getUser(), () -> {
-                    userProfileService.updateProfileAgreement(data.getUser().getId());
+                    profileService.updateProfileAgreement(data.getUser().getId());
                     testService.flushAndClearSession();
                 })
         );
