@@ -25,7 +25,8 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,7 +43,7 @@ public class EligibilityModelPopulatorTest {
 
 	@Mock
 	private OrganisationTypeRestService organisationTypeRestService;
-	
+
 	@Test
 	public void testSectionToPopulateModel() {
 		CompetitionSetupSection result = populator.sectionToPopulateModel();
