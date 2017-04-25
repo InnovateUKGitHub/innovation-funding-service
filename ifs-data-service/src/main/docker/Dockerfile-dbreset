@@ -1,0 +1,7 @@
+FROM dhoer/flyway:4.1.2
+MAINTAINER Lukasz Guminski <lukasz.guminski@container-solutions.com>
+WORKDIR /
+VOLUME /tmp
+RUN apt-get update -y && apt-get install -y mysql-client ldap-utils
+COPY db/ /db
+ADD ldap-sync-from-ifs-db.sh /

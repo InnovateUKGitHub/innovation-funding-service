@@ -48,7 +48,7 @@ File uploads not visible
 Days left to submit are visible
     [Documentation]    -INFUND-37
     [Tags]    HappyPath
-    Then the user should see the element  jQuery=.deadline:contains("Days left to submit")
+    Then the user should see the element  jQuery=.deadline:contains("days left to submit")
 
 The Progress bar is visible
     [Documentation]    INFUND-32

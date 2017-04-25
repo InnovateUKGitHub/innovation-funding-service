@@ -31,7 +31,8 @@ public class ApplicationSummaryDocs {
             fieldWithPath("content[].fundingDecision").description("The funding decision for the application"),
             fieldWithPath("content[].funded").description("Whether the application will be funded"),
             fieldWithPath("content[].innovationArea").description("The innovation area of the application"),
-            fieldWithPath("content[].manageFundingEmailDate").description("The date of the last  manage funding email sent")
+            fieldWithPath("content[].manageFundingEmailDate").description("The date of the last  manage funding email sent"),
+            fieldWithPath("content[].ineligibleInformed").description("Whether the applicant has been informed the application is ineligible")
     };
 
     public static final ApplicationSummaryResourceBuilder APPLICATION_SUMMARY_RESOURCE_BUILDER =
@@ -46,5 +47,6 @@ public class ApplicationSummaryDocs {
                     withInnovationArea("Earth Observation", "Internet of Things", "Data", "Cyber Security", "User Experience").
                     withLeadApplicant("A lead user").
                     withManageFundingEmailDate(ZonedDateTime.now()).
-                    withNumberOfPartners(1, 2, 3, 4, 5);
+                    withNumberOfPartners(1, 2, 3, 4, 5).
+                    withIneligibleInformed(true, true, true, false, false);
 }

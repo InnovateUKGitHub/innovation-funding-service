@@ -59,8 +59,13 @@ public class ApplicationResource {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
+
+    @NotNull(message="{validation.application.research.category.required}")
     private ResearchCategoryResource researchCategory;
+
+    @NotNull(message="{validation.application.innovationarea.category.required}")
     private InnovationAreaResource innovationArea;
+
     private boolean noInnovationAreaApplicable;
     private String ineligibleReason;
 

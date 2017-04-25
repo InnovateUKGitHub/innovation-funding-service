@@ -11,6 +11,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
@@ -20,7 +21,7 @@ import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.CompAdminEmailRepository;
-import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.ProjectFinanceEmailRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -92,6 +93,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private EthnicityMapper ethnicityMapper;
 
+    @Autowired
+    private UserSurveyService userSurveyService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -127,7 +131,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<UserResource> createOrganisationUser(Long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
         String roleName;
         if (isUserCompAdmin(userResource.getEmail())) {
             roleName = COMP_ADMIN.getName();
@@ -151,12 +155,28 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> activateUser(Long userId) {
-        return getUser(userId).andOnSuccessReturnVoid(u -> {
-            idpService.activateUser(u.getUid());
-            u.setStatus(UserStatus.ACTIVE);
-            userRepository.save(u);
-        });
+    public ServiceResult<Void> activateUser(long userId) {
+        return getUser(userId).andOnSuccessReturnVoid(this::activateUser);
+    }
+
+    private ServiceResult<User> activateUser(User user) {
+        return idpService
+                .activateUser(user.getUid())
+                .andOnSuccessReturn(() -> {
+                        user.setStatus(UserStatus.ACTIVE);
+                        return userRepository.save(user);
+                });
+    }
+
+    @Override
+    public ServiceResult<Void> activateUserAndSendDiversitySurvey(long userId) {
+        return getUser(userId)
+                .andOnSuccess(this::activateUser)
+                .andOnSuccessReturnVoid(this::sendDiversitySurvey);
+    }
+
+    private ServiceResult<Void> sendDiversitySurvey(User user) {
+        return userSurveyService.sendDiversitySurvey(user);
     }
 
     private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {

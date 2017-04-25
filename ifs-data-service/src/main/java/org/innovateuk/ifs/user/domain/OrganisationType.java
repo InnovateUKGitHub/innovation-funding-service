@@ -24,6 +24,8 @@ public class OrganisationType {
     @OneToMany(mappedBy="organisationType")
     private List<GrantClaimMaximum> grantClaimMaximums;
 
+    private Boolean visibleInSetup;
+
     public OrganisationType(String name, String description, OrganisationType parentOrganisationType) {
         this.name = name;
         this.description = description;
@@ -74,6 +76,14 @@ public class OrganisationType {
         this.grantClaimMaximums = grantClaimMaximums;
     }
 
+    public Boolean getVisibleInSetup() {
+        return visibleInSetup;
+    }
+
+    public void setVisibleInSetup(Boolean visibleInSetup) {
+        this.visibleInSetup = visibleInSetup;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,6 +98,7 @@ public class OrganisationType {
                 .append(description, that.description)
                 .append(parentOrganisationType, that.parentOrganisationType)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
+                .append(visibleInSetup, that.visibleInSetup)
                 .isEquals();
     }
 
@@ -99,6 +110,7 @@ public class OrganisationType {
                 .append(description)
                 .append(parentOrganisationType)
                 .append(grantClaimMaximums)
+                .append(visibleInSetup)
                 .toHashCode();
     }
 }

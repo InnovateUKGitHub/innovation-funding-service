@@ -210,7 +210,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         OrganisationResource expectedOrganisation = new OrganisationResource();
         expectedOrganisation.setId(456L);
         expectedOrganisation.setOrganisationType(
-                teamStatus.getPartnerStatusForOrganisation(456L).get().getOrganisationType().getOrganisationTypeId());
+                teamStatus.getPartnerStatusForOrganisation(456L).get().getOrganisationType().getId());
 
         when(accessorCheck.apply(accessor, expectedOrganisation)).thenReturn(ACCESSIBLE);
 
@@ -248,7 +248,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         OrganisationResource expectedOrganisation = new OrganisationResource();
         expectedOrganisation.setId(789L);
         expectedOrganisation.setOrganisationType(
-                teamStatus.getPartnerStatusForOrganisation(789L).get().getOrganisationType().getOrganisationTypeId());
+                teamStatus.getPartnerStatusForOrganisation(789L).get().getOrganisationType().getId());
 
         when(accessorCheck.apply(accessor, expectedOrganisation)).thenReturn(ACCESSIBLE);
 
