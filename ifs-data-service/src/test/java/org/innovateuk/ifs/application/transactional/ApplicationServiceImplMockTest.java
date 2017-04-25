@@ -764,7 +764,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         List<Notification> notifications = asList(
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(0)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
@@ -773,7 +773,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                                 "dashboardUrl", processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(1)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
@@ -782,7 +782,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                                 "dashboardUrl", processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(2)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
@@ -896,7 +896,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         List<Notification> notifications = asList(
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(0)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
@@ -905,7 +905,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                                 "dashboardUrl", processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(1)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
@@ -914,7 +914,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                                 "dashboardUrl", processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(2)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
@@ -1030,7 +1030,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         List<Notification> notifications = asList(
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(0)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
@@ -1039,7 +1039,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                                 "dashboardUrl", processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(1)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
@@ -1048,7 +1048,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                                 "dashboardUrl", processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(2)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
