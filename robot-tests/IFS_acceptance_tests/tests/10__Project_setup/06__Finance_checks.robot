@@ -1868,6 +1868,9 @@ Academic user can view Finance checks page
     Then the user clicks the button/link    link=Finance checks
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
     And the user should not see the text in the page    View finances
+    Then the user navigates to the page      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/40/finance-checks/eligibility
+    And the user should see the text in the page    Page not found
+    Then the user clicks the button/link    link=your dashboard
 
 Non Lead Partner can view Finance checks page
     [Documentation]     INFUND-8787
