@@ -136,6 +136,11 @@ Used to define input widths, so they can be more specific to digits that need to
 
 .width-full{
   width: 100%;
+
+  .app-form &{
+    min-width: 100px;
+  }
+
 }
 
 select.form-control.width-x-large,

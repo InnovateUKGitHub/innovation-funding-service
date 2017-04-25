@@ -2,92 +2,107 @@
 .eligibility-form [data-repeatable-container]{
 
 	.labour-costs-table td {
-		 	border-top:1px solid $border-colour;
-			border-bottom:none;
+    border-top: 1px solid $border-colour ;
+    border-bottom: none;
 	}
+
 	.labour-costs-table tr:last-child td,
 	.labour-costs-table tr:nth-last-child(2) td.rowspan {
-		border-bottom:1px solid $border-colour;
+    border-bottom: 1px solid $border-colour;
 	}
+
 	.labour-costs-table th.rowspan,
 	.labour-costs-table td.rowspan {
-			padding:0;
-			text-align:center;
+    padding: 0;
+    text-align: center;
 	}
+
 	.labour-costs-table th.colspan,
 	.labour-costs-table td.colspan {
-			border-top:none;
+    border-top: none;
 	}
+
 	.labour-costs-table .control {
-		 padding:0;
+    padding: 0;
 	 }
+
 	.form-label-bold {
-		font-size:24px;
+    font-size: 24px;
 	}
 
 	.last-update strong {
-		font-weight:300;
+    font-weight: 300;
 	}
 
-	.button{
-		&.button-block{
-			display: block;
-			width: 100%;
-			text-align: center;
-			padding: 15px;
-		}
-	}
+  .button{
+    &.button-block {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+    }
+  }
+
 	.form-row .form-label {
-			width:50%;
+    width:50%;
 		}
 
 }
 
 .form-row {
   @extend %contain-floats;
-	border-bottom:1px solid $border-colour;
-	padding:20px 0;
+  border-bottom:1px solid $border-colour;
+  padding:20px 0;
 
-	&:first-child { border-top:1px solid $border-colour; }
-	+ .alignright {
-		margin-top:10px;
-	}
+  &:first-child {
+    border-top:1px solid $border-colour;
+  }
+
+  + .alignright {
+    margin-top:10px;
+	 }
 
 }
 
 .question {
-	clear:both;
+  clear:both;
 }
 
 //finances
-.total-cost{
-		padding:15px 0;
-		border-top:1px solid $border-colour;
-		margin:25px 0 0;
+.total-cost {
+  padding: 15px 0;
+  border-top: 1px solid $border-colour;
+  margin: 25px 0 0;
 
-		.column-half {
-			padding:0;
-		}
-		.heading-medium {
-			margin-top:0;
-		}
-		label {
-			display: block;
-		}
-		input[readonly]{
-			border:none;
-			background:#fff;
-			@include box-sizing(border-box);
-			padding-right:15px;
-		}
+  .column-half {
+    padding:0;
+  }
+
+  .heading-medium {
+    margin-top:0;
+  }
+
+  label {
+    display: block;
+  }
+
+  input[readonly]{
+    border:none;
+    background:#fff;
+    @include box-sizing(border-box);
+    padding-right:15px;
+  }
 }
+
 table th > div {
-	position: relative;
+  position: relative;
 }
+
 table img.table-tick {
-  position:absolute;
-  right:-1.25em;
-  top:50%;margin-top:-8px;
+  position: absolute;
+  right: -1.25em;
+  top: 50%;
+  margin-top: -8px;
 }
 
 .section-total-summary {
@@ -102,29 +117,34 @@ table img.table-tick {
 /* acadmic finances */
 
 .academic .form-group.error {
-		padding-left:0;
+  padding-left: 0;
 }
+
 .academic .form-label-bold {
-	font-size:19px;
+  font-size: 19px;
 }
+
 .academic .totals {
-		background: #dee0e2;
-    border: 1px solid $grey-2;
-		padding:10px 0;
+  background: #dee0e2;
+  border: 1px solid $grey-2;
+  padding: 10px 0;
 }
+
 #other-costs-table textarea{
-	min-height: 80px;
+  min-height: 80px;
 }
+
 #other-costs-table textarea,
 #other-costs-table input {
-	width:100%;
-	resize:vertical;
+  width: 100%;
+  resize: vertical;
 }
+
 #other-costs-table td {
-	vertical-align:top;
-	&:first-child {
-		min-width:60%;
-	}
+  vertical-align: top;
+  &:first-child {
+    min-width: 60%;
+  }
 }
 
 .your-finances {
@@ -132,7 +152,7 @@ table img.table-tick {
 }
 
 .eligibility-form h3 .finance-total {
-  min-width:120px;
-  text-align:right;
-  float:right;
+  min-width: 120px;
+  text-align: right;
+  float: right;
 }

@@ -314,7 +314,7 @@
                            required="required" />
                 </div>
                 <h3>Number of staff and roles within the project</h3>
-                <div class="form-group">
+                <div class="form-group table-overflow">
                     <table class="labour-costs-table">
                         <thead>
                         <tr>
@@ -720,7 +720,7 @@
         <th:block th:if="${(viewmode == 'readonly') or (viewmode == 'edit')}">
 
             <div th:attr="data-repeatable-container=${question.id}">
-                <div class="form-group">
+                <div class="form-group table-overflow">
                     <table id="material-costs-table">
                         <thead>
                         <tr>
@@ -1204,7 +1204,7 @@
         </th:block>
         <th:block th:if="${(viewmode == 'readonly') or (viewmode == 'edit')}">
             <div th:attr="data-repeatable-container=${question.id}">
-                <div class="form-group">
+                <div class="form-group table-overflow">
                     <table id="travel-costs-table">
                         <thead>
                         <tr>
@@ -1349,7 +1349,7 @@
         </th:block>
         <th:block th:if="${(viewmode == 'readonly') or (viewmode == 'edit')}">
             <div th:attr="data-repeatable-container=${question.id}">
-                <div class="form-group">
+                <div class="form-group table-overflow">
                     <table id="other-costs-table">
                         <thead>
                             <tr>
