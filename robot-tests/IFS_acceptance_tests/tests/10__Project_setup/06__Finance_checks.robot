@@ -1653,10 +1653,10 @@ Project finance user can view Partner's Changes to finances during the Finance C
     Given the user clicks the button/link       link=Finance checks
     When the user clicks the button/link        css=a.eligibility-2
     Then the user clicks the button/link        link=View changes to finances
-    And the user should see the text in the element    css=h1:nth-of-type(1)   Changes to finances
-    And the user should see the text in the element    css=h2:nth-of-type(1)   Project finances
-    And the user should see the text in the element    css=h2:nth-of-type(2)   Section changes
-    And the user should see the text in the element    css=h2:nth-of-type(3)   Changes from submitted finances
+    And the user should see the element         jQuery=h1:contains("Changes to finances")
+    And the user should see the element         jQuery=h2:contains("Project finances")
+    And the user should see the element         jQuery=h2:contains("Section changes")
+    And the user should see the element         jQuery=h2:contains("Changes from submitted finances")
 
 Project finance user can view Partner's Project finances in Changes-to-finances page
     [Documentation]    INFUND-4837
@@ -1851,7 +1851,7 @@ Lead-Partner can view only the external version of Finance Checks Eligibility ta
     [Documentation]    INFUND-8778
     [Tags]
     When the user clicks the button/link    link=View finances
-    Then the user should see the text in the element    css=h2:nth-of-type(2)      Detailed finances
+    Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
     And the user should see the text in the element     css=[for="total-cost"]        Total project costs
@@ -1881,7 +1881,7 @@ Non Lead-Partner can view only the external version of Finance Checks Eligibilit
     [Documentation]    INFUND-8778
     [Tags]
     When the user clicks the button/link    link=View finances
-    Then the user should see the text in the element    css=h2:nth-of-type(2)      Detailed finances
+    Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
     And the user should see the text in the element     css=[for="total-cost"]        Total project costs
@@ -2077,19 +2077,19 @@ the user adds data into materials row
 
 the user adds capital usage data into row
     [Arguments]  ${row_number}  ${description}  ${net_value}  ${residual_value}  ${utilization}
-    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(1) textarea   ${description}
-    Click Element                               jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(2) label:nth-of-type(1)
-    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(3) input    12
-    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) h2:contains("Section changes") + div input  ${net_value}
-    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) h2:contains("Changes from submitted finances") + * input   ${residual_value}
-    the user enters text to a text field        jQuery=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(6) input   ${utilization}
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(1) textarea   ${description}
+    Click Element                               jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(2) label:nth-of-type(1)
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(3) input    12
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(4) input  ${net_value}
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(5) input   ${residual_value}
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(6) input   ${utilization}
 
 the user adds subcontracting data into row
     [Arguments]  ${row_number}  ${name}  ${cost}
-    the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(1) input   ${name}
-    the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(2) input   UK
-    the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(3) textarea   Develop
-    the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) h2:contains("Section changes") + div input   ${cost}
+    the user enters text to a text field        css=#subcontracting div:nth-child(${row_number}) div:nth-of-type(1) input   ${name}
+    the user enters text to a text field        css=#subcontracting div:nth-child(${row_number}) div:nth-of-type(2) input   UK
+    the user enters text to a text field        css=#subcontracting div:nth-child(${row_number}) div:nth-of-type(3) textarea   Develop
+    the user enters text to a text field        css=#subcontracting div:nth-child(${row_number}) div:nth-of-type(4) input   ${cost}
 
 the user adds travel data into row
     [Arguments]  ${row_number}  ${description}  ${number_of_times}  ${cost}
