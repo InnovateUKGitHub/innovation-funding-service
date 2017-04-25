@@ -23,6 +23,7 @@ public class ApplicantDashboardViewModel {
     private List<ProjectResource> projectsInSetup;
     private Map<Long, CompetitionResource> competitions;
     private Map<Long, ApplicationState> applicationStates;
+    private List<Long> leadApplicantApplications;
 
     public ApplicantDashboardViewModel() {
     }
@@ -30,7 +31,7 @@ public class ApplicantDashboardViewModel {
     public ApplicantDashboardViewModel(Map<Long, Integer> applicationProgress, List<ApplicationResource> applicationsInProgress,
                                        List<Long> applicationsAssigned, List<ApplicationResource> applicationsFinished,
                                        List<ProjectResource> projectsInSetup, Map<Long, CompetitionResource> competitions,
-                                       Map<Long, ApplicationState> applicationStates) {
+                                       Map<Long, ApplicationState> applicationStates,  List<Long> leadApplicantApplications) {
         this.applicationProgress = applicationProgress;
         this.applicationsInProgress = applicationsInProgress;
         this.applicationsAssigned = applicationsAssigned;
@@ -38,6 +39,7 @@ public class ApplicantDashboardViewModel {
         this.projectsInSetup = projectsInSetup;
         this.competitions = competitions;
         this.applicationStates = applicationStates;
+        this.leadApplicantApplications = leadApplicantApplications;
     }
 
     public Map<Long, Integer> getApplicationProgress() {
@@ -66,6 +68,10 @@ public class ApplicantDashboardViewModel {
 
     public Map<Long, ApplicationState> getApplicationStates() {
         return applicationStates;
+    }
+
+    public List<Long> getLeadApplicantApplications() {
+        return leadApplicantApplications;
     }
 
     public boolean getProjectsInSetupNotEmpty() {
@@ -141,5 +147,13 @@ public class ApplicantDashboardViewModel {
         LocalDate today = TimeZoneUtil.toUkTimeZone(ZonedDateTime.now()).toLocalDate();
 
         return today.equals(endDay);
+    }
+
+    public boolean isLeadApplicant(Long applicationId) {
+        return leadApplicantApplications.contains(applicationId);
+    }
+
+    public boolean navigateUserToTeamPage(Long applicationId) {
+        return isLeadApplicant(applicationId) && applicationIsCreated(applicationId);
     }
 }

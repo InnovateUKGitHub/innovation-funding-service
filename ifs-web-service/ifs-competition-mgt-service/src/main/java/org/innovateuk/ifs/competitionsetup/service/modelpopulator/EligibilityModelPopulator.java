@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
+
 /**
  * populates the model for the eligibility competition setup section.
  */
@@ -34,7 +35,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
 
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
-	
+
 	@Override
 	public CompetitionSetupSection sectionToPopulateModel() {
 		return CompetitionSetupSection.ELIGIBILITY;
@@ -50,14 +51,13 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
         Predicate<OrganisationTypeResource> notResearchFilter = organisationTypeResource -> !"Research".equals(organisationTypeResource.getName());
 		List<OrganisationTypeResource> leadApplicantTypes = simpleFilter(organisationTypes, CollectionFunctions.and(OrganisationTypeResource::getVisibleInSetup, notResearchFilter));
 
-
 		model.addAttribute("leadApplicantTypes", leadApplicantTypes);
         model.addAttribute("leadApplicantTypesText", leadApplicantTypes.stream()
                 .filter(organisationTypeResource -> competitionResource.getLeadApplicantTypes().contains(organisationTypeResource.getId()))
                 .map(organisationTypeResource -> organisationTypeResource.getName())
                 .collect(Collectors.joining(", ")));
 
-        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
+		List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
 		model.addAttribute("researchCategories",researchCategories);
 		model.addAttribute("researchCategoriesFormatted", categoryFormatter.format(competitionResource.getResearchCategories(), researchCategories));
 	}
