@@ -54,7 +54,6 @@ Create assessor account: server-side validations
     And the user should see an error    Please enter a last name.
     And the user should see an error    Please enter a phone number.
     And the user should see an error    Please enter your password.
-    And the user should see an error    Please re-type your password.
     And the user should see an error    Please enter a valid phone number.
     And the user should see an error    Input for your phone number has a minimum length of 8 characters.
     And the user should see an error    Your last name should have at least 2 characters.
