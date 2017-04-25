@@ -149,7 +149,7 @@ the available assessors information is correct
 
 the assigned list is correct before notification
     the user should see the element    jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum")
-    the user should see the element    jQuery=.assessors-assigned td:nth-child(2):contains("ACADEMIC")
+    the user should see the element    jQuery=.assessors-assigned td:nth-child(2):contains("Academic")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Urban living")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("infrastructure")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("9")
@@ -162,7 +162,7 @@ the assigned list is correct before notification
 
 the previously assigned list is correct
     the user should see the element    jQuery=.assessors-previous td:nth-child(1):contains('Paul Plum')
-    the user should see the element    jQuery=.assessors-previous td:nth-child(2):contains('ACADEMIC')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(2):contains('Academic')
     the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Urban living')
     the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('infrastructure')
     #the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('8')
