@@ -31,7 +31,7 @@ RUN apt-get update --fix-missing && \
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod shib2 socache_shmcb slotmem_shm ssl proxy_balancer status lbmethod_byrequests proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
-  sed -i -e "s/Listen 80/Listen $HTTP_PORT/" -e "s/Listen 443/Listen $HTTPS_PORT/" /etc/apache2/ports.conf && \
+  sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
   mv /usr/local/files/apache2/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
 
 # put holding pages in place. A dedicated container is probably a better idea \
@@ -54,10 +54,8 @@ RUN apt-get update --fix-missing && \
   mv /usr/local/files/sp/* /etc/shibboleth/ && \
   mkdir /var/www/html/Logout &&  mv /usr/local/files/apache2/index.html /var/www/html/Logout/ && \
   mkdir /var/run/shibboleth && \
-  sed -i "s#\/\/ifs.local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
-  sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml && \
-  sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/shibboleth2.xml /etc/shibboleth/metadata.xml /var/www/html/Logout/index.html && \
   sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
+  # see also substitutions in entrypoint script
   cp /etc/apache2/certs/* /etc/shibboleth/ && \
 
 # run shibboleth sp as its own user (same as apache)
