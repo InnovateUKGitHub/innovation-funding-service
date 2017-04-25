@@ -22,31 +22,14 @@ ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
-echo "Deploying the $PROJECT Openshift project"
+echo "Resetting the $PROJECT Openshift project"
 
-
-function deploy() {
-    if [[ ${TARGET} == "local" ]]
-    then
-        oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
-    fi
-
-    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" ]]
-    then
-        oc create -f os-files-tmp/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/gluster/named-envs/12-${TARGET}-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml ${SVC_ACCOUNT_CLAUSE}
-    else
-        oc create -f os-files-tmp/mail/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/mysql/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/shib/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/gluster/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
-    fi
+function dbReset() {
+    until oc create -f os-files-tmp/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+    do
+      oc delete -f os-files-tmp/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+      sleep 10
+    done
 }
 
 function blockUntilServiceIsUp() {
@@ -79,29 +62,24 @@ function createProject() {
 cleanUp
 cloneConfig
 tailorAppInstance
-if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" && ${TARGET} != "sysint" ]]
-then
-    createProject
-fi
+injectDBVariables
+injectLDAPVariables
+injectFlywayVariables
 
 if [[ (${TARGET} != "local") ]]
 then
     useContainerRegistry
-    pushApplicationImages
+    pushDBResetImages
 fi
 
-deploy
-blockUntilServiceIsUp
+dbReset
 
-if [[ ${TARGET} == "local" || ${TARGET} == "remote" ]]
-then
-    shibInit
-fi
+echo Waiting for completion
+while [ "$(oc get jobs dbreset -o go-template --template '{{.status.completionTime}}' ${SVC_ACCOUNT_CLAUSE})" == '<no value>' ]
+do
+  echo -n .
+  sleep 5
+done
 
-if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
-then
-    # We only scale up data-service once data-service started up and performed the Flyway migrations on one thread
-    scaleDataService
-fi
-
-cleanUp
+[ "$(oc get -o template job dbreset --template={{.status.succeeded}} ${SVC_ACCOUNT_CLAUSE})" != 1 ] && exit -1
+exit 0

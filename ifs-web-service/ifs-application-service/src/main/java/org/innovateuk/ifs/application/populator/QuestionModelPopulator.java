@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -101,7 +102,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         form = initializeApplicationForm(form);
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
 
-        QuestionApplicationViewModel questionApplicationViewModel = addApplicationDetails(application, competition, user.getId(), question, userOrganisation, form, userApplicationRoles);
+        QuestionApplicationViewModel questionApplicationViewModel = addApplicationDetails(application, competition, user.getId(), question, userOrganisation, form, userApplicationRoles, formInputs);
         NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question, application.getId());
         QuestionAssignableViewModel questionAssignableViewModel = addAssignableDetails(application, userOrganisation, user.getId(), question.getId());
 
@@ -124,12 +125,20 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                                                                QuestionResource questionResource,
                                                                Optional<OrganisationResource> userOrganisation,
                                                                ApplicationForm form,
-                                                               List<ProcessRoleResource> userApplicationRoles) {
+                                                               List<ProcessRoleResource> userApplicationRoles,
+                                                               List<FormInputResource> formInputs) {
         form.setApplication(application);
 
         List<QuestionStatusResource> questionStatuses = getQuestionStatuses(questionResource.getId(), application.getId());
-        Set<Long> completedDetails = getCompletedDetails(questionResource, application.getId(), questionStatuses);
-        Boolean allReadOnly = calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
+        Set<Long> completedDetails = getCompletedDetails(questionResource, questionStatuses);
+        Boolean isApplicationDetails = isApplicationDetails(formInputs, questionResource);
+        Boolean allReadOnly;
+
+        if(isApplicationDetails && !userService.isLeadApplicant(userId, application)) {
+            allReadOnly = true;
+        } else {
+            allReadOnly = calculateAllReadOnly(competition, questionResource, questionStatuses, userId, completedDetails);
+        }
 
         QuestionApplicationViewModel questionApplicationViewModel = new QuestionApplicationViewModel(completedDetails, allReadOnly
                 , application, competition, userOrganisation.orElse(null));
@@ -142,6 +151,10 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         addSelectedResearchCategoryName(application, questionApplicationViewModel);
 
         return questionApplicationViewModel;
+    }
+
+    private Boolean isApplicationDetails(List<FormInputResource> formInputs, QuestionResource questionResource) {
+        return formInputs.stream().anyMatch(formInput -> (questionResource.getFormInputs().contains(formInput.getId())) && formInput.getType().equals(FormInputType.APPLICATION_DETAILS));
     }
 
     private void addSelectedInnovationAreaName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
@@ -159,14 +172,19 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         }
     }
 
-    private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {
+    private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId,
+                                         Set<Long> completedDetails) {
         if(null != competition.getCompetitionStatus() && competition.getCompetitionStatus().equals(CompetitionStatus.OPEN)) {
-            Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
-            return questionStatuses.size() > 0 &&
-                    (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId()));
+            return isReadOnly(questionStatuses, questionResource, completedDetails, userId);
         } else {
             return true;
         }
+    }
+
+    private Boolean isReadOnly(List<QuestionStatusResource> questionStatuses, QuestionResource questionResource, Set<Long> completedDetails, Long userId) {
+        Set<Long> assignedQuestions = getAssigneeQuestions(questionResource, questionStatuses, userId);
+        return (questionStatuses.size() > 0 &&
+                (completedDetails.contains(questionResource.getId()) || !assignedQuestions.contains(questionResource.getId())));
     }
 
     private void addQuestionsDetails(QuestionViewModel questionViewModel, ApplicationResource application, ApplicationForm form) {
@@ -247,7 +265,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         return assigned;
     }
 
-    private Set<Long> getCompletedDetails(QuestionResource question, Long applicationId, List<QuestionStatusResource> questionStatuses) {
+    private Set<Long> getCompletedDetails(QuestionResource question, List<QuestionStatusResource> questionStatuses) {
         Set<Long> markedAsComplete = new HashSet<Long>();
 
         if(question.getMarkAsCompletedEnabled() && !question.getMultipleStatuses()) {
