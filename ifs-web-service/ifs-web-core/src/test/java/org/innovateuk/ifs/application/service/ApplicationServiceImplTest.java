@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,15 +16,14 @@ import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -120,66 +118,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testGetInProgressReliesOnApplicationStatusAndCompetitionStatus() throws Exception {
-        List<ApplicationResource> returnedApplications = service.getInProgress(userId);
-        assertEquals(4, returnedApplications.size());
-        assertEquals(ApplicationState.CREATED, returnedApplications.get(0).getApplicationState());
-        assertEquals(openCompetition.getId(), returnedApplications.get(0).getCompetition());
-
-        assertEquals(ApplicationState.OPEN, returnedApplications.get(1).getApplicationState());
-        assertEquals(openCompetition.getId(), returnedApplications.get(1).getCompetition());
-
-        assertEquals(ApplicationState.SUBMITTED, returnedApplications.get(2).getApplicationState());
-        assertEquals(inAssessmentCompetition.getId(), returnedApplications.get(2).getCompetition());
-
-        assertEquals(ApplicationState.SUBMITTED, returnedApplications.get(3).getApplicationState());
-        assertEquals(fundersPanelCompetition.getId(), returnedApplications.get(3).getCompetition());
-    }
-
-    @Test
-    public void testGetFinishedReliesOnApplicationStatusAndCompetitionStatus() throws Exception {
-        List<ApplicationResource> returnedApplications = service.getFinished(userId);
-        assertEquals(2, returnedApplications.size());
-        assertEquals(inAssessmentCompetition.getId(), returnedApplications.get(0).getCompetition());
-
-        assertEquals(ApplicationState.SUBMITTED, returnedApplications.get(1).getApplicationState());
-        assertEquals(closedCompetition.getId(), returnedApplications.get(1).getCompetition());
-    }
-
-    @Test
-    public void testGetProgress() throws Exception {
-        Long applicationId = 2L;
-
-        Map<Long, Integer> progress = service.getProgress(userId);
-
-        assertEquals(20, progress.get(applicationId), 0d);
-    }
-
-    @Test
-    public void testGetProgressZero() throws Exception {
-        Long applicationId = 7L;
-
-        Map<Long, Integer> progress = service.getProgress(userId);
-
-        assertNull(progress.get(applicationId));
-    }
-
-    @Test
     public void testUpdateStatus() throws Exception {
         Long applicationId = 2L;
         ApplicationState status = ApplicationState.APPROVED;
         when(applicationRestService.updateApplicationState(applicationId, status)).thenReturn(restSuccess());
         service.updateState(applicationId, status);
         Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationState(applicationId, status);
-    }
-
-    @Test
-    public void testGetCompleteQuestionsPercentage() throws Exception {
-        Long applicationId = 3L;
-        when(applicationRestService.getCompleteQuestionsPercentage(applicationId)).thenReturn(settable(restSuccess(20.5d)));
-
-        // somehow the progress is rounded, because we use a long as the return type.
-        Assert.assertEquals(20, service.getCompleteQuestionsPercentage(applicationId).intValue());
     }
 
     @Test
