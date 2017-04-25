@@ -96,9 +96,10 @@
     </div>
     <main tabindex="-1" id="content">
       #parse("login-error.vm")
-
-            <h1 class="heading-large">Innovation Funding Service</h1>
-            <h2 class="heading-medium">Sign in</h2>
+            <h1 class="heading-large">
+                <span class="heading-secondary">Innovation Funding Service</span>
+                Sign in
+            </h1>
             <form action="$flowExecutionUrl" method="post">
 
             #set ($serviceName = $rpUIContext.serviceName)
