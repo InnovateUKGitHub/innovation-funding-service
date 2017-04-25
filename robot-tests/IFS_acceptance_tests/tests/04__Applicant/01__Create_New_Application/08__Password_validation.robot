@@ -82,7 +82,7 @@ Password is too short
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${short_password}
     And the user submits their information
-    Then the user should see an error    Password must at least be 8 characters.
+    Then the user should see an error    Password must be at least 8 characters.
     And The user should see the text in the page    We were unable to create your account
 
 Password left blank
