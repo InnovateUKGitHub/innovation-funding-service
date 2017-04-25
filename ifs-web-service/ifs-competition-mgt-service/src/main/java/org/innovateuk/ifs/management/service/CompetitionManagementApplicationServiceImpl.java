@@ -66,25 +66,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
 
-    public enum ApplicationOverviewOrigin {
-        ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
-        SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
-        INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
-        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
-        FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
-        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");
-
-        private String baseOriginUrl;
-
-        ApplicationOverviewOrigin(String baseOriginUrl) {
-            this.baseOriginUrl = baseOriginUrl;
-        }
-
-        public String getBaseOriginUrl() {
-            return baseOriginUrl;
-        }
-    }
-
     @Override
     public String displayApplicationOverview(UserResource user, long applicationId, long competitionId, ApplicationForm form, String origin, MultiValueMap<String, String> queryParams, Model model, ApplicationResource application) {
         form.setAdminMode(true);
@@ -192,6 +173,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     public enum ApplicationOverviewOrigin {
         ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
+        INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
         MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
         FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
         APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");
