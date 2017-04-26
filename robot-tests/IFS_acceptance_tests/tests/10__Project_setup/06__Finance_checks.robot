@@ -824,16 +824,16 @@ Project finance user can view finance overview for the consortium
 Project finance user can view Finances summary for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    Given the user should see the element   jQuery=h3:contains("Finance summary")
+    Given the user should see the element   jQuery=h3:contains("Finances summary")
     When the user verifies the table heading for Finance summary section
-    Then the user should see the text in the element    jQuery=h3:contains("Finance summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the categories are verified for Finance summary section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
-    Then the user should see the text in the element    jQuery=h3:contains("Finance summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
     And the categories are verified for Finance summary section   2   £ 990   0%  £ 0     £ 0     £ 990
-    Then the user should see the text in the element    jQuery=h3:contains("Finance summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
     And the categories are verified for Finance summary section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
-    Then the user should see the text in the element    jQuery=h3:contains("Finance summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
     And the Total calculation for Finance summary are verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
@@ -1481,16 +1481,16 @@ Project finance user can view Updated finance overview for the consortium
 Project finance user can view Updated Finances summary for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    Given the user should see the element   jQuery=h3:contains("Finance summary")
+    Given the user should see the element   jQuery=h3:contains("Finances summary")
     When the user verifies the table heading for Finance summary section
-    Then the user should see the text in the element    jQuery=h3:contains("Finance summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the categories are verified for Finance summary section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
-    Then the user should see the text in the element    jQuery=h3:contains("Finance summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
     And the categories are verified for Finance summary section   2   £ 990   0%  £ 0     £ 0     £ 990
-    Then the user should see the text in the element    jQuery=h3:contains("Finance summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
     And the categories are verified for Finance summary section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
-    Then the user should see the text in the element    jQuery=h3:contains("Finance summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
     And the Total calculation for Finance summary are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
 
 Project finance user can view Lead-partner's Changes to finances during the Finance Checks eligibility
@@ -2318,27 +2318,27 @@ the categories are verified for Overview section
     the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
 
 the user verifies the table heading for Finance summary section
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * thead tr:nth-of-type(1) th:nth-of-type(1)   Partner
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * thead tr:nth-of-type(1) th:nth-of-type(2)   Total costs
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * thead tr:nth-of-type(1) th:nth-of-type(3)   % Grant
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * thead tr:nth-of-type(1) th:nth-of-type(4)   Funding sought
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * thead tr:nth-of-type(1) th:nth-of-type(5)   Other public sector funding
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * thead tr:nth-of-type(1) th:nth-of-type(6)   Contribution to project
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(1)   Partner
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(2)   Total costs
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(3)   % Grant
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(4)   Funding sought
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(5)   Other public sector funding
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(6)   Contribution to project
 
 the categories are verified for Finances summary section
     [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
 
 the Total calculation for Finances summary are verified
     [Arguments]  ${row_number}  ${allPartners_totalcost}   ${allPartners_fundingSought}   ${allPartners_otherPublicSectorFunding}  ${allPartners_contributionToProject}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${allPartners_totalcost}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
-    the user should see the text in the element     jQuery=h3:contains("Finance summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${allPartners_totalcost}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
 
 all the categories are verified
     [Arguments]  ${row_number}  ${total}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${subcontracting}  ${travel}   ${other_costs}
