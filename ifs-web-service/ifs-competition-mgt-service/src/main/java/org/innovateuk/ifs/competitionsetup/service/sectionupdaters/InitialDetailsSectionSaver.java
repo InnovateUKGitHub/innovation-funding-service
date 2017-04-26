@@ -3,25 +3,26 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,13 +47,13 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	private CompetitionService competitionService;
 
     @Autowired
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
 	@Autowired
 	private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
 	@Autowired
-	private CategoryService categoryService;
+	private CategoryRestService categoryRestService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -61,7 +62,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		
+
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {
             competition.setExecutive(initialDetailsForm.getExecutiveUserId());
@@ -72,8 +73,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setName(initialDetailsForm.getTitle());
 
                 if (shouldTryToSaveStartDate(initialDetailsForm)) {
-                    LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
-                            initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
+                    ZonedDateTime startDate = initialDetailsForm.getOpeningDate();
                     competition.setStartDate(startDate);
 
                     List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
@@ -87,7 +87,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
 
                 if (competition.getInnovationSector() != null) {
-                    List<InnovationAreaResource> children = categoryService.getInnovationAreasBySector(competition.getInnovationSector());
+                    List<InnovationAreaResource> children = categoryRestService.getInnovationAreasBySector(competition.getInnovationSector()).getSuccessObjectOrThrowException();
                     List<CategoryResource> matchingChildren =
                             children.stream().filter(child -> initialDetailsForm.getInnovationAreaCategoryIds().contains(child.getId())).collect(Collectors.toList());
 
@@ -122,19 +122,19 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                initialDetailsForm.getOpeningDateDay() != null);
    }
 
-	private List<Error> validateOpeningDate(LocalDateTime openingDate) {
+	private List<Error> validateOpeningDate(ZonedDateTime openingDate) {
 	    if(openingDate.getYear() > 9999) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "validation.initialdetailsform.openingdateyear.range"));
         }
 
-        if (openingDate.isBefore(LocalDateTime.now())) {
+        if (openingDate.isBefore(ZonedDateTime.now())) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "competition.setup.opening.date.not.in.future"));
         }
 
         return Collections.emptyList();
     }
 
-	private List<Error> saveOpeningDateAsMilestone(LocalDateTime openingDate, Long competitionId, boolean isMarkAsCompleteAction) {
+	private List<Error> saveOpeningDateAsMilestone(ZonedDateTime openingDate, Long competitionId, boolean isMarkAsCompleteAction) {
 		if (isMarkAsCompleteAction) {
 			List<Error> errors = validateOpeningDate(openingDate);
 			if (!errors.isEmpty()) {
@@ -145,7 +145,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, openingDate);
 
 
-        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
         if(milestones.isEmpty()) {
             milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId).getSuccessObjectOrThrowException();
         }
@@ -166,11 +166,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         if("openingDate".equals(fieldName)) {
             try {
                 String[] dateParts = value.split("-");
-                LocalDateTime startDate = LocalDateTime.of(
+                ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(
                         Integer.parseInt(dateParts[2]),
                         Integer.parseInt(dateParts[1]),
-                        Integer.parseInt(dateParts[0]),
-                        0, 0, 0);
+                        Integer.parseInt(dateParts[0]));
                 competitionResource.setStartDate(startDate);
 
 
@@ -193,7 +192,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
     private void processInnovationAreas(String inputValue, CompetitionResource competitionResource) {
         List<String> valueList = Arrays.asList(inputValue.split("\\s*,\\s*"));
-        Set<Long> valueSet = valueList.stream().map( value -> Long.parseLong(value) ).collect(Collectors.toSet());
+        Set<Long> valueSet = valueList.stream().map(Long::parseLong).collect(Collectors.toSet());
         competitionResource.setInnovationAreas(valueSet);
 
     }

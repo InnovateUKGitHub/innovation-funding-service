@@ -12,7 +12,7 @@
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
         <h1 class="heading-xlarge">Grant offer letter</h1>
     </div>
 
@@ -57,18 +57,18 @@
             <p th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
 
             <th:block th:if="${model.isGrantOfferLetterSent()}">
-                <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename}" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
+                <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename} + ' (opens in a new window)'" target="_blank" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
             </th:block>
 
             <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null}">
                 <h2 class="heading-medium">Signed grant offer letter</h2>
-                <p><a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile.filename}">Signed grant offer letter 2016-07-28a.PDF</a></p>
+                <p><a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile.filename} + ' (opens in a new window)'" target="_blank">Signed grant offer letter 2016-07-28a.PDF</a></p>
             </th:block>
 
             <th:block th:if="${model.additionalContractFile != null}">
                 <h2 class="heading-medium">Annex</h2>
                 <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
-                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename} + ' (opens in a new window)'" target="_blank">Grant offer letter 2016-07-28a.PDF</a></p>
             </th:block>
 
             <div th:if="${model.isGrantOfferLetterSent() and !model.submitted and model.getGrantOfferLetterFile() != null}" class="upload-section">
@@ -88,20 +88,15 @@
                         <p>Unable to upload? Contact Customer Support on 0300 321 4357.</p>
                     </div>
                 </details>
-
-                <!-- /* file is not uploaded */-->
-                <div th:classappend="${#fields.hasErrors('signedGrantOfferLetter') ? 'error' : ''}" th:unless="${model.signedGrantOfferLetterFile}">
-                    <th:block th:if="${#fields.hasErrors('signedGrantOfferLetter')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('signedGrantOfferLetter')}" th:text="${err}"/>
-                    </th:block>
-                    <input th:field="*{signedGrantOfferLetter}" type="file" class="inputfile"/>
-                    <label for="signedGrantOfferLetter" class="button-secondary extra-margin">+ Upload</label>
-                    <button name="uploadSignedGrantOfferLetterClicked" class="button-secondary" type="submit" data-for-file-upload="signedGrantOfferLetter">Save</button>
-                </div>
-                <!--/* file is uploaded */-->
-                <th:block th:if="${model.signedGrantOfferLetterFile}">
-                    <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" class="uploaded-file" th:text="${model.signedGrantOfferLetterFile.filename}">The-uploaded-file-example.pdf</a>
-                    <button name="removeSignedGrantOfferLetterClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
+                <th:block th:with="uploadViewmode='edit',
+                               downloadUrl=@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})},
+                               filename=${model.signedGrantOfferLetterFile?.filename},
+                               inputField='signedGrantOfferLetter',
+                               validationField=${inputField},
+                               mayRemove=true,
+                               removeName='removeSignedGrantOfferLetterClicked',
+                               saveName='uploadSignedGrantOfferLetterClicked'">
+                    <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
             </div>
 
@@ -126,12 +121,12 @@
             </th:block>
 
             <h2 class="heading-medium">Grant offer letter</h2>
-            <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename}" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
+            <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename} + ' (opens in a new window)'" target="_blank" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
 
             <th:block th:if="${model.additionalContractFile}">
                 <h2 class="heading-medium">Annex</h2>
                 <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
-                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename}">Grant offer letter 2016-07-28a.PDF</a></p>
+                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename} + ' (opens in a new window)'" target="_blank">Grant offer letter 2016-07-28a.PDF</a></p>
             </th:block>
         </th:block>
 

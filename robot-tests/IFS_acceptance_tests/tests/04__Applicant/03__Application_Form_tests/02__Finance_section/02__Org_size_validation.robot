@@ -60,7 +60,7 @@ User sees warning that the funding section will be reset
 Medium org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
     [Tags]    HappyPath
-    When the user clicks the button/link   jQuery=button:contains("Edit your organisation")
+    When the user clicks the button/link   jQuery=button:contains("Edit")
     And the user marks their organisation as    ${MEDIUM_ORGANISATION_SIZE}
 
 Funding section shows as incomplete
@@ -100,7 +100,7 @@ User still sees warning that the funding section will be reset
 Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
     [Tags]    HappyPath
-    When the user clicks the button/link   jQuery=button:contains("Edit your organisation")
+    When the user clicks the button/link   jQuery=button:contains("Edit")
     And the user marks their organisation as    ${LARGE_ORGANISATION_SIZE}
 
 Funding section shows as incomplete again
@@ -140,7 +140,7 @@ The user marks their organisation as
     the user selects the radio button    financePosition-organisationSize  ${org_size}
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
     the user enters text to a text field    jQuery=label:contains("employees") + input    0
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user should not see the element  jQuery=.error-message
     the user should see the text in the page    Please complete your project finances.
 
@@ -153,7 +153,7 @@ the user completes the funding section with funding level
     the user enters text to a text field    css=[name*=other_funding-securedDate]    12-2008
     the user enters text to a text field    css=[name*=other_funding-fundingAmount]    20000
     the user selects the checkbox    termsAgreed
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the funding section has been reset including funding level
     [Arguments]    ${funding_level}
@@ -165,4 +165,4 @@ the funding section has been reset including funding level
 
 the user marks the 'your funding' section as incomplete again
     the user clicks the button/link    link=Your funding
-    the user clicks the button/link    jQuery=button:contains("Edit your funding")
+    the user clicks the button/link    jQuery=button:contains("Edit")

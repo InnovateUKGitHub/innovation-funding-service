@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.attachment.security;
 
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.project.financecheck.security.AttachmentPermissionsRules;
+import org.innovateuk.ifs.project.financechecks.security.AttachmentPermissionsRules;
 
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -137,7 +137,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     }
 
     private Query query() {
-        return new Query(92L, 1993L, "", null, null, "", LocalDateTime.now());
+        return new Query(92L, 1993L, "", null, null, "", ZonedDateTime.now());
     }
 
     private Attachment asDomain(AttachmentResource attachmentResource, Long uploaderId) {

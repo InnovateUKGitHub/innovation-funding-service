@@ -10,16 +10,18 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
+import static java.time.ZonedDateTime.now;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUser;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
-import static java.time.LocalDateTime.now;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
@@ -41,11 +43,11 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     @Test
     public void test_findAllVisible() throws Exception {
         // save new alerts with date ranges that should make them visible now
-        LocalDateTime now = now();
-        LocalDateTime oneSecondAgo = now.minusSeconds(1);
-        LocalDateTime oneDayAgo = now.minusDays(1);
-        LocalDateTime oneHourAhead = now.plusHours(1);
-        LocalDateTime oneDayAhead = now.plusDays(1);
+        ZonedDateTime now = now();
+        ZonedDateTime oneSecondAgo = now.minusSeconds(1);
+        ZonedDateTime oneDayAgo = now.minusDays(1);
+        ZonedDateTime oneHourAhead = now.plusHours(1);
+        ZonedDateTime oneDayAhead = now.plusDays(1);
 
         setLoggedInUser(systemMaintenanceUser);
         AlertResource created1 = controller.create(newAlertResource()
@@ -69,11 +71,11 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     @Test
     public void test_findAllVisibleByType() throws Exception {
         // save new alerts with date ranges that should make them visible now
-        LocalDateTime now = now();
-        LocalDateTime oneSecondAgo = now.minusSeconds(1);
-        LocalDateTime oneDayAgo = now.minusDays(1);
-        LocalDateTime oneHourAhead = now.plusHours(1);
-        LocalDateTime oneDayAhead = now.plusDays(1);
+        ZonedDateTime now = now();
+        ZonedDateTime oneSecondAgo = now.minusSeconds(1);
+        ZonedDateTime oneDayAgo = now.minusDays(1);
+        ZonedDateTime oneHourAhead = now.plusHours(1);
+        ZonedDateTime oneDayAhead = now.plusDays(1);
 
         setLoggedInUser(systemMaintenanceUser);
         AlertResource created1 = controller.create(newAlertResource()
@@ -102,8 +104,8 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         assertEquals(Long.valueOf(1L), found.getId());
         assertEquals("Sample message", found.getMessage());
         assertEquals(MAINTENANCE, found.getType());
-        assertEquals(LocalDateTime.parse("2016-05-06T21:00:00.00"), found.getValidFromDate());
-        assertEquals(LocalDateTime.parse("2016-05-06T21:05:00.00"), found.getValidToDate());
+        assertEquals(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), found.getValidFromDate());
+        assertEquals(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()), found.getValidToDate());
     }
 
     @Test
@@ -117,8 +119,8 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         assertNotNull(created.getId());
         assertEquals("Sample message", created.getMessage());
         assertEquals(MAINTENANCE, created.getType());
-        assertEquals(LocalDateTime.parse("2016-05-06T21:00:00.00"), created.getValidFromDate());
-        assertEquals(LocalDateTime.parse("2016-05-06T21:05:00.00"), created.getValidToDate());
+        assertEquals(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.of("UTC")), created.getValidFromDate());
+        assertEquals(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.of("UTC")), created.getValidToDate());
 
         // check it can also be found
         assertNotNull(controller.findById(created.getId()));

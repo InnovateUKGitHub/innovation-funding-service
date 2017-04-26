@@ -8,7 +8,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class PostResource {
@@ -16,12 +16,12 @@ public class PostResource {
     public final UserResource author;
     public final String body;
     public final List<AttachmentResource> attachments;
-    public final LocalDateTime createdOn;
+    public final ZonedDateTime createdOn;
 
     @JsonCreator
     public PostResource(@JsonProperty("id") Long id, @JsonProperty("author") UserResource author,
                         @JsonProperty("body") String body, @JsonProperty("attachments") List<AttachmentResource> attachments,
-                        @JsonProperty("createdOn") LocalDateTime createdOn) {
+                        @JsonProperty("createdOn") ZonedDateTime createdOn) {
         this.id = id;
         this.author = author;
         this.body = body;

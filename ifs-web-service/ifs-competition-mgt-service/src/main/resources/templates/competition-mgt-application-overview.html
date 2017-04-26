@@ -41,8 +41,8 @@
                 <h3 class="heading-small no-margin" th:text="${appendix.title}">
                     View project management appendix:
                 </h3>
-                <a th:href="${appendix.getDownloadURL()}"
-                   th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">
+                <a target="_blank" th:href="${appendix.getDownloadURL()}"
+                   th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize() + ' (opens in a new window)'}">
                     Project-plan.pdf (161.96 KB)
                 </a>
             </div>

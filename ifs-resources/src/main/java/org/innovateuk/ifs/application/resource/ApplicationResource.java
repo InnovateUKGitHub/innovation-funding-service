@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
@@ -16,14 +15,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
 @FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
@@ -33,9 +30,9 @@ public class ApplicationResource {
 
     private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
-    private static final List<CompetitionStatus> SUBMITABLE_COMPETITION_STATES = asList(OPEN);
-    private static final List<Long> SUBMITTED_APPLICATION_STATES =
-            simpleMap(asList(ApplicationStatusConstants.SUBMITTED, ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED), ApplicationStatusConstants::getId);
+    private static final List<CompetitionStatus> SUBMITTABLE_COMPETITION_STATES = asList(OPEN);
+    private static final List<ApplicationState> SUBMITTED_APPLICATION_STATES =
+            asList(ApplicationState.SUBMITTED, ApplicationState.APPROVED, ApplicationState.REJECTED);
 
     private Long id;
 
@@ -44,14 +41,13 @@ public class ApplicationResource {
 
     @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
-    private LocalDateTime submittedDate;
+    private ZonedDateTime submittedDate;
 
     @Min(value=MIN_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
     @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
     @NotNull
     private Long durationInMonths;
-    private Long applicationStatus;
-    private String applicationStatusName;
+    private ApplicationState applicationState;
     private Long competition;
     private String competitionName;
     private Long assessorFeedbackFileEntry;
@@ -63,8 +59,13 @@ public class ApplicationResource {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
+
+    @NotNull(message="{validation.application.research.category.required}")
     private ResearchCategoryResource researchCategory;
+
+    @NotNull(message="{validation.application.innovationarea.category.required}")
     private InnovationAreaResource innovationArea;
+
     private boolean noInnovationAreaApplicable;
 
     public Long getId() {
@@ -99,18 +100,12 @@ public class ApplicationResource {
         this.durationInMonths = durationInMonths;
     }
 
-    public Long getApplicationStatus() {
-        return applicationStatus;
+    public ApplicationState getApplicationState() {
+        return applicationState;
     }
 
-    public void setApplicationStatus(Long applicationStatus) {
-        this.applicationStatus = applicationStatus;
-    }
-
-    @JsonIgnore
-    public void setApplicationStatusConstant(ApplicationStatusConstants applicationStatus) {
-        this.applicationStatus = applicationStatus.getId();
-        this.applicationStatusName = applicationStatus.getName();
+    public void setApplicationState(ApplicationState applicationState) {
+        this.applicationState = applicationState;
     }
 
     public Long getCompetition() {
@@ -141,11 +136,11 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean isOpen(){
-        return ApplicationStatusConstants.OPEN.getId().equals(applicationStatus) || ApplicationStatusConstants.CREATED.getId().equals(applicationStatus);
+        return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
     }
     @JsonIgnore
     public void enableViewMode(){
-        setApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId());
+        setApplicationState(ApplicationState.SUBMITTED);
     }
 
     public Long getAssessorFeedbackFileEntry() {
@@ -169,7 +164,7 @@ public class ApplicationResource {
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(durationInMonths, that.durationInMonths)
-                .append(applicationStatus, that.applicationStatus)
+                .append(applicationState, that.applicationState)
                 .append(competition, that.competition)
                 .append(assessorFeedbackFileEntry, that.assessorFeedbackFileEntry)
                 .isEquals();
@@ -182,7 +177,7 @@ public class ApplicationResource {
                 .append(name)
                 .append(startDate)
                 .append(durationInMonths)
-                .append(applicationStatus)
+                .append(applicationState)
                 .append(competition)
                 .append(assessorFeedbackFileEntry)
                 .toHashCode();
@@ -196,20 +191,12 @@ public class ApplicationResource {
         this.competitionName = competitionName;
     }
 
-    public LocalDateTime getSubmittedDate() {
+    public ZonedDateTime getSubmittedDate() {
         return submittedDate;
     }
 
-    public void setSubmittedDate(LocalDateTime submittedDate) {
+    public void setSubmittedDate(ZonedDateTime submittedDate) {
         this.submittedDate = submittedDate;
-    }
-
-    public String getApplicationStatusName() {
-        return applicationStatusName;
-    }
-
-    public void setApplicationStatusName(String applicationStatusName) {
-        this.applicationStatusName = applicationStatusName;
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -235,17 +222,17 @@ public class ApplicationResource {
     }
 
     @JsonIgnore
-    public boolean isSubmitable() {
-        return isInSubmitableCompetitionState() && !hasBeenSubmitted();
+    public boolean isSubmittable() {
+        return isInSubmittableCompetitionState() && !hasBeenSubmitted();
     }
 
     @JsonIgnore
     public boolean hasBeenSubmitted() {
-        return SUBMITTED_APPLICATION_STATES.contains(applicationStatus);
+        return SUBMITTED_APPLICATION_STATES.contains(applicationState);
     }
 
-    private boolean isInSubmitableCompetitionState() {
-        return SUBMITABLE_COMPETITION_STATES.contains(competitionStatus);
+    private boolean isInSubmittableCompetitionState() {
+        return SUBMITTABLE_COMPETITION_STATES.contains(competitionStatus);
     }
 
     public BigDecimal getCompletion() {
@@ -287,5 +274,4 @@ public class ApplicationResource {
     public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
     }
-
 }

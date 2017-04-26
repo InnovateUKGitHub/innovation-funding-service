@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.controller.ApplicationController;
 import org.innovateuk.ifs.application.controller.QuestionController;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -19,6 +17,9 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,13 +79,10 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         leadApplicantProcessRole = 1L;
         List<ProcessRole> processRoles = new ArrayList<>();
         Application app = new Application(
-                APPLICATION_ID,
                 "",
-                new ApplicationStatus(
-                        ApplicationStatusConstants.CREATED.getId(),
-                        ApplicationStatusConstants.CREATED.getName()
-                )
+                new ActivityState(ActivityType.APPLICATION, State.CREATED)
         );
+        app.setId(APPLICATION_ID);
         processRoles.add(
                 new ProcessRole(
                         leadApplicantProcessRole,

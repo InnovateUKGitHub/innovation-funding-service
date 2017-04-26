@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -29,6 +31,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceB
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -206,6 +209,41 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(view().name("comp-mgt-funders-panel"));
 
         verify(applicationFundingDecisionService, times(0)).saveApplicationFundingDecisionData(any(), any(), any());
+    }
+
+    @Test
+    public void applications_filteredParameterNameShouldNotBeReflectedInPaginationViewModel() throws Exception {
+        String fundingDecisionString = "abc";
+        List<Long> applicationIds = new ArrayList<>();
+        applicationIds.add(8L);
+        applicationIds.add(9L);
+        applicationIds.add(10L);
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
+        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.getFundingDecisionForString(fundingDecisionString)).thenReturn(empty());
+
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .build(3);
+        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, expectedSummaries, 1, 20);
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "sortfield", 0, 20, "", empty())).thenReturn(restSuccess(summary));
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicationIds", "8")
+                .param("applicationIds", "9")
+                .param("applicationIds", "10")
+                .param("fundingDecision", fundingDecisionString)
+                .param("_csrf", "hash")
+        )
+                .andExpect(status().isOk()).andReturn();
+
+        PaginationViewModel paginationViewModel = (PaginationViewModel) result.getModelAndView().getModel().get("pagination");
+
+        assertEquals("?origin=FUNDING_APPLICATIONS&page=0",paginationViewModel.getPageNames().get(0).getPath());
+
     }
 
     private ApplicationSummaryResource app(Long id) {

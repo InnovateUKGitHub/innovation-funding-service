@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,12 +8,9 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
-import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -46,15 +42,15 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
@@ -64,7 +60,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
@@ -124,7 +120,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
-        return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(Collectors.toList());
+        return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(toList());
     }
 
     private ServiceResult<Void> processCollaboratorInvite(String baseUrl, ApplicationInvite invite) {
@@ -147,7 +143,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private void handleInviteSuccess(ApplicationInvite invite) {
-        applicationInviteRepository.save(invite.send(loggedInUserSupplier.get(), LocalDateTime.now()));
+        applicationInviteRepository.save(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
     }
 
     private Consumer<ServiceFailure> logInviteError(ApplicationInvite i) {
@@ -204,23 +200,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
-        List<Error> errors = validateUniqueEmails(inviteOrganisationResource.getInviteResources());
-        if (errors.size() > 0) {
-            LOG.warn("Some double email addresses found");
-            return serviceFailure(errors);
-        }
-
-        if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
-            return serviceFailure(PROJECT_INVITE_INVALID);
-        }
-
-        return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(newInviteOrganisation -> {
-            List<ApplicationInvite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
-            inviteOrganisationRepository.save(newInviteOrganisation);
-            Iterable<ApplicationInvite> savedInvites = applicationInviteRepository.save(newInvites);
-            InviteResultsResource sentInvites = sendInvites(newArrayList(savedInvites));
-            return sentInvites;
-        });
+        return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
+                validateUniqueEmails(inviteOrganisationResource.getInviteResources())).andOnSuccess(() ->
+                assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(inviteOrganisation -> {
+                            List<ApplicationInvite> invites = saveInviteOrganisationWithInvites(inviteOrganisation, inviteOrganisationResource.getInviteResources());
+                            return sendInvites(invites);
+                        }
+                ));
     }
 
     @Override
@@ -240,15 +226,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
-        List<Error> errors = validateUniqueEmails(inviteResources);
-        if (errors.size() > 0) {
-            LOG.warn("Some double email addresses found");
-            return serviceFailure(errors);
-        }
-
-        List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
-        applicationInviteRepository.save(invites);
-        return serviceSuccess(sendInvites(invites));
+        return validateUniqueEmails(inviteResources).andOnSuccess(() -> {
+            List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
+            applicationInviteRepository.save(invites);
+            return serviceSuccess(sendInvites(invites));
+        });
     }
 
     @Override
@@ -308,38 +290,30 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<Void> removeApplicationInvite(Long applicationInviteId) {
-        try {
-            ApplicationInvite applicationInvite = applicationInviteMapper.mapIdToDomain(applicationInviteId);
+    public ServiceResult<Void> removeApplicationInvite(long applicationInviteId) {
+        return find(applicationInviteMapper.mapIdToDomain(applicationInviteId), notFoundError(ApplicationInvite.class))
+                .andOnSuccessReturnVoid(applicationInvite -> {
+                    ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
+                    Long applicationId = applicationInvite.getTarget().getId();
 
-            if (applicationInvite == null) {
-                return serviceFailure(notFoundError(ApplicationInvite.class));
-            }
+                    List<ProcessRole> collaboratorProcessRoles = processRoleRepository.findByUserAndApplicationId(
+                            applicationInvite.getUser(),
+                            applicationInvite.getTarget().getId()
+                    );
 
-            ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
-            Long applicationId = applicationInvite.getTarget().getId();
+                    reassignCollaboratorResponsesAndQuestionStatuses(applicationId, leadApplicantProcessRole, collaboratorProcessRoles);
 
-            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), applicationInvite.getTarget().getId());
+                    processRoleRepository.delete(collaboratorProcessRoles);
 
-            setAssignedQuestionsToLeadApplicant(leadApplicantProcessRole, processRoles);
-            setMarkedAsCompleteQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
-            setAssignedQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
+                    InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
-            removeProcessRolesOnApplication(processRoles);
-
-            InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
-
-            if (inviteOrganisation.getInvites().size() < 2) {
-                inviteOrganisationRepository.delete(inviteOrganisation);
-            } else {
-                inviteOrganisation.getInvites().remove(applicationInvite);
-                inviteOrganisationRepository.save(inviteOrganisation);
-            }
-
-            return serviceSuccess();
-        } catch (IllegalArgumentException e) {
-            return serviceFailure(notFoundError(ApplicationInvite.class));
-        }
+                    if (inviteOrganisation.getInvites().size() < 2) {
+                        inviteOrganisationRepository.delete(inviteOrganisation);
+                    } else {
+                        inviteOrganisation.getInvites().remove(applicationInvite);
+                        inviteOrganisationRepository.save(inviteOrganisation);
+                    }
+                });
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
@@ -382,13 +356,10 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
     }
 
-    private List<ApplicationInvite> assembleInvitesFromInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource, InviteOrganisation newInviteOrganisation) {
-        List<ApplicationInvite> invites = new ArrayList<>();
-        inviteOrganisationResource.getInviteResources().forEach(inviteResource ->
-                invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
-        );
-
-        return invites;
+    private List<ApplicationInvite> saveInviteOrganisationWithInvites(InviteOrganisation inviteOrganisation, List<ApplicationInviteResource> applicationInviteResources) {
+        inviteOrganisationRepository.save(inviteOrganisation);
+        return applicationInviteResources.stream().map(inviteResource ->
+                applicationInviteRepository.save(mapInviteResourceToInvite(inviteResource, inviteOrganisation))).collect(toList());
     }
 
     private ApplicationInvite mapInviteResourceToInvite(ApplicationInviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
@@ -399,166 +370,145 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
 
-    private boolean inviteOrganisationResourceIsValid(InviteOrganisationResource inviteOrganisationResource) {
-        if (!inviteOrganisationResourceNameAndIdAreValid(inviteOrganisationResource)) {
-            return false;
+    private ServiceResult<Void> validateInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource) {
+        if (inviteOrganisationResource.getOrganisation() != null || StringUtils.isNotBlank(inviteOrganisationResource.getOrganisationName())
+                && inviteOrganisationResource.getInviteResources().stream().allMatch(this::applicationInviteResourceIsValid)) {
+            return serviceSuccess();
         }
-
-        if (!allInviteResourcesAreValid(inviteOrganisationResource)) {
-            return false;
-        }
-
-        return true;
+        return serviceFailure(PROJECT_INVITE_INVALID);
     }
 
-    private boolean inviteOrganisationResourceNameAndIdAreValid(InviteOrganisationResource inviteOrganisationResource) {
-        if ((inviteOrganisationResource.getOrganisationName() == null ||
-                inviteOrganisationResource.getOrganisationName().isEmpty())
-                &&
-                inviteOrganisationResource.getOrganisation() == null) {
-            return false;
-        } else {
-            return true;
-        }
+    private boolean applicationInviteResourceIsValid(ApplicationInviteResource inviteResource) {
+        return inviteResource.getApplication() != null && StringUtils.isNotBlank(inviteResource.getEmail()) && StringUtils.isNotBlank(inviteResource.getName());
     }
 
-    private boolean allInviteResourcesAreValid(InviteOrganisationResource inviteOrganisationResource) {
-        if (inviteOrganisationResource.getInviteResources()
-                .stream()
-                .filter(inviteResource -> !inviteResourceIsValid(inviteResource))
-                .count() > 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean inviteResourceIsValid(ApplicationInviteResource inviteResource) {
-        if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplication() == null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private List<Error> validateUniqueEmails(List<ApplicationInviteResource> inviteResources) {
-        List<Error> errors = new ArrayList<>();
-        int inviteIndex = 0;
-
-        List<ApplicationInviteResource> duplicatesInList = findDuplicatesInResourceList(inviteResources);
-
-        for (ApplicationInviteResource invite : inviteResources) {
-            if (duplicatesInList.contains(invite) || validateUniqueEmail(invite).equals(false)) {
-                errors.add(fieldError("applicants[" + inviteIndex + "].email", invite.getEmail(), "email.already.in.invite"));
-            }
-            inviteIndex++;
-        }
-
-        return errors;
-    }
-
-    private Boolean validateUniqueEmail(ApplicationInviteResource inviteResource) {
-        if (inviteResource.getEmail() == null) {
-            return true;
-        }
-
-        Application application = applicationRepository.findOne(inviteResource.getApplication());
-
-        Set<String> savedEmails = getSavedEmailAddresses(inviteResource.getApplication());
-        if (application.getLeadApplicant() != null) {
-            savedEmails.add(application.getLeadApplicant().getEmail());
-        }
-
-        return !savedEmails.contains(inviteResource.getEmail());
-    }
-
-    private Set<String> getSavedEmailAddresses(Long applicationId) {
-        Set<String> savedEmails = new TreeSet<>();
-        List<InviteOrganisationResource> savedInvites = newArrayList();
-        savedInvites.addAll(getInvitesByApplication(applicationId).getSuccessObject());
-        savedInvites.forEach(s -> {
-            if (s.getInviteResources() != null) {
-                s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail()));
+    private ServiceResult<Void> validateUniqueEmails(List<ApplicationInviteResource> inviteResources) {
+        List<Error> failures = new ArrayList<>();
+        long applicationId = inviteResources.get(0).getApplication();
+        Set<String> uniqueEmails = getUniqueEmailAddressesForApplication(applicationId);
+        forEachWithIndex(inviteResources, (index, invite) -> {
+            if (!uniqueEmails.add(invite.getEmail())) {
+                failures.add(fieldError(format("applicants[%s].email", index), invite.getEmail(), "email.already.in.invite"));
             }
         });
-        return savedEmails;
+        return failures.isEmpty() ? serviceSuccess() : serviceFailure(failures);
     }
 
-    private List<ApplicationInviteResource> findDuplicatesInResourceList(List<ApplicationInviteResource> resourceList) {
-        List<ApplicationInviteResource> result = new ArrayList();
-        List<String> emails = resourceList.stream().map(inviteResource -> inviteResource.getEmail()).collect(Collectors.toList());
-        Integer currentIndex = 0;
-
-        for (String email : emails) {
-            if (emails.subList(currentIndex + 1, emails.size()).contains(email)) {
-                result.add(resourceList.get(currentIndex));
-            }
-            currentIndex++;
+    private Set<String> getUniqueEmailAddressesForApplication(long applicationId) {
+        Set<String> result = getUniqueEmailAddressesForApplicationInvites(applicationId);
+        String leadApplicantEmail = getLeadApplicantEmail(applicationId);
+        if (leadApplicantEmail != null) {
+            result.add(leadApplicantEmail);
         }
-
         return result;
-
     }
 
-    private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
-        processRoles.forEach(processRole -> {
-            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationId, processRole.getId());
-            List<QuestionStatus> toDelete = new ArrayList<>();
-            if (!questionStatuses.isEmpty()) {
-                questionStatuses.forEach(questionStatus -> {
-                    if (!questionStatus.getQuestion().getMultipleStatuses()) {
-                        questionStatus.setMarkedAsCompleteBy(leadApplicantProcessRole);
-                    } else {
-                        setMarkedAsCompleteForQuestionWithMultipleQuestions(applicationId, processRole, questionStatus, toDelete);
-                    }
-                });
-                questionStatuses.removeAll(toDelete);
-                questionStatusRepository.save(questionStatuses);
-            }
+    private Set<String> getUniqueEmailAddressesForApplicationInvites(long applicationId) {
+        List<InviteOrganisationResource> inviteOrganisationResources = getInvitesByApplication(applicationId).getSuccessObject();
+        return inviteOrganisationResources.stream().flatMap(inviteOrganisationResource ->
+                inviteOrganisationResource.getInviteResources().stream().map(ApplicationInviteResource::getEmail)).collect(Collectors.toSet());
+    }
+
+    private String getLeadApplicantEmail(long applicationId) {
+        Application application = applicationRepository.findOne(applicationId);
+        return application.getLeadApplicant() != null ? application.getLeadApplicant().getEmail() : null;
+    }
+
+    private void reassignCollaboratorResponsesAndQuestionStatuses(long applicationId,
+                                                                  ProcessRole leadApplicantProcessRole,
+                                                                  List<ProcessRole> collaboratorProcessRoles) {
+        collaboratorProcessRoles.forEach(collaboratorProcessRole -> {
+            List<ProcessRole> organisationRoles = getOrganisationProcessRolesExcludingCollaborator(applicationId, collaboratorProcessRole);
+
+            reassignCollaboratorFormResponses(leadApplicantProcessRole, collaboratorProcessRole, organisationRoles);
+            reassignCollaboratorQuestionStatuses(applicationId, leadApplicantProcessRole, collaboratorProcessRole, organisationRoles);
         });
     }
 
-    private void setMarkedAsCompleteForQuestionWithMultipleQuestions(Long applicationId, ProcessRole roleToRemove, QuestionStatus questionStatus, List<QuestionStatus> statusesToDelete) {
-        List<ProcessRole> rolesFromSameOrganisation = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, roleToRemove.getOrganisationId());
-        rolesFromSameOrganisation.remove(roleToRemove);
-        if (rolesFromSameOrganisation.isEmpty()) {
-            questionStatusRepository.delete(questionStatus);
-            statusesToDelete.add(questionStatus);
-        } else {
-            questionStatus.setMarkedAsCompleteBy(rolesFromSameOrganisation.get(0));
+    private List<ProcessRole> getOrganisationProcessRolesExcludingCollaborator(long applicationId, ProcessRole collaboratorProcessRole) {
+        List<ProcessRole> organisationRoles = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, collaboratorProcessRole.getOrganisationId());
+        organisationRoles.remove(collaboratorProcessRole);
+        return organisationRoles;
+    }
+
+    private void reassignCollaboratorFormResponses(ProcessRole leadApplicantProcessRole,
+                                                   ProcessRole collaboratorProcessRole,
+                                                   List<ProcessRole> organisationRoles) {
+        List<FormInputResponse> formInputResponses = formInputResponseRepository.findByUpdatedById(collaboratorProcessRole.getId());
+
+        List<FormInputResponse> unassignableFormInputResponses = new ArrayList<>();
+
+        formInputResponses.forEach(collaboratorResponse -> {
+            if (collaboratorResponse.getFormInput().getQuestion().hasMultipleStatuses()) {
+                if (organisationRoles.isEmpty()) {
+                    unassignableFormInputResponses.add(collaboratorResponse);
+                } else {
+                    collaboratorResponse.setUpdatedBy(organisationRoles.get(0));
+                }
+            } else {
+                collaboratorResponse.setUpdatedBy(leadApplicantProcessRole);
+            }
+        });
+
+        formInputResponseRepository.save(formInputResponses);
+        formInputResponseRepository.delete(unassignableFormInputResponses);
+    }
+
+    private void reassignCollaboratorQuestionStatuses(long applicationId,
+                                                      ProcessRole leadApplicantProcessRole,
+                                                      ProcessRole collaboratorProcessRole,
+                                                      List<ProcessRole> organisationRoles) {
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(
+                applicationId,
+                collaboratorProcessRole.getId(),
+                collaboratorProcessRole.getId(),
+                collaboratorProcessRole.getId()
+        );
+
+        List<QuestionStatus> unassignableQuestionStatuses = new ArrayList<>();
+
+        questionStatuses.forEach(questionStatus -> {
+            if (questionStatus.getQuestion().hasMultipleStatuses()) {
+                if (organisationRoles.isEmpty()) {
+                    unassignableQuestionStatuses.add(questionStatus);
+                } else {
+                    reassignQuestionStatusRoles(questionStatus, organisationRoles.get(0), leadApplicantProcessRole);
+                }
+            } else {
+                reassignQuestionStatusRoles(questionStatus, leadApplicantProcessRole, leadApplicantProcessRole);
+            }
+        });
+
+        questionStatusRepository.save(questionStatuses);
+        questionStatusRepository.delete(unassignableQuestionStatuses);
+    }
+
+    private QuestionStatus reassignQuestionStatusRoles(QuestionStatus questionStatus, ProcessRole reassignTo, ProcessRole leadApplicantRole) {
+        if (questionStatus.getAssignee() != null && questionStatus.getAssignedBy() != null) {
+            ProcessRole assignee =
+                    convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignee(), reassignTo, leadApplicantRole);
+            ProcessRole assignedBy =
+                    convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignedBy(), reassignTo, leadApplicantRole);
+
+            questionStatus.setAssignee(assignee, assignedBy, ZonedDateTime.now());
         }
-    }
 
-    private void setAssignedQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
-        processRoles.forEach(processRole -> {
-            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeIdOrAssignedById(applicationId, processRole.getId(), processRole.getId());
-            if (!questionStatuses.isEmpty()) {
-                questionStatuses.forEach(questionStatus ->
-                        questionStatus.setAssignee(
-                                leadApplicantProcessRole,
-                                leadApplicantProcessRole,
-                                LocalDateTime.now())
-                );
-                questionStatusRepository.save(questionStatuses);
-            }
-        });
-    }
+        if (questionStatus.getMarkedAsCompleteBy() != null) {
+            ProcessRole markedAsCompleteBy =
+                    convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getMarkedAsCompleteBy(), reassignTo, leadApplicantRole);
 
-    private void setAssignedQuestionsToLeadApplicant(ProcessRole leadApplicantProcessRole, List<ProcessRole> processRoles) {
-        processRoles.forEach(processRole -> {
-            List<FormInputResponse> collaboratorQuestions = formInputResponseRepository.findByUpdatedById(processRole.getId());
-            if (!collaboratorQuestions.isEmpty()) {
-                collaboratorQuestions.forEach(collaboratorQuestion -> {
-                    collaboratorQuestion.setUpdatedBy(leadApplicantProcessRole);
-                    formInputResponseRepository.save(collaboratorQuestion);
-                });
-            }
-        });
-    }
-
-    private void removeProcessRolesOnApplication(List<ProcessRole> processRoles) {
-        if (!processRoles.isEmpty()) {
-            processRoleRepository.delete(processRoles);
+            questionStatus.setMarkedAsCompleteBy(markedAsCompleteBy);
         }
+
+        return questionStatus;
+    }
+
+    private ProcessRole convertToProcessRoleIfOriginalRoleNotForLeadApplicant(ProcessRole processRoleFrom,
+                                                                              ProcessRole processRoleTo,
+                                                                              ProcessRole leadApplicantRole) {
+        return Optional.of(processRoleFrom)
+                .filter(originalRole -> !originalRole.getId().equals(leadApplicantRole.getId()))
+                .map(originalRole -> processRoleTo)
+                .orElse(leadApplicantRole);
     }
 }

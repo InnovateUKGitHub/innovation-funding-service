@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -25,7 +26,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
-            description = "The lead partners can update the basic project details, like start date, address, project manager")
+            description = "The lead partners can update the basic project details, like start date, address, Project Manager")
     public boolean leadPartnersCanUpdateTheBasicProjectDetails(ProjectResource project, UserResource user) {
         return isLeadPartner(project.getId(), user.getId());
     }
@@ -33,30 +34,16 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "UPDATE_FINANCE_CONTACT",
-            description = "The lead partner can update the basic project details like start date")
-    public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
+            description = "A partner can update the finance contact for their own organisation")
+    public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectOrganisationCompositeId composite, UserResource user) {
+        return isPartner(composite.getProjectId(), user.getId()) && partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
     }
 
     @PermissionRule(
-            value = "VIEW_MONITORING_OFFICER",
-            description = "Internal users can view Monitoring Officers on any Project")
-    public boolean internalUsersCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_MONITORING_OFFICER",
-            description = "Partners can view monitoring officers on Projects that they are partners on")
-    public boolean partnersCanViewMonitoringOfficersOnTheirProjects(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "ASSIGN_MONITORING_OFFICER",
-            description = "Internal users can assign Monitoring Officers on any Project")
-    public boolean internalUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isInternal(user);
+            value = "UPDATE_FINANCE_CONTACT",
+            description = "A partner can update the finance contact for their own organisation")
+    public boolean submitIsAllowed(Long projectId, UserResource user) {
+        return isPartner(projectId, user.getId());
     }
 
     @PermissionRule(
@@ -103,7 +90,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "SUBMIT_OTHER_DOCUMENTS",
-            description = "Only a project manager can submit completed partner documents")
+            description = "Only a Project Manager can submit completed partner documents")
     public boolean onlyProjectManagerCanMarkDocumentsAsSubmit(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId());
     }

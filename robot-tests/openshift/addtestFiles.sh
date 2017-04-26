@@ -93,7 +93,7 @@ webServiceCodeDir="${rootDir}/ifs-web-service"
 webBase="<<SHIB-ADDRESS>>"
 
 uploadFileDir="${scriptDir}/../upload_files"
-baseFileStorage="/tmp/uploads"
+baseFileStorage="/mnt/ifs_storage"
 storedFileFolder="${baseFileStorage}/ifs/"
 virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
 virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"

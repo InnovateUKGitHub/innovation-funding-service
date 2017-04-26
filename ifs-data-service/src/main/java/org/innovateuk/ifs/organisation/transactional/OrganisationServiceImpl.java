@@ -92,7 +92,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         Organisation organisation = organisationMapper.mapToDomain(organisationResource);
 
         if (organisation.getOrganisationType() == null) {
-            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
+            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getId()));
         }
 
         Organisation savedOrganisation = organisationRepository.save(organisation);

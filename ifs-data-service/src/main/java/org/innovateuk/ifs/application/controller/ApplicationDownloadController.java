@@ -6,6 +6,7 @@ import org.apache.poi.POIXMLDocument;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
 import org.innovateuk.ifs.commons.error.exception.SummaryDataUnavailableException;
@@ -21,20 +22,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+import static java.util.Arrays.asList;
 
 @RestController
 @RequestMapping("/application/download")
@@ -55,9 +54,14 @@ public class ApplicationDownloadController {
     private Integer rowCount = 0;
     private Integer headerCount = 0;
 
-    @RequestMapping("/downloadByCompetition/{competitionId}")
+    public static final Collection<ApplicationState> SUBMITTED_STATUSES = asList(
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.SUBMITTED);
+
+    @GetMapping("/downloadByCompetition/{competitionId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
-        ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndStatus(competitionId, SUBMITTED_STATUS_IDS);
+        ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndState(competitionId, SUBMITTED_STATUSES);
         
         List<Application> applications;
         if(applicationsResult.isSuccess()) {

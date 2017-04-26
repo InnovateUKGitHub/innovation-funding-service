@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.viability.controller;
 
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.OrganisationSizeService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -22,9 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,8 +30,6 @@ import java.util.function.Supplier;
 
 import static java.math.RoundingMode.HALF_EVEN;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller serves the Viability page where internal users can confirm the viability of a partner organisation's
@@ -58,17 +52,14 @@ public class FinanceChecksViabilityController {
     @Autowired
     private ProjectFinanceService financeService;
 
-    @Autowired
-    private OrganisationSizeService organisationSizeService;
-
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
                                 @PathVariable("organisationId") Long organisationId, Model model) {
 
         return doViewViability(projectId, organisationId, model, getViabilityForm(projectId, organisationId));
     }
 
-    @RequestMapping(method = POST, params = "save-and-continue")
+    @PostMapping(params = "save-and-continue")
     public String saveAndContinue(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute("form") FinanceChecksViabilityForm form,
@@ -81,7 +72,7 @@ public class FinanceChecksViabilityController {
         return doSaveViability(projectId, organisationId, Viability.REVIEW, form, validationHandler, model, successView);
     }
 
-    @RequestMapping(method = POST, params = "confirm-viability")
+    @PostMapping(params = "confirm-viability")
     public String confirmViability(@PathVariable("projectId") Long projectId,
                                    @PathVariable("organisationId") Long organisationId,
                                    @ModelAttribute("form") FinanceChecksViabilityForm form,
@@ -169,7 +160,7 @@ public class FinanceChecksViabilityController {
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
 
-        List<OrganisationSizeResource> sizes = organisationSizeService.getOrganisationSizes();
+        List<OrganisationSizeResource> sizes = organisationDetailsService.getOrganisationSizes().getSuccessObjectOrThrowException();
         Optional<OrganisationSizeResource> organisationSizeResource = sizes.stream().filter(size -> size.getId().equals(financesForOrganisation.getOrganisationSize())).findAny();
         String organisationSizeDescription = organisationSizeResource.map(OrganisationSizeResource::getDescription).orElse(null);
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,

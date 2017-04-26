@@ -68,29 +68,37 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
 
     @Override
     public void configure(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+        configureNotify(transitions);
+        configureAccept(transitions);
+        configureReject(transitions);
+        configureWithdraw(transitions);
+        configureFeedback(transitions);
+        configureFundingDecision(transitions);
+        configureSubmit(transitions);
+        configureChoice(transitions);
+    }
+
+    private void configureNotify(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
         transitions
-                .withInternal()
-                .source(CREATED)
-                .event(WITHDRAW)
-                .action(withdrawCreatedAction)
-                .and()
                 .withExternal()
                 .source(CREATED).target(PENDING)
-                .event(NOTIFY)
-                .and()
+                .event(NOTIFY);
+    }
+
+    private void configureAccept(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+        transitions
+                .withExternal()
+                .source(PENDING).target(ACCEPTED)
+                .event(ACCEPT);
+    }
+
+    private void configureReject(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+        transitions
                 .withExternal()
                 .source(PENDING).target(REJECTED)
                 .event(REJECT)
                 .action(rejectAction)
                 .guard(assessmentRejectOutcomeGuard)
-                .and()
-                .withExternal()
-                .source(PENDING).target(WITHDRAWN)
-                .event(WITHDRAW)
-                .and()
-                .withExternal()
-                .source(PENDING).target(ACCEPTED)
-                .event(ACCEPT)
                 .and()
                 .withExternal()
                 .source(ACCEPTED).target(REJECTED)
@@ -99,13 +107,59 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .guard(assessmentRejectOutcomeGuard)
                 .and()
                 .withExternal()
+                .source(OPEN).target(REJECTED)
+                .event(REJECT)
+                .action(rejectAction)
+                .guard(assessmentRejectOutcomeGuard)
+                .and()
+                .withExternal()
+                .source(READY_TO_SUBMIT).target(REJECTED)
+                .event(REJECT)
+                .action(rejectAction)
+                .guard(assessmentRejectOutcomeGuard);
+    }
+
+    private void configureWithdraw(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+        transitions
+                .withInternal()
+                .source(CREATED)
+                .event(WITHDRAW)
+                .action(withdrawCreatedAction)
+                .and()
+                .withExternal()
+                .source(PENDING).target(WITHDRAWN)
+                .event(WITHDRAW)
+                .and()
+                .withExternal()
                 .source(ACCEPTED).target(WITHDRAWN)
                 .event(WITHDRAW)
                 .and()
                 .withExternal()
+                .source(OPEN).target(WITHDRAWN)
+                .event(WITHDRAW)
+                .and()
+                .withExternal()
+                .source(READY_TO_SUBMIT).target(WITHDRAWN)
+                .event(WITHDRAW);
+    }
+
+    private void configureFeedback(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+        transitions
+                .withExternal()
                 .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
                 .event(FEEDBACK)
                 .and()
+                .withExternal()
+                .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
+                .event(FEEDBACK)
+                .and()
+                .withExternal()
+                .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
+                .event(FEEDBACK);
+    }
+
+    private void configureFundingDecision(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+        transitions
                 .withExternal()
                 .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
                 .event(FUNDING_DECISION)
@@ -113,51 +167,29 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .guard(assessmentFundingDecisionOutcomeGuard)
                 .and()
                 .withExternal()
-                .source(OPEN).target(REJECTED)
-                .event(REJECT)
-                .action(rejectAction)
-                .guard(assessmentRejectOutcomeGuard)
-                .and()
-                .withExternal()
-                .source(OPEN).target(WITHDRAWN)
-                .event(WITHDRAW)
-                .and()
-                .withExternal()
-                .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
-                .event(FEEDBACK)
-                .and()
-                .withExternal()
                 .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
                 .event(FUNDING_DECISION)
                 .action(fundingDecisionAction)
                 .and()
                 .withExternal()
-                .source(READY_TO_SUBMIT).target(REJECTED)
-                .event(REJECT)
-                .action(rejectAction)
-                .guard(assessmentRejectOutcomeGuard)
-                .and()
-                .withExternal()
-                .source(READY_TO_SUBMIT).target(WITHDRAWN)
-                .event(WITHDRAW)
-                .and()
-                .withExternal()
-                .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
-                .event(FEEDBACK)
-                .and()
-                .withExternal()
                 .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
                 .event(FUNDING_DECISION)
-                .action(fundingDecisionAction)
-                .and()
-                .withChoice()
-                .source(DECIDE_IF_READY_TO_SUBMIT)
-                .first(READY_TO_SUBMIT, assessmentCompleteGuard)
-                .last(OPEN)
-                .and()
+                .action(fundingDecisionAction);
+    }
+
+    private void configureSubmit(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+        transitions
                 .withExternal()
                 .source(READY_TO_SUBMIT).target(SUBMITTED)
                 .event(SUBMIT)
                 .guard(competitionInAssessmentGuard);
+    }
+
+    private void configureChoice(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
+        transitions
+                .withChoice()
+                .source(DECIDE_IF_READY_TO_SUBMIT)
+                .first(READY_TO_SUBMIT, assessmentCompleteGuard)
+                .last(OPEN);
     }
 }

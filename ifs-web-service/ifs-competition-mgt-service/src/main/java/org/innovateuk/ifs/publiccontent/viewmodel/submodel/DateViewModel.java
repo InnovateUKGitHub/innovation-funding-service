@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.publiccontent.viewmodel.submodel;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
  * Repeating viewmodel that's being used by {@link org.innovateuk.ifs.publiccontent.viewmodel.DatesViewModel}
  */
 public class DateViewModel {
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
     private String content;
 
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM YYYY");
 
-    public LocalDateTime getDateTime() {
+    public ZonedDateTime getDateTime() {
         return dateTime;
     }
 
@@ -24,7 +24,7 @@ public class DateViewModel {
         return dateTime.format(DATE_FORMAT);
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(ZonedDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

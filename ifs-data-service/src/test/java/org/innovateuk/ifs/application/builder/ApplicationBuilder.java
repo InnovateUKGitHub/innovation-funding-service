@@ -1,19 +1,21 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
+import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -49,17 +51,13 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((competition, application) -> application.setCompetition(competition), competitions);
     }
 
-    public ApplicationBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {
-        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
-    }
-
-    public ApplicationBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
-        return withArray((applicationState, application) -> {
-
-            ApplicationStatus status = new ApplicationStatus(applicationState.getId(), applicationState.getName());
-            application.setApplicationStatus(status);
-
-        }, applicationStatus);
+    public ApplicationBuilder withApplicationState(ApplicationState... applicationStates) {
+        return withArray((applicationState, application)
+                        -> setField("applicationProcess",
+                                new ApplicationProcess(application, null, new ActivityState(ActivityType.APPLICATION, applicationState.getBackingState())), application
+                ),
+                applicationStates
+        );
     }
 
     public ApplicationBuilder withStartDate(LocalDate... dates) {
@@ -86,7 +84,7 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((duration, application) -> application.setDurationInMonths(duration), durationInMonths);
     }
 
-    public ApplicationBuilder withManageFundingEmailDate(LocalDateTime... manageFundingEmailDates) {
+    public ApplicationBuilder withManageFundingEmailDate(ZonedDateTime... manageFundingEmailDates) {
         return withArray((fundingEmailDate, application) -> application.setManageFundingEmailDate(fundingEmailDate), manageFundingEmailDates);
     }
 

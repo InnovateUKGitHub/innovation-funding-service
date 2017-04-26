@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
- * An implementation of PermissionEvaluator that 
+ * An implementation of PermissionEvaluator that
  */
 @Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {

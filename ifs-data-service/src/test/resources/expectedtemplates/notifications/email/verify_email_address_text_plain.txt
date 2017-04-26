@@ -1,0 +1,12 @@
+Dear User 2,
+
+You have recently set up an account with the Innovation Funding Service. We now need you to verify your email address.
+
+https://ifs-local-dev/invite
+
+Once verified you can sign into your account.
+
+Competitions Team
+Innovate UK
+Tel: 0300 321 4357
+Email: competitions@innovateuk.gov.uk

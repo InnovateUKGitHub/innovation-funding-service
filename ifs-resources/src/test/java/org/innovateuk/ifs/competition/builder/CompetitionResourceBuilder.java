@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,11 +28,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> setField("name", name, competition));
     }
 
-    public CompetitionResourceBuilder withStartDate(LocalDateTime startDate) {
+    public CompetitionResourceBuilder withStartDate(ZonedDateTime startDate) {
         return with(competition -> setField("startDate", startDate, competition));
     }
 
-    public CompetitionResourceBuilder withEndDate(LocalDateTime endDate) {
+    public CompetitionResourceBuilder withEndDate(ZonedDateTime endDate) {
         return with(competition -> setField("endDate", endDate, competition));
     }
 
@@ -64,27 +64,27 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("description", descriptions);
     }
 
-    public CompetitionResourceBuilder withAssessorAcceptsDate(LocalDateTime... assessorAcceptsDates) {
+    public CompetitionResourceBuilder withAssessorAcceptsDate(ZonedDateTime... assessorAcceptsDates) {
         return withArraySetFieldByReflection("assessorAcceptsDate", assessorAcceptsDates);
     }
 
-    public CompetitionResourceBuilder withAssessorDeadlineDate(LocalDateTime... assessorDeadlineDates) {
+    public CompetitionResourceBuilder withAssessorDeadlineDate(ZonedDateTime... assessorDeadlineDates) {
         return withArraySetFieldByReflection("assessorDeadlineDate", assessorDeadlineDates);
     }
 
-    public CompetitionResourceBuilder withReleaseFeedbackDate(LocalDateTime... releaseFeedbackDates) {
+    public CompetitionResourceBuilder withReleaseFeedbackDate(ZonedDateTime... releaseFeedbackDates) {
         return withArraySetFieldByReflection("releaseFeedbackDate", releaseFeedbackDates);
     }
 
-    public CompetitionResourceBuilder withFundersPanelDate(LocalDateTime... fundersPanelDates) {
+    public CompetitionResourceBuilder withFundersPanelDate(ZonedDateTime... fundersPanelDates) {
         return withArraySetFieldByReflection("fundersPanelDate", fundersPanelDates);
     }
 
-    public CompetitionResourceBuilder withFundersPanelEndDate(LocalDateTime... fundersPanelEndDates) {
+    public CompetitionResourceBuilder withFundersPanelEndDate(ZonedDateTime... fundersPanelEndDates) {
         return withArraySetFieldByReflection("fundersPanelEndDate", fundersPanelEndDates);
     }
 
-    public CompetitionResourceBuilder withAssessorFeedbackDate(LocalDateTime... assessorFeedbackDate) {
+    public CompetitionResourceBuilder withAssessorFeedbackDate(ZonedDateTime... assessorFeedbackDate) {
         return withArray((date, object) -> object.setAssessorFeedbackDate(date), assessorFeedbackDate);
     }
 
@@ -156,8 +156,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("collaborationLevel", collaborationLevels);
     }
 
-    public CompetitionResourceBuilder withLeadApplicantType(LeadApplicantType... leadApplicantTypes) {
-        return withArraySetFieldByReflection("leadApplicantType", leadApplicantTypes);
+    public CompetitionResourceBuilder withLeadApplicantType(List<Long>... leadApplicantTypes) {
+        return withArraySetFieldByReflection("leadApplicantTypes", leadApplicantTypes);
     }
 
     public CompetitionResourceBuilder withActivityCode(String... activityCodes) {

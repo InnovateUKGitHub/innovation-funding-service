@@ -63,7 +63,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testUpdateFinanceContact() {
         setupPostWithRestResultExpectations(projectRestURL + "/123/organisation/5/finance-contact?financeContact=6", null, OK);
-        RestResult<Void> result = service.updateFinanceContact(123L, 5L, 6L);
+        RestResult<Void> result = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 6L);
         assertTrue(result.isSuccess());
     }
 
@@ -137,47 +137,6 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
 
         Assert.assertEquals(isAllowed, result.getSuccessObject());
-    }
-
-    @Test
-    public void testUpdateMonitoringOfficer() {
-
-        Long projectId = 1L;
-
-        MonitoringOfficerResource monitoringOfficerResource = new MonitoringOfficerResource();
-        monitoringOfficerResource.setId(null);
-        monitoringOfficerResource.setProject(projectId);
-        monitoringOfficerResource.setFirstName("abc");
-        monitoringOfficerResource.setLastName("xyz");
-        monitoringOfficerResource.setEmail("abc.xyz@gmail.com");
-        monitoringOfficerResource.setPhoneNumber("078323455");
-
-        setupPutWithRestResultExpectations(projectRestURL + "/" + projectId + "/monitoring-officer", monitoringOfficerResource, OK);
-
-        RestResult<Void> result = service.updateMonitoringOfficer(projectId, "abc", "xyz", "abc.xyz@gmail.com", "078323455");
-
-        assertTrue(result.isSuccess());
-
-    }
-
-    @Test
-    public void testGetMonitoringOfficerForProject() {
-
-        MonitoringOfficerResource expectedMonitoringOfficerResource = new MonitoringOfficerResource();
-        expectedMonitoringOfficerResource.setProject(1L);
-        expectedMonitoringOfficerResource.setFirstName("abc");
-        expectedMonitoringOfficerResource.setLastName("xyz");
-        expectedMonitoringOfficerResource.setEmail("abc.xyz@gmail.com");
-        expectedMonitoringOfficerResource.setPhoneNumber("078323455");
-
-        setupGetWithRestResultExpectations(projectRestURL + "/1/monitoring-officer", MonitoringOfficerResource.class, expectedMonitoringOfficerResource);
-
-        RestResult<MonitoringOfficerResource> result = service.getMonitoringOfficerForProject(1L);
-
-        assertTrue(result.isSuccess());
-
-        Assert.assertEquals(expectedMonitoringOfficerResource, result.getSuccessObject());
-
     }
 
     @Test

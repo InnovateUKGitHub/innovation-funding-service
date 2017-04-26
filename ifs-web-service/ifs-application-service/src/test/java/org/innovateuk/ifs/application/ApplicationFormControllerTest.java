@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
@@ -14,14 +13,18 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,6 +34,7 @@ import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -40,6 +44,7 @@ import org.springframework.validation.BindingResult;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
@@ -51,9 +56,11 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -64,12 +71,12 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.isA;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations="classpath:application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<ApplicationFormController> {
 
     @Mock
@@ -106,12 +113,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
 
-    @Mock
-    private FundingLevelResetHandler fundingLevelResetHandler;
-
-    @Mock
-    private Model model;
-
     private ApplicationResource application;
     private Long sectionId;
     private Long questionId;
@@ -126,7 +127,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Before
     @Override
-    public void setUp(){
+    public void setUp() {
 
         // Process mock annotations
         super.setUp();
@@ -147,8 +148,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         costId = 1L;
 
         // save actions should always succeed.
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(financeHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
@@ -246,7 +247,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
-        when(competitionService.getById(anyLong())).thenReturn(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         // just check if these pages are not throwing errors.
@@ -265,7 +265,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                .param("formInput[1]", "Some Value...")
+                        .param("formInput[1]", "Some Value...")
 
         )
                 .andExpect(status().is3xxRedirection());
@@ -291,7 +291,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                    .param(ApplicationFormController.ASSIGN_QUESTION_PARAM, "1_2")
+                        .param(ApplicationFormController.ASSIGN_QUESTION_PARAM, "1_2")
 
         )
                 .andExpect(status().is3xxRedirection());
@@ -339,9 +339,9 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testAjaxRemoveCost() throws Exception {
         ValidationMessages costItemMessages = new ValidationMessages();
-        when(financeRowService.add(anyLong(),anyLong(), any())).thenReturn(costItemMessages);
+        when(financeRowRestService.add(anyLong(), anyLong(), any())).thenReturn(restSuccess(costItemMessages));
         mockMvc.perform(
-            get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
+                get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
         );
     }
 
@@ -350,7 +350,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         LocalDate futureDate = LocalDate.now().plusDays(1);
 
-        MvcResult result =  mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("application.startDate", futureDate.format(FORMATTER))
                         .param("application.startDate.year", Integer.toString(futureDate.getYear()))
@@ -360,7 +360,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("application.durationInMonths", "12")
                         .param("submit-section", "Save")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
                 .andReturn();
     }
@@ -371,16 +371,16 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         QuestionResource financeQuestion = newQuestionResource().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
-        when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
+        when(financeRowRestService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.NOT_REQUESTING_FUNDING, "1")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
 
         ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
-        verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
+        verify(financeRowRestService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
         assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
         verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
     }
@@ -391,16 +391,16 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         QuestionResource financeQuestion = newQuestionResource().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
-        when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
+        when(financeRowRestService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.REQUESTING_FUNDING, "1")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
 
         ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
-        verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
+        verify(financeRowRestService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
         assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
         verify(sectionService, times(2)).markAsInComplete(anyLong(), anyLong(), anyLong());
     }
@@ -415,7 +415,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
                         .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
@@ -423,7 +423,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFinanceMarkAsCompleteFailWithTerms() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
-
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.YOUR_FINANCE).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
 
@@ -438,13 +439,14 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void testApplicationFinanceMarkAsCompleteFailWithStateAid() throws Exception {
+    public void testApplicationFinanceMarkAsCompleteFailWithoutStateAid() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).build());
 
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
 
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -453,6 +455,22 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.STATE_AID_AGREED_KEY));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+    }
+
+    @Test
+    public void testApplicationFinanceMarkAsCompleteSuccessWithoutStateAidForAcademic() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).build());
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build());
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
     }
 
     @Test
@@ -477,7 +495,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
@@ -487,7 +505,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(ApplicationFormController.MARK_AS_COMPLETE, "12")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId+"**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
@@ -538,12 +556,14 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param(ApplicationFormController.MARK_AS_INCOMPLETE, "3")
         ).andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId +"**"))
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId + "**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsWithEmptyFields() throws Exception {
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
@@ -555,7 +575,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("application.startDate.monthValue", "")
         ).andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
 
         assertEquals("NotBlank", bindingResult.getFieldError("application.name").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.durationInMonths").getCode());
@@ -567,7 +587,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsWithResubmissionSelected() throws Exception {
-
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         LocalDate yesterday = LocalDate.now().minusDays(1L);
 
         MvcResult result = mockMvc.perform(
@@ -578,7 +599,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("application.previousApplicationTitle", "")
         ).andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
 
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("application.previousApplicationNumber").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("application.previousApplicationTitle").getCode());
@@ -588,7 +609,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsForPastDate() throws Exception {
-
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         LocalDate yesterday = LocalDate.now().minusDays(1L);
 
         MvcResult result = mockMvc.perform(
@@ -600,40 +622,71 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("application.startDate.monthValue", String.valueOf(yesterday.getMonthValue()))
         ).andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorForTooFewMonths() throws Exception {
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
                         .param("application.durationInMonths", "0")
         ).andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("Min", bindingResult.getFieldError("application.durationInMonths").getCode());
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
     public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorForTooManyMonths() throws Exception {
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
                         .param("application.durationInMonths", "37")
         ).andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("Max", bindingResult.getFieldError("application.durationInMonths").getCode());
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
-    public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsWithInvalidValues() throws Exception {
+    public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorForNoResearchCategorySelected() throws Exception {
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
+                        .param("mark_as_complete", questionId.toString())
+                        .param("application.name", "random")
+        ).andReturn();
 
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        assertEquals("NotNull", bindingResult.getFieldError("application.researchCategory").getCode());
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+    }
+
+    @Test
+    public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorForNoInnovationAreaSelected() throws Exception {
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
+                        .param("mark_as_complete", questionId.toString())
+                        .param("application.name", "random")
+        ).andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        assertEquals("NotNull", bindingResult.getFieldError("application.innovationArea").getCode());
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
+    }
+
+    @Test
+    public void testApplicationDetailsFormSubmitMarkAsComplete_returnsErrorsWithInvalidValues() throws Exception {
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
         LocalDate yesterday = LocalDate.now().minusDays(1L);
 
         MvcResult result = mockMvc.perform(
@@ -644,7 +697,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("application.previousApplicationTitle", "")
         ).andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
 
         assertNull(bindingResult.getFieldError("application.previousApplicationNumber"));
         assertNull(bindingResult.getFieldError("application.previousApplicationTitle"));
@@ -652,10 +705,70 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void testApplicationDetailsForm_leadCanEdit() throws Exception {
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
+        MvcResult result = mockMvc.perform(
+                get("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId))
+                .andExpect(view().name("application-form"))
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(QuestionViewModel.class, viewModelResult.getClass());
+        QuestionViewModel viewModel = (QuestionViewModel) viewModelResult;
+
+        assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
+        assertEquals(users.get(0), viewModel.getLeadApplicant());
+        assertEquals(Boolean.FALSE, viewModel.getQuestionApplicationViewModel().getAllReadOnly());
+    }
+
+    @Test
+    public void testApplicationDetailsForm_nonLeadReadOnly() throws Exception {
+        setLoggedInUser(users.get(1));
+        FormInputResource resource = newFormInputResource().withId(1L).withType(FormInputType.APPLICATION_DETAILS).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
+        MvcResult result = mockMvc.perform(
+                get("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId))
+                .andExpect(view().name("application-form"))
+                .andReturn();
+
+        Object viewModelResult = result.getModelAndView().getModelMap().get("model");
+        assertEquals(QuestionViewModel.class, viewModelResult.getClass());
+        QuestionViewModel viewModel = (QuestionViewModel) viewModelResult;
+
+        assertEquals(Boolean.FALSE, viewModel.getUserIsLeadApplicant());
+        assertEquals(Boolean.TRUE, viewModel.getQuestionApplicationViewModel().getAllReadOnly());
+    }
+
+    @Test
+    public void applicationDetailsFormSubmit_incorrectFileType() throws Exception {
+        long formInputId = 2L;
+        long processRoleId = 5L;
+        String fileError = "file error";
+        MockMultipartFile file = new MockMultipartFile("formInput[" + formInputId +"]", "filename.txt", "text/plain", "someText".getBytes());
+
+        long fileQuestionId = 31L;
+        when(formInputResponseRestService.createFileEntry(formInputId, application.getId(), processRoleId,
+                file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes()))
+                .thenReturn(restFailure(new Error(fileError,UNSUPPORTED_MEDIA_TYPE)));
+        FormInputResource resource = newFormInputResource().withId(formInputId).withType(FormInputType.FILEUPLOAD).build();
+        when(formInputRestService.getByQuestionIdAndScope(questionId, FormInputScope.APPLICATION)).thenReturn(restSuccess(Collections.singletonList(resource)));
+
+        MvcResult result = mockMvc.perform(
+            fileUpload("/application/{applicationId}/form/question/{questionId}", application.getId(), fileQuestionId)
+                        .file(file)
+                        .param("upload_file", "")
+        ).andReturn();
+
+        BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+        assertEquals(fileError, bindingResult.getFieldError("formInput[" + formInputId + "]").getCode());
+    }
+
+    @Test
     public void testApplicationFormSubmitGivesNoValidationErrorsIfNoQuestionIsEmptyOnSectionSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
-        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(new ValidationMessages(globalError("Please enter some text")));
+        when(formInputResponseRestService.saveQuestionResponse(userId, application.getId(), 1L, "", false)).thenReturn(restSuccess(new ValidationMessages(globalError("Please enter some text"))));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -670,7 +783,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFormSubmitGivesNoValidationErrorsIfQuestionIsEmptyOnSectionSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
-        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(new ValidationMessages(globalError("Please enter some text")));
+        when(formInputResponseRestService.saveQuestionResponse(userId, application.getId(), 1L, "", false)).thenReturn(restSuccess(new ValidationMessages(globalError("Please enter some text"))));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -684,7 +797,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFormSubmitNotAllowedMarkAsComplete() throws Exception {
         // Question should not be marked as complete, since the input is not valid.
 
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(new ValidationMessages(globalError("please.enter.some.text")));
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(restSuccess(new ValidationMessages(globalError("please.enter.some.text"))));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         mockMvc.perform(
@@ -714,16 +827,16 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Test
     public void testSaveFormElement() throws Exception {
-        String value = "Form Input "+formInputId+" Response";
+        String value = "Form Input " + formInputId + " Response";
 
         mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", formInputId.toString())
-                        .param("fieldName", "formInput["+formInputId+"]")
+                        .param("fieldName", "formInput[" + formInputId + "]")
                         .param("value", value)
         ).andExpect(status().isOk());
 
-        Mockito.inOrder(formInputResponseService).verify(formInputResponseService, calls(1)).save(loggedInUser.getId(), application.getId(), formInputId, value, false);
+        Mockito.inOrder(formInputResponseRestService).verify(formInputResponseRestService, calls(1)).saveQuestionResponse(loggedInUser.getId(), application.getId(), formInputId, value, false);
     }
 
     @Test
@@ -737,7 +850,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("fieldName", fieldName)
                         .param("value", value)
         ).andExpect(status().isOk())
-        		.andExpect(content().json("{\"success\":\"true\"}"));
+                .andExpect(content().json("{\"success\":\"true\"}"));
 
         Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
@@ -767,7 +880,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         String fieldName = "application.name";
 
         MvcResult result = mockMvc.perform(
-                post("/application/"+application.getId().toString()+"/form/123/saveFormElement")
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
                         .param("formInputId", "")
                         .param("fieldName", fieldName)
                         .param("value", value)
@@ -781,7 +894,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-     public void testSaveFormElementApplicationDuration() throws Exception {
+    public void testSaveFormElementApplicationDuration() throws Exception {
         String value = "12";
         String fieldName = "application.durationInMonths";
 
@@ -899,7 +1012,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testSaveFormElementApplicationValidStartDateDDMMYYYY() throws Exception {
         String value = "25-10-2025";
-        String questionId= "application_details-startdate";
+        String questionId = "application_details-startdate";
         String fieldName = "application.startDate";
 
         MvcResult result = mockMvc.perform(
@@ -921,7 +1034,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testSaveFormElementApplicationInvalidStartDateMMDDYYYY() throws Exception {
         String value = "10-25-2025";
-        String questionId= "application_details-startdate";
+        String questionId = "application_details-startdate";
         String fieldName = "application.startDate";
 
         mockMvc.perform(
@@ -939,7 +1052,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testSaveFormElementApplicationStartDateValidDay() throws Exception {
         String value = "25";
-        String questionId= "application_details-startdate_day";
+        String questionId = "application_details-startdate_day";
         String fieldName = "application.startDate.dayOfMonth";
 
         MvcResult result = mockMvc.perform(
@@ -960,8 +1073,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     //TODO: Change this to AutosaveElementException
     @Test
-     public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
-        String questionId= "application_details-startdate_day";
+    public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
+        String questionId = "application_details-startdate_day";
         String fieldName = "application.startDate.dayOfMonth";
         String value = "35";
 
@@ -973,12 +1086,12 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-        		.andExpect(content().json("{\"success\":\"false\"}"));
+                .andExpect(content().json("{\"success\":\"false\"}"));
     }
 
     @Test
     public void testSaveFormElementApplicationAttributeInvalidMonth() throws Exception {
-        String questionId= "application_details-startdate_month";
+        String questionId = "application_details-startdate_month";
         String fieldName = "application.startDate.monthValue";
         String value = "13";
 
@@ -992,7 +1105,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         ).andExpect(status().isOk()).andReturn();
 
         String content = result.getResponse().getContentAsString();
-        log.info("Response : "+ content);
+        log.info("Response : " + content);
 
         String jsonExpectedContent = "{\"success\":\"false\"}";
         assertEquals(jsonExpectedContent, content);
@@ -1002,7 +1115,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testSaveFormElementApplicationAttributeInvalidYear() throws Exception {
 
         String questionId = "application_details-startdate_year";
-        String fieldName  = "application.startDate.year";
+        String fieldName = "application.startDate.year";
         String value = "2015";
 
         when(sectionService.getById(anyLong())).thenReturn(null);
@@ -1021,7 +1134,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testSaveFormElementApplicationResubmission() throws Exception {
         String value = "true";
-        String questionId= "application_details-resubmission";
+        String questionId = "application_details-resubmission";
         String fieldName = "application.resubmission";
 
         MvcResult result = mockMvc.perform(
@@ -1043,7 +1156,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testSaveFormElementApplicationPreviousApplicationNumber() throws Exception {
         String value = "999";
-        String questionId= "application_details-previousapplicationnumber";
+        String questionId = "application_details-previousapplicationnumber";
         String fieldName = "application.previousApplicationNumber";
 
         MvcResult result = mockMvc.perform(
@@ -1065,7 +1178,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testSaveFormElementApplicationPreviousApplicationTitle() throws Exception {
         String value = "test";
-        String questionId= "application_details-previousapplicationtitle";
+        String questionId = "application_details-previousapplicationtitle";
         String fieldName = "application.previousApplicationTitle";
 
         MvcResult result = mockMvc.perform(
@@ -1093,18 +1206,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("remove_cost", String.valueOf(costId)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()+"/form/section/" + sectionId));
-
-        // verify that the method is called to send the data to the data services.
-        //Mockito.inOrder(financeRowService).verify(financeRowService, calls(1)).delete(costId);
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
     }
-
-//    @Test
-//    public void testAssignQuestion() throws Exception {
-//        Model model = new RequestModel;
-//        applicationFormController.assignQuestion(model, application.getId(), sectionId);
-//    }
-
 
     @Test
     public void testRedirectToSectionUnique() throws Exception {
@@ -1115,7 +1218,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 get("/application/{applicationId}/form/{sectionType}", application.getId(), SectionType.FINANCE))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()+"/form/section/" + financeSection.getId()));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + financeSection.getId()));
 
     }
 
@@ -1128,7 +1231,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 get("/application/{applicationId}/form/{sectionType}", application.getId(), SectionType.FINANCE))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId()));
 
     }
 
@@ -1140,7 +1243,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(
                 get("/application/{applicationId}/form/{sectionType}", application.getId(), SectionType.FINANCE))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId()));
     }
 
     @Test
@@ -1176,7 +1279,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
         ).andExpect(status().is2xxSuccessful())
-        .andExpect(model().hasNoErrors());
+                .andExpect(model().hasNoErrors());
 
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
     }

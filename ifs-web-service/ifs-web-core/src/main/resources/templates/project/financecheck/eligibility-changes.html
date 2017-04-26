@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance Checks'"/>
 </head>
-<body th:with="context='project'" class="project spend-profile">
+<body>
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
@@ -17,12 +17,12 @@
 
     <div th:unless="${model.internal}"
          th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{orgId}/finance-checks/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}"
+         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
          th:remove="tag"></div>
 
     <div class="page-title">
         <th:block
-            th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"/>
+            th:insert="fragments/elements :: project-title (projectName=${model.projectName})"/>
         <h1 class="heading-xlarge">Changes to finances</h1>
     </div>
 
@@ -111,7 +111,7 @@
 
                 <th:block th:each="rowType : ${model.changes.keySet()}">
                     <th:block th:each="changePairLst : ${model.changes.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).getByTypeName(rowType.type).get())}">
-                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
+                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name},workingDays=${model.projectWorkingDaysPerYearCostItem.labourDays}">
                             <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
                         </th:block>
                     </th:block>
@@ -125,7 +125,7 @@
     <hr/>
 
     <a th:if="${model.internal}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
-    <a th:unless="${model.internal}" class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{orgId}/finance-checks/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
+    <a th:unless="${model.internal}" class="button button-secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to eligibility</a>
 
     <th:block th:insert="fragments/layout :: main-content-end"/>
 </main>

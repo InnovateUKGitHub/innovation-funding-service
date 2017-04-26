@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -15,17 +15,19 @@ import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -39,11 +41,11 @@ public class Application implements ProcessActivity {
 
     private String name;
     private LocalDate startDate;
-    private LocalDateTime submittedDate;
+    private ZonedDateTime submittedDate;
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
-    private LocalDateTime manageFundingEmailDate;
+    private ZonedDateTime manageFundingEmailDate;
 
     @Min(0)
     private Long durationInMonths; // in months
@@ -56,10 +58,6 @@ public class Application implements ProcessActivity {
 
     @OneToMany(mappedBy = "application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applicationStatusId", referencedColumnName = "id")
-    private ApplicationStatus applicationStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition", referencedColumnName = "id")
@@ -84,26 +82,28 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private ApplicationInnovationAreaLink innovationArea;
 
+    @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false)
+    private ApplicationProcess applicationProcess;
+
     private boolean noInnovationAreaApplicable;
 
     private Boolean stateAidAgreed;
 
     public Application() {
-        /*default constructor*/
     }
 
-    public Application(Long id, String name, ApplicationStatus applicationStatus) {
-        this.id = id;
+    public Application(String name, ActivityState activityState) {
+        requireNonNull(activityState, "activityState cannot be null " + activityState);
         this.name = name;
-        this.applicationStatus = applicationStatus;
+        this.applicationProcess = new ApplicationProcess(this, null, activityState);
     }
 
-    public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationStatus applicationStatus, Long id) {
+    public Application(Competition competition, String name, List<ProcessRole> processRoles, ActivityState activityState) {
+        requireNonNull(activityState, "activityState cannot be null " + activityState);
         this.competition = competition;
         this.name = name;
         this.processRoles = processRoles;
-        this.applicationStatus = applicationStatus;
-        this.id = id;
+        this.applicationProcess = new ApplicationProcess(this, null, activityState);
     }
 
     protected boolean canEqual(Object other) {
@@ -146,7 +146,6 @@ public class Application implements ProcessActivity {
         this.previousApplicationTitle = previousApplicationTitle;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }
@@ -157,14 +156,6 @@ public class Application implements ProcessActivity {
 
     public void setProcessRoles(List<ProcessRole> processRoles) {
         this.processRoles = processRoles;
-    }
-
-    public ApplicationStatus getApplicationStatus() {
-        return applicationStatus;
-    }
-
-    public void setApplicationStatus(ApplicationStatus applicationStatus) {
-        this.applicationStatus = applicationStatus;
     }
 
     public Competition getCompetition() {
@@ -186,11 +177,11 @@ public class Application implements ProcessActivity {
         }
     }
 
-    public LocalDateTime getManageFundingEmailDate() {
+    public ZonedDateTime getManageFundingEmailDate() {
         return manageFundingEmailDate;
     }
 
-    public void setManageFundingEmailDate(LocalDateTime manageFundingEmailDate) {
+    public void setManageFundingEmailDate(ZonedDateTime manageFundingEmailDate) {
         this.manageFundingEmailDate = manageFundingEmailDate;
     }
 
@@ -239,19 +230,18 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isOpen() {
-        return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
+        return applicationProcess.isInState(ApplicationState.OPEN);
     }
-
 
     public void setInvites(List<ApplicationInvite> invites) {
         this.invites = invites;
     }
 
-    public LocalDateTime getSubmittedDate() {
+    public ZonedDateTime getSubmittedDate() {
         return submittedDate;
     }
 
-    public void setSubmittedDate(LocalDateTime submittedDate) {
+    public void setSubmittedDate(ZonedDateTime submittedDate) {
         this.submittedDate = submittedDate;
     }
 
@@ -367,5 +357,9 @@ public class Application implements ProcessActivity {
         }
 
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
+    }
+
+    public ApplicationProcess getApplicationProcess() {
+        return applicationProcess;
     }
 }

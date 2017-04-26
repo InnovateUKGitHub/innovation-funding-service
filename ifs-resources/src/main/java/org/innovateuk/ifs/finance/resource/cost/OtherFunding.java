@@ -7,7 +7,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class OtherFunding implements FinanceRowItem {
+public class OtherFunding extends AbstractFinanceRowItem {
     private Long id;
 
     private String otherPublicFunding;
@@ -77,10 +77,7 @@ public class OtherFunding implements FinanceRowItem {
 
     @Override
     public boolean isEmpty() {
-        if((StringUtils.isBlank(fundingSource) && StringUtils.isBlank(securedDate) && (fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) == 0))){
-            return true;
-        }
-        return false;
+        return (StringUtils.isBlank(fundingSource) && StringUtils.isBlank(securedDate) && (fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) == 0));
     }
 
     @Override

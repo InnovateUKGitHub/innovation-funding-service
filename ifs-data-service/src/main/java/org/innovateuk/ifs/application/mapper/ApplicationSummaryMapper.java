@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.mapper;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -11,7 +11,6 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public abstract class ApplicationSummaryMapper {
         result.setName(source.getName());
         result.setDuration(source.getDurationInMonths());
         result.setManageFundingEmailDate(source.getManageFundingEmailDate());
-
+        result.setIneligibleInformed(source.getApplicationProcess().getActivityState() == ApplicationState.INELIGIBLE_INFORMED);
         if (source.getLeadApplicant() != null) {
             result.setLeadApplicant(source.getLeadApplicant().getName());
         }
@@ -63,7 +62,7 @@ public abstract class ApplicationSummaryMapper {
         if (source.getFundingDecision() != null) {
             result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
         }
-        if (ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
+        if (source.getApplicationProcess().getActivityState() == ApplicationState.APPROVED) {
             result.setFundingDecision(FundingDecision.FUNDED);
         }
 
@@ -87,9 +86,9 @@ public abstract class ApplicationSummaryMapper {
 
     private String status(Application source, Integer completedPercentage) {
 
-        if (ApplicationStatusConstants.SUBMITTED.getId().equals(source.getApplicationStatus().getId())
-                || ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())
-                || ApplicationStatusConstants.REJECTED.getId().equals(source.getApplicationStatus().getId())) {
+        if (source.getApplicationProcess().getActivityState() == ApplicationState.SUBMITTED
+                || source.getApplicationProcess().getActivityState() == ApplicationState.APPROVED
+                || source.getApplicationProcess().getActivityState() == ApplicationState.REJECTED) {
             return "Submitted";
         }
 
@@ -122,5 +121,4 @@ public abstract class ApplicationSummaryMapper {
         }
         return result;
     }
-
 }

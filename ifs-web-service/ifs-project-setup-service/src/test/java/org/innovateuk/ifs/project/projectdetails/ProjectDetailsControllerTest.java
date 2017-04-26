@@ -9,10 +9,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -22,6 +23,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -56,6 +58,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,6 +70,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private static final String SAVE_FC = "save_fc";
     private static final String INVITE_FC = "invite_fc";
     private static final String SAVE_PM = "save_pm";
+    private static final String INVITE_PM = "invite_pm";
 
 	@Before
 	public void setUp() {
@@ -360,7 +364,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         inviteProjectResource.setLeadOrganisationId(leadOrganisation.getId());
 
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
-        when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
+        when(projectService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), invitedUserId)).thenReturn(serviceSuccess());
         when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
@@ -379,7 +383,91 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(view().name("redirect:/project/" + projectId  + "/details")).
                 andReturn();
 
-        verify(projectService).updateFinanceContact(projectId, organisationId, invitedUserId);
+        verify(projectService).updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), invitedUserId);
+    }
+
+    @Test
+    public void testInviteSelfToProjectManager() throws Exception {
+
+        long loggedInUserId = 1L;
+        long projectId = 4L;
+        long organisationId = 4L;
+        long applicationId = 16L;
+
+        UserResource loggedInUser = newUserResource().withId(loggedInUserId).withFirstName("Steve").withLastName("Smith").withEmail("Steve.Smith@empire.com").build();
+        setLoggedInUser(loggedInUser);
+
+        String invitedUserName = "Steve Smith";
+        String invitedUserEmail = "Steve.Smith@empire.com";
+
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(projectService.isUserLeadPartner(projectResource.getId(), loggedInUser.getId())).thenReturn(false);
+        when(projectService.getLeadOrganisation(projectId)).thenReturn(organisationResource);
+
+        mockMvc.perform(post("/project/{id}/details/project-manager", projectId).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param(INVITE_PM, INVITE_PM).
+                param("name", invitedUserName).
+                param("inviteEmail", invitedUserEmail)
+        ).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/details")).
+                andReturn();
+
+        verify(projectService, never()).saveProjectInvite(any(InviteProjectResource.class));
+        verify(projectService, never()).inviteProjectManager(Mockito.anyLong(), Mockito.any(InviteProjectResource.class));
+    }
+
+    @Test
+    public void testInviteSelfToFinanceContact() throws Exception {
+
+        long loggedInUserId = 1L;
+        long projectId = 4L;
+        long organisationId = 21L;
+        long applicationId = 16L;
+
+        UserResource loggedInUser = newUserResource().withId(loggedInUserId).withFirstName("Steve").withLastName("Smith").withEmail("Steve.Smith@empire.com").build();
+        setLoggedInUser(loggedInUser);
+
+        String invitedUserName = "Steve Smith";
+        String invitedUserEmail = "Steve.Smith@empire.com";
+
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+        OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
+        List<ProjectUserResource> availableUsers = newProjectUserResource().
+                withUser(loggedInUser.getId(), loggedInUserId).
+                withOrganisation(organisationId).
+                withRoleName(PARTNER).
+                build(2);
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+
+        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
+                .withProject(projectId).withNames("exist test", invitedUserName)
+                .withEmails("existing@test.com", invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withLeadOrganisation(leadOrganisation.getId()).build(2);
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
+        when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+
+        mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param(INVITE_FC, INVITE_FC).
+                param("name", invitedUserName).
+                param("inviteEmail", invitedUserEmail).
+                param("organisation", organisationId + "")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/finance-contact")).
+                andReturn();
+
+        verify(projectService, never()).saveProjectInvite(any(InviteProjectResource.class));
+        verify(projectService, never()).inviteFinanceContact(Mockito.anyLong(), Mockito.any(InviteProjectResource.class));
     }
 
     @Test
@@ -427,7 +515,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(projectService.saveProjectInvite(createdInvite)).thenReturn(serviceSuccess());
         when(projectService.inviteFinanceContact(projectId, createdInvite)).thenReturn(serviceSuccess());
-        when(projectService.updateFinanceContact(projectId, organisationId, invitedUserId)).thenReturn(serviceSuccess());
+        when(projectService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), invitedUserId)).thenReturn(serviceSuccess());
         when(userService.findById(invitedUserId)).thenReturn(financeContactUserResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
@@ -436,6 +524,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.saveProjectInvite(any())).thenReturn(serviceSuccess());
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         InviteStatus testStatus = CREATED;
 
@@ -630,6 +719,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
 
+        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("organisation", String.valueOf(organisationId)))
@@ -676,6 +767,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

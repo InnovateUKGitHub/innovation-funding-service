@@ -5,16 +5,20 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.controller.ProjectOtherDocumentsController;
 import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
+import org.innovateuk.ifs.project.otherdocuments.populator.ProjectOtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +41,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTest<ProjectOtherDocumentsController> {
+
+    @Spy
+    @InjectMocks
+    ProjectOtherDocumentsViewModelPopulator populator;
 
     @Test
     public void testViewOtherDocumentsPage() throws Exception {
@@ -91,7 +99,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         long projectId = 123L;
 
         ProjectResource project = newProjectResource()
-                .withDocumentsSubmittedDate(LocalDateTime.now())
+                .withDocumentsSubmittedDate(ZonedDateTime.now())
                 .withOtherDocumentsApproved(ApprovalType.APPROVED)
                 .withId(projectId)
                 .build();
@@ -243,7 +251,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         long projectId = 123L;
 
         ProjectResource project = newProjectResource().withId(projectId)
-                .withDocumentsSubmittedDate(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.UNSET).build();
+                .withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.UNSET).build();
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);

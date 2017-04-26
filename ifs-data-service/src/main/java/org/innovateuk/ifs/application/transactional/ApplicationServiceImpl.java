@@ -5,16 +5,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -39,7 +35,13 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.util.TimeZoneUtil;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -47,6 +49,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -104,6 +107,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationMapper applicationMapper;
     @Autowired
     private NotificationSender notificationSender;
+    @Autowired
+    private ApplicationWorkflowHandler applicationWorkflowHandler;
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
+
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -125,17 +136,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
-        Application application = new Application();
-        application.setName(applicationName);
+        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED);
+
+        Application application = new Application(applicationName, createdActivityState);
         application.setStartDate(null);
 
-        String name = ApplicationStatusConstants.CREATED.getName();
-
-        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-        ApplicationStatus applicationStatus = applicationStatusList.get(0);
-        application.setApplicationStatus(applicationStatus);
         application.setDurationInMonths(3L);
         application.setCompetition(competition);
+        setInnovationArea(application, competition);
 
         return getRole(LEADAPPLICANT).andOnSuccess(role -> {
             Application savedApplication = applicationRepository.save(application);
@@ -143,6 +151,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             savedApplication = applicationRepository.findOne(savedApplication.getId());
             return serviceSuccess(applicationMapper.mapToResource(savedApplication));
         });
+    }
+
+    // Default to the competition's innovation area if only one set.
+    private void setInnovationArea(Application application, Competition competition) {
+        if (competition.getInnovationAreas().size() == 1) {
+            application.setInnovationArea(competition.getInnovationAreas().stream().findFirst().orElse(null));
+            application.setNoInnovationAreaApplicable(false);
+        }
     }
 
     @Override
@@ -185,7 +201,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return find(processRole(processRoleId), () -> getFormInput(formInputId), application(applicationId)).andOnSuccess((processRole, formInput, application) -> {
 
-            FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
+            FormInputResponse newFormInputResponse = new FormInputResponse(ZonedDateTime.now(), fileEntry, processRole, formInput, application);
             formInputResponseRepository.save(newFormInputResponse);
             FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
             return serviceSuccess(fileEntryResource);
@@ -353,7 +369,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, LocalDateTime date) {
+    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, ZonedDateTime date) {
         return getOpenApplication(id).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
@@ -362,7 +378,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final LocalDateTime fundingEmailDateTime) {
+    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final ZonedDateTime fundingEmailDateTime) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
             application.setManageFundingEmailDate(fundingEmailDateTime);
             Application savedApplication = applicationRepository.save(application);
@@ -380,10 +396,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
-                                                                      final Long statusId) {
-        return find(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
-            application.setApplicationStatus(applicationStatus);
+    public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
+        return find(application(id)).andOnSuccess((application) -> {
+            applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
@@ -401,7 +416,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
-            notificationArguments.put("assesmentEndDate", competition.getFundersPanelDate());
+            notificationArguments.put("webBaseUrl", webBaseUrl);
 
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
@@ -467,19 +482,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
-        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
+    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
+        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
         return serviceSuccess(applicationResults);
     }
 
-    // TODO DW - INFUND-1555 - deal with rest results
     @Override
     public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
-        List<ProcessRole> applicants = applicationRepository.findByCompetitionId(competitionId)
+        List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId,
+                ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
                 .flatMap(x -> x.getProcessRoles().stream())
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)

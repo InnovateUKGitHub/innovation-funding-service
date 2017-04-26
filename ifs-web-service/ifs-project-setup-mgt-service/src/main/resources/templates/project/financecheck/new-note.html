@@ -4,7 +4,7 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notes'"/>
     </head>
 
-    <body th:with="context='project-management'" class="note-form">
+    <body class="note-form">
         <th:block th:insert="fragments/layout :: body-start"/>
         <th:block th:insert="fragments/layout :: global-header"/>
 
@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"/>
+                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})"/>
                 <h1 class="heading-xlarge">
                     <th:block th:text="${model.organisationName}" />
                     <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
@@ -25,7 +25,8 @@
                 Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
             </p>
 
-            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
+                  enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                 <fieldset>
                     <legend class="heading-medium">New note</legend>
                     <div th:class="${#fields.hasErrors('noteTitle')}? 'form-group error':'form-group'">
@@ -75,11 +76,11 @@
                         </div>
                     </div>
 
-                    <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+                    <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                         <h2 class="heading-small">Supporting documentation</h2>
                         <ul>
                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
                                 <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                             </li>
                         </ul>
@@ -103,7 +104,7 @@
                 <input type="hidden" id="action" value="postNote">
                 <div class="grid-row extra-margin">
                     <div class="column-half">
-                        <button class="button button-large no-margin">Save note</button>
+                        <button class="button button-large no-margin" data-content-on-submit="Please wait...">Save note</button>
                         <a class="button button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                     </div>
                 </div>

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.CREATED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 
 /**
  * This controller will handle all requests that are related to the read only view of the application team.
@@ -37,14 +36,14 @@ public class ApplicationTeamController {
     @Autowired
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
-    @GetMapping(value = "/team")
+    @GetMapping("/team")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
         return "application-team/team";
     }
 
-    @GetMapping(value = "/begin")
+    @GetMapping("/begin")
     public String beginApplication(@PathVariable("applicationId") long applicationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
@@ -64,8 +63,8 @@ public class ApplicationTeamController {
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
-        if (CREATED == ApplicationStatusConstants.getFromId(applicationResource.getApplicationStatus())) {
-            applicationService.updateStatus(applicationResource.getId(), OPEN.getId()).getSuccessObjectOrThrowException();
+        if (ApplicationState.CREATED == applicationResource.getApplicationState()) {
+            applicationService.updateState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
         }
     }
 }

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.resource;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Represents a high-level overview of an application.
@@ -19,14 +19,23 @@ public class ApplicationSummaryResource {
     private long duration;
     private FundingDecision fundingDecision;
     private String innovationArea;
-    private LocalDateTime manageFundingEmailDate;
+    private ZonedDateTime manageFundingEmailDate;
+    private boolean ineligibleInformed;
 
-    public LocalDateTime getManageFundingEmailDate() {
+    public ZonedDateTime getManageFundingEmailDate() {
         return manageFundingEmailDate;
     }
 
-    public void setManageFundingEmailDate(LocalDateTime manageFundingEmailDate) {
+    public void setManageFundingEmailDate(ZonedDateTime manageFundingEmailDate) {
         this.manageFundingEmailDate = manageFundingEmailDate;
+    }
+
+    public boolean isIneligibleInformed() {
+        return ineligibleInformed;
+    }
+
+    public void setIneligibleInformed(boolean ineligibleInformed) {
+        this.ineligibleInformed = ineligibleInformed;
     }
 
     public long getId() {

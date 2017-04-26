@@ -8,8 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.util.MapFunctions.combineMaps;
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Collections.emptyMap;
+import static org.innovateuk.ifs.util.MapFunctions.combineMaps;
 
 /**
  * A DTO reporesenting a message that we wish to send out via one or more mediums.  The Notification itself holds the
@@ -36,11 +37,7 @@ public class Notification {
      */
     private Map<NotificationTarget, Map<String, Object>> perNotificationTargetArguments = emptyMap();
 
-    /**
-     * For builder use only
-     */
-    public Notification() {
-    	// no-arg constructor
+    private Notification() {
     }
 
     public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> globalArguments) {
@@ -48,6 +45,10 @@ public class Notification {
         this.to = to;
         this.messageKey = messageKey;
         this.globalArguments = globalArguments;
+    }
+
+    public Notification(NotificationSource from, NotificationTarget to, Enum<?> messageKey, Map<String, Object> globalArguments) {
+        this(from, singletonList(to), messageKey, globalArguments);
     }
 
     public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> globalArguments, Map<NotificationTarget, Map<String, Object>> perNotificationTargetArguments) {

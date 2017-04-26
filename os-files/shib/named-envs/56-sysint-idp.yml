@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: idp
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: idp
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
+    template:
+      metadata:
+        labels:
+          deploymentconfig: idp
+      spec:
+        containers:
+        - image: innovateuk/ifs-shib-idp:0.5.5
+          name: idp
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: SSLCERT
+            value: "<<SSLCERT>>"
+          - name: SSLCACERT
+            value: "<<SSLCACERT>>"
+          - name: SSLKEY
+            value: "<<SSLKEY>>"
+          - name: SPHOST
+            value: <<SHIB-ADDRESS>>
+          - name: IDPHOST
+            value: <<SHIB-IDP-ADDRESS>>
+          - name: HTTPSPORT
+            value: "9443"
+          - name: HTTPPORT
+            value: "9080"
+          - name: LDAPURL
+            value: "ldap://oldap.sysint.org.iuk.local:389"
+          - name: LDAPUSESTARTTLS
+            value: "false"
+          - name: LDAPBASEDN
+            value: "dc=int,dc=g2g3digital,dc=net"
+          - name: LDAPBINDDN
+            value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
+          - name: LDAPBINDDNCRED
+            value: "<<LDAP-PASSWORD>>"
+          - name: LDAPUSERFILTER
+            value: "(&(mail={user})(!(employeeType=inactive)))"
+          - name: LDAPRURL
+            value: "ldap://oldap.sysint.org.iuk.local:389"
+          - name: LDAPRBASEDN
+            value: "dc=int,dc=g2g3digital,dc=net"
+          - name: LDAPRBINDDN
+            value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
+          - name: LDAPRBINDDNCRED
+            value: "<<LDAP-PASSWORD>>"
+          - name: LDAPRUSESTARTTLS
+            value: "false"
+          - name: LDAPRTRUSTCERT
+            value: "%{idp.authn.LDAP.trustCertificates:undefined}"
+          - name: LDAPRSEARCHFILTER
+            value: "(mail=$resolutionContext.principal)"
+          - name: LDAPRRETURNATTRIBUTE
+            value: "mail,uid"
+          - name: LDAPAUTHENTICATOR
+            value: "bindSearchAuthenticator"
+          ports:
+          - containerPort: 9443
+          - containerPort: 9080
+          resources:
+            limits:
+              memory: 1024M
+          test: false
+  triggers:
+  - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: idp
+  spec:
+    ports:
+    - name: 443-tcp
+      port: 443
+      targetPort: 9443
+    selector:
+      deploymentconfig: idp
+  status:
+    loadBalancer: {}
+
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: idp
+  spec:
+    host: <<SHIB-IDP-ADDRESS>>
+    port:
+      targetPort: 443-tcp
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: idp

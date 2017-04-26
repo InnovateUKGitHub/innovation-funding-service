@@ -120,7 +120,7 @@ public class SectionResource {
     public Boolean isDisplayInAssessmentApplicationSummary() {
         return this.displayInAssessmentApplicationSummary;
     }
-    
+
     public SectionType getType() {
 		return type;
 	}

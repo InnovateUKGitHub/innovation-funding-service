@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries'" />
 </head>
 
-<body th:with="context='project-management'" class="query-form">
+<body class="query-form">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
         <h1 class="heading-xlarge">
             <th:block th:text="${model.organisationName}" />
             <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
@@ -34,7 +34,8 @@
         You must confirm any finance changes with the contact before you approve.
     </p>
 
-    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
+          th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
         <fieldset>
             <legend class="heading-medium">Post new query</legend>
             <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group error':'form-group'">
@@ -114,11 +115,11 @@
                 </div>
             </div>
         </fieldset>
-        <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
             <fieldset>
                 <legend class="heading-small">Supporting documentation</legend>
                 <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
                     <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                 </th:block>
             </fieldset>
@@ -140,7 +141,7 @@
         <input type="hidden" id="action" value="postQuery">
         <div class="grid-row">
             <div class="column-half">
-                <button class="button button-large no-margin">Post Query</button>
+                <button type="submit" data-content-on-submit="Please wait..." class="button button-large no-margin">Post Query</button>
             </div>
             <div class="column-half alignright">
                 <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>

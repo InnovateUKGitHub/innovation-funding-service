@@ -11,7 +11,6 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-2961: ‘Working days per year’ in Labour Costs do not default to 232.
 ...
 ...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
-...
 Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -19,7 +18,8 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
-${applicationName}  Planetary science Pluto's telltale heart
+${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
+# ${OPEN_COMPETITION_APPLICATION_2_NAME} == Planetary science Pluto\'s telltale heart
 
 *** Test Cases ***
 Finance sub-sections
@@ -97,6 +97,7 @@ Non-academic partner finance section
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
     and the user should not see the element     link=Your funding
+    and the user should not see the element     link=application details
 
 Academic partner finance section
     [Documentation]    INFUND-7522
@@ -106,14 +107,14 @@ Academic partner finance section
     Then The user should not see the element      link=Not requesting funding
     and the user should see the element       link=Your project costs
     and the user should not see the element     link=Your organisation
-    and the user should see the element        link=Your funding
+    and the user should not see the element        link=Your funding
     and the user should not see the element     link=application details
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
     [Tags]    HappyPath
     Given the user navigates to Your-finances page  ${applicationName}
-    and the user clicks the button/link         link=Your funding
+    and the user clicks the button/link         link=Your project costs
     # Note the Jes form is already uploaded
     Then the user should see the element     css=a.uploaded-file
     When The user clicks the button/link       jQuery=button:contains("Remove")
@@ -121,21 +122,14 @@ Academic partner can upload file for field J-es PDF
     and the user uploads the file   name=jes-upload   ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
 
-Academic partner's Your funding section is read only once marked as complete
-    [Documentation]     INFUND-7405
-    [Tags]    HappyPath
-    When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
-    and the user clicks the button/link     jQuery=button:contains("Mark as complete")
-    then the user should not see the element   css=input
-
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469
     [Tags]    HappyPath    Pending
     #TODO pending due to INFUND-8469
     # This will also check the auto-save as we hvaen't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
-    and the user clicks the button/link      link=Your funding
-    and the user clicks the button/link      jQuery=button:contains("Edit your funding")
+    and the user clicks the button/link      link=Your project costs
+    and the user clicks the button/link      jQuery=button:contains("Edit")
     and the user clicks the button/link       jQuery=button:contains("Remove")
     When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
@@ -145,13 +139,9 @@ Applicant chooses Calculate overheads option
     [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
     [Tags]      Pending
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    #TODO Pending due to INFUND-8706
     # This test also checks read only view of the overheads once section is marked as complete
-    When the user navigates to Your-finances page     ${Competition_E2E}
-    then the user fills in the project costs       ${Competition_E2E}
-    When the user clicks the button/link    link=Your project costs
-    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    then the user should not see the element      css=input
+    When the user navigates to Your-finances page  ${applicationName}
+    then the user fills in the project costs       ${applicationName}
 
 *** Keywords ***
 Custom Suite Setup

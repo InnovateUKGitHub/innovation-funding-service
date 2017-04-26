@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})" />
+                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
                 <h1 class="heading-xlarge">Project Manager</h1>
             </div>
 
@@ -65,7 +65,7 @@
                                     </td>
                                     <td>
                                         <label for="email-project-manager" class="visuallyhidden">email</label>
-                                        <input type="email" class="form-control width-full" th:value="*{email}" th:classappend="${#fields.hasErrors('email') ? 'field-error' : ''}" name="email" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
+                                        <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail') ? 'field-error' : ''}" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                     </td>
                                     <td class="alignright">
                                         <button class="buttonlink no-margin-bottom" id="invite-project-manager" name="invite_pm">Invite to project</button>

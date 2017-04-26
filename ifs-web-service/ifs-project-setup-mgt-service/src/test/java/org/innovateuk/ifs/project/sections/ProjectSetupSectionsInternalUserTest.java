@@ -52,17 +52,17 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(projectSetupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(null));
 
         verifyInteractions(
-                mock -> mock.isProjectDetailsSubmitted()
+                mock -> mock.canAccessMonitoringOfficer()
         );
     }
 
     @Test
     public void testCheckAccessToMonitoringOfficerSectionButProjectDetailsSectionIncomplete() {
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(null));
     }
 

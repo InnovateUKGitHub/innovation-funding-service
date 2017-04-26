@@ -24,10 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -63,7 +60,7 @@ public class CompetitionSetupApplicationController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    @RequestMapping(value = "/landing-page", method = RequestMethod.GET)
+    @GetMapping("/landing-page")
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         if(competitionResource.isNonIfs()) {
@@ -74,7 +71,7 @@ public class CompetitionSetupApplicationController {
         return "competition/setup";
     }
 
-    @RequestMapping(value = "/landing-page", method = RequestMethod.POST)
+    @PostMapping("/landing-page")
     public String setApplicationProcessAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                                   @ModelAttribute(COMPETITION_SETUP_FORM_KEY) LandingPageForm form, BindingResult bindingResult, ValidationHandler validationHandler) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
@@ -90,7 +87,7 @@ public class CompetitionSetupApplicationController {
                 competitionSetupQuestionService.validateApplicationQuestions(competitionResource, form, bindingResult));
     }
 
-    @RequestMapping(value = "/question/finance", method = RequestMethod.GET)
+    @GetMapping("/question/finance")
     public String seeApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
@@ -101,17 +98,17 @@ public class CompetitionSetupApplicationController {
     }
 
 
-    @RequestMapping(value = "/question/finance/edit", method = RequestMethod.GET)
+    @GetMapping("/question/finance/edit")
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
-        return ifUserCanAccessEditPage(competitionResource, () -> getFinancePage(model, competitionResource, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getFinancePage(model, competitionResource, true, null));
     }
 
-    @RequestMapping(value = "/question/finance/edit", method = RequestMethod.POST)
+    @PostMapping("/question/finance/edit")
     public String submitApplicationFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
@@ -127,7 +124,7 @@ public class CompetitionSetupApplicationController {
 
     }
 
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
+    @GetMapping("/question/{questionId}")
     public String seeQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          @PathVariable("questionId") Long questionId,
                                          Model model) {
@@ -138,7 +135,7 @@ public class CompetitionSetupApplicationController {
         return getQuestionPage(model, competitionResource, questionId, false, null);
     }
 
-    @RequestMapping(value = "/question/{questionId}/edit", method = RequestMethod.GET)
+    @GetMapping("/question/{questionId}/edit")
     public String editQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                           @PathVariable("questionId") Long questionId,
                                           Model model) {
@@ -146,10 +143,10 @@ public class CompetitionSetupApplicationController {
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
-        return ifUserCanAccessEditPage(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
     }
 
-    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
+    @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
@@ -165,7 +162,7 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
-    @RequestMapping(value = "/question", method = RequestMethod.POST)
+    @PostMapping("/question/{questionId}/edit")
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
@@ -183,11 +180,9 @@ public class CompetitionSetupApplicationController {
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, PROJECT_DETAILS));
-
-
     }
 
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    @GetMapping(value = "/detail")
     public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
@@ -197,18 +192,18 @@ public class CompetitionSetupApplicationController {
         return getDetailsPage(model, competitionResource, false, null);
     }
 
-    @RequestMapping(value = "/detail/edit", method = RequestMethod.GET)
+    @GetMapping(value = "/detail/edit")
     public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
-        return ifUserCanAccessEditPage(competitionResource, () ->  getDetailsPage(model, competitionResource, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () ->  getDetailsPage(model, competitionResource, true, null));
 
     }
 
-    @RequestMapping(value = "/detail/edit", method = RequestMethod.POST)
+    @PostMapping("/detail/edit")
     public String submitApplicationDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationDetailsForm form,
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler,
@@ -262,7 +257,6 @@ public class CompetitionSetupApplicationController {
         return questionView;
     }
 
-
     private void setupQuestionToModel(final CompetitionResource competition, final Optional<Long> questionId, Model model, CompetitionSetupSubsection subsection, boolean isEditable, CompetitionSetupForm form) {
         CompetitionSetupSection section = APPLICATION_FORM;
 
@@ -283,11 +277,12 @@ public class CompetitionSetupApplicationController {
         model.addAttribute("editable", isEditable);
     }
 
-    private String ifUserCanAccessEditPage(CompetitionResource competition, Supplier<String> successAction) {
+    private String ifUserCanAccessEditPageMarkSectionAsIncomplete(CompetitionResource competition, Supplier<String> successAction) {
         if(CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition)) {
             LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {
+            competitionService.setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
             return successAction.get();
         }
     }

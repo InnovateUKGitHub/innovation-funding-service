@@ -8,7 +8,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessStates;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Calendar;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -28,8 +28,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     protected ActivityState activityState;
 
     @Version
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar lastModified;
+    private ZonedDateTime lastModified;
 
     private LocalDate startDate;
     private LocalDate endDate;
@@ -56,11 +55,11 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         this.endDate = endDate;
     }
 
-    public Calendar getLastModified() {
+    public ZonedDateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Calendar lastModified) {
+    public void setLastModified(ZonedDateTime lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -105,7 +104,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     }
 
     @JsonIgnore
-    public Calendar getVersion() {
+    public ZonedDateTime getVersion() {
         return lastModified;
     }
 

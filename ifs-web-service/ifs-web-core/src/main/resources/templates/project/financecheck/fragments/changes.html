@@ -4,8 +4,8 @@
     <th:block th:if="${typeOfChange == 'Change'}">
         <th:block th:unless="${changePair.submitted.name == T(org.innovateuk.ifs.finance.resource.category.LabourCostCategory).WORKING_DAYS_KEY}">
             <tr th:class="${changePair.submitted.role != changePair.changed.role} ? 'item-changed' : ''">
-                <td rowspan="4" th:text="${typeOfChange}"></td>
-                <td rowspan="4" th:text="${rowTypeName}"></td>
+                <td rowspan="3" th:text="${typeOfChange}"></td>
+                <td rowspan="3" th:text="${rowTypeName}"></td>
 
                 <th scope="row">Role</th>
                 <td th:text="${changePair.submitted.role}"></td>
@@ -23,14 +23,16 @@
                 <td th:text="${changePair.submitted.labourDays}"></td>
                 <td th:text="${changePair.changed.labourDays}" colspan="2" th:class="${changePair.submitted.labourDays != changePair.changed.labourDays} ? 'item-changed' : ''"></td>
             </tr>
-            <tr></tr>
+            <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(workingDays, changePair.submitted)}">
+                <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+            </tr>
         </th:block>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr>
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
 
             <th scope="row">Role</th>
             <td></td>
@@ -48,13 +50,15 @@
             <td></td>
             <td th:text="${changePair.changed.labourDays}" colspan="2"></td>
         </tr>
-        <tr></tr>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.getTotal(workingDays),0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr>
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
 
             <th scope="row">Role</th>
             <td th:text="${changePair.submitted.role}"></td>
@@ -72,15 +76,17 @@
             <td th:text="${changePair.submitted.labourDays}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr></tr>
+        <tr class="change-row">
+            <td colspan="6" th:text="|-${#numbers.formatDecimal(changePair.submitted.getTotal(workingDays),0, 'COMMA', 0, 'POINT')}|" class="numeric"></td>
+        </tr>
     </th:block>
 </th:block>
 
 <th:block th:fragment="materials">
     <th:block th:if="${typeOfChange == 'Change'}">
         <tr th:class="${changePair.submitted.item != changePair.changed.item} ? 'item-changed' : ''">
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
             <th scope="row">Item</th>
             <td th:text="${changePair.submitted.item}"></td>
             <td th:text="${changePair.changed.item}" colspan="2"></td>
@@ -95,23 +101,20 @@
             <td th:text="${changePair.submitted.cost}"></td>
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr th:class="${changePair.submitted.total != changePair.changed.total} ? 'item-changed' : ''">
-            <th scope="row">Total</th>
-            <td th:text="${changePair.submitted.total}"></td>
-            <td th:text="${changePair.changed.total}" colspan="2"></td>
+        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
-        <tr></tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr>
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
             <th scope="row">Item</th>
             <td></td>
             <td th:text="${changePair.changed.item}" colspan="2"></td>
         </tr>
-        <tr class="item-changed">
+        <tr>
             <th scope="row">Quantity</th>
             <td></td>
             <td th:text="${changePair.changed.quantity}" colspan="2"></td>
@@ -121,23 +124,20 @@
             <td></td>
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr>
-            <th scope="row">Total</th>
-            <td></td>
-            <td th:text="${changePair.changed.total}" colspan="2"></td>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.total,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
-        <tr></tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr>
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
             <th scope="row">Item</th>
             <td th:text="${changePair.submitted.item}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr class="item-changed">
+        <tr>
             <th scope="row">Quantity</th>
             <td th:text="${changePair.submitted.quantity}"></td>
             <td colspan="2"></td>
@@ -147,12 +147,9 @@
             <td th:text="${changePair.submitted.cost}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr>
-            <th scope="row">Total</th>
-            <td th:text="${changePair.submitted.total}"></td>
-            <td colspan="2"></td>
+        <tr class="change-row">
+            <td th:text="|-${#numbers.formatDecimal(changePair.submitted.total,0, 'COMMA', 0, 'POINT')}|" colspan="6" class="numeric"></td>
         </tr>
-        <tr></tr>
     </th:block>
 </th:block>
 
@@ -195,7 +192,9 @@
             <td th:text="${changePair.submitted.getTotal()}"></td>
             <td th:text="${changePair.changed.getTotal()}" colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
@@ -236,7 +235,9 @@
             <td></td>
             <td th:text="${changePair.changed.getTotal()}" colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.total,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
@@ -277,7 +278,9 @@
             <td th:text="${changePair.submitted.getTotal()}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row">
+            <td th:text="|-${#numbers.formatDecimal(changePair.submitted.total,0, 'COMMA', 0, 'POINT')}|" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
 </th:block>
 
@@ -286,7 +289,7 @@
         <tr th:class="${changePair.submitted.name != changePair.changed.name} ? 'item-changed' : ''">
             <td rowspan="4" th:text="${typeOfChange}"></td>
             <td rowspan="4" th:text="${rowTypeName}"></td>
-            <th scope="row">Suncontractor name</th>
+            <th scope="row">Subcontractor name</th>
             <td th:text="${changePair.submitted.name}"></td>
             <td th:text="${changePair.changed.name}" colspan="2"></td>
         </tr>
@@ -305,14 +308,16 @@
             <td th:text="${changePair.submitted.cost}"></td>
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr>
             <td rowspan="4" th:text="${typeOfChange}"></td>
             <td rowspan="4" th:text="${rowTypeName}"></td>
-            <th scope="row">Suncontractor name</th>
+            <th scope="row">Subcontractor name</th>
             <td></td>
             <td th:text="${changePair.changed.name}" colspan="2"></td>
         </tr>
@@ -321,24 +326,26 @@
             <td></td>
             <td th:text="${changePair.changed.country}" colspan="2"></td>
         </tr>
-        <tr class="item-changed">
+        <tr>
             <th scope="row">Role</th>
             <td></td>
             <td th:text="${changePair.changed.role}" colspan="2"></td>
         </tr>
-        <tr class="change-row item-changed">
+        <tr>
             <th scope="row">Cost</th>
             <td></td>
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.total,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr>
             <td rowspan="4" th:text="${typeOfChange}"></td>
             <td rowspan="4" th:text="${rowTypeName}"></td>
-            <th scope="row">Suncontractor name</th>
+            <th scope="row">Subcontractor name</th>
             <td th:text="${changePair.submitted.name}"></td>
             <td colspan="2"></td>
         </tr>
@@ -347,25 +354,27 @@
             <td th:text="${changePair.submitted.country}"></td>
             <td></td>
         </tr>
-        <tr class="item-changed">
+        <tr>
             <th scope="row">Role</th>
             <td th:text="${changePair.submitted.role}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr class="change-row item-changed">
+        <tr>
             <th scope="row">Cost</th>
             <td th:text="${changePair.submitted.cost}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row">
+            <td th:text="|-${#numbers.formatDecimal(changePair.submitted.total,0, 'COMMA', 0, 'POINT')}|" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
 </th:block>
 
 <th:block th:fragment="travel">
     <th:block th:if="${typeOfChange == 'Change'}">
         <tr th:class="${changePair.submitted.item != changePair.changed.item} ? 'item-changed' : ''">
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
             <th scope="row">Purpose of journey</th>
             <td th:text="${changePair.submitted.item}"></td>
             <td th:text="${changePair.changed.item}" colspan="2"></td>
@@ -380,23 +389,20 @@
             <td th:text="${changePair.submitted.cost}"></td>
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr th:class="${changePair.submitted.getTotal() != changePair.changed.getTotal()} ? 'item-changed' : ''">
-            <th scope="row">Total</th>
-            <td th:text="${changePair.submitted.getTotal()}"></td>
-            <td th:text="${changePair.changed.getTotal()}" colspan="2"></td>
+        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
-        <tr class="change-row"></tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr>
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
             <th scope="row">Purpose of journey</th>
             <td></td>
             <td th:text="${changePair.changed.item}" colspan="2"></td>
         </tr>
-        <tr class="item-changed">
+        <tr>
             <th scope="row">Number of times</th>
             <td></td>
             <td th:text="${changePair.changed.quantity}" colspan="2"></td>
@@ -406,22 +412,19 @@
             <td></td>
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr>
-            <th scope="row">Total</th>
-            <td></td>
-            <td th:text="${changePair.changed.getTotal()}" colspan="2"></td>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.total,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
-        <tr class="change-row"></tr>
     </th:block>
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr>
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
             <th scope="row">Purpose of journey</th>
             <td th:text="${changePair.submitted.item}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr class="item-changed">
+        <tr>
             <th scope="row">Number of times</th>
             <td th:text="${changePair.submitted.quantity}"></td>
             <td colspan="2"></td>
@@ -431,12 +434,9 @@
             <td th:text="${changePair.submitted.cost}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr>
-            <th scope="row">Total</th>
-            <td th:text="${changePair.submitted.getTotal()}"></td>
-            <td colspan="2"></td>
+        <tr class="change-row">
+            <td th:text="|-${#numbers.formatDecimal(changePair.submitted.total,0, 'COMMA', 0, 'POINT')}|" colspan="6" class="numeric"></td>
         </tr>
-        <tr class="change-row"></tr>
     </th:block>
 </th:block>
 
@@ -454,7 +454,9 @@
             <td th:text="${changePair.submitted.cost}"></td>
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
     <th:block th:if="${typeOfChange == 'New'}">
         <tr>
@@ -464,12 +466,14 @@
             <td></td>
             <td th:text="${changePair.changed.description}" colspan="2"></td>
         </tr>
-        <tr class="item-changed">
+        <tr>
             <th scope="row">Total</th>
             <td></td>
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.total,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr>
@@ -479,12 +483,76 @@
             <td th:text="${changePair.submitted.description}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr class="item-changed">
+        <tr>
             <th scope="row">Total</th>
             <td th:text="${changePair.submitted.cost}"></td>
             <td colspan="2"></td>
         </tr>
-        <tr class="change-row"></tr>
+        <tr class="change-row">
+            <td th:text="|-${#numbers.formatDecimal(changePair.submitted.total,0, 'COMMA', 0, 'POINT')}|" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="overheads">
+    <th:block th:if="${typeOfChange == 'Change'}">
+        <tr th:class="${changePair.submitted.rateType.name != changePair.changed.rateType.name} ? 'item-changed' : ''">
+            <td rowspan="2" th:text="${typeOfChange}"></td>
+            <td rowspan="2" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Rate Type</th>
+            <td th:text="${changePair.submitted.rateType.label}"></td>
+            <td th:text="${changePair.changed.rateType.label}" colspan="2" th:class="${changePair.submitted.rateType.name != changePair.changed.rateType.name} ? 'item-changed' : ''"></td>
+        </tr>
+
+        <tr th:class="${changePair.submitted.rate != changePair.changed.rate} ? 'item-changed' : ''">
+            <th scope="row">Amount</th>
+            <td th:text="${changePair.submitted.rate}"></td>
+            <td th:text="${changePair.changed.rate}" colspan="2" th:class="${changePair.submitted.rate!= changePair.changed.rate} ? 'item-changed' : ''"></td>
+        </tr>
+        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+
+    <th:block th:if="${typeOfChange == 'New'}">
+        <tr>
+            <td rowspan="2" th:text="${typeOfChange}"></td>
+            <td rowspan="2" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Rate Type</th>
+            <td></td>
+            <td colspan="2" th:text="${changePair.changed.rateType.label}"></td>
+        </tr>
+
+        <tr>
+            <th scope="row">Amount</th>
+            <td></td>
+            <td th:text="${changePair.changed.rate}" colspan="2"></td>
+        </tr>
+        <tr class="change-row">
+            <td th:text="${#numbers.formatDecimal(changePair.changed.rate,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+        </tr>
+    </th:block>
+
+    <th:block th:if="${typeOfChange == 'Remove'}">
+        <tr>
+            <td rowspan="2" th:text="${typeOfChange}"></td>
+            <td rowspan="2" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Rate Type</th>
+            <td th:text="${changePair.submitted.rateType.label}"></td>
+            <td colspan="2"></td>
+        </tr>
+
+        <tr>
+            <th scope="row">Amount</th>
+            <td th:text="${changePair.submitted.rate}"></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr class="change-row">
+            <td th:text="|-${#numbers.formatDecimal(changePair.submitted.rate,0, 'COMMA', 0, 'POINT')}|" colspan="6" class="numeric"></td>
+        </tr>
     </th:block>
 </th:block>
 

@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -18,11 +18,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.*;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
@@ -40,19 +44,16 @@ public class MilestonesSectionSaverTest {
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     @Mock
-    private CompetitionService competitionService;
-
-    @Mock
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @Test
     public void testSaveMilestone() {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        LocalDateTime milestoneDate = LocalDateTime.of(2017, 1, 1, 0, 0);
+        ZonedDateTime milestoneDate = ZonedDateTime.of(2017, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault());
 
         CompetitionResource competition = newCompetitionResource()
-                .withMilestones(asList(1L))
+                .withMilestones(singletonList(1L))
                 .withId(1L).build();
 
         MilestoneResource milestoneresource = newMilestoneResource()
@@ -67,7 +68,7 @@ public class MilestonesSectionSaverTest {
         competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry(resourceList));
 
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
-        when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(resourceList);
+        when(milestoneRestService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(restSuccess(resourceList));
         service.saveSection(competition, competitionSetupForm);
         List<Long> milestones = competition.getMilestones();
 
@@ -82,14 +83,14 @@ public class MilestonesSectionSaverTest {
     public void testSaveMilestoneSetupComplete() {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        LocalDateTime pastDate = LocalDateTime.now().minusDays(1);
-        LocalDateTime futureDate = LocalDateTime.now().plusDays(1);
+        ZonedDateTime pastDate = ZonedDateTime.now().minusDays(1);
+        ZonedDateTime futureDate = ZonedDateTime.now().plusDays(1);
 
         CompetitionResource competition = newCompetitionResource()
                 .withMilestones(Arrays.asList(1L, 2L))
                 .withSetupComplete(true)
-                .withStartDate(LocalDateTime.now().minusDays(1))
-                .withFundersPanelDate(LocalDateTime.now().plusDays(1))
+                .withStartDate(ZonedDateTime.now().minusDays(1))
+                .withFundersPanelDate(ZonedDateTime.now().plusDays(1))
                 .withId(1L).build();
 
         MilestoneResource milestonePast = newMilestoneResource()
@@ -107,7 +108,7 @@ public class MilestonesSectionSaverTest {
 
         competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry(resourceList));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
-        when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(resourceList);
+        when(milestoneRestService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(restSuccess(resourceList));
 
         service.saveSection(competition, competitionSetupForm);
 
@@ -137,12 +138,17 @@ public class MilestonesSectionSaverTest {
     @Test
     public void testAutoSaveCompetitionSetupSection() {
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].milestoneType";
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(getBriefingEventMilestone());
+        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(restSuccess(getBriefingEventMilestone()));
         MilestonesForm form = new MilestonesForm();
 
         CompetitionResource competition = newCompetitionResource().withId(1L).build();
         competition.setMilestones(Arrays.asList(10L));
         when(competitionSetupMilestoneService.isMilestoneDateValid(20, 10, 2020)).thenReturn(Boolean.TRUE);
+
+        MilestoneResource expectedMilestoneMatcher = createLambdaMatcher(milestoneResource -> {
+            assertEquals(TimeZoneUtil.fromUkTimeZone(2020, 10, 20, 0), milestoneResource.getDate());
+        });
+        when(milestoneRestService.updateMilestone(expectedMilestoneMatcher)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.autoSaveSectionField(competition, form, fieldName, "20-10-2020", Optional.empty());
 
@@ -152,12 +158,17 @@ public class MilestonesSectionSaverTest {
     @Test
     public void testAutoSaveTimeCompetitionSetupSection() {
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].time";
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(getBriefingEventMilestone());
+        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(restSuccess(getBriefingEventMilestone()));
         MilestonesForm form = new MilestonesForm();
 
         CompetitionResource competition = newCompetitionResource().withId(2L).build();
         competition.setMilestones(Arrays.asList(10L));
-        when(competitionSetupMilestoneService.isMilestoneDateValid(1, 12, LocalDateTime.now().plusYears(1).getYear())).thenReturn(Boolean.TRUE);
+        when(competitionSetupMilestoneService.isMilestoneDateValid(1, 12, ZonedDateTime.now().plusYears(1).getYear())).thenReturn(Boolean.TRUE);
+
+        MilestoneResource expectedMilestoneMatcher = createLambdaMatcher(milestoneResource -> {
+            assertEquals(TimeZoneUtil.fromUkTimeZone(ZonedDateTime.now().plusYears(1).getYear(), 12, 1, 15), milestoneResource.getDate());
+        });
+        when(milestoneRestService.updateMilestone(expectedMilestoneMatcher)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.autoSaveSectionField(competition, form, fieldName, "THREE_PM", Optional.empty());
 
@@ -167,7 +178,7 @@ public class MilestonesSectionSaverTest {
     @Test
     public void testAutoSaveTimeWithEmptyDateCompetitionSetupSection() {
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].time";
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(newMilestoneResource().withDate(null).build());
+        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(restSuccess(newMilestoneResource().build()));
         MilestonesForm form = new MilestonesForm();
 
         CompetitionResource competition = newCompetitionResource().withId(2L).build();
@@ -182,7 +193,7 @@ public class MilestonesSectionSaverTest {
     @Test
     public void testAutoSaveCompetitionSetupSectionDateNotInFuture() {
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].milestoneType";
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(getBriefingEventMilestone());
+        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(restSuccess(getBriefingEventMilestone()));
         MilestonesForm form = new MilestonesForm();
         CompetitionResource competition = newCompetitionResource().withId(1L).build();
         competition.setMilestones(Arrays.asList(10L));
@@ -198,7 +209,7 @@ public class MilestonesSectionSaverTest {
         return newMilestoneResource()
                 .withId(1L)
                 .withName(MilestoneType.OPEN_DATE)
-                .withDate(LocalDateTime.of(LocalDateTime.now().plusYears(1).getYear(), 12, 1, 0, 0))
+                .withDate(ZonedDateTime.of(ZonedDateTime.now().plusYears(1).getYear(), 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()))
                 .withCompetitionId(1L).build();
     }
 

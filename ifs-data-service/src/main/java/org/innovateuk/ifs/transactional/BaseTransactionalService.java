@@ -2,11 +2,9 @@ package org.innovateuk.ifs.transactional;
 
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.repository.ApplicationStatusRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -51,9 +49,6 @@ public abstract class BaseTransactionalService  {
 
     @Autowired
     protected UserRepository userRepository;
-
-    @Autowired
-    protected ApplicationStatusRepository applicationStatusRepository;
 
     @Autowired
     protected RoleRepository roleRepository;
@@ -143,14 +138,6 @@ public abstract class BaseTransactionalService  {
 
     protected ServiceResult<Competition> getCompetition(final Long id) {
         return find(competitionRepository.findOne(id), notFoundError(Competition.class, id));
-    }
-
-    protected Supplier<ServiceResult<ApplicationStatus>> applicationStatus(final Long id) {
-        return () -> getApplicationStatus(id);
-    }
-
-    protected ServiceResult<ApplicationStatus> getApplicationStatus(final Long id) {
-        return find(applicationStatusRepository.findOne(id), notFoundError(ApplicationStatus.class, id));
     }
 
     protected Supplier<ServiceResult<Role>> role(UserRoleType roleType) {

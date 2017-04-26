@@ -18,6 +18,7 @@ project.ext['flyway.locations']="db/migration,db/setup,db/webtest"
 ext.ifsFlywayLocations="db/migration,db/setup,db/webtest"
 
 ext.silRestBaseURL="http://data-service:8080/silstub"
+
 //
 // The production application will use the SIL to send emails out.  For non-production environments, the IFS application
 // can talk to a SIL stub within the IFS application itself.  The below configuration allows you to configure whether or
@@ -25,8 +26,8 @@ ext.silRestBaseURL="http://data-service:8080/silstub"
 // regardless)
 //
 ext.ifsSendMailLocally=true
-ext.ifsSmtpHost="smtp"
-ext.ifsSmtpPort=25
+ext.ifsSmtpHost="mail"
+ext.ifsSmtpPort=8025
 ext.ifsSmtpUser="smtp"
 ext.ifsSmtpAuth=false
 ext.ifsSmtpPassword="smtp"
@@ -39,7 +40,7 @@ ext.ifsDataServiceRestBaseURL="http://data-service:8080"
 
 ext.postcodeLookupKey=""
 
-ext.ifsFileStorageLocation="/tmp/uploads"
+ext.ifsFileStorageLocation="/mnt/ifs_storage"
 
 ext.ifsWebBaseURL="https://ifs.local-dev"
 

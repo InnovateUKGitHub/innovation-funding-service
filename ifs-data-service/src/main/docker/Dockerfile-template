@@ -6,6 +6,7 @@ EXPOSE 8081
 EXPOSE 8000
 EXPOSE 12345
 ENV JAVA_OPTS -Xmx300m
+ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 RUN apk --update add curl
 COPY certificate /certificate
 WORKDIR $JAVA_HOME
@@ -14,8 +15,6 @@ WORKDIR /
 VOLUME /tmp
 
 ADD ifs-data-service-@version@.jar app.jar
-RUN sh -c 'touch /app.jar'
-ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
+ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 
-HEALTHCHECK --interval=15s --timeout=8s \
-  CMD curl -f --connect-timeout 5 -m 5 http://localhost:8080/monitoring/health || exit 1
+ENTRYPOINT exec java $JAVA_OPTS $JMX_OPTS -jar app.jar

@@ -3,19 +3,17 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Cookies'" />
 </head>
-<body th:with="context='guest'">
+<body>
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/}" />
 
     <div class="grid-row">
         <div class="column-two-thirds">
             <div class="page-title">
-                <p class="subtitle">Help</p>
                 <h1 class="heading-xlarge">Cookies</h1>
             </div>
             <div class="inner">
@@ -178,7 +176,7 @@
             </div>
         </div>
         <div class="column-one-third">
-            <th:block th:insert="content/fragments :: content-menu" />
+            <th:block th:insert="content/fragments :: content-menu(current=${'cookies'})" />
         </div>
     </div>
     <th:block th:insert="fragments/layout :: main-content-end" />

@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.nonifs.saver;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
@@ -18,16 +18,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.OPEN_DATE;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_DATE;
@@ -44,19 +45,22 @@ public class NonIfsDetailsFormSaverTest {
     private static final Long INNOVATION_SECTOR = 1L;
     private static final Long INNOVATION_AREA = 2L;
     private static final String COMPETITION_URL = "COMPETITION_URL";
-    private static final LocalDateTime NOTIFIED = LocalDateTime.now().plusDays(1);
-    private static final LocalDateTime OPEN = LocalDateTime.now().plusDays(2);
-    private static final LocalDateTime CLOSE = LocalDateTime.now().plusDays(3);
+    private static final ZonedDateTime NOTIFIED = ZonedDateTime.now().plusDays(1);
+    private static final ZonedDateTime OPEN = ZonedDateTime.now().plusDays(2);
+    private static final ZonedDateTime CLOSE = ZonedDateTime.now().plusDays(3);
 
     @InjectMocks
     private NonIfsDetailsFormSaver target;
 
     @Mock
     private CompetitionService competitionService;
+
     @Mock
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
     @Mock
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
+
     @Captor
     private ArgumentCaptor<Map<String, MilestoneRowForm>> captor;
 
@@ -64,10 +68,10 @@ public class NonIfsDetailsFormSaverTest {
     public void testSaveSuccess() {
         NonIfsDetailsForm form = createForm();
         CompetitionResource competition = newCompetitionResource().withNonIfs(true).build();
-        List<MilestoneResource> allMilestones = new ArrayList<>();
+        List<MilestoneResource> allMilestones = newMilestoneResource().build(1);
         when(competitionSetupMilestoneService.validateMilestoneDates(any())).thenReturn(emptyList());
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
-        when(milestoneService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(allMilestones);
+        when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(allMilestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(eq(allMilestones), any(), eq(competition.getId()))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = target.save(form, competition);

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.resource;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -14,20 +13,20 @@ import java.util.List;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 
 public class ApplicationResourceTest {
-    ApplicationResource applicationResource;
+    private ApplicationResource applicationResource;
 
-    Competition competition;
-    String name;
-    List<ProcessRole> processRoles;
-    ApplicationStatusConstants applicationStatus;
-    Long id;
-    List<ApplicationFinance> applicationFinances;
+    private Competition competition;
+    private String name;
+    private List<ProcessRole> processRoles;
+    private ApplicationState applicationState;
+    private Long id;
+    private List<ApplicationFinance> applicationFinances;
 
     @Before
     public void setUp() throws Exception {
         id = 0L;
         name = "testApplicationName";
-        applicationStatus = ApplicationStatusConstants.OPEN;
+        applicationState = ApplicationState.OPEN;
         competition = new Competition();
         competition.setId(1L);
 
@@ -44,7 +43,7 @@ public class ApplicationResourceTest {
         applicationResource = newApplicationResource()
                 .withCompetition(competition.getId())
                 .withName(name)
-                .withApplicationStatus(applicationStatus)
+                .withApplicationState(applicationState)
                 .withId(id)
                 .build();
     }
@@ -53,7 +52,7 @@ public class ApplicationResourceTest {
     public void applicationShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(applicationResource.getId(), id);
         Assert.assertEquals(applicationResource.getName(), name);
-        Assert.assertEquals(applicationResource.getApplicationStatus(), applicationStatus.getId());
+        Assert.assertEquals(applicationResource.getApplicationState(), applicationState);
         Assert.assertEquals(applicationResource.getCompetition(), competition.getId());
     }
 

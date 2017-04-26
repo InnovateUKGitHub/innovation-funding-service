@@ -80,8 +80,8 @@ Project finance user selects the grant offer letter
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
     Then the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element     jQuery=h2:contains("Grant offer letter")
-    And the user should see the element     link=grant_offer_letter.pdf
-    And the user should see the element     jQuery=button.button-secondary:contains("Remove")
+    And the user opens the link in new window   grant_offer_letter.pdf
+    And the user should see the element     jQuery=button:contains("Remove")
 
 Project Finance can download GOL
     [Documentation]  INFUND-6377
@@ -141,12 +141,12 @@ Comp Admin user uploads new grant offer letter
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user uploads a file           grantOfferLetter  ${valid_pdf}
-    And the user should see the element    jQuery=button.button-secondary:contains("Remove")
+    And the user should see the element    jQuery=button:contains("Remove")
     When the user uploads a file           annex  ${valid_pdf}
     And the user clicks the button/link    id=send-gol
     And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
     Then the user should not see the element  jQuery=.button:contains("Publish to project team")
-    And the user should not see the element   jQuery=button.button-secondary:contains("Remove")
+    And the user should not see the element   jQuery=button:contains("Remove")
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting   # GOL
 
@@ -288,9 +288,8 @@ PM can view the uploaded Annex file
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
-    When the user clicks the button/link     link=${valid_pdf}
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    When the user opens the link in new window   ${valid_pdf}
+    Then the user goes back to the previous tab
 
 PM can download the annex
     [Documentation]    INFUND-5998
@@ -302,7 +301,6 @@ PM can download the annex
 PM can remove the signed grant offer letter
     [Documentation]    INFUND-6780
     [Tags]
-
     When the user clicks the button/link    name=removeSignedGrantOfferLetterClicked
     Then the user should not see the text in the page    Remove
     And the user should not see the text in the page    jQuery=.upload-section a:contains("${valid_pdf}")
@@ -310,7 +308,7 @@ PM can remove the signed grant offer letter
 
 PM can upload new signed grant offer letter
     [Documentation]    INFUND-6780
-    [Tags]  
+    [Tags]
     When the user uploads a file    signedGrantOfferLetter    ${valid_pdf}
     And the user reloads the page
     Then the user should see the element    jQuery=.button:contains("Send to Innovate UK")
@@ -359,7 +357,7 @@ Internal user can download the signed GOL
     [Documentation]    INFUND-6377
     [Tags]  Download
     Given the user navigates to the page  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    Then the user should see the element  jQuery=#content > p:nth-child(11) > a
+    Then the user should see the element  jQuery=h2:contains("Signed grant offer letter") + .upload-section a
     And the user downloads the file  ${Comp_admin1_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
     [Teardown]    remove the file from the operating system  testing.pdf
 
@@ -380,7 +378,7 @@ Internal user accepts signed grant offer letter
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
+    When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a:contains("Review")
     Then the user should not see the text in the page  "Confirm receipt of signed grant offer letter"
     And the user clicks the button/link    jQuery=#content .button:contains("Accept signed grant offer letter")
     And the user clicks the button/link     jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")
@@ -536,7 +534,7 @@ all partners submit their Spend Profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Gabtype_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Review spend profiles")
+    the user clicks the button/link    jQuery=.button:contains("Review and send total project spend profile")
     the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
     the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 

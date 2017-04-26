@@ -254,4 +254,53 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
         inOrder.verifyNoMoreInteractions();
     }
+
+    @Test
+    public void getApplicationAssessmentSummary_multipleCollaboratorsPerOrg() throws Exception {
+        Organisation[] organisations = newOrganisation()
+                .withName("IO systems", "Acme Ltd.", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
+
+        Long[] orgIds = Stream.of(0,1,2,3,1,2,3).map(x -> organisations[x].getId()).toArray(Long[]::new);
+
+        Application application = newApplication()
+                .withName("Progressive machines")
+                .withInnovationArea(newInnovationArea()
+                        .withName("Digital Manufacturing")
+                        .build())
+                .withCompetition(newCompetition()
+                        .withName("Connected digital additive manufacturing")
+                        .withCompetitionStatus(FUNDERS_PANEL)
+                        .build())
+                .withProcessRoles(newProcessRole()
+                        .withRole(COMP_ADMIN, LEADAPPLICANT, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR )
+                        .withOrganisationId(orgIds)
+                        .buildArray(7, ProcessRole.class))
+                .build();
+
+        ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
+                .withId(application.getId())
+                .withName(application.getName())
+                .withInnovationArea(application.getInnovationArea().getName())
+                .withCompetitionId(application.getCompetition().getId())
+                .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("Acme Ltd.")
+                .withCompetitionStatus(FUNDERS_PANEL)
+                .withPartnerOrganisations(asList("Liquid Dynamics", "Piezo Electrics"))
+                .build();
+
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, found);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
+        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[3].getId());
+        inOrder.verifyNoMoreInteractions();
+    }
 }

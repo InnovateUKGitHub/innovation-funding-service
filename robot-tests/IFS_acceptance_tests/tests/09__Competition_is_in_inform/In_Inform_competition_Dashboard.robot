@@ -34,7 +34,7 @@ Competition Dashboard
     And The user should see the text in the page    Inform
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
-    And The user should see the text in the page    Satellite Applications
+    And The user should see the text in the page    Satellite applications
     And The user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     And the user should not see the element    link=View and update competition setup
 
@@ -59,6 +59,16 @@ Filtering on the Manage funding applications page
     And the user clicks the button/link    jQuery=.button:contains("Clear all filters")
     And the user should see the element    jQuery=td:nth-child(2):contains("70")
     [Teardown]    The user clicks the button/link    link=Competition
+
+Checking release feedback button state is correct
+    [Documentation]    INFUND-7950
+    [Tags]
+    Given the user clicks the button/link    link=Input and review funding decision
+    And the user selects the checkbox    app-row-3
+    And the user clicks the button/link    jQuery=button:contains("On hold")
+    When the user clicks the button/link    jQuery=.link-back:contains("Competition")
+    Then the user should see that the element is disabled    jQuery=button:contains("Release feedback")
+    [Teardown]    User sends the notification to enable release feedback
 
 Release feedback
     [Documentation]    INFUND-8050
@@ -92,11 +102,10 @@ View feedback from each assessor
     And the user should see the element    jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
     And the user should see the element    jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
 
-Overall scores and application details are correct
+Question scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
     [Tags]    Email    HappyPath
-    Then the overall scores are correct
-    And the application question scores are correct
+    Then the application question scores are correct
     And the application details are correct
 
 User can see feedback to individual questions
@@ -121,18 +130,6 @@ Selecting the dashboard link takes user back to the dashboard
     Then the user should see the element    jQuery=h1:contains("Your dashboard")
 
 *** Keywords ***
-the overall scores are correct
-    the user should see the element    jQuery=.table-overflow td:nth-child(2):contains("6")
-    the user should see the element    jQuery=.table-overflow td:nth-child(3):contains("5")
-    the user should see the element    jQuery=.table-overflow td:nth-child(4):contains("6")
-    the user should see the element    jQuery=.table-overflow td:nth-child(5):contains("4")
-    the user should see the element    jQuery=.table-overflow td:nth-child(6):contains("4")
-    the user should see the element    jQuery=.table-overflow td:nth-child(7):contains("5")
-    the user should see the element    jQuery=.table-overflow td:nth-child(8):contains("7")
-    the user should see the element    jQuery=.table-overflow td:nth-child(9):contains("7")
-    the user should see the element    jQuery=.table-overflow td:nth-child(10):contains("3")
-    the user should see the element    jQuery=.table-overflow td:nth-child(11):contains("7")
-
 the application question scores are correct
     the user should see the element    jQuery=.column-two-thirds:contains("Business opportunity") ~ div div:contains("Average score 6 / 10")
     the user should see the element    jQuery=.column-two-thirds:contains("Potential market") ~ div div:contains("Average score 5 / 10")
@@ -152,3 +149,16 @@ the application details are correct
     the user should see the element    jQuery=p:contains("Project start date: ")
     the user should see the element    jQuery=p:contains("Duration")
     the user should see the element    jQuery=h3:contains("Total project cost")
+
+User sends the notification to enable release feedback
+    the user clicks the button/link    link=Input and review funding decision
+    the user selects the checkbox    app-row-3
+    the user clicks the button/link    jQuery=button:contains("Unsuccessful")
+    the user clicks the button/link    jQuery=.link-back:contains("Competition")
+    the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
+    the user selects the checkbox     app-row-70
+    the user clicks the button/link    jQuery=button:contains("Write and send email")
+    the user enters text to a text field    id=subject    Subject
+    the user enters text to a text field    jQuery=.editor    Text
+    the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link    jQuery=.link-back:contains("Competition")

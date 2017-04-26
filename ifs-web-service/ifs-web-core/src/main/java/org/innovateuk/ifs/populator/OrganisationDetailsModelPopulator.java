@@ -10,7 +10,6 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -21,18 +20,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * View model for Organisation Details
  */
 @Component
 public class OrganisationDetailsModelPopulator {
-
-    @Autowired
-    private ProcessRoleService processRoleService;
 
     @Autowired
     protected InviteRestService inviteRestService;
@@ -63,7 +57,7 @@ public class OrganisationDetailsModelPopulator {
     }
 
     private List<OrganisationResource> getAcademicOrganisations(final List<OrganisationResource> organisations) {
-        return simpleFilter(organisations, o -> OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(o.getOrganisationType()));
+        return simpleFilter(organisations, o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()));
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {

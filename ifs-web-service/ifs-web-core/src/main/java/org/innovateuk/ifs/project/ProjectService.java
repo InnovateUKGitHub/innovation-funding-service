@@ -28,7 +28,7 @@ public interface ProjectService {
 
     ProjectResource getByApplicationId(Long applicationId);
 
-    ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId);
+    ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);
 
     ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
 
@@ -45,10 +45,6 @@ public interface ProjectService {
     OrganisationResource getLeadOrganisation(Long projectId);
 
     OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
-
-    Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
-
-    ServiceResult<Void> updateMonitoringOfficer(Long projectId, String firstName, String lastName, String emailAddress, String phoneNumber);
 
     Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId);
 

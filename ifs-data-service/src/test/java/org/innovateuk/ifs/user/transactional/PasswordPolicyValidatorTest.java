@@ -194,6 +194,28 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void testValidatePasswordUsingSpecialCharactersInOrganisationName() {
+
+        User user = newUser().
+                withId(13L).
+                withFirstName("Steve").
+                withLastName("Smith").
+                build();
+        Organisation org1 = newOrganisation().withId(123L).withName("(((£&").build();
+        org1.addUser(user);
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        when(organisationRepositoryMock.findByUsersId(user.getId())).thenReturn(asList(org1));
+
+        UserResource userResource = newUserResource().
+                withId(13L).
+                withFirstName("Steve").
+                withLastName("Smith").
+                build();
+        assertTrue(validator.validatePassword("jenny", userResource).isSuccess());
+    }
+
+    @Test
     public void testValidatePasswordStopsUserUsingOrganisationNameButNotWhenVeryShort() {
 
         User user = newUser().withId(13L).withFirstName("William").withLastName("Lo").build();

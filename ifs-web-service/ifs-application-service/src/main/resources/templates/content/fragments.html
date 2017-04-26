@@ -1,10 +1,10 @@
-<th:block th:fragment="content-menu">
+<th:block th:fragment="content-menu(current)">
     <aside role="complementary" class="related-items extra-margin">
         <h2 class="heading-medium">Elsewhere on Innovation Funding Service</h2>
         <nav>
             <ul>
-                <li><a th:href="@{cookies}">Cookies</a></li>
-                <li><a th:href="@{terms-and-conditions}">Terms and Conditions</a></li>
+                <li><a th:unless="${current == 'cookies'}" th:href="@{cookies}">Cookies</a></li>
+                <li><a th:unless="${current == 'terms'}" th:href="@{terms-and-conditions}">Terms and Conditions</a></li>
             </ul>
         </nav>
     </aside>

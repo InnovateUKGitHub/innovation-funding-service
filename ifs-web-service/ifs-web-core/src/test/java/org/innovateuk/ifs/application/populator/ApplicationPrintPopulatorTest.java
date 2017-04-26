@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,13 +42,13 @@ public class ApplicationPrintPopulatorTest {
     private ApplicationPrintPopulator target;
 
     @Mock
-    private UserAuthenticationService userAuthenticationService;
-
-    @Mock
     private ApplicationService applicationService;
 
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -70,7 +72,6 @@ public class ApplicationPrintPopulatorTest {
     public void testPrint() {
         Long applicationId = 1L;
         Model model = mock(Model.class);
-        HttpServletRequest request = mock(HttpServletRequest.class);
         UserResource user = UserResourceBuilder.newUserResource().build();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
@@ -80,16 +81,14 @@ public class ApplicationPrintPopulatorTest {
         Optional<OrganisationResource> userOrganisation = Optional.of(OrganisationResourceBuilder.newOrganisationResource().build());
         Map<Long, FormInputResponseResource> mappedResponses = mock(Map.class);
 
-
-        when(userAuthenticationService.getAuthenticatedUser(request)).thenReturn(user);
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
-        when(formInputResponseService.getByApplication(applicationId)).thenReturn(responses);
+        when(formInputResponseRestService.getResponsesByApplicationId(applicationId)).thenReturn(restSuccess(responses));
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
         when(applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles)).thenReturn(userOrganisation);
         when(formInputResponseService.mapFormInputResponsesToFormInput(responses)).thenReturn(mappedResponses);
 
-        target.print(applicationId, model, request);
+        target.print(applicationId, model, user);
 
         //Verify model attributes set
         verify(model).addAttribute("responses", mappedResponses);

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
@@ -14,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +29,7 @@ import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
  */
 @Controller
 @PreAuthorize("permitAll")
-public class AcceptProjectInviteController extends BaseController {
+public class AcceptProjectInviteController {
 
     public static final String INVITE_HASH = "project_invite_hash";
 
@@ -58,7 +54,7 @@ public class AcceptProjectInviteController extends BaseController {
     // Initial landing of the invite link
     //===================================
 
-    @RequestMapping(value = ACCEPT_INVITE_MAPPING + "{hash}", method = RequestMethod.GET)
+    @GetMapping(ACCEPT_INVITE_MAPPING + "{hash}")
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
             HttpServletResponse response,
@@ -84,13 +80,13 @@ public class AcceptProjectInviteController extends BaseController {
     // Show the user the confirm project
     //==================================
 
-    @RequestMapping(value = ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING, method = RequestMethod.GET)
+    @GetMapping(ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING)
     public String acceptInviteUserDoesNotYetExistShowProject(HttpServletRequest request, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         model.addAttribute("userExists", false);
         return acceptInviteShowProject(request, model, loggedInUser);
     }
 
-    @RequestMapping(value = ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING, method = RequestMethod.GET)
+    @GetMapping(ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING)
     public String acceptInviteUserDoesExistShowProject(HttpServletRequest request, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         model.addAttribute("userExists", true);
         return acceptInviteShowProject(request, model, loggedInUser);
@@ -121,7 +117,7 @@ public class AcceptProjectInviteController extends BaseController {
     // Accept a project invite for a user who already exists
     //======================================================
 
-    @RequestMapping(value = ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING, method = RequestMethod.GET)
+    @GetMapping(ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING)
     public String acceptInviteUserDoesExistConfirm(HttpServletRequest request,
                                                    @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                    Model model) {

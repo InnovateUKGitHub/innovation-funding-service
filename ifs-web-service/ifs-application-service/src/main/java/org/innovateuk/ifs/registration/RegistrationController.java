@@ -72,9 +72,6 @@ public class RegistrationController {
     private EthnicityRestService ethnicityRestService;
 
     @Autowired
-    protected UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
@@ -82,7 +79,7 @@ public class RegistrationController {
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
     public final static String EMAIL_FIELD_NAME = "email";
 
-    @RequestMapping(value = "/success", method = RequestMethod.GET)
+    @GetMapping("/success")
     public String registrationSuccessful(
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
@@ -93,7 +90,7 @@ public class RegistrationController {
         return "registration/successful";
     }
 
-    @RequestMapping(value = "/verified", method = RequestMethod.GET)
+    @GetMapping("/verified")
     public String verificationSuccessful(final HttpServletRequest request, final HttpServletResponse response) {
         if(!hasVerifiedCookieSet(request)){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
@@ -103,7 +100,7 @@ public class RegistrationController {
         }
     }
 
-    @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
+    @GetMapping("/verify-email/{hash}")
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
                                      final HttpServletResponse response){
         userService.verifyEmail(hash);
@@ -111,10 +108,12 @@ public class RegistrationController {
         return "redirect:/registration/verified";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/register")
+    public String registerForm(Model model,
+                               @ModelAttribute("loggedInUser") UserResource user,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
@@ -131,7 +130,7 @@ public class RegistrationController {
             return "redirect:/login";
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         if (!processOrganisation(request, model)) {
             destination = "redirect:/";
@@ -189,10 +188,11 @@ public class RegistrationController {
         return organisationService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request));
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PostMapping("/register")
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
+                                     @ModelAttribute("loggedInUser") UserResource user,
                                      HttpServletRequest request,
                                      Model model) {
 
@@ -212,12 +212,11 @@ public class RegistrationController {
             validator.validate(registrationForm, bindingResult);
         }
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
@@ -246,13 +245,13 @@ public class RegistrationController {
         return destination;
     }
 
-    @RequestMapping(value = "/resend-email-verification", method = RequestMethod.GET)
+    @GetMapping("/resend-email-verification")
     public String resendEmailVerification(final ResendEmailVerificationForm resendEmailVerificationForm, final Model model) {
         model.addAttribute("resendEmailVerificationForm", resendEmailVerificationForm);
         return "registration/resend-email-verification";
     }
 
-    @RequestMapping(value = "/resend-email-verification", method = RequestMethod.POST)
+    @PostMapping("/resend-email-verification")
     public String resendEmailVerification(@Valid final ResendEmailVerificationForm resendEmailVerificationForm, final BindingResult bindingResult, final Model model) {
 
         if (bindingResult.hasErrors()) {
@@ -290,13 +289,12 @@ public class RegistrationController {
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
-            Optional<UserResource> existingUserSearch = userService.findUserByEmailForAnonymousUserFlow(email);
+            Optional<UserResource> existingUserSearch = userService.findUserByEmail(email);
             if (existingUserSearch.isPresent()) {
                 ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
             }
         }
     }
-
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
@@ -324,7 +322,8 @@ public class RegistrationController {
                 Long.parseLong(registrationForm.getEthnicity()),
                 registrationForm.getDisability(),
                 organisationId,
-                competitionId);
+                competitionId,
+                registrationForm.getAllowMarketingEmails());
     }
 
     private void addOrganisationNameToModel(Model model, OrganisationResource organisation) {

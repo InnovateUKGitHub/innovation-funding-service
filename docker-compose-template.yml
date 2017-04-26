@@ -1,8 +1,12 @@
-version: '2'
+version: '3'
 services:
 
   shib:
-    image: innovateuk/ifs-shib-sp:0.4.0
+    image: innovateuk/ifs-shib-sp:0.5.2
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:443/Shibboleth.sso/Metadata"]
+      interval: 15s
+      timeout: 8s
     ports:
       - "443:443"
     environment:
@@ -16,7 +20,11 @@ services:
           - ifs.local-dev
 
   idp:
-    image: innovateuk/ifs-shib-idp:0.4.1
+    image: innovateuk/ifs-shib-idp:0.5.2
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/"]
+      interval: 15s
+      timeout: 8s
     ports:
       - "9443:9443"
     environment:
@@ -32,6 +40,10 @@ services:
 
   ldap:
     image: innovateuk/ifs-ldap:0.4.0
+    healthcheck:
+      test: ["CMD", "ldapsearch", "-h", "localhost", "-p", "389", "-b", "dc=nodomain", "-x", "-LLL", "-s", "base"]
+      interval: 15s
+      timeout: 8s
     ports:
       - "389:389"
     environment:
@@ -41,31 +53,55 @@ services:
 
   application-svc:
     image: innovateuk/application-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   assessment-svc:
     image: innovateuk/assessment-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/assessment/monitoring/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   competition-mgt-svc:
     image: innovateuk/competition-management-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/management/monitoring/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   project-setup-mgt-svc:
     image: innovateuk/project-setup-management-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup-management/monitoring/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   project-setup-svc:
     image: innovateuk/project-setup-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup/monitoring/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       - ifs
 
   data-service:
     image: innovateuk/data-service:@version@
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+      interval: 15s
+      timeout: 8s
     networks:
       ifs:
         aliases:

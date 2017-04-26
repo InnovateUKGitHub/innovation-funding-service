@@ -1,19 +1,18 @@
 package org.innovateuk.ifs.application.service;
 
-import java.util.List;
-import java.util.concurrent.Future;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.concurrent.Future;
+
 import static org.innovateuk.ifs.application.service.Futures.adapt;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link ApplicationResource}.
@@ -45,8 +44,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> updateApplicationStatus(Long applicationId, Long statusId) {
-        return putWithRestResult(applicationRestURL + "/updateApplicationStatus?applicationId=" + applicationId + "&statusId=" + statusId, Void.class);
+    public RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state) {
+        return putWithRestResult(applicationRestURL + "/updateApplicationState?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 
     // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible
@@ -84,7 +83,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
         return postWithRestResult(url, application, ApplicationResource.class);
     }
-
 
     @Override
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {

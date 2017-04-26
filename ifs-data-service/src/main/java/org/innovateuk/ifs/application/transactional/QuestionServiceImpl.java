@@ -25,13 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -108,7 +108,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             if (questionStatus == null) {
                 questionStatus = new QuestionStatus(question, application, assignee, assignedBy, now());
             } else {
-                questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
+                questionStatus.setAssignee(assignee, assignedBy, ZonedDateTime.now());
             }
             questionStatusRepository.save(questionStatus);
             return serviceSuccess();

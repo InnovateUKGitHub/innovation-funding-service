@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ public class FinanceRowMetaFieldController {
     @Autowired
     private FinanceRowService costFieldService;
 
-    @RequestMapping("/findAll/")
+    @GetMapping("/findAll/")
     public RestResult<List<FinanceRowMetaFieldResource>> findAll() {
         return costFieldService.findAllCostFields().toGetResponse();
     }

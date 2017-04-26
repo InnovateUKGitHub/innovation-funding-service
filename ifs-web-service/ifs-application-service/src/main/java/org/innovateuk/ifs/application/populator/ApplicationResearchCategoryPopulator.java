@@ -2,25 +2,17 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Populates the research category selection viewmodel.
  */
 @Component
 public class ApplicationResearchCategoryPopulator extends BaseModelPopulator {
-
-    @Autowired
-    private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -31,20 +23,16 @@ public class ApplicationResearchCategoryPopulator extends BaseModelPopulator {
     @Autowired
     private FinanceService financeService;
 
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    public ResearchCategoryViewModel populate(Long applicationId, Long questionId, Long userId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+    public ResearchCategoryViewModel populate(ApplicationResource applicationResource, Long questionId) {
 
         ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel();
         researchCategoryViewModel.setAvailableResearchCategories(categoryRestService.getResearchCategories().getSuccessObject());
         researchCategoryViewModel.setQuestionId(questionId);
-        researchCategoryViewModel.setApplicationId(applicationId);
+        researchCategoryViewModel.setApplicationId(applicationResource.getId());
         researchCategoryViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());
 
         setResearchCategoryChoice(applicationResource, researchCategoryViewModel);
-        setHasApplicationFinances(researchCategoryViewModel, userId, applicationId);
+        setHasApplicationFinances(researchCategoryViewModel, applicationResource.getId());
 
         return researchCategoryViewModel;
     }
@@ -56,11 +44,14 @@ public class ApplicationResearchCategoryPopulator extends BaseModelPopulator {
         }
     }
 
-    private void setHasApplicationFinances(ResearchCategoryViewModel researchCategoryViewModel, Long userId, Long applicationId) {
+    private void setHasApplicationFinances(ResearchCategoryViewModel researchCategoryViewModel, Long applicationId) {
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        boolean applicationFinanceDetailsEntered = false;
 
-        getUserOrganisation(userId, userApplicationRoles).ifPresent(org -> researchCategoryViewModel.setHasApplicationFinances(
-                financeService.getApplicationFinanceDetails(userId, applicationId, org.getId()) != null));
+        if (researchCategoryViewModel.getSelectedResearchCategoryId() != null) {
+            applicationFinanceDetailsEntered = financeService.getApplicationFinanceDetails(applicationId).stream()
+                    .filter(applicationFinanceResource -> applicationFinanceResource.getOrganisationSize() != null).findFirst().isPresent();
+        }
+        researchCategoryViewModel.setHasApplicationFinances(applicationFinanceDetailsEntered);
     }
 }

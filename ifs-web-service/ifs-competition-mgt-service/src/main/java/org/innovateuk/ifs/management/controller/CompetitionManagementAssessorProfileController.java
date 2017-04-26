@@ -1,16 +1,12 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -21,7 +17,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 @PreAuthorize("hasAuthority('comp_admin')")
-public class CompetitionManagementAssessorProfileController extends BaseController {
+public class CompetitionManagementAssessorProfileController {
 
     @Autowired
     private AssessorProfileModelPopulator assessorProfileModelPopulator;
@@ -43,7 +39,7 @@ public class CompetitionManagementAssessorProfileController extends BaseControll
         }
     }
 
-    @RequestMapping(value = "/profile/{assessorId}", method = RequestMethod.GET)
+    @GetMapping("/profile/{assessorId}")
     public String profile(Model model,
                           @PathVariable("competitionId") long competitionId,
                           @PathVariable("assessorId") long assessorId,

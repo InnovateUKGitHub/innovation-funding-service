@@ -4,7 +4,7 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notes'" />
     </head>
 
-    <body th:with="context='project-management'" class="note-form">
+    <body class="note-form">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
+                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
                 <h1 class="heading-xlarge">
                     <th:block th:text="${model.organisationName}" />
                     <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
@@ -53,9 +53,9 @@
 
                         <th:block th:if="${post.attachments.size() > 0}">
                             <h3 class="heading-small">Supporting documentation</h3>
-                            <ul class="list-bullet">
+                            <ul>
                                 <li th:each="attachment : ${post.attachments}">
-                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a><br />
                                 </li>
                             </ul>
                         </th:block>
@@ -69,7 +69,7 @@
                             <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}">Content of the comment.</p>
                             <h3 th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</h3>
                             <th:block th:each="attachment : ${post.attachments}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a><br />
                             </th:block>
                         </article>
                     </th:block>
@@ -84,7 +84,8 @@
 
                 <th:block th:if="${model.noteId != null and note.id == model.noteId}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
                     <h2 class="heading-medium">Add your comment</h2>
-                    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+                    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
+                          method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                         <div th:class="${#fields.hasErrors('comment')}? 'form-group error':'form-group'">
                             <label for="comment" class="form-label-bold">
                                 <span class="heading-small no-margin">Comment</span>
@@ -113,11 +114,11 @@
                             </div>
                         </div>
 
-                        <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+                        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                             <h3 class="heading-small">Supporting documentation</h3>
                             <ul>
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                                    <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}">filename</a>
                                     <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                                 </li>
                             </ul>
@@ -140,7 +141,7 @@
                         <input type="hidden" id="action" value="postComment">
                         <div class="grid-row extra-margin">
                             <div class="column-half">
-                                <button class="button button-large no-margin">Save comment</button>
+                                <button class="button button-large no-margin" data-content-on-submit="Please wait...">Save comment</button>
                                 <a class="button button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                             </div>
                         </div>

@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +21,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ApplicationTest {
     private Application application;
@@ -25,7 +29,7 @@ public class ApplicationTest {
     private Competition competition;
     private String name;
     private List<ProcessRole> processRoles;
-    private ApplicationStatus applicationStatus;
+    private ApplicationState applicationState;
     private Long id;
     private List<ApplicationFinance> applicationFinances;
 
@@ -33,7 +37,7 @@ public class ApplicationTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "testApplicationName";
-        applicationStatus = new ApplicationStatus();
+        applicationState = ApplicationState.CREATED;
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 
@@ -42,14 +46,15 @@ public class ApplicationTest {
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
 
-        application = new Application(competition, name, processRoles, applicationStatus, id);
+        application = new Application(competition, name, processRoles, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        application.setId(id);
     }
 
     @Test
     public void applicationShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(application.getId(), id);
         Assert.assertEquals(application.getName(), name);
-        Assert.assertEquals(application.getApplicationStatus(), applicationStatus);
+        Assert.assertEquals(application.getApplicationProcess().getActivityState(), applicationState);
         Assert.assertEquals(application.getProcessRoles(), processRoles);
         Assert.assertEquals(application.getCompetition(), competition);
         Assert.assertEquals(application.getApplicationFinances(), applicationFinances);

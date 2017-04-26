@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.profile.domain.Profile;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +30,6 @@ public class Agreement extends AuditableEntity {
     private String text;
 
     public Agreement() {
-        // default constructor
     }
 
     public Agreement(String text, boolean current) {

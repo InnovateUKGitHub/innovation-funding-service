@@ -18,102 +18,160 @@ Next and previous page navigation
         </a>
     </li>
 </ul>
-
 ```
 
 */
 
 
 .pagination {
+  border-top: 1px solid $grey-2;
+  clear: both;
+  display: block;
+  font: {
+    size: 16px;
+    weight: 400;
+  }
+  line-height: 1.25;
+  list-style: none;
+  margin: 3em 0px 15px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+
+  li {
+    width: 49%;
+  }
+
+  a,
+  button {
+    border: 0;
+    color: $govuk-blue;
     display: block;
-    margin: 3em 0px 15px;
-    list-style: none;
     font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    overflow:hidden;
-    border-top: 1px solid $grey-2;
-    clear: both;
-    text-align:center;
-    position: relative;
+    outline: none;
+    padding: 15px 0;
+    text-decoration: none;
 
-    li {
-        float: left;
-        text-align: right;
-        width: 49%;
+    &:hover {
+      background: $grey-4;
     }
+  }
 
-    a,
-    button{
-        color: $govuk-blue;
+  .prev,
+  .next {
+
+    a {
+
+      &::before {
+        background: {
+          image: url('../images/arrow-sprite.png');
+          repeat: no-repeat;
+        }
+        content: ' ';
         display: block;
-        text-decoration: none;
-        border:none;
-        background:none;
-        font-size:16px;
+        height: 38px;
+        width: 30px;
+      }
     }
-    button {
-      font-size:27px;
-      cursor: pointer;
-      position: absolute;
-      top:0;
+  }
+
+  button {
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 27px;
+    position: absolute;
+    top: 0;
+
+    &::before {
+      background: {
+        image: url('../images/arrow-sprite.png');
+        repeat: no-repeat;
+      }
+      content: ' ';
+      display: block;
+      height: 38px;
+      width: 30px;
     }
-    .prev {
-        left:0;
+
+    &.prev {
+      padding-left: 35px;
+
+      &::before {
+        background-position: -20px -11px;
         float: left;
-        text-align: left;
-    }
-    .prev a,
-    button.prev {
-        padding: 1.2em 0px 1.2em 32px;
-    }
-    button.prev:before,
-    .prev a:before {
-        background: transparent url("../images/arrow-sprite.png") no-repeat scroll -20px -11px;
         margin: -4px 0px 0px -32px;
-        display: block;
-        float: left;
-        width: 30px;
-        height: 38px;
-        content: " ";
-    }
-    .next {
-        right:0;
-        float: right;
-        text-align: right;
-    }
-    button.next,
-    .next a {
-        padding: 1.2em 32px 1.2em 0px;
-    }
-    button.next:before,
-    .next a:before {
-        background: transparent url("../images/arrow-sprite.png") no-repeat scroll -102px -11px;
-        margin: -4px -32px 0px 0px;
-        display: block;
-        float: right;
-        width: 30px;
-        height: 38px;
-        content: " ";
-    }
-    .pagination-label {
-        font-size: 27px;
-        line-height: 1.25;
-        font-weight: 400;
-        margin-bottom: 0.1em;
-        display: block;
+      }
     }
 
-    .pagination-part-title {
-        text-decoration: underline;
+    &.next {
+      padding-right: 35px;
+
+      &::before {
+        background-position: -102px -11px;
+        float: right;
+        margin: -4px -32px 0px 0px;
+      }
     }
-    .status {
-        text-align:center;
-        padding: 2.1em 0;
-        font-size:18px;
+
+    &:focus {
+      background-color: $yellow;
     }
+  }
+
+  .prev {
+    left: 0;
+    float: left;
+    text-align: left;
+
+    a {
+      padding-left: 35px;
+
+      &::before {
+        background-position: -20px -11px;
+        float: left;
+        margin: -4px 0px 0px -32px;
+      }
+    }
+  }
+
+  .next {
+    right: 0;
+    float: right;
+    text-align: right;
+
+    a {
+      padding-right: 35px;
+
+      &::before {
+        background-position: -102px -11px;
+        float: right;
+        margin: -4px -32px 0px 0px;
+      }
+    }
+  }
+
+  .pagination-label {
+    display: block;
+    font: {
+      size: 27px;
+      weight: 400;
+    }
+    line-height: 1.25;
+    margin-bottom: 0.1em;
+  }
+
+  .pagination-part-title {
+    text-decoration: underline;
+  }
+
+  .status {
+    font-size: 18px;
+    text-align: center;
+    padding: 2.1em 0;
+  }
 }
 
+// Index pagination e.g.: 1 to 20, 21 to 40...
 .pagination-index {
   text-align: center;
 

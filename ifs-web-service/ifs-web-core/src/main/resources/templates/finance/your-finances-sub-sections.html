@@ -8,7 +8,7 @@
                 <h2 class="heading-medium no-margin-bottom">Finances</h2>
                 <p>Please complete your project finances.</p>
 
-                <details th:unless="${readonly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
+                <details th:unless="${readonly or model.isAcademicFinance}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                     <summary><span class="summary">Not requesting funding</span></summary>
                     <div class="panel-indent">
                         <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
@@ -111,10 +111,11 @@
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons">
         <th:block th:if="${model.subFinanceSection}">
-            <div th:unless="${readonly}">
-                <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="button">Mark as complete</button>
-                <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="extra-margin buttonlink"
-                        th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit</button>
+            <div th:unless="${readonly}" class="form-footer">
+                <div class="form-footer__actions">
+                    <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete</button>
+                    <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="buttonlink">Edit</button>
+                </div>
             </div>
             <div>
                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.currentSection.getParentSection()})}" class="button-secondary extra-margin">
@@ -144,16 +145,14 @@
                     </div>
                 </th:block>
                 <th:block th:if="${model.showSectionAsLockedFunding(subSection)}">
-                    <div class="task-full-width">
+                    <div class="task full-width">
                         <h3 class="heading-small" th:text="${subSection.name}"></h3>
-                        <th:block th:if="${model.userIsLeadApplicant}">
-                            <p>You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.
-                                You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
-                        </th:block>
-                        <th:block th:unless="${model.userIsLeadApplicant}">
-                            <p>The lead applicant must select a research category in application details before you can supply funding.
-                                You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
-                        </th:block>
+                        <p>
+                            <th:block th:if="${model.userIsLeadApplicant}">You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.</th:block>
+                            <th:block th:unless="${model.userIsLeadApplicant}">The lead applicant must select a research category in application details before you can supply funding.</th:block>
+                            <br />
+                            You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
+                        </p>
                     </div>
                 </th:block>
                 <th:block th:if="${model.showSectionStatus(subSection)}">
@@ -178,7 +177,7 @@
                 <tbody>
                 <tr th:if="${hasOrganisationFinance}" th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}">
                     <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /></strong></td>
-                    <td class="numeric">&pound;<th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
+                    <td class="numeric"><th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}" /></td>

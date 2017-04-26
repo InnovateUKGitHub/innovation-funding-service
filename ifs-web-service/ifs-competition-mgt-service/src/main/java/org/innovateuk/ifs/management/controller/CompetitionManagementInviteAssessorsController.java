@@ -45,9 +45,6 @@ public class CompetitionManagementInviteAssessorsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
@@ -59,29 +56,27 @@ public class CompetitionManagementInviteAssessorsController {
     @Autowired
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String assessors(@PathVariable("competitionId") long competitionId) {
         return format("redirect:/competition/%s/assessors/find", competitionId);
     }
 
-    @RequestMapping(value = "/find", method = RequestMethod.GET)
+    @GetMapping("/find")
     public String find(Model model,
                        @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) FindAssessorsFilterForm filterForm,
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
                        @RequestParam MultiValueMap<String, String> queryParams) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
 
-        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competition, page, filterForm.getInnovationArea(), originQuery));
+        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/find";
     }
 
-    @RequestMapping(value = "/find", params = {"add"}, method = RequestMethod.POST)
+    @PostMapping(value = "/find", params = {"add"})
     public String addInviteFromFindView(Model model,
                                         @PathVariable("competitionId") long competitionId,
                                         @RequestParam("add") String email,
@@ -92,7 +87,7 @@ public class CompetitionManagementInviteAssessorsController {
         return redirectToFind(competitionId, page, innovationArea);
     }
 
-    @RequestMapping(value = "/find", params = {"remove"}, method = RequestMethod.POST)
+    @PostMapping(value = "/find", params = {"remove"})
     public String removeInviteFromFindView(Model model,
                                            @PathVariable("competitionId") long competitionId,
                                            @RequestParam("remove") String email,
@@ -113,7 +108,7 @@ public class CompetitionManagementInviteAssessorsController {
                 .toUriString();
     }
 
-    @RequestMapping(value = "/invite", method = RequestMethod.GET)
+    @GetMapping("/invite")
     public String invite(Model model,
                          @PathVariable("competitionId") long competitionId,
                          @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
@@ -123,17 +118,15 @@ public class CompetitionManagementInviteAssessorsController {
             form.getInvites().add(new InviteNewAssessorsRowForm());
         }
 
-        CompetitionResource competition = competitionService.getById(competitionId);
-
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams);
 
-        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition, page, originQuery));
+        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/invite";
     }
 
-    @RequestMapping(value = "/invite", params = {"remove"}, method = RequestMethod.POST)
+    @PostMapping(value = "/invite", params = {"remove"})
     public String removeInviteFromInviteView(Model model,
                                              @PathVariable("competitionId") long competitionId,
                                              @RequestParam(name = "remove") String email,
@@ -143,7 +136,7 @@ public class CompetitionManagementInviteAssessorsController {
         return redirectToInvite(competitionId, page);
     }
 
-    @RequestMapping(value = "/invite", params = {"addNewUser"}, method = RequestMethod.POST)
+    @PostMapping(value = "/invite", params = {"addNewUser"})
     public String addNewUserToInviteView(Model model,
                                          @PathVariable("competitionId") long competitionId,
                                          @RequestParam(defaultValue = "0") int page,
@@ -155,7 +148,7 @@ public class CompetitionManagementInviteAssessorsController {
         return invite(model, competitionId, form, page, queryParams);
     }
 
-    @RequestMapping(value = "/invite", params = {"removeNewUser"}, method = RequestMethod.POST)
+    @PostMapping(value = "/invite", params = {"removeNewUser"})
     public String removeNewUserFromInviteView(Model model,
                                               @PathVariable("competitionId") long competitionId,
                                               @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
@@ -168,7 +161,7 @@ public class CompetitionManagementInviteAssessorsController {
         return invite(model, competitionId, form, page, queryParams);
     }
 
-    @RequestMapping(value = "/invite", params = {"inviteNewUsers"}, method = RequestMethod.POST)
+    @PostMapping(value = "/invite", params = {"inviteNewUsers"})
     public String inviteNewsUsersFromInviteView(Model model,
                                                 @PathVariable("competitionId") long competitionId,
                                                 @RequestParam(defaultValue = "0") int page,
@@ -201,18 +194,16 @@ public class CompetitionManagementInviteAssessorsController {
                 .toUriString();
     }
 
-    @RequestMapping(value = "/overview", method = RequestMethod.GET)
+    @GetMapping("/overview")
     public String overview(Model model,
                            @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) OverviewAssessorsFilterForm filterForm,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam MultiValueMap<String, String> queryParams) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams);
 
         model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(
-                competition,
+                competitionId,
                 page,
                 filterForm.getInnovationArea(),
                 filterForm.getStatus(),

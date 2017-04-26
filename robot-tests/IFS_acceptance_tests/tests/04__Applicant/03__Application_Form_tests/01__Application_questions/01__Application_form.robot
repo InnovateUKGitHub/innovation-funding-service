@@ -32,15 +32,62 @@ Application details: Previous submission
 
 Application details: Research category
     [Documentation]    INFUND-6823
-    Given The user clicks the button/link   jQuery=button:contains("Choose your research category")
+    Given The user clicks the button/link    jQuery=button:contains("Choose your research category")
+    and the user should not see the text in the page     Changing the research category will reset the funding level for all business participants.
     Then the user should see the element    jQuery=label:contains("Industrial research")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
-    and the user clicks the button/link     jQuery=button:contains(Save)
-    Then the user should see an error       This field cannot be left blank
-    and the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-    and the user clicks the button/link     jQuery=button:contains(Save)
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    Then the user should see an error    This field cannot be left blank
+    and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    and the user should see the element     jQuery=div:contains("Chosen research category: Feasibility studies")
+
+Research Category : Autosave not applicable
+    [Documentation]    INFUND-6823, INFUND-8251
+    the user clicks the button/link      jQuery=button:contains("Change your research category")
+    #  TODO commented due to INFUND-9212
+    # and the user should see the text in the page     Changing the research category will reset the funding level for all business participants.
+    the user should see the element      jQuery=label:contains("Industrial research")
+    and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
+    and the user clicks the button/link     jQuery=a:contains("Application details")
+    and the user should see the element     jQuery=div:contains("Chosen research category: Feasibility studies")
     And the finance summary page should show a warning
+
+Application details: Innovation Area - Materials and manufacturing
+    [Documentation]    INFUND-8115
+    [Tags]    Pending
+    #TODO INFUND-9151
+    Given the user clicks the button/link    link=Application overview
+    And the user clicks the button/link    link=Application details
+    and the user should not see the element      jQuery=button:contains("Change your innovation area")
+    and The user clicks the button/link   jQuery=button:contains("Choose your innovation area")
+    Then the user should see the element    jQuery=label:contains("Composite materials"):contains("New composite materials with enhanced or new properties and performance.")
+    And the user should see the element    jQuery=label:contains("My innovation area is not listed")
+    And the user should see the element    jQuery=a:contains("Cancel")
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    #Then the user should see an error       This field cannot be left blank
+    #TODO : INFUND-9097
+    and the user clicks the button/link   jQuery=label:contains("Metals / metallurgy")
+    and the user clicks the button/link     jQuery=button:contains(Save)
+    Then the user should see the element     jQuery=button:contains("Change your innovation area")
+
+Application details: Innovation Area - Infrastructe
+    [Documentation]    INFUND-8443
+    [Tags]  MySQL    Pending
+    #TODO INFUND-9151
+    [Setup]  Set the competition innovation sector to Infrastructure
+    Given the user clicks the button/link   jQuery=button:contains("Change your innovation area")
+    Then the user should see the element    jQuery=label:contains("Energy efficiency"):contains("Improve energy end-use efficiency, for example, in buildings, domestic appliances, industrial processes or vehicles.")
+    And the user should see the element    jQuery=label:contains("My innovation area is not listed")
+    And the user should see the element    jQuery=a:contains("Cancel")
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    #Then the user should see an error       This field cannot be left blank
+    #TODO : INFUND-9097
+    and the user clicks the button/link   jQuery=label:contains("Energy systems")
+    and the user clicks the button/link     jQuery=button:contains(Save)
+    Then the user should see the element     jQuery=button:contains("Change your innovation area")
+    [Teardown]  Set the competition innovation sector to Materials and manufacturing
 
 Autosave in the form questions
     [Documentation]    INFUND-189
@@ -48,6 +95,9 @@ Autosave in the form questions
     [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
+    When the user clicks the button/link    link=Application details
+    then the application details need to be autosaved
+    and the user clicks the button/link     link=Application overview
     And the user clicks the button/link    link=Project summary
     When the user edits the project summary question
     And the user reloads the page
@@ -86,46 +136,6 @@ Mark a question as incomplete
     And the button state should change to 'Mark as complete'
     And the question should not be marked as complete on the application overview page
 
-Navigation of the form sections
-    [Documentation]    INFUND-189
-    [Tags]    HappyPath
-    And the user clicks the button/link    link=Application details
-    Then the user should see the text in the page    Enter the full title of your proposed project.
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Please provide a short summary of your project.
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Please provide a brief description of your project
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    If your application doesn't align with the scope
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the business opportunity section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the market opportunity section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the project exploitation section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the benefits section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Describe the areas of work
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Explain how your project is innovative
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    We recognise that many of the projects we fund are risky
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Describe your capability to develop and exploit this technology
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Tell us the total costs of the project and how
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the financial support from Innovate UK section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Only your organisation can see this level of detail.
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    To determine the level of funding you are eligible
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Enter your funding level
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    This is the financial overview of all partners
-
 Review and submit button
     [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -133,6 +143,16 @@ Review and submit button
     When the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the user should see the text in the page    Application summary
     And the user should see the text in the page    Please review your application before final submission
+
+Collaborator: read only view of Application details
+    [Documentation]    INFUND-8251 , INFUND-8260
+    [Tags]
+    [Setup]  Log in as a different user     &{collaborator1_credentials}
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=${Competition_E2E}
+    When the user clicks the button/link    link=Application details
+    then the user should not see the element      css=input
+    and the user should see the element      jQuery=a:contains("Return to application overview")
 
 *** Keywords ***
 the text should be visible
@@ -142,7 +162,15 @@ The user clicks the section link and is redirected to the correct section
     [Arguments]    ${link}    ${url}
     The user clicks the button/link    link=${link}
     The user should be redirected to the correct page    ${url}
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
+
+the application details need to be autosaved
+   the user enters text to a text field      application.durationInMonths   22
+   wait for autosave
+   the user clicks the button/link      link=Application overview
+   the user clicks the button/link      link=Application details
+   the user should not see the text in the element       application.durationInMonths   22
+
 
 the Applicant edits the Project summary
     Clear Element Text    css=#form-input-1039 .editor
@@ -183,7 +211,7 @@ the Applicant edits Project summary and marks it as complete
     the user clicks the button/link    css=#form-input-1039 .form-footer .form-footer__actions button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
     The user should see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
 
 the text box should be editable
@@ -193,16 +221,20 @@ the button state should change to 'Mark as complete'
     the user should see the element    jQuery=button:contains("Mark as complete")
 
 the question should not be marked as complete on the application overview page
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
     Run Keyword And Ignore Error Without Screenshots    confirm action
     the user should see the element    jQuery=#section-184 li:nth-child(2)
     the user should not see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
 
-The applicant navigates to the next section
-    The user clicks the button/link    css=.next .pagination-label
-    Run Keyword And Ignore Error Without Screenshots    confirm action
-
 the finance summary page should show a warning
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
     The user clicks the button/link    link=Your finances
-    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+
+Set the competition innovation sector to Infrastructure
+    Connect to Database    @{database}
+    Execute sql string    UPDATE `${database_name}`.`category_link` SET category_id=(SELECT id FROM `${database_name}`.`category` WHERE `name` = 'Infrastructure systems') WHERE class_name = "org.innovateuk.ifs.competition.domain.Competition#innovationSector" AND class_pk = '${OPEN_COMPETITION}'
+
+Set the competition innovation sector to Materials and manufacturing
+    Connect to Database    @{database}
+    execute sql string    UPDATE `${database_name}`.`category_link` SET category_id=(SELECT id FROM `${database_name}`.`category` WHERE `name` = 'Materials and manufacturing') WHERE class_name = "org.innovateuk.ifs.competition.domain.Competition#innovationSector" AND class_pk = '${OPEN_COMPETITION}';

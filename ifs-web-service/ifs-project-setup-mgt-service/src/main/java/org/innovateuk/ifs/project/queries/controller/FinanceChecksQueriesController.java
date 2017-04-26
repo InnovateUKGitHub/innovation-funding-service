@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -53,8 +53,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This Controller handles finance check queries activity for the finance team members
@@ -89,7 +87,7 @@ public class FinanceChecksQueriesController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String showPage(@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
@@ -100,7 +98,7 @@ public class FinanceChecksQueriesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value = "/attachment/{attachmentId}", method = GET)
+    @GetMapping("/attachment/{attachmentId}")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
@@ -124,7 +122,7 @@ public class FinanceChecksQueriesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value = "/{queryId}/new-response", method = GET)
+    @GetMapping("/{queryId}/new-response")
     public String viewNewResponse(@PathVariable Long projectId,
                                   @PathVariable Long organisationId,
                                   @PathVariable Long queryId,
@@ -146,7 +144,7 @@ public class FinanceChecksQueriesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value = "/{queryId}/new-response", method = POST)
+    @PostMapping("/{queryId}/new-response")
     public String saveResponse(Model model,
                                @PathVariable("projectId") final Long projectId,
                                @PathVariable final Long organisationId,
@@ -186,7 +184,7 @@ public class FinanceChecksQueriesController {
                         attachments.forEach(attachment -> financeCheckService.getAttachment(attachment)
                                     .ifSuccessful(foundAttachment -> attachmentResources.add(foundAttachment))
                         );
-                        PostResource post = new PostResource(null, loggedInUser, form.getResponse(), attachmentResources, LocalDateTime.now());
+                        PostResource post = new PostResource(null, loggedInUser, form.getResponse(), attachmentResources, ZonedDateTime.now());
 
                         ValidationMessages errors = new ValidationMessages();
                         ServiceResult<Void> saveResult = financeCheckService.saveQueryPost(post, queryId);
@@ -205,7 +203,7 @@ public class FinanceChecksQueriesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value = "/{queryId}/new-response", method = POST, params = "uploadAttachment")
+    @PostMapping(value = "/{queryId}/new-response", params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
                                             @PathVariable("projectId") final Long projectId,
                                             @PathVariable Long organisationId,
@@ -241,7 +239,7 @@ public class FinanceChecksQueriesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value = "/{queryId}/new-response/attachment/{attachmentId}", method = GET)
+    @GetMapping("/{queryId}/new-response/attachment/{attachmentId}")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
@@ -268,7 +266,7 @@ public class FinanceChecksQueriesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value = "/{queryId}/new-response", params = "removeAttachment", method = POST)
+    @PostMapping(value = "/{queryId}/new-response", params = "removeAttachment")
     public String removeAttachment(@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @PathVariable Long queryId,
@@ -295,7 +293,7 @@ public class FinanceChecksQueriesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value="/{queryId}/new-response/cancel", method = GET)
+    @GetMapping("/{queryId}/new-response/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @PathVariable Long queryId,

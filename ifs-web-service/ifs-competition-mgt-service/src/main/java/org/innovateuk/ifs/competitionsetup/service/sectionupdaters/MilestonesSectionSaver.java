@@ -3,28 +3,30 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneTime;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.util.CollectionFunctions;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -39,7 +41,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     private static Log LOG = LogFactory.getLog(MilestonesSectionSaver.class);
 
     @Autowired
-    private MilestoneService milestoneService;
+    private MilestoneRestService milestoneRestService;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -64,14 +66,14 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneRowForm> milestoneEntries, CompetitionResource competition) {
-        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competition.getId());
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
         Map<String, MilestoneRowForm> filteredMilestoneEntries = milestoneEntries;
 
         //If competition is already set up only allow to save of future milestones.
-        if (Boolean.TRUE.equals(competition.getSetupComplete())) {
+        if (TRUE.equals(competition.getSetupComplete())) {
             List<MilestoneType> futureTypes = milestones.stream()
-                    .filter(milestoneResource -> milestoneResource.getDate() == null || LocalDateTime.now().isBefore(milestoneResource.getDate()))
-                    .map(milestoneResource -> milestoneResource.getType())
+                    .filter(milestoneResource -> milestoneResource.getDate() == null || ZonedDateTime.now().isBefore(milestoneResource.getDate()))
+                    .map(MilestoneResource::getType)
                     .collect(Collectors.toList());
 
             filteredMilestoneEntries = CollectionFunctions.simpleFilter(milestoneEntries, (name, form) -> futureTypes.contains(form.getMilestoneType()));
@@ -105,15 +107,15 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     private List<Error> updateMilestoneWithValueByFieldname(CompetitionResource competitionResource, String fieldName, String value) {
         List<Error> errors = new ArrayList<>();
         try{
-            MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(
-                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId());
+            MilestoneResource milestone = milestoneRestService.getMilestoneByTypeAndCompetitionId(
+                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId()).getSuccessObjectOrThrowException();
 
             errors.addAll(validateMilestoneDateOnAutosave(milestone, fieldName, value));
 
             if(!errors.isEmpty()) {
                 return errors;
             }
-            milestoneService.updateMilestone(milestone);
+            milestoneRestService.updateMilestone(milestone).getSuccessObjectOrThrowException();
         }catch(Exception ex){
             LOG.error(ex.getMessage());
             return makeErrorList();
@@ -123,7 +125,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     private List<Error> validateMilestoneDateOnAutosave(MilestoneResource milestone, String fieldName, String value) {
         Integer day = null, month = null, year = null, hour = 0;
-        LocalDateTime currentDate = milestone.getDate();
+        ZonedDateTime currentDate = milestone.getDate();
 
 	    if(isTimeField(fieldName)) {
             if(null != currentDate) {
@@ -144,10 +146,10 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         }
 
         if(!competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
-            return asList(fieldError(fieldName, fieldName.toString(), "error.milestone.invalid"));
+            return asList(fieldError(fieldName, fieldName, "error.milestone.invalid"));
         }
         else {
-            milestone.setDate(LocalDateTime.of(year, month, day, hour, 0));
+            milestone.setDate(TimeZoneUtil.fromUkTimeZone(year, month, day, hour));
         }
 
         return Collections.emptyList();

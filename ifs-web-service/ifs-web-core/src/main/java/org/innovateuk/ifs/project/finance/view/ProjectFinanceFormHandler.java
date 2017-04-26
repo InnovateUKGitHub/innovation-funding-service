@@ -13,7 +13,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ProjectFinanceRowRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -26,14 +25,12 @@ import java.util.Map;
 
 @Component
 public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements FinanceFormHandler {
-    @Autowired
-    private ProjectFinanceRowService projectFinanceRowService;
-
-    @Autowired
-    private ProjectFinanceService projectFinanceService;
 
     @Autowired
     private ProjectFinanceRowRestService projectFinanceRowRestService;
+
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
 
     @Autowired
     private UnsavedFieldsManager unsavedFieldsManager;
@@ -46,7 +43,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
             projectFinanceResource = projectFinanceService.addProjectFinance(projectId, organisationId);
         }
 
-        ValidationMessages errors = getAndStoreCostitems(request, projectFinanceResource.getId(), financeRowItem -> projectFinanceRowService.update(financeRowItem));
+        ValidationMessages errors = getAndStoreCostitems(request, projectFinanceResource.getId(), financeRowItem -> projectFinanceRowRestService.update(financeRowItem));
         addRemoveCostRows(request, projectId, organisationId);
 
         return errors;
@@ -70,7 +67,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
     @Override
     public FinanceRowItem addCostWithoutPersisting(Long projectId, Long organisationId, Long questionId) {
         ProjectFinanceResource projectFinanceResource = projectFinanceService.getProjectFinance(projectId, organisationId);
-        return projectFinanceRowService.addWithoutPersisting(projectFinanceResource.getId(), questionId);
+        return projectFinanceRowRestService.addWithoutPersisting(projectFinanceResource.getId(), questionId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -87,7 +84,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
         }
         if (requestParams.containsKey("remove_cost")) {
             String removeCostParam = request.getParameter("remove_cost");
-            projectFinanceRowService.delete(Long.valueOf(removeCostParam));
+            projectFinanceRowRestService.delete(Long.valueOf(removeCostParam)).getSuccessObjectOrThrowException();
         }
     }
 
@@ -114,12 +111,12 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
                         if (costItem != null && fieldGroup.size() > 0) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
-                            ValidationMessages addResult = projectFinanceRowService.add(projectFinanceId, questionId, costItem);
+                            ValidationMessages addResult = projectFinanceRowRestService.add(projectFinanceId, questionId, costItem).getSuccessObjectOrThrowException();
                             Either<FinanceRowItem, ValidationMessages> either;
                             if(addResult.hasErrors()) {
                                 either = Either.right(addResult);
                             } else {
-                                FinanceRowItem added = projectFinanceRowService.findById(addResult.getObjectId());
+                                FinanceRowItem added = projectFinanceRowRestService.findById(addResult.getObjectId()).getSuccessObjectOrThrowException();
                                 either = Either.left(added);
                             }
 

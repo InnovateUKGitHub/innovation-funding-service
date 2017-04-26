@@ -12,6 +12,8 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-3859: As an Assessor I want to see how many words I can enter as feedback so that I know how much I can write.
 ...
 ...               INFUND-6281 As an Assessor I want to see specific scoring guidance text for each application question so that I can score the question accurately
+...
+...               INFUND-8065 File download links are broken for assessors
 Suite Setup       guest user log-in    paul.plum@gmail.com    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -94,6 +96,17 @@ Application questions should be scorable
     And The user should see the text in the page    How does financial support from Innovate UK
     And the user should see the text in the page    This is the applicant response for adding value.
     Then The user should see the element    jQuery=label:contains(Question score)
+    [Teardown]    the user clicks the button/link    link=Back to your assessment overview
+
+Appendix can be opened on the question view
+    [Documentation]    INFUND-8065
+    [Tags]
+    Given The user opens the link in new window  products-and-services-personalised-technical-approach.pdf, 7 KB
+    And The user opens the link in new window  products-and-services-personalised-innovation.pdf, 7 KB
+    And The user opens the link in new window  products-and-services-personalised-project-team.pdf, 7 KB
+    When the user clicks the button/link    jQuery=a:contains("6. Innovation")
+    And The user opens the link in new window  products-and-services-personalised-innovation.pdf, 7.94 KB
+    And the user goes back to the previous tab
 
 Scope: Status in the overview is updated
     [Documentation]    INFUND-1483

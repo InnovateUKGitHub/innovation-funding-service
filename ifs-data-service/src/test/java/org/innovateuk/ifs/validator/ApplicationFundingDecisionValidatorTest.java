@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.validator;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -24,7 +24,7 @@ public class ApplicationFundingDecisionValidatorTest {
     public void testIsValid_applicationInSubmittedStateShouldBeValid() throws Exception {
         Application application = newApplication()
                 .withFundingDecision(FundingDecisionStatus.FUNDED)
-                .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).build();
+                .withApplicationState(ApplicationState.SUBMITTED).build();
 
         boolean result = validator.isValid(application);
 
@@ -35,7 +35,7 @@ public class ApplicationFundingDecisionValidatorTest {
     public void testIsValid_applicationIsNotSubmittedShouldBeInvalid() throws Exception {
         Application application = newApplication()
                 .withFundingDecision(FundingDecisionStatus.FUNDED)
-                .withApplicationStatus(ApplicationStatusConstants.CREATED).build();
+                .withApplicationState(ApplicationState.CREATED).build();
 
         boolean result = validator.isValid(application);
 
@@ -46,7 +46,7 @@ public class ApplicationFundingDecisionValidatorTest {
     public void testIsValid_applicationIsSuccessfulWithNoNotificationSentShouldBeValid() throws Exception {
         Application application = newApplication()
                 .withFundingDecision(FundingDecisionStatus.FUNDED)
-                .withApplicationStatus(ApplicationStatusConstants.APPROVED).build();
+                .withApplicationState(ApplicationState.APPROVED).build();
 
         boolean result = validator.isValid(application);
 
@@ -57,8 +57,8 @@ public class ApplicationFundingDecisionValidatorTest {
     public void testIsValid_applicationIsSuccessfulWithNotificationSentShouldBeInvalid() throws Exception {
         Application application = newApplication()
                 .withFundingDecision(FundingDecisionStatus.FUNDED)
-                .withApplicationStatus(ApplicationStatusConstants.APPROVED)
-                .withManageFundingEmailDate(LocalDateTime.now()).build();
+                .withApplicationState(ApplicationState.APPROVED)
+                .withManageFundingEmailDate(ZonedDateTime.now()).build();
 
         boolean result = validator.isValid(application);
 
@@ -69,8 +69,8 @@ public class ApplicationFundingDecisionValidatorTest {
     public void testIsValid_applicationIsUnsuccessfulWithNotificationSentShouldBeValid() throws Exception {
         Application application = newApplication()
                 .withFundingDecision(FundingDecisionStatus.UNFUNDED)
-                .withApplicationStatus(ApplicationStatusConstants.REJECTED)
-                .withManageFundingEmailDate(LocalDateTime.now()).build();
+                .withApplicationState(ApplicationState.REJECTED)
+                .withManageFundingEmailDate(ZonedDateTime.now()).build();
 
         boolean result = validator.isValid(application);
 
@@ -81,12 +81,11 @@ public class ApplicationFundingDecisionValidatorTest {
     public void testIsValid_applicationIsUnsuccessfulWithNoNotificationsSentShouldBeValid() throws Exception {
         Application application = newApplication()
                 .withFundingDecision(FundingDecisionStatus.UNFUNDED)
-                .withApplicationStatus(ApplicationStatusConstants.REJECTED)
+                .withApplicationState(ApplicationState.REJECTED)
                 .build();
 
         boolean result = validator.isValid(application);
 
         assertTrue(result);
     }
-
 }

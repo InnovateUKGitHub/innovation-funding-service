@@ -1,19 +1,12 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -38,7 +31,8 @@ public class ApplicationSummaryDocs {
             fieldWithPath("content[].fundingDecision").description("The funding decision for the application"),
             fieldWithPath("content[].funded").description("Whether the application will be funded"),
             fieldWithPath("content[].innovationArea").description("The innovation area of the application"),
-            fieldWithPath("content[].manageFundingEmailDate").description("The date of the last  manage funding email sent")
+            fieldWithPath("content[].manageFundingEmailDate").description("The date of the last  manage funding email sent"),
+            fieldWithPath("content[].ineligibleInformed").description("Whether the applicant has been informed the application is ineligible")
     };
 
     public static final ApplicationSummaryResourceBuilder APPLICATION_SUMMARY_RESOURCE_BUILDER =
@@ -52,6 +46,7 @@ public class ApplicationSummaryDocs {
                     withGrantRequested(new BigDecimal("500"), new BigDecimal("1000"), new BigDecimal("1500"), new BigDecimal("2000"), new BigDecimal("2500")).
                     withInnovationArea("Earth Observation", "Internet of Things", "Data", "Cyber Security", "User Experience").
                     withLeadApplicant("A lead user").
-                    withManageFundingEmailDate(LocalDateTime.now()).
-                    withNumberOfPartners(1, 2, 3, 4, 5);
+                    withManageFundingEmailDate(ZonedDateTime.now()).
+                    withNumberOfPartners(1, 2, 3, 4, 5).
+                    withIneligibleInformed(true, true, true, false, false);
 }

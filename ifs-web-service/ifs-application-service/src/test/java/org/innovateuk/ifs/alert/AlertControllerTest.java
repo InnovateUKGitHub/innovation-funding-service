@@ -1,60 +1,45 @@
 package org.innovateuk.ifs.alert;
 
-import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.alert.resource.AlertType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
+@RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AlertControllerTest extends BaseUnitTest {
+public class AlertControllerTest extends BaseControllerMockMVCTest<AlertController> {
 
-    @InjectMocks
-    private AlertController alertController;
-
-    @Before
-    public void setUp() {
-
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-        mockMvc = setupMockMvc(alertController, () -> loggedInUser, env, messageSource);
-
-        super.setup();
-
-        when(alertService.findAllVisibleByType(AlertType.MAINTENANCE))
-                .thenReturn(
-                        asList(newAlertResource()
-                                .withId(1L)
-                                .withMessage("Test Maintenance")
-                                .withType(AlertType.MAINTENANCE)
-                                .withValidFromDate(LocalDateTime.now().minusDays(2))
-                                .withValidToDate(LocalDateTime.now().plusDays(2))
-                                .build())
-                );
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
+    @Override
+    protected AlertController supplyControllerUnderTest() {
+        return new AlertController();
     }
 
     @Test
-    public void testAlertMessage() throws Exception {
+    public void findAllVisibleByType() throws Exception {
+        when(alertRestService.findAllVisibleByType(AlertType.MAINTENANCE))
+                .thenReturn(
+                        restSuccess(asList(newAlertResource()
+                                .withId(1L)
+                                .withMessage("Test Maintenance")
+                                .withType(AlertType.MAINTENANCE)
+                                .withValidFromDate(ZonedDateTime.now().minusDays(2))
+                                .withValidToDate(ZonedDateTime.now().plusDays(2))
+                                .build()))
+                );
+
         mockMvc.perform(get("/alert/findAllVisibleByType/" + AlertType.MAINTENANCE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

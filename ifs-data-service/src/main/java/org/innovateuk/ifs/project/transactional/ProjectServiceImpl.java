@@ -26,34 +26,34 @@ import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.notifications.resource.*;
-import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
-import org.innovateuk.ifs.project.financecheck.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.financecheck.transactional.CostCategoryTypeStrategy;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
-import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
-import org.innovateuk.ifs.project.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -69,7 +69,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -82,7 +82,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -110,9 +109,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ProjectMapper projectMapper;
 
     @Autowired
-    private MonitoringOfficerMapper monitoringOfficerMapper;
-
-    @Autowired
     private AddressRepository addressRepository;
 
     @Autowired
@@ -134,10 +130,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private OrganisationMapper organisationMapper;
 
     @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
+    private  EmailService projectEmailService;
 
     @Autowired
     private FileService fileService;
@@ -150,9 +143,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
-
-    @Autowired
-    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
@@ -188,8 +178,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private String webBaseUrl;
 
     enum Notifications {
-        MONITORING_OFFICER_ASSIGNED,
-        MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
         INVITE_FINANCE_CONTACT,
         INVITE_PROJECT_MANAGER,
         GRANT_OFFER_LETTER_PROJECT_MANAGER,
@@ -233,10 +221,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
-        return getProject(projectId).
+    public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+        return getProject(composite.getProjectId()).
                 andOnSuccess(this::validateProjectIsInSetup).
-                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
+                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
                             andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                                     andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
@@ -287,7 +275,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> submitProjectDetails(final Long projectId, LocalDateTime date) {
+    public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
                 getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
@@ -310,7 +298,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
                 retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
@@ -318,7 +306,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         success -> setDocumentsSubmittedDate(project, date)));
     }
 
-    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
+    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, ZonedDateTime date) {
         project.setDocumentsSubmittedDate(date);
         return serviceSuccess();
     }
@@ -334,37 +322,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
                         serviceSuccess(true) :
                         serviceSuccess(false));
-    }
-
-    @Override
-    public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
-        return getExistingMonitoringOfficerForProject(projectId).andOnSuccessReturn(monitoringOfficerMapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
-
-        return validateMonitoringOfficer(projectId, monitoringOfficerResource).
-                andOnSuccess(() -> validateInMonitoringOfficerAssignableState(projectId)).
-                andOnSuccess(() -> saveMonitoringOfficer(monitoringOfficerResource));
-    }
-
-    @Override
-    public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
-
-        Project project = projectRepository.findOne(monitoringOfficer.getProject());
-        User projectManager = getExistingProjectManager(project).get().getUser();
-
-        NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
-        NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
-
-        Notification monitoringOfficerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, moTarget, ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
-        Notification projectManagerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, pmTarget, ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER, project, projectManager);
-
-        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(monitoringOfficerNotification, EMAIL);
-        ServiceResult<Void> pmAssignedEmailSendResult = notificationService.sendNotification(projectManagerNotification, EMAIL);
-
-        return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult, pmAssignedEmailSendResult));
     }
 
     @Override
@@ -568,119 +525,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 andOnSuccess(() -> project.setExploitationPlan(null));
     }
 
-    private NotificationTarget createPartnerNotificationTargets(final ProjectUser user) {
-        return new ExternalUserNotificationTarget(user.getUser().getName(), user.getUser().getEmail());
-    }
-
-    private Notification createLiveProjectNotification(List<NotificationTarget> notificationTargets, Enum template) {
-
-        return new Notification(systemNotificationSource, notificationTargets, template, emptyMap());
-    }
-
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
         String fullName = getProjectManagerFullName(projectManager);
 
         return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
     }
 
-    private Notification createMonitoringOfficerAssignedNotification(MonitoringOfficerResource monitoringOfficer, NotificationTarget notificationTarget, Enum template, final Project project, final User projectManager) {
-
-        Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager);
-
-        return new Notification(systemNotificationSource, singletonList(notificationTarget), template
-                , globalArguments, emptyMap());
-
-    }
-
-    private NotificationTarget createMonitoringOfficerNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
-
-        String fullName = getMonitoringOfficerFullName(monitoringOfficer);
-
-        return new ExternalUserNotificationTarget(fullName, monitoringOfficer.getEmail());
-
-    }
-
-    private String getMonitoringOfficerFullName(MonitoringOfficerResource monitoringOfficer) {
-        // At this stage, validation has already been done to ensure that first name and last name are not empty
-        return monitoringOfficer.getFirstName() + " " + monitoringOfficer.getLastName();
-    }
-
     private String getProjectManagerFullName(User projectManager) {
         // At this stage, validation has already been done to ensure that first name and last name are not empty
         return projectManager.getFirstName() + " " + projectManager.getLastName();
-    }
-
-    private Map<String, Object> createGlobalArgsForMonitoringOfficerAssignedEmail(MonitoringOfficerResource monitoringOfficer, Project project, User projectManager) {
-        Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("dashboardUrl", webBaseUrl);
-        globalArguments.put("projectName", project.getName());
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-        globalArguments.put("leadOrganisation", leadOrganisation.getName());
-        globalArguments.put("projectManagerName", getProjectManagerFullName(projectManager));
-        globalArguments.put("projectManagerEmail", projectManager.getEmail());
-        globalArguments.put("monitoringOfficerName", getMonitoringOfficerFullName(monitoringOfficer));
-        globalArguments.put("monitoringOfficerTelephone", monitoringOfficer.getPhoneNumber());
-        globalArguments.put("monitoringOfficerEmail", monitoringOfficer.getEmail());
-        return globalArguments;
-
-    }
-
-    private ServiceResult<Void> validateMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
-
-        if (!projectId.equals(monitoringOfficerResource.getProject())) {
-            return serviceFailure(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE);
-        } else {
-            return serviceSuccess();
-        }
-    }
-
-    private ServiceResult<Void> validateInMonitoringOfficerAssignableState(final Long projectId) {
-
-        return getProject(projectId).andOnSuccess(project -> {
-            if (!projectDetailsWorkflowHandler.isSubmitted(project)) {
-                return serviceFailure(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED);
-            } else {
-                return serviceSuccess();
-            }
-        });
-    }
-
-    private ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final MonitoringOfficerResource monitoringOfficerResource) {
-
-        return getExistingMonitoringOfficerForProject(monitoringOfficerResource.getProject()).handleSuccessOrFailure(
-                noMonitoringOfficer -> saveNewMonitoringOfficer(monitoringOfficerResource),
-                existingMonitoringOfficer -> updateExistingMonitoringOfficer(existingMonitoringOfficer, monitoringOfficerResource)
-        );
-    }
-
-    private boolean isMonitoringOfficerDetailsChanged(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
-        return !existingMonitoringOfficer.getFirstName().equals(updateDetails.getFirstName()) ||
-                !existingMonitoringOfficer.getLastName().equals(updateDetails.getLastName()) ||
-                !existingMonitoringOfficer.getEmail().equals(updateDetails.getEmail()) ||
-                !existingMonitoringOfficer.getPhoneNumber().equals(updateDetails.getPhoneNumber());
-    }
-
-    private ServiceResult<SaveMonitoringOfficerResult> updateExistingMonitoringOfficer(MonitoringOfficer existingMonitoringOfficer, MonitoringOfficerResource updateDetails) {
-        SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
-
-        if (isMonitoringOfficerDetailsChanged(existingMonitoringOfficer, updateDetails)) {
-            existingMonitoringOfficer.setFirstName(updateDetails.getFirstName());
-            existingMonitoringOfficer.setLastName(updateDetails.getLastName());
-            existingMonitoringOfficer.setEmail(updateDetails.getEmail());
-            existingMonitoringOfficer.setPhoneNumber(updateDetails.getPhoneNumber());
-        } else {
-            result.setMonitoringOfficerSaved(false);
-        }
-
-        return serviceSuccess(result);
-    }
-
-    private ServiceResult<SaveMonitoringOfficerResult> saveNewMonitoringOfficer(MonitoringOfficerResource monitoringOfficerResource) {
-        SaveMonitoringOfficerResult result = new SaveMonitoringOfficerResult();
-        MonitoringOfficer monitoringOfficer = monitoringOfficerMapper.mapToDomain(monitoringOfficerResource);
-        monitoringOfficerRepository.save(monitoringOfficer);
-        return serviceSuccess(result);
     }
 
     @Override
@@ -759,7 +612,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
-        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, bankDetailsStatus, isQueryActionRequired);
+        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
@@ -806,9 +659,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 
-        Notification notification = createInviteContactNotification(projectId, projectResource, kindOfNotification);
-        ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
         ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
+        ServiceResult<Void> inviteContactEmailSendResult = projectEmailService.sendEmail(singletonList(createInviteContactNotificationTarget(projectInvite)), createGlobalArgsForInviteContactEmail(projectId, projectResource), kindOfNotification);
         inviteContactEmailSendResult.handleSuccessOrFailure(
                 failure -> handleInviteError(projectInvite, failure),
                 success -> handleInviteSuccess(projectInvite)
@@ -817,7 +669,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private boolean handleInviteSuccess(ProjectInvite projectInvite) {
-        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), LocalDateTime.now()));
+        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return true;
     }
 
@@ -825,14 +677,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
-    }
-
-    private Notification createInviteContactNotification(Long projectId, InviteProjectResource projectResource, ProjectServiceImpl.Notifications kindOfNotification) {
-        Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, projectResource);
-        ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
-        NotificationTarget notificationTarget = createInviteContactNotificationTarget(projectInvite);
-        return new Notification(systemNotificationSource, singletonList(notificationTarget),
-                kindOfNotification, globalArguments, emptyMap());
     }
 
     private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
@@ -995,23 +839,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
 
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
-        ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> viabilityProcesses = createViabilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> eligibilityProcesses = createEligibilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, viabilityProcesses, eligibilityProcesses, golProcess, projectProcess);
-    }
-
-    private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
-
-        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
-                financeCheckWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
-                        serviceSuccess() :
-                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
-
-        return aggregate(results).andOnSuccessReturnVoid();
+        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, golProcess, projectProcess);
     }
 
     private ServiceResult<Void> createViabilityProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
@@ -1081,10 +914,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
     }
 
-    private ServiceResult<Project> getProject(long projectId) {
-        return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
-    }
-
     private ServiceResult<Project> getProjectByApplication(long applicationId) {
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
@@ -1137,15 +966,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
             }
 
-            NotificationSource from = systemNotificationSource;
             User projectManager = getExistingProjectManager(project).get().getUser();
             NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("dashboardUrl", webBaseUrl);
 
-            Notification notification = new Notification(from, singletonList(pmTarget), ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
-            ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
+            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER);
 
             if (!notificationResult.isSuccess()) {
                 return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
@@ -1172,8 +999,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Project project = projectRepository.findOne(projectId);
         List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
 
-        Notification partnerNotification = createLiveProjectNotification(notificationTargets, Notifications.PROJECT_LIVE);
-        ServiceResult<Void> sendEmailResult = notificationService.sendNotification(partnerNotification, EMAIL);
+        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, emptyMap(), Notifications.PROJECT_LIVE);
 
         return processAnyFailuresOrSucceed(sendEmailResult);
     }
