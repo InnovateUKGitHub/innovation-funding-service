@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * A helper component that can be wired into any service or controllers in data layers that requires getting partner organistions
+ * A helper component that can be wired into any service or controllers in data layers that requires getting partner organisations
  * Please keep extending this with any other useful methods so we avoid reinventing.
  */
 @Component
