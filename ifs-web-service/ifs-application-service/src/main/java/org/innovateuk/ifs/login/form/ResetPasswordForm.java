@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.login.form;
 
-import org.innovateuk.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;

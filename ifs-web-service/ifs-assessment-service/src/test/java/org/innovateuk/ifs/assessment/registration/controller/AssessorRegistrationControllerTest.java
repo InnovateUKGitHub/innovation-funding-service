@@ -140,7 +140,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         expectedForm.setEthnicity(ethnicity);
         expectedForm.setDisability(disability);
         expectedForm.setPassword(password);
-        expectedForm.setRetypedPassword(password);
 
         AddressForm addressForm = expectedForm.getAddressForm();
 
@@ -205,7 +204,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         expectedForm.setEthnicity(ethnicity);
         expectedForm.setDisability(disability);
         expectedForm.setPassword(password);
-        expectedForm.setRetypedPassword(password);
 
         AddressForm addressForm = expectedForm.getAddressForm();
 
@@ -289,7 +287,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         assertEquals(ethnicity, form.getEthnicity());
         assertEquals(disability, form.getDisability());
         assertEquals(password, form.getPassword());
-        assertEquals(password, form.getRetypedPassword());
 
         BindingResult bindingResult = form.getBindingResult();
 
