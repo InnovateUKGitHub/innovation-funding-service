@@ -1040,7 +1040,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         assertEquals(expectedEligibilityApprovalUserFirstName, returnedEligibilityResource.getEligibilityApprovalUserFirstName());
         assertEquals(expectedEligibilityApprovalUserLastName, returnedEligibilityResource.getEligibilityApprovalUserLastName());
-        assertEquals(expectedEligibilityApprovalDate, returnedEligibilityResource.getEligibilityApprovalDate());
+        if (expectedEligibilityApprovalDate != null) {
+            assertEquals(expectedEligibilityApprovalDate, returnedEligibilityResource.getEligibilityApprovalDate());
+        }
 
     }
 
