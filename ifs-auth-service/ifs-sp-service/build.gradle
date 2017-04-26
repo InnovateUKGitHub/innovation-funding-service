@@ -20,12 +20,14 @@ def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
 
 
 task prepareDockerFile(type: Copy) {
-    assert file(spProxyKeyFile).exists() 
-    assert file(spProxyCertificateFile).exists() 
-    assert file(spProxyCacertificateFile).exists() 
+    doFirst {
+        assert file(spProxyKeyFile).exists() 
+        assert file(spProxyCertificateFile).exists() 
+        assert file(spProxyCacertificateFile).exists() 
 
-    assert file(idpSigningCertificateFile).exists() 
-    assert file(idpEncryptionCertificateFile).exists() 
+        assert file(idpSigningCertificateFile).exists() 
+        assert file(idpEncryptionCertificateFile).exists() 
+    }
 
     outputs.upToDateWhen { false }
 
