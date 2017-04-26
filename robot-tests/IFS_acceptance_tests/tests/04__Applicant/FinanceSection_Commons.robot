@@ -133,15 +133,15 @@ the user chooses Calculate overheads option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     and the user clicks the button/link     jQuery=label:contains("Calculate overheads")
     then the user should see the element     jQuery=h3:contains("Calculate overheads")
-    and the user uploads the file      css=input[id="overheadfile"]   ${excel_file}
+    and the user uploads the file      css=#overheadfile   ${excel_file}
     wait for autosave
-    and the user enters text to a text field    jQuery=input[name^="overheads-total"][id^="cost-overheads"]   40
+    and the user enters text to a text field    css=input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
-    and the total overhead costs should reflect rate entered    jQuery=input[id="total-cost"]   £ 185,997
+    and the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    the element should be disabled      jQuery=input[id="total-cost"]
+    the element should be disabled      css=#total-cost
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
 
 the user chooses 20% overheads option

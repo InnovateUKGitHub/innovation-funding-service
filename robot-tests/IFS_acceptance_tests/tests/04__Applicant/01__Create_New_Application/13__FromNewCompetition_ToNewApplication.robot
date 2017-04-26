@@ -483,7 +483,7 @@ the user completes the new account creation
     the user clicks the button/link        jQuery=button:contains("Search")
     wait for autosave
     the user clicks the button/link        jQuery=a:contains("INNOVATE LTD")
-    the user should not see the text in the page      Organisation type
+    # the user should not see the text in the page      Organisation type
     the user selects the checkbox     address-same
     wait for autosave
     the user clicks the button/link     jQuery=button:contains("Continue")
