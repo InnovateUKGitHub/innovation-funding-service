@@ -30,7 +30,6 @@ ${EMPIRE_LTD_NAME}    Empire Ltd
 #Competitions and Applications Variables
 ${OPEN_COMPETITION_NAME}                  Predicting market trends programme
 ${OPEN_COMPETITION}                       ${competition_ids['${OPEN_COMPETITION_NAME}']}
-${OPEN_COMPETITION_INNOVATION_AREAS}      Assembly / disassembly / joining, Digital manufacturing, Forming technologies
 ${OPEN_COMPETITION_NAME_2}                Home and industrial efficiency programme
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}      Climate science the history of Greenland\'s ice
@@ -54,7 +53,6 @@ ${NOT_EDITABLE_COMPETITION_NAME}          Integrated delivery programme - low ca
 ${NOT_EDITABLE_COMPETITION}               ${competition_ids['${NOT_EDITABLE_COMPETITION_NAME}']}
 ${FUNDERS_PANEL_COMPETITION_NAME}         Internet of Things
 ${FUNDERS_PANEL_COMPETITION_NUMBER}       ${competition_ids['${FUNDERS_PANEL_COMPETITION_NAME}']}
-${FUNDERS_PANEL_COMPETITION_INNOVATION_AREAS}   Assembly / disassembly / joining, Digital manufacturing, Forming technologies, Materials, process and manufacturing design technologies
 ${FUNDERS_PANEL_APPLICATION_1_TITLE}      Sensing & Control network using the lighting infrastructure
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_1_TITLE}']}
 ${FUNDERS_PANEL_APPLICATION_1_HEADER}     ${FUNDERS_PANEL_APPLICATION_1_TITLE}
@@ -64,7 +62,6 @@ ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    12
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    Empire Ltd
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}
-${IN_ASSESSMENT_COMPETITION_INNOVATION_AREAS}   Assembly / disassembly / joining, Digital manufacturing, Forming technologies, Materials, process and manufacturing design technologies, Nanotechnology / nanomaterials
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
 ${IN_ASSESSMENT_APPLICATION_1}            ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_1_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
@@ -153,7 +150,6 @@ ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
-${CLOSED_COMPETITION_INNOVATION_AREAS}     Energy systems, Smart infrastructure, Urban living
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
 ${CURRENTLY_WAITING_UNTIL}      false

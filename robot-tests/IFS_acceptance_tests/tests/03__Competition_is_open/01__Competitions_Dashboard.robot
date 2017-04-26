@@ -21,7 +21,7 @@ Competition dashboard Open competition
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
-    And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("${OPEN_COMPETITION_INNOVATION_AREAS}")
+    And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Digital manufacturing")
     And the user should see the element    link=View and update competition setup
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     And the user should see the element    jQuery=a:contains("Applications: All, submitted, ineligible")

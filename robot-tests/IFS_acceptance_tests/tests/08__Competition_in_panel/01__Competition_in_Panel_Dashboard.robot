@@ -10,7 +10,7 @@ In Panel Dashboard
     Given the user navigates to the page  ${CA_Live}
     Then the user should see the element  jQuery=section:contains("Panel") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
     And the user should see the element   jQuery=div:Contains("Internet of Things") + div:contains("Programme")
-    And the user should see the element   jQuery=div:Contains("Internet of Things") + div:contains("${FUNDERS_PANEL_COMPETITION_INNOVATION_AREAS}")
+    And the user should see the element   jQuery=div:Contains("Internet of Things") + div:contains("Digital manufacturing")
     And the user should see the element   jQuery=div:Contains("Internet of Things") + div:contains("applicants")
     When the user clicks the button/link  link=${FUNDERS_PANEL_COMPETITION_NAME}
     Then the user should not see the element      link=View and update competition setup
