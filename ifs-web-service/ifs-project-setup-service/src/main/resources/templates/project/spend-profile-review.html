@@ -55,13 +55,13 @@
                               th:text="${partner.value.organisationName}" />
                     <th:block th:if="${partner.value.organisationName.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                 </h3>
-                <div th:unless="${partner.value.markedComplete}" class="notification">
-                    In progress
-                </div>
-                <div th:if="${partner.value.markedComplete}" class="task-status-complete">
-                    <span>Complete</span>
-                </div>
             </div>
+            <div th:if="${partner.value.markedComplete}" class="task-status-complete">
+                <span>Complete</span>
+            </div>
+            <span th:unless="${partner.value.markedComplete}" class="notification">
+                In progress
+            </span>
         </li>
     </ul>
 
