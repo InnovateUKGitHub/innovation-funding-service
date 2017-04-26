@@ -59,7 +59,7 @@ import static org.springframework.web.util.UriUtils.encodeQueryParam;
 /**
  * This Controller handles the users request to create an organisation. This is done when the users creates a new account. In most cases the user will first
  * choose his organisation Type in the AcceptInviteController. Pending on that choice, the related form will be rendered with this controller.
- * <p>
+ *
  * This controller is using the OrganisationSearchRestService to provide the user a quick way to reuse information about a existing organisation.OrganisationSearchRestService
  */
 @Controller
