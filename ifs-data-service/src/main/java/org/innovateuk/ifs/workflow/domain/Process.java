@@ -30,8 +30,8 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
 
     private LocalDate startDate;
     private LocalDate endDate;
+
     @Version
-    @SuppressWarnings("unused")
     private int version = 0;
 
     @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
