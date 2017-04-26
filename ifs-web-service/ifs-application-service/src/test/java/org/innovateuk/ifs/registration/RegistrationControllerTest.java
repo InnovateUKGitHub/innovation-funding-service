@@ -251,7 +251,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(organisationCookie)
                 .param("email", "")
                 .param("password", "")
-                .param("retypedPassword", "")
                 .param("title", "")
                 .param("firstName", "")
                 .param("lastName", "")
@@ -262,7 +261,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "phoneNumber"))
@@ -311,12 +309,10 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie(organisationCookie)
                 .param("password", "12345")
-                .param("retypedPassword", "123456789012345678901234567890123")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "password"));
     }
 
 
@@ -342,7 +338,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("phoneNumber", "012345678")
                 .param("termsAndConditions", "1")
                 .param("password", "Password123")
-                .param("retypedPassword", "Password123")
                 .param("gender", Gender.MALE.toString())
                 .param("ethnicity", "3")
                 .param("disability", Disability.NO.toString())
@@ -350,22 +345,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"));
-    }
-
-    @Test
-    public void unmatchedPasswordAndRetypePasswordShouldReturnError() throws Exception {
-        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-
-        mockMvc.perform(post("/registration/register")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .cookie(organisationCookie)
-                .param("password", "12345678")
-                .param("retypedPassword", "123456789")
-        )
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"));
     }
 
     @Test
