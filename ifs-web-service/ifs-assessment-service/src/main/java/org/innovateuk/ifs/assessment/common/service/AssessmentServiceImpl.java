@@ -62,8 +62,8 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public void acceptInvitation(Long assessmentId) {
-        assessmentRestService.acceptInvitation(assessmentId).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> acceptInvitation(Long assessmentId) {
+        return assessmentRestService.acceptInvitation(assessmentId).toServiceResult();
     }
 
     @Override

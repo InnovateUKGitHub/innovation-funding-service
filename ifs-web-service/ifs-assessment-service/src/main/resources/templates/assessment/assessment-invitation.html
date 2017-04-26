@@ -52,19 +52,19 @@
                 <li>you have time to assess this application</li>
             </ul>
 
-            <form th:action="@{/{assessmentId}/assignment/accept(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
+            <form th:action="@{/{assessmentId}/assignment/respond(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
                 <div class="form-group">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Select your ability to assess this application</span>
-                            <!-- <th:block th:if="${#fields.hasErrors('assessmentChoice')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('assessmentChoice')}" th:text="${err}" />
-                            </th:block> -->
+                            <th:block th:if="${#fields.hasErrors('assessmentAccept')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
+                            </th:block>
                         </legend>
 
                         <div class="form-block">
-                            <label class="block-label selection-button-radio" data-target="accept-application" for="updateMe">
-                                <input id="updateMe" name="update" type="radio" required="required">
+                            <label class="block-label selection-button-radio" data-target="accept-application" for="acceptAssessment">
+                                <input id="acceptAssessment" value="true" th:field="*{assessmentAccept}" type="radio" required="required">
                                 Accept, I am able to assess this application
                             </label>
                         </div>
@@ -73,8 +73,8 @@
                         </div>
 
                         <div class="form-block">
-                            <label class="block-label selection-button-radio" data-target="reject-application" for="updateMe2">
-                                <input id="updateMe2" name="update" type="radio" required="required">
+                            <label class="block-label selection-button-radio" data-target="reject-application" for="rejectAssessment">
+                                <input id="rejectAssessment" value="false" th:field="*{assessmentAccept}" type="radio" required="required">
                                 Reject, I am not able to assess this application
                             </label>
                         </div>
@@ -88,9 +88,9 @@
                                 </label>
                                 <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                                     <option value="">Select a reason</option>
-                                    <option th:each="reason : ${rejectionReasons}"
-                                            th:value="${reason.id}"
-                                            th:text="${reason.reason}"
+                                    <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
+                                            th:value="${reason}"
+                                            th:text="${reason.displayLabel}"
                                             value="1">Not available</option>
                                 </select>
                             </div>
