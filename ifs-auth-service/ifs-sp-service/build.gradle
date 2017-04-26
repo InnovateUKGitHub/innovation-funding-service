@@ -55,8 +55,7 @@ task buildDocker(type: Docker) {
     dependsOn prepareDockerFile
 
     push = false
-    applicationName = 'innovateuk/ifs-sp-service'
-    tagVersion = '1.1.0-SNAPSHOT'
+    applicationName = 'sp-service'
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
         copy {
@@ -70,8 +69,4 @@ task buildDocker(type: Docker) {
             into "${stageDir}/files/apache2"
         }
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
 }

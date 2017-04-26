@@ -39,7 +39,7 @@ services:
           - iuk-auth-localdev
 
   ldap:
-    image: innovateuk/ifs-ldap:0.4.0
+    image: innovateuk/ldap-service:@version@
     healthcheck:
       test: ["CMD", "ldapsearch", "-h", "localhost", "-p", "389", "-b", "dc=nodomain", "-x", "-LLL", "-s", "base"]
       interval: 15s
@@ -47,9 +47,9 @@ services:
     ports:
       - "389:389"
     environment:
-      - "LDAPPORT=389"
+      - "LDAP_PORT=389"
     networks:
-      ifs:
+      - ifs
 
   application-svc:
     image: innovateuk/application-service:@version@

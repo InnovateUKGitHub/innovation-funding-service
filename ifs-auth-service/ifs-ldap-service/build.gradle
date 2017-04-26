@@ -25,8 +25,7 @@ task buildDocker(type: Docker) {
     dependsOn prepareDockerFile
 
     push = false
-    applicationName = 'innovateuk/ifs-ldap-service'
-    tagVersion = '1.1.0-SNAPSHOT'
+    applicationName = 'ldap-service'
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
         copy {
@@ -34,8 +33,4 @@ task buildDocker(type: Docker) {
             into "${stageDir}/scripts"
         }
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
 }
