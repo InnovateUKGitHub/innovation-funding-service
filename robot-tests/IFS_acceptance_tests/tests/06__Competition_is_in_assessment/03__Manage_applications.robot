@@ -127,6 +127,28 @@ Assessor should not see the removed application
     When The user clicks the button/link    link=Sustainable living models for the future
     Then The user should not see the element    Link=Living with Augmented Reality
 
+Re-assign and notify an assessor (Notified)
+    [Documentation]    INFUND-7048
+    [Tags]
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
+    And the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
+    And the user should see the text in the page    Previously assigned (1)
+    And the user clicks the button/link    jQuery=tr:contains("Paul Plum") button:contains("Re-assign")
+    Then the user should see the text in the page    Assigned (1)
+    And the assigned list is correct before notification
+    And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Competition")
+    And the user clicks the button/link    jQuery=button:contains("Notify assessors")
+    And the element should be disabled    jQuery=button:contains("Notify assessors")
+
+Assessor should see the re-assigned application
+    [Documentation]    INFUND-7050
+    [Setup]    Log in as a different user    email=paul.plum@gmail.com    password=Passw0rd
+    When The user clicks the button/link    link=Sustainable living models for the future
+    Then The user should see the element    Link=Living with Augmented Reality
+
 *** Keywords ***
 the application list is correct before changes
     the user should see the element    jQuery=tr:nth-child(1) td:contains(The Best Juggling Company)
