@@ -79,7 +79,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testGetDateByTypeAndCompetitionId() throws Exception {
+    public void testGetMilestoneByTypeAndCompetitionId() throws Exception {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccessObject();
@@ -88,7 +88,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testGetNullDateByTypeAndCompetitionId() throws Exception {
+    public void testGetMilestoneByTypeAndCompetitionIdWithNullDate() throws Exception {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccessObject();
@@ -96,7 +96,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testGetDateByTypeAndCompetitionIdReturns404WhenNotPresent() throws Exception {
+    public void testGetMilestoneByTypeAndCompetitionIdReturns404WhenNotPresent() throws Exception {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, COMPETITION_ID_INVALID);
         assertTrue(milestoneResult.isFailure());
         assertEquals(milestoneResult.getErrors().size(), 1);
