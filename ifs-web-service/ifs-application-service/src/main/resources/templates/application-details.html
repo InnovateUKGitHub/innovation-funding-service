@@ -11,7 +11,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.currentCompetition}"></th:block>
 
     <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
   	<th:block th:insert="fragments/elements :: competition-status-message (app=${model.currentApplication}, competition=${model.currentCompetition})" />
