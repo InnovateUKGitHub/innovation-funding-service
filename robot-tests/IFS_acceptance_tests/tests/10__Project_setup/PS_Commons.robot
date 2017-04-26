@@ -150,3 +150,6 @@ ${internal_spend_profile_approval}    ${server}/project-setup-management/project
 ${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 
 ${ELBOW_GREASE_PROJECT_ID}  4
+
+
+*** Keywords ***

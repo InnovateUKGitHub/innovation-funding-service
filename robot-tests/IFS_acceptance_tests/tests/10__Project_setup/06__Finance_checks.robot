@@ -85,7 +85,7 @@ Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Commons.robot
 Resource          ../04__Applicant/FinanceSection_Commons.robot
 
 *** Variables ***

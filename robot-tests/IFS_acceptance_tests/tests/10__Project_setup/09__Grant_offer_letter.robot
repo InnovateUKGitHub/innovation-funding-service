@@ -32,7 +32,7 @@ Suite Setup       all the other sections of the project are completed (except sp
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Commons.robot
 
 *** Test Cases ***
 

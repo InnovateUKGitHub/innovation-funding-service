@@ -25,7 +25,7 @@ Suite Setup       Log in as user  &{collaborator1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Commons.robot
 
 *** Variables ***
 

@@ -65,7 +65,7 @@ Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Commons.robot
 
 *** Variables ***
 ${project_overview}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
