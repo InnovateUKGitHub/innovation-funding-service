@@ -70,7 +70,7 @@
                         <li th:each="childSection : ${model.section.subSections.get(section.id)}">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="'/application/'+${model.currentApplication.getId()}+'/form/section/'+${childSection.getId()}"
+                                    <a th:href="'/application/'+${model.currentApplication.id}+'/form/section/'+${childSection.id}"
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
@@ -88,8 +88,8 @@
         </th:block>
     </form>
 
-    <a class="button"  th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}" th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
-    <a class="button button-clear" th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}" rel="nofollow" target="_blank"><span class="icon icon-print"></span> Print your application</a>
+    <a class="button"  th:href="@{/application/{id}/summary(id=${model.currentApplication.id})}" th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
+    <a class="button button-clear" th:href="@{/application/{id}/print(id=${model.currentApplication.id})}" rel="nofollow" target="_blank"><span class="icon icon-print"></span> Print your application</a>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />
