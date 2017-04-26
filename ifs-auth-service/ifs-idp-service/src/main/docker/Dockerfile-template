@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
   LDAPUSESTARTTLS=false \
   LDAPBASEDN="dc=nodomain" \
   LDAPBINDDN="cn=admin,dc=nodomain" \
-  LDAPBINDDNCRED="test" \
+  LDAPBINDDNCRED="default" \
   LDAPPPOLICYDN="cn=PPolicy,ou=Policies" \
   LDAPPPOLICY="true" \
   LDAPUSERFILTER="(&(mail={user})(!(employeeType=inactive)))" \
@@ -28,17 +28,34 @@ ENV DEBIAN_FRONTEND=noninteractive \
   LDAPRRETURNATTRIBUTE="mail,uid" \
   LDAPVALIDATEPERIOD="PT20S" \
   REGAPIKEY=@auth_idp_regapikey@ \
-  REGAPIVER="0.0.13"
+  REGAPIVER="0.0.16" \
+  IDP_PROXY_KEY="idp_proxy_key.pem" \
+  IDP_PROXY_CERTIFICATE="idp_proxy_certificate.pem" \
+  IDP_PROXY_CACERTIFICATE="idp_proxy_cacertificate.pem" \
+  SP_PROXY_CERTIFICATE="sp_proxy_certificate.pem" \
+  IDP_SIGNING_KEY="idp-signing.key" \
+  IDP_SIGNING_CERTIFICATE="idp-signing.crt" \
+  IDP_ENCRYPTION_KEY="idp-encryption.key" \
+  IDP_ENCRYPTION_CERTIFICATE="idp-encryption.crt"
+
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
 ENV JRE_HOME=${JAVA_HOME}/jre
 #
 # Apache layer
 COPY apache /apache/
+COPY certs /apache/
 RUN apt-get update --fix-missing && \
-  apt-get -y install lsb-release grep lsof net-tools curl wget openssl rsync ldap-utils vim apache2 && \
+
+# install apache \
+  apt-get -y install grep lsof net-tools curl wget openssl rsync ldap-utils apache2 && \
   apt-get autoclean && apt-get --purge -y autoremove && \
+
+# put certificates in place \
   mkdir /etc/apache2/certs && chown root:www-data /etc/apache2/certs && chmod 775 /etc/apache2/certs && \
-  mv /apache/server.[kc]* /etc/apache2/certs/ && mv /apache/DigiCertCA.crt /etc/apache2/certs/ && \
+  mv "/apache/$IDP_PROXY_KEY" "/apache/$IDP_PROXY_CERTIFICATE" /etc/apache2/certs/ && \
+  mv "/apache/$IDP_PROXY_CACERTIFICATE" /etc/apache2/certs/ && \
+
+# configure apache \
   mv /apache/ssl.conf /etc/apache2/mods-available/ssl.conf && \
   mv /apache/ob_defaults.conf /etc/apache2/conf-available/ && \
   ln -s /etc/apache2/conf-available/ob_defaults.conf /etc/apache2/conf-enabled/ob_defaults.conf && \
@@ -59,22 +76,26 @@ RUN apt-get update --fix-missing && \
     /var/log/apache2 \
     /var/lib/apache2  && \
   rm -rf /apache /tmp/* /var/tmp/*
-#
+
 # Java layer
-RUN apt-get -y install ca-certificates gcc libc6-dev libssl-dev make --no-install-recommends openssl && \
+RUN apt-get -y install ca-certificates gcc libc6-dev libssl-dev make --no-install-recommends openssl unzip && \
   curl --connect-timeout 30 -m 120 -L -s --retry 5 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
     http://download.oracle.com/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/server-jre-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz | tar -C /tmp -xz && \
   mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${JAVAVER}.0_${JAVAUPD} ${JAVA_HOME} && \
-  apt-get autoclean && apt-get remove --purge --auto-remove -y gcc libc6-dev libssl-dev make && \
+  curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/unlimited_jce_policy.zip "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" && \
+  unzip -jo -d ${JAVA_HOME}/jre/lib/security /tmp/unlimited_jce_policy.zip && \
+  apt-get autoclean && apt-get remove --purge --auto-remove -y gcc libc6-dev libssl-dev make unzip && \
   update-alternatives --install "/usr/bin/java" "java" "${JRE_HOME}/bin/java" 1 && \
   update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 && \
   update-alternatives --set java "${JRE_HOME}/bin/java" && \
   update-alternatives --set javac "${JAVA_HOME}/bin/javac" && \
   rm -rf /tmp/* /var/tmp/*
-#
+
+
 # idp layer, which includes tomcat8 and idp
 # default-jre-headless-dummy_1.0_all.deb prevents openjdk being installed and saves 100Mb or so.
 COPY idp/* /idp/
+COPY certs /idp/
 COPY default-jre-headless-dummy_1.0_all.deb /tmp/
 RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f /tmp/default-jre-headless-dummy_1.0_all.deb && \
   apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java java-common ucf && \
@@ -98,6 +119,9 @@ RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f
   chown -R .tomcat8 /opt/shibboleth-idp/conf /opt/shibboleth-idp/credentials && chmod -R g+r /opt/shibboleth-idp/conf && \
   mkdir /etc/shibboleth && chmod 755 /etc/shibboleth && \
   mv /idp/metadata.xml /etc/shibboleth/ && \
+  cp "/idp/$IDP_SIGNING_CERTIFICATE" /etc/shibboleth/ && \
+  cp "/idp/$IDP_ENCRYPTION_CERTIFICATE" /etc/shibboleth/ && \
+  cp "/idp/$SP_PROXY_CERTIFICATE" /etc/shibboleth/ && \
   cd /opt/shibboleth-idp/conf/ && \
   mv /idp/*.properties . && \
   mv /idp/*.xml . && \
@@ -106,7 +130,6 @@ RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f
   mv /idp/idp-encryption.* . && \
   mv /idp/sealer.* . && \
   cp /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
-  mv /idp/jstl-1.2.jar /usr/share/tomcat8/lib/ && \
   mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
   chgrp -R 0 /etc/shibboleth \
     /etc/apache2 \
@@ -128,7 +151,7 @@ RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f
   rm -rf /idp /tmp/* /var/tmp/*
 #
 # Custom govuk pages
-COPY innovation-funding-service/ifs-auth-service /ifs-custom-pages/
+COPY pages /ifs-custom-pages/
 RUN cp -a /ifs-custom-pages/* /opt/shibboleth-idp/ && \
     rm -rf /ifs-custom-pages
 #
@@ -137,5 +160,5 @@ COPY scripts/* /usr/local/bin/
 RUN cd /usr/local/bin && \
   chgrp -R 0 *.sh && chmod ug+rx *.sh  && \
   mv startup-run.sh startup.sh
-#
+
 ENTRYPOINT [ "startup.sh" ]

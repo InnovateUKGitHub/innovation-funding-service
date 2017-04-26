@@ -2,7 +2,7 @@ version: '3'
 services:
 
   shib:
-    image: innovateuk/ifs-shib-sp:0.5.2
+    image: innovateuk/sp-service:@version@
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:443/Shibboleth.sso/Metadata"]
       interval: 15s
@@ -10,17 +10,17 @@ services:
     ports:
       - "443:443"
     environment:
-      - "SPHOST=ifs.local-dev"
-      - "IDPHOST=auth.local-dev:9443"
-      - "HTTPSPORT=443"
-      - "HTTPPORT=80"
+      - "SP_DOMAIN=ifs.local-dev"
+      - "IDP_DOMAIN=auth.local-dev:9443"
+      - "HTTPS_PORT=443"
+      - "HTTP_PORT=80"
     networks:
       ifs:
         aliases:
           - ifs.local-dev
 
   idp:
-    image: innovateuk/ifs-shib-idp:0.6.1
+    image: innovateuk/idp-service:@version@
     healthcheck:
       test: ["CMD", "curl", "-k", "-f", "https://localhost:9443/"]
       interval: 15s

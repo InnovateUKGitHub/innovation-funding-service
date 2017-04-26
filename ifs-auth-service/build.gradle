@@ -10,6 +10,10 @@ project(':ifs-auth-service:ifs-sp-service').bootRepackage {
     onlyIf{ Task task -> false}
 }
 
+project(':ifs-auth-service:ifs-idp-service').bootRepackage {
+    onlyIf{ Task task -> false}
+}
+
 buildscript {
     repositories { mavenCentral() }
 }
