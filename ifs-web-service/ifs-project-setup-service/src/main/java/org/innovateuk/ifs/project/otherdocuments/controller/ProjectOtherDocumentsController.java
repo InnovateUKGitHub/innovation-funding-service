@@ -115,7 +115,6 @@ public class ProjectOtherDocumentsController {
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form, () -> {
-
             MultipartFile file = form.getCollaborationAgreement();
 
             return projectService.addCollaborationAgreementDocument(projectId, file.getContentType(), file.getSize(),
