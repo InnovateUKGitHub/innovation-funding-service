@@ -11,11 +11,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
-
-            <div class="hgroup">
-                <h1 class="heading-xlarge">Assessor agreement</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor agreement',size='heading-xlarge'" />
             <p>Please read through all of the terms of service before agreeing.</p>
 
             <!--/* TODO INFUND-8899 ifs:utext is stripping relative links in the text. Switching to using th:utext. */-->
