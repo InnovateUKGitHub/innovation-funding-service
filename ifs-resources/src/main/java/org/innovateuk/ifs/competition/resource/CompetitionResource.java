@@ -50,7 +50,7 @@ public class CompetitionResource {
     private Long innovationSector;
     private String innovationSectorName;
     private Set<Long> innovationAreas;
-    private SortedSet<String> innovationAreaNames;
+    private Set<String> innovationAreaNames;
 
     private String pafCode;
     private String budgetCode;
@@ -389,12 +389,12 @@ public class CompetitionResource {
         this.innovationSectorName = innovationSectorName;
     }
 
-    public SortedSet<String> getInnovationAreaNames() {
+    public Set<String> getInnovationAreaNames() {
         return innovationAreaNames;
     }
 
-    public void setInnovationAreaNames(SortedSet<String> innovationAreaNames) {
-        this.innovationAreaNames = innovationAreaNames;
+    public void setInnovationAreaNames(Set<String> innovationAreaNames) {
+        this.innovationAreaNames = new TreeSet<>(innovationAreaNames);
     }
 
     public Set<Long> getResearchCategories() {

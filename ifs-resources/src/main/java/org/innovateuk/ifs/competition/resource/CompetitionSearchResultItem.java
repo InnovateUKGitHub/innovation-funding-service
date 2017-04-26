@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
-import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A summary of competition information displayed during competition search
@@ -14,7 +14,7 @@ public class CompetitionSearchResultItem {
 
     private Long id;
     private String name;
-    private SortedSet<String> innovationAreaNames;
+    private Set<String> innovationAreaNames;
     private Integer numberOfApplications;
     private String startDateDisplay;
     private CompetitionStatus competitionStatus;
@@ -26,12 +26,12 @@ public class CompetitionSearchResultItem {
     CompetitionSearchResultItem() {
     }
 
-    public CompetitionSearchResultItem(Long id, String name, SortedSet<String> innovationAreaNames, Integer numberOfApplications,
+    public CompetitionSearchResultItem(Long id, String name, Set<String> innovationAreaNames, Integer numberOfApplications,
                                        String startDateDisplay, CompetitionStatus competitionStatus,
                                        String competitionTypeName, Integer projectsCount, ZonedDateTime publishDate) {
         this.id = id;
         this.name = name;
-        this.innovationAreaNames = innovationAreaNames;
+        this.innovationAreaNames = new TreeSet<>(innovationAreaNames);
         this.numberOfApplications = numberOfApplications;
         this.startDateDisplay = startDateDisplay;
         this.competitionStatus = competitionStatus;
@@ -48,12 +48,12 @@ public class CompetitionSearchResultItem {
         this.id = id;
     }
 
-    public SortedSet<String> getInnovationAreaNames() {
+    public Set<String> getInnovationAreaNames() {
         return innovationAreaNames;
     }
 
-    public void setInnovationAreaNames(SortedSet<String> innovationAreaNames) {
-        this.innovationAreaNames = innovationAreaNames;
+    public void setInnovationAreaNames(Set<String> innovationAreaNames) {
+        this.innovationAreaNames = new TreeSet<>(innovationAreaNames);
     }
 
     public Integer getNumberOfApplications() {
