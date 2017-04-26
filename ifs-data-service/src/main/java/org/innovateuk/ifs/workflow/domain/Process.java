@@ -28,7 +28,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     protected ActivityState activityState;
 
     @LastModifiedDate
-    private ZonedDateTime lastModified;
+    private ZonedDateTime lastModified = ZonedDateTime.now();
 
     private LocalDate startDate;
     private LocalDate endDate;

@@ -931,7 +931,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         assertEquals(expectedViabilityApprovalUserFirstName, returnedViabilityResource.getViabilityApprovalUserFirstName());
         assertEquals(expectedViabilityApprovalUserLastName, returnedViabilityResource.getViabilityApprovalUserLastName());
-        assertEquals(expectedViabilityApprovalDate, returnedViabilityResource.getViabilityApprovalDate());
+        if (expectedViabilityApprovalDate != null) {
+            assertEquals(expectedViabilityApprovalDate, returnedViabilityResource.getViabilityApprovalDate());
+        }
     }
 
     @Test

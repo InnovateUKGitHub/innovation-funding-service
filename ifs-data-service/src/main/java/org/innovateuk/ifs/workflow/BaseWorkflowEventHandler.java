@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.workflow;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -9,8 +11,6 @@ import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.innovateuk.ifs.workflow.resource.OutcomeType;
 import org.innovateuk.ifs.workflow.resource.ProcessStates;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
@@ -20,7 +20,6 @@ import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
 
 import javax.annotation.PostConstruct;
-import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction.testingStateTransition;
@@ -73,7 +72,6 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
             processToUpdate.setActivityState(newState);
             processToUpdate.setProcessEvent(message.getPayload().getType());
 
-            processToUpdate.setLastModified(ZonedDateTime.now());
             getProcessRepository().save(processToUpdate);
         }
     }

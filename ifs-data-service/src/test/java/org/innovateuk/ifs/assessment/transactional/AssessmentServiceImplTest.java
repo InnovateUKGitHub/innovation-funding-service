@@ -549,7 +549,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         Assessment expectedAssessment = newAssessment()
-                .with(id(null))
+                .withId()
                 .withApplication(application)
                 .withActivityState(activityState)
                 .withParticipant(savedProcessRole)
