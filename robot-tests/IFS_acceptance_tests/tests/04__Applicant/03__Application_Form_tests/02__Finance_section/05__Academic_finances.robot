@@ -4,22 +4,25 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-918: As an academic partner i want to be able to mark my finances as complete, so that the lead partner can have confidence in my finances
 ...
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
+...
+...               INFUND-8347: Update 'Your project costs' for academics
 Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
 Suite Teardown    the user closes the browser
-Force Tags        Email    Applicant    Pending
+Force Tags        Email    Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
-#TODO Pending due to INFUND-4747. It seems not possible to mark the finances as complete as Academic. Have created ticket INFUND-4747
+
 
 *** Variables ***
 
 *** Test Cases ***
 Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    Lead applicant marks the finances as complete
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
-    When The user navigates to the academic application finances
+    When the user navigates to the academic application finances
+    And the user clicks the button/link    link=Your project costs
     Then the user should not see the element    css=#incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
 
@@ -27,7 +30,8 @@ Academic finance validations
     [Documentation]    INFUND-2399
     [Tags]
     [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
-    When The user navigates to the academic application finances
+    When the user navigates to the academic application finances
+    And the user clicks the button/link    link=Your project costs
     And the applicant enters invalid inputs
     And Mark academic finances as complete
     Then the user should see an error    This field should be 0 or higher.
@@ -38,8 +42,9 @@ Academic finance validations
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
     [Tags]
-    Given The user navigates to the academic application finances
-    When the academic partner fills the finances
+    Given the user navigates to the academic application finances
+    When the user clicks the button/link    link=Your project costs
+    And the academic partner fills the finances
     Then the calculations should be correct and the totals rounded to the second decimal
 
 Large pdf upload not allowed
@@ -48,91 +53,101 @@ Large pdf upload not allowed
     When the academic partner uploads a file    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
     And the user should see the text in the page    Attempt to upload a large file
+    [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-2720
     [Tags]    Upload
-    [Setup]    The user navigates to the academic application finances
     When the academic partner uploads a file    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
 
 Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
     [Tags]
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    When The user navigates to the academic application finances
+    [Setup]    log in as a different user    &{lead_applicant_credentials}
+    Given the user navigates to the academic application finances
+    When the user clicks the button/link    link=Your project costs
     Then the user should not see the element    name=jes-upload
 
 Academics upload
     [Documentation]    INFUND-917
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
-    When The user navigates to the academic application finances
+    [Setup]    log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    When the user navigates to the academic application finances
+    And the user clicks the button/link    link=Your project costs
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
-    And the user should see the element    link=testing.pdf
+    And the user should see the element    link=testing.pdf (opens in a new window)
     And the user waits for the file to be scanned by the anti virus software
 
 Academic partner can view the file on the finances
     [Documentation]    INFUND-917
     [Tags]    HappyPath
-    When The user navigates to the academic application finances
-    When The user opens the link in new window  ${valid_pdf}
+    When the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
     [Tags]
-    Given The user navigates to the finance overview of the academic
-    When The user opens the link in new window  ${valid_pdf}
+    When the user navigates to the finance overview of the academic
+    And the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
+    [Teardown]    the user goes back to the previous page
 
 Lead applicant can't view the file on the finances page
     [Documentation]    INFUND-917
     [Tags]
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    When The user navigates to the academic application finances
+    [Setup]    log in as a different user    &{lead_applicant_credentials}
+    When the user navigates to the academic application finances
+    And the user clicks the button/link    link=Your project costs
     Then the user should not see the text in the page    ${valid_pdf}
 
 Lead applicant can view the file on the finances overview page
     [Documentation]    INFUND-917
-    [Tags]
-    Given The user navigates to the finance overview of the academic
+    [Tags]    Pending
+    # TODO Pending due to INFUND-xxxx
+    When the user navigates to the finance overview of the academic
     And the user should see the text in the page    ${valid_pdf}
-    When The user opens the link in new window  ${valid_pdf}
+    When the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
+    [Teardown]    the user goes back to the previous page
 
 Academic finances JeS link showing
-    [Documentation]    INFUND-2402
+    [Documentation]    INFUND-2402, INFUND-8347
     [Tags]
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
-    When The user navigates to the academic application finances
-    Then the user can see the link for more JeS details
+    [Setup]    log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    When the user navigates to the academic application finances
+    Then the user should not see the element    link=Your funding
+    When the user clicks the button/link    link=Your project costs
+    Then the user can see JeS details
 
 Mark all as complete
     [Documentation]    INFUND-918
     [Tags]
-    Given log in as user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
-    And The user navigates to the academic application finances
-    And the user should see the element    link=testing.pdf
+    Given log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    And the user navigates to the academic application finances
+    And the user clicks the button/link    link=Your project costs
+    And the user should see the element    link=testing.pdf (opens in a new window)
     When the user enters text to a text field    id=tsb-ref    123123
     Then textfield value should be    id=tsb-ref    123123
-    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
-    Then the user redirects to the page    Please provide information about your project.    Application overview
-    and the user navigates to the finance overview of the academic
-    And the user should see the element    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
+    When the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    Then the user redirects to the page    This is a breakdown of your project costs    Your finances
+#    TODO: Pending due to INFUND-9340
+#    And the user navigates to the finance overview of the academic
+#    And the user should see the element    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
 
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
     [Tags]
-    When The user navigates to the academic application finances
+    When the user navigates to the academic application finances
+    And the user clicks the button/link    link=Your project costs
     Then the user should not see the element    jQuery=button:contains("Remove")
     And the user should see the element    css=#incurred-staff[readonly]
 
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
     [Tags]
-    When The user navigates to the academic application finances
+    When the user navigates to the academic application finances
     Then the user should not see the text in the page    Remove
 
 Academic finance overview
@@ -142,8 +157,8 @@ Academic finance overview
     [Tags]
     Given the user navigates to the finance overview of the academic
     Then the finance table should be correct
-    When the user clicks the button/link    link=testing.pdf
-    Then the user should see the text in the page    Adobe Acrobat PDF Files
+    When the user clicks the button/link    link=testing.pdf (opens in a new window)
+    Then the user should not see an error in the page
     [Teardown]    The user marks the academic application finances as incomplete
 
 *** Keywords ***
@@ -173,35 +188,33 @@ the academic partner uploads a file
 
 
 the finance table should be correct
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(2)    £3,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(3)    £1,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(4)    £1,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £0
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(7)    £1,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(8)    £3,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £9,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    £3,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    £1,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    £1,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £0
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    £1,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
-    Given guest user log-in    steve.smith@empire.com    Passw0rd
-    The user navigates to the academic application finances
-    the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
-    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
-    the user enters text to a text field    jQuery=label:contains("employees") + input    0
-    The user enters text to a text field    id=cost-financegrantclaim    20
-    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
-    When the user marks the finances as complete
-    Then the user redirects to the page    Please provide information about your project.    Application overview
-    the user closes the browser
+    guest user log-in    steve.smith@empire.com    Passw0rd
+    the user clicks the button/link    link=Academic robot test application
+    the applicant completes the application details    Application details
+    the user navigates to the academic application finances
+    the user marks the finances as complete    Academic robot test application
+
 
 Lead applicant marks the finances as incomplete
-    Given log in as a different user    steve.smith@empire.com    Passw0rd
-    When The user navigates to the academic application finances
-    And the user clicks the button/link    jQuery=button:contains("Edit")
+    log in as a different user    steve.smith@empire.com    Passw0rd
+    the user navigates to the academic application finances
+    the user clicks the button/link    link=Your funding
+    the user clicks the button/link    jQuery=button:contains("Edit")
 
 
-the user can see the link for more JeS details
+the user can see JeS details
     the user should see the element    link=Je-S website
-    the user should see the element    css=a[href="https://je-s.rcuk.ac.uk"]
+    the user should see the element    css=a[href*="https://je-s.rcuk.ac.uk"]
+    the user should see the element    css=a[href*="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system"]
 
 the applicant enters invalid inputs
     The user enters text to a text field    id=incurred-staff    100£
@@ -219,8 +232,8 @@ the field should not contain the currency symbol
     Textfield Value Should Be    id=incurred-staff    100
 
 Mark academic finances as complete
-    Focus    jQuery=.button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
+    the user moves focus to the element    id=mark-all-as-complete
+    the user clicks the button/link    id=mark-all-as-complete
 
 the user waits for the file to be scanned by the anti virus software
     Sleep    5s
