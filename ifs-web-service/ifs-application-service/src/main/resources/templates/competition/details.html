@@ -11,7 +11,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${'Funding competition: '+currentCompetition.name},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Funding competition: ${currentCompetition.name}|,size='heading-xlarge'" />
 
     <div class="grid-row">
         <div th:class="${#authorization.expression('isAuthenticated()')  ? 'column-half' : 'column-two-thirds'}">
