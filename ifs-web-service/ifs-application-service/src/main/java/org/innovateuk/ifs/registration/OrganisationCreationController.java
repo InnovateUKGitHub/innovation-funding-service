@@ -45,8 +45,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
@@ -195,9 +193,9 @@ public class OrganisationCreationController {
     private Optional<OrganisationCreationForm> organisationCreationFormFromCookie(HttpServletRequest request) {
         String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
         if (isNotBlank(organisationFormJson)) {
-            return ofNullable(getObjectFromJson(organisationFormJson, OrganisationCreationForm.class));
+            return Optional.ofNullable(getObjectFromJson(organisationFormJson, OrganisationCreationForm.class));
         } else {
-            return empty();
+            return Optional.empty();
         }
     }
 
@@ -229,9 +227,9 @@ public class OrganisationCreationController {
     private Optional<Long> organisationTypeIdFromCookie(HttpServletRequest request) {
         String organisationTypeJson = cookieUtil.getCookieValue(request, ORGANISATION_TYPE);
         if (isNotBlank(organisationTypeJson)) {
-            return ofNullable(getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class).getOrganisationType());
+            return Optional.ofNullable(getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class).getOrganisationType());
         } else {
-            return empty();
+            return Optional.empty();
         }
     }
 
