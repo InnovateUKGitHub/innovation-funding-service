@@ -977,14 +977,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project projectInDB = newProject().withId(projectId).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
-        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
+        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
 
         assertTrue(result.isSuccess());
 
         assertEquals(ApprovalType.APPROVED, projectInDB.getOtherDocumentsApproved());
-        verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
+        verify(grantOfferLetterServiceMock).generateGrantOfferLetterIfReady(1L);
 
     }
 
@@ -996,7 +996,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project projectInDB = newProject().withId(projectId).withOtherDocumentsSubmittedDate(ZonedDateTime.now()).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
-        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
+        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, false);
 
@@ -1004,7 +1004,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertEquals(ApprovalType.REJECTED, projectInDB.getOtherDocumentsApproved());
         assertEquals(null, projectInDB.getDocumentsSubmittedDate());
-        verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
+        verify(grantOfferLetterServiceMock).generateGrantOfferLetterIfReady(1L);
 
     }
 
@@ -1016,7 +1016,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project projectInDB = newProject().withId(projectId).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
-        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
 
         ServiceResult<Void> result = service.acceptOrRejectOtherDocuments(projectId, true);
 
@@ -1024,7 +1024,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
 
         assertEquals(ApprovalType.APPROVED, projectInDB.getOtherDocumentsApproved());
-        verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
+        verify(grantOfferLetterServiceMock).generateGrantOfferLetterIfReady(1L);
 
     }
 

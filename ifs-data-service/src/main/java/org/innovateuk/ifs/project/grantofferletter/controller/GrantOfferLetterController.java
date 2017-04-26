@@ -5,7 +5,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +21,10 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
  **/
 @RestController
 @RequestMapping("/project")
-public class ProjectGrantOfferController {
+public class GrantOfferLetterController {
 
     @Autowired
-    private ProjectGrantOfferService projectGrantOfferService;
+    private GrantOfferLetterService grantOfferLetterService;
 
     @Autowired
     @Qualifier("projectSetupGrantOfferLetterFileValidator")
@@ -34,20 +34,20 @@ public class ProjectGrantOfferController {
     @GetMapping("/{projectId}/signed-grant-offer")
     public @ResponseBody ResponseEntity<Object> getGrantOfferLetterFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
-        return handleFileDownload(() -> projectGrantOfferService.getSignedGrantOfferLetterFileAndContents(projectId));
+        return handleFileDownload(() -> grantOfferLetterService.getSignedGrantOfferLetterFileAndContents(projectId));
     }
 
     @GetMapping("/{projectId}/grant-offer")
     public @ResponseBody ResponseEntity<Object> getGeneratedGrantOfferLetterFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
-        return handleFileDownload(() -> projectGrantOfferService.getGrantOfferLetterFileAndContents(projectId));
+        return handleFileDownload(() -> grantOfferLetterService.getGrantOfferLetterFileAndContents(projectId));
     }
 
 
     @GetMapping("/{projectId}/additional-contract")
     public @ResponseBody ResponseEntity<Object> getAdditionalContractFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
-        return handleFileDownload(() -> projectGrantOfferService.getAdditionalContractFileAndContents(projectId));
+        return handleFileDownload(() -> grantOfferLetterService.getAdditionalContractFileAndContents(projectId));
     }
 
 
@@ -55,14 +55,14 @@ public class ProjectGrantOfferController {
     public RestResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectGrantOfferService.getSignedGrantOfferLetterFileEntryDetails(projectId).toGetResponse();
+        return grantOfferLetterService.getSignedGrantOfferLetterFileEntryDetails(projectId).toGetResponse();
     }
 
     @GetMapping(value = "/{projectId}/grant-offer/details", produces = "application/json")
     public RestResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectGrantOfferService.getGrantOfferLetterFileEntryDetails(projectId).toGetResponse();
+        return grantOfferLetterService.getGrantOfferLetterFileEntryDetails(projectId).toGetResponse();
     }
 
 
@@ -70,7 +70,7 @@ public class ProjectGrantOfferController {
     public RestResult<FileEntryResource> getAdditionalContractFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectGrantOfferService.getAdditionalContractFileEntryDetails(projectId).toGetResponse();
+        return grantOfferLetterService.getAdditionalContractFileEntryDetails(projectId).toGetResponse();
     }
 
 
@@ -83,7 +83,7 @@ public class ProjectGrantOfferController {
             HttpServletRequest request) {
 
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectGrantOfferService.createSignedGrantOfferLetterFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                grantOfferLetterService.createSignedGrantOfferLetterFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
 
@@ -96,20 +96,20 @@ public class ProjectGrantOfferController {
             HttpServletRequest request) {
 
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectGrantOfferService.createGrantOfferLetterFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                grantOfferLetterService.createGrantOfferLetterFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
 
     @DeleteMapping(value = "/{projectId}/grant-offer", produces = "application/json")
     public RestResult<Void> removeGrantOfferLetterFile(@PathVariable(value = "projectId") long projectId) {
 
-        return projectGrantOfferService.removeGrantOfferLetterFileEntry(projectId).toDeleteResponse();
+        return grantOfferLetterService.removeGrantOfferLetterFileEntry(projectId).toDeleteResponse();
     }
 
     @DeleteMapping(value = "/{projectId}/signed-grant-offer-letter", produces = "application/json")
     public RestResult<Void> removeSignedGrantOfferLetterFile(@PathVariable(value = "projectId") long projectId) {
 
-        return projectGrantOfferService.removeSignedGrantOfferLetterFileEntry(projectId).toDeleteResponse();
+        return grantOfferLetterService.removeSignedGrantOfferLetterFileEntry(projectId).toDeleteResponse();
     }
 
     @PostMapping(value = "/{projectId}/additional-contract", produces = "application/json")
@@ -121,7 +121,7 @@ public class ProjectGrantOfferController {
             HttpServletRequest request) {
 
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectGrantOfferService.createAdditionalContractFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                grantOfferLetterService.createAdditionalContractFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
 
@@ -134,42 +134,42 @@ public class ProjectGrantOfferController {
             HttpServletRequest request) {
 
         return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectGrantOfferService.updateSignedGrantOfferLetterFile(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                grantOfferLetterService.updateSignedGrantOfferLetterFile(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @PostMapping("/{projectId}/grant-offer/submit")
     public RestResult<Void> submitGrantOfferLetter(@PathVariable("projectId") long projectId) {
-        return projectGrantOfferService.submitGrantOfferLetter(projectId).toPostResponse();
+        return grantOfferLetterService.submitGrantOfferLetter(projectId).toPostResponse();
     }
 
     @GetMapping("/{projectId}/is-send-grant-offer-letter-allowed")
     public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId) {
-        return projectGrantOfferService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
+        return grantOfferLetterService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
     }
 
     @PostMapping("/{projectId}/grant-offer/send")
     public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") final Long projectId) {
-        return projectGrantOfferService.sendGrantOfferLetter(projectId).toPostResponse();
+        return grantOfferLetterService.sendGrantOfferLetter(projectId).toPostResponse();
     }
 
     @GetMapping("/{projectId}/is-grant-offer-letter-already-sent")
     public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
-        return projectGrantOfferService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
+        return grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
     }
 
     @PostMapping("/{projectId}/signed-grant-offer-letter/approval/{approvalType}")
     public RestResult<Void> approveOrRejectSignedGrantOfferLetter(@PathVariable("projectId") final Long projectId,
                                                                   @PathVariable("approvalType") final ApprovalType approvalType) {
-        return projectGrantOfferService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
+        return grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
     }
 
     @GetMapping("/{projectId}/signed-grant-offer-letter/approval")
     public RestResult<Boolean> isSignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
-        return projectGrantOfferService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
+        return grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
     }
 
     @GetMapping("/{projectId}/grant-offer-letter/state")
     public RestResult<GOLState> getGrantOfferLetterWorkflowState(@PathVariable("projectId") final Long projectId) {
-        return projectGrantOfferService.getGrantOfferLetterWorkflowState(projectId).toGetResponse();
+        return grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).toGetResponse();
     }
 }

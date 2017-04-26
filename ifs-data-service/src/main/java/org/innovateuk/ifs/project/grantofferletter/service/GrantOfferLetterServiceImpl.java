@@ -26,7 +26,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
-import org.innovateuk.ifs.project.grantofferletter.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -65,7 +65,7 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MA
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
-public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService {
+public class GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOfferLetterService {
 
     public static final String GOL_CONTENT_TYPE = "application/pdf";
 
@@ -75,7 +75,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
 
-    private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(GrantOfferLetterServiceImpl.class);
 
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
 

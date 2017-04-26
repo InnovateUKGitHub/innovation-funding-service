@@ -8,7 +8,7 @@ import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
 
-public interface ProjectGrantOfferLetterRestService {
+public interface GrantOfferLetterRestService {
 
     RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId);
 

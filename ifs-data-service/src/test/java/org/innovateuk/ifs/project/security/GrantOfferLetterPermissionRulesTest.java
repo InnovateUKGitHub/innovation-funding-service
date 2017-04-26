@@ -11,7 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class ProjectGrantOfferPermissionRulesTest extends BasePermissionRulesTest<ProjectGrantOfferPermissionRules> {
+public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest<ProjectGrantOfferPermissionRules> {
 
     @Test
     public void testLeadPartnersCanCreateSignedGrantOfferLetter() {

@@ -62,11 +62,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResource getByApplicationId(Long applicationId) {
-        if(applicationId == null) {
+        if (applicationId == null) {
             return null;
         }
         RestResult<ProjectResource> restResult = projectRestService.getByApplicationId(applicationId);
-        if(restResult.isSuccess()){
+        if (restResult.isSuccess()) {
             return restResult.getSuccessObject();
         } else {
             return null;
@@ -161,7 +161,6 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.getExploitationPlanFileDetails(projectId).getSuccessObjectOrThrowException();
     }
 
-
     @Override
     public ServiceResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
         return projectRestService.addExploitationPlanDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
@@ -207,7 +206,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
+    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
     }
 
@@ -223,22 +222,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource) {
+    public ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource) {
         return projectInviteRestService.saveProjectInvite(inviteProjectResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource) {
-        return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
-    }
-
-    @Override public ServiceResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteProjectResource) {
-        return projectRestService.inviteProjectManager (projectId, inviteProjectResource).toServiceResult();
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteProjectResource) {
+        return projectRestService.inviteFinanceContact(projectId, inviteProjectResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
-        return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
+    public ServiceResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteProjectResource) {
+        return projectRestService.inviteProjectManager(projectId, inviteProjectResource).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId) {
+        return projectInviteRestService.getInvitesByProject(projectId).toServiceResult();
     }
 
     @Override

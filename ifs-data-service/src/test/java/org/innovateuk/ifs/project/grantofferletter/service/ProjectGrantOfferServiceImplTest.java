@@ -18,8 +18,6 @@ import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
-import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferService;
-import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferServiceImpl;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.transactional.EmailService;
@@ -75,7 +73,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferServiceImpl.GRANT_OFFER_LETTER_DATE_FORMAT;
+import static org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterServiceImpl.GRANT_OFFER_LETTER_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -90,7 +88,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<ProjectGrantOfferService> {
+public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<GrantOfferLetterService> {
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -706,7 +704,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
-        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectGrantOfferServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
@@ -738,7 +736,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
-        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectGrantOfferServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
         User user = UserBuilder.newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -766,7 +764,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
-        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectGrantOfferServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
         User user = UserBuilder.newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -856,7 +854,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.TRUE);
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
-        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectGrantOfferServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
 
@@ -864,7 +862,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         verify(golWorkflowHandlerMock).isReadyToApprove(p);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(p, u);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        verify(projectEmailService).sendEmail(singletonList(to), emptyMap(), ProjectGrantOfferServiceImpl.NotificationsGol.PROJECT_LIVE);
+        verify(projectEmailService).sendEmail(singletonList(to), emptyMap(), GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE);
 
         assertTrue(result.isSuccess());
     }
@@ -886,7 +884,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.TRUE);
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
-        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectGrantOfferServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
 
@@ -894,7 +892,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         verify(golWorkflowHandlerMock).isReadyToApprove(p);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(p, u);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectGrantOfferServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE)).thenReturn(serviceSuccess());
 
         assertTrue(result.isSuccess());
     }
@@ -998,9 +996,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
 
     @Override
-    protected ProjectGrantOfferService supplyServiceUnderTest() {
+    protected GrantOfferLetterService supplyServiceUnderTest() {
 
-        ProjectGrantOfferServiceImpl projectGrantOfferService = new ProjectGrantOfferServiceImpl();
+        GrantOfferLetterServiceImpl projectGrantOfferService = new GrantOfferLetterServiceImpl();
         ReflectionTestUtils.setField(projectGrantOfferService, "webBaseUrl", webBaseUrl);
         return projectGrantOfferService;
     }

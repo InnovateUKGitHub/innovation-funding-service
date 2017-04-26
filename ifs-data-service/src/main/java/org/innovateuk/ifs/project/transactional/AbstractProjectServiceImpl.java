@@ -17,7 +17,7 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
-import org.innovateuk.ifs.project.grantofferletter.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;

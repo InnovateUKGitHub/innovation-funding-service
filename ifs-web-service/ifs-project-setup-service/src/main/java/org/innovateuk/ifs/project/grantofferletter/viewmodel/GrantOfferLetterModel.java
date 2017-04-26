@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 /**
  * A view model that backs the Project grant offer letter page
  **/
-public class ProjectGrantOfferModel implements BasicProjectDetailsViewModel {
+public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     private final Long projectId;
     private final String projectName;
@@ -21,9 +21,9 @@ public class ProjectGrantOfferModel implements BasicProjectDetailsViewModel {
     private boolean offerApproved;
     private boolean isGrantOfferLetterSent;
 
-    public ProjectGrantOfferModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
-                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                  ZonedDateTime submitDate, boolean offerApproved, boolean projectManager, boolean isGrantOfferLetterSent) {
+    public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
+                                 FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
+                                 ZonedDateTime submitDate, boolean offerApproved, boolean projectManager, boolean isGrantOfferLetterSent) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
@@ -98,13 +98,19 @@ public class ProjectGrantOfferModel implements BasicProjectDetailsViewModel {
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
     }
 
-    public boolean isShowSubmitButton() { return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null; }
+    public boolean isShowSubmitButton() {
+        return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null;
+    }
 
-    public boolean isShowDisabledSubmitButton() { return leadPartner && (!isOfferSigned() || !projectManager); }
+    public boolean isShowDisabledSubmitButton() {
+        return leadPartner && (!isOfferSigned() || !projectManager);
+    }
 
     public boolean isProjectManager() {
         return projectManager;
     }
 
-    public boolean isGrantOfferLetterSent() { return isGrantOfferLetterSent; }
+    public boolean isGrantOfferLetterSent() {
+        return isGrantOfferLetterSent;
+    }
 }

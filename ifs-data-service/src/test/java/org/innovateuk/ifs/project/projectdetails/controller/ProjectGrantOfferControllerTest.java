@@ -4,9 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.grantofferletter.controller.ProjectGrantOfferController;
+import org.innovateuk.ifs.project.grantofferletter.controller.GrantOfferLetterController;
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
-import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<ProjectGrantOfferController> {
+public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<GrantOfferLetterController> {
 
     private RestDocumentationResultHandler document;
 
@@ -44,11 +44,11 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
     public void getGrantOfferLetterFileContents() throws Exception {
         Long projectId = 123L;
 
-        Function<ProjectGrantOfferService, ServiceResult<FileAndContents>> serviceCallToUpload =
+        Function<GrantOfferLetterService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getGrantOfferLetterFileAndContents(projectId);
 
         assertGetFileContents("/project/{projectId}/grant-offer", new Object[] {projectId},
-                emptyMap(), projectGrantOfferServiceMock, serviceCallToUpload).
+                emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload).
                 andDo(documentFileGetContentsMethod(document));
     }
 
@@ -56,11 +56,11 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
     public void getAdditionalContractrFileContents() throws Exception {
         Long projectId = 123L;
 
-        Function<ProjectGrantOfferService, ServiceResult<FileAndContents>> serviceCallToUpload =
+        Function<GrantOfferLetterService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getAdditionalContractFileAndContents(projectId);
 
         assertGetFileContents("/project/{projectId}/additional-contract", new Object[] {projectId},
-                emptyMap(), projectGrantOfferServiceMock, serviceCallToUpload).
+                emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload).
                 andDo(documentFileGetContentsMethod(document));
     }
 
@@ -69,24 +69,24 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
     public void getGrantOfferLetterFileEntryDetails() throws Exception {
         Long projectId = 123L;
 
-        Function<ProjectGrantOfferService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        Function<GrantOfferLetterService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getSignedGrantOfferLetterFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/signed-grant-offer/details", new Object[] {projectId},
                 emptyMap(),
-                projectGrantOfferServiceMock, serviceCallToUpload).
+                grantOfferLetterServiceMock, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod(document));
     }
     @Test
     public void getAdditionaContractFileEntryDetails() throws Exception {
         Long projectId = 123L;
 
-        Function<ProjectGrantOfferService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        Function<GrantOfferLetterService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getAdditionalContractFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/additional-contract/details", new Object[] {projectId},
                 emptyMap(),
-                projectGrantOfferServiceMock, serviceCallToUpload).
+                grantOfferLetterServiceMock, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod(document));
     }
 
@@ -95,10 +95,10 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
     public void addGrantOfferLetter() throws Exception {
         Long projectId = 123L;
 
-        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createSignedGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer/", projectGrantOfferServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer/", grantOfferLetterServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod(document));
     }
 
@@ -106,10 +106,10 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
     public void addAdditionalContractFile() throws Exception {
         Long projectId = 123L;
 
-        BiFunction<ProjectGrantOfferService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createAdditionalContractFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/additional-contract/", projectGrantOfferServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/additional-contract/", grantOfferLetterServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod(document));
 
     }
@@ -119,7 +119,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
 
         Long projectId = 123L;
 
-        when(projectGrantOfferServiceMock.removeGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
+        when(grantOfferLetterServiceMock.removeGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)).
                 andExpect(status().isNoContent());
@@ -130,7 +130,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
 
         Long projectId = 123L;
 
-        when(projectGrantOfferServiceMock.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
+        when(grantOfferLetterServiceMock.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
                 andExpect(status().isNoContent());
@@ -141,18 +141,18 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
 
         Long projectId = 123L;
 
-        when(projectGrantOfferServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
+        when(grantOfferLetterServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
 
         mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(GOLState.APPROVED)))
                 .andReturn();
 
-        verify(projectGrantOfferServiceMock).getGrantOfferLetterWorkflowState(projectId);
+        verify(grantOfferLetterServiceMock).getGrantOfferLetterWorkflowState(projectId);
     }
 
     @Override
-    protected ProjectGrantOfferController supplyControllerUnderTest() {
-        return new ProjectGrantOfferController();
+    protected GrantOfferLetterController supplyControllerUnderTest() {
+        return new GrantOfferLetterController();
     }
 }

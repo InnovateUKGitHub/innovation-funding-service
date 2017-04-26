@@ -80,9 +80,9 @@ public interface ProjectService {
 
     ProjectStatusResource getProjectStatus(Long projectId);
 
-    ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
+    ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteProjectResource);
 
-    ServiceResult<Void> inviteProjectManager (Long projectId, InviteProjectResource inviteProjectResource);
+    ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteProjectResource);
 
     List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId);
 

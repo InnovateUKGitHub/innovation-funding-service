@@ -7,7 +7,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +30,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.*;
 
-public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTest<ProjectGrantOfferService> {
+public class GrantOfferServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
 
     private ProjectGrantOfferPermissionRules projectGrantOfferPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -300,11 +300,11 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Override
-    protected Class<? extends ProjectGrantOfferService> getClassUnderTest() {
-        return TestProjectGrantOfferService.class;
+    protected Class<? extends GrantOfferLetterService> getClassUnderTest() {
+        return TestGrantOfferLetterService.class;
     }
 
-    public static class TestProjectGrantOfferService implements ProjectGrantOfferService {
+    public static class TestGrantOfferLetterService implements GrantOfferLetterService {
 
         @Override
         public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {

@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * View model backing the internal members view of the Grant Offer Letter send page
  */
 
-public class ProjectGrantOfferSendLetterModel {
+public class GrantOfferSendLetterModel {
     private CompetitionSummaryResource competitionSummary;
     private FileDetailsViewModel grantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
@@ -23,18 +23,18 @@ public class ProjectGrantOfferSendLetterModel {
     private Boolean signedGrantOfferLetterAvailable;
     private FileDetailsViewModel signedGrantOfferLetterFile;
 
-    public ProjectGrantOfferSendLetterModel(CompetitionSummaryResource competitionSummary,
-                                            FileDetailsViewModel grantOfferLetterFile,
-                                            FileDetailsViewModel additionalContractFile,
-                                            Boolean sentToProjectTeam,
-                                            Long projectId,
-                                            String projectName,
-                                            Long applicationId,
-                                            Boolean grantOfferLetterFileContentAvailable,
-                                            Boolean additionalContractFileContentAvailable,
-                                            Boolean signedGrantOfferLetterApproved,
-                                            Boolean signedGrantOfferLetterAvailable,
-                                            FileDetailsViewModel signedGrantOfferLetterFile) {
+    public GrantOfferSendLetterModel(CompetitionSummaryResource competitionSummary,
+                                     FileDetailsViewModel grantOfferLetterFile,
+                                     FileDetailsViewModel additionalContractFile,
+                                     Boolean sentToProjectTeam,
+                                     Long projectId,
+                                     String projectName,
+                                     Long applicationId,
+                                     Boolean grantOfferLetterFileContentAvailable,
+                                     Boolean additionalContractFileContentAvailable,
+                                     Boolean signedGrantOfferLetterApproved,
+                                     Boolean signedGrantOfferLetterAvailable,
+                                     FileDetailsViewModel signedGrantOfferLetterFile) {
         this.competitionSummary = competitionSummary;
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
@@ -100,7 +100,7 @@ public class ProjectGrantOfferSendLetterModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProjectGrantOfferSendLetterModel that = (ProjectGrantOfferSendLetterModel) o;
+        GrantOfferSendLetterModel that = (GrantOfferSendLetterModel) o;
 
         return new EqualsBuilder()
                 .append(competitionSummary, that.competitionSummary)

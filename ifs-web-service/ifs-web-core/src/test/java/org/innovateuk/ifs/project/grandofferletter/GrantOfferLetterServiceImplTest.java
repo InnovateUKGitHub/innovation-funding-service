@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.grandofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
-import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferLetterRestService;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -20,21 +20,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectGrantOfferServiceImplTest {
+public class GrantOfferLetterServiceImplTest {
 
     @Mock
-    ProjectGrantOfferLetterRestService projectGrantOfferLetterRestService;
+    GrantOfferLetterRestService grantOfferLetterRestService;
 
     @Mock
-    ProjectGrantOfferService projectGrantOfferService;
+    GrantOfferLetterService grantOfferLetterService;
 
     @Test
     public void testGetGrantOfferLetterFile() {
 
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
-        when(projectGrantOfferLetterRestService.getGrantOfferFile(123L)).thenReturn(restSuccess(content));
+        when(grantOfferLetterRestService.getGrantOfferFile(123L)).thenReturn(restSuccess(content));
 
-        Optional<ByteArrayResource> result = projectGrantOfferService.getGrantOfferFile(123L);
+        Optional<ByteArrayResource> result = grantOfferLetterService.getGrantOfferFile(123L);
         assertEquals(content, result);
     }
 
@@ -44,9 +44,9 @@ public class ProjectGrantOfferServiceImplTest {
         FileEntryResource returnedFile = newFileEntryResource().build();
 
         Optional<FileEntryResource> response = Optional.of(returnedFile);
-        when(projectGrantOfferLetterRestService.getGrantOfferFileDetails(123L)).thenReturn(restSuccess(response));
+        when(grantOfferLetterRestService.getGrantOfferFileDetails(123L)).thenReturn(restSuccess(response));
 
-        Optional<FileEntryResource> result = projectGrantOfferService.getGrantOfferFileDetails(123L);
+        Optional<FileEntryResource> result = grantOfferLetterService.getGrantOfferFileDetails(123L);
         assertEquals(response, result);
     }
 
@@ -55,11 +55,11 @@ public class ProjectGrantOfferServiceImplTest {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 
-        when(projectGrantOfferLetterRestService.addSignedGrantOfferLetterFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+        when(grantOfferLetterRestService.addSignedGrantOfferLetterFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                projectGrantOfferService.addSignedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                grantOfferLetterService.addSignedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
@@ -70,11 +70,11 @@ public class ProjectGrantOfferServiceImplTest {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 
-        when(projectGrantOfferLetterRestService.addGrantOfferLetterFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+        when(grantOfferLetterRestService.addGrantOfferLetterFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                projectGrantOfferService.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                grantOfferLetterService.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
@@ -84,9 +84,9 @@ public class ProjectGrantOfferServiceImplTest {
     public void testRemoveGrantOfferLetter() {
         long projectId = 123L;
 
-        when(projectGrantOfferLetterRestService.removeGrantOfferLetter(projectId)).thenReturn(restSuccess());
+        when(grantOfferLetterRestService.removeGrantOfferLetter(projectId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = projectGrantOfferService.removeGrantOfferLetter(projectId);
+        ServiceResult<Void> result = grantOfferLetterService.removeGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
     }
@@ -95,9 +95,9 @@ public class ProjectGrantOfferServiceImplTest {
     public void testRemoveSignedGrantOfferLetter() {
         long projectId = 123L;
 
-        when(projectGrantOfferLetterRestService.removeSignedGrantOfferLetter(projectId)).thenReturn(restSuccess());
+        when(grantOfferLetterRestService.removeSignedGrantOfferLetter(projectId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = projectGrantOfferService.removeSignedGrantOfferLetter(projectId);
+        ServiceResult<Void> result = grantOfferLetterService.removeSignedGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
     }
@@ -106,9 +106,9 @@ public class ProjectGrantOfferServiceImplTest {
     public void testSubmitGrantOfferLetter() {
         long projectId = 123L;
 
-        when(projectGrantOfferLetterRestService.submitGrantOfferLetter(projectId)).thenReturn(restSuccess());
+        when(grantOfferLetterRestService.submitGrantOfferLetter(projectId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = projectGrantOfferService.submitGrantOfferLetter(projectId);
+        ServiceResult<Void> result = grantOfferLetterService.submitGrantOfferLetter(projectId);
 
         assertTrue(result.isSuccess());
     }
@@ -117,9 +117,9 @@ public class ProjectGrantOfferServiceImplTest {
     public void testGetAdditionalContractFile() {
 
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
-        when(projectGrantOfferLetterRestService.getAdditionalContractFile(123L)).thenReturn(restSuccess(content));
+        when(grantOfferLetterRestService.getAdditionalContractFile(123L)).thenReturn(restSuccess(content));
 
-        Optional<ByteArrayResource> result = projectGrantOfferService.getAdditionalContractFile(123L);
+        Optional<ByteArrayResource> result = grantOfferLetterService.getAdditionalContractFile(123L);
         assertEquals(content, result);
     }
 
@@ -128,16 +128,16 @@ public class ProjectGrantOfferServiceImplTest {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 
-        when(projectGrantOfferLetterRestService.addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+        when(grantOfferLetterRestService.addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                projectGrantOfferService.addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                grantOfferLetterService.addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
 
-        verify(projectGrantOfferLetterRestService).addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+        verify(grantOfferLetterRestService).addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
     }
 
 }

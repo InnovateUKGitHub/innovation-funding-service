@@ -4,9 +4,9 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
-import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
-import org.innovateuk.ifs.project.grantofferletter.populator.ProjectGrantOfferModelPopulator;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterForm;
+import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -30,23 +30,23 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  **/
 @Controller
 @RequestMapping("/project/{projectId}/offer")
-public class ProjectGrantOfferController {
+public class GrantOfferLetterController {
 
     private static final String FORM_ATTR = "form";
     public static final String BASE_DIR = "project";
     public static final String TEMPLATE_NAME = "grant-offer-letter";
 
     @Autowired
-    private ProjectGrantOfferService projectGrantOfferService;
+    private GrantOfferLetterService grantOfferLetterService;
 
     @Autowired
-    private ProjectGrantOfferModelPopulator grantOfferLetterViewModelPopulator;
+    private GrantOfferLetterModelPopulator grantOfferLetterViewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
     public String viewGrantOfferLetterPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ProjectGrantOfferLetterForm form = new ProjectGrantOfferLetterForm();
+        GrantOfferLetterForm form = new GrantOfferLetterForm();
 
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
     }
@@ -61,24 +61,23 @@ public class ProjectGrantOfferController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @PostMapping(params = "confirmSubmit")
     public String submit(@PathVariable("projectId") Long projectId,
-                         @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
+                         @ModelAttribute(FORM_ATTR) GrantOfferLetterForm form,
                          @SuppressWarnings("unused") BindingResult bindingResult,
                          ValidationHandler validationHandler,
                          Model model,
                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-
         return validationHandler.performActionOrBindErrorsToField("",
                 () -> createGrantOfferLetterPage(projectId, model, loggedInUser, form),
                 () -> "redirect:/project/" + projectId,
-                () -> projectGrantOfferService.submitGrantOfferLetter(projectId));
+                () -> grantOfferLetterService.submitGrantOfferLetter(projectId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @PostMapping(params = "uploadSignedGrantOfferLetterClicked")
     public String uploadSignedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
+            @ModelAttribute(FORM_ATTR) GrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
@@ -87,7 +86,7 @@ public class ProjectGrantOfferController {
 
             MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
 
-            return projectGrantOfferService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
+            return grantOfferLetterService.addSignedGrantOfferLetter(projectId, signedGrantOfferLetter.getContentType(), signedGrantOfferLetter.getSize(),
                     signedGrantOfferLetter.getOriginalFilename(), getMultipartFileBytes(signedGrantOfferLetter));
         });
     }
@@ -96,13 +95,13 @@ public class ProjectGrantOfferController {
     @PostMapping(params = "removeSignedGrantOfferLetterClicked")
     public String deleteSignedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
+            @ModelAttribute(FORM_ATTR) GrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
-            return projectGrantOfferService.removeSignedGrantOfferLetter(projectId);
+            return grantOfferLetterService.removeSignedGrantOfferLetter(projectId);
         });
     }
 
@@ -113,8 +112,8 @@ public class ProjectGrantOfferController {
     ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectGrantOfferService.getGrantOfferFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getGrantOfferFileDetails(projectId);
+        final Optional<ByteArrayResource> content = grantOfferLetterService.getGrantOfferFile(projectId);
+        final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
@@ -125,8 +124,8 @@ public class ProjectGrantOfferController {
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
-        final Optional<ByteArrayResource> content = projectGrantOfferService.getSignedGrantOfferLetterFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getSignedGrantOfferLetterFileDetails(projectId);
+        final Optional<ByteArrayResource> content = grantOfferLetterService.getSignedGrantOfferLetterFile(projectId);
+        final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
@@ -137,20 +136,19 @@ public class ProjectGrantOfferController {
     ResponseEntity<ByteArrayResource> downloadAdditionalContractFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectGrantOfferService.getAdditionalContractFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectGrantOfferService.getAdditionalContractFileDetails(projectId);
+        final Optional<ByteArrayResource> content = grantOfferLetterService.getAdditionalContractFile(projectId);
+        final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-
-    private String createGrantOfferLetterPage(Long projectId, Model model, UserResource loggedInUser, ProjectGrantOfferLetterForm form) {
+    private String createGrantOfferLetterPage(Long projectId, Model model, UserResource loggedInUser, GrantOfferLetterForm form) {
         model.addAttribute("model", grantOfferLetterViewModelPopulator.populateGrantOfferLetterViewModel(projectId, loggedInUser));
         model.addAttribute("form", form);
         return BASE_DIR + "/" + TEMPLATE_NAME;
     }
 
-    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectGrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, GrantOfferLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToGrantOfferLetterPage(projectId);
         Supplier<String> failureView = () -> createGrantOfferLetterPage(projectId, model, loggedInUser, form);

@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 /**
  * Transactional and secure service for Project processing work - grant offer service.
  **/
-public interface ProjectGrantOfferService {
+public interface GrantOfferLetterService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId);

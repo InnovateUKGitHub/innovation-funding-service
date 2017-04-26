@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Form backing the Grant offer letter page
  **/
-public class ProjectGrantOfferLetterForm extends BaseBindingResultTarget {
+public class GrantOfferLetterForm extends BaseBindingResultTarget {
 
     private MultipartFile signedGrantOfferLetter;
 

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.grantofferletter.configuration;
+package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;

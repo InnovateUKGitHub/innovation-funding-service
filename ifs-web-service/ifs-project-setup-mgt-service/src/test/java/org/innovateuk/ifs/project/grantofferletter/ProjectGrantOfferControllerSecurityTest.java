@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
-import org.innovateuk.ifs.project.grantofferletter.controller.ProjectGrantOfferSendLetterController;
+import org.innovateuk.ifs.project.grantofferletter.controller.GrantOfferSendLetterController;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectGrantOfferControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectGrantOfferSendLetterController> {
+public class ProjectGrantOfferControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<GrantOfferSendLetterController> {
 
     @Override
-    protected Class<? extends ProjectGrantOfferSendLetterController> getClassUnderTest() {
-        return ProjectGrantOfferSendLetterController.class;
+    protected Class<? extends GrantOfferSendLetterController> getClassUnderTest() {
+        return GrantOfferSendLetterController.class;
     }
 
     @Test

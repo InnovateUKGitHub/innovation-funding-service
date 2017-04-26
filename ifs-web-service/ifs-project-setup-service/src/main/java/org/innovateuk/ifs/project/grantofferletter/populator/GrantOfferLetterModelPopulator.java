@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.grantofferletter.populator;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferModel;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,26 +15,26 @@ import java.util.Optional;
 import static java.util.function.Function.identity;
 
 @Service
-public class ProjectGrantOfferModelPopulator {
+public class GrantOfferLetterModelPopulator {
 
     @Autowired
     public ProjectService projectService;
 
     @Autowired
-    public ProjectGrantOfferService projectGrantOfferService;
+    public GrantOfferLetterService grantOfferLetterService;
 
-    public ProjectGrantOfferModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
+    public GrantOfferLetterModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        Optional<FileEntryResource> signedGrantOfferLetterFile = projectGrantOfferService.getSignedGrantOfferLetterFileDetails(projectId);
-        Optional<FileEntryResource> grantOfferFileDetails = projectGrantOfferService.getGrantOfferFileDetails(projectId);
-        Optional<FileEntryResource> additionalContractFile = projectGrantOfferService.getAdditionalContractFileDetails(projectId);
-        Boolean grantOfferLetterApproved = projectGrantOfferService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
+        Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
+        Optional<FileEntryResource> grantOfferFileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
+        Optional<FileEntryResource> additionalContractFile = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
+        Boolean grantOfferLetterApproved = grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
         boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
-        boolean isGrantOfferLetterSent = projectGrantOfferService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);
+        boolean isGrantOfferLetterSent = grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);
 
-        return new ProjectGrantOfferModel(projectId, project.getName(),
+        return new GrantOfferLetterModel(projectId, project.getName(),
                 leadPartner,
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,

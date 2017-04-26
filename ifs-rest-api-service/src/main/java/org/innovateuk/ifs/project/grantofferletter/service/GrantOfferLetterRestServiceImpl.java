@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ProjectGrantOfferLetterRestServiceImpl extends BaseRestService implements ProjectGrantOfferLetterRestService {
+public class GrantOfferLetterRestServiceImpl extends BaseRestService implements GrantOfferLetterRestService {
 
     private String projectRestURL = "/project";
 
     @Override
     public RestResult<Void> sendGrantOfferLetter(Long projectId) {
-        return  postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/send", Void.class);
+        return postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/send", Void.class);
     }
 
     @Override
@@ -59,9 +59,8 @@ public class ProjectGrantOfferLetterRestServiceImpl extends BaseRestService impl
 
     @Override
     public RestResult<Void> submitGrantOfferLetter(Long projectId) {
-        return  postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/submit", Void.class);
+        return postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/submit", Void.class);
     }
-
 
     @Override
     public RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {

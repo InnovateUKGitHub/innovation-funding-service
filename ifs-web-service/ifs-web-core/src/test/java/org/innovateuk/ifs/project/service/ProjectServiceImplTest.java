@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
-import org.innovateuk.ifs.project.grantofferletter.ProjectGrantOfferService;
-import org.innovateuk.ifs.project.grantofferletter.service.ProjectGrantOfferLetterRestService;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -43,6 +43,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectServiceImplTest {
 
@@ -59,10 +60,10 @@ public class ProjectServiceImplTest {
     private ApplicationService applicationService;
 
     @Mock
-    ProjectGrantOfferLetterRestService grantOfferLetterRestService;
+    GrantOfferLetterRestService grantOfferLetterRestService;
 
     @Mock
-    ProjectGrantOfferService projectGrantOfferService;
+    GrantOfferLetterService grantOfferLetterService;
 
     @Test
     public void testGetById() {
@@ -347,8 +348,9 @@ public class ProjectServiceImplTest {
 
         verify(projectRestService).isOtherDocumentsSubmitAllowed(123L);
     }
+
     @Test
-    public void testSetPartnerDocumentsAsSubmitted()  throws Exception {
+    public void testSetPartnerDocumentsAsSubmitted() throws Exception {
 
         when(projectRestService.setPartnerDocumentsSubmitted(1L)).thenReturn(restSuccess());
 
@@ -386,7 +388,7 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testInviteProjectFinanceUser()  throws Exception {
+    public void testInviteProjectFinanceUser() throws Exception {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
 
@@ -400,7 +402,7 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testInviteProjectManagerUser()  throws Exception {
+    public void testInviteProjectManagerUser() throws Exception {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
 
@@ -414,7 +416,7 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testSaveProjectInvite()  throws Exception {
+    public void testSaveProjectInvite() throws Exception {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
 
@@ -429,11 +431,11 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetter()  throws Exception {
+    public void testApproveOrRejectSignedGrantOfferLetter() throws Exception {
 
         when(grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = projectGrantOfferService.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED);
+        ServiceResult<Void> result = grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED);
 
         assertTrue(result.isSuccess());
 
@@ -442,11 +444,11 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testIsSignedGrantOfferLetterApproved()  throws Exception {
+    public void testIsSignedGrantOfferLetterApproved() throws Exception {
 
         when(grantOfferLetterRestService.isSignedGrantOfferLetterApproved(123L)).thenReturn(restSuccess(Boolean.TRUE));
 
-        ServiceResult<Boolean> result = projectGrantOfferService.isSignedGrantOfferLetterApproved(123L);
+        ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterApproved(123L);
 
         assertTrue(result.isSuccess());
         assertEquals(Boolean.TRUE, result.getSuccessObject());
@@ -456,11 +458,11 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testGrantOfferLetterAlreadySent()  throws Exception {
+    public void testGrantOfferLetterAlreadySent() throws Exception {
 
         when(grantOfferLetterRestService.isGrantOfferLetterAlreadySent(123L)).thenReturn(restSuccess(Boolean.TRUE));
 
-        ServiceResult<Boolean> result = projectGrantOfferService.isGrantOfferLetterAlreadySent(123L);
+        ServiceResult<Boolean> result = grantOfferLetterService.isGrantOfferLetterAlreadySent(123L);
 
         assertTrue(result.isSuccess());
         assertEquals(Boolean.TRUE, result.getSuccessObject());
@@ -470,11 +472,11 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testIsSendGrantOfferLetterAllowed()  throws Exception {
+    public void testIsSendGrantOfferLetterAllowed() throws Exception {
 
         when(grantOfferLetterRestService.isSendGrantOfferLetterAllowed(123L)).thenReturn(restSuccess(Boolean.TRUE));
 
-        ServiceResult<Boolean> result = projectGrantOfferService.isSendGrantOfferLetterAllowed(123L);
+        ServiceResult<Boolean> result = grantOfferLetterService.isSendGrantOfferLetterAllowed(123L);
 
         assertTrue(result.isSuccess());
         assertEquals(Boolean.TRUE, result.getSuccessObject());
@@ -484,11 +486,11 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testSendGrantOfferLetter()  throws Exception {
+    public void testSendGrantOfferLetter() throws Exception {
 
         when(grantOfferLetterRestService.sendGrantOfferLetter(123L)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = projectGrantOfferService.sendGrantOfferLetter(123L);
+        ServiceResult<Void> result = grantOfferLetterService.sendGrantOfferLetter(123L);
 
         assertTrue(result.isSuccess());
 
@@ -497,13 +499,13 @@ public class ProjectServiceImplTest {
     }
 
     @Test
-    public void testGetGrantOfferLetterWorkflowState()  throws Exception {
+    public void testGetGrantOfferLetterWorkflowState() throws Exception {
 
         Long projectId = 123L;
 
         when(grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(restSuccess(GOLState.APPROVED));
 
-        ServiceResult<GOLState> result = projectGrantOfferService.getGrantOfferLetterWorkflowState(projectId);
+        ServiceResult<GOLState> result = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isSuccess());
         assertEquals(GOLState.APPROVED, result.getSuccessObject());
