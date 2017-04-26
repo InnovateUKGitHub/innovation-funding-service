@@ -22,12 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Populator for the applicant dashboard, it populates an {@link org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel}
@@ -77,8 +73,8 @@ public class ApplicantDashboardPopulator {
         Map<Long, ProcessRoleResource> inProgressProcessRoles = simpleToMap(inProgress, ApplicationResource::getId,
                 applicationResource -> processRoleService.findProcessRole(user.getId(), applicationResource.getId()));
 
-        List<Long> applicationsAssigned = getAssignedApplications(inProgressProcessRoles, user);
-        List<Long> leadApplicantApplications = getLeadApplicantApplications(inProgressProcessRoles, user);
+        List<Long> applicationsAssigned = getAssignedApplications(inProgressProcessRoles);
+        List<Long> leadApplicantApplications = getLeadApplicantApplications(inProgressProcessRoles);
 
         Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionMap(inProgress, finished, getApplicationsForProjectsInSetup(projectsInSetup));
 
@@ -87,7 +83,7 @@ public class ApplicantDashboardPopulator {
                 projectsInSetup, competitionApplicationMap, applicationStatusMap, leadApplicantApplications);
     }
 
-    private List<Long> getAssignedApplications(Map<Long, ProcessRoleResource> inProgressProcessRoles, UserResource user) {
+    private List<Long> getAssignedApplications(Map<Long, ProcessRoleResource> inProgressProcessRoles) {
         return inProgressProcessRoles.entrySet().stream().filter(entry -> {
             if (!UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().getRoleName())) {
                 int count = applicationRestService.getAssignedQuestionsCount(entry.getKey(), entry.getValue().getId())
@@ -99,7 +95,7 @@ public class ApplicantDashboardPopulator {
         }).map(Map.Entry::getKey).collect(toList());
     }
 
-    private List<Long> getLeadApplicantApplications(Map<Long, ProcessRoleResource> inProgressProcessRoles, UserResource user) {
+    private List<Long> getLeadApplicantApplications(Map<Long, ProcessRoleResource> inProgressProcessRoles) {
         return inProgressProcessRoles.entrySet().stream()
                 .filter(entry -> UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().getRoleName()))
                 .map(Map.Entry::getKey).collect(toList());
@@ -107,26 +103,6 @@ public class ApplicantDashboardPopulator {
 
     private Map<Long, ApplicationState> createApplicationStateMap(List<ApplicationResource> resources) {
         return simpleToMap(resources, ApplicationResource::getId, ApplicationResource::getApplicationState);
-    }
-
-    private Map<Long, CompetitionResource> createCompetitionApplicationMap(List<ApplicationResource> resources) {
-        Map<Long, CompetitionResource> competitions = getCompetitions(resources);
-        return resources.stream()
-                .collect(toMap(
-                        ApplicationResource::getId,
-                        application -> competitions.get(application.getCompetition()), (p1, p2) -> p1)
-                );
-    }
-
-    private Map<Long, CompetitionResource> getCompetitions(List<ApplicationResource> resources) {
-        return resources.stream()
-                .map(ApplicationResource::getCompetition)
-                .distinct()
-                .map(compId -> competitionService.getById(compId))
-                .collect(toMap(
-                        CompetitionResource::getId,
-                        identity()
-                ));
     }
 
     private boolean applicationInProgress(ApplicationResource a) {
