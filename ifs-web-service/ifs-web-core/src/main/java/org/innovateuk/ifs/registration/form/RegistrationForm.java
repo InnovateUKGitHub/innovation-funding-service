@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.validator.constraints.FieldMatch;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
