@@ -15,52 +15,14 @@
         <KeyDescriptor use="signing">
             <ds:KeyInfo>
                     <ds:X509Data>
-                        <ds:X509Certificate>
-MIIDSDCCAjCgAwIBAgIVAMvB6TENATUfNhHgYuRlA9Aim+ogMA0GCSqGSIb3DQEB
-CwUAMCIxIDAeBgNVBAMMF2F1dGguZGV2Lmlubm92YXRldWsub3JnMB4XDTE1MTIy
-MTE1MjEzNVoXDTM1MTIyMTE1MjEzNVowIjEgMB4GA1UEAwwXYXV0aC5kZXYuaW5u
-b3ZhdGV1ay5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCJj0Nz
-tI5A6oUpFJbUQA7akF0Szu8Xeh7fpG78a47MiolAYby9nSCgYW4J/RyOeB2kK4DN
-w+DgTK8jqOS6hP43iXQzY5jBW0/mJGEe7dUK/ubycbTR2N7kZs7UhFcKQvfFHtsd
-Siw219gfyUDYTcE7tq0CtmjGM8Pp9vp+rumSQ/PSfBdFChvlb/I5yLa8LCcZENlV
-Ik9x0syw7n4MIjfqR2O34CW3eyZwYOLATNSnZ8nnP7CR7+EGeygE2tFBkWDa78jz
-FRVtgRrUIRCUOF8isGv5S2tp8Eyau2fKUS3Ke5veTlKOtiCLwRN3lmJfjtOYUGgg
-Efs940oIdSsYMsObAgMBAAGjdTBzMB0GA1UdDgQWBBReZT8V8ZnIgoWnajQ/C1kf
-GFSu9TBSBgNVHREESzBJghdhdXRoLmRldi5pbm5vdmF0ZXVrLm9yZ4YuaHR0cHM6
-Ly9hdXRoLmRldi5pbm5vdmF0ZXVrLm9yZy9pZHAvc2hpYmJvbGV0aDANBgkqhkiG
-9w0BAQsFAAOCAQEAh5OOeMsDmA1fnSUHqO6r2DUjEoUlzdpzKqxjpHRSsLA1I1RM
-NcDLK3IONZbjxsNKdkw5iYNMu4WGJFJAi/M/ghSug3X71yyCmwQU67erkgiGcJmE
-cWT2sKOOGbconbJqUj5BjvMv89jq/nvuo94tvVhx9xvwwP1PGYDZqtI/vkq/zeZb
-Gq0Q3J/0hwTya8WvOBsdiuBDeNQ/FH+17YG9EjdRGOJzNEosG7IB/w20TmtE3xrC
-zBNoFeANZ4RzH/kJLbHNwCini/Izsd6GhpGz5aoDxy+gQ3Ol6+kpsxofpYJw9hMq
-FRap+RWaJfA2fllJ9TA3+0jPd6BAhFznISD0Cw==
-                        </ds:X509Certificate>
+                        <ds:X509Certificate>${IDP_SIGNING_CERTIFICATE}</ds:X509Certificate>
                     </ds:X509Data>
             </ds:KeyInfo>
         </KeyDescriptor>
         <KeyDescriptor use="signing">
             <ds:KeyInfo>
                     <ds:X509Data>
-                        <ds:X509Certificate>
-MIIDSDCCAjCgAwIBAgIVAMvB6TENATUfNhHgYuRlA9Aim+ogMA0GCSqGSIb3DQEB
-CwUAMCIxIDAeBgNVBAMMF2F1dGguZGV2Lmlubm92YXRldWsub3JnMB4XDTE1MTIy
-MTE1MjEzNVoXDTM1MTIyMTE1MjEzNVowIjEgMB4GA1UEAwwXYXV0aC5kZXYuaW5u
-b3ZhdGV1ay5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCJj0Nz
-tI5A6oUpFJbUQA7akF0Szu8Xeh7fpG78a47MiolAYby9nSCgYW4J/RyOeB2kK4DN
-w+DgTK8jqOS6hP43iXQzY5jBW0/mJGEe7dUK/ubycbTR2N7kZs7UhFcKQvfFHtsd
-Siw219gfyUDYTcE7tq0CtmjGM8Pp9vp+rumSQ/PSfBdFChvlb/I5yLa8LCcZENlV
-Ik9x0syw7n4MIjfqR2O34CW3eyZwYOLATNSnZ8nnP7CR7+EGeygE2tFBkWDa78jz
-FRVtgRrUIRCUOF8isGv5S2tp8Eyau2fKUS3Ke5veTlKOtiCLwRN3lmJfjtOYUGgg
-Efs940oIdSsYMsObAgMBAAGjdTBzMB0GA1UdDgQWBBReZT8V8ZnIgoWnajQ/C1kf
-GFSu9TBSBgNVHREESzBJghdhdXRoLmRldi5pbm5vdmF0ZXVrLm9yZ4YuaHR0cHM6
-Ly9hdXRoLmRldi5pbm5vdmF0ZXVrLm9yZy9pZHAvc2hpYmJvbGV0aDANBgkqhkiG
-9w0BAQsFAAOCAQEAh5OOeMsDmA1fnSUHqO6r2DUjEoUlzdpzKqxjpHRSsLA1I1RM
-NcDLK3IONZbjxsNKdkw5iYNMu4WGJFJAi/M/ghSug3X71yyCmwQU67erkgiGcJmE
-cWT2sKOOGbconbJqUj5BjvMv89jq/nvuo94tvVhx9xvwwP1PGYDZqtI/vkq/zeZb
-Gq0Q3J/0hwTya8WvOBsdiuBDeNQ/FH+17YG9EjdRGOJzNEosG7IB/w20TmtE3xrC
-zBNoFeANZ4RzH/kJLbHNwCini/Izsd6GhpGz5aoDxy+gQ3Ol6+kpsxofpYJw9hMq
-FRap+RWaJfA2fllJ9TA3+0jPd6BAhFznISD0Cw==
-                        </ds:X509Certificate>
+                        <ds:X509Certificate>${IDP_SIGNING_CERTIFICATE}</ds:X509Certificate>
                     </ds:X509Data>
             </ds:KeyInfo>
 
@@ -68,26 +30,7 @@ FRap+RWaJfA2fllJ9TA3+0jPd6BAhFznISD0Cw==
         <KeyDescriptor use="encryption">
             <ds:KeyInfo>
                     <ds:X509Data>
-                        <ds:X509Certificate>
-MIIDSDCCAjCgAwIBAgIVAIRH6+aF2sGoU+M3BvHoigzbIC9xMA0GCSqGSIb3DQEB
-CwUAMCIxIDAeBgNVBAMMF2F1dGguZGV2Lmlubm92YXRldWsub3JnMB4XDTE1MTIy
-MTE1MjEzNloXDTM1MTIyMTE1MjEzNlowIjEgMB4GA1UEAwwXYXV0aC5kZXYuaW5u
-b3ZhdGV1ay5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDFnk9b
-RtP+ugRZ8skEqfLv5C0hXYCl5pkR39xOv4wDxutwPhS+3wf4JxhpvW5XG1YYCnxX
-EII828UJPAvUTC+9bxd6egRqORwh77ZDzHaOuUJjsQWztmzr7JG7AoR4NuAT5b/Y
-b5mnJJlYhPKJvfwXKRkRpbYFDvI6gzXdK87pkUdd5ZlAO9ZKpsChsE4FUSHNrYeO
-v9W8QCyEY5Wiwr1MqGcoDQMfeYVAKvNQPrbJTzNc6Dky/uI16h/q5tU15BBXxUlh
-SwN7mOqbNgCQp3e6WYSu9aFAN5V5bAgV1BDDIbayGslZ8OW2XlwY+0Am09kN2BYA
-uoWjqv6VQp/Jj1lpAgMBAAGjdTBzMB0GA1UdDgQWBBSAljPAeVnoQP8xfiOXoDqs
-BH0jRTBSBgNVHREESzBJghdhdXRoLmRldi5pbm5vdmF0ZXVrLm9yZ4YuaHR0cHM6
-Ly9hdXRoLmRldi5pbm5vdmF0ZXVrLm9yZy9pZHAvc2hpYmJvbGV0aDANBgkqhkiG
-9w0BAQsFAAOCAQEAZt1ySDArYMsGkPfVuFdPqpNh+6axc8/XohFdxLMPnxmJ/ptu
-P9PKxV9zdWN4bP//Rdy5atNA1jQzM5EBg+8FNsFTOn6DxlMjIEZFTkp1gj3XjQvl
-kVfABpXIQsOL+yPSG8ZNza70yCw4Aw03rv9uRiruEy3nqmdTIkvjAwWF3esg/TXM
-1Aqf9GtinqFoa7R+x0UPIbsCseBHL5AzfJdpFFPEOk2DUtZ13tXbQ43Ap4ncUYOT
-UCpaOKUbRgN6F7R0HUeaLIYVs+nbOlnEIsznEb9jeRGox69x0Wnu+FCrRyoaG2QY
-Ekz23Yv8baWqwZRwZcbjbe4zAMMNa6oc5b//kg==
-                        </ds:X509Certificate>
+                        <ds:X509Certificate>${IDP_ENCRYPTION_CERTIFICATE}</ds:X509Certificate>
                     </ds:X509Data>
             </ds:KeyInfo>
 
@@ -123,26 +66,7 @@ Ekz23Yv8baWqwZRwZcbjbe4zAMMNa6oc5b//kg==
         <KeyDescriptor use="signing">
             <ds:KeyInfo>
                     <ds:X509Data>
-                        <ds:X509Certificate>
-MIIDSDCCAjCgAwIBAgIVAMvB6TENATUfNhHgYuRlA9Aim+ogMA0GCSqGSIb3DQEB
-CwUAMCIxIDAeBgNVBAMMF2F1dGguZGV2Lmlubm92YXRldWsub3JnMB4XDTE1MTIy
-MTE1MjEzNVoXDTM1MTIyMTE1MjEzNVowIjEgMB4GA1UEAwwXYXV0aC5kZXYuaW5u
-b3ZhdGV1ay5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCJj0Nz
-tI5A6oUpFJbUQA7akF0Szu8Xeh7fpG78a47MiolAYby9nSCgYW4J/RyOeB2kK4DN
-w+DgTK8jqOS6hP43iXQzY5jBW0/mJGEe7dUK/ubycbTR2N7kZs7UhFcKQvfFHtsd
-Siw219gfyUDYTcE7tq0CtmjGM8Pp9vp+rumSQ/PSfBdFChvlb/I5yLa8LCcZENlV
-Ik9x0syw7n4MIjfqR2O34CW3eyZwYOLATNSnZ8nnP7CR7+EGeygE2tFBkWDa78jz
-FRVtgRrUIRCUOF8isGv5S2tp8Eyau2fKUS3Ke5veTlKOtiCLwRN3lmJfjtOYUGgg
-Efs940oIdSsYMsObAgMBAAGjdTBzMB0GA1UdDgQWBBReZT8V8ZnIgoWnajQ/C1kf
-GFSu9TBSBgNVHREESzBJghdhdXRoLmRldi5pbm5vdmF0ZXVrLm9yZ4YuaHR0cHM6
-Ly9hdXRoLmRldi5pbm5vdmF0ZXVrLm9yZy9pZHAvc2hpYmJvbGV0aDANBgkqhkiG
-9w0BAQsFAAOCAQEAh5OOeMsDmA1fnSUHqO6r2DUjEoUlzdpzKqxjpHRSsLA1I1RM
-NcDLK3IONZbjxsNKdkw5iYNMu4WGJFJAi/M/ghSug3X71yyCmwQU67erkgiGcJmE
-cWT2sKOOGbconbJqUj5BjvMv89jq/nvuo94tvVhx9xvwwP1PGYDZqtI/vkq/zeZb
-Gq0Q3J/0hwTya8WvOBsdiuBDeNQ/FH+17YG9EjdRGOJzNEosG7IB/w20TmtE3xrC
-zBNoFeANZ4RzH/kJLbHNwCini/Izsd6GhpGz5aoDxy+gQ3Ol6+kpsxofpYJw9hMq
-FRap+RWaJfA2fllJ9TA3+0jPd6BAhFznISD0Cw==
-                        </ds:X509Certificate>
+                        <ds:X509Certificate>${IDP_SIGNING_CERTIFICATE}</ds:X509Certificate>
                     </ds:X509Data>
             </ds:KeyInfo>
 
@@ -150,26 +74,7 @@ FRap+RWaJfA2fllJ9TA3+0jPd6BAhFznISD0Cw==
         <KeyDescriptor use="signing">
             <ds:KeyInfo>
                     <ds:X509Data>
-                        <ds:X509Certificate>
-MIIDSDCCAjCgAwIBAgIVAMvB6TENATUfNhHgYuRlA9Aim+ogMA0GCSqGSIb3DQEB
-CwUAMCIxIDAeBgNVBAMMF2F1dGguZGV2Lmlubm92YXRldWsub3JnMB4XDTE1MTIy
-MTE1MjEzNVoXDTM1MTIyMTE1MjEzNVowIjEgMB4GA1UEAwwXYXV0aC5kZXYuaW5u
-b3ZhdGV1ay5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCJj0Nz
-tI5A6oUpFJbUQA7akF0Szu8Xeh7fpG78a47MiolAYby9nSCgYW4J/RyOeB2kK4DN
-w+DgTK8jqOS6hP43iXQzY5jBW0/mJGEe7dUK/ubycbTR2N7kZs7UhFcKQvfFHtsd
-Siw219gfyUDYTcE7tq0CtmjGM8Pp9vp+rumSQ/PSfBdFChvlb/I5yLa8LCcZENlV
-Ik9x0syw7n4MIjfqR2O34CW3eyZwYOLATNSnZ8nnP7CR7+EGeygE2tFBkWDa78jz
-FRVtgRrUIRCUOF8isGv5S2tp8Eyau2fKUS3Ke5veTlKOtiCLwRN3lmJfjtOYUGgg
-Efs940oIdSsYMsObAgMBAAGjdTBzMB0GA1UdDgQWBBReZT8V8ZnIgoWnajQ/C1kf
-GFSu9TBSBgNVHREESzBJghdhdXRoLmRldi5pbm5vdmF0ZXVrLm9yZ4YuaHR0cHM6
-Ly9hdXRoLmRldi5pbm5vdmF0ZXVrLm9yZy9pZHAvc2hpYmJvbGV0aDANBgkqhkiG
-9w0BAQsFAAOCAQEAh5OOeMsDmA1fnSUHqO6r2DUjEoUlzdpzKqxjpHRSsLA1I1RM
-NcDLK3IONZbjxsNKdkw5iYNMu4WGJFJAi/M/ghSug3X71yyCmwQU67erkgiGcJmE
-cWT2sKOOGbconbJqUj5BjvMv89jq/nvuo94tvVhx9xvwwP1PGYDZqtI/vkq/zeZb
-Gq0Q3J/0hwTya8WvOBsdiuBDeNQ/FH+17YG9EjdRGOJzNEosG7IB/w20TmtE3xrC
-zBNoFeANZ4RzH/kJLbHNwCini/Izsd6GhpGz5aoDxy+gQ3Ol6+kpsxofpYJw9hMq
-FRap+RWaJfA2fllJ9TA3+0jPd6BAhFznISD0Cw==
-                        </ds:X509Certificate>
+                        <ds:X509Certificate>${IDP_SIGNING_CERTIFICATE}</ds:X509Certificate>
                     </ds:X509Data>
             </ds:KeyInfo>
 
@@ -177,26 +82,7 @@ FRap+RWaJfA2fllJ9TA3+0jPd6BAhFznISD0Cw==
         <KeyDescriptor use="encryption">
             <ds:KeyInfo>
                     <ds:X509Data>
-                        <ds:X509Certificate>
-MIIDSDCCAjCgAwIBAgIVAIRH6+aF2sGoU+M3BvHoigzbIC9xMA0GCSqGSIb3DQEB
-CwUAMCIxIDAeBgNVBAMMF2F1dGguZGV2Lmlubm92YXRldWsub3JnMB4XDTE1MTIy
-MTE1MjEzNloXDTM1MTIyMTE1MjEzNlowIjEgMB4GA1UEAwwXYXV0aC5kZXYuaW5u
-b3ZhdGV1ay5vcmcwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDFnk9b
-RtP+ugRZ8skEqfLv5C0hXYCl5pkR39xOv4wDxutwPhS+3wf4JxhpvW5XG1YYCnxX
-EII828UJPAvUTC+9bxd6egRqORwh77ZDzHaOuUJjsQWztmzr7JG7AoR4NuAT5b/Y
-b5mnJJlYhPKJvfwXKRkRpbYFDvI6gzXdK87pkUdd5ZlAO9ZKpsChsE4FUSHNrYeO
-v9W8QCyEY5Wiwr1MqGcoDQMfeYVAKvNQPrbJTzNc6Dky/uI16h/q5tU15BBXxUlh
-SwN7mOqbNgCQp3e6WYSu9aFAN5V5bAgV1BDDIbayGslZ8OW2XlwY+0Am09kN2BYA
-uoWjqv6VQp/Jj1lpAgMBAAGjdTBzMB0GA1UdDgQWBBSAljPAeVnoQP8xfiOXoDqs
-BH0jRTBSBgNVHREESzBJghdhdXRoLmRldi5pbm5vdmF0ZXVrLm9yZ4YuaHR0cHM6
-Ly9hdXRoLmRldi5pbm5vdmF0ZXVrLm9yZy9pZHAvc2hpYmJvbGV0aDANBgkqhkiG
-9w0BAQsFAAOCAQEAZt1ySDArYMsGkPfVuFdPqpNh+6axc8/XohFdxLMPnxmJ/ptu
-P9PKxV9zdWN4bP//Rdy5atNA1jQzM5EBg+8FNsFTOn6DxlMjIEZFTkp1gj3XjQvl
-kVfABpXIQsOL+yPSG8ZNza70yCw4Aw03rv9uRiruEy3nqmdTIkvjAwWF3esg/TXM
-1Aqf9GtinqFoa7R+x0UPIbsCseBHL5AzfJdpFFPEOk2DUtZ13tXbQ43Ap4ncUYOT
-UCpaOKUbRgN6F7R0HUeaLIYVs+nbOlnEIsznEb9jeRGox69x0Wnu+FCrRyoaG2QY
-Ekz23Yv8baWqwZRwZcbjbe4zAMMNa6oc5b//kg==
-                        </ds:X509Certificate>
+                        <ds:X509Certificate>${IDP_ENCRYPTION_CERTIFICATE}</ds:X509Certificate>
                     </ds:X509Data>
             </ds:KeyInfo>
 

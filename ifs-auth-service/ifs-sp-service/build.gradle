@@ -9,39 +9,24 @@ buildscript {
     }
 }
 
-// if there is no key/cert provided, we generate a self-signed certificate
-def String spProxyKeyFile = "${buildDir}/sp_proxy_key.pem"
-def String spProxyCertificateFile = "${buildDir}/sp_proxy_certificate.pem"
-def String spProxyCacertificateFile = "${buildDir}/sp_proxy_cacertificate.pem"
+def String spCertsVolume = 'src/main/docker/certs'
 
-if ( project.hasProperty('auth.sp.proxy.key') ) { file(spProxyKeyFile).text = project['auth.sp.proxy.key'] }
-if ( project.hasProperty('auth.sp.proxy.certificate') ) { file(spProxyCertificateFile).text = project['auth.sp.proxy.certificate'] }
-if ( project.hasProperty('auth.sp.proxy.cacertificate') ) { file(spProxyCacertificateFile).text = project['auth.sp.proxy.cacertificate'] }
+def String spProxyKeyFile = "${spCertsVolume}/sp_proxy_key.pem"
+def String spProxyCertificateFile = "${spCertsVolume}/sp_proxy_certificate.pem"
+def String spProxyCacertificateFile = "${spCertsVolume}/sp_proxy_cacertificate.pem"
 
-task prepareSecrets(type: Exec) {
-    onlyIf { !file(spProxyKeyFile).exists() || !file(spProxyCertificateFile).exists() || !file(spProxyCacertificateFile).exists() }
-    buildDir.mkdir()
+def String idpSigningCertificateFile = "${spCertsVolume}/idp-signing.crt"
+def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
 
-    executable = 'openssl'
-    args = ['req', '-x509',
-            '-newkey', 'rsa:4096',
-            '-keyout', spProxyKeyFile,
-            '-out', spProxyCertificateFile,
-            '-days', '3650',
-            '-nodes',
-            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ifs.local-dev'
-    ]
-    doLast {
-        copy {
-            from file(spProxyCertificateFile)
-            into buildDir
-            rename 'sp_proxy_certificate.pem', 'sp_proxy_cacertificate.pem'
-        }
-    }
-}
 
 task prepareDockerFile(type: Copy) {
-    dependsOn prepareSecrets
+    assert file(spProxyKeyFile).exists() 
+    assert file(spProxyCertificateFile).exists() 
+    assert file(spProxyCacertificateFile).exists() 
+
+    assert file(idpSigningCertificateFile).exists() 
+    assert file(idpEncryptionCertificateFile).exists() 
+
     outputs.upToDateWhen { false }
 
     from 'src/main/docker/'
@@ -63,10 +48,8 @@ task buildDocker(type: Docker) {
             into "${stageDir}/files"
         }
         copy {
-            from file(spProxyKeyFile)
-            from file(spProxyCertificateFile)
-            from file(spProxyCacertificateFile)
-            into "${stageDir}/files/apache2"
+            from fileTree('src/main/docker/certs')
+            into "${stageDir}/certs"
         }
     }
 }

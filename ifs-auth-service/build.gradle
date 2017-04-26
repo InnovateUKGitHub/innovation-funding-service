@@ -10,3 +10,106 @@ project(':ifs-auth-service:ifs-sp-service').bootRepackage {
     onlyIf{ Task task -> false}
 }
 
+buildscript {
+    repositories { mavenCentral() }
+}
+
+def String spCertsVolume = 'ifs-sp-service/src/main/docker/certs'
+def String idpCertsVolume = 'ifs-idp-service/src/main/docker/certs'
+
+// if there is no key/cert provided, we generate self-signed certificates
+def String spProxyKeyFile = "${buildDir}/sp_proxy_key.pem"
+def String spProxyCertificateFile = "${buildDir}/sp_proxy_certificate.pem"
+def String spProxyCacertificateFile = "${buildDir}/sp_proxy_cacertificate.pem"
+
+def String idpSigningKeyFile = "${buildDir}/idp-signing.key"
+def String idpSigningCertificateFile = "${buildDir}/idp-signing.crt"
+
+def String idpEncryptionKeyFile = "${buildDir}/idp-encryption.key"
+def String idpEncryptionCertificateFile = "${buildDir}/idp-encryption.crt"
+
+task prepareIDPSigningSecrets(type: Exec) {
+    onlyIf { !file(idpSigningKeyFile).exists() || !file(idpSigningCertificateFile).exists() }
+    buildDir.mkdir()
+
+    executable = 'openssl'
+    args = ['req', '-x509',
+            '-newkey', 'rsa:4096',
+            '-keyout', idpSigningKeyFile,
+            '-out', idpSigningCertificateFile,
+            '-days', '3650',
+            '-nodes',
+            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
+    ]
+}
+
+task prepareIDPEncryptionSecrets(type: Exec) {
+    onlyIf { !file(idpEncryptionKeyFile).exists() || !file(idpEncryptionCertificateFile).exists() }
+    buildDir.mkdir()
+
+    executable = 'openssl'
+    args = ['req', '-x509',
+            '-newkey', 'rsa:4096',
+            '-keyout', idpEncryptionKeyFile,
+            '-out', idpEncryptionCertificateFile,
+            '-days', '3650',
+            '-nodes',
+            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
+    ]
+}
+
+task prepareIDPSecrets(type: Copy) {
+    dependsOn prepareIDPSigningSecrets
+    dependsOn prepareIDPEncryptionSecrets
+
+    from file(idpSigningKeyFile)
+    from file(idpSigningCertificateFile)
+    from file(idpEncryptionKeyFile)
+    from file(idpEncryptionCertificateFile)
+    into idpCertsVolume
+}
+
+task prepareSPSecrets(type: Exec) {
+    onlyIf { !file(spProxyKeyFile).exists() || !file(spProxyCertificateFile).exists() || !file(spProxyCacertificateFile).exists() }
+    buildDir.mkdir()
+
+    executable = 'openssl'
+    args = ['req', '-x509',
+            '-newkey', 'rsa:4096',
+            '-keyout', spProxyKeyFile,
+            '-out', spProxyCertificateFile,
+            '-days', '3650',
+            '-nodes',
+            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=ifs.local-dev'
+    ]
+    doLast {
+        copy {
+            from file(spProxyCertificateFile)
+            into buildDir
+            rename 'sp_proxy_certificate.pem', 'sp_proxy_cacertificate.pem'
+        }
+        copy {
+            from file(spProxyKeyFile)
+            from file(spProxyCertificateFile)
+            from file(spProxyCacertificateFile)
+            into spCertsVolume
+        }
+    }
+}
+
+task prepareSecrets {
+    dependsOn prepareIDPSigningSecrets
+    dependsOn prepareIDPEncryptionSecrets
+    dependsOn prepareSPSecrets
+
+    // on top of their respective certificates SP and IDP need each other's
+    copy {
+        from file(spProxyCertificateFile)
+        into idpCertsVolume
+    }
+    copy {
+        from file(idpSigningCertificateFile)
+        from file(idpEncryptionCertificateFile)
+        into spCertsVolume
+    }
+}

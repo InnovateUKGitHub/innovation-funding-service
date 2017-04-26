@@ -11,11 +11,14 @@ ENV HTTP_PORT=9080 \
     TRUSTED_IP="@auth_service_trusted_ip@" \
     PROXY_CERTIFICATE="sp_proxy_certificate.pem" \
     PROXY_KEY="sp_proxy_key.pem" \
-    PROXY_CA_CERTIFICATE="sp_proxy_cacertificate.pem"
+    PROXY_CA_CERTIFICATE="sp_proxy_cacertificate.pem" \
+    IDP_SIGNING_CERTIFICATE="idp-signing.crt" \
+    IDP_ENCRYPTION_CERTIFICATE="idp-encryption.crt"
 
 WORKDIR /usr/local/bin
 
 COPY files /usr/local/files/
+COPY certs /usr/local/files/apache2/
 
 RUN apt-get update --fix-missing && \
 
@@ -57,6 +60,8 @@ RUN apt-get update --fix-missing && \
   sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
   # see also substitutions in entrypoint script
   cp /etc/apache2/certs/* /etc/shibboleth/ && \
+  mv "/usr/local/files/apache2/$IDP_SIGNING_CERTIFICATE" /etc/shibboleth/ && \
+  mv "/usr/local/files/apache2/$IDP_ENCRYPTION_CERTIFICATE" /etc/shibboleth/ && \
 
 # run shibboleth sp as its own user (same as apache)
   mkdir -p /var/run/shibboleth && \
@@ -66,6 +71,3 @@ RUN apt-get update --fix-missing && \
   rm -Rf /usr/local/files/
 
 ENTRYPOINT [ "run-shibboleth-sp.sh" ]
-
-HEALTHCHECK --interval=15s --timeout=8s \
-  CMD curl --connect-timeout 5 -m 5 -k -f https://localhost:$HTTPS_PORT/Shibboleth.sso/Metadata || exit 1
