@@ -11,10 +11,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{id}(id=${competitionId})})" />
-
-            <div class="page-title">
-                <h1 class="heading-xlarge">Submit assessments</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit assessments',size='heading-xlarge'" />
 
             <h2 class="heading-medium no-margin">You are about to submit your assessments.</h2>
             <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>

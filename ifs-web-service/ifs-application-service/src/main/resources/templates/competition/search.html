@@ -8,7 +8,9 @@
     <th:block th:include="fragments/layout :: global-header" />
     <main tabindex="-1" id="content">
         <th:block th:include="fragments/layout :: main-content-start" />
-        <h1 class="heading-large">Innovation competitions</h1>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation competitions',size='heading-large'" />
+
         <p>Browse upcoming and live competitions. Find out when new competitions are launched by <a href="http://info.innovateuk.org/emailpref">signing up for competition updates</a>.</p>
         <div class="grid-row">
             <div class="column-third">

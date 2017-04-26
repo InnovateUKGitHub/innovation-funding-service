@@ -11,13 +11,8 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" th:remove="tag"></div>
-
-
-    <div class="page-title">
-            <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})"/>
-        <h1 class="heading-xlarge">Spend profile</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='heading-xlarge'" />
 
     <div th:if="${model.submitted and !model.approved}" th:remove="tag">
         <div class="success-alert extra-margin-bottom">
@@ -44,26 +39,24 @@
     <h2 class="heading-medium">Partner progress</h2>
 
     <ul class="task-list">
-        <li th:unless="${#lists.isEmpty(model.partnerOrganisations) and partnerSpendProfileProgress != null}"
-            th:each="partnerProgress : ${model.partnerSpendProfileProgress}">
-            <div th:each="partner : ${model.partnerOrganisations}"
-                 th:if="${partner.name.equals(partnerProgress.key)}"
-                 class="task">
+        <li th:unless="${#lists.isEmpty(model.editablePartners)}"
+            th:each="partner : ${model.editablePartners}">
+            <div class="task">
                 <h3 class="heading-small">
-                    <a th:if="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}"
-                       th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}"
-                       th:text="${partnerProgress.key}" />
-                    <th:block th:unless="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}"
-                              th:text="${partnerProgress.key}" />
-                    <th:block th:if="${partner.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    <a th:if="${partner.value.showEditLinkToUser}"
+                       th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.key})}"
+                       th:text="${partner.value.organisationName}" />
+                    <th:block th:unless="${partner.value.showEditLinkToUser}"
+                              th:text="${partner.value.organisationName}" />
+                    <th:block th:if="${partner.value.organisationName.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                 </h3>
             </div>
-            <div th:unless="${partnerProgress.value}" class="notification">
-                In progress
-            </div>
-            <div th:if="${partnerProgress.value}" class="task-status-complete">
+            <div th:if="${partner.value.markedComplete}" class="task-status-complete">
                 <span>Complete</span>
             </div>
+            <span th:unless="${partner.value.markedComplete}" class="notification">
+                In progress
+            </span>
         </li>
     </ul>
 

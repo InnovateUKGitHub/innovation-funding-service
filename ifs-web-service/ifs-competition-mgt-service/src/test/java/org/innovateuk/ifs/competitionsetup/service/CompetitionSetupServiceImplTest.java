@@ -90,13 +90,12 @@ public class CompetitionSetupServiceImplTest {
 
 	private void verifyCommonModelAttributes(Model model, CompetitionResource competition,
 			CompetitionSetupSection section, List<CompetitionSetupSection> completedSections) {
-		assertEquals(10, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		assertEquals(Boolean.FALSE, model.asMap().get("isInitialComplete"));
 		assertEquals(Boolean.TRUE, model.asMap().get("editable"));
 		assertEquals(competition, model.asMap().get("competition"));
 		assertEquals(section, model.asMap().get("currentSection"));
 		assertArrayEquals(CompetitionSetupSection.values(), (Object[])model.asMap().get("allSections"));
-		assertEquals("code: name", model.asMap().get("subTitle"));
 		assertEquals(Boolean.FALSE, model.asMap().get("preventEdit"));
 		assertEquals(Boolean.FALSE, model.asMap().get("isSetupAndLive"));
 		assertEquals(Boolean.FALSE, model.asMap().get("setupComplete"));
