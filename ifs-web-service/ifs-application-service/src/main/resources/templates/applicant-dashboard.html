@@ -124,6 +124,7 @@
                                 <p th:if="${model.applicationIsRejected(app.id)}" class="status-msg msg-progress">Unsuccessful</p>
                                 <p th:if="${model.applicationIsApproved(app.id)}" class="status-msg msg-progress">Successful</p>
                                 <p th:if="${model.applicationIsCreatedOrOpen(app.id)}" class="status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${model.applicationIsInformedIneligible(app.id)}" class="status-msg msg-progress">Ineligible</p>
                             </div>
                         </li>
                     </ul>
