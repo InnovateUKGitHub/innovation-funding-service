@@ -295,7 +295,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     public void markAsIneligible() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.markAsIneligible(1L, "reason"),
-                COMP_ADMIN
+                COMP_ADMIN, PROJECT_FINANCE
         );
     }
 
