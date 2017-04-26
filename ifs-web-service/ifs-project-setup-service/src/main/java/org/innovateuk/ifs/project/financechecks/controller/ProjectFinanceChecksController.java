@@ -87,7 +87,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @RequestMapping(ProjectFinanceChecksController.PROJECT_FINANCE_CHECKS_BASE_URL)
 public class ProjectFinanceChecksController {
 
-    public static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/partner-organisation/{organisationId}/finance-checks";
+    static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks";
 
     private static final String ATTACHMENT_COOKIE = "query_new_response_attachments";
     private static final String FORM_ATTR = "form";
@@ -140,9 +140,9 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewFinanceChecks(Model model, @PathVariable("projectId") final Long projectId,
-                                    @PathVariable("organisationId") final Long organisationId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
         model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, null, null));
 
@@ -152,13 +152,13 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/{queryId}/new-response")
     public String viewNewResponse(@PathVariable Long projectId,
-                                  @PathVariable Long organisationId,
                                   @PathVariable Long queryId,
                                   Model model,
                                   HttpServletRequest request,
                                   HttpServletResponse response,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         attachments.forEach(financeCheckService::deleteFile);
@@ -173,7 +173,6 @@ public class ProjectFinanceChecksController {
     @PostMapping("/{queryId}/new-response")
     public String saveResponse(Model model,
                                @PathVariable("projectId") final Long projectId,
-                               @PathVariable final Long organisationId,
                                @PathVariable final Long queryId,
                                @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksQueryResponseForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
@@ -182,6 +181,7 @@ public class ProjectFinanceChecksController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         Supplier<String> failureView = () -> {
@@ -226,7 +226,7 @@ public class ProjectFinanceChecksController {
                         }
                         return validationHandler.failNowOrSucceedWith(saveFailureView, () -> {
                             cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
-                            return redirectToQueries(projectId, organisationId);
+                            return redirectToQueries(projectId);
                         });
                     });
         });
@@ -236,7 +236,6 @@ public class ProjectFinanceChecksController {
     @PostMapping(value = "/{queryId}/new-response", params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
                                             @PathVariable("projectId") final Long projectId,
-                                            @PathVariable Long organisationId,
                                             @PathVariable Long queryId,
                                             @ModelAttribute(FORM_ATTR) FinanceChecksQueryResponseForm form,
                                             @SuppressWarnings("unused") BindingResult bindingResult,
@@ -244,6 +243,8 @@ public class ProjectFinanceChecksController {
                                             HttpServletRequest request,
                                             HttpServletResponse response,
                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -274,11 +275,11 @@ public class ProjectFinanceChecksController {
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
-                                                                 @PathVariable Long organisationId,
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
                                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                                  HttpServletRequest request) {
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Optional<ByteArrayResource> content = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
@@ -301,7 +302,6 @@ public class ProjectFinanceChecksController {
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
-                                                         @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId) {
         Optional<ByteArrayResource> content = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
@@ -321,17 +321,16 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @PostMapping(value = "/{queryId}/new-response", params = "removeAttachment")
     public String removeAttachment(@PathVariable Long projectId,
-                                   @PathVariable Long organisationId,
                                    @PathVariable Long queryId,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueryResponseForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
-                                   ValidationHandler validationHandler,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
-        
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -350,24 +349,25 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/{queryId}/new-response/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
-                                @PathVariable Long organisationId,
                                 @PathVariable Long queryId,
                                 HttpServletRequest request,
                                 HttpServletResponse response,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        attachments.forEach(id -> financeCheckService.deleteFile(id));
+        attachments.forEach((id -> financeCheckService.deleteFile(id)));
 
         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
 
-        return redirectToQueries(projectId, organisationId);
+        return redirectToQueries(projectId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility")
-    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request){
+    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -381,7 +381,8 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser){
+    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
@@ -464,8 +465,8 @@ public class ProjectFinanceChecksController {
         return queryModel;
     }
 
-    private String redirectToQueries(Long projectId, Long organisationId) {
-        return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/finance-checks";
+    private String redirectToQueries(Long projectId) {
+        return "redirect:/project/" + projectId + "/finance-checks";
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
