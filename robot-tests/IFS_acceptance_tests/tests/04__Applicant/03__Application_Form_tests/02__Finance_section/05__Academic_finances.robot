@@ -105,7 +105,7 @@ Lead applicant can't view the file on the finances page
 Lead applicant can view the file on the finances overview page
     [Documentation]    INFUND-917
     [Tags]    Pending
-    # TODO Pending due to INFUND-xxxx
+    # TODO EC: Still waiting on confirmation from BA about expected behaviour here
     When the user navigates to the finance overview of the academic
     And the user should see the text in the page    ${valid_pdf}
     When the user opens the link in new window  ${valid_pdf}
