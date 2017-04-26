@@ -928,17 +928,9 @@ Lead-Partner can review only the external version of Finance Checks Eligibility 
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-<<<<<<< HEAD
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
     Then the user should see the element    css=input[id="total-cost"][value="£ 301,355"]
     And the user clicks the button/link     link=Finance checks
-=======
-    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
-    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
-    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
-    And the user should see the element     id=total-cost
-    Then the user clicks the button/link     link=Finance checks
->>>>>>> development
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
 Partner can review only the external version of Finance Checks Eligibility table
@@ -949,15 +941,8 @@ Partner can review only the external version of Finance Checks Eligibility table
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-<<<<<<< HEAD
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
     Then the user should see the element    css=input[id="total-cost"][value="£ 200,903"]
-=======
-    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
-    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
-    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
-    And the user should see the element     id=total-cost
->>>>>>> development
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
@@ -1858,15 +1843,8 @@ Lead-Partner can view only the external version of Finance Checks Eligibility ta
     [Tags]
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-<<<<<<< HEAD
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
     Then the user should see the element    css=input[id="total-cost"][value="£ 206,867"]
-=======
-    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
-    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
-    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
-    Then the user should see the element                id=total-cost
->>>>>>> development
 
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787, INFUND-8880
@@ -1897,15 +1875,8 @@ Non Lead-Partner can view only the external version of Finance Checks Eligibilit
     [Tags]
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-<<<<<<< HEAD
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
     Then the user should see the element    css=input[id="total-cost"][value="£ 114,256"]
-=======
-    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
-    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
-    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
-    Then the user should see the element                id=total-cost
->>>>>>> development
 
 *** Keywords ***
 
@@ -2453,17 +2424,6 @@ the revised categories are verified for specified Section
     the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
     the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
 
-<<<<<<< HEAD
-=======
-the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
-    the user should not see the text in the element     css=section:nth-of-type(1) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(3) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(4) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(5) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(6) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(7) h3 button   %
-
->>>>>>> development
 the user verifies the financial sub-totals for external version under the Detailed-finances
     [Arguments]  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}
     the user should see the text in the element     css=section:nth-of-type(1) h3 button span   ${labour}
