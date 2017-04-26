@@ -74,15 +74,13 @@ public class ApplicantDashboardPopulator {
 
         List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObjectOrThrowException();
 
-
         Map<Long, ProcessRoleResource> inProgressProcessRoles = simpleToMap(inProgress, ApplicationResource::getId,
                 applicationResource -> processRoleService.findProcessRole(user.getId(), applicationResource.getId()));
 
         List<Long> applicationsAssigned = getAssignedApplications(inProgressProcessRoles, user);
         List<Long> leadApplicantApplications = getLeadApplicantApplications(inProgressProcessRoles, user);
 
-        List<ApplicationResource> applicationsForProjectsInSetup = getApplicationsForProjectsInSetup(projectsInSetup);
-        Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionMap(inProgress, finished, applicationsForProjectsInSetup);
+        Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionMap(inProgress, finished, getApplicationsForProjectsInSetup(projectsInSetup));
 
         return new ApplicantDashboardViewModel(applicationProgress, inProgress,
                 applicationsAssigned, finished,
