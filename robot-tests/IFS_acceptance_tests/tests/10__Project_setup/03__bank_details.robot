@@ -143,8 +143,8 @@ Bank details submission
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given the user submits the bank account details   00000123    000004 
     Then the user should see the element              jQuery=.error-summary-list:contains("Bank details cannot be validated.")
-    When the user enters text to a text field         name=accountNumber    12345677
-    And the user enters text to a text field          name=sortCode    000004
+    When the user enters text to a text field         name=accountNumber  ${account_two}
+    And the user enters text to a text field          name=sortCode  ${shortCode_two}
     When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link               jquery=button:contains("Cancel")
     And the user should not see the text in the page  The bank account details below are being reviewed
@@ -176,8 +176,8 @@ Bank details for Academic
     And the user clicks the button/link            link=Bank details
     When the user submits the bank account details along with the organisation address     00000123    000004
     Then wait until element is visible  jQuery=.error-summary-list:contains("Bank details cannot be validated.")
-    When the user enters text to a text field      name=accountNumber  51406795
-    And the user enters text to a text field       name=sortCode  404745
+    When the user enters text to a text field      name=accountNumber  ${account_one}
+    And the user enters text to a text field       name=sortCode  ${shortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
     And the user enters text to a text field       id=addressForm.postcodeInput  BS14NT
     And the user clicks the button/link            id=postcode-lookup
@@ -213,7 +213,6 @@ Status updates correctly for internal user's table
 Bank details for non-lead partner
     [Documentation]    INFUND-3010, INFUND-6018, INFUND-8688
     [Tags]    HappyPath
-    #TODO pending due to INFUND-6090  Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
     Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
@@ -227,8 +226,8 @@ Bank details for non-lead partner
     Then the user should see the text in the page  Bank account
     When the user submits the bank account details along with the organisation address     00000123    000004
     Then the user should see the element  jQuery=.error-summary-list:contains("Bank details cannot be validated.")
-    When the user enters text to a text field      name=accountNumber  51406795
-    Then the user enters text to a text field      name=sortCode  404745
+    When the user enters text to a text field      name=accountNumber  ${account_one}
+    Then the user enters text to a text field      name=sortCode  ${shortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
     Then the user enters text to a text field      id=addressForm.postcodeInput  BS14NT
     And the user clicks the button/link            id=postcode-lookup
@@ -322,14 +321,7 @@ the user submits the bank account details
     the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link    jQuery=.button:contains("Submit")
 
-the user submits the bank account details along with the organisation address
-    [Arguments]    ${account_number}    ${sort_code}
-    the user enters text to a text field    name=accountNumber    ${account_number}
-    the user enters text to a text field    name=sortCode    ${sort_code}
-    the user clicks the button twice        jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    the user should see the element         jQuery=#registeredAddress h3:contains("Confirm billing address")
-    wait until keyword succeeds without screenshots  30  200ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
-    wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
+
 
 finance contacts are submitted by all users
     user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Npath_Id}
@@ -361,6 +353,6 @@ the user opens the excel and checks the content
     ${bank_account_name}=       get from list  ${eadel_details}  9
     should be equal             ${bank_account_name}  ${Eadel_Name}
     ${bank_account_number}=     get from list  ${eadel_details}  10
-    should be equal             ${bank_account_number}  12345677
+    should be equal             ${bank_account_number}  ${account_two}
     ${bank_account_sort_code}=  get from list  ${eadel_details}  11
-    should be equal             ${bank_account_sort_code}  000004
+    should be equal             ${bank_account_sort_code}  ${shortCode_two}

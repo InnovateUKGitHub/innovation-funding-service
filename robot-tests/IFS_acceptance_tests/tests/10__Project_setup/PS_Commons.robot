@@ -1,5 +1,5 @@
 *** Settings ***
-Resource    ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource    ../../resources/defaultResources.robot
 *** Variables ***
 #Project: London underground – enhancements to existing stock and logistics
 # GOL = Grant Offer Letter
@@ -151,5 +151,22 @@ ${internal_project_summary}    ${server}/project-setup-management/competition/${
 
 ${ELBOW_GREASE_PROJECT_ID}  4
 
+# Bank Account & Short code Combination
+${account_one}    51406795
+${shortCode_one}  404745
+${account_two}    12345677
+${shortCode_two}  000004
 
 *** Keywords ***
+partner submits his bank details
+    [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
+    log in as a different user                       ${email}    ${short_password}
+    the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
+    the user enters text to a text field             id=bank-acc-number  ${account_number}
+    the user enters text to a text field             id=bank-sort-code  ${sort_code}
+    the user clicks the button twice                 jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user should see the element                  jQuery=#registeredAddress h3:contains("Confirm billing address")
+    wait until keyword succeeds without screenshots  30  200ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
+    wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
+    wait until element is visible                    jQuery=dt:contains("Account number") + dd:contains("*****")
+    # Added this readonly check to verify that the bank details are indeed marked as done
