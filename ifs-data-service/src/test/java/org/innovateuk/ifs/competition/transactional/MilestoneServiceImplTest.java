@@ -224,7 +224,6 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void getMilestoneByTypeAndCompetitionReturnsNotFoundErrorWhenNotPresent() {
-        Milestone milestone = newMilestone().withType(NOTIFICATIONS).build();
         when(milestoneRepository.findByTypeAndCompetitionId(NOTIFICATIONS, 1L)).thenReturn(Optional.empty());
 
         ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, 1L);
