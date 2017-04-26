@@ -133,7 +133,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
     @Test
     public void testSendNotificationApplicationSubmitted() {
-        // Expectations
         User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
         Role leadRole = newRole().withType(LEADAPPLICANT).build();
         ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(leadRole).build();
@@ -141,9 +140,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
         when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
-        // Method under test
+
         ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
-        // Verifications
+
         verify(notificationServiceMock).sendNotification(createLambdaMatcher(notification -> {
             assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
             assertEquals(application.getId(), notification.getGlobalArguments().get("applicationId"));

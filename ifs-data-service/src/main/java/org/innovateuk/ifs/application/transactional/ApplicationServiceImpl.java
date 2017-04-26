@@ -246,10 +246,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
                 return fileService.deleteFile(fileEntryId).
                         andOnSuccess(deletedFile -> {
-                            if (questionHasMultipleStatuses)
+                            if (questionHasMultipleStatuses) {
                                 return getFormInputResponse(formInputFileEntryResource.getCompoundId());
-                            else
+                            } else {
                                 return getFormInputResponseForQuestionAssignee(formInputFileEntryResource.getCompoundId());
+                            }
                         }).
                         andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
             } else {
@@ -513,7 +514,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             if (!applicationWorkflowHandler.informIneligible(application)) {
                 return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);
-            };
+            }
+            ;
 
             applicationRepository.save(application);
             String bodyPlain = stripHtml(applicationIneligibleSendResource.getContent());
