@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -26,7 +27,8 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     @ManyToOne(fetch = FetchType.LAZY)
     protected ActivityState activityState;
 
-    private ZonedDateTime lastModified = ZonedDateTime.now();
+    @LastModifiedDate
+    private ZonedDateTime lastModified;
 
     private LocalDate startDate;
     private LocalDate endDate;
