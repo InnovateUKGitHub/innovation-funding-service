@@ -20,7 +20,7 @@ COPY files /usr/local/files/
 RUN apt-get update --fix-missing && \
 
 # install apache and shibboleth sp module \
-  apt-get -y install apache2 libapache2-modsecurity libapache2-mod-shib2 && \
+  apt-get -y install curl apache2 libapache2-modsecurity libapache2-mod-shib2 && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
 
 # put certificates in place \
