@@ -5,14 +5,13 @@
 </head>
 <body th:with="context='applicant'" class="competition-overview">
     <th:block th:insert="fragments/layout :: global-header" />
-
     <th:block th:insert="fragments/layout :: body-start" />
+
     <main tabindex="-1" id="content">
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl='/competition/search'" />
 
-        <p class="subtitle">Funding competition</p>
-        <h1 class="heading-large no-margin" th:text="${model.competitionTitle}"></h1>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},subTitle='Funding competition',size='heading-large'" />
 
         <p class="wysiwyg-styles" ifs:utext="${model.shortDescription}"></p>
 

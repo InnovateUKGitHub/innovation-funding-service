@@ -92,6 +92,7 @@ Resource          ../04__Applicant/FinanceSection_Commons.robot
 
 *** Variables ***
 ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+${opens_in_new_window}    (opens in a new window)
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
@@ -194,11 +195,10 @@ Project finance can re-upload the file
 Project finance user can view the file
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
     And the file has been scanned for viruses
-    When the user clicks the button/link    link=${valid_pdf}
-    Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    When the user opens the link in new window   ${valid_pdf}
+    Then the user goes back to the previous tab
 
 
 Project finance user can upload more than one file
@@ -210,13 +210,11 @@ Project finance user can upload more than one file
 Project finance user can still view and delete both files
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
-    Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
-    Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Post new query server side validations
@@ -378,18 +376,16 @@ Finance contact can view query
 Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    Then the user goes back to the previous tab
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    Then the user goes back to the previous tab
 
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
     [Tags]
-    When the user should see the element    jQuery=#content h2:nth-of-type(3):contains("an eligibility query's title")
-    And the user should see the element    jQuery=#content h2:nth-of-type(2):contains("a viability query's title")
+    When the user should see the element    jQuery=h2:contains("an eligibility query's title")
+    And the user should see the element    jQuery=h2:contains("a viability query's title")
 
 Large pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
@@ -415,38 +411,38 @@ Finance contact can remove the file
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
     And the user should not see an error in the page
 
 Finance contact can re-upload the file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
 
 Finance contact can view the file
     [Documentation]    INFUND-4843
     [Tags]
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
-    Then the user goes back to the initial page after having checked the attachment
+    When the user opens the link in new window   ${valid_pdf}
+    Then the user goes back to the previous tab
 
 Finance contact can upload more than one file
     [Documentation]    INFUND-4843
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
+    And the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
 
 Finance contact can still view both files
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
 
 Response to query server side validations
     [Documentation]    INFUND-4843
@@ -509,12 +505,10 @@ Project finance user can view the response
 Project finance user can view the finance contact's uploaded files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf}"):nth-of-type(1)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
-    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf}"):nth-of-type(2)
-    Then the user should not see an error in the page
-    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    Then the user goes back to the previous tab
+    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    Then the user goes back to the previous tab
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -588,23 +582,22 @@ Project finance can remove the file from notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
     And the user should not see an error in the page
 
 Project finance can re-upload the file to notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
 
 Project finance can view the file in notes
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
-    Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    When The user opens the link in new window   ${valid_pdf}
+    Then the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save note")
 
 Project finance can upload more than one file to notes
@@ -618,10 +611,10 @@ Project finance can still view both files in notes
     [Tags]
     When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     When the user clicks the button/link    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Create new note server side validations
@@ -708,22 +701,22 @@ Project finance can remove the file from note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
     And the user should not see an error in the page
 
 Project finance can re-upload the file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}")
 
 Project finance can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
-    Given the user should see the element    link=${valid_pdf}
+    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}")
-    And the user goes back to the initial page after having checked the attachment
+    When the user opens the link in new window   ${valid_pdf}
+    And the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save comment")
 
 Project finance can upload more than one file to note comments
@@ -737,10 +730,10 @@ Project finance can still view both files in note comments
     [Tags]
     When the user clicks the button/link    jQuery=form li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     When the user clicks the button/link    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the initial page after having checked the attachment
+    And the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save comment")
 
 Note comments server side validations
@@ -784,8 +777,8 @@ Project Finance user can view academic Jes form
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    css=a.eligibility-1
     Then the user should see the text in the page    Download Je-S form
-    When the user clicks the button/link    link=jes-form80.pdf
-    Then the user should not see an error in the page
+    When the user opens the link in new window   jes-form80.pdf
+    Then the user goes back to the previous tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can see the within limit research participation level
@@ -824,8 +817,8 @@ Project finance user can view finance overview for the consortium
     [Documentation]    INFUND-4846
     [Tags]
     When the user clicks the button/link    link=Project finance overview
-    Then the user should see the text in the element    css=#content h1:nth-of-type(1)  Finance overview
-    And the user should see the text in the element     css=#content h3:nth-of-type(1)  Overview
+    Then the user should see the element    jQuery=h1:contains("Finance overview")
+    And the user should see the element     jQuery=h3:contains("Overview")
     Then the user verifies the table heading for Overview section
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
     And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 503,248   £ 145,497    £ 6,170     29%
@@ -833,17 +826,17 @@ Project finance user can view finance overview for the consortium
 Project finance user can view Finances summary for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    Given the user should see the text in the element   css=#content h3:nth-of-type(2)      Finances summary
-    When the user verifies the table heading for Finances summary section
-    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    Given the user should see the element   jQuery=h3:contains("Finances summary")
+    When the user verifies the table heading for Finance summary section
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the categories are verified for Finances summary section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
-    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
-    And the categories are verified for Finances summary section   2   £ 990   0%  £ 0     £ 0     £ 990
-    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
-    And the categories are verified for Finances summary section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
-    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And the Total calculation for Finances summary are verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
+    And the Categories Are Verified For Finances Summary Section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    And the Categories Are Verified For Finances Summary Section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    And the Categories Are Verified For Finances Summary Section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
+    And The Total Calculation For Finances Summary Are Verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can see finance breakdown for different categories
@@ -851,7 +844,7 @@ Project finance can see finance breakdown for different categories
     [Tags]
     When the user clicks the button/link               link=Project finance overview
     Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
+    # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
     And all the categories are verified   1   £ 301,355  £ 4,622  £ 0  £ 150,300  £ 828  £ 135,000  £ 8,955  £ 1,650
     When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     Then all the categories are verified  2   £ 990      £ 286 	 £ 154 	£ 66     £ 0    £ 0        £ 44     £ 440
@@ -865,10 +858,10 @@ Project finance user can review Lead-partner's Changes to finances during the Fi
     [Tags]
     Given the user clicks the button/link        css=a.eligibility-0
     When the user clicks the button/link         link=Review all changes to project finances
-    Then the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
-    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
-    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
-    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+    Then the user should see the element    jQuery=h1:contains("Changes to finances")
+    And the user should see the element     jQuery=h2:contains("Project finances")
+    And the user should see the element     jQuery=h2:contains("Section changes")
+    And the user should see the element     jQuery=h2:contains("Changes from submitted finances")
 
 Project finance user can review Lead-partner's Project finances in Changes-to-finances page before the revisions made
     [Documentation]    INFUND-4837
@@ -888,8 +881,8 @@ Project finance user can review Lead-partner's Section changes in Changes-to-fin
 Project finance user can review Lead-partner's Overall cost for Changes-from-submitted-finances before the revisions made
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
+    Given the user should see the text in the element   css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
     And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
 
 Project finance user can review Partner's Changes to finances during the Finance Checks eligibility before the revisions made
@@ -898,10 +891,10 @@ Project finance user can review Partner's Changes to finances during the Finance
     Given the user clicks the button/link       link=Finance checks
     When the user clicks the button/link        css=a.eligibility-2
     Then the user clicks the button/link        link=Review all changes to project finances
-    And the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
-    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
-    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
-    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+    And the user should see the element         jQuery=h1:contains("Changes to finances")
+    And the user should see the element         jQuery=h2:contains("Project finances")
+    And the user should see the element         jQuery=h2:contains("Section changes")
+    And the user should see the element         jQuery=h2:contains("Changes from submitted finances")
 
 Project finance user can review Partner's Project finances in Changes-to-finances page before the revisions made
     [Documentation]    INFUND-4837
@@ -921,8 +914,8 @@ Project finance user can review Partner's Section changes in Changes-to-finances
 Project finance user can review Partner's Overall cost for Changes-from-submitted-finances before the revisions made
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
+    Given the user should see the text in the element   jQuery=h2:contains("Changes from submitted finances") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    jQuery=h2:contains("Changes from submitted finances") + * tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
     And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
@@ -935,9 +928,17 @@ Lead-Partner can review only the external version of Finance Checks Eligibility 
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
+<<<<<<< HEAD
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
     Then the user should see the element    css=input[id="total-cost"][value="£ 301,355"]
     And the user clicks the button/link     link=Finance checks
+=======
+    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
+    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
+    And the user should see the element     id=total-cost
+    Then the user clicks the button/link     link=Finance checks
+>>>>>>> development
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
 Partner can review only the external version of Finance Checks Eligibility table
@@ -948,8 +949,15 @@ Partner can review only the external version of Finance Checks Eligibility table
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
+<<<<<<< HEAD
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
     Then the user should see the element    css=input[id="total-cost"][value="£ 200,903"]
+=======
+    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
+    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
+    And the user should see the element     id=total-cost
+>>>>>>> development
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
@@ -1449,7 +1457,7 @@ Project finance can see updated finance breakdown for different categories
     [Tags]
     When the user clicks the button/link   link=Project finance overview
     Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
+    # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
     And all the categories are verified  1   £ 206,867 	 £ 60,602  £ 1,954 	£ 52,100   £ 10,376   £ 65,000  £ 4,985   £ 11,850
     When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     Then all the categories are verified  2   £ 990 	     £ 286 	   £ 154    £ 66       £ 0 	      £ 0 	    £ 44      £ 440
@@ -1477,8 +1485,8 @@ Project finance user can view Updated finance overview for the consortium
     [Documentation]    INFUND-4846
     [Tags]
     When the user clicks the button/link    link=Project finance overview
-    Then the user should see the text in the element    css=#content h1:nth-of-type(1)  Finance overview
-    And the user should see the text in the element     css=#content h3:nth-of-type(1)  Overview
+    Then the user should see the element    jQuery=h1:contains("Finance overview")
+    And the user should see the element     jQuery=h3:contains("Overview")
     Then the user verifies the table heading for Overview section
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
     And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 322,113   £ 91,157    £ 6,170     28%
@@ -1486,17 +1494,17 @@ Project finance user can view Updated finance overview for the consortium
 Project finance user can view Updated Finances summary for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    Given the user should see the text in the element   css=#content h3:nth-of-type(2)      Finances summary
-    When the user verifies the table heading for Finances summary section
-    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    Given the user should see the element   jQuery=h3:contains("Finances summary")
+    When the user verifies the table heading for Finance summary section
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the categories are verified for Finances summary section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
-    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
-    And the categories are verified for Finances summary section   2   £ 990   0%  £ 0     £ 0     £ 990
-    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
-    And the categories are verified for Finances summary section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
-    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And the Total calculation for Finances summary are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
+    And the Categories Are Verified For Finances Summary Section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    And the Categories Are Verified For Finances Summary Section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    And the Categories Are Verified For Finances Summary Section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
+    Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
+    And The Total Calculation For Finances Summary Are Verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
 
 Project finance user can view Lead-partner's Changes to finances during the Finance Checks eligibility
     [Documentation]    INFUND-4837
@@ -1504,10 +1512,10 @@ Project finance user can view Lead-partner's Changes to finances during the Fina
     Given the user clicks the button/link       link=Finance checks
     When the user clicks the button/link        css=a.eligibility-0
     Then the user clicks the button/link        link=View changes to finances
-    And the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
-    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
-    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
-    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+    And the user should see the element         jQuery=h1:contains("Changes to finances")
+    And the user should see the element         jQuery=h2:contains("Project finances")
+    And the user should see the element         jQuery=h2:contains("Section changes")
+    And the user should see the element         jQuery=h2:contains("Changes from submitted finances")
 
 Project finance user can view Lead-partner's Project finances in Changes-to-finances page
     [Documentation]    INFUND-4837
@@ -1547,13 +1555,13 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
 Project finance user can view Lead-partner's Changes-from-submitted-finances for Overheads Section
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(13) td:nth-of-type(1)
+    Given the user moves focus to the element    jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(13) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the Action and Section for Changes-from-submitted-finances       13  Change  Overheads
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     And the user verifies the table heading for the specified section  13  Rate Type  None  Custom Amount  #Overheads
-    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
-    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) td:nth-of-type(2)  1954
+    And the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
+    And the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(14) td:nth-of-type(2)  1954
     Then the revised cost is verified for the specified section     15  0
 
 #3.capital usage section
@@ -1562,7 +1570,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     [Tags]
     Given the user clicks the button/link       link=Eligibility
     When the user clicks the button/link        link=View changes to finances
-    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(28) td:nth-of-type(1)
+    Then the user moves focus to the element    jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(28) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the Action and Section for Changes-from-submitted-finances       28    Change    Capital usage
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
@@ -1580,7 +1588,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
 Project finance user can view Lead-partner's Changes-from-submitted-finances for Other-costs Section
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(79) td:nth-of-type(1)
+    Given the user moves focus to the element       jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(79) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     When the user verifies the Action and Section for Changes-from-submitted-finances       79     Change     Other costs
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
@@ -1596,7 +1604,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     [Tags]
     Given the user clicks the button/link       link=Eligibility
     When the user clicks the button/link        link=View changes to finances
-    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(67) td:nth-of-type(1)
+    Then the user moves focus to the element    jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(67) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     And the user verifies the Action and Section for Changes-from-submitted-finances      67      Change      Travel and subsistence
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
@@ -1612,7 +1620,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     [Documentation]    INFUND-4837
     [Tags]
     # the below figures are listed as:     RowNumber      Action      Section
-    Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(52) td:nth-of-type(1)
+    Given the user moves focus to the element       jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(52) td:nth-of-type(1)
     When the user verifies the Action and Section for Changes-from-submitted-finances      52      Change      Subcontracting
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     Then the user verifies the table heading for the specified section   52  Subcontractor name  Developers   test  #Subcontracting
@@ -1628,7 +1636,7 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
     [Tags]
     Given the user clicks the button/link       link=Eligibility
     When the user clicks the button/link        link=View changes to finances
-    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1)
+    Then the user moves focus to the element    jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(1) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     And the user verifies the Action and Section for Changes-from-submitted-finances      1    Change    Labour
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
@@ -1641,8 +1649,8 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances for
 Project finance user can view Lead-partner's Overall cost difference after Changes-from-submitted-finances
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   -94,488
+    Given the user should see the text in the element   jQuery=h2:contains("Changes from submitted finances") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    jQuery=h2:contains("Changes from submitted finances") + * tfoot tr:nth-of-type(1) th:nth-of-type(2)   -94,488
     And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
 
 Project finance user can view Partner's Changes to finances during the Finance Checks eligibility
@@ -1651,10 +1659,10 @@ Project finance user can view Partner's Changes to finances during the Finance C
     Given the user clicks the button/link       link=Finance checks
     When the user clicks the button/link        css=a.eligibility-2
     Then the user clicks the button/link        link=View changes to finances
-    And the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
-    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
-    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
-    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+    And the user should see the element         jQuery=h1:contains("Changes to finances")
+    And the user should see the element         jQuery=h2:contains("Project finances")
+    And the user should see the element         jQuery=h2:contains("Section changes")
+    And the user should see the element         jQuery=h2:contains("Changes from submitted finances")
 
 Project finance user can view Partner's Project finances in Changes-to-finances page
     [Documentation]    INFUND-4837
@@ -1694,13 +1702,13 @@ Project finance user can view Partner's Changes-from-submitted-finances for Mate
 Project finance user can view Partner's Changes-from-submitted-finances for Overheads Section
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(13) td:nth-of-type(1)
+    Given the user moves focus to the element    jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(13) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the Action and Section for Changes-from-submitted-finances       13  Change  Overheads
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     And the user verifies the table heading for the specified section   13      Rate Type       None        Custom Amount  #Overheads
-    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
-    And the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(14) td:nth-of-type(2)  9078
+    And the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(14) th:nth-of-type(1)  Amount
+    And the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(14) td:nth-of-type(2)  9078
     Then the revised cost is verified for the specified section     15  0
 
 #3.capital usage section
@@ -1709,7 +1717,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Capi
     [Tags]
     Given the user clicks the button/link       link=Eligibility
     When the user clicks the button/link        link=View changes to finances
-    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(28) td:nth-of-type(1)
+    Then the user moves focus to the element    jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(28) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the Action and Section for Changes-from-submitted-finances       28    Change    Capital usage
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
@@ -1727,7 +1735,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Capi
 Project finance user can view Partner's Changes-from-submitted-finances for Other-costs Section
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(79) td:nth-of-type(1)
+    Given the user moves focus to the element       jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(79) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     When the user verifies the Action and Section for Changes-from-submitted-finances       79     Change     Other costs
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
@@ -1743,7 +1751,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Trav
     [Tags]
     Given the user clicks the button/link       link=Eligibility
     When the user clicks the button/link        link=View changes to finances
-    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(67) td:nth-of-type(1)
+    Then the user moves focus to the element    jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(67) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     And the user verifies the Action and Section for Changes-from-submitted-finances      67      Change      Travel and subsistence
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
@@ -1759,7 +1767,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Subc
     [Documentation]    INFUND-4837
     [Tags]
     # the below figures are listed as:     RowNumber      Action      Section
-    Given the user moves focus to the element       css=#content div:nth-of-type(5) tbody tr:nth-of-type(52) td:nth-of-type(1)
+    Given the user moves focus to the element       jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(52) td:nth-of-type(1)
     When the user verifies the Action and Section for Changes-from-submitted-finances      52      Change      Subcontracting
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
     Then the user verifies the table heading for the specified section   52     Subcontractor name      Developers      test  #Subcontracting
@@ -1775,7 +1783,7 @@ Project finance user can view Partner's Changes-from-submitted-finances for Labo
     [Tags]
     Given the user clicks the button/link       link=Eligibility
     When the user clicks the button/link        link=View changes to finances
-    Then the user moves focus to the element    css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1)
+    Then the user moves focus to the element    jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(1) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
     And the user verifies the Action and Section for Changes-from-submitted-finances      1    Change    Labour
     # the below figures are listed as:     RowNumber      heading_1      heading_2      heading_3
@@ -1788,8 +1796,8 @@ Project finance user can view Partner's Changes-from-submitted-finances for Labo
 Project finance user can view Partner's Overall cost difference after Changes-from-submitted-finances
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user should see the text in the element   css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    Then the user should see the text in the element    css=#content div:nth-of-type(5) tfoot tr:nth-of-type(1) th:nth-of-type(2)   -86,647
+    Given the user should see the text in the element   jQuery=h2:contains("Changes from submitted finances") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+    Then the user should see the text in the element    jQuery=h2:contains("Changes from submitted finances") + * tfoot tr:nth-of-type(1) th:nth-of-type(2)   -86,647
     And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -1850,8 +1858,15 @@ Lead-Partner can view only the external version of Finance Checks Eligibility ta
     [Tags]
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
+<<<<<<< HEAD
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
     Then the user should see the element    css=input[id="total-cost"][value="£ 206,867"]
+=======
+    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
+    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
+    Then the user should see the element                id=total-cost
+>>>>>>> development
 
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787, INFUND-8880
@@ -1882,8 +1897,15 @@ Non Lead-Partner can view only the external version of Finance Checks Eligibilit
     [Tags]
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
+<<<<<<< HEAD
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
     Then the user should see the element    css=input[id="total-cost"][value="£ 114,256"]
+=======
+    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
+    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
+    Then the user should see the element                id=total-cost
+>>>>>>> development
 
 *** Keywords ***
 
@@ -1966,7 +1988,7 @@ the user fills in project costs
     Input Text    name=costs[5].value    £ 10,000
     Input Text    name=costs[6].value    £ 10,000
     the user moves focus to the element    css=[for="costs-reviewed"]
-    the user sees the text in the element    css=#content tfoot td    £ 60,000
+    the user sees the text in the element    css=tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
 
 bank details are approved for all businesses
@@ -2075,19 +2097,19 @@ the user adds data into materials row
 
 the user adds capital usage data into row
     [Arguments]  ${row_number}  ${description}  ${net_value}  ${residual_value}  ${utilization}
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(1) textarea   ${description}
-    Click Element                               css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(2) label:nth-of-type(1)
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(3) input    12
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(4) input  ${net_value}
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(5) input   ${residual_value}
-    the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(${row_number}) div:nth-of-type(6) input   ${utilization}
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(1) textarea   ${description}
+    Click Element                               jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(2) label:nth-of-type(1)
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(3) input    12
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(4) input  ${net_value}
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(5) input   ${residual_value}
+    the user enters text to a text field        jQuery=#capital_usage div:nth-child(${row_number}) div:nth-of-type(6) input   ${utilization}
 
 the user adds subcontracting data into row
     [Arguments]  ${row_number}  ${name}  ${cost}
-    the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(1) input   ${name}
-    the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(2) input   UK
-    the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(3) textarea   Develop
-    the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(4) input   ${cost}
+    the user enters text to a text field        css=#subcontracting div:nth-child(${row_number}) div:nth-of-type(1) input   ${name}
+    the user enters text to a text field        css=#subcontracting div:nth-child(${row_number}) div:nth-of-type(2) input   UK
+    the user enters text to a text field        css=#subcontracting div:nth-child(${row_number}) div:nth-of-type(3) textarea   Develop
+    the user enters text to a text field        css=#subcontracting div:nth-child(${row_number}) div:nth-of-type(4) input   ${cost}
 
 the user adds travel data into row
     [Arguments]  ${row_number}  ${description}  ${number_of_times}  ${cost}
@@ -2305,10 +2327,6 @@ Project finance user amends other costs details in eligibility for lead
     And the user should see the element           jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
 
-the user goes back to the initial page after having checked the attachment
-    the user should not see an error in the page
-    Select Window    #this goes back to the initial page
-
 the user verifies the table heading for Overview section
     the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(1)      Start date
     the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(2)      Duration
@@ -2326,28 +2344,28 @@ the categories are verified for Overview section
     the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${other_public_sector_fund}
     the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
 
-the user verifies the table heading for Finances summary section
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(1)   Partner
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(2)   Total costs
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(3)   % Grant
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(4)   Funding sought
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(5)   Other public sector funding
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(6)   Contribution to project
+the user verifies the table heading for Finance summary section
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(1)   Partner
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(2)   Total costs
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(3)   % Grant
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(4)   Funding sought
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(5)   Other public sector funding
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * thead tr:nth-of-type(1) th:nth-of-type(6)   Contribution to project
 
 the categories are verified for Finances summary section
     [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
 
 the Total calculation for Finances summary are verified
     [Arguments]  ${row_number}  ${allPartners_totalcost}   ${allPartners_fundingSought}   ${allPartners_otherPublicSectorFunding}  ${allPartners_contributionToProject}
-    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${allPartners_totalcost}
-    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
-    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
-    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${allPartners_totalcost}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
+    the user should see the text in the element     jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
 
 all the categories are verified
     [Arguments]  ${row_number}  ${total}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${subcontracting}  ${travel}   ${other_costs}
@@ -2361,86 +2379,97 @@ all the categories are verified
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}
 
 the user verifies the table heading for Project finances section
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(1)   Total costs
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(2)   % Grant
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(3)   Funding sought
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(4)   Other public sector funding
-    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(5)   Contribution to project
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tr:nth-of-type(1) th:nth-of-type(1)   Total costs
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tr:nth-of-type(1) th:nth-of-type(2)   % Grant
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tr:nth-of-type(1) th:nth-of-type(3)   Funding sought
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tr:nth-of-type(1) th:nth-of-type(4)   Other public sector funding
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tr:nth-of-type(1) th:nth-of-type(5)   Contribution to project
 
 # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
 the categories are verified for Project finances section
     [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${total_costs}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${percentage_grant}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${funding_sought}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${other_public_sector_funding}
-    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${contribution_to_project}
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${total_costs}
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${percentage_grant}
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${funding_sought}
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${other_public_sector_funding}
+    the user should see the text in the element     jQuery=h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${contribution_to_project}
 
 the user verifies the table heading for Section changes
-    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(1)   Labour
-    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(2)   Overheads
-    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(3)   Materials
-    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(4)   Capital usage
-    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(5)   Subcontracting
-    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(6)   Travel and subsistence
-    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(7)   Other costs
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div thead tr:nth-of-type(1) th:nth-of-type(1)   Labour
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div thead tr:nth-of-type(1) th:nth-of-type(2)   Overheads
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div thead tr:nth-of-type(1) th:nth-of-type(3)   Materials
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div thead tr:nth-of-type(1) th:nth-of-type(4)   Capital usage
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div thead tr:nth-of-type(1) th:nth-of-type(5)   Subcontracting
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div thead tr:nth-of-type(1) th:nth-of-type(6)   Travel and subsistence
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div thead tr:nth-of-type(1) th:nth-of-type(7)   Other costs
 
 # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
 the categories are verified for Section changes
     [Arguments]  ${row_number}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}
-    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${labour}
-    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${overheads}
-    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${materials}
-    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${capital_usage}
-    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${sub_contracting}
-    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)   ${travel_and_subsistence}
-    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)   ${other_costs}
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${labour}
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${overheads}
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${materials}
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${capital_usage}
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${sub_contracting}
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)   ${travel_and_subsistence}
+    the user should see the text in the element     jQuery=h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)   ${other_costs}
 
 the user verifies the table heading for Changes-from-submitted-finances
-    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(1)   Action
-    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(2)   Section
-    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(3)   Detail
-    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(4)   Submitted
-    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(5)   Updated
-    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(6)   Cost
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * thead tr:nth-of-type(1) th:nth-of-type(1)   Action
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * thead tr:nth-of-type(1) th:nth-of-type(2)   Section
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * thead tr:nth-of-type(1) th:nth-of-type(3)   Detail
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * thead tr:nth-of-type(1) th:nth-of-type(4)   Submitted
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * thead tr:nth-of-type(1) th:nth-of-type(5)   Updated
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * thead tr:nth-of-type(1) th:nth-of-type(6)   Cost
 
 the user verifies the Action and Section for Changes-from-submitted-finances
     [Arguments]  ${row_number}  ${action}  ${section}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${action}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${section}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${action}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${section}
 
 the revised cost is verified for the specified section
     [Arguments]  ${row_number}  ${cost}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${cost}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${cost}
 
 the user verifies the table heading for the specified section
     [Arguments]  ${row_number}   ${heading_1}  ${heading_2}  ${heading_3}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${heading_1}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${heading_2}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${heading_3}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${heading_1}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${heading_2}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${heading_3}
 
 the revised categories are verified for Other-costs Section
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) th:nth-of-type(1)   Description and justification of cost
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(3)   Some more costs
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(4)   some other costs
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) th:nth-of-type(1)   Total
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) td:nth-of-type(1)   550
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) td:nth-of-type(2)   5000
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(3) td:nth-of-type(1)   4,450
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(1) th:nth-of-type(1)   Description and justification of cost
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(1) td:nth-of-type(3)   Some more costs
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(1) td:nth-of-type(4)   some other costs
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(2) th:nth-of-type(1)   Total
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(2) td:nth-of-type(1)   550
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(2) td:nth-of-type(2)   5000
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(3) td:nth-of-type(1)   4,450
 
 # the below figures are listed as:     RowNumber    Detail   Submitted    Updated
 the revised categories are verified for specified Section
     [Arguments]  ${row_number}  ${detail}  ${submitted}  ${updated}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${detail}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${detail}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
+    the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
 
+<<<<<<< HEAD
+=======
+the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
+    the user should not see the text in the element     css=section:nth-of-type(1) h3 button   %
+    the user should not see the text in the element     css=section:nth-of-type(3) h3 button   %
+    the user should not see the text in the element     css=section:nth-of-type(4) h3 button   %
+    the user should not see the text in the element     css=section:nth-of-type(5) h3 button   %
+    the user should not see the text in the element     css=section:nth-of-type(6) h3 button   %
+    the user should not see the text in the element     css=section:nth-of-type(7) h3 button   %
+
+>>>>>>> development
 the user verifies the financial sub-totals for external version under the Detailed-finances
     [Arguments]  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}
-    the user should see the text in the element     jQuery=section:nth-of-type(1) h3 button span   ${labour}
-    the user should see the text in the element     jQuery=section:nth-of-type(2) h3 button span   ${overheads}
-    the user should see the text in the element     jQuery=section:nth-of-type(3) h3 button span   ${materials}
-    the user should see the text in the element     jQuery=section:nth-of-type(4) h3 button span   ${capital_usage}
-    the user should see the text in the element     jQuery=section:nth-of-type(5) h3 button span   ${sub_contracting}
-    the user should see the text in the element     jQuery=section:nth-of-type(6) h3 button span   ${travel_and_subsistence}
-    the user should see the text in the element     jQuery=section:nth-of-type(7) h3 button span   ${other_costs}
+    the user should see the text in the element     css=section:nth-of-type(1) h3 button span   ${labour}
+    the user should see the text in the element     css=section:nth-of-type(2) h3 button span   ${overheads}
+    the user should see the text in the element     css=section:nth-of-type(3) h3 button span   ${materials}
+    the user should see the text in the element     css=section:nth-of-type(4) h3 button span   ${capital_usage}
+    the user should see the text in the element     css=section:nth-of-type(5) h3 button span   ${sub_contracting}
+    the user should see the text in the element     css=section:nth-of-type(6) h3 button span   ${travel_and_subsistence}
+    the user should see the text in the element     css=section:nth-of-type(7) h3 button span   ${other_costs}

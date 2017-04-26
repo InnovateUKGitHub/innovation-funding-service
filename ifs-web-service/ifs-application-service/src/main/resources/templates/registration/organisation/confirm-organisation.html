@@ -10,19 +10,15 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to confirm operating address',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
-
-    <h1 class="heading-xlarge">
-        <span class="heading-secondary">Create your account</span>
-        Confirm your organisation
-    </h1>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle='Create your account',size='heading-xlarge'" />
 
     <div class="message-alert">
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
     <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
-    <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, hideType=false"/>
+    <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
 
     <a th:href="@{/organisation/create/save-organisation}" name="save-organisation" class="button extra-margin">Save and continue</a>
 

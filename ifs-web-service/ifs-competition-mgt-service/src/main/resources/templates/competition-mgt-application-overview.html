@@ -12,10 +12,9 @@
     <th:block th:include="fragments/layout :: main-content-start" />
     <th:block th:include="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" th:remove="tag"></th:block>
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})"/>
-        <h1 class="heading-xlarge no-margin">Application overview</h1>
-    </div>
+    <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
+    </th:block>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
           method="post" enctype="multipart/form-data"
@@ -41,8 +40,8 @@
                 <h3 class="heading-small no-margin" th:text="${appendix.title}">
                     View project management appendix:
                 </h3>
-                <a th:href="${appendix.getDownloadURL()}"
-                   th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">
+                <a target="_blank" th:href="${appendix.getDownloadURL()}"
+                   th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize() + ' (opens in a new window)'}">
                     Project-plan.pdf (161.96 KB)
                 </a>
             </div>

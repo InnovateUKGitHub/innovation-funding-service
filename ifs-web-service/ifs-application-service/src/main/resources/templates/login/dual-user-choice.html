@@ -17,11 +17,7 @@
                     <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
                 </ul>
             </div>
-
-            <div class="page-title">
-                <h1 class="heading-xlarge">Sign in successful</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sign in successful',size='heading-xlarge'" />
             <p>Thank you for signing into the Innovation Funding Service.</p>
 
             <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="extra-margin">
