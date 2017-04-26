@@ -43,9 +43,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
- * This controller will handle all requests that are related to the application overview.
- * Application overview is the page that contains the most basic information about the current application and
- * the basic information about the competition the application is related to.
+ * This controller will handle all submit requests that are related to the application overview.
  */
 
 @Controller
