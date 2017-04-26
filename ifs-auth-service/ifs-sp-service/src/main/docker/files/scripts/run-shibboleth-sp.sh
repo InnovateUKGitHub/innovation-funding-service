@@ -4,7 +4,9 @@
 
 # substitutions at runtime, we can't use environment variables in XML files
 sed -i "s#\/\/ifs.local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
-sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml && \
+sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml
+proxy_certificate=$(sed '/^-----/d' "/etc/shibboleth/$PROXY_CERTIFICATE" | sed '{:q;N;s/\n/\\n/g;t q}')
+sed -i "s#\${PROXY_CERTIFICATE}#$proxy_certificate#g" /etc/shibboleth/metadata.xml && \
 sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/shibboleth2.xml /etc/shibboleth/metadata.xml /var/www/html/Logout/index.html
 
 # Remove any lingering pid files

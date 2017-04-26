@@ -238,23 +238,10 @@ Ekz23Yv8baWqwZRwZcbjbe4zAMMNa6oc5b//kg==
     </Extensions>
     <KeyDescriptor>
       <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-        <ds:KeyName>iuk-auth-localdev</ds:KeyName>
+        <ds:KeyName>ifs.local-dev</ds:KeyName>
         <ds:X509Data>
-          <ds:X509SubjectName>CN=iuk-auth-localdev,O=G2G3 Digital,L=Sheffield,ST=Yorkshire,C=GB</ds:X509SubjectName>
-          <ds:X509Certificate>MIICSTCCAbICCQDiRKgjEqhdqTANBgkqhkiG9w0BAQsFADBoMQswCQYDVQQGEwJH
-QjESMBAGA1UECAwJWW9ya3NoaXJlMRIwEAYDVQQHDAlTaGVmZmllbGQxFTATBgNV
-BAoMDEcyRzMgRGlnaXRhbDEaMBgGA1UEAwwRaXVrLWF1dGgtbG9jYWxkZXYwIBcN
-MTYwMTEyMTE0ODQ4WhgPMjE1MjEyMDQxMTQ4NDhaMGgxCzAJBgNVBAYTAkdCMRIw
-EAYDVQQIDAlZb3Jrc2hpcmUxEjAQBgNVBAcMCVNoZWZmaWVsZDEVMBMGA1UECgwM
-RzJHMyBEaWdpdGFsMRowGAYDVQQDDBFpdWstYXV0aC1sb2NhbGRldjCBnzANBgkq
-hkiG9w0BAQEFAAOBjQAwgYkCgYEAuaiWmrS4m5LCbvUB9JoqVsLRgWPM/mlTu3E+
-qdnc1qQMI+9ScCU15JViVO+W4/Hsc90KJ3xRGz1rztK5lA5w6OaABbfPJzSHx4fb
-sGS4shoShR1p6LFJMbOUqQ05Y8SX838MfP60jnCmNYRUXn39OWMGdIyvFviOtxtK
-EaALj3cCAwEAATANBgkqhkiG9w0BAQsFAAOBgQBkTn5fwKqm8iZIqqtx6a6Q0TxN
-5gZW0yyr6qslGlHUD2oWEwhVidzwVdd+oqU8Urx0MvyzPTk0sGBmqIRJXHbZVe23
-OyNceKehvsKSXtKOq+KRw+wPW4SUMjo9jLNxJo5Jq/ULwjHvUdvoFOHc/LBh9B4L
-IYZT/dpniOXel4qSRw==
-</ds:X509Certificate>
+          <ds:X509SubjectName>CN=ifs.local-dev,O=Innovate UK,L=Swindon,ST=Wiltshire,C=GB</ds:X509SubjectName>
+          <ds:X509Certificate>${PROXY_CERTIFICATE}</ds:X509Certificate>
         </ds:X509Data>
       </ds:KeyInfo>
       <EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#aes128-gcm"/>
