@@ -11,10 +11,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application progress',linkClass='link-back',linkUrl=@{/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${model.applicationId},sortField=${model.sortField})}" />
-
-            <div class="page-title">
-                <h1 class="heading-xlarge">Confirm remove</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm remove',size='heading-xlarge'" />
 
             <form th:action="@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(
                   competitionId=${model.competitionId},

@@ -10,17 +10,10 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-
-            <div class="hgroup">
-                <h1 class="heading-large">Thank you</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Thank you',size='heading-large'" />
             <p>Thank you for letting us know you are unable to assess applications within this competition.</p>
-
             <p>We hope that you will be able to assess for us in the future.</p>
-
             <p>If you have any questions, please contact the Innovate UK team at <a href="mailto:competitions@innovateuk.com">competitions@innovateuk.com</a></p>
-
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 

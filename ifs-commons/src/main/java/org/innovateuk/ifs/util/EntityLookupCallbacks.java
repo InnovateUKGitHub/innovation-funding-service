@@ -39,15 +39,8 @@ public class EntityLookupCallbacks {
         return ofNullable(result).map(ServiceResult::serviceSuccess).orElse(ServiceResult.serviceFailure(failureResponse));
     }
 
-    public static <T> ServiceResult<T> find(
-            Optional<T> result,
-            Error failureResponse) {
-
-        if(result.isPresent()){
-            return ServiceResult.serviceSuccess(result.get());
-        }else{
-            return ServiceResult.serviceFailure(failureResponse);
-        }
+    public static <T> ServiceResult<T> find(Optional<T> result, Error failureResponse) {
+        return result.map(ServiceResult::serviceSuccess).orElse(ServiceResult.serviceFailure(failureResponse));
     }
 
     /**
@@ -55,9 +48,7 @@ public class EntityLookupCallbacks {
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
      * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
      */
-    public static <SuccessType1> ServiceResultHandler<SuccessType1> find(
-            Supplier<ServiceResult<SuccessType1>> getterFn) {
-
+    public static <SuccessType1> ServiceResultHandler<SuccessType1> find(Supplier<ServiceResult<SuccessType1>> getterFn) {
         return new ServiceResultHandler<>(getterFn);
     }
 
