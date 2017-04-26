@@ -10,14 +10,8 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to ' + ${model.organisationTypeName} + ' organisation',
-        linkClass='link-back',linkUrl='/organisation/create/find-organisation'" />
-
-    <h1 class="heading-xlarge">
-        <span class="heading-secondary">Create your account</span>
-        Organisation address
-    </h1>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to ' + ${model.organisationTypeName} + ' organisation',linkClass='link-back',linkUrl='/organisation/create/find-organisation'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisation address',subTitle='Create your account',size='heading-xlarge'" />
 
     <div class="message-alert">
         <p>

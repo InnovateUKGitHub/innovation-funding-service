@@ -11,9 +11,8 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div class="page-title">
-        <h1 class="heading-large">Terms and conditions of an Innovate UK grant award</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions of an Innovate UK grant award',size='heading-large'" />
+
     <ol class="list-alpha">
         <li>These terms and conditions apply to organisations who are applying for grant funding either individually or in collaboration with other applicants. Each organisation must accept the terms and conditions before submitting its application.</li>
         <li>If you are successful, you will receive an award letter confirming any project-specific conditions of the award. This letter must be countersigned and uploaded by the organisation in the correct manner before the project can start.</li>
