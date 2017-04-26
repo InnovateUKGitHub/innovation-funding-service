@@ -87,7 +87,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         try {
             classUnderTest.createProjectFromApplication(123L);
             fail("Should not have been able to create project from application as applicant");
-        } catch(AccessDeniedException ade){
+        } catch (AccessDeniedException ade) {
             //expected behaviour
         }
     }
@@ -249,7 +249,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
-
     @Test
     public void testCreateExploitationPlanFileEntry() {
 
@@ -317,7 +316,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
-
     @Test
     public void testAddPartnerDeniedIfNotSystemRegistrar() {
         EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
@@ -331,6 +329,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             }
         });
     }
+
     @Test
     public void testAddPartnerAllowedIfSystemRegistrar() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build())).build());
@@ -353,7 +352,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectTeamStatus(){
+    public void testGetProjectTeamStatus() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -365,77 +364,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
- /*   @Test
-    public void testSendGrantOfferLetter(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.sendGrantOfferLetter(123L), () -> {
-            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
     @Test
-    public void testIsSendGrantOfferLetterAllowed(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.isSendGrantOfferLetterAllowed(123L), () -> {
-            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testIsSendGrantOfferLetterAlreadySent(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.isGrantOfferLetterAlreadySent(123L), () -> {
-            verify(projectPermissionRules).internalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testApproveSignedGrantOfferLetter(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED), () -> {
-            verify(projectPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testSignedGrantOfferLetterApproved(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterApproved(123L), () -> {
-            verify(projectPermissionRules).partnersOnProjectCanViewGrantOfferApprovedStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).internalUsersCanViewGrantOfferApprovedStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetGrantOfferLetterWorkflowState() {
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.getGrantOfferLetterWorkflowState(123L), () -> {
-            verify(projectPermissionRules).internalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }*/
-
-    @Test
-    public void testGetProjectManager(){
+    public void testGetProjectManager() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -448,7 +378,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                 }
         );
     }
-
 
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
