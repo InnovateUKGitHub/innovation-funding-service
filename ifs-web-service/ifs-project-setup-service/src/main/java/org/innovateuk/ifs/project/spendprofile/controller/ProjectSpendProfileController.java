@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -157,7 +158,7 @@ public class ProjectSpendProfileController {
     }
 
 
-    private String saveSpendProfileSuccessView(Long projectId, Long organisationId, Long userId) {
+    private String saveSpendProfileSuccessView(final Long projectId, final Long organisationId, final Long userId) {
         final String urlSuffix = projectService.isUserLeadPartner(projectId, userId) ? "/review" : "";
         return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + urlSuffix;
 
@@ -167,7 +168,7 @@ public class ProjectSpendProfileController {
     @PostMapping("/incomplete")
     public String markAsActionRequiredSpendProfile(Model model,
                                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
-                                                   BindingResult bindingResult,
+                                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                                    ValidationHandler validationHandler,
                                                    @PathVariable("projectId") final Long projectId,
                                                    @PathVariable("organisationId") final Long organisationId,
@@ -193,8 +194,8 @@ public class ProjectSpendProfileController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping("/confirm")
-    public String viewConfirmSpendProfilePage(@PathVariable("projectId") Long projectId,
-                                              @PathVariable("organisationId") Long organisationId,
+    public String viewConfirmSpendProfilePage(@PathVariable("projectId") final Long projectId,
+                                              @PathVariable("organisationId") final Long organisationId,
                                               Model model,
                                               @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
@@ -204,17 +205,21 @@ public class ProjectSpendProfileController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping("/incomplete")
-    public String viewConfirmEditSpendProfilePage(@PathVariable("projectId") Long projectId,
-                                              @PathVariable("organisationId") Long organisationId,
-                                              Model model,
-                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String viewConfirmEditSpendProfilePage(@PathVariable("projectId") final Long projectId,
+                                                  @PathVariable("organisationId") final Long organisationId,
+                                                  Model model,
+                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
         model.addAttribute("model", viewModel);
         return "project/spend-profile-confirm-edits";
     }
 
-    private String doEditSpendProfile(Model model, SpendProfileForm form, Long organisationId, UserResource loggedInUser,
-                                      ProjectResource project, SpendProfileTableResource spendProfileTableResource) {
+    private String doEditSpendProfile(Model model,
+                                      SpendProfileForm form,
+                                      final Long organisationId,
+                                      final UserResource loggedInUser,
+                                      ProjectResource project,
+                                      SpendProfileTableResource spendProfileTableResource) {
 
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().keySet().forEach(key -> {
             List<BigDecimal> monthlyCostNullsReplacedWithZeros = new ArrayList<>();
@@ -241,16 +246,16 @@ public class ProjectSpendProfileController {
         return BASE_DIR + "/spend-profile";
     }
 
-    private String viewProjectManagerSpendProfile(Model model, Long projectId, UserResource loggedInUser) {
+    private String viewProjectManagerSpendProfile(Model model, final Long projectId, final UserResource loggedInUser) {
         model.addAttribute("model", populateSpendProfileProjectManagerViewModel(projectId, loggedInUser));
         return BASE_DIR + "/" + REVIEW_TEMPLATE_NAME;
     }
 
     private String markSpendProfileComplete(Model model,
-                                            Long projectId,
-                                            Long organisationId,
-                                            String successView,
-                                            UserResource loggedInUser) {
+                                            final Long projectId,
+                                            final Long organisationId,
+                                            final String successView,
+                                            final UserResource loggedInUser) {
         ServiceResult<Void> result = spendProfileService.markSpendProfileComplete(projectId, organisationId);
         if (result.isFailure()) {
             ProjectSpendProfileViewModel spendProfileViewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
@@ -262,14 +267,16 @@ public class ProjectSpendProfileController {
         }
     }
 
-    private ServiceResult<Void> markSpendProfileIncomplete(Long projectId,
-                                                           Long organisationId) {
+    private ServiceResult<Void> markSpendProfileIncomplete(final Long projectId,
+                                                           final Long organisationId) {
 
         return spendProfileService.markSpendProfileIncomplete(projectId, organisationId);
     }
 
-    private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource, final Long organisationId,
-                                                                    final SpendProfileTableResource spendProfileTableResource, final UserResource loggedInUser) {
+    private ProjectSpendProfileViewModel buildSpendProfileViewModel(final ProjectResource projectResource,
+                                                                    final Long organisationId,
+                                                                    final SpendProfileTableResource spendProfileTableResource,
+                                                                    final UserResource loggedInUser) {
         SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
@@ -293,7 +300,7 @@ public class ProjectSpendProfileController {
                 isApproved(projectResource.getId()), leadPartner);
     }
 
-    private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId, final UserResource loggedInUser) {
+    private ProjectSpendProfileViewModel buildSpendProfileViewModel(final Long projectId, final Long organisationId, final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         SpendProfileTableResource spendProfileTableResource = spendProfileService.getSpendProfileTable(projectId, organisationId);
         return buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser);
@@ -309,7 +316,7 @@ public class ProjectSpendProfileController {
                 leadOrganisation, OrganisationResource::getName).unwrap();
 
 
-        Map<Long, OrganisationReviewDetails> editablePartners = determineEditablePartners(projectId, organisations, loggedInUser);
+        Map<Long, OrganisationReviewDetails> editablePartners = getOrganisationReviewDetails(projectId, organisations, loggedInUser);
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectId,
                 projectResource.getApplication(), projectResource.getName(),
@@ -325,14 +332,10 @@ public class ProjectSpendProfileController {
         return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
-    private Map<Long, OrganisationReviewDetails> determineEditablePartners(Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
-        Map<Long, OrganisationReviewDetails> editablePartners = new HashMap<>();
-        partnerOrganisations.forEach(organisation -> {
-            boolean isUserPartOfThisOrganisation = isUserPartOfThisOrganisation(projectId, organisation.getId(), loggedInUser);
-            boolean isMarkedComplete = spendProfileService.getSpendProfile(projectId, organisation.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false);
-            editablePartners.put(organisation.getId(), new OrganisationReviewDetails(organisation.getName(), isMarkedComplete, isUserPartOfThisOrganisation, true));
-        });
-        return editablePartners;
+    private Map<Long, OrganisationReviewDetails> getOrganisationReviewDetails(final Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
+        return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
+                o -> new OrganisationReviewDetails(o.getName(), spendProfileService.getSpendProfile(projectId, o.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false), isUserPartOfThisOrganisation(projectId, o.getId(), loggedInUser), true),
+                (v1, v2) -> v1, LinkedHashMap::new));
     }
 
     private boolean isUserPartOfThisOrganisation(final Long projectId, final Long organisationId, final UserResource loggedInUser) {
