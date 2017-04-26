@@ -828,13 +828,13 @@ Project finance user can view Finances summary for the consortium
     When the user verifies the table heading for Finance summary section
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the categories are verified for Finance summary section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
+    And the Categories Are Verified For Finances Summary Section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
-    And the categories are verified for Finance summary section   2   £ 990   0%  £ 0     £ 0     £ 990
+    And the Categories Are Verified For Finances Summary Section   2   £ 990   0%  £ 0     £ 0     £ 990
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
-    And the categories are verified for Finance summary section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
+    And the Categories Are Verified For Finances Summary Section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And the Total calculation for Finance summary are verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
+    And The Total Calculation For Finances Summary Are Verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can see finance breakdown for different categories
@@ -1485,13 +1485,13 @@ Project finance user can view Updated Finances summary for the consortium
     When the user verifies the table heading for Finance summary section
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the categories are verified for Finance summary section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
+    And the Categories Are Verified For Finances Summary Section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
-    And the categories are verified for Finance summary section   2   £ 990   0%  £ 0     £ 0     £ 990
+    And the Categories Are Verified For Finances Summary Section   2   £ 990   0%  £ 0     £ 0     £ 990
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
-    And the categories are verified for Finance summary section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
+    And the Categories Are Verified For Finances Summary Section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And the Total calculation for Finance summary are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
+    And The Total Calculation For Finances Summary Are Verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
 
 Project finance user can view Lead-partner's Changes to finances during the Finance Checks eligibility
     [Documentation]    INFUND-4837
