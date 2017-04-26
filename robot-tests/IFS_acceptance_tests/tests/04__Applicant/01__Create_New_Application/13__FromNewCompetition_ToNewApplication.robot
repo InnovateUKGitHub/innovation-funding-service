@@ -348,8 +348,7 @@ the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
 the user selects feasibility studies and no to resubmission
-    the user clicks the button/link    jQuery=legend:contains("Research category")
-    the user clicks the button/link    jQuery=button:contains("Choose your research")
+    the user clicks the button/link    jQuery=label:contains("Research category")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button twice   jQuery=label[for="application.resubmission-no"]

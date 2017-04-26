@@ -76,6 +76,6 @@ public class CompetitionSetupFinanceControllerDocumentation extends BaseControll
     public static final FieldDescriptor[] COMPETITION_SETUP_FINANCE_RESOURCE_FIELDS = {
             fieldWithPath("competitionId").description("The id of the competition"),
             fieldWithPath("fullApplicationFinance").description("Full application finance"),
-            fieldWithPath("includeGrowthTable").description("The active status of staff count and staff turnover form inputs are false when this is true"),
+            fieldWithPath("includeGrowthTable").description("The active status of staff count and organisation turnover form inputs are false when this is true"),
     };
 }

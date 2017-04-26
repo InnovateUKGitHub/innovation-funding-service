@@ -30,19 +30,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         super(true);
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http
             .csrf().disable()
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(csrfStatelessFilter, StatelessAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .anonymous().and()
-                .exceptionHandling().and()
+            .addFilterAfter(csrfStatelessFilter, StatelessAuthenticationFilter.class)
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .anonymous().and()
+            .exceptionHandling().and()
             .headers()
                 .addHeaderWriter(new StaticHeadersWriter("server","server"))
-                .cacheControl().disable();
+                    .cacheControl().disable();
     }
 }
