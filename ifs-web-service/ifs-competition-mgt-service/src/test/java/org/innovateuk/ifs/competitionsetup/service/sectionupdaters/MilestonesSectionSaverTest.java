@@ -158,7 +158,8 @@ public class MilestonesSectionSaverTest {
     @Test
     public void testAutoSaveTimeCompetitionSetupSection() {
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].time";
-        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(restSuccess(getBriefingEventMilestone()));
+        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L))
+                .thenReturn(restSuccess(getBriefingEventMilestone()));
         MilestonesForm form = new MilestonesForm();
 
         CompetitionResource competition = newCompetitionResource().withId(2L).build();
