@@ -26,7 +26,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     @ManyToOne(fetch = FetchType.LAZY)
     protected ActivityState activityState;
 
-    private ZonedDateTime lastModified;
+    private ZonedDateTime lastModified = ZonedDateTime.now();
 
     private LocalDate startDate;
     private LocalDate endDate;

@@ -78,6 +78,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Long assessmentId = 1L;
 
         Assessment assessment = newAssessment()
+                .withId()
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING
                         .getBackingState()))
                 .build();
