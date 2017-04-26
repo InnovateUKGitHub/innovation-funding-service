@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -86,7 +87,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     competition.setCompetitionType(competitionType.getId());
                 }
 
-                List<Long> innovationAreas = simpleMap(innovationAreaNames, this::getInnovationAreaIdOrNull);
+                List<Long> innovationAreas = simpleFilter(
+                        simpleMap(innovationAreaNames, this::getInnovationAreaIdOrNull),
+                        Objects::nonNull
+                );
                 Long innovationSector = getInnovationSectorIdOrNull(innovationSectorName);
                 Long researchCategory = getResearchCategoryIdOrNull(researchCategoryName);
 

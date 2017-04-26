@@ -767,7 +767,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 .withBasicData(line.name, null, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null,
-                        null, null, null, null, line.nonIfsUrl)
+                        null, emptyList(), null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
