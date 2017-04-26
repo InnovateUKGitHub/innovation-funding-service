@@ -68,7 +68,7 @@
                                 Accept, I am able to assess this application
                             </label>
                         </div>
-                        <div class="panel panel-border-narrow js-hidden" id="accept-application">
+                        <div class="panel js-hidden" id="accept-application">
                             <p>You will still have the option to reject after accepting and viewing the full application</p>
                         </div>
 
@@ -78,7 +78,7 @@
                                 Reject, I am not able to assess this application
                             </label>
                         </div>
-                        <div class="panel panel-border-narrow js-hidden" id="reject-application">
+                        <div class="panel js-hidden" id="reject-application">
                             <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
                                 <label class="form-label" th:for="${#ids.next('rejectReason')}">
                                     Please select a reason for rejecting the competition
