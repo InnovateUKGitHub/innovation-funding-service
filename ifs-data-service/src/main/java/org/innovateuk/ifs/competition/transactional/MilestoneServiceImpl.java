@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -65,9 +66,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
-        return milestoneRepository.findByTypeAndCompetitionId(type, id)
-                .map(milestoneMapper::mapToResource).map(ServiceResult::serviceSuccess)
-                .orElse(serviceFailure(notFoundError(MilestoneResource.class, type, id)));
+        return find(milestoneRepository.findByTypeAndCompetitionId(type, id), notFoundError(MilestoneResource.class, type, id))
+                .andOnSuccess(milestone -> serviceSuccess(milestoneMapper.mapToResource(milestone)));
     }
 
     @Override
