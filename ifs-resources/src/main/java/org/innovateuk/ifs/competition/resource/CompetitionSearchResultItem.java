@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.ZonedDateTime;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * A summary of competition information displayed during competition search
@@ -13,7 +14,7 @@ public class CompetitionSearchResultItem {
 
     private Long id;
     private String name;
-    private Set<String> innovationAreaNames;
+    private SortedSet<String> innovationAreaNames;
     private Integer numberOfApplications;
     private String startDateDisplay;
     private CompetitionStatus competitionStatus;
@@ -25,7 +26,7 @@ public class CompetitionSearchResultItem {
     CompetitionSearchResultItem() {
     }
 
-    public CompetitionSearchResultItem(Long id, String name, Set<String> innovationAreaNames, Integer numberOfApplications,
+    public CompetitionSearchResultItem(Long id, String name, SortedSet<String> innovationAreaNames, Integer numberOfApplications,
                                        String startDateDisplay, CompetitionStatus competitionStatus,
                                        String competitionTypeName, Integer projectsCount, ZonedDateTime publishDate) {
         this.id = id;
@@ -47,11 +48,11 @@ public class CompetitionSearchResultItem {
         this.id = id;
     }
 
-    public Set<String> getInnovationAreaNames() {
+    public SortedSet<String> getInnovationAreaNames() {
         return innovationAreaNames;
     }
 
-    public void setInnovationAreaNames(Set<String> innovationAreaNames) {
+    public void setInnovationAreaNames(SortedSet<String> innovationAreaNames) {
         this.innovationAreaNames = innovationAreaNames;
     }
 

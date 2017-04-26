@@ -119,7 +119,7 @@ Innovation sector and area are correct
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation sector")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation area")
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")
-    And the user should see the element    jQuery=.standard-definition-list dd:contains("Satellite applications")
+    And the user should see the element    jQuery=.standard-definition-list dd:contains("${IN_ASSESSMENT_COMPETITION_INNOVATION_AREAS}")
 
 Invite Individual Assessors
     [Documentation]    INFUND-6414
