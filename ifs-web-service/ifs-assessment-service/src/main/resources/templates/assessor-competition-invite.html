@@ -12,7 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
 
             <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We were unable to reject the competition</h2>
+                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
                 </ul>
@@ -54,26 +54,26 @@
                     <fieldset>
                         <legend class="heading-medium">
                             Select your ability to assess the competition
-                            <th:block th:if="${#fields.hasErrors('assessmentChoice')}">
+                            <!-- <th:block th:if="${#fields.hasErrors('competitionChoice')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('assessmentChoice')}" th:text="${err}" />
-                            </th:block>
+                            </th:block> -->
                         </legend>
 
-                        <div class="block-label selection-button-radio">
-                            <label>
-                                <input type="radio">
+                        <div class="block-form">
+                            <label class="block-label selection-button-radio" for="updateMe">
+                                <input id="updateMe" name="update" type="radio" required="required" />
                                 Yes, I am able to assess applications to this competition
                                 <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
                             </label>
                         </div>
 
-                        <div class="block-label selection-button-radio" data-target="reject-competition">
-                            <label>
-                                <input type="radio">
+                        <div class="block-form" for="updateMe2">
+                            <label class="block-label selection-button-radio" for="updateMe2" data-target="reject-competition">
+                                <input id="updateMe2" name="update" type="radio" required="required" />
                                 No, I am not able to assess applications to this competition
                             </label>
                         </div>
-                        <div class="panel panel-border-narrow js-hidden" id="reject-competition">
+                        <div class="panel js-hidden" id="reject-competition">
                             <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
                                 <label class="form-label" th:for="${#ids.next('rejectReason')}">
                                     Please select a reason for rejecting the competition
