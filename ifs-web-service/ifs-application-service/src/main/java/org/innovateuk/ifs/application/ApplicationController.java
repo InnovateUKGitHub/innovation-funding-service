@@ -5,9 +5,10 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profiling.ProfileExecution;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -103,29 +103,6 @@ public class ApplicationController {
 
         questionService.assignQuestion(applicationId, request, assignedBy);
         return "redirect:/application/" + applicationId;
-    }
-
-    @ProfileExecution
-    @GetMapping("/{applicationId}/section/{sectionId}")
-    public String applicationDetailsOpenSection(ApplicationForm form, Model model,
-                                                @PathVariable("applicationId") long applicationId,
-                                                @PathVariable("sectionId") long sectionId,
-                                                @ModelAttribute("loggedInUser") UserResource user) {
-        ApplicationResource application = applicationService.getById(applicationId);
-        SectionResource section = sectionService.getById(sectionId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
-
-        organisationDetailsModelPopulator.populateModel(model, application.getId());
-        applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-        model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(user, application));
-        return "application-details";
-    }
-
-    private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
