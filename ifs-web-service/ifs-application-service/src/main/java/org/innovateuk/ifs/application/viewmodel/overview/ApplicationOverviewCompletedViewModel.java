@@ -41,6 +41,10 @@ public class ApplicationOverviewCompletedViewModel {
         this.completedSections = completedSections;
     }
 
+    public Set<Long> getCompletedSections() {
+        return completedSections;
+    }
+
     public Boolean getUserFinanceSectionCompleted() {
         return userFinanceSectionCompleted;
     }
