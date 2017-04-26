@@ -67,6 +67,7 @@ public class ApplicationResource {
     private InnovationAreaResource innovationArea;
 
     private boolean noInnovationAreaApplicable;
+    private String ineligibleReason;
 
     public Long getId() {
         return id;
@@ -137,10 +138,6 @@ public class ApplicationResource {
     @JsonIgnore
     public boolean isOpen(){
         return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
-    }
-    @JsonIgnore
-    public void enableViewMode(){
-        setApplicationState(ApplicationState.SUBMITTED);
     }
 
     public Long getAssessorFeedbackFileEntry() {
@@ -273,5 +270,13 @@ public class ApplicationResource {
 
     public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
+    }
+
+    public String getIneligibleReason() {
+        return ineligibleReason;
+    }
+
+    public void setIneligibleReason(String ineligibleReason) {
+        this.ineligibleReason = ineligibleReason;
     }
 }

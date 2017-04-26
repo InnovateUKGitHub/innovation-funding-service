@@ -150,11 +150,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ServiceResult<Void> updateState(Long applicationId, ApplicationState state) {
-        return applicationRestService.updateApplicationState(applicationId, state).toServiceResult();
-    }
-
-    @Override
     public Integer getCompleteQuestionsPercentage(Long applicationId) {
         return call(
                 applicationRestService.getCompleteQuestionsPercentage(applicationId)
@@ -165,7 +160,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public int getAssignedQuestionsCount(Long applicationId, Long processRoleId){
-        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).getSuccessObject().intValue();
+        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).getSuccessObject();
     }
 
     @Override

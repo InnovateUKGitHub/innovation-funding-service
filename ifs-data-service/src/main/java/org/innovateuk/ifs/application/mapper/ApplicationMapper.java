@@ -40,6 +40,8 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "competition.name", target = "competitionName"),
             @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
             @Mapping(source = "applicationProcess.activityState", target = "applicationState"),
+            // TODO INFUND-8941 remove me!
+            @Mapping(target = "ineligibleReason", ignore = true)
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);

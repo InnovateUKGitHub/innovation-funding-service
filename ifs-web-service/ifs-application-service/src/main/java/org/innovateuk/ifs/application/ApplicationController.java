@@ -76,6 +76,9 @@ public class ApplicationController {
     private ApplicationService applicationService;
 
     @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
     private CompetitionService competitionService;
 
     @Autowired
@@ -249,7 +252,7 @@ public class ApplicationController {
             return "redirect:/application/" + applicationId + "/confirm-submit";
         }
 
-        applicationService.updateState(applicationId, SUBMITTED);
+        applicationRestService.updateApplicationState(applicationId, SUBMITTED).getSuccessObjectOrThrowException();
         application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);

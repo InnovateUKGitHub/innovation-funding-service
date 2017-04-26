@@ -492,15 +492,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationRestService.updateApplicationState(app.getId(), SUBMITTED)).thenReturn(restSuccess());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
 
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app));
 
-        verify(applicationService).updateState(app.getId(), SUBMITTED);
+        verify(applicationRestService).updateApplicationState(app.getId(), SUBMITTED);
     }
 
     @Test
@@ -518,7 +518,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
-        verify(applicationService, never()).updateState(any(Long.class), any(ApplicationState.class));
+        verify(applicationRestService, never()).updateApplicationState(any(Long.class), any(ApplicationState.class));
     }
 
     @Test

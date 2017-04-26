@@ -19,6 +19,10 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Stream;
+
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION;
 
 /**
@@ -108,6 +112,10 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
             case CREATED:
                 return false;
             case SUBMITTED:
+                boolean reinstating = applicationStateMatches(application, INELIGIBLE, INELIGIBLE_INFORMED);
+                if (reinstating) {
+                    return reinstateIneligible(application);
+                }
                 return submit(application);
             case APPROVED:
                 return approve(application);
@@ -124,5 +132,10 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", application);
+    }
+
+    private boolean applicationStateMatches(Application application, ApplicationState... applicationStates) {
+        ApplicationProcess applicationProcess = application.getApplicationProcess();
+        return Stream.of(applicationStates).anyMatch(applicationProcess::isInState);
     }
 }

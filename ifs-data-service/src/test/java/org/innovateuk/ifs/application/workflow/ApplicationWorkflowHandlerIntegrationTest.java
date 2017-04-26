@@ -10,7 +10,6 @@ import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
@@ -31,13 +30,6 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
 
     private ActivityStateRepository activityStateRepositoryMock;
     private ApplicationProcessRepository applicationProcessRepositoryMock;
-
-    private Application application;
-
-    @Before
-    public void setUp() throws Exception {
-        application = newApplication().build();
-    }
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
@@ -85,8 +77,21 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
         assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.REJECTED, application -> applicationWorkflowHandler.reject(application));
     }
 
+    @Test
+    public void notifyFromApplicationState_ineligibleToSubmitted() {
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE, ApplicationState.SUBMITTED, application ->
+                applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.SUBMITTED));
+    }
+
+    @Test
+    public void notifyFromApplicationState_ineligibleInformedToSubmitted() {
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE_INFORMED, ApplicationState.SUBMITTED, application ->
+                applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.SUBMITTED));
+    }
+
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod) {
-        ApplicationProcess applicationProcess = new ApplicationProcess(application, null, new ActivityState(activityType, initialApplicationState.getBackingState()));
+        Application application = newApplication().withApplicationState(initialApplicationState).build();
+        ApplicationProcess applicationProcess = application.getApplicationProcess();
         when(applicationProcessRepositoryMock.findOneByTargetId(application.getId())).thenReturn(applicationProcess);
 
         ActivityState expectedActivityState = new ActivityState(activityType, expectedApplicationState.getBackingState());
