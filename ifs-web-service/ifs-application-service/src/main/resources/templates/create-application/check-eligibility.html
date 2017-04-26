@@ -11,8 +11,8 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please sign in or create an account',size='heading-xlarge'" />
 
-    <h1 class="heading-xlarge">Please sign in or create an account</h1>
 
     <div class="grid-row">
 

@@ -19,10 +19,7 @@
                     <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
                 </ul>
             </div>
-
-            <div class="hgroup">
-                <h1 class="heading-xlarge">Edit your details</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your details',size='heading-xlarge'" />
 
             <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
                 <h2 class="heading-medium">Your details</h2>

@@ -12,13 +12,8 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
-
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary" th:text="|${model.competitionId}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
-                <span th:text="${model.inAssessment ? 'Application progress' : 'Assign to application'}" th:remove="tag">Application progress</span>
-            </h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
             <h2 class="heading-medium" th:text="|${model.applicationId}: ${model.applicationName}|">
                 94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes
