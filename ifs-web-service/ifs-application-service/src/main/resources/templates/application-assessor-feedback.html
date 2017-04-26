@@ -14,10 +14,11 @@
 
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/summary(applicationId=${model.application.id})}"  th:remove="tag"></div>
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.name})"/>
-        <h1 class="heading-xlarge no-margin" th:text="${model.question.shortName}"/>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your dashboard',size='heading-large'" />
+
+    <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.question.shortName},subTitle=${applicationName},size='heading-xlarge'" />
+    </th:block>
 
     <h2 class="heading-medium no-margin" th:text="|${model.question.questionNumber}. ${model.question.name}|">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h2>
 

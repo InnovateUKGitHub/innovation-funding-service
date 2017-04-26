@@ -12,10 +12,7 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
-        <h1 class="heading-xlarge">Application status</h1>
-    </div>
+     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application status',subTitle=|${currentApplication.id} : {currentApplication.name}|,size='heading-xlarge'" />
 
     <div class="submitted-panel">
         <h2 class="heading-xlarge no-margin">Application submitted</h2>

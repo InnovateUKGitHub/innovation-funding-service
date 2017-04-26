@@ -11,11 +11,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
-
-    <h1 class="heading-xlarge">
-        <th:block th:text="${model.organisationName}" />
-        <small th:if="${model.organisationName == model.leadPartnerOrganisation}">(Lead Partner)</small>
-    </h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${competitionTitle},size='heading-xlarge',smallText=${model.organisationName == model.leadPartnerOrganisation} ? '(Lead Partner)'" />
     <hr/>
 
     <th:block th:if="${model.isShowApprovalMessage()}">
