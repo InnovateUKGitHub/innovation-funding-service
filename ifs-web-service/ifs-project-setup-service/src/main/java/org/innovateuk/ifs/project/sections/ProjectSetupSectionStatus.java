@@ -86,7 +86,7 @@ public class ProjectSetupSectionStatus {
 
     public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
                                                        final boolean isLeadPartner) {
-        if (grantOfferLetterState == null) {
+        if (grantOfferLetterState == null || NOT_REQUIRED.equals(grantOfferLetterState)) {
             return EMPTY;
         } else if (COMPLETE.equals(grantOfferLetterState)) {
             return TICK;

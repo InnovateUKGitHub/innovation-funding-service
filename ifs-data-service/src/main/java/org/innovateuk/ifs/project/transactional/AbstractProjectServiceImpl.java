@@ -98,7 +98,6 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createOtherDocumentStatus(final Project project) {
-
         if (APPROVED.equals(project.getOtherDocumentsApproved())) {
             return COMPLETE;
         } else if (UNSET.equals(project.getOtherDocumentsApproved()) && project.getDocumentsSubmittedDate() != null) {
@@ -109,11 +108,9 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
-
         Optional<ProjectUser> financeContactForOrganisation = simpleFindFirst(project.getProjectUsers(), pu ->
                 pu.getRole().isFinanceContact() &&
                         pu.getOrganisation().getId().equals(partnerOrganisation.getId()));
-
         return financeContactForOrganisation.map(existing -> COMPLETE).orElse(ACTION_REQUIRED);
     }
 
@@ -189,7 +186,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
             return ACTION_REQUIRED;
         } else if (GOLState.APPROVED.equals(state)) {
             return COMPLETE;
-        } else if (GOLState.PENDING.equals(state)){
+        } else if (GOLState.PENDING.equals(state) && !(isLeadPartner && project.getGrantOfferLetter() != null)){
             return NOT_REQUIRED;
         } else {
             return PENDING;
