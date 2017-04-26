@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.workflow.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.domain.User;
@@ -27,11 +26,13 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     @ManyToOne(fetch = FetchType.LAZY)
     protected ActivityState activityState;
 
-    @Version
     private ZonedDateTime lastModified;
 
     private LocalDate startDate;
     private LocalDate endDate;
+    @Version
+    @SuppressWarnings("unused")
+    private int version = 0;
 
     @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
     @OrderBy("id ASC")
@@ -103,11 +104,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return processOutcomes;
     }
 
-    @JsonIgnore
-    public ZonedDateTime getVersion() {
-        return lastModified;
-    }
-
     public abstract void setParticipant(ParticipantType participant);
 
     public abstract ParticipantType getParticipant();
@@ -148,6 +144,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
                 .append(lastModified, process.lastModified)
                 .append(startDate, process.startDate)
                 .append(endDate, process.endDate)
+                .append(version, process.version)
                 .append(internalParticipant, process.internalParticipant)
                 .isEquals();
     }
@@ -161,6 +158,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
                 .append(lastModified)
                 .append(startDate)
                 .append(endDate)
+                .append(version)
                 .append(internalParticipant)
                 .toHashCode();
     }
