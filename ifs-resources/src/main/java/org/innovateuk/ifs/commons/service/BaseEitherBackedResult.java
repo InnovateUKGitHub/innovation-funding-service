@@ -34,7 +34,8 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
-    public <T1> T1 handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends T1> failureHandler, ExceptionThrowingFunction<? super T, ? extends T1> successHandler) {
+    public <T1> T1 handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends T1> failureHandler,
+                                          ExceptionThrowingFunction<? super T, ? extends T1> successHandler) {
         return mapLeftOrRight(failureHandler, successHandler);
     }
 

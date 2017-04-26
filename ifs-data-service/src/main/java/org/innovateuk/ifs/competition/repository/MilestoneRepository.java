@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -17,5 +18,5 @@ public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
 
     List<Milestone> findByCompetitionIdAndTypeIn(Long competitionId, List<MilestoneType> types);
 
-    Milestone findByTypeAndCompetitionId(MilestoneType type, Long competitionId);
+    Optional<Milestone> findByTypeAndCompetitionId(MilestoneType type, Long competitionId);
 }
