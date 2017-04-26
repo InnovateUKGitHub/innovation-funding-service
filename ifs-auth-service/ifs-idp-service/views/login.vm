@@ -124,7 +124,7 @@
                     <input class="form-control field-error" id="password" name="j_password" type="password" value=""
                          required="required"
                          data-required-errormessage="Please enter your password.">
-                    <button role="switch" aria-checked="false" aria-label="Show password">Show</button>
+                    <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
                   </div>
                 </div>
               #else
@@ -146,7 +146,7 @@
                     <input class="form-control" id="password" name="j_password" type="password" value=""
                          required="required"
                          data-required-errormessage="Please enter your password.">
-                    <button role="switch" aria-checked="false" aria-label="Show password">Show</button>
+                    <button type="button" role="switch" aria-checked="false" aria-label="Show password">Show</button>
                   </div>
                 </div>
               #end
