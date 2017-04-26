@@ -10,24 +10,19 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <div class="page-title">
-            <h1 class="heading-xlarge no-margin-bottom">Account verification</h1>
-      </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Account verification',size='heading-xlarge'" />
     <p>
       Has your verification link expired? If you have an Innovation Funding Service account, please enter the email address you used to create the account.
       We will send a new link to this email address which will allow you to verify your account.
       Please note that verification links are only valid for 24 hours.
     </p>
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${resendEmailVerificationForm}" method="POST">
-        <fieldset>
-            <legend class="visuallyhidden">Enter your email address</legend>
             <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
                 <label class="form-label" for="id_email">
                     <span class="form-label-bold">Enter Email Address</span>
-                            <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
-                            </span>
+                    <th:block th:if="${#fields.hasErrors('email')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+                    </th:block>
                 </label>
                 <input class="form-control form-control-3-4"
                        th:classappend="${#fields.hasErrors('email') ? 'field-error': ''}"
@@ -37,13 +32,8 @@
                        required="required"
                        th:attr="data-required-errormessage=#{validation.standard.email.required}" />
             </div>
-            <!-- .form-group -->
-
-        </fieldset>
         <input class="button" value="Resend verification link email" type="submit"/>
     </form>
-
-
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

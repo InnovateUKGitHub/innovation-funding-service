@@ -11,12 +11,9 @@
 
 <main tabindex="-1" id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
-  <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" th:remove="tag"></div>
+  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
+  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank account',subTitle=${project.name},size='heading-xlarge'" />
 
-  <div class="page-title">
-      <th:block th:insert="fragments/elements :: project-title (projectName=${project.name})" />
-      <h1 class="heading-xlarge">Bank account</h1>
-  </div>
   <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">
 
   <div class="error-summary" th:if="${#fields.hasErrors('*')}">

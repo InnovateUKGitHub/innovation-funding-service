@@ -249,18 +249,15 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withNewMilestones() {
-
-        return asCompAdmin(data -> {
-            Stream.of(MilestoneType.presetValues()).forEach(type -> {
-                milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId()).
-                        andOnSuccess((milestoneResource) -> {
-                            if (milestoneResource.getId() == null) {
-                                milestoneService.create(type, data.getCompetition().getId());
-                            }
-                            return serviceSuccess();
-                        });
-            });
-        });
+        return asCompAdmin(data ->
+            Stream.of(MilestoneType.presetValues()).forEach(type ->
+                milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
+                        .handleSuccessOrFailure(
+                                failure -> milestoneService.create(type, data.getCompetition().getId()),
+                                success -> success
+                        )
+            )
+        );
     }
 
     public CompetitionDataBuilder withOpenDate(ZonedDateTime date) {

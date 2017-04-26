@@ -13,11 +13,10 @@
             <th:block th:insert="fragments/layout :: header-sub"
                       th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
 
-            <div class="page-title">
-                <th:block
-                    th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})"/>
-                <h1 class="heading-xlarge">Application team</h1>
-            </div>
+
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+              <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application team',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <p>View and manage your participants in the application. If an individual is 'pending' they have not yet joined the application.</p>
 

@@ -21,9 +21,7 @@
                 </ul>
             </div>
 
-            <div class="page-title">
-                <h1 class="heading-xlarge" th:text="${model.competitionTitle}" />
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},size='heading-xlarge'" />
 
             <div class="grid-row">
                 <div class="column-two-thirds competition details">

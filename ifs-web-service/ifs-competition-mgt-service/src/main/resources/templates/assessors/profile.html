@@ -12,15 +12,7 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" />
 
-    <div class="page-title">
-        <h1 class="heading-xlarge">
-            <span class="heading-secondary" th:text="|${model.competition.id}: ${model.competition.name}|">
-                00000001: Technology inspired
-            </span>
-            Assessor profile
-        </h1>
-    </div>
-
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor profile',subTitle=|${model.competition.id}: ${model.competition.name}|,size='heading-xlarge'" />
     <h2 class="heading-medium">Assessor details</h2>
 
     <h3 class="heading-small">Name</h3>

@@ -19,10 +19,8 @@
                 </ul>
             </div>
 
-            <div class="hgroup">
-                <h1 class="heading-xlarge">Your skills</h1>
-                <p>Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='heading-xlarge'" />
+            <p>Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
 
             <form th:action="@{/profile/skills}" method="post" th:object="${form}" class="extra-margin">
                 <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')}? error">

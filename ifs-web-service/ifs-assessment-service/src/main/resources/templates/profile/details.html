@@ -11,9 +11,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
-
-            <h1 class="heading-xlarge">Your details</h1>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='heading-xlarge'" />
             <p>These details will be used for all accounts linked to your email address.</p>
 
             <dl>
