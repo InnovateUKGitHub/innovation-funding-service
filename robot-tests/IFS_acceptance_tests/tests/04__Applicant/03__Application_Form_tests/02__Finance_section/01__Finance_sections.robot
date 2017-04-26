@@ -145,9 +145,7 @@ Applicant chooses Calculate overheads option
     When the user navigates to Your-finances page  ${applicationName}
     then the user fills in the project costs       ${applicationName}
     When the user clicks the button/link      link=Your project costs
-    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    # This need to be clicked twice to expand dropdown
-    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    and the user clicks the button twice   jQuery=button:contains("Overhead costs")
     then the user should see the text in the page       ${excel_file}
 
 *** Keywords ***
