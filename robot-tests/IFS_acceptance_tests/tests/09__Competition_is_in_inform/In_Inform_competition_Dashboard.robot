@@ -158,7 +158,6 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
     the user selects the checkbox     app-row-70
     the user clicks the button/link    jQuery=button:contains("Write and send email")
-    the user enters text to a text field    id=subject    Subject
     the user enters text to a text field    jQuery=.editor    Text
     the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
     the user clicks the button/link    jQuery=.link-back:contains("Competition")
