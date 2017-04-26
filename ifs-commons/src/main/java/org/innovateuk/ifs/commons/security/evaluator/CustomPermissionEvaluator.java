@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.commons.security;
+package org.innovateuk.ifs.commons.security.evaluator;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.security.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -27,7 +28,9 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
-
+/**
+ * An implementation of PermissionEvaluator that 
+ */
 @Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 

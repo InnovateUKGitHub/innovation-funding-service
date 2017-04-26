@@ -2,7 +2,7 @@ package org.innovateuk.ifs.alert.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

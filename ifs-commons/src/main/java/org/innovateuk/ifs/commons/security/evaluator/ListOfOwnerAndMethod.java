@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.commons.security;
+package org.innovateuk.ifs.commons.security.evaluator;
 
 import org.apache.commons.lang3.tuple.Pair;
 

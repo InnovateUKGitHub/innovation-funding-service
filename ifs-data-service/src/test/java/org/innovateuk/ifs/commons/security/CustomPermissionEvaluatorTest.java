@@ -3,10 +3,14 @@ package org.innovateuk.ifs.commons.security;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsMethods;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.ListOfOwnerAndMethod;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsMethods;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsMethods;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

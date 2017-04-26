@@ -2,6 +2,7 @@ package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;

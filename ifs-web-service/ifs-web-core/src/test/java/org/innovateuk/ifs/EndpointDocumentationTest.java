@@ -2,7 +2,7 @@ package org.innovateuk.ifs;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

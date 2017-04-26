@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.commons.security;
 
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassesToListOfLookup;
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
+import org.innovateuk.ifs.commons.security.evaluator.*;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.ListOfOwnerAndMethod;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.PermissionedObjectClassesToListOfLookup;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.commons.security.PermissionMethodHandler;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionMethodHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;

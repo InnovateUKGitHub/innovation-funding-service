@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.commons.security.CustomPermissionEvaluatorTransactionManager;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTransactionManager;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
