@@ -55,6 +55,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -1194,6 +1195,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Notification notification = new Notification(from, singletonList(to), ApplicationServiceImpl.Notifications.APPLICATION_INELIGIBLE, expetedNotificationArguments);
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(true);
         when(notificationSender.sendNotification(notification)).thenReturn(serviceSuccess(notification));
 
         ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
@@ -1204,6 +1206,35 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
         inOrder.verify(applicationRepositoryMock).save(application);
         inOrder.verify(notificationSender).sendNotification(notification);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void informIneligible_workflowError() throws Exception {
+        long applicationId = 1L;
+        String subject = "subject";
+        String content = "content";
+
+        ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
+                .withSubject(subject)
+                .withContent(content)
+                .build();
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .build();
+
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(false);
+
+        ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
+        assertTrue(serviceResult.isFailure());
+        assertEquals(APPLICATION_MUST_BE_INELIGIBLE.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findOne(applicationId);
+        inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -48,7 +47,6 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -56,10 +54,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
@@ -515,7 +511,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
         return getApplication(applicationId).andOnSuccess(application -> {
 
-            applicationWorkflowHandler.informIneligible(application);
+            if (!applicationWorkflowHandler.informIneligible(application)) {
+                return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);
+            };
+
             applicationRepository.save(application);
             String bodyPlain = stripHtml(applicationIneligibleSendResource.getContent());
             String bodyHtml = plainTextToHtml(bodyPlain);
