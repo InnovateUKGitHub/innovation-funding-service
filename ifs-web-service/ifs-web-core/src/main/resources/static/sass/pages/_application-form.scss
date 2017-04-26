@@ -81,13 +81,17 @@
 			padding-right:15px;
 		}
 }
+
 table th > div {
-	position: relative;
+  position: relative;
+  padding-right: 40px;
 }
+
 table img.table-tick {
-  position:absolute;
-  right:-1.25em;
-  top:50%;margin-top:-8px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -8px;
 }
 
 /* acadmic finances */

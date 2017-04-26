@@ -162,10 +162,18 @@
                             </a>
 
                             <th:block th:if="${currentApplication.isOpen()}">
-                              <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
-                                   th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has marked the Finances as complete"/>
-                              <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/warning-icon.png')}"
-                                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has not yet marked the Finances as complete" />
+                                <th:block th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
+                                    <img class="table-tick" width="20" height="17"
+                                        th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
+                                        alt="has marked the Finances as complete"/>
+                                    <span class="visuallyhidden">Complete</span>
+                                </th:block>
+                                <th:block th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
+                                    <img class="table-tick" width="20" height="20"
+                                        th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/icons/icon-messages/alert-icon.png')}"
+                                        alt="has not yet marked the Finances as complete" />
+                                    <span class="visuallyhidden">Incomplete</span>
+                                </th:block>
                             </th:block>
                         </div>
                     </th>
