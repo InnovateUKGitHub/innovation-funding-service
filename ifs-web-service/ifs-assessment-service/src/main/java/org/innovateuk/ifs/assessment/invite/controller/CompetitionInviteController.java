@@ -58,10 +58,26 @@ public class CompetitionInviteController {
         return "assessor-competition-invite";
     }
 
-    @PostMapping("/invite/competition/{inviteHash}/accept")
-    public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               Model model) {
+    @PostMapping("/invite/competition/{inviteHash}")
+    public String handleDecision(@PathVariable("inviteHash") String inviteHash,
+                                 @Valid @ModelAttribute("form") RejectCompetitionForm form,
+                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                 @SuppressWarnings("unused") BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model) {
+
+        if (form.getAcceptInvitation()) {
+            return doAcceptInvite(inviteHash, loggedInUser, model);
+        } else {
+            return doRejectInvite(model, inviteHash, form, bindingResult, validationHandler);
+        }
+    }
+
+//    @PostMapping("/invite/competition/{inviteHash}/accept")
+//    public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
+//                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+//                               Model model) {
+    private String doAcceptInvite(String inviteHash,UserResource loggedInUser, Model model) {
         boolean userIsLoggedIn = loggedInUser != null;
 
         if (userIsLoggedIn) {
@@ -91,12 +107,17 @@ public class CompetitionInviteController {
         return "redirect:/assessor/dashboard";
     }
 
-    @PostMapping("/invite/competition/{inviteHash}/reject")
-    public String rejectInvite(Model model,
-                               @PathVariable("inviteHash") String inviteHash,
-                               @Valid @ModelAttribute("form") RejectCompetitionForm form,
-                               @SuppressWarnings("unused") BindingResult bindingResult,
-                               ValidationHandler validationHandler) {
+//    @PostMapping("/invite/competition/{inviteHash}/reject")
+//    public String rejectInvite(Model model,
+//                               @PathVariable("inviteHash") String inviteHash,
+//                               @Valid @ModelAttribute("form") RejectCompetitionForm form,
+//                               @SuppressWarnings("unused") BindingResult bindingResult,
+//                               ValidationHandler validationHandler) {
+    private String doRejectInvite(Model model,
+                                  String inviteHash,
+                                  RejectCompetitionForm form,
+                                  @SuppressWarnings("unused") BindingResult bindingResult,
+                                  ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> doViewRejectInvitationConfirm(model, inviteHash);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {

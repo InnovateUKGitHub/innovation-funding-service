@@ -49,7 +49,7 @@
                 </ul>
             </section>
 
-            <form th:action="@{/invite/competition/{inviteHash}/accept(inviteHash=${model.competitionInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
+            <form th:action="@{/invite/competition/{inviteHash}(inviteHash=${model.competitionInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
                 <div class="form-group">
                     <fieldset>
                         <legend class="heading-medium">
@@ -61,7 +61,8 @@
 
                         <div class="block-form">
                             <label class="block-label selection-button-radio" for="updateMe">
-                                <input id="updateMe" name="update" type="radio" required="required" />
+                                <input id="updateMe" name="update" value="true" type="radio" required="required"
+                                       th:field="*{acceptInvitation}"/>
                                 Yes, I am able to assess applications to this competition
                                 <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
                             </label>
@@ -69,7 +70,8 @@
 
                         <div class="block-form" for="updateMe2">
                             <label class="block-label selection-button-radio" for="updateMe2" data-target="reject-competition">
-                                <input id="updateMe2" name="update" type="radio" required="required" />
+                                <input id="updateMe2" name="update" value="false" type="radio" required="required"
+                                       th:field="*{acceptInvitation}"/>
                                 No, I am not able to assess applications to this competition
                             </label>
                         </div>
