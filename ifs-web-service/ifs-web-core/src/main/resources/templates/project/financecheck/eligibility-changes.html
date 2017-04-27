@@ -10,22 +10,9 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start"/>
 
-    <div th:if="${model.internal}"
-         th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}"
-         th:remove="tag"></div>
-
-    <div th:unless="${model.internal}"
-         th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
-         th:remove="tag"></div>
-
-    <div class="page-title">
-        <th:block
-            th:insert="fragments/elements :: project-title (projectName=${model.projectName})"/>
-        <h1 class="heading-xlarge">Changes to finances</h1>
-    </div>
-
+    <th:block th:if="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}" />
+    <th:block th:unless="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"  />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Changes to finances',subTitle=${model.projectName},size='heading-xlarge'" />
     <hr/>
 
     <th:block th:fragment="summary" th:with="summaryModel=${model.financeCheckEligibility}">

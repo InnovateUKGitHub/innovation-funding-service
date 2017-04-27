@@ -8,30 +8,26 @@
   <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-  <th:block th:insert="fragments/layout :: main-content-start" />
-  <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" th:remove="tag"></div>
-
-  <div class="page-title">
-      <p class="subtitle" th:text="${applicationId}"/>
-      <h1 class="heading-xlarge">Submit bank details</h1>
-  </div>
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit bank details',subTitle=${applicationId},size='heading-xlarge'" />
 
     <form th:object="${form}" th:action="@{/project/{id}/bank-details(id=${project.id})}" method="post">
-      <input type="hidden" th:field="*{accountNumber}"/>
-      <input type="hidden" th:field="*{sortCode}"/>
-      <input type="hidden" th:field="*{addressType}"/>
-  		<p>Are you sure you wish to submit your bank details?</p>
-  		<p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
-  		<hr />
-  		<div class="grid-row">
-  			<div class="column-half">
-  					<a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="js-close button buttonlink large">Cancel</a>
-  			</div>
-  			<div class="column-half alignright-button" method="post">
-  				<button class="button large">Submit</button>
-  			</div>
-  		</div>
-  	</form>
+        <input type="hidden" th:field="*{accountNumber}"/>
+        <input type="hidden" th:field="*{sortCode}"/>
+        <input type="hidden" th:field="*{addressType}"/>
+        <p>Are you sure you wish to submit your bank details?</p>
+        <p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
+        <hr />
+        <div class="grid-row">
+            <div class="column-half">
+                <a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="js-close button buttonlink large">Cancel</a>
+            </div>
+            <div class="column-half alignright-button">
+                <button class="button large">Submit</button>
+            </div>
+        </div>
+    </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

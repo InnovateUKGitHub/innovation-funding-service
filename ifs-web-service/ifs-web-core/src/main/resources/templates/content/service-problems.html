@@ -10,13 +10,9 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <div class="page-title">
-        <h1 class="heading-xlarge no-margin" >Service problems</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Service problems',size='heading-xlarge'" />
 
     <p>We&rsquo;re experiencing a few technical problems at the moment. We&rsquo;re aware of the issues and are working hard to resolve them. Please try again later. We&rsquo;re sorry for any inconvenience this might cause.</p>
-
     <p class="user-feedback"><span>Need help with this service?</span> <a href="/info/contact">Contact us</a></p>
 </main>
 

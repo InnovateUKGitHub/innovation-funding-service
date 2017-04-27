@@ -12,10 +12,7 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition details',linkClass='link-back',linkUrl=@{../details},currentApplication=${currentApplication}" />
 
-    <div class="page-title">
-      <h1 class="heading-xlarge no-margin" th:text="${currentCompetition.name}" />
-        <h2 class="heading-large ">Competition eligibility</h2>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition eligibility',subTitle=${currentCompetition.name},size='heading-xlarge'" />
   	<p>For this competition:</p>
 
   	<div class="grid-row">

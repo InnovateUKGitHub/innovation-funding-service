@@ -10,18 +10,14 @@
 
 
 <main tabindex="-1" id="content">
-  <th:block th:insert="fragments/layout :: main-content-start" />
-  <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${applicationId})}" th:remove="tag"></div>
-
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${applicationId})}" />
 
     <form th:if="${isSubmissionAllowed}" th:action="@{/project/{id}/details/submit(id=${projectId})}" method="post">
-      <div class="page-title">
-        <h1 class="heading-xlarge no-margin">Submit project details</h1>
-      </div>
-      <p>Are you sure that you wish to submit your project details to Innovate UK?</p>
-      <button class="button large" name="submit-app-details" >Submit</button>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit project details',subTitle=${project.name},size='heading-xlarge'" />
+        <p>Are you sure that you wish to submit your project details to Innovate UK?</p>
+        <button class="button large" name="submit-app-details" >Submit</button>
     </form>
-
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
