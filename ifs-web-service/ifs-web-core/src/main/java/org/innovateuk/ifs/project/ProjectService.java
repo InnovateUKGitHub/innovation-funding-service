@@ -46,33 +46,11 @@ public interface ProjectService {
 
     OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId);
-
-    Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId);
-
-    ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId);
-
-    Optional<ByteArrayResource> getExploitationPlanFile(Long projectId);
-
-    Optional<FileEntryResource> getExploitationPlanFileDetails(Long projectId);
-
-    ServiceResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    ServiceResult<Void> removeExploitationPlanDocument(Long projectId);
-
-    ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved);
-
     boolean isUserLeadPartner(Long projectId, Long userId);
 
     List<ProjectUserResource> getLeadPartners(Long projectId);
 
     List<ProjectUserResource> getPartners(Long projectId);
-
-    Boolean isOtherDocumentSubmitAllowed(Long projectId);
-
-    ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
     Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId);
 

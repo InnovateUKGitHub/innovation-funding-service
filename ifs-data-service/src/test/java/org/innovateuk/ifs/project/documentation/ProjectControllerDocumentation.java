@@ -8,13 +8,11 @@ import org.innovateuk.ifs.project.projectdetails.controller.ProjectController;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -32,7 +30,6 @@ import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.ne
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -283,56 +280,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
     }
-
-    @Test
-    public void isOtherDocumentsSubmitAllowed() throws Exception {
-        UserResource userResource = newUserResource()
-                .withId(1L)
-                .withUID("123abc")
-                .build();
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
-
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
-    }
-
-    @Test
-    public void isOtherDocumentsSubmitNotAllowedWhenDocumentsNotFullyUploaded() throws Exception {
-        UserResource userResource = newUserResource()
-                .withId(1L)
-                .withUID("123abc")
-                .build();
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
-
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
-    }
-
-    @Test
-    public void setPartnerDocumentsSubmittedDate() throws Exception {
-        when(projectServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )));
-    }
-
 
     @Test
     public void getTeamStatus() throws Exception {

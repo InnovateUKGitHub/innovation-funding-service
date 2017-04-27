@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * View model backing the Other Documents page
  */
-public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsViewModel {
+public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
     private Long applicationId;
@@ -27,9 +27,9 @@ public class ProjectPartnerDocumentsViewModel implements BasicProjectDetailsView
 
     private ApprovalType approved;
 
-    public ProjectPartnerDocumentsViewModel(Long projectId, long applicationId, String projectName, Long competitionId, String leadPartnerOrganisationName, String projectManagerName,
-                                            String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
-                                            FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, ApprovalType approved
+    public ProjectOtherDocumentsViewModel(Long projectId, long applicationId, String projectName, Long competitionId, String leadPartnerOrganisationName, String projectManagerName,
+                                          String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
+                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, ApprovalType approved
                                           ) {
         this.projectId = projectId;
         this.applicationId = applicationId;
