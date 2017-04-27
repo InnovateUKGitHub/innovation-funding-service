@@ -88,7 +88,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<GrantOfferLetterService> {
+public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOfferLetterService> {
 
     private Long projectId = 123L;
     private Long applicationId = 456L;

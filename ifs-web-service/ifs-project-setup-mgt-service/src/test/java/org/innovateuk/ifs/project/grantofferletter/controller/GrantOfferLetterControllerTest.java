@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.grantofferletter;
+package org.innovateuk.ifs.project.grantofferletter.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -10,9 +10,8 @@ import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
-import org.innovateuk.ifs.project.grantofferletter.controller.GrantOfferSendLetterController;
-import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterSendLetterForm;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferSendLetterModel;
+import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
@@ -47,7 +46,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<GrantOfferSendLetterController> {
+public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<GrantOfferLetterController> {
     @Test
     public void testView() throws Exception {
         Long competitionId = 1L;
@@ -74,7 +73,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferSendLetterModel golViewModel = (GrantOfferSendLetterModel) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
 
         assertFalse(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
@@ -83,7 +82,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
     }
 
@@ -128,7 +127,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferSendLetterModel golViewModel = (GrantOfferSendLetterModel) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
 
         assertTrue(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
@@ -138,7 +137,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertEquals(Boolean.TRUE, golViewModel.isSentToProjectTeam());
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
     }
 
@@ -183,7 +182,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferSendLetterModel golViewModel = (GrantOfferSendLetterModel) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
 
         assertFalse(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
@@ -193,7 +192,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertEquals(Boolean.FALSE, golViewModel.isSentToProjectTeam());
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
     }
 
@@ -279,7 +278,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getGrantOfferLetter());
     }
 
@@ -319,7 +318,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(2, form.getObjectErrors().size());
         assertEquals(form.getObjectErrors(), form.getBindingResult().getFieldErrors("grantOfferLetter"));
     }
@@ -357,7 +356,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferSendLetterModel model = (GrantOfferSendLetterModel) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel model = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
         assertFalse(model.getGrantOfferLetterFileContentAvailable());
 
     }
@@ -444,7 +443,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getAnnex());
     }
 
@@ -484,9 +483,9 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getAnnex());
-        assertEquals(Boolean.FALSE, ((GrantOfferSendLetterModel)result.getModelAndView().getModel().get("model")).getAdditionalContractFileContentAvailable());
+        assertEquals(Boolean.FALSE, ((GrantOfferLetterModel)result.getModelAndView().getModel().get("model")).getAdditionalContractFileContentAvailable());
     }
 
     @Test
@@ -534,7 +533,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferSendLetterModel golViewModel = (GrantOfferSendLetterModel) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
 
         assertTrue(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
@@ -546,7 +545,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
         assertEquals(Boolean.TRUE, golViewModel.getSignedGrantOfferLetterApproved());
         assertEquals(Boolean.TRUE, golViewModel.getSignedGrantOfferLetterFileAvailable());
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
     }
 
@@ -591,7 +590,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferSendLetterModel golViewModel = (GrantOfferSendLetterModel) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
 
         assertTrue(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
@@ -603,7 +602,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
         assertEquals(Boolean.FALSE, golViewModel.getSignedGrantOfferLetterApproved());
         assertEquals(Boolean.FALSE, golViewModel.getSignedGrantOfferLetterFileAvailable());
 
-        GrantOfferLetterSendLetterForm form = (GrantOfferLetterSendLetterForm) result.getModelAndView().getModel().get("form");
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
     }
 
@@ -653,7 +652,7 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<G
     }
 
     @Override
-    protected GrantOfferSendLetterController supplyControllerUnderTest() {
-        return new GrantOfferSendLetterController();
+    protected GrantOfferLetterController supplyControllerUnderTest() {
+        return new GrantOfferLetterController();
     }
 }

@@ -11,8 +11,8 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
-import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterSendLetterForm;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferSendLetterModel;
+import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/project/{projectId}/grant-offer-letter")
-public class GrantOfferSendLetterController {
+public class GrantOfferLetterController {
     @Autowired
     private ProjectService projectService;
 
@@ -63,14 +63,14 @@ public class GrantOfferSendLetterController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/send")
     public String viewGrantOfferLetterSend(@PathVariable Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        GrantOfferLetterSendLetterForm form = new GrantOfferLetterSendLetterForm();
+        GrantOfferLetterLetterForm form = new GrantOfferLetterLetterForm();
         return doViewGrantOfferLetterSend(projectId, model, form);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping("/send")
     public String sendGrantOfferLetter(@PathVariable Long projectId,
-                                       @ModelAttribute(FORM_ATTR) GrantOfferLetterSendLetterForm form,
+                                       @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
                                        Model model,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
@@ -81,8 +81,8 @@ public class GrantOfferSendLetterController {
         );
     }
 
-    private String doViewGrantOfferLetterSend(Long projectId, Model model, GrantOfferLetterSendLetterForm form) {
-        GrantOfferSendLetterModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
+    private String doViewGrantOfferLetterSend(Long projectId, Model model, GrantOfferLetterLetterForm form) {
+        GrantOfferLetterModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
@@ -93,7 +93,7 @@ public class GrantOfferSendLetterController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(value = "/grant-offer-letter", params = "uploadGrantOfferLetterClicked")
     public String uploadGrantOfferLetterFile(@PathVariable("projectId") final Long projectId,
-                                             @ModelAttribute(FORM_ATTR) GrantOfferLetterSendLetterForm form,
+                                             @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
                                              Model model)
@@ -110,7 +110,7 @@ public class GrantOfferSendLetterController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(value = "/grant-offer-letter", params = "removeGrantOfferLetterClicked")
     public String removeGrantOfferLetterFile(@PathVariable("projectId") final Long projectId,
-                                             @ModelAttribute(FORM_ATTR) GrantOfferLetterSendLetterForm form,
+                                             @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
                                              Model model) {
@@ -125,7 +125,7 @@ public class GrantOfferSendLetterController {
     public String signedGrantOfferLetterApproval(
             @PathVariable("projectId") final Long projectId,
             @PathVariable("approvalType") final ApprovalType approvalType,
-            @ModelAttribute(FORM_ATTR) GrantOfferLetterSendLetterForm form,
+            @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model) {
@@ -133,7 +133,7 @@ public class GrantOfferSendLetterController {
         return doViewGrantOfferLetterSend(projectId, model, form);
     }
 
-    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, String fieldName, GrantOfferLetterSendLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, String fieldName, GrantOfferLetterLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToGrantOfferLetterPage(projectId);
         Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
@@ -188,7 +188,7 @@ public class GrantOfferSendLetterController {
     @PostMapping(params = "uploadAnnexClicked", value = "/upload-annex")
     public String uploadAnnexFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) GrantOfferLetterSendLetterForm form,
+            @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
@@ -203,7 +203,7 @@ public class GrantOfferSendLetterController {
         });
     }
 
-    private GrantOfferSendLetterModel populateGrantOfferLetterSendViewModel(Long projectId) {
+    private GrantOfferLetterModel populateGrantOfferLetterSendViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
@@ -216,7 +216,7 @@ public class GrantOfferSendLetterController {
 
         GOLState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
 
-        return new GrantOfferSendLetterModel(competitionSummary,
+        return new GrantOfferLetterModel(competitionSummary,
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                 additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
                 !GOLState.PENDING.equals(golState),
