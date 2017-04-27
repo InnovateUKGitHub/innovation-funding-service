@@ -154,7 +154,7 @@ release {
     ]
 
     git {
-        requireBranch = 'master'
+        requireBranch = 'master|acceptance'
         pushToRemote = 'origin'
         pushToBranchPrefix = ''
         commitVersionFileOnly = false
