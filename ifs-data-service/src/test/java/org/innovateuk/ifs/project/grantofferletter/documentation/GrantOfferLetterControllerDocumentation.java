@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.documentation;
+package org.innovateuk.ifs.project.grantofferletter.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;

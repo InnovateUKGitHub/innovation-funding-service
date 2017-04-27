@@ -30,7 +30,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.*;
 
-public class GrantOfferServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
+public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
 
     private ProjectGrantOfferPermissionRules projectGrantOfferPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
