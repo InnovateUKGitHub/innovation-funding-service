@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.grandofferletter;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -138,6 +140,90 @@ public class GrantOfferLetterServiceImplTest {
         assertEquals(createdFile, result.getSuccessObject());
 
         verify(grantOfferLetterRestService).addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+    }
+
+    @Test
+    public void testApproveOrRejectSignedGrantOfferLetter() throws Exception {
+
+        when(grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED);
+
+        assertTrue(result.isSuccess());
+
+        verify(grantOfferLetterRestService).approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED);
+
+    }
+
+    @Test
+    public void testIsSignedGrantOfferLetterApproved() throws Exception {
+
+        when(grantOfferLetterRestService.isSignedGrantOfferLetterApproved(123L)).thenReturn(restSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterApproved(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+
+        verify(grantOfferLetterRestService).isSignedGrantOfferLetterApproved(123L);
+
+    }
+
+    @Test
+    public void testGrantOfferLetterAlreadySent() throws Exception {
+
+        when(grantOfferLetterRestService.isGrantOfferLetterAlreadySent(123L)).thenReturn(restSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = grantOfferLetterService.isGrantOfferLetterAlreadySent(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+
+        verify(grantOfferLetterRestService).isGrantOfferLetterAlreadySent(123L);
+
+    }
+
+    @Test
+    public void testIsSendGrantOfferLetterAllowed() throws Exception {
+
+        when(grantOfferLetterRestService.isSendGrantOfferLetterAllowed(123L)).thenReturn(restSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = grantOfferLetterService.isSendGrantOfferLetterAllowed(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+
+        verify(grantOfferLetterRestService).isSendGrantOfferLetterAllowed(123L);
+
+    }
+
+    @Test
+    public void testSendGrantOfferLetter() throws Exception {
+
+        when(grantOfferLetterRestService.sendGrantOfferLetter(123L)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = grantOfferLetterService.sendGrantOfferLetter(123L);
+
+        assertTrue(result.isSuccess());
+
+        verify(grantOfferLetterRestService).sendGrantOfferLetter(123L);
+
+    }
+
+    @Test
+    public void testGetGrantOfferLetterWorkflowState() throws Exception {
+
+        Long projectId = 123L;
+
+        when(grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(restSuccess(GOLState.APPROVED));
+
+        ServiceResult<GOLState> result = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(GOLState.APPROVED, result.getSuccessObject());
+
+        verify(grantOfferLetterRestService).getGrantOfferLetterWorkflowState(projectId);
+
     }
 
 }
