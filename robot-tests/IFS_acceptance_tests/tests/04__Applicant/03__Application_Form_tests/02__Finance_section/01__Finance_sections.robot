@@ -145,8 +145,7 @@ Applicant chooses Calculate overheads option
     When the user navigates to Your-finances page  ${applicationName}
     then the user fills in the project costs       ${applicationName}
     When the user clicks the button/link      link=Your project costs
-    and the user clicks the button twice   jQuery=button:contains("Overhead costs")
-    then the user should see the text in the page       ${excel_file}
+    then the user should see the text in the page     ${excel_file}
 
 *** Keywords ***
 Custom Suite Setup
@@ -196,3 +195,4 @@ the user should see the funding guidance
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
     the user should not see the element           jQuery=#details-content-0 p
+
