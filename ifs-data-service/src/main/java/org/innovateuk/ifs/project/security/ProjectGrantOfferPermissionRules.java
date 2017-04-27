@@ -7,9 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
-
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
-
 
 @PermissionRules
 @Component
