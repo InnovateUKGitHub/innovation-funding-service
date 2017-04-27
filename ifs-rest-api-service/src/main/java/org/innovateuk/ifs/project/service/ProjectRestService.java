@@ -41,28 +41,6 @@ public interface ProjectRestService {
 
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    RestResult<Optional<ByteArrayResource>> getCollaborationAgreementFile(Long projectId);
-
-    RestResult<Optional<FileEntryResource>> getCollaborationAgreementFileDetails(Long projectId);
-
-    RestResult<Optional<ByteArrayResource>> getExploitationPlanFile(Long projectId);
-
-    RestResult<Optional<FileEntryResource>> getExploitationPlanFileDetails(Long projectId);
-
-    RestResult<Void> removeCollaborationAgreementDocument(Long projectId);
-
-    RestResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    RestResult<Void> removeExploitationPlanDocument(Long projectId);
-
-    RestResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved);
-
-    RestResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    RestResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId);
-
-    RestResult<Void> setPartnerDocumentsSubmitted(Long projectId);
-
     RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
 
     RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId);

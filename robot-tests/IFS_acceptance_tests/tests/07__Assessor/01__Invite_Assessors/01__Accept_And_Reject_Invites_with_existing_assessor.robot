@@ -184,7 +184,7 @@ Number of days remaining until assessment submission
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
     [Tags]    MySQL    HappyPath
-    Then the total calculation in dashboard should be correct    Competitions for assessment    //div[3]/div/ul/li
+    Then the total calculation in dashboard should be correct    Competitions for assessment    //div/div/ul/li
 
 Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895

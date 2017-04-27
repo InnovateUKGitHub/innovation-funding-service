@@ -130,52 +130,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId) {
-        return projectRestService.getCollaborationAgreementFile(projectId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId) {
-        return projectRestService.getCollaborationAgreementFileDetails(projectId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
-        return projectRestService.addCollaborationAgreementDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId) {
-        return projectRestService.removeCollaborationAgreementDocument(projectId).toServiceResult();
-    }
-
-    @Override
-    public Optional<ByteArrayResource> getExploitationPlanFile(Long projectId) {
-        return projectRestService.getExploitationPlanFile(projectId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public Optional<FileEntryResource> getExploitationPlanFileDetails(Long projectId) {
-        return projectRestService.getExploitationPlanFileDetails(projectId).getSuccessObjectOrThrowException();
-    }
-
-
-    @Override
-    public ServiceResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
-        return projectRestService.addExploitationPlanDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> removeExploitationPlanDocument(Long projectId) {
-        return projectRestService.removeExploitationPlanDocument(projectId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
-        return projectRestService.acceptOrRejectOtherDocuments(projectId, approved).toServiceResult();
-    }
-
-    @Override
     public List<ProjectUserResource> getLeadPartners(Long projectId) {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
@@ -187,16 +141,6 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectUserResource> partnerUsers = getProjectUsersWithPartnerRole(projectId);
         OrganisationResource leadOrganisation = getLeadOrganisation(projectId);
         return simpleFilter(partnerUsers, projectUser -> !(projectUser.getOrganisation().equals(leadOrganisation.getId())));
-    }
-
-    @Override
-    public Boolean isOtherDocumentSubmitAllowed(Long projectId) {
-        return projectRestService.isOtherDocumentsSubmitAllowed(projectId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId) {
-        return projectRestService.setPartnerDocumentsSubmitted(projectId).toServiceResult();
     }
 
     @Override
