@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.monitoringofficer;
+package org.innovateuk.ifs.project.monitoringofficer.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 

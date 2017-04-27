@@ -5,7 +5,7 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 /**
  * Form backing the Other Documents page
  */
-public class ProjectPartnerDocumentsForm extends BaseBindingResultTarget {
+public class ProjectOtherDocumentsForm extends BaseBindingResultTarget {
 
     private Boolean approved;
 

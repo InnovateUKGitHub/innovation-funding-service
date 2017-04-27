@@ -22,6 +22,8 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -78,6 +80,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         assertTrue(viewModel.getApplicationsInFinishedNotEmpty());
         assertTrue(viewModel.getProjectsInSetupNotEmpty());
 
+        verify(applicationService, times(1)).getById(APPLICATION_ID_IN_PROJECT);
         assertEquals("Application in progress", viewModel.getApplicationInProgressText());
     }
 }
