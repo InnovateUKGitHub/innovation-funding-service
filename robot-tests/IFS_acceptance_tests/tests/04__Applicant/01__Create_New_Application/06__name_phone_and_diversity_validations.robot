@@ -19,7 +19,6 @@ First name left blank
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
-    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter a first name.
     And the user should see an error    We were unable to create your account
@@ -35,7 +34,6 @@ Last name left blank
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
-    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter a last name.
 
@@ -48,7 +46,6 @@ Phone number left blank
     And the user enters text to a text field    id=phoneNumber    ${EMPTY}
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
-    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter a phone number.
 
@@ -61,7 +58,6 @@ Phone number validation
     And the user enters text to a text field    id=phoneNumber    invalidphone
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
-    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter a valid phone number.
 
@@ -74,6 +70,5 @@ Phone number too short
     And the user enters text to a text field    id=phoneNumber    0123
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
-    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters.

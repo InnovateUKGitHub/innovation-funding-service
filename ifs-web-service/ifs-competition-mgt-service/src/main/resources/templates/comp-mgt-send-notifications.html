@@ -18,11 +18,9 @@
         </ul>
     </div>
 
-    <h1 class="heading-xlarge">
-                <span class="heading-secondary"><th:block th:text="${model.competitionId}"/>: <th:block
-                    th:text="${model.competitionName}"/></span>
-        <span>Funding decision notification</span>
-    </h1>
+    <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionName)} ? |${model.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionId} : ${model.competitionName}|">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision notification',subTitle=${competitionTitle},size='heading-xlarge'" />
+    </th:block>
 
     <p>This email can be edited. It will be received by all applicants associated with each of the applications you selected.</p>
 

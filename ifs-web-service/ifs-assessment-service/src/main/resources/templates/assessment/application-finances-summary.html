@@ -12,10 +12,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge">Funding</h1>
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <h2 class="heading-medium">Finances summary</h2>
             <div class="form-group finances-summary">

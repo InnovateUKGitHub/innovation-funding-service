@@ -13,16 +13,10 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null" />
-    <div th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
+    <th:block th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null" />
+    <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectName=${summaryModel.projectName})" />
-        <h1 class="heading-xlarge">
-            <th:block th:text="${summaryModel.organisationName}" />
-            <small th:if="${summaryModel.leadPartnerOrganisation}">(Lead Partner)</small>
-        </h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${summaryModel.organisationName},subTitle=${summaryModel.projectName},size='heading-xlarge',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
     <th:block th:if="${summaryModel.isShowApprovalMessage()}">
         <div class="success-alert">

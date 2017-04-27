@@ -54,12 +54,11 @@ Create assessor account: server-side validations
     And the user should see an error    Please enter a last name.
     And the user should see an error    Please enter a phone number.
     And the user should see an error    Please enter your password.
-    And the user should see an error    Please re-type your password.
     And the user should see an error    Please enter a valid phone number.
     And the user should see an error    Input for your phone number has a minimum length of 8 characters.
     And the user should see an error    Your last name should have at least 2 characters.
     And the user should see an error    Your first name should have at least 2 characters.
-    And the user should see an error    Password must at least be 10 characters.
+    And the user should see an error    Password must be at least 8 characters.
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
@@ -73,9 +72,8 @@ Create assessor account: client-side validations
     And the user should not see the validation error in the create assessor form    Please enter a valid phone number.
     And the user should not see the validation error in the create assessor form    Input for your phone number has a minimum length of 8 characters.
     When The user enters text to a text field    id=password    Passw0rd123
-    And The user enters text to a text field    id=retypedPassword    Passw0rd123
     Then the user should not see the validation error in the create assessor form    Please enter your password.
-    And the user should not see the validation error in the create assessor form    Password must at least be 10 characters.
+    And the user should not see the validation error in the create assessor form    Password must be at least 8 characters.
     When the user clicks the button/link    id=postcode-lookup
     And The user should see the text in the page    Please enter a valid postcode    # empty postcode check
 
@@ -88,7 +86,6 @@ Create assessor account: Postcode lookup and save
     And the user clicks the button/link    css=#select-address-block button
     And the address fields should be filled
     And The user enters text to a text field    id=password    Passw0rd123
-    And The user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see the text in the page    Your account has been created
     And the user clicks the button/link    jQuery=a:contains("Sign into your account")
@@ -104,11 +101,14 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the text in the page    There are currently no assessments for you to review.
+    And the user reads his email and clicks the link    ${test_mailbox_one}+thomas.fister@gmail.com    Innovate UK survey    Please complete the short diversity survey
+    [Teardown]      the user navigates to the page    ${LOGIN_URL}
 
 Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
     [Tags]
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    #Note opening a new browser here as the end of the previous test is on survery monkey page.
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    jQuery=a:contains(81 to)

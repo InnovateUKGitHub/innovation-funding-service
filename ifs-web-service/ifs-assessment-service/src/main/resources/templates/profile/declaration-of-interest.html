@@ -12,8 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
 
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
-
-            <h1 class="heading-xlarge">Declaration of interest</h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Declaration of interest',size='heading-xlarge'" />
 
             <h2 class="heading-medium no-margin-bottom">Principal employer and role</h2>
             <p th:if="${model.principalEmployer}">

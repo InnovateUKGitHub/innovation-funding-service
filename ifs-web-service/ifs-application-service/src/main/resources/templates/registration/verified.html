@@ -10,13 +10,9 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <div class="page-title">
-      <h1 class="heading-xlarge no-margin">Account verified</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Account verified',size='heading-xlarge'" />
     <p>Your account has been successfully verified. You can sign in with your registered email and password.</p>
     <a th:href="${userDashboardLink}" class="button">Sign in</a>
-
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

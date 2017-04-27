@@ -7,8 +7,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeXml10;
-
 public class OrganisationResource {
     private Long id;
     private String name;

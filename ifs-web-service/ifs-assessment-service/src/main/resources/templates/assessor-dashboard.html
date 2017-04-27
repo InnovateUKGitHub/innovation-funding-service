@@ -11,10 +11,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <div class="page-title">
-                <h1 class="heading-xlarge">Assessor dashboard</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor dashboard',size='heading-xlarge'" />
             <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
                 <h2 class="heading-small no-margin">Complete your assessor account</h2>
 

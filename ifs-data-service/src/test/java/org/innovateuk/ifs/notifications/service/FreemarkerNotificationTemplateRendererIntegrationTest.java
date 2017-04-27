@@ -162,7 +162,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testInviteProjectManagerEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "projectName", "My Project",
+                "projectName", "My Project<>\"&",
                 "leadOrganisation", "Lead Organisation 123",
                 "inviteUrl", "https://ifs-local-dev/invite"
         );
