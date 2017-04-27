@@ -18,10 +18,7 @@
 
     <th:block th:if="${ineligibility.ineligible}">
         <h3 class="heading-small">Removed by</h3>
-        <!-- TODO INFUND-8941
         <p th:text="|${ineligibility.removedBy}, ${#temporals.format(ineligibility.removedOn, 'dd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
-        -->
-        <p th:text="${ineligibility.removedBy}">Peter Kault</p>
 
         <h3 class="heading-small">Reason for removal</h3>
         <p th:text="${ineligibility.reasonForRemoval}"></p>
