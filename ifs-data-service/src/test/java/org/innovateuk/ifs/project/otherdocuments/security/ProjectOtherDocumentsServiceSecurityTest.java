@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing how the secured methods in ProjectService interact with Spring Security
+ * Testing how the secured methods in ProjectOtherDocumentsService interact with Spring Security
  */
 public class ProjectOtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<ProjectOtherDocumentsService> {
 
