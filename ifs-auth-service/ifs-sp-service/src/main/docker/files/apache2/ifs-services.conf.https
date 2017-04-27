@@ -95,7 +95,7 @@ ShibCompatValidUser On
   ErrorDocument 501 /holding/error.html
   ErrorDocument 502 /holding/error.html
   ErrorDocument 503 /holding/error.html
-  ErrorDocument 504 /holding/error.html
+  ErrorDocument 504 /holding/maintenance.html
   ErrorDocument 505 /holding/error.html
   ErrorDocument 506 /holding/error.html
   ErrorDocument 507 /holding/error.html
