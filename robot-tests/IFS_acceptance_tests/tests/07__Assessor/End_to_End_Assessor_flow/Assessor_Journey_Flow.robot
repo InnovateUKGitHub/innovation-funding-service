@@ -95,7 +95,8 @@ Assessor accepts the invite for the Application
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     When The user clicks the button/link    Link=Park living
-    And The user clicks the button/link    jQuery=button:contains("Accept")
+    And the user selects the radio button  assessmentAccept  true
+        And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
 
 New assessor has one assessment
