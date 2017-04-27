@@ -15,8 +15,7 @@ public class UserRegistrationResource extends UserProfileBaseResource{
 
     @NotEmpty(message = "{validation.standard.password.required}")
     @Size.List({
-            @Size(min = 10, message = "{validation.standard.password.length.min}"),
-            @Size(max = 30, message = "{validation.standard.password.length.max}"),
+            @Size(min = 8, message = "{validation.standard.password.length.min}"),
     })
     private String password;
 
