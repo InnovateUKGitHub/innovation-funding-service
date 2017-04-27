@@ -59,7 +59,8 @@ Non registered users CH route (email step)
     And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
-    [Teardown]    logout as user
+    And logout as user
+    And the user reads his email and clicks the link    ${test_mailbox_one}+${unique_email_number}@gmail.com    Innovate UK survey    Please complete the short diversity survey
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510

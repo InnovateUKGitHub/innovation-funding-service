@@ -10,17 +10,8 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-
-            <div th:include="fragments/layout :: header-sub"
-                 th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
-                 th:remove="tag" />
-
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">
-                    <th:block th:text="|${model.competitionId}: ${model.competitionName}|">00000001: Connected digital additive manufacturing</th:block>
-                </span>
-                Submitted applications
-            </h1>
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submitted applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
             <h2 class="heading-medium">Key statistics</h2>
             <ul class="grid-row extra-margin-bottom">

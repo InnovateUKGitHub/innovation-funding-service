@@ -18,10 +18,7 @@
                     <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
                 </ul>
             </div>
-
-            <div class="page-title">
-                <h1 class="heading-xlarge">Accept application</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept application',size='heading-xlarge'" />
 
             <h2 class="visually-hidden">Application details</h2>
             <div class="boxed">
