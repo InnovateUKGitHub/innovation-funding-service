@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.transactional;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
@@ -15,12 +14,6 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
@@ -66,14 +59,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.function.Supplier;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -133,12 +122,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private  EmailService projectEmailService;
 
     @Autowired
-    private FileService fileService;
-
-    @Autowired
-    private FileEntryMapper fileEntryMapper;
-
-    @Autowired
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
@@ -167,9 +150,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private FinanceChecksGenerator financeChecksGenerator;
-
-    @Autowired
-    private ProjectGrantOfferService projectGrantOfferLetterService;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -298,167 +278,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
-
-        return getProject(projectId).andOnSuccess(project ->
-                retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                        failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
-                        success -> setDocumentsSubmittedDate(project, date)));
-    }
-
-    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, ZonedDateTime date) {
-        project.setDocumentsSubmittedDate(date);
-        return serviceSuccess();
-    }
-
-    @Override
-    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
-
-        ServiceResult<Project> project = getProject(projectId);
-        Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
-
-        return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                failure -> serviceSuccess(false),
-                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
-                        serviceSuccess(true) :
-                        serviceSuccess(false));
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
-                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
-    }
-
-    @Override
-    public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            FileEntry fileEntry = project.getCollaborationAgreement();
-
-            if (fileEntry == null) {
-                return serviceFailure(notFoundError(FileEntry.class));
-            }
-
-            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
-        });
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            FileEntry fileEntry = project.getCollaborationAgreement();
-
-            if (fileEntry == null) {
-                return serviceFailure(notFoundError(FileEntry.class));
-            }
-
-            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
-        });
-    }
-
-    @Override
-    public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
-                andOnSuccess(this::validateProjectIsInSetup).
-                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
-    }
-
-    @Override
-    public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
-        return getProject(projectId).
-                andOnSuccess(this::validateProjectIsInSetup).
-                andOnSuccess(project ->
-                getCollaborationAgreement(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                removeCollaborationAgreementFileFromProject(project))));
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
-                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
-    }
-
-    @Override
-    public ServiceResult<FileAndContents> getExploitationPlanFileContents(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            FileEntry fileEntry = project.getExploitationPlan();
-
-            if (fileEntry == null) {
-                return serviceFailure(notFoundError(FileEntry.class));
-            }
-
-            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
-        });
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            FileEntry fileEntry = project.getExploitationPlan();
-
-            if (fileEntry == null) {
-                return serviceFailure(notFoundError(FileEntry.class));
-            }
-
-            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
-        });
-    }
-
-    @Override
-    public ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
-                andOnSuccess(this::validateProjectIsInSetup).
-                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
-    }
-
-    @Override
-    public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
-        return getProject(projectId).
-        andOnSuccess(this::validateProjectIsInSetup).andOnSuccess(project ->
-                getExploitationPlan(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                removeExploitationPlanFileFromProject(project))));
-    }
-
-    @Override
-    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
-        //TODO INFUND-7493
-        if (approval == null) {
-            return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
-        }
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
-                        return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
-                    }
-                    project.setOtherDocumentsApproved(approval ? ApprovalType.APPROVED : ApprovalType.REJECTED);
-                    if (approval.equals(false)) {
-                        project.setDocumentsSubmittedDate(null);
-                    }
-                    return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
-                });
-    }
-
-    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
-
-        ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
-        ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
-
-        return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
-    }
-
-    @Override
     public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
@@ -474,55 +293,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceSuccess(pu);
                     }
                 });
-    }
-
-    private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
-        if (project.getCollaborationAgreement() == null) {
-            return serviceFailure(notFoundError(FileEntry.class));
-        } else {
-            return serviceSuccess(project.getCollaborationAgreement());
-        }
-    }
-
-    private FileEntryResource linkCollaborationAgreementFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
-        FileEntry fileEntry = fileDetails.getValue();
-        linkCollaborationAgreementFileEntryToProject(fileEntry, project);
-        return fileEntryMapper.mapToResource(fileEntry);
-    }
-
-    private void linkCollaborationAgreementFileEntryToProject(FileEntry fileEntry, Project project) {
-        project.setOtherDocumentsApproved(ApprovalType.UNSET);
-        project.setCollaborationAgreement(fileEntry);
-    }
-
-    private void removeCollaborationAgreementFileFromProject(Project project) {
-        validateProjectIsInSetup(project).
-        andOnSuccess(() -> project.setCollaborationAgreement(null));
-    }
-
-    private ServiceResult<FileEntry> getExploitationPlan(Project project) {
-        if (project.getExploitationPlan() == null) {
-            return serviceFailure(notFoundError(FileEntry.class));
-        } else {
-            return serviceSuccess(project.getExploitationPlan());
-        }
-    }
-
-    private FileEntryResource linkExploitationPlanFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
-        FileEntry fileEntry = fileDetails.getValue();
-        linkExploitationPlanFileEntryToProject(fileEntry, project);
-        return fileEntryMapper.mapToResource(fileEntry);
-    }
-
-    private void linkExploitationPlanFileEntryToProject(FileEntry fileEntry, Project project) {
-        project.setOtherDocumentsApproved(ApprovalType.UNSET);
-        project.setExploitationPlan(fileEntry);
-    }
-
-    private void removeExploitationPlanFileFromProject(Project project) {
-
-        validateProjectIsInSetup(project).
-                andOnSuccess(() -> project.setExploitationPlan(null));
     }
 
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
