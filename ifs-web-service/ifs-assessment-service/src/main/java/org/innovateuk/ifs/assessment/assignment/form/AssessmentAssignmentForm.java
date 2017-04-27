@@ -47,7 +47,7 @@ public class AssessmentAssignmentForm extends BaseBindingResultTarget {
     }
 
     @AssertTrue(message = "{validation.assessmentRejectOutcome.rejectReason.required}")
-    public boolean isRejectOutcomeValid() {
+    public boolean isRejectReasonValid() {
         return BooleanUtils.isNotFalse(assessmentAccept) || rejectReason != null;
     }
 

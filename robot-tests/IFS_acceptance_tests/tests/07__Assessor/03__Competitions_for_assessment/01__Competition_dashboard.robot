@@ -88,7 +88,8 @@ Accept an application for assessment
     Then the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
     When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the text in the page    Accept application
-    And The user clicks the button/link    jQuery=button:contains("Accept")
+    And the user selects the radio button  assessmentAccept  true
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
     And the user should see the element    jQuery=.in-progress li:nth-child(3):contains("Intelligent water system"):contains("Accepted")
 
@@ -104,14 +105,12 @@ Reject an application for assessment
     And the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
     When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the text in the page    Accept application
-    And The user clicks the button/link    jQuery=a:contains("Reject")
-    And the user clicks the button/link    jQuery=button:contains(Cancel)
     And the user should not see the element    id=rejectComment
-    And The user clicks the button/link    jQuery=a:contains("Reject")
-    And the user clicks the button/link    jQuery=.button:contains("Reject")
+    And the user selects the radio button  assessmentAccept  false
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should see an error    Please enter a reason.
     And the assessor fills all fields with valid inputs
-    And the user clicks the button/link    jQuery=.button:contains("Reject")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the application for assessment should be removed
 
 Applications should not have a check-box when the status is Open

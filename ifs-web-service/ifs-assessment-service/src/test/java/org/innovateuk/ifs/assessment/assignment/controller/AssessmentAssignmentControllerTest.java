@@ -299,7 +299,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form", "rejectOutcomeValid"))
+                .andExpect(model().attributeHasFieldErrors("form", "rejectReasonValid"))
                 .andExpect(view().name("assessment/assessment-invitation"))
                 .andReturn();
 
@@ -308,8 +308,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("rejectOutcomeValid"));
-        assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectOutcomeValid").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("rejectReasonValid"));
+        assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReasonValid").getDefaultMessage());
 
         InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleService, organisationRestService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);

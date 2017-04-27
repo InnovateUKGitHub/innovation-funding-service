@@ -79,11 +79,11 @@
                             </label>
                         </div>
                         <div class="panel js-hidden" id="reject-application">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
-                                <label class="form-label" th:for="${#ids.next('rejectReason')}">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
+                                <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
                                     Please select a reason for rejecting the competition
-                                    <th:block th:if="${#fields.hasErrors('rejectReason')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
+                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
                                 </label>
                                 <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
