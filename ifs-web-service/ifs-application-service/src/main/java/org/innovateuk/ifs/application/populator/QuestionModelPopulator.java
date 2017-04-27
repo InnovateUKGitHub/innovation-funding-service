@@ -12,6 +12,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -78,8 +79,14 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     private QuestionApplicationViewModel addApplicationDetails(ApplicantQuestionResource question, ApplicationForm form) {
         form.setApplication(question.getApplication());
 
-        Set<Long> completedDetails = getCompletedDetails(question.getQuestion(), question.getApplication().getId(), question.getQuestionStatuses().stream().map(ApplicantQuestionStatusResource::getStatus).collect(Collectors.toList()));
-        Boolean allReadOnly = calculateAllReadOnly(question, completedDetails);
+        Boolean isApplicationDetails = isApplicationDetails(question);
+        Set<Long> completedDetails = getCompletedDetails(question.getQuestion(), question.getQuestionStatuses().stream().map(ApplicantQuestionStatusResource::getStatus).collect(Collectors.toList()));
+        boolean allReadOnly;
+        if(isApplicationDetails && !question.getCurrentApplicant().isLead()) {
+            allReadOnly = true;
+        } else {
+            allReadOnly = calculateAllReadOnly(question, completedDetails);
+        }
 
         QuestionApplicationViewModel questionApplicationViewModel = new QuestionApplicationViewModel(completedDetails, allReadOnly
                 , question.getApplication(), question.getCompetition(), question.getCurrentApplicant().getOrganisation());
@@ -92,6 +99,10 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         addSelectedResearchCategoryName(question.getApplication(), questionApplicationViewModel);
 
         return questionApplicationViewModel;
+    }
+
+    private Boolean isApplicationDetails(ApplicantQuestionResource questionResource) {
+        return questionResource.getFormInputs().stream().anyMatch(formInput -> (formInput.getFormInput().getType().equals(FormInputType.APPLICATION_DETAILS)));
     }
 
     private void addSelectedInnovationAreaName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
@@ -115,7 +126,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
             return question.getQuestionStatuses().size() > 0 &&
                     (completedDetails.contains(question.getQuestion().getId()) || !assignedQuestions.contains(question.getQuestion().getId()));
         } else {
-            return true;
+            return false;
         }
     }
 
@@ -196,7 +207,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         return assigned;
     }
 
-    private Set<Long> getCompletedDetails(QuestionResource question, Long applicationId, List<QuestionStatusResource> questionStatuses) {
+    private Set<Long> getCompletedDetails(QuestionResource question, List<QuestionStatusResource> questionStatuses) {
         Set<Long> markedAsComplete = new HashSet<Long>();
 
         if(question.getMarkAsCompletedEnabled() && !question.getMultipleStatuses()) {

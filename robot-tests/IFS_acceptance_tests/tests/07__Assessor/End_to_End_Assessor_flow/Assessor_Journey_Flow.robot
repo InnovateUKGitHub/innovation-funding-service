@@ -148,5 +148,4 @@ The user fills and submits the registration form
     And the user should see the element    id=addressForm.selectedPostcodeIndex
     And the user clicks the button/link    css=#select-address-block button
     And The user enters text to a text field    id=password    Passw0rd123
-    And The user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user clicks the button/link    jQuery=button:contains("Continue")

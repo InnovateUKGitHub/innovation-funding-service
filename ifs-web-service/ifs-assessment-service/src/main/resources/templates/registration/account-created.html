@@ -11,10 +11,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <div class="page-title">
-                <h1 class="heading-xlarge">Your account has been created</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your account has been created',size='heading-xlarge'" />
             <p>Before we can invite you to assess you will need to sign into your account to complete the following:</p>
 
             <ul class="list list-bullet">

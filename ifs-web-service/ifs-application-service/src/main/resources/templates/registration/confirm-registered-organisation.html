@@ -10,8 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <h1 class="heading-large">Confirm your organisation</h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',size='heading-large'" />
     <p>The lead applicant has invited you to participate on this application as part of the following organisation:
         <strong th:text="${model.partOfOrganisation}"></strong></p>
 

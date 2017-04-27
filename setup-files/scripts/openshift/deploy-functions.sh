@@ -2,6 +2,33 @@ function convertFileToBlock() {
    cat $1 | tail -n +2 | sed '$ d' | tr -d '\r' | tr '\n' ' ' |  rev | cut -c 2- | rev
 }
 
+function injectDBVariables() {
+    if [ -z "$DB_USER" ]; then echo "Set DB_USER environment variable"; exit -1; fi
+    if [ -z "$DB_PASS" ]; then echo "Set DB_PASS environment variable"; exit -1; fi
+    if [ -z "$DB_NAME" ]; then echo "Set DB_NAME environment variable"; exit -1; fi
+    if [ -z "$DB_HOST" ]; then echo "Set DB_HOST environment variable"; exit -1; fi
+    DB_PORT=${DB_PORT:-3306}
+    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/*.yml
+}
+
+function injectFlywayVariables() {
+    [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
+    sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" os-files-tmp/*.yml
+}
+
+function injectLDAPVariables() {
+    if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
+    LDAP_PORT=${LDAP_PORT:-389}
+    sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" os-files-tmp/*.yml
+}
+
 function tailorAppInstance() {
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
     sed -i.bak $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" os-files-tmp/shib/*.yml
@@ -68,7 +95,9 @@ function useContainerRegistry() {
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/robot-tests/*.yml
+}
 
+function pushApplicationImages() {
     docker tag innovateuk/data-service:${VERSION} \
         ${REGISTRY}/${PROJECT}/data-service:${VERSION}
     docker tag innovateuk/project-setup-service:${VERSION} \
@@ -90,6 +119,15 @@ function useContainerRegistry() {
     docker push ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/application-service:${VERSION}
+}
+
+function pushDBResetImages() {
+    docker tag innovateuk/dbreset:${VERSION} \
+        ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
+
+    docker push ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 }
 
 function cloneConfig() {

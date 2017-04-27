@@ -10,9 +10,8 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Thymeleaf rendering error',size='heading-large'" />
 
-
-    <h1 class="heading-large">Thymeleaf rendering error</h1>
 
 
     <p th:if="${url}">

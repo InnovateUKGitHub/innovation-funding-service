@@ -87,6 +87,7 @@ fi
 if [[ (${TARGET} != "local") ]]
 then
     useContainerRegistry
+    pushApplicationImages
 fi
 
 deploy

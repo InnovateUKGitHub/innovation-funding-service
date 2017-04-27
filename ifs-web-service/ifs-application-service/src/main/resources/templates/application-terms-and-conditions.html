@@ -10,10 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <header class="page-header group no-pad">
-        <h1 class="heading-xlarge">Terms and Conditions of the Offer</h1>
-    </header>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and Conditions of the Offer',size='heading-xlarge'" />
 
     <div class="grid-row">
         <div class="row competition-details">
