@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -52,6 +53,9 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
 
     @Autowired
     private ProjectGrantOfferService projectGrantOfferLetterService;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Override
     public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
