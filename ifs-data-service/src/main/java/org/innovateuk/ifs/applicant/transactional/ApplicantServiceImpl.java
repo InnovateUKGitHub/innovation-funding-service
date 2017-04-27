@@ -59,7 +59,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         ApplicantQuestionResource applicant = new ApplicantQuestionResource();
         populateAbstractApplicantResource(applicant, applicationId, userId, results);
 
-        populateQuestion(results, applicant, questionId, applicationId, applicant.getApplicants());
+        populateQuestion(results, applicant, questionId, applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
 
         return results.toSingle().andOnSuccessReturn(() -> applicant);
     }
@@ -70,15 +70,15 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         ApplicantSectionResource applicant = new ApplicantSectionResource();
         populateAbstractApplicantResource(applicant, applicationId, userId, results);
 
-        populateSection(results, applicant, sectionId, applicationId, applicant.getApplicants());
+        populateSection(results, applicant, sectionId, applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
 
         ApplicantSectionResource parent = new ApplicantSectionResource();
-        populateSection(results, parent, applicant.getSection().getParentSection(), applicationId, applicant.getApplicants());
+        populateSection(results, parent, applicant.getSection().getParentSection(), applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
         applicant.setParentSection(parent);
 
         applicant.getSection().getChildSections().forEach(subSectionId -> {
             ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
-            populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
+            populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
             applicant.addChildSection(applicantSectionResource);
         });
 
@@ -86,10 +86,10 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     }
 
 
-    private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
+    private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, Long organisationId, List<ApplicantResource> applicants) {
         results.trackResult(questionService.getQuestionById(questionId), applicant::setQuestion);
         results.trackResult(questionService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId), questionStatusResources -> applicant.setQuestionStatuses(mapToApplicantStatuses(questionStatusResources, applicants)));
-        results.trackResult(mapFormInputs(results, questionId, applicationId, applicant.getCurrentApplicant().getOrganisation().getId()), applicant::setFormInputs);
+        results.trackResult(mapFormInputs(results, questionId, applicationId, organisationId), applicant::setFormInputs);
     }
 
     private List<ApplicantQuestionStatusResource> mapToApplicantStatuses(List<QuestionStatusResource> questionStatusResources, List<ApplicantResource> applicants) {
@@ -106,12 +106,12 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         }).collect(Collectors.toList());
     }
 
-    private void populateSection(ServiceResults results, ApplicantSectionResource applicant, Long sectionId, Long applicationId, List<ApplicantResource> applicants) {
+    private void populateSection(ServiceResults results, ApplicantSectionResource applicant, Long sectionId, Long applicationId, Long organisationId, List<ApplicantResource> applicants) {
         results.trackResult(sectionService.getById(sectionId), applicant::setSection);
 
         applicant.getSection().getQuestions().forEach(questionId -> {
             ApplicantQuestionResource applicantQuestionResource = new ApplicantQuestionResource();
-            populateQuestion(results, applicantQuestionResource, questionId, applicationId, applicants);
+            populateQuestion(results, applicantQuestionResource, questionId, applicationId, organisationId, applicants);
             applicant.addQuestion(applicantQuestionResource);
         });
     }
@@ -146,8 +146,13 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private ServiceResult<ApplicantFormInputResponseResource> mapFormInputResponse(ServiceResults results, FormInputResource formInputResource, Long applicationId, Long organisationId) {
         ApplicantFormInputResponseResource applicantFormInputResponseResource = new ApplicantFormInputResponseResource();
+        //TODO get(0)
         results.trackResult(formInputService.findResponsesByFormInputIdAndApplicationId(formInputResource.getId(), applicationId),
-                formInputResponseResources -> applicantFormInputResponseResource.setResponse(formInputResponseResources.get(0)));
+                formInputResponseResources -> {
+                    if (!formInputResponseResources.isEmpty()) {
+                        applicantFormInputResponseResource.setResponse(formInputResponseResources.get(0));
+                    }
+                });
         return serviceSuccess(applicantFormInputResponseResource);
     }
 

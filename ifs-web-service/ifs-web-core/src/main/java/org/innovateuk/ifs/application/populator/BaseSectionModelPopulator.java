@@ -6,12 +6,13 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -57,15 +58,15 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
-    public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId);
+    public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection);
 
     protected NavigationViewModel addNavigation(SectionResource section, Long applicationId) {
         return applicationNavigationPopulator.addNavigation(section, applicationId);
     }
 
-    protected Boolean calculateAllReadOnly(CompetitionResource competition, Long currentSectionId, Set<Long> markedAsCompleteSections) {
-        return (null != competition && !competition.isOpen()) ||
-                (null != markedAsCompleteSections && markedAsCompleteSections.contains(currentSectionId));
+    protected Boolean calculateAllReadOnly(BaseSectionViewModel sectionViewModel, ApplicantSectionResource applicantSectionResource) {
+        return (null != applicantSectionResource.getCompetition() && !applicantSectionResource.getCompetition().isOpen()) ||
+                (null != sectionViewModel.getCompletedSections() && sectionViewModel.getCompletedSections().contains(applicantSectionResource.getSection().getId()));
     }
 
     protected void addUserDetails(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
@@ -147,6 +148,23 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(applicantSection.getApplication().getId());
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(applicantSection.getCurrentApplicant().getOrganisation().getId());
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
+    }
+
+    protected SectionAssignableViewModel addAssignableDetails(ApplicantSectionResource applicantSection) {
+
+        if (isApplicationInViewMode(applicantSection.getApplication(), Optional.of(applicantSection.getCurrentApplicant().getOrganisation()))) {
+            return new SectionAssignableViewModel();
+        }
+
+        Map<Long, QuestionStatusResource> questionAssignees;
+
+        questionAssignees = simpleToMap(applicantSection.allQuestionStatuses().filter(status -> status.getAssignee().isSameUser(applicantSection.getCurrentApplicant())).collect(Collectors.toList()),
+                status -> status.getStatus().getQuestion(), ApplicantQuestionStatusResource::getStatus);
+
+        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), applicantSection.getCurrentApplicant().getUser().getId());
+        questionService.removeNotifications(notifications);
+
+        return new SectionAssignableViewModel(questionAssignees, notifications);
     }
 
 }

@@ -88,7 +88,6 @@ import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessage
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.HttpUtils.requestParameterPresent;
 import static org.springframework.util.StringUtils.hasText;
@@ -279,7 +278,7 @@ public class ApplicationFormController {
 
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
-        applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), model, section);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection());
     }
 
     @ProfileExecution
@@ -722,18 +721,14 @@ public class ApplicationFormController {
 
         logSaveApplicationBindingErrors(validationHandler);
 
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        SectionResource section = sectionService.getById(sectionId);
-        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
 
         model.addAttribute("form", form);
 
         Map<String, String[]> params = request.getParameterMap();
 
-        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, section, params, user.getId(), applicationId);
-        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, sectionId, null, user, request, response, bindingResult, validFinanceTerms);
+        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, applicantSection.getSection(), params, user.getId(), applicationId);
+        ValidationMessages saveApplicationErrors = saveApplicationForm(applicantSection.getApplication(), applicantSection.getCompetition(), form, sectionId, null, user, request, response, bindingResult, validFinanceTerms);
         logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -743,10 +738,10 @@ public class ApplicationFormController {
 
         if (saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)) {
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(model, form, bindingResult, application, user, organisationId, section, allSections);
+            populateSection(model, form, bindingResult, applicantSection);
             return APPLICATION_FORM;
         } else {
-            return getRedirectUrl(request, applicationId, Optional.of(section.getType()));
+            return getRedirectUrl(request, applicationId, Optional.of(applicantSection.getSection().getType()));
         }
     }
 
