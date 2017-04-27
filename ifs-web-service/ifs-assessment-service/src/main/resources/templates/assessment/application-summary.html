@@ -19,10 +19,9 @@
                 </ul>
             </div>
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge" th:text="${'Assessment summary'}" />
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment summary',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">

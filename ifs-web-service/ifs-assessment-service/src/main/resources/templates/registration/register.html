@@ -19,9 +19,7 @@
                 </ul>
             </div>
 
-            <div class="hgroup">
-                <h1 class="heading-xlarge">Create assessor account</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create assessor account',size='heading-xlarge'" />
 
             <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
                 <h2 class="heading-medium">Your details</h2>

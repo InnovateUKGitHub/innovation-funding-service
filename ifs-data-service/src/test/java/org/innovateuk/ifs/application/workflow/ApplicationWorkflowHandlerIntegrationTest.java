@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.workflow;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.repository.ApplicationProcessRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
@@ -14,9 +15,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -49,7 +52,10 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
 
     @Test
     public void markIneligible() {
-        assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.INELIGIBLE, application -> applicationWorkflowHandler.markIneligible(application));
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.INELIGIBLE, application -> applicationWorkflowHandler.markIneligible(application, createIneligible()), (applicationProcess -> {
+            assertEquals(1, applicationProcess.getIneligibleOutcomes().size());
+            assertEquals("reason", applicationProcess.getIneligibleOutcomes().get(0).getReason());
+        }));
     }
 
     @Test
@@ -90,6 +96,10 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
     }
 
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod) {
+        assertStateChangeOnWorkflowHandlerCall(initialApplicationState, expectedApplicationState, workflowHandlerMethod, null);
+    }
+
+    private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod, Consumer<ApplicationProcess> additionalVerifications) {
         Application application = newApplication().withApplicationState(initialApplicationState).build();
         ApplicationProcess applicationProcess = application.getApplicationProcess();
         when(applicationProcessRepositoryMock.findOneByTargetId(application.getId())).thenReturn(applicationProcess);
@@ -97,14 +107,23 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
         ActivityState expectedActivityState = new ActivityState(activityType, expectedApplicationState.getBackingState());
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(activityType, expectedApplicationState.getBackingState())).thenReturn(expectedActivityState);
 
-        assertTrue( workflowHandlerMethod.apply(application) );
+        assertTrue(workflowHandlerMethod.apply(application));
 
         assertEquals(expectedApplicationState, applicationProcess.getActivityState());
 
         verify(applicationProcessRepositoryMock, times(2)).findOneByTargetId(application.getId());
         verify(activityStateRepositoryMock).findOneByActivityTypeAndState(activityType, expectedApplicationState.getBackingState());
         verify(applicationProcessRepositoryMock).save(applicationProcess);
+
+        if (additionalVerifications != null) {
+            additionalVerifications.accept(applicationProcess);
+        }
+
         verifyNoMoreInteractionsWithMocks();
+    }
+
+    private IneligibleOutcome createIneligible() {
+        return newIneligibleOutcome().withReason("reason").build();
     }
 
     @Override

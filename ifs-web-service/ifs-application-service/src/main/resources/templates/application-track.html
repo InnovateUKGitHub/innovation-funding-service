@@ -11,10 +11,9 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
-    <div class="page-title">
-      <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
-      <h1 class="heading-xlarge">Application status</h1>
-    </div>
+    <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application status',subTitle=${applicationName},size='heading-xlarge'" />
+    </th:block>
 
     <div class="submitted-panel">
       <h2 class="heading-xlarge no-margin">Application submitted</h2>

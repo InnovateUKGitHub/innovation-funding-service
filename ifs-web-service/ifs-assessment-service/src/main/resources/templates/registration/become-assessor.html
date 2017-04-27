@@ -11,12 +11,8 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <div class="hgroup no-margin-top">
-                <h1 class="heading-xlarge">Become an assessor for Innovate UK</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Become an assessor for Innovate UK',size='heading-xlarge'" />
             <p>Welcome to Innovate UK’s assessment service.</p>
-
             <p>Please create your account. Once your account is created you will need to sign in before you can accept invitations to assess.</p>
 
         	<a th:href="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" class="button button-large">Create account</a>

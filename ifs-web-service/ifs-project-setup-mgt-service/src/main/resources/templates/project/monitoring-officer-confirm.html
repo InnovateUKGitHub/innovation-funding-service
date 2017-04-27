@@ -13,10 +13,9 @@
 
 	<div class="grid-row">
 		<div class="column-two-thirds">
-			<div class="page-title">
-				<th:block th:insert="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" />
-				<h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
-			</div>
+            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
+            </th:block>
 		</div>
 		<div class="column-third alignright extra-margin">
 			<th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
