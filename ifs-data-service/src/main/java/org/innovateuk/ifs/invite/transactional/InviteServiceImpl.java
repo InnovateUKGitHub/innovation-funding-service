@@ -323,9 +323,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private void deleteOrganisationsApplicationData(Organisation organisation, Application application) {
-        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
-        if (finance != null) {
-            applicationFinanceRepository.delete(finance);
+        if (organisation != null) {
+            ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            if (finance != null) {
+                applicationFinanceRepository.delete(finance);
+            }
         }
     }
 

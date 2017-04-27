@@ -532,7 +532,7 @@ public class ApplicationFormController {
         }
     }
 
-    private void markAcademicFinancesAsNotRequired(Long organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
+    private void markAcademicFinancesAsNotRequired(long organisationType, SectionResource selectedSection, long applicationId, long competitionId, long processRoleId) {
 
         if (selectedSection != null && SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
                 && OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {
