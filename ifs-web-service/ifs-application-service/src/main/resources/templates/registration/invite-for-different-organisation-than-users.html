@@ -10,7 +10,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <h1 class="heading-large">Sorry, you are unable to accept this invitation.</h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sorry, you are unable to accept this invitation.',size='heading-large'" />
             <p>You have been invited to join this application as part of the organisation: <strong th:text="${model.inviteOrganisationName}"/></p>
             <p>Your account is already registered with us as part of the organisation: <strong th:text="${model.userOrganisationName}"/></p>
             <p>To represent <th:block th:text="${model.inviteOrganisationName}"/>, you need to be invited through a different email address and create a new account. Please contact

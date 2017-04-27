@@ -21,13 +21,13 @@ public class MilestoneController {
 
     @GetMapping("/{competitionId}/public")
     public RestResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(
-            @PathVariable("competitionId") final Long competitionId){
+            @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.getAllPublicMilestonesByCompetitionId(competitionId).toGetResponse();
     }
 
     @GetMapping("/{competitionId}")
     public RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(
-            @PathVariable("competitionId") final Long competitionId){
+            @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.getAllMilestonesByCompetitionId(competitionId).toGetResponse();
     }
 
@@ -45,11 +45,11 @@ public class MilestoneController {
 
     @PutMapping("/many")
     public RestResult<Void> saveMilestones(@RequestBody final List<MilestoneResource> milestones) {
-         return milestoneService.updateMilestones(milestones).toPutResponse();
+        return milestoneService.updateMilestones(milestones).toPutResponse();
     }
 
     @PutMapping("/")
     public RestResult<Void> saveMilestone(@RequestBody final MilestoneResource milestone) {
         return milestoneService.updateMilestone(milestone).toPutResponse();
     }
- }
+}

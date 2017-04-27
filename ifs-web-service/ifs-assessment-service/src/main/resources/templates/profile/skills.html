@@ -12,8 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
-            <h1 class="heading-xlarge">Your skills</h1>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='heading-xlarge'" />
             <p>These innovation areas have been chosen as your current areas of expertise. They will influence the types
                 of competition you will be invited to assess. If you would like to amend them or add new ones please
                 contact a member of the Competitions team <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
