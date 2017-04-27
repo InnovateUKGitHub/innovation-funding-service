@@ -3,13 +3,10 @@ package org.innovateuk.ifs.project;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.springframework.core.io.ByteArrayResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,33 +43,11 @@ public interface ProjectService {
 
     OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId);
-
-    Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId);
-
-    ServiceResult<FileEntryResource> addCollaborationAgreementDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    ServiceResult<Void> removeCollaborationAgreementDocument(Long projectId);
-
-    Optional<ByteArrayResource> getExploitationPlanFile(Long projectId);
-
-    Optional<FileEntryResource> getExploitationPlanFileDetails(Long projectId);
-
-    ServiceResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    ServiceResult<Void> removeExploitationPlanDocument(Long projectId);
-
-    ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved);
-
     boolean isUserLeadPartner(Long projectId, Long userId);
 
     List<ProjectUserResource> getLeadPartners(Long projectId);
 
     List<ProjectUserResource> getPartners(Long projectId);
-
-    Boolean isOtherDocumentSubmitAllowed(Long projectId);
-
-    ServiceResult<Void> setPartnerDocumentsSubmitted(Long projectId);
 
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
