@@ -38,9 +38,6 @@ public class ProjectController {
     @Autowired
     private ProjectStatusService projectStatusService;
 
-    @Autowired
-    private GrantOfferLetterService grantOfferLetterService;
-
     @GetMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
         return projectService.getProjectById(id).toGetResponse();

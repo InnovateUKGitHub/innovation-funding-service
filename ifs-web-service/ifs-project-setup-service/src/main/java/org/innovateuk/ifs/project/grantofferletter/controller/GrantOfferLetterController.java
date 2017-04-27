@@ -26,8 +26,8 @@ import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipa
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
- * Controller for the grant offer letter
- **/
+ * This Controller handles Grant Offer Letter activity for the External Competition team members
+ */
 @Controller
 @RequestMapping("/project/{projectId}/offer")
 public class GrantOfferLetterController {

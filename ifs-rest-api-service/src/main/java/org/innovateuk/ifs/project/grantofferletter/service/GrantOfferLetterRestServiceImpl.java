@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * This Service implementation calls the REST endpoint request mapping of the controller in ifs data service layer
+ * 'GrantOfferLetterController' for Grant Offer Letter activity.
+ */
+
 @Service
 public class GrantOfferLetterRestServiceImpl extends BaseRestService implements GrantOfferLetterRestService {
 

@@ -8,6 +8,9 @@ import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
 
+/**
+ * A service for dealing with a project's grant offer functionality
+ */
 public interface GrantOfferLetterService {
 
     Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId);

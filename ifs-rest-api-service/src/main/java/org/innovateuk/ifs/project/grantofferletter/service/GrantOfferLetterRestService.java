@@ -8,6 +8,10 @@ import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
 
+/**
+ * This Service calls the REST endpoint request mapping of the controller in ifs data service layer 'GrantOfferLetterController'
+ * for Grant Offer Letter activity.
+ */
 public interface GrantOfferLetterRestService {
 
     RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId);

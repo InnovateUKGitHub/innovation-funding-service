@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * A service implementation for dealing with a project's grant offer functionality
+ */
 @Service
 public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
 
