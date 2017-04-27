@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.management.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.springframework.stereotype.Component;
 
-import java.time.ZonedDateTime;
 import java.util.EnumSet;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
@@ -19,9 +19,9 @@ public class ApplicationOverviewIneligibilityModelPopulator {
 
     public ApplicationOverviewIneligibilityViewModel populateModel(final ApplicationResource applicationResource) {
         if (isApplicationIneligible(applicationResource)) {
-            String removedBy = "Removed by";
-            ZonedDateTime removedOn = null;
-            return new ApplicationOverviewIneligibilityViewModel(removedBy, removedOn, applicationResource.getIneligibleReason());
+            IneligibleOutcomeResource ineligibleOutcome = applicationResource.getIneligibleOutcome();
+            return new ApplicationOverviewIneligibilityViewModel(ineligibleOutcome.getRemovedBy(),
+                    ineligibleOutcome.getRemovedOn(), ineligibleOutcome.getReason());
         }
 
         return createViewModelEligible();

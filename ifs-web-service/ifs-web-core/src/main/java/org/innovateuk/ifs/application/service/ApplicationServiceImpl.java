@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -45,20 +44,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Boolean isApplicationReadyForSubmit(Long applicationId) {
         return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public Integer getCompleteQuestionsPercentage(Long applicationId) {
-        return call(
-                applicationRestService.getCompleteQuestionsPercentage(applicationId)
-            ).getSuccessObjectOrThrowException()
-            .intValue();
-
-    }
-
-    @Override
-    public int getAssignedQuestionsCount(Long applicationId, Long processRoleId){
-        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).getSuccessObject();
     }
 
     @Override

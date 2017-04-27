@@ -30,6 +30,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
@@ -144,11 +146,17 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupOrganisationTypes();
         this.setupResearchCategories();
 
+        ZonedDateTime now = ZonedDateTime.now();
+
         applications.get(0).setApplicationState(ApplicationState.INELIGIBLE);
-        applications.get(0).setIneligibleReason("Reason for removal...");
+        applications.get(0).setIneligibleOutcome(newIneligibleOutcomeResource()
+                .withReason("Reason for removal...")
+                .withRemovedBy("Removed by")
+                .withRemovedOn(now)
+                .build());
 
         ApplicationOverviewIneligibilityViewModel expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
-                "Removed by", null, "Reason for removal...");
+                "Removed by", now, "Reason for removal...");
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
