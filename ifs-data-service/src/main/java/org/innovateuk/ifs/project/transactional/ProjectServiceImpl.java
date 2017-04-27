@@ -618,9 +618,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
         ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(project, spendProfileStatus, spendProfile);
         ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project, partnerOrganisation.equals(leadOrganisation));
-
-        ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
+        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(project);
+        ProjectActivityStates leadGrantOfferLetterStatus = createLeadGrantOfferLetterStatus(project, grantOfferLetterStatus);
 
         ProjectPartnerStatusResource projectPartnerStatusResource;
 
@@ -635,7 +634,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     financeChecksStatus,
                     leadSpendProfileStatus,
                     otherDocumentsStatus,
-                    grantOfferLetterStatus,
+                    leadGrantOfferLetterStatus,
                     financeContactStatus,
                     golWorkflowHandler.isAlreadySent(project));
         } else {
@@ -643,7 +642,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     partnerOrganisation.getId(),
                     partnerOrganisation.getName(),
                     organisationType,
-                    partnerProjectDetailsSubmittedStatus,
+                    financeContactStatus,
                     NOT_REQUIRED,
                     bankDetailsStatus,
                     financeChecksStatus,

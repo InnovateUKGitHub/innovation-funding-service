@@ -178,14 +178,22 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createGrantOfferLetterStatus(final Project project,
-                                                                 final boolean isLeadPartner) {
+    protected ProjectActivityStates createLeadGrantOfferLetterStatus(final Project project, ProjectActivityStates grantOfferState) {
         GOLState state = golWorkflowHandler.getState(project);
-        if (SENT.equals(state) && isLeadPartner) {
-            return ACTION_REQUIRED;
-        } else if (GOLState.APPROVED.equals(state)) {
+        if (SENT.equals(state)) {
+             return ACTION_REQUIRED;
+        } else if (GOLState.PENDING.equals(state) && project.getGrantOfferLetter() != null) {
+             return PENDING;
+        } else {
+            return grantOfferState;
+        }
+    }
+
+    protected ProjectActivityStates createGrantOfferLetterStatus(final Project project) {
+        GOLState state = golWorkflowHandler.getState(project);
+        if (GOLState.APPROVED.equals(state)) {
             return COMPLETE;
-        } else if (GOLState.PENDING.equals(state) && !(isLeadPartner && project.getGrantOfferLetter() != null)){
+        } else if (GOLState.PENDING.equals(state)){
             return NOT_REQUIRED;
         } else {
             return PENDING;
