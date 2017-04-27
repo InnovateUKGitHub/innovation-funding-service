@@ -515,7 +515,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             if (!applicationWorkflowHandler.informIneligible(application)) {
                 return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);
             }
-            ;
 
             applicationRepository.save(application);
             String bodyPlain = stripHtml(applicationIneligibleSendResource.getContent());
