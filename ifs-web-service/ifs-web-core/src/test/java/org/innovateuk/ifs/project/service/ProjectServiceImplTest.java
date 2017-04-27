@@ -216,6 +216,7 @@ public class ProjectServiceImplTest {
     }
 
     @Test
+<<<<<<< HEAD
     public void testAddCollaborationAgreement() {
 
         FileEntryResource createdFile = newFileEntryResource().build();
@@ -362,6 +363,8 @@ public class ProjectServiceImplTest {
     }
 
     @Test
+=======
+>>>>>>> 597f7e0bd8fdab83bbbe0735278702bc8941c667
     public void testGetProjectTeamStatus() throws Exception {
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
 

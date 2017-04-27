@@ -8,10 +8,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -62,11 +60,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResource getByApplicationId(Long applicationId) {
-        if (applicationId == null) {
+        if(applicationId == null) {
             return null;
         }
         RestResult<ProjectResource> restResult = projectRestService.getByApplicationId(applicationId);
-        if (restResult.isSuccess()) {
+        if(restResult.isSuccess()){
             return restResult.getSuccessObject();
         } else {
             return null;
@@ -161,6 +159,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.getExploitationPlanFileDetails(projectId).getSuccessObjectOrThrowException();
     }
 
+
     @Override
     public ServiceResult<FileEntryResource> addExploitationPlanDocument(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
         return projectRestService.addExploitationPlanDocument(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
@@ -206,7 +205,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
+    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
         return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
     }
 
@@ -222,23 +221,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource) {
+    public ServiceResult<Void> saveProjectInvite (InviteProjectResource inviteProjectResource) {
         return projectInviteRestService.saveProjectInvite(inviteProjectResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteProjectResource) {
-        return projectRestService.inviteFinanceContact(projectId, inviteProjectResource).toServiceResult();
+    public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource) {
+        return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
+    }
+
+    @Override public ServiceResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteProjectResource) {
+        return projectRestService.inviteProjectManager (projectId, inviteProjectResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteProjectResource) {
-        return projectRestService.inviteProjectManager(projectId, inviteProjectResource).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId) {
-        return projectInviteRestService.getInvitesByProject(projectId).toServiceResult();
+    public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
+        return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
 
     @Override

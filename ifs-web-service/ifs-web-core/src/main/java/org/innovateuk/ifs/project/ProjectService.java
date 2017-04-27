@@ -5,10 +5,8 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.core.io.ByteArrayResource;
@@ -80,9 +78,9 @@ public interface ProjectService {
 
     ProjectStatusResource getProjectStatus(Long projectId);
 
-    ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteProjectResource);
+    ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
 
-    ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteProjectResource);
+    ServiceResult<Void> inviteProjectManager (Long projectId, InviteProjectResource inviteProjectResource);
 
     List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId);
 

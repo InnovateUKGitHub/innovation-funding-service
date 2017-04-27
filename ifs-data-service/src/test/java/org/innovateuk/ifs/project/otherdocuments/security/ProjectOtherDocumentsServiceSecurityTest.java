@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.security;
+package org.innovateuk.ifs.project.otherdocuments.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -10,187 +10,45 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.of;
-import static java.util.stream.Collectors.toList;
-import static junit.framework.TestCase.fail;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing how the secured methods in ProjectService interact with Spring Security
  */
-public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectService> {
+public class ProjectOtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<ProjectService> {
 
-    private ProjectPermissionRules projectPermissionRules;
+    private ProjectOtherDocumentsPermissionRules projectPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        projectPermissionRules = getMockPermissionRulesBean(ProjectPermissionRules.class);
+        projectPermissionRules = getMockPermissionRulesBean(ProjectOtherDocumentsPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
-    }
-
-    @Test
-    public void testGetProjectById() {
-        final Long projectId = 1L;
-
-        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(newProjectResource().build());
-
-        assertAccessDenied(
-                () -> classUnderTest.getProjectById(projectId),
-                () -> {
-                    verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
-                    verify(projectPermissionRules, times(1)).internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
-                }
-        );
-    }
-
-    @Test
-    public void testCreateProjectFromApplicationAllowedIfCompAdminRole() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
-        classUnderTest.createProjectFromApplication(123L);
-    }
-
-    @Test
-    public void testCreateProjectFromApplicationDeniedForApplicant() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
-        try {
-            classUnderTest.createProjectFromApplication(123L);
-            fail("Should not have been able to create project from application as applicant");
-        } catch(AccessDeniedException ade){
-            //expected behaviour
-        }
-    }
-
-    @Test
-    public void testCreateProjectFromFundingDecisionsAllowedIfGlobalCompAdminRole() {
-        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-        classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
-    }
-
-    @Test
-    public void testCreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
-        try {
-            classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
-            Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
-        } catch (AccessDeniedException e) {
-            // expected behaviour
-        }
-    }
-
-    @Test
-    public void testCreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
-
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
-
-            setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
-                Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-
-    @Test
-    public void testUpdateProjectStartDate() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.updateProjectStartDate(123L, LocalDate.now()), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testUpdateProjectAddress() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testUpdateFinanceContact() {
-
-        ProjectResource project = newProjectResource().build();
-        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.updateFinanceContact(composite, 789L), () -> {
-            verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testSetProjectManager() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.setProjectManager(123L, 456L), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetProjectUsers() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getProjectUsers(123L), () -> {
-            verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
-            verify(projectPermissionRules).internalUsersCanViewProjects(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
     }
 
     @Test
@@ -246,7 +104,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
-
 
     @Test
     public void testCreateExploitationPlanFileEntry() {
@@ -315,70 +172,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
-
-    @Test
-    public void testAddPartnerDeniedIfNotSystemRegistrar() {
-        EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
-        nonSystemRegistrationRoles.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.addPartner(1L, 2L, 3L);
-                Assert.fail("Should not have been able to add a partner without the system registrar role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-    @Test
-    public void testAddPartnerAllowedIfSystemRegistrar() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build())).build());
-        classUnderTest.addPartner(1L, 2L, 3L);
-        // There should be no exception thrown
-    }
-
-    @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
-        EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
-        nonSystemRegistrationRoles.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.addPartner(1L, 2L, 3L);
-                Assert.fail("Should not have been able to add a partner without the system registrar role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-
-    @Test
-    public void testGetProjectTeamStatus(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
-            verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetProjectManager(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(
-                () -> classUnderTest.getProjectById(123L),
-                () -> {
-                    verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
-                    verify(projectPermissionRules, times(1)).internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
-                    verifyNoMoreInteractions(projectPermissionRules);
-                }
-        );
-    }
-
-
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
@@ -413,12 +206,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
-        @Override
-        public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
-            return null;
-        }
+		@Override
+		public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+			return null;
+		}
 
-        @Override
+		@Override
         public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
             return null;
         }
@@ -433,10 +226,10 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
-        @Override
-        public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
-            return null;
-        }
+		@Override
+		public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+			return null;
+		}
 
         @Override
         public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
@@ -540,6 +333,25 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
+            return null;
+        }
+        @Override
+        public ServiceResult<Void> sendGrantOfferLetter(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) { return null; }
+
+        @Override
+        public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
             return null;
         }
 

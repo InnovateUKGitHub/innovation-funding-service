@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -32,7 +33,6 @@ import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.ne
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -105,7 +105,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     @Test
     public void projectControllerSetProjectManager() throws Exception {
-    	when(projectServiceMock.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
+        when(projectServiceMock.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/3/project-manager/5").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -147,8 +147,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .param("addressType", OrganisationAddressType.REGISTERED.name())
                 .contentType(APPLICATION_JSON)
                 .content(toJson(addressResource)))
-            .andExpect(status().isOk())
-            .andExpect(content().string(""));
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
 
         verify(projectServiceMock).updateProjectAddress(123L, 456L, OrganisationAddressType.REGISTERED, addressResource);
     }
@@ -214,7 +214,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Function<ProjectService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getCollaborationAgreementFileEntryDetails(projectId);
 
-        assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[] {projectId}, emptyMap(),
+        assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[]{projectId}, emptyMap(),
                 projectServiceMock, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod(document));
     }
@@ -227,7 +227,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Function<ProjectService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getCollaborationAgreementFileContents(projectId);
 
-        assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
+        assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[]{projectId},
                 emptyMap(), projectServiceMock, serviceCallToUpload).
                 andDo(documentFileGetContentsMethod(document));
     }
@@ -240,12 +240,10 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
                 service -> service.deleteCollaborationAgreementFile(projectId);
 
-        assertDeleteFile("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
+        assertDeleteFile("/project/{projectId}/collaboration-agreement", new Object[]{projectId},
                 emptyMap(), projectServiceMock, serviceCallToDelete).
                 andDo(documentFileDeleteMethod(document));
     }
-
-
 
     @Test
     public void addExploitationPlan() throws Exception {
@@ -279,7 +277,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Function<ProjectService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getExploitationPlanFileEntryDetails(projectId);
 
-        assertGetFileDetails("/project/{projectId}/exploitation-plan/details", new Object[] {projectId}, emptyMap(),
+        assertGetFileDetails("/project/{projectId}/exploitation-plan/details", new Object[]{projectId}, emptyMap(),
                 projectServiceMock, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod(document));
     }
@@ -292,7 +290,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Function<ProjectService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getExploitationPlanFileContents(projectId);
 
-        assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[] {projectId},
+        assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[]{projectId},
                 emptyMap(), projectServiceMock, serviceCallToUpload).
                 andDo(documentFileGetContentsMethod(document));
     }
@@ -305,7 +303,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
                 service -> service.deleteExploitationPlanFile(projectId);
 
-        assertDeleteFile("/project/{projectId}/exploitation-plan", new Object[] {projectId},
+        assertDeleteFile("/project/{projectId}/exploitation-plan", new Object[]{projectId},
                 emptyMap(), projectServiceMock, serviceCallToDelete).
                 andDo(documentFileDeleteMethod(document));
     }
@@ -341,7 +339,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void tetsGetProjectManager() throws Exception {
+    public void testGetProjectManager() throws Exception {
         Long project1Id = 1L;
 
         ProjectUserResource projectManager = newProjectUserResource().withId(project1Id).build();
