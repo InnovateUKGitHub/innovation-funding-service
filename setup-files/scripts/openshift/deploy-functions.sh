@@ -8,25 +8,25 @@ function injectDBVariables() {
     if [ -z "$DB_NAME" ]; then echo "Set DB_NAME environment variable"; exit -1; fi
     if [ -z "$DB_HOST" ]; then echo "Set DB_HOST environment variable"; exit -1; fi
     DB_PORT=${DB_PORT:-3306}
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" os-files-tmp/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" os-files-tmp/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" os-files-tmp/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/db-reset/*.yml
 }
 
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
-    sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" os-files-tmp/db-reset/*.yml
 }
 
 function injectLDAPVariables() {
     if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
     LDAP_PORT=${LDAP_PORT:-389}
-    sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" os-files-tmp/*.yml
-    sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" os-files-tmp/*.yml
-    sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" os-files-tmp/*.yml
-    sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" os-files-tmp/*.yml
+    sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" os-files-tmp/db-reset/*.yml
 }
 
 function tailorAppInstance() {
@@ -84,14 +84,17 @@ function tailorAppInstance() {
 
 function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/innovateuk/#g" os-files-tmp/shib/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/innovateuk/#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/robot-tests/*.yml
