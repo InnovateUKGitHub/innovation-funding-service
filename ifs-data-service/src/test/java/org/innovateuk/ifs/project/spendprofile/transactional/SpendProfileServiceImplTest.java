@@ -931,7 +931,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         assertEquals(expectedViabilityApprovalUserFirstName, returnedViabilityResource.getViabilityApprovalUserFirstName());
         assertEquals(expectedViabilityApprovalUserLastName, returnedViabilityResource.getViabilityApprovalUserLastName());
-        assertEquals(expectedViabilityApprovalDate, returnedViabilityResource.getViabilityApprovalDate());
+        if (expectedViabilityApprovalDate != null) {
+            assertEquals(expectedViabilityApprovalDate, returnedViabilityResource.getViabilityApprovalDate());
+        }
     }
 
     @Test
@@ -1038,7 +1040,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         assertEquals(expectedEligibilityApprovalUserFirstName, returnedEligibilityResource.getEligibilityApprovalUserFirstName());
         assertEquals(expectedEligibilityApprovalUserLastName, returnedEligibilityResource.getEligibilityApprovalUserLastName());
-        assertEquals(expectedEligibilityApprovalDate, returnedEligibilityResource.getEligibilityApprovalDate());
+        if (expectedEligibilityApprovalDate != null) {
+            assertEquals(expectedEligibilityApprovalDate, returnedEligibilityResource.getEligibilityApprovalDate());
+        }
 
     }
 
