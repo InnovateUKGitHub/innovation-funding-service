@@ -607,8 +607,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
-        Boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccessObject();
-        Boolean isLead = partnerOrganisation.equals(leadOrganisation);
+        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccessObject();
+        boolean isLead = partnerOrganisation.equals(leadOrganisation);
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
