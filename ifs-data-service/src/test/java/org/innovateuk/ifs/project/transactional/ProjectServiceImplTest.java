@@ -54,6 +54,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -84,7 +86,6 @@ import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCost
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -201,7 +202,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         po = newPartnerOrganisation().
                 withOrganisation(o).
-                withLeadOrganisation(Boolean.TRUE).
+                withLeadOrganisation(TRUE).
                 build(1);
 
         u = newUser().
@@ -234,8 +235,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withRoleName(PROJECT_PARTNER.getName()).
                 build(1);
 
-        bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
-        spendProfile = newSpendProfile().withOrganisation(o).withGeneratedDate(Calendar.getInstance()).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.EMPTY).build();
+        bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
+        spendProfile = newSpendProfile().withOrganisation(o).withGeneratedDate(Calendar.getInstance()).withMarkedComplete(TRUE).withApproval(ApprovalType.EMPTY).build();
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -1425,21 +1426,21 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectUserMapperMock.mapToResource(pu.get(1))).thenReturn(puResource.get(1));
         when(projectUserMapperMock.mapToResource(pu.get(2))).thenReturn(puResource.get(2));
 
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(Boolean.FALSE));
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(TRUE));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(FALSE));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), organisations.get(2).getId())).thenReturn(serviceSuccess(TRUE));
 
         partnerOrganisations.forEach(org ->
             when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(org.getProject().getId(),
                     org.getOrganisation().getId())).thenReturn(org));
 
-        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(0).getProject().getId(), partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(serviceSuccess(Boolean.FALSE));
-        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(1).getProject().getId(), partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(serviceSuccess(Boolean.FALSE));
-        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(2).getProject().getId(), partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(0).getProject().getId(), partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(serviceSuccess(FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(1).getProject().getId(), partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(serviceSuccess(FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(2).getProject().getId(), partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(serviceSuccess(TRUE));
 
         when(golWorkflowHandlerMock.getState(p)).thenReturn(GOLState.PENDING);
 
-        ProjectLeadStatusResource expectedLeadPartnerOrganisationStatus = newProjectLeadStatusResource().
+        ProjectPartnerStatusResource expectedLeadPartnerOrganisationStatus = newProjectPartnerStatusResource().
                 withName(organisations.get(0).getName()).
                 withOrganisationType(
                         OrganisationTypeEnum.getFromId(organisations.get(0).getOrganisationType().getId())).
@@ -1451,6 +1452,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
+                withIsLeadPartner(TRUE).
                 build();
 
         List<ProjectPartnerStatusResource> expectedFullPartnerStatuses = newProjectPartnerStatusResource().
@@ -1516,7 +1518,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectDetailsWorkflowHandlerMock.isSubmitted(any(Project.class))).thenReturn(true);
         when(monitoringOfficerRepositoryMock.findOneByProjectId(p.getId())).thenReturn(null);
 
-        ProjectLeadStatusResource expectedLeadPartnerOrganisationStatusWhenPDSubmitted = newProjectLeadStatusResource().
+        ProjectPartnerStatusResource expectedLeadPartnerOrganisationStatusWhenPDSubmitted = newProjectPartnerStatusResource().
                 withName(organisations.get(0).getName()).
                 withOrganisationType(
                         OrganisationTypeEnum.getFromId(organisations.get(0).getOrganisationType().getId())).
@@ -1528,6 +1530,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
+                withIsLeadPartner(TRUE).
                 build();
 
         ProjectTeamStatusResource expectedProjectTeamStatusResourceWhenPSSubmitted = newProjectTeamStatusResource().
@@ -1606,7 +1609,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
-        when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(TRUE);
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
@@ -1634,7 +1637,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
-        when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.grantOfferLetterSent(p, user)).thenReturn(FALSE);
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
@@ -1646,7 +1649,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testIsSendGrantOfferLetterAllowed() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isSendAllowed(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isSendAllowed(p)).thenReturn(TRUE);
 
         ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
 
@@ -1657,11 +1660,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testIsSendGrantOfferLetterAllowedFails() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isSendAllowed(p)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.isSendAllowed(p)).thenReturn(FALSE);
 
         ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
 
-        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && FALSE == result.getSuccessObject());
     }
 
     @Test
@@ -1678,7 +1681,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testIsGrantOfferLetterAlreadySent() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(TRUE);
 
         ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
 
@@ -1689,11 +1692,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testIsGrantOfferLetterAlreadySentFails() {
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(FALSE);
 
         ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
 
-        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && FALSE == result.getSuccessObject());
     }
 
     @Test
@@ -1702,12 +1705,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
-        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(TRUE).build(1);
         Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
-        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
-        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.APPROVED).build();
+        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).withApproval(ApprovalType.APPROVED).build();
 
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1718,7 +1721,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         when(golWorkflowHandlerMock.getState(p)).thenReturn(GOLState.SENT);
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -1732,12 +1735,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
-        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(TRUE).build(1);
         Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
-        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
-        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.APPROVED).build();
+        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).withApproval(ApprovalType.APPROVED).build();
 
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1748,15 +1751,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
-        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.FALSE);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
+        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(FALSE);
 
         ServiceResult<ProjectTeamStatusResource> resultWhenGolIsNotSent = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
         assertTrue(resultWhenGolIsNotSent.isSuccess() && PENDING.equals(resultWhenGolIsNotSent.getSuccessObject().getLeadPartnerStatus().getGrantOfferLetterStatus()));
 
         // Same flow but when GOL is in Ready To Approve state.
-        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(TRUE);
 
         // Call the service again
         ServiceResult<ProjectTeamStatusResource> resultWhenGolIsReadyToApprove = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -1780,12 +1783,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         nonLeadOrg.setOrganisationType(businessOrganisationType);
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonLeadOrg).withInvite(newInvite().build()).build(1);
-        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(Boolean.FALSE).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(FALSE).build(1);
         Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
-        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
-        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(Boolean.TRUE).withApproval(ApprovalType.APPROVED).build();
+        BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).withApproval(ApprovalType.APPROVED).build();
 
         when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1796,14 +1799,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), nonLeadOrg.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(TRUE);
 
         // Same flow but when GOL is in Ready To Approve state.
-        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(TRUE);
 
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), o.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), nonLeadOrg.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(financeCheckServiceMock.isQueryActionRequired(anyLong(),anyLong())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), o.getId())).thenReturn(serviceSuccess(TRUE));
+        when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), nonLeadOrg.getId())).thenReturn(serviceSuccess(TRUE));
+        when(financeCheckServiceMock.isQueryActionRequired(anyLong(),anyLong())).thenReturn(serviceSuccess(FALSE));
 
 
         // Call the service again
@@ -1819,7 +1822,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
-        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
+        List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(TRUE).build(1);
         Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(ZonedDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
@@ -1835,7 +1838,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         when(golWorkflowHandlerMock.getState(p)).thenReturn(GOLState.APPROVED);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1863,10 +1866,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(TRUE);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
-        when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.TRUE);
-        when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(TRUE);
+        when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(TRUE);
         when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
@@ -1893,10 +1896,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(TRUE);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
-        when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.TRUE);
-        when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(TRUE);
+        when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(TRUE);
         when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
@@ -1919,9 +1922,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         p.setGrantOfferLetter(golFile);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(TRUE);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
-        when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(FALSE);
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
 
@@ -1941,7 +1944,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         p.setGrantOfferLetter(golFile);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(FALSE);
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
 
@@ -1956,28 +1959,28 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testGetSignedGrantOfferLetterApprovalStatusSuccess(){
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isApproved(p)).thenReturn(Boolean.TRUE);
+        when(golWorkflowHandlerMock.isApproved(p)).thenReturn(TRUE);
 
         ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
 
         verify(projectRepositoryMock).findOne(projectId);
         verify(golWorkflowHandlerMock).isApproved(p);
 
-        assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && TRUE == result.getSuccessObject());
     }
 
     @Test
     public void testGetSignedGrantOfferLetterApprovalStatusFailure(){
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(golWorkflowHandlerMock.isApproved(p)).thenReturn(Boolean.FALSE);
+        when(golWorkflowHandlerMock.isApproved(p)).thenReturn(FALSE);
 
         ServiceResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
 
         verify(projectRepositoryMock).findOne(projectId);
         verify(golWorkflowHandlerMock).isApproved(p);
 
-        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && FALSE == result.getSuccessObject());
     }
 
     @Test
@@ -2137,7 +2140,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2155,7 +2158,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.empty());
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.REVIEW);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2174,7 +2177,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.empty());
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.REVIEW);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2195,7 +2198,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.NOT_APPLICABLE);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2216,7 +2219,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2235,7 +2238,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2257,7 +2260,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
-        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 

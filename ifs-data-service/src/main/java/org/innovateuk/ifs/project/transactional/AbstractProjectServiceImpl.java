@@ -160,7 +160,8 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
                 asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg));
     }
 
-    protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus, final Optional<SpendProfile> spendProfile) {
+    protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
+        ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeCheckStatus, spendProfile);
         if (COMPLETE.equals(spendProfileStatus) && !APPROVED.equals(spendProfile.get().getApproval())) {
             return project.getSpendProfileSubmittedDate() != null ? PENDING : ACTION_REQUIRED;
         } else {
@@ -178,14 +179,14 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createLeadGrantOfferLetterStatus(final Project project, ProjectActivityStates grantOfferState) {
+    protected ProjectActivityStates createLeadGrantOfferLetterStatus(final Project project) {
         GOLState state = golWorkflowHandler.getState(project);
         if (SENT.equals(state)) {
              return ACTION_REQUIRED;
         } else if (GOLState.PENDING.equals(state) && project.getGrantOfferLetter() != null) {
              return PENDING;
         } else {
-            return grantOfferState;
+            return createGrantOfferLetterStatus(project);
         }
     }
 

@@ -1,24 +1,18 @@
 package org.innovateuk.ifs.project.resource;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 
+import static java.lang.Boolean.FALSE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 
 /**
  * Used for returning status of each partner (except lead, for which there is a more specific class with constructor)
  * There is a constructor here which is used by subclass but is package local.
  */
-
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value=ProjectLeadStatusResource.class, name="projectLeadStatusResource")
-})
 public class ProjectPartnerStatusResource {
 
     private Long organisationId;
@@ -39,13 +33,19 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
 
-    private boolean isGrantOfferLetterSent;
+    private Boolean isGrantOfferLetterSent = FALSE;
+    private Boolean isLead = FALSE;
 
 
     //Required for Json Mapping.
     ProjectPartnerStatusResource() {}
 
-    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType, ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus, ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus, ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus, ProjectActivityStates grantOfferLetterStatus, ProjectActivityStates financeContactStatus, boolean isGrantOfferLetterSent) {
+    public ProjectPartnerStatusResource(Long organisationId, String name, OrganisationTypeEnum organisationType,
+                                        ProjectActivityStates projectDetailsStatus, ProjectActivityStates monitoringOfficerStatus,
+                                        ProjectActivityStates bankDetailsStatus, ProjectActivityStates financeChecksStatus,
+                                        ProjectActivityStates spendProfileStatus, ProjectActivityStates otherDocumentsStatus,
+                                        ProjectActivityStates grantOfferLetterStatus, ProjectActivityStates financeContactStatus,
+                                        Boolean isGrantOfferLetterSent, Boolean isLead) {
         this.organisationId = organisationId;
         this.name = name;
         this.organisationType = organisationType;
@@ -58,6 +58,7 @@ public class ProjectPartnerStatusResource {
         this.grantOfferLetterStatus = grantOfferLetterStatus;
         this.financeContactStatus = financeContactStatus;
         this.isGrantOfferLetterSent = isGrantOfferLetterSent;
+        this.isLead = isLead;
     }
 
     public Long getOrganisationId() {
@@ -156,9 +157,17 @@ public class ProjectPartnerStatusResource {
         this.financeContactStatus = financeContactStatus;
     }
 
-    public boolean getIsGrantOfferLetterSent() { return isGrantOfferLetterSent; }
+    public Boolean isGrantOfferLetterSent() { return isGrantOfferLetterSent; }
 
-    public void setIsGrantOfferLetterSent(boolean isGrantOfferLetterSent) { this.isGrantOfferLetterSent = isGrantOfferLetterSent; }
+    public void setGrantOfferLetterSent(Boolean isGrantOfferLetterSent) { this.isGrantOfferLetterSent = isGrantOfferLetterSent; }
+
+    public Boolean isLead() {
+        return isLead;
+    }
+
+    public void setLead(Boolean lead) {
+        isLead = lead;
+    }
 
     @Override
     public boolean equals(Object o) {

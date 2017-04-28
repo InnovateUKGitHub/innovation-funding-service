@@ -8,7 +8,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
 import org.innovateuk.ifs.project.status.viewmodel.ProjectSetupStatusViewModel;
@@ -21,6 +24,7 @@ import org.mockito.InjectMocks;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static java.lang.Boolean.TRUE;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -29,7 +33,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
-import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -81,9 +84,10 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatus() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -104,11 +108,12 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedAsProjectManager() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -137,10 +142,11 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusForNonLeadPartnerWithFinanceContactNotSubmitted() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
                         .withProjectDetailsStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -163,12 +169,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmitted() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -190,12 +197,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedNotFinanceContact() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -218,13 +226,14 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedAsFinanceContact() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withBankDetailsStatus(COMPLETE)
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -274,12 +283,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWhenAwaitingProjectDetailsActionFromOtherPartners() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource()
+                withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -300,11 +310,12 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithMonitoringOfficerAssigned() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withFinanceChecksStatus(PENDING).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 build();
 
@@ -324,12 +335,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithBankDetailsEntered() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(PENDING).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 build();
 
@@ -349,12 +361,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithAllBankDetailsCompleteOrNotRequired() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(PENDING).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
@@ -378,12 +391,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithQueryAwaitingResponseNonFinanceContact() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(ACTION_REQUIRED).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
@@ -407,13 +421,14 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithQueryAwaitingResponseAsFinanceContact() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withBankDetailsStatus(COMPLETE)
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(COMPLETE)
                         .withFinanceChecksStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -455,12 +470,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithAllFinanceChecksApproved() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -484,12 +500,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithSpendProfile() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(ACTION_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -515,12 +532,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithSpendProfilePartnerComplete() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(ACTION_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -546,12 +564,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithSpendAwaitingApproval() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(PENDING).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -577,12 +596,13 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithSpendApproved() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -608,13 +628,14 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithGOLNotSent() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(NOT_STARTED).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -642,13 +663,14 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithGOLSent() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(ACTION_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -676,13 +698,14 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithGOLReturned() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(PENDING).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -710,13 +733,14 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithGOLApproved() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(COMPLETE).
                         withOrganisationId(organisationResource.getId()).
+                        withIsLeadPartner(TRUE).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -746,11 +770,12 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAsProjectManager() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -780,11 +805,12 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndRejectedAsProjectManager() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -819,11 +845,12 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndRejectedAsPartner() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -845,11 +872,12 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
     public void testViewProjectSetupStatusWithProjectDetailsSubmittedButFinanceContactNotYetSubmittedWithOtherDocumentsSubmittedAndApprovedAsPartner() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
-                .withProjectLeadStatus(newProjectLeadStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(TRUE)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)

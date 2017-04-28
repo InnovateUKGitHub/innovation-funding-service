@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
-import org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
@@ -36,6 +35,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -388,8 +388,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     private ProjectTeamStatusResource buildProjectTeamStatusResource() {
 
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(2);
-        ProjectPartnerStatusResource leadProjectPartnerStatusResource = ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource()
+        ProjectPartnerStatusResource leadProjectPartnerStatusResource = newProjectPartnerStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.ACTION_REQUIRED)
+                .withIsLeadPartner(TRUE)
                 .build();
         partnerStatuses.add(leadProjectPartnerStatusResource);
 
