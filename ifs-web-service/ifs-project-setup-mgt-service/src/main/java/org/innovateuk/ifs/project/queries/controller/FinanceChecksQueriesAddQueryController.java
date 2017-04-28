@@ -55,6 +55,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class FinanceChecksQueriesAddQueryController {
 
     static final String FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query/new-query";
+    private static final String FINANCE_CHECKS_QUERIES_LIST = "/project/{projectId}/finance-check/organisation/{organisationId}/query";
     private static final String ATTACHMENT_COOKIE = "finance_checks_queries_new_query_attachments";
     private static final String FORM_COOKIE = "finance_checks_queries_new_query_form";
     private static final String FORM_ATTR = "form";
@@ -144,7 +145,7 @@ public class FinanceChecksQueriesAddQueryController {
                     failNowOrSucceedWith(failureView, () -> {
                         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
                         cookieUtil.removeCookie(response, getCookieNameForm(projectId, organisationId));
-                        return redirectToQueryPage(projectId, organisationId, querySection);
+                        return redirectTo(queriesListView(projectId, organisationId));
                     });
         });
     }
@@ -166,7 +167,7 @@ public class FinanceChecksQueriesAddQueryController {
             FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
-            return redirectToQueryPage(projectId, organisationId, querySection);
+            return redirectTo(rootView(projectId, organisationId, querySection));
         };
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
@@ -232,7 +233,7 @@ public class FinanceChecksQueriesAddQueryController {
         saveAttachmentsToCookie(response, attachments, projectId, organisationId);
         saveFormToCookie(response, projectId, organisationId, form);
 
-        return redirectTo(rootView(projectId, organisationId));
+        return redirectTo(rootView(projectId, organisationId, querySection));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -247,8 +248,9 @@ public class FinanceChecksQueriesAddQueryController {
         attachments.forEach((id -> financeCheckService.deleteFile(id)));
 
         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
+        cookieUtil.removeCookie(response, getCookieNameForm(projectId, organisationId));
 
-        return redirectToQueryPage(projectId, organisationId, querySection);
+        return redirectTo(queriesListView(projectId, organisationId));
     }
 
     private FinanceChecksQueriesAddQueryViewModel populateQueriesViewModel(Long projectId, Long organisationId, String querySection, List<Long> attachmentFileIds) {
@@ -272,9 +274,9 @@ public class FinanceChecksQueriesAddQueryController {
         return new FinanceChecksQueriesAddQueryViewModel(
                 organisation.getName(),
                 leadPartnerOrganisation,
-                financeContact.isPresent() ? financeContact.get().getUserName() : UNKNOWN_FIELD,
-                financeContact.isPresent() ? financeContact.get().getEmail() : UNKNOWN_FIELD,
-                financeContact.isPresent() ? financeContact.get().getPhoneNumber() : UNKNOWN_FIELD,
+                financeContact.map(ProjectUserResource::getUserName).orElse(UNKNOWN_FIELD),
+                financeContact.map(ProjectUserResource::getEmail).orElse(UNKNOWN_FIELD),
+                financeContact.map(ProjectUserResource::getPhoneNumber).orElse(UNKNOWN_FIELD),
                 querySection == null ? UNKNOWN_FIELD : querySection,
                 project.getId(),
                 project.getName(),
@@ -290,10 +292,6 @@ public class FinanceChecksQueriesAddQueryController {
     private Optional<ProjectUserResource> getFinanceContact(Long projectId, Long organisationId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         return simpleFindFirst(projectUsers, pr -> pr.isFinanceContact() && organisationId.equals(pr.getOrganisation()));
-    }
-
-    private String redirectToQueryPage(Long projectId, Long organisationId, String querySection) {
-        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/query?query_section=" + querySection;
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
@@ -313,8 +311,7 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     private void saveAttachmentsToCookie(HttpServletResponse response, List<Long> attachmentFileIds, Long projectId, Long organisationId) {
-        String jsonState = JsonUtil.getSerializedObject(attachmentFileIds);
-        cookieUtil.saveToCookie(response, getCookieName(projectId, organisationId), jsonState);
+        cookieUtil.saveToCookie(response, getCookieName(projectId, organisationId), JsonUtil.getSerializedObject(attachmentFileIds));
     }
 
     private void saveFormToCookie(HttpServletResponse response, Long projectId, Long organisationId, FinanceChecksQueriesAddQueryForm form) {
@@ -331,8 +328,12 @@ public class FinanceChecksQueriesAddQueryController {
                 new TypeReference<FinanceChecksQueriesAddQueryForm>() {});
     }
 
-    private String rootView(final Long projectId, final Long organisationId) {
-        return String.format(FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL, projectId, organisationId);
+    private String rootView(final Long projectId, final Long organisationId, String querySection) {
+        return String.format(FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL, projectId, organisationId) + "?query_section=" + querySection;
+    }
+
+    private String queriesListView(Long projectId, Long organisationId) {
+        return String.format(FINANCE_CHECKS_QUERIES_LIST, projectId, organisationId);
     }
 
     private String redirectTo(final String path) {
