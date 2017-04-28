@@ -9,12 +9,8 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" th:remove="tag"></div>
-
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
-        <h1 class="heading-xlarge">Project setup status</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup status',subTitle=${model.projectName},size='heading-xlarge'" />
 
     <dl class="font-xsmall extra-margin-bottom">
         <dt>Project number:</dt>
