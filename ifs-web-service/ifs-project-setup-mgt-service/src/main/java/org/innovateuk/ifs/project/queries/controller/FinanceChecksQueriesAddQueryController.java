@@ -84,9 +84,6 @@ public class FinanceChecksQueriesAddQueryController {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
-//        attachments.forEach(id -> financeCheckService.deleteFile(id)); //Nuno : probably shouldn't do this
-//        saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId); //Nuno : probably shouldn't do this
-
         FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddQueryForm()));
