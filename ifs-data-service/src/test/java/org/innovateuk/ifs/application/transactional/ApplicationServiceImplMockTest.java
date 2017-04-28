@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -88,6 +89,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED), ApplicationState::getBackingState);
+    private static final String WEB_BASE_URL = "www.baseUrl.com" ;
 
     private Application openApplication;
 
@@ -132,6 +134,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         openApplication = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
+
+        ReflectionTestUtils.setField(service, "webBaseUrl", WEB_BASE_URL);
     }
 
     @Test
@@ -773,7 +777,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
                         null,
@@ -782,7 +786,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
                         null,
@@ -791,7 +795,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
@@ -905,7 +909,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
                         null,
@@ -914,7 +918,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
                         null,
@@ -923,7 +927,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
@@ -1039,7 +1043,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
                         null,
@@ -1048,7 +1052,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
                         null,
@@ -1057,7 +1061,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
