@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.validator.constraints.FieldMatch;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -18,7 +17,6 @@ import javax.validation.constraints.Size;
  * read all the request attributes to get to the form data.
  */
 
-@FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class RegistrationForm {
 
 
@@ -29,17 +27,9 @@ public class RegistrationForm {
 
     @NotEmpty(message = "{validation.standard.password.required}")
     @Size.List ({
-        @Size(min=10, message="{validation.standard.password.length.min}"),
-        @Size(max=30, message="{validation.standard.password.length.max}"),
+        @Size(min=8, message="{validation.standard.password.length.min}"),
     })
     private String password;
-
-    @NotEmpty(message = "{validation.standard.retypedpassword.required}")
-    @Size.List ({
-        @Size(min=10, message="{validation.standard.password.length.min}"),
-        @Size(max=30, message="{validation.standard.password.length.max}"),
-    })
-    private String retypedPassword;
 
     private String title;
 
@@ -100,14 +90,6 @@ public class RegistrationForm {
     public RegistrationForm withEmail(String email) {
         this.email = email;
         return this;
-    }
-
-    public String getRetypedPassword() {
-        return retypedPassword;
-    }
-
-    public void setRetypedPassword(String retypedPassword) {
-        this.retypedPassword = retypedPassword;
     }
 
     public String getTitle() {

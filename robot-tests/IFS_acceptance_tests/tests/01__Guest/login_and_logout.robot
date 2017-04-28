@@ -122,21 +122,11 @@ Reset password
     And the user should see the text in the page    Password reset
     # TODO INFUND-5582
 
-Reset password validations
-    [Documentation]    INFUND-1889
-    [Tags]    Email
-    When the user enters text to a text field    id=id_password    Passw0rdnew
-    And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
-    And the user clicks the button/link    jQuery=input[value*="Save password"]
-    Then the user should see an error    Passwords must match.
-    # TODO INFUND-5582
-
 Reset password user enters new psw
     [Documentation]    INFUND-1889
     [Tags]    Email    HappyPath
     [Setup]    Clear the login fields
     When the user enters text to a text field    id=id_password    Passw0rdnew
-    And the user enters text to a text field    id=id_retypedPassword    Passw0rdnew
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     Then the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
@@ -164,8 +154,7 @@ the user should be logged-in as an Assessor
 Clear the login fields
     the user reloads the page
     When the user enters text to a text field    id=id_password    ${EMPTY}
-    And the user enters text to a text field    id=id_retypedPassword    ${EMPTY}
-    Mouse Out    id=id_retypedPassword
+    Mouse Out    id=id_password
     wait for autosave
 
 the user clicks the forgot psw link

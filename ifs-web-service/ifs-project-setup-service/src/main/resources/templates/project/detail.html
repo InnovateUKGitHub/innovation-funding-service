@@ -13,12 +13,8 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" th:remove="tag"></div>
-
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectName=${model.project.name})" />
-        <h1 class="heading-xlarge">Project details</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
 
     <p th:if="${!model.projectDetailsSubmitted}">Please supply the following details for your project and the team. We need these to set up your project.</p>
     <div th:unless="${!model.projectDetailsSubmitted}" class="success-alert extra-margin-bottom">

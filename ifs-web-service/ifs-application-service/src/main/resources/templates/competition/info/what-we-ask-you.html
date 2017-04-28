@@ -12,12 +12,9 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition eligibility',linkClass='link-back',linkUrl=@{eligibility},currentApplication=${currentApplication}" />
 
-    <div class="page-title">
-      <h1 class="heading-xlarge no-margin" th:text="${currentCompetition.name}" />
-        <h2 class="heading-large">What we ask....</h2>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='What we ask....',subTitle=${currentCompetition.name},size='heading-large'" />
     <p>The application has the following sections:</p>
-  <hr/>
+    <hr/>
 <h2 class="heading-large">Project Details</h2>
 <p>In this section you will provide the details of your project. This section is not scored, but our assessors will use it to decide whether the project fits with the scope of the competition. If it doesn’t fit the scope then it will not be funded.</p>
 <p><strong>Application details</strong> : The title of your project, the start date and project length.  This section will also list you as the lead organisation and any partner organisations you have named as collaborators.  The lead applicant must complete this section.</p>
