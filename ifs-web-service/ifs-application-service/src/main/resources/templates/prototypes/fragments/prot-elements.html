@@ -31,27 +31,42 @@
 
 <!-- =================== Custom form elements =================== -->
 
-<div th:fragment="prot-form-footer">
-  <div class="grid-row form-footer">
-    <div class="column-half">
-      <a href="#">Mark as complete</a>
-    </div>
-    <div class="column-half alignright">
-      Last saved 15 January 03:34 by you
-    </div>
-  </div>
+<th:block th:fragment="prot-form-footer">
 
-  <h3 class="heading-small">Example when marked as complete</h3>
+    <div class="form-footer">
+        <div class="form-footer__actions">
+            <button class="buttonlink">Mark as complete</button>
+        </div>
+        <div class="form-footer__info">
+            <span class="textarea-footer"></span>
+            <span class="update-label">Last updated: </span>
+            <span class="update-details">
+                06 April 05:19pm by you
+            </span>
+            <span class="count-label">
+                <span class="count-down positive" aria-live="polite">Words remaining: 351</span>
+            </span>
+        </div>
+    </div>
 
-  <div class="grid-row form-footer">
-    <div class="column-half">
-      <a href="#">Edit</a>
+    <h3 class="heading-small">Example when marked as complete</h3>
+
+    <div class="form-footer">
+        <div class="form-footer__actions">
+            <button class="buttonlink">Edit</button>
+        </div>
+        <div class="form-footer__info">
+            <span class="textarea-footer"></span>
+            <span class="update-label">Last updated: </span>
+            <span class="update-details">
+                06 April 05:19pm by you
+            </span>
+            <span class="count-label">
+                <span class="count-down positive" aria-live="polite">Words remaining: 351</span>
+            </span>
+        </div>
     </div>
-    <div class="column-half alignright">
-      Marked as complete on 15 January 03:34 by you
-    </div>
-  </div>
-</div>
+</th:block>
 
 <!-- =========================== Tabs =========================== -->
 
