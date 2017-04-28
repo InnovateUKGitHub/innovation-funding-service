@@ -494,36 +494,4 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
         inOrder.verifyNoMoreInteractions();
     }
-
-
-    @Test
-    public void rejectAssignmentConfirm() throws Exception {
-        Long assessmentId = 1L;
-        Long applicationId = 2L;
-
-        when(assessmentService.getRejectableById(assessmentId)).thenReturn(newAssessmentResource()
-                .withId(assessmentId)
-                .withApplication(applicationId)
-                .withApplicationName("application name")
-                .withActivityState(PENDING)
-                .build());
-
-        AssessmentAssignmentForm expectedForm = new AssessmentAssignmentForm();
-
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                applicationId,
-                "application name",
-                PENDING
-        );
-
-        mockMvc.perform(get("/{assessmentId}/assignment/reject/confirm", assessmentId))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("assessment/reject-invitation-confirm"));
-
-        InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getRejectableById(assessmentId);
-        inOrder.verifyNoMoreInteractions();
-    }
 }

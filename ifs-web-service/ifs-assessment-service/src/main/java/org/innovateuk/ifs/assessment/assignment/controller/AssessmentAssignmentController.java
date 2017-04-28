@@ -68,35 +68,6 @@ public class AssessmentAssignmentController {
         });
     }
 
-    @PostMapping("assignment/reject")
-    public String rejectAssignment(Model model,
-                                   @PathVariable("assessmentId") Long assessmentId,
-                                   @Valid @ModelAttribute("form") AssessmentAssignmentForm form,
-                                   @SuppressWarnings("unused") BindingResult bindingResult,
-                                   ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> doViewRejectAssignmentConfirm(model, assessmentId);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            AssessmentResource assessment = assessmentService.getRejectableById(assessmentId);
-            ServiceResult<Void> updateResult = assessmentService.rejectInvitation(assessment.getId(), form.getRejectReason(), form.getRejectComment());
-
-            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> redirectToAssessorCompetitionDashboard(assessment.getCompetition()));
-        });
-    }
-
-    @GetMapping("assignment/reject/confirm")
-    public String rejectAssignmentConfirm(Model model,
-                                          @ModelAttribute("form") AssessmentAssignmentForm form,
-                                          @PathVariable("assessmentId") Long assessmentId) {
-        return doViewRejectAssignmentConfirm(model, assessmentId);
-    }
-
-    private String doViewRejectAssignmentConfirm(Model model, Long assessmentId) {
-        model.addAttribute("model", rejectAssessmentModelPopulator.populateModel(assessmentId));
-        return "assessment/reject-invitation-confirm";
-    }
-
     private String redirectToAssessorCompetitionDashboard(Long competitionId) {
         return format("redirect:/assessor/dashboard/competition/%s", competitionId);
     }
