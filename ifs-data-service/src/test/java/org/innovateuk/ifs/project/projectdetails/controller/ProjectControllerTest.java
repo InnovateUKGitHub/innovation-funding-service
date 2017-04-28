@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -95,7 +94,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     @Test
     public void projectControllerSetProjectManager() throws Exception {
-    	when(projectServiceMock.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
+        when(projectServiceMock.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/3/project-manager/5").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -137,8 +136,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .param("addressType", OrganisationAddressType.REGISTERED.name())
                 .contentType(APPLICATION_JSON)
                 .content(toJson(addressResource)))
-            .andExpect(status().isOk())
-            .andExpect(content().string(""));
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
 
         verify(projectServiceMock).updateProjectAddress(123L, 456L, OrganisationAddressType.REGISTERED, addressResource);
     }
@@ -170,21 +169,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isOk())
                 .andReturn();
-    }
-
-    @Test
-    public void getGrantOfferLetterWorkflowState() throws Exception {
-
-        Long projectId = 123L;
-
-        when(projectServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
-
-        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(GOLState.APPROVED)))
-                .andReturn();
-
-        verify(projectServiceMock).getGrantOfferLetterWorkflowState(projectId);
     }
 
     @Test

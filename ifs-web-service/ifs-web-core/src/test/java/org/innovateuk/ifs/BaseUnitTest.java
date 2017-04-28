@@ -53,6 +53,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
@@ -251,6 +252,9 @@ public class BaseUnitTest {
     protected OrganisationDetailsRestService organisationDetailsRestService;
     @Mock
     protected ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
+
+    @Mock
+    public GrantOfferLetterService grantOfferLetterService;
 
     @Spy
     @InjectMocks
