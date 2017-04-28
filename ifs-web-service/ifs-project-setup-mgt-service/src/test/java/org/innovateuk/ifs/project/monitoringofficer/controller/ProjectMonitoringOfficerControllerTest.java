@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -166,7 +165,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(PENDING).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -248,7 +247,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(PENDING).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -346,7 +345,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(PENDING).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -368,7 +367,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -439,7 +438,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(PENDING).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -519,7 +518,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 

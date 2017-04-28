@@ -1449,7 +1449,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
-                withIsLeadPartner(TRUE).
+                withIsLeadPartner(true).
                 build();
 
         List<ProjectPartnerStatusResource> expectedFullPartnerStatuses = newProjectPartnerStatusResource().
@@ -1527,7 +1527,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
-                withIsLeadPartner(TRUE).
+                withIsLeadPartner(true).
                 build();
 
         ProjectTeamStatusResource expectedProjectTeamStatusResourceWhenPSSubmitted = newProjectTeamStatusResource().

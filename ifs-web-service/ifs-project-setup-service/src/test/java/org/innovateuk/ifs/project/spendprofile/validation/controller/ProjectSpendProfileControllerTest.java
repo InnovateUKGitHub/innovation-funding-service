@@ -390,7 +390,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(2);
         ProjectPartnerStatusResource leadProjectPartnerStatusResource = newProjectPartnerStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.ACTION_REQUIRED)
-                .withIsLeadPartner(TRUE)
+                .withIsLeadPartner(true)
                 .build();
         partnerStatuses.add(leadProjectPartnerStatusResource);
 

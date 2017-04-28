@@ -58,7 +58,7 @@ public class ProjectTeamStatusControllerTest extends BaseControllerMockMVCTest<P
 
     private ProjectTeamStatusResource buildTeamStatus(){
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(2);
-        ProjectPartnerStatusResource leadProjectPartnerStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(TRUE).build();
+        ProjectPartnerStatusResource leadProjectPartnerStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
         partnerStatuses.add(leadProjectPartnerStatusResource);
         return newProjectTeamStatusResource().withPartnerStatuses(partnerStatuses).build();
     }

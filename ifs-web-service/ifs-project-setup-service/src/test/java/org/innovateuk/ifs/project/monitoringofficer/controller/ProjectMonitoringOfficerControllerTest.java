@@ -145,7 +145,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 

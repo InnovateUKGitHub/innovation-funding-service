@@ -24,7 +24,6 @@ import org.mockito.InjectMocks;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.lang.Boolean.TRUE;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -87,7 +86,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
                         .withSpendProfileStatus(NOT_REQUIRED)
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -113,7 +112,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -146,7 +145,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withOrganisationId(999L)
                         .withProjectDetailsStatus(COMPLETE)
                         .withSpendProfileStatus(NOT_REQUIRED)
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -175,7 +174,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -203,7 +202,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -233,7 +232,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -289,7 +288,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -315,7 +314,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(NOT_REQUIRED).
                         withFinanceChecksStatus(PENDING).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -341,7 +340,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(PENDING).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -367,7 +366,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(PENDING).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
@@ -397,7 +396,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(ACTION_REQUIRED).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
@@ -428,7 +427,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withFinanceChecksStatus(ACTION_REQUIRED)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(COMPLETE)
@@ -476,7 +475,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -506,7 +505,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(ACTION_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -538,7 +537,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(ACTION_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -570,7 +569,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(PENDING).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -602,7 +601,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withFinanceChecksStatus(COMPLETE).
                         withSpendProfileStatus(COMPLETE).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -635,7 +634,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(NOT_STARTED).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -670,7 +669,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(ACTION_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -705,7 +704,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(PENDING).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -740,7 +739,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         withSpendProfileStatus(COMPLETE).
                         withGrantOfferStatus(COMPLETE).
                         withOrganisationId(organisationResource.getId()).
-                        withIsLeadPartner(TRUE).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withFinanceChecksStatus(COMPLETE).
@@ -775,7 +774,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -810,7 +809,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -850,7 +849,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)
@@ -877,7 +876,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(NOT_STARTED)
                         .withSpendProfileStatus(NOT_REQUIRED)
-                        .withIsLeadPartner(TRUE)
+                        .withIsLeadPartner(true)
                         .build())
                 .withPartnerStatuses(newProjectPartnerStatusResource()
                         .withFinanceContactStatus(NOT_STARTED)

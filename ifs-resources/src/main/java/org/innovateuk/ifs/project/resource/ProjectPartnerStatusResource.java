@@ -33,8 +33,8 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates otherDocumentsStatus;
     private ProjectActivityStates grantOfferLetterStatus;
 
-    private Boolean isGrantOfferLetterSent = FALSE;
-    private Boolean isLead = FALSE;
+    private boolean isGrantOfferLetterSent = false;
+    private boolean isLead = false;
 
 
     //Required for Json Mapping.

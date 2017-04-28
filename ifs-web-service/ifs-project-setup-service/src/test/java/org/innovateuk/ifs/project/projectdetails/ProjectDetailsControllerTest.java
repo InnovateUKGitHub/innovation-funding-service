@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.util.*;
 
-import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -100,7 +99,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(TRUE).build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -152,7 +151,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(TRUE).build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -804,7 +803,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                         build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(TRUE).build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
                 build();
 
 

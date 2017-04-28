@@ -349,7 +349,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     private ProjectTeamStatusResource buildTeamStatus(){
-        ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(TRUE).build();
+        ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
 
         projectLeadStatusResource.setName("Nomensa");
