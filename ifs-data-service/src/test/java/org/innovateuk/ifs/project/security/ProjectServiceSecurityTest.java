@@ -9,7 +9,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -194,129 +193,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testCreateCollaborationAgreementFileEntry() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.createCollaborationAgreementFileEntry(123L, null, null), () -> {
-            verify(projectPermissionRules).leadPartnersCanUploadOtherDocuments(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetCollaborationAgreementFileEntryDetails() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getCollaborationAgreementFileEntryDetails(123L), () -> {
-            verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
-            verify(projectPermissionRules).internalUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetCollaborationAgreementFileEntryContents() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getCollaborationAgreementFileContents(123L), () -> {
-            verify(projectPermissionRules).internalUserCanDownloadOtherDocuments(project, getLoggedInUser());
-            verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testDeleteCollaborationAgreementFileEntry() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.deleteCollaborationAgreementFile(123L), () -> {
-            verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-
-    @Test
-    public void testCreateExploitationPlanFileEntry() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.createExploitationPlanFileEntry(123L, null, null), () -> {
-            verify(projectPermissionRules).leadPartnersCanUploadOtherDocuments(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetExploitationPlanFileEntryDetails() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getExploitationPlanFileEntryDetails(123L), () -> {
-            verify(projectPermissionRules).internalUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
-            verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetExploitationPlanFileEntryContents() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getExploitationPlanFileContents(123L), () -> {
-            verify(projectPermissionRules).internalUserCanDownloadOtherDocuments(project, getLoggedInUser());
-            verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testDeleteExploitationPlanFileEntry() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.deleteExploitationPlanFile(123L), () -> {
-            verify(projectPermissionRules).leadPartnersCanDeleteOtherDocuments(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testAcceptOrRejectOtherDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.acceptOrRejectOtherDocuments(123L, true), () -> {
-            verify(projectPermissionRules).internalUserCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-
-    @Test
     public void testAddPartnerDeniedIfNotSystemRegistrar() {
         EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
         nonSystemRegistrationRoles.forEach(role -> {
@@ -331,9 +207,9 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
     @Test
     public void testAddPartnerAllowedIfSystemRegistrar() {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build())).build());
-            classUnderTest.addPartner(1L, 2L, 3L);
-            // There should be no exception thrown
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build())).build());
+        classUnderTest.addPartner(1L, 2L, 3L);
+        // There should be no exception thrown
     }
 
     @Test
@@ -359,75 +235,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
             verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
             verify(projectPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testSendGrantOfferLetter(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.sendGrantOfferLetter(123L), () -> {
-            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testIsSendGrantOfferLetterAllowed(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.isSendGrantOfferLetterAllowed(123L), () -> {
-            verify(projectPermissionRules).internalUserCanSendGrantOfferLetter(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testIsSendGrantOfferLetterAlreadySent(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.isGrantOfferLetterAlreadySent(123L), () -> {
-            verify(projectPermissionRules).internalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testApproveSignedGrantOfferLetter(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED), () -> {
-            verify(projectPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testSignedGrantOfferLetterApproved(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterApproved(123L), () -> {
-            verify(projectPermissionRules).partnersOnProjectCanViewGrantOfferApprovedStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).internalUsersCanViewGrantOfferApprovedStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testGetGrantOfferLetterWorkflowState() {
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.getGrantOfferLetterWorkflowState(123L), () -> {
-            verify(projectPermissionRules).internalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -482,12 +289,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
-		@Override
-		public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
-			return null;
-		}
+        @Override
+        public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+            return null;
+        }
 
-		@Override
+        @Override
         public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
             return null;
         }
@@ -502,10 +309,10 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
-		@Override
-		public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
-			return null;
-		}
+        @Override
+        public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+            return null;
+        }
 
         @Override
         public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
@@ -609,25 +416,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
-            return null;
-        }
-        @Override
-        public ServiceResult<Void> sendGrantOfferLetter(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
             return null;
         }
 
