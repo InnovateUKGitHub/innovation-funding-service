@@ -5,13 +5,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
+import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.overview.viewmodel.RejectAssessmentViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
-import org.innovateuk.ifs.assessment.overview.viewmodel.RejectAssessmentViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -55,6 +56,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTest<AssessmentAssignmentController> {
 
+    private static final long APPLICATION_ID = 2L;
+
+    private SortedSet<OrganisationResource> partners;
+
+    private OrganisationResource leadOrganisation;
+
+    private OrganisationResource collaboratorOrganisation1;
+    private OrganisationResource collaboratorOrganisation2;
+
     @Spy
     @InjectMocks
     private AssessmentAssignmentModelPopulator assessmentAssignmentModelPopulator;
@@ -71,26 +81,19 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         return new AssessmentAssignmentController();
     }
 
-    @Test
-    public void viewAssignment() throws Exception {
-        long assessmentId = 1L;
-        long applicationId = 2L;
-        long competitionId = 3L;
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(newAssessmentResource()
-                .withApplication(applicationId)
-                .withApplicationName("Application name")
-                .withCompetition(competitionId)
-                .build());
+    @Before
+    public void setup() {
+        super.setup();
 
-        when(formInputResponseRestService.getByApplicationIdAndQuestionName(applicationId, "Project summary"))
+        when(formInputResponseRestService.getByApplicationIdAndQuestionName(APPLICATION_ID, "Project summary"))
                 .thenReturn(restSuccess(newFormInputResponseResource()
                         .withValue("Project summary")
                         .build()));
 
-        OrganisationResource collaboratorOrganisation1 = newOrganisationResource().build();
-        OrganisationResource collaboratorOrganisation2 = newOrganisationResource().build();
-        OrganisationResource leadOrganisation = newOrganisationResource().build();
+        collaboratorOrganisation1 = newOrganisationResource().build();
+        collaboratorOrganisation2 = newOrganisationResource().build();
+        leadOrganisation = newOrganisationResource().build();
 
         OrganisationResource otherOrganisation = newOrganisationResource().build();
 
@@ -102,15 +105,27 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withRoleName(COLLABORATOR.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName(), ASSESSOR.getName())
                 .build(4);
 
-        when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(processRoleResources);
+        when(processRoleService.findProcessRolesByApplicationId(APPLICATION_ID)).thenReturn(processRoleResources);
         when(organisationRestService.getOrganisationById(collaboratorOrganisation1.getId())).thenReturn(restSuccess(collaboratorOrganisation1));
         when(organisationRestService.getOrganisationById(collaboratorOrganisation2.getId())).thenReturn(restSuccess(collaboratorOrganisation2));
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
-        SortedSet<OrganisationResource> partners = new TreeSet<>(comparingLong(OrganisationResource::getId));
+        partners = new TreeSet<>(comparingLong(OrganisationResource::getId));
         partners.add(collaboratorOrganisation1);
         partners.add(leadOrganisation);
         partners.add(collaboratorOrganisation2);
+    }
+
+    @Test
+    public void viewAssignment() throws Exception {
+        long assessmentId = 1L;
+        long competitionId = 3L;
+
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(newAssessmentResource()
+                .withApplication(APPLICATION_ID)
+                .withApplicationName("Application name")
+                .withCompetition(competitionId)
+                .build());
 
         AssessmentAssignmentViewModel expectedViewModel = new AssessmentAssignmentViewModel(assessmentId,
                 competitionId,
@@ -124,8 +139,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
 
         InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleService, organisationRestService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
-        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(applicationId, "Project summary");
-        inOrder.verify(processRoleService).findProcessRolesByApplicationId(applicationId);
+        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, "Project summary");
+        inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
         asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
                 inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
         inOrder.verifyNoMoreInteractions();
@@ -135,6 +150,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
     public void acceptAssignment() throws Exception {
         Long assessmentId = 1L;
         Long competitionId = 2L;
+        Boolean accept = true;
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
@@ -142,8 +158,11 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .build();
 
         when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/{assessmentId}/assignment/accept", assessmentId))
+        mockMvc.perform(post("/{assessmentId}/assignment/respond", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("assessmentAccept", accept.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard/competition/2"));
 
@@ -157,6 +176,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
     public void rejectAssignment() throws Exception {
         Long assessmentId = 1L;
         Long competitionId = 2L;
+        Boolean accept = false;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(100, "comment"));
 
@@ -165,18 +185,19 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
+        mockMvc.perform(post("/{assessmentId}/assignment/respond", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("assessmentAccept", accept.toString())
                 .param("rejectReason", reason.name())
                 .param("rejectComment", comment))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%s", competitionId)))
                 .andReturn();
 
-        verify(assessmentService).getRejectableById(assessmentId);
+        verify(assessmentService).getAssignableById(assessmentId);
         verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
         verifyNoMoreInteractions(assessmentService);
     }
@@ -184,34 +205,35 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
     @Test
     public void rejectAssignment_eventNotAccepted() throws Exception {
         Long assessmentId = 1L;
-        Long applicationId = 2L;
+        long competitionId = 3L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(100, "comment"));
+        Boolean accept = false;
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
-                .withApplication(applicationId)
-                .withApplicationName("application name")
+                .withApplication(APPLICATION_ID)
+                .withApplicationName("Application name")
                 .withActivityState(PENDING)
+                .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
-        // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
-
         AssessmentAssignmentForm expectedForm = new AssessmentAssignmentForm();
+        expectedForm.setAssessmentAccept(accept);
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
 
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                applicationId,
-                "application name",
-                PENDING
-        );
+        AssessmentAssignmentViewModel expectedViewModel = new AssessmentAssignmentViewModel(assessmentId,
+                competitionId,
+                "Application name",
+                partners, leadOrganisation, "Project summary");
 
-        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/respond", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("assessmentAccept", accept.toString())
                 .param("rejectReason", reason.name())
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
@@ -219,7 +241,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form"))
-                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andExpect(view().name("assessment/assessment-invitation"))
                 .andReturn();
 
         AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
@@ -229,49 +251,56 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals(0, bindingResult.getFieldErrorCount());
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
-        InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getRejectableById(assessmentId);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleService, organisationRestService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
-        inOrder.verify(assessmentService).getRejectableById(assessmentId);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, "Project summary");
+        inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
+        asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
+                inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void rejectAssignment_noReason() throws Exception {
         Long assessmentId = 1L;
-        Long applicationId = 2L;
+        long competitionId = 3L;
+        Boolean accept = false;
         String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
-                .withApplication(applicationId)
-                .withApplicationName("application name")
+                .withApplication(APPLICATION_ID)
+                .withApplicationName("Application name")
                 .withActivityState(PENDING)
+                .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
         AssessmentAssignmentForm expectedForm = new AssessmentAssignmentForm();
+        expectedForm.setAssessmentAccept(accept);
         expectedForm.setRejectComment(comment);
 
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                applicationId,
-                "application name",
-                PENDING
-        );
+        AssessmentAssignmentViewModel expectedViewModel = new AssessmentAssignmentViewModel(assessmentId,
+                competitionId,
+                "Application name",
+                partners, leadOrganisation, "Project summary");
 
-        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/respond", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("assessmentAccept", accept.toString())
                 .param("rejectReason", "")
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form", "rejectReason"))
-                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andExpect(model().attributeHasFieldErrors("form", "rejectReasonValid"))
+                .andExpect(view().name("assessment/assessment-invitation"))
                 .andReturn();
 
         AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
@@ -279,44 +308,104 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("rejectReason"));
-        assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("rejectReasonValid"));
+        assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReasonValid").getDefaultMessage());
 
-        InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getRejectableById(assessmentId);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleService, organisationRestService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, "Project summary");
+        inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
+        asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
+                inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectAssignment_neitherAcceptOrReject() throws Exception {
+        Long assessmentId = 1L;
+        long competitionId = 3L;
+        String comment = String.join(" ", nCopies(100, "comment"));
+
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withApplication(APPLICATION_ID)
+                .withApplicationName("Application name")
+                .withActivityState(PENDING)
+                .withCompetition(competitionId)
+                .build();
+
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+
+        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
+
+        AssessmentAssignmentForm expectedForm = new AssessmentAssignmentForm();
+
+        AssessmentAssignmentViewModel expectedViewModel = new AssessmentAssignmentViewModel(assessmentId,
+                competitionId,
+                "Application name",
+                partners, leadOrganisation, "Project summary");
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/respond", assessmentId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("assessmentAccept", ""))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "assessmentAccept"))
+                .andExpect(view().name("assessment/assessment-invitation"))
+                .andReturn();
+
+        AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("assessmentAccept"));
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("assessmentAccept").getDefaultMessage());
+
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleService, organisationRestService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, "Project summary");
+        inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
+        asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
+                inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void rejectAssignment_exceedsCharacterSizeLimit() throws Exception {
         Long assessmentId = 1L;
-        Long applicationId = 2L;
+        long competitionId = 3L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = RandomStringUtils.random(5001);
+        Boolean accept = false;
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
-                .withApplication(applicationId)
-                .withApplicationName("application name")
+                .withApplication(APPLICATION_ID)
+                .withApplicationName("Application name")
                 .withActivityState(PENDING)
+                .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
         AssessmentAssignmentForm expectedForm = new AssessmentAssignmentForm();
+        expectedForm.setAssessmentAccept(accept);
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
 
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                applicationId,
-                "application name",
-                PENDING
-        );
+        AssessmentAssignmentViewModel expectedViewModel = new AssessmentAssignmentViewModel(assessmentId,
+                competitionId,
+                "Application name",
+                partners, leadOrganisation, "Project summary");
 
-        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/respond", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("assessmentAccept", accept.toString())
                 .param("rejectReason", reason.name())
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
@@ -324,7 +413,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
-                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andExpect(view().name("assessment/assessment-invitation"))
                 .andReturn();
 
         AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
@@ -336,41 +425,48 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getRejectableById(assessmentId);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleService, organisationRestService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, "Project summary");
+        inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
+        asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
+                inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void rejectAssignment_exceedsWordLimit() throws Exception {
         Long assessmentId = 1L;
-        Long applicationId = 2L;
+        long competitionId = 3L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(101, "comment"));
+        Boolean accept = false;
 
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
-                .withApplication(applicationId)
-                .withApplicationName("application name")
+                .withApplication(APPLICATION_ID)
+                .withApplicationName("Application name")
                 .withActivityState(PENDING)
+                .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
         AssessmentAssignmentForm expectedForm = new AssessmentAssignmentForm();
+        expectedForm.setAssessmentAccept(accept);
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
 
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                applicationId,
-                "application name",
-                PENDING
-        );
+        AssessmentAssignmentViewModel expectedViewModel = new AssessmentAssignmentViewModel(assessmentId,
+                competitionId,
+                "Application name",
+                partners, leadOrganisation, "Project summary");
 
-        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/respond", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("assessmentAccept", accept.toString())
                 .param("rejectReason", reason.name())
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
@@ -378,7 +474,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
-                .andExpect(view().name("assessment/reject-invitation-confirm"))
+                .andExpect(view().name("assessment/assessment-invitation"))
                 .andReturn();
 
         AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
@@ -390,8 +486,12 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getRejectableById(assessmentId);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleService, organisationRestService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, "Project summary");
+        inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
+        asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
+                inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
         inOrder.verifyNoMoreInteractions();
     }
 
