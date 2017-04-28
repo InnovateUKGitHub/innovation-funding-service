@@ -97,7 +97,7 @@ public class CookieUtil {
         return "";
     }
 
-    public <T> Optional<T> getCookieAsList(HttpServletRequest request, String cookieName, TypeReference<T> cookieType) {
+    public <T> Optional<T> getCookieAs(HttpServletRequest request, String cookieName, TypeReference<T> cookieType) {
         String jsonValue = getCookieValue(request, cookieName);
 
         if (jsonValue != null && !"".equals(jsonValue)) {
@@ -111,7 +111,7 @@ public class CookieUtil {
         return Optional.empty();
     }
 
-    public <T> List<T> getCookieAs(HttpServletRequest request, String cookieName, TypeReference<List<T>> cookieType) {
+    public <T> List<T> getCookieAsList(HttpServletRequest request, String cookieName, TypeReference<List<T>> cookieType) {
         String jsonValue = getCookieValue(request, cookieName);
 
         if (jsonValue != null && !"".equals(jsonValue)) {

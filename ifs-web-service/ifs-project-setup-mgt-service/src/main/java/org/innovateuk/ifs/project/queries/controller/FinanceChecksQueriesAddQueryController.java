@@ -166,7 +166,7 @@ public class FinanceChecksQueriesAddQueryController {
             FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
-            return "redirect:" + rootView(projectId, organisationId);
+            return redirectToQueryPage(projectId, organisationId, querySection);
         };
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
@@ -177,7 +177,6 @@ public class FinanceChecksQueriesAddQueryController {
             if (result.isSuccess()) {
                 attachments.add(result.getSuccessObject().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId);
-//                form.setAttachment(null);
                 saveFormToCookie(response, projectId, organisationId, form);
             }
 
@@ -208,7 +207,6 @@ public class FinanceChecksQueriesAddQueryController {
             if (fileInfo.isSuccess()) {
                 fileDetails = Optional.of(fileInfo.getSuccessObject());
             }
-
         }
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
@@ -232,11 +230,9 @@ public class FinanceChecksQueriesAddQueryController {
             financeCheckService.deleteFile(attachmentId);
         }
         saveAttachmentsToCookie(response, attachments, projectId, organisationId);
+        saveFormToCookie(response, projectId, organisationId, form);
 
-        FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
-        model.addAttribute("model", viewModel);
-        model.addAttribute("form", form);
-        return "project/financecheck/new-query";
+        return redirectTo(rootView(projectId, organisationId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -322,22 +318,24 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     private void saveFormToCookie(HttpServletResponse response, Long projectId, Long organisationId, FinanceChecksQueriesAddQueryForm form) {
-        String formAsJson = JsonUtil.getSerializedObject(form);
-        cookieUtil.saveToCookie(response, getCookieNameForm(projectId, organisationId), formAsJson);
+        cookieUtil.saveToCookie(response, getCookieNameForm(projectId, organisationId), JsonUtil.getSerializedObject(form));
     }
 
     private List<Long> loadAttachmentsFromCookie(HttpServletRequest request, Long projectId, Long organisationId) {
-        return cookieUtil.getCookieAs(request, getCookieName(projectId, organisationId), new TypeReference<List<Long>>() {
-        });
+        return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId),
+                new TypeReference<List<Long>>() {});
     }
 
     private Optional<FinanceChecksQueriesAddQueryForm> loadForm(HttpServletRequest request, Long projectId, Long organisationId) {
-        return cookieUtil.getCookieAsList(request, getCookieNameForm(projectId, organisationId),
-                new TypeReference<FinanceChecksQueriesAddQueryForm>() {
-                });
+        return cookieUtil.getCookieAs(request, getCookieNameForm(projectId, organisationId),
+                new TypeReference<FinanceChecksQueriesAddQueryForm>() {});
     }
 
     private String rootView(final Long projectId, final Long organisationId) {
         return String.format(FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL, projectId, organisationId);
+    }
+
+    private String redirectTo(final String path) {
+        return "redirect:" + path;
     }
 }
