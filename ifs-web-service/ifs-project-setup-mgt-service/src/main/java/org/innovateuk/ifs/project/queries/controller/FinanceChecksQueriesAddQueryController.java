@@ -109,7 +109,6 @@ public class FinanceChecksQueriesAddQueryController {
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
             FinanceChecksSectionType section = null;
             for (FinanceChecksSectionType value : FinanceChecksSectionType.values()) {
                 if (value.name().toUpperCase().equals(form.getSection().toUpperCase())) {
@@ -215,8 +214,8 @@ public class FinanceChecksQueriesAddQueryController {
                                    Model model) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         if (attachments.contains(attachmentId)) {
-            attachments.remove(attachments.indexOf(attachmentId));
-            financeCheckService.deleteFile(attachmentId);
+            financeCheckService.deleteFile(attachmentId).andOnSuccess(() ->
+                    attachments.remove(attachments.indexOf(attachmentId)));
         }
         saveAttachmentsToCookie(response, attachments, projectId, organisationId);
         saveFormToCookie(response, projectId, organisationId, form);
@@ -232,10 +231,8 @@ public class FinanceChecksQueriesAddQueryController {
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-        attachments.forEach((id -> financeCheckService.deleteFile(id)));
+        loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);
-
         return redirectTo(queriesListView(projectId, organisationId));
     }
 
@@ -302,7 +299,8 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     private List<Long> loadAttachmentsFromCookie(HttpServletRequest request, Long projectId, Long organisationId) {
-        return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId), new TypeReference<List<Long>>() {});
+        return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId), new TypeReference<List<Long>>() {
+        });
     }
 
     private Optional<FinanceChecksQueriesAddQueryForm> loadForm(HttpServletRequest request, Long projectId, Long organisationId) {
