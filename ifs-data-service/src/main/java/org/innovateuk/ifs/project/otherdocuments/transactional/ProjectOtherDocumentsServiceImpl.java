@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
-import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,7 +52,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private ProjectGrantOfferService projectGrantOfferLetterService;
+    private GrantOfferLetterService projectGrantOfferLetterService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;

@@ -1,34 +1,20 @@
 package org.innovateuk.ifs.project.otherdocuments.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.otherdocuments.transactional.ProjectOtherDocumentsService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -239,41 +225,6 @@ public class ProjectOtherDocumentsServiceSecurityTest extends BaseServiceSecurit
         public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approved) {
             return null;
         }
-
-        @Override
-        public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
-            return null;
-        }
-        @Override
-        public ServiceResult<Void> sendGrantOfferLetter(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
-            return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
-        }
-
     }
 }
 
