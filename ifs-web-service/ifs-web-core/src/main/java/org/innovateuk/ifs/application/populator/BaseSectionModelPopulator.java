@@ -4,7 +4,9 @@ import org.innovateuk.ifs.applicant.resource.*;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
@@ -12,11 +14,8 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +23,6 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
@@ -41,16 +39,7 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     private SectionService sectionService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
     private FormInputResponseService formInputResponseService;
-
-    @Autowired
-    private FormInputRestService formInputRestService;
 
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
@@ -76,24 +65,22 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
         viewModel.setLeadApplicant(leadApplicant);
     }
 
-    protected List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
-        return formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
-    }
-
     protected void addMappedSectionsDetails(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
 
         Map<Long, SectionResource> sections = new HashMap<>();
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
         Map<Long, List<SectionResource>> subSections = new HashMap<>();
-        Map<Long, List<QuestionResource>> subsectionQuestions = new HashMap<>();
+        Map<Long, List<QuestionResource>> subsectionQuestions;
         Map<Long, List<FormInputResource>> subSectionQuestionFormInputs;
 
         sections.put(applicantSection.getSection().getId(), applicantSection.getSection());
         sectionQuestions.put(applicantSection.getSection().getId(), applicantSection.getQuestions().stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()));
         subSections.put(applicantSection.getSection().getId(), applicantSection.getChildSections().stream().map(ApplicantSectionResource::getSection).collect(Collectors.toList()));
-        List<ApplicantQuestionResource> subsectionApplicantQuestions = applicantSection.getChildSections().stream().map(ApplicantSectionResource::getQuestions).flatMap(List::stream).collect(Collectors.toList());
-        subsectionQuestions.put(applicantSection.getSection().getId(), subsectionApplicantQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()));
-        subSectionQuestionFormInputs = simpleToMap(subsectionApplicantQuestions, applicantQuestion -> applicantQuestion.getQuestion().getId(),
+        subsectionQuestions = simpleToMap(applicantSection.getChildSections(),
+                childSection -> childSection.getSection().getId(),
+                childSection -> childSection.getQuestions().stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()));
+        subSectionQuestionFormInputs = simpleToMap(applicantSection.getChildSections().stream().map(ApplicantSectionResource::getQuestions).flatMap(List::stream).collect(Collectors.toList()),
+                applicantQuestion -> applicantQuestion.getQuestion().getId(),
                 applicantQuestion -> applicantQuestion.getFormInputs().stream().map(ApplicantFormInputResource::getFormInput).collect(Collectors.toList()));
 
         viewModel.setCompletedSections(sectionService.getCompleted(applicantSection.getApplication().getId(), applicantSection.getCurrentApplicant().getOrganisation().getId()));
@@ -105,14 +92,12 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     }
 
     protected void addSectionDetails(BaseSectionViewModel viewModel, ApplicantSectionResource sectionResource) {
-        List<QuestionResource> questions = sectionResource.allQuestions().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList());
-        questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
+        List<ApplicantQuestionResource> questions = sectionResource.getQuestions();
         Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
-        sectionQuestions.put(sectionResource.getSection().getId(), questions);
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
-                .flatMap(Collection::stream)
-                .collect(Collectors.toMap(QuestionResource::getId, question ->
-                        formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException()));
+        sectionQuestions.put(sectionResource.getSection().getId(), questions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()));
+        Map<Long, List<FormInputResource>> questionFormInputs = simpleToMap(questions,
+                question -> question.getQuestion().getId(),
+                question -> question.getFormInputs().stream().map(ApplicantFormInputResource::getFormInput).collect(Collectors.toList()));
 
         viewModel.setQuestionFormInputs(questionFormInputs);
         viewModel.setCurrentSection(sectionResource.getSection());
@@ -153,7 +138,7 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
 
         Map<Long, QuestionStatusResource> questionAssignees;
 
-        questionAssignees = simpleToMap(applicantSection.allQuestionStatuses().filter(status -> status.getAssignee().isSameUser(applicantSection.getCurrentApplicant())).collect(Collectors.toList()),
+        questionAssignees = simpleToMap(applicantSection.allAssignedQuestionStatuses().filter(status -> status.getAssignee().isSameUser(applicantSection.getCurrentApplicant())).collect(Collectors.toList()),
                 status -> status.getStatus().getQuestion(), ApplicantQuestionStatusResource::getStatus);
 
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), applicantSection.getCurrentApplicant().getUser().getId());

@@ -8,9 +8,6 @@ import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.application.resource.SectionType;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
@@ -30,19 +27,10 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
     private FinanceHandler financeHandler;
-
-    @Autowired
-    private OrganisationService organisationService;
 
     @Override
     public BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection) {

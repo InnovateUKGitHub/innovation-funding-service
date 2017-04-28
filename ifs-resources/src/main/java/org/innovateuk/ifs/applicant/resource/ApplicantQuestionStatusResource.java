@@ -2,6 +2,8 @@ package org.innovateuk.ifs.applicant.resource;
 
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 
+import java.util.Optional;
+
 /**
  * Created by luke.harper on 25/04/2017.
  */

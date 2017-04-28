@@ -7,12 +7,9 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,16 +26,7 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private SectionService sectionService;
-
-    @Autowired
-    private FormInputRestService formInputRestService;
 
     protected void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Integer organisationGrantClaimPercentage) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
@@ -81,14 +69,16 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
         addUserDetails(viewModel, applicantSection);
         addMappedSectionsDetails(viewModel, applicantSection);
 
-        viewModel.setSectionAssignableViewModel(addAssignableDetails(applicantSection));
+        if (!SectionType.FINANCE.equals(applicantSection.getSection().getType())) {
+            viewModel.setSectionAssignableViewModel(addAssignableDetails(applicantSection));
+        }
         addCompletedDetails(sectionApplicationViewModel, applicantSection);
 
         sectionApplicationViewModel.setUserOrganisation(applicantSection.getCurrentApplicant().getOrganisation());
     }
 
     private void addCompletedDetails(SectionApplicationViewModel sectionApplicationViewModel, ApplicantSectionResource applicantSection) {
-        Set<Long> markedAsComplete = applicantSection.allQuestionStatuses()
+        Set<Long> markedAsComplete = applicantSection.allCompleteQuestionStatuses()
                 .filter(status -> status.getMarkedAsCompleteBy().hasSameOrganisation(applicantSection.getCurrentApplicant()))
                 .map(status -> status.getStatus().getQuestion())
                 .collect(Collectors.toSet());

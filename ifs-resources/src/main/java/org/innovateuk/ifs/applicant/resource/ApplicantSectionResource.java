@@ -71,8 +71,11 @@ public class ApplicantSectionResource extends AbstractApplicantResource {
                 questions.stream());
     }
 
-    public Stream<ApplicantQuestionStatusResource> allQuestionStatuses() {
-        return allQuestions().map(ApplicantQuestionResource::getQuestionStatuses).flatMap(List::stream);
+    public Stream<ApplicantQuestionStatusResource> allCompleteQuestionStatuses() {
+        return allQuestions().flatMap(ApplicantQuestionResource::allCompleteStatuses);
+    }
+    public Stream<ApplicantQuestionStatusResource> allAssignedQuestionStatuses() {
+        return allQuestions().flatMap(ApplicantQuestionResource::allAssignedStatuses);
     }
 
     public Stream<ApplicantFormInputResponseResource> allResponses() {

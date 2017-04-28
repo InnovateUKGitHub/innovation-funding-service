@@ -99,7 +99,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
             if (questionStatusResource.getAssignee() != null) {
                 questionStatus.setAssignee(applicants.stream().filter(applicantResource -> applicantResource.getProcessRole().getId().equals(questionStatusResource.getAssignee())).findAny().orElse(null));
             }
-            if (questionStatus.getMarkedAsCompleteBy() != null) {
+            if (questionStatusResource.getMarkedAsCompleteBy() != null) {
                 questionStatus.setMarkedAsCompleteBy(applicants.stream().filter(applicantResource -> applicantResource.getProcessRole().getId().equals(questionStatusResource.getMarkedAsCompleteBy())).findAny().orElse(null));;
             }
             return questionStatus;

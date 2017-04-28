@@ -45,4 +45,12 @@ public class ApplicantQuestionResource extends AbstractApplicantResource {
                 .map(ApplicantFormInputResource::getApplicantResponses)
                 .flatMap(List::stream);
     }
+
+    public Stream<ApplicantQuestionStatusResource> allCompleteStatuses() {
+        return getQuestionStatuses().stream().filter(status -> status.getMarkedAsCompleteBy() != null);
+    }
+
+    public Stream<ApplicantQuestionStatusResource> allAssignedStatuses() {
+        return getQuestionStatuses().stream().filter(status -> status.getAssignee() != null);
+    }
 }
