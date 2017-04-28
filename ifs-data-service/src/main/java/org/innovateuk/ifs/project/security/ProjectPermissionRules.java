@@ -47,62 +47,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-            value = "UPLOAD_OTHER_DOCUMENTS",
-            description = "The lead partners can upload Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
-    public boolean leadPartnersCanUploadOtherDocuments(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "DOWNLOAD_OTHER_DOCUMENTS",
-            description = "Partners can download Other Documents (Collaboration Agreement, Exploitation Plan)")
-    public boolean partnersCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "DOWNLOAD_OTHER_DOCUMENTS",
-            description = "Internal users can download Other Documents (Collaboration Agreement, Exploitation Plan)")
-    public boolean internalUserCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_OTHER_DOCUMENTS_DETAILS",
-            description = "Partners can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
-    public boolean partnersCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "VIEW_OTHER_DOCUMENTS_DETAILS",
-            description = "Internal users can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
-    public boolean internalUserCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "DELETE_OTHER_DOCUMENTS",
-            description = "The lead partners can delete Other Documents (Collaboration Agreement, Exploitation Plan) for their Projects")
-    public boolean leadPartnersCanDeleteOtherDocuments(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "SUBMIT_OTHER_DOCUMENTS",
-            description = "Only a Project Manager can submit completed partner documents")
-    public boolean onlyProjectManagerCanMarkDocumentsAsSubmit(ProjectResource project, UserResource user) {
-        return isProjectManager(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
-            description = "Internal users can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
-    public boolean internalUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
             value = "VIEW_TEAM_STATUS",
             description = "All partners can view team status")
     public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user) {
@@ -127,44 +71,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
             value = "VIEW_STATUS",
             description = "Internal users can see the project status")
     public boolean internalUsersCanViewStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "SEND_GRANT_OFFER_LETTER",
-            description = "Internal users can send the Grant Offer Letter notification")
-    public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "APPROVE_SIGNED_GRANT_OFFER_LETTER",
-            description = "Internal users can approve the signed Grant Offer Letter")
-    public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
-            description = "Internal users can view the send status of Grant Offer Letter for a project")
-    public boolean internalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
-            description = "Partners can view the send status of Grant Offer Letter for a project")
-    public boolean externalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "A user can see grant offer approval status that they are partners on")
-    public boolean partnersOnProjectCanViewGrantOfferApprovedStatus(ProjectResource project, UserResource user) {
-        return project != null && isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "Internal users can see grant offer approval status")
-    public boolean internalUsersCanViewGrantOfferApprovedStatus(ProjectResource project, UserResource user) {
         return isInternal(user);
     }
 
