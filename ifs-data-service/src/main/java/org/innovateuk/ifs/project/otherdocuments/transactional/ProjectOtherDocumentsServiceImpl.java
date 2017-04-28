@@ -40,6 +40,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Service
+/**
+ * Transactional and secure service for Project Other Documents processing work
+ */
 public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl implements ProjectOtherDocumentsService {
 
     @Autowired
