@@ -52,13 +52,13 @@
                         <legend class="heading-medium">
                             Select your ability to assess the competition
                             <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                                <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
                             </th:block>
                         </legend>
 
                         <div class="block-form">
                             <label class="block-label selection-button-radio" for="acceptCompetition">
-                                <input id="acceptCompetition" name="update" value="true" type="radio" required="required"
+                                <input id="acceptCompetition" value="true" type="radio" required="required"
                                        th:field="*{acceptInvitation}"/>
                                 Yes, I am able to assess applications to this competition
                                 <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
@@ -67,7 +67,7 @@
 
                         <div class="block-form" for="rejectCompetition">
                             <label class="block-label selection-button-radio" for="rejectCompetition" data-target="reject-competition">
-                                <input id="rejectCompetition" name="update" value="false" type="radio" required="required"
+                                <input id="rejectCompetition" value="false" type="radio" required="required"
                                        th:field="*{acceptInvitation}"/>
                                 No, I am not able to assess applications to this competition
                             </label>
