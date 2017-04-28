@@ -111,7 +111,7 @@ public class UserController {
         return result.handleSuccessOrFailure(
                 failure -> restFailure(failure.getErrors()),
                 token -> {
-                    registrationService.activateUserAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
+                    registrationService.activateApplicantAndSendDiversitySurvey(token.getClassPk()).andOnSuccessReturnVoid(v -> {
                         tokenService.handleExtraAttributes(token);
                         tokenService.removeToken(token);
                         crmService.syncCrmContact(token.getClassPk());
