@@ -26,10 +26,10 @@ import static org.mockito.Mockito.when;
 public class GrantOfferLetterServiceImplTest {
 
     @InjectMocks
-    GrantOfferLetterServiceImpl grantOfferLetterService;
+    private GrantOfferLetterServiceImpl grantOfferLetterService;
 
     @Mock
-    GrantOfferLetterRestService grantOfferLetterRestService;
+    private GrantOfferLetterRestService grantOfferLetterRestService;
 
     @Test
     public void testGetGrantOfferLetterFile() {
