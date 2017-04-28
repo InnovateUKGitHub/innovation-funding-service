@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.invite.controller;
 
-import org.innovateuk.ifs.assessment.invite.form.RejectCompetitionForm;
+import org.innovateuk.ifs.assessment.invite.form.CompetitionInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.CompetitionInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.populator.RejectCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
@@ -49,7 +49,7 @@ public class CompetitionInviteController {
 
     @GetMapping("/invite/competition/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
-                             @ModelAttribute("form") RejectCompetitionForm form,
+                             @ModelAttribute("form") CompetitionInviteForm form,
                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
                              Model model) {
         boolean userLoggedIn = loggedInUser != null;
@@ -62,7 +62,7 @@ public class CompetitionInviteController {
     public String handleDecision(Model model,
                                  @PathVariable("inviteHash") String inviteHash,
                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                 @Valid @ModelAttribute("form") RejectCompetitionForm form,
+                                 @Valid @ModelAttribute("form") CompetitionInviteForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler) {
 
@@ -71,15 +71,11 @@ public class CompetitionInviteController {
             if (form.getAcceptInvitation()) {
                 return doAcceptInvite(inviteHash, loggedInUser, model);
             } else {
-                return doRejectInvite(model, inviteHash, form, bindingResult, validationHandler);
+                return doRejectInvite(model, inviteHash, form, loggedInUser, validationHandler);
             }
         });
     }
 
-//    @PostMapping("/invite/competition/{inviteHash}/accept")
-//    public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
-//                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
-//                               Model model) {
     private String doAcceptInvite(String inviteHash,UserResource loggedInUser, Model model) {
         boolean userIsLoggedIn = loggedInUser != null;
 
@@ -110,18 +106,12 @@ public class CompetitionInviteController {
         return "redirect:/assessor/dashboard";
     }
 
-//    @PostMapping("/invite/competition/{inviteHash}/reject")
-//    public String rejectInvite(Model model,
-//                               @PathVariable("inviteHash") String inviteHash,
-//                               @Valid @ModelAttribute("form") RejectCompetitionForm form,
-//                               @SuppressWarnings("unused") BindingResult bindingResult,
-//                               ValidationHandler validationHandler) {
     private String doRejectInvite(Model model,
                                   String inviteHash,
-                                  RejectCompetitionForm form,
-                                  @SuppressWarnings("unused") BindingResult bindingResult,
+                                  CompetitionInviteForm form,
+                                  UserResource loggedInUser,
                                   ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> doViewRejectInvitationConfirm(model, inviteHash);
+        Supplier<String> failureView = () -> openInvite(inviteHash, form, loggedInUser, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -132,13 +122,6 @@ public class CompetitionInviteController {
         });
     }
 
-    @GetMapping("/invite/competition/{inviteHash}/reject/confirm")
-    public String rejectInviteConfirm(Model model,
-                                      @ModelAttribute("form") RejectCompetitionForm form,
-                                      @PathVariable("inviteHash") String inviteHash) {
-        return doViewRejectInvitationConfirm(model, inviteHash);
-    }
-
     @GetMapping("/invite/competition/{inviteHash}/reject/thank-you")
     public String rejectThankYou(@PathVariable("inviteHash") String inviteHash) {
         return "assessor-competition-reject";
@@ -147,10 +130,5 @@ public class CompetitionInviteController {
     @ModelAttribute("rejectionReasons")
     public List<RejectionReasonResource> populateRejectionReasons() {
         return rejectionReasonRestService.findAllActive().getSuccessObjectOrThrowException();
-    }
-
-    private String doViewRejectInvitationConfirm(Model model, String inviteHash) {
-        model.addAttribute("model", rejectCompetitionModelPopulator.populateModel(inviteHash));
-        return "assessor-competition-reject-confirm";
     }
 }

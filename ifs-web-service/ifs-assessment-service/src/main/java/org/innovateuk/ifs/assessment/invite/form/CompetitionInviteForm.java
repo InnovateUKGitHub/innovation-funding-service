@@ -14,9 +14,9 @@ import javax.validation.constraints.Size;
 /**
  * Form field model for the competition rejection content
  */
-public class RejectCompetitionForm extends BaseBindingResultTarget {
+public class CompetitionInviteForm extends BaseBindingResultTarget {
 
-    @NotNull
+    @NotNull(message = "{validation.competitioninvitedecision.required}")
     private Boolean acceptInvitation;
 
     private RejectionReasonResource rejectReason;
@@ -59,7 +59,7 @@ public class RejectCompetitionForm extends BaseBindingResultTarget {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        RejectCompetitionForm that = (RejectCompetitionForm) o;
+        CompetitionInviteForm that = (CompetitionInviteForm) o;
 
         return new EqualsBuilder()
                 .append(acceptInvitation, that.acceptInvitation)
