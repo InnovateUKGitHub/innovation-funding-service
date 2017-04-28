@@ -34,26 +34,26 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -169,7 +169,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private FinanceChecksGenerator financeChecksGenerator;
 
     @Autowired
-    private ProjectGrantOfferService projectGrantOfferLetterService;
+    private GrantOfferLetterService projectGrantOfferLetterService;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -224,9 +224,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
         return getProject(composite.getProjectId()).
                 andOnSuccess(this::validateProjectIsInSetup).
-                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
-                            andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                                    andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
+                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
@@ -373,9 +373,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).
                 andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project ->
-                getCollaborationAgreement(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                removeCollaborationAgreementFileFromProject(project))));
+                        getCollaborationAgreement(project).andOnSuccess(fileEntry ->
+                                fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                        removeCollaborationAgreementFileFromProject(project))));
     }
 
     @Override
@@ -425,7 +425,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
         return getProject(projectId).
-        andOnSuccess(this::validateProjectIsInSetup).andOnSuccess(project ->
+                andOnSuccess(this::validateProjectIsInSetup).andOnSuccess(project ->
                 getExploitationPlan(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                 removeExploitationPlanFileFromProject(project))));
@@ -496,8 +496,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void removeCollaborationAgreementFileFromProject(Project project) {
-        validateProjectIsInSetup(project).
-        andOnSuccess(() -> project.setCollaborationAgreement(null));
+        validateProjectIsInSetup(project).andOnSuccess(() -> project.setCollaborationAgreement(null));
     }
 
     private ServiceResult<FileEntry> getExploitationPlan(Project project) {
@@ -958,42 +957,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return notificationTargets;
     }
 
-    @Override
-    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
-
-        return getProject(projectId).andOnSuccess( project -> {
-            if (project.getGrantOfferLetter() == null) {
-                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
-            }
-
-            User projectManager = getExistingProjectManager(project).get().getUser();
-            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
-
-            Map<String, Object> notificationArguments = new HashMap<>();
-            notificationArguments.put("dashboardUrl", webBaseUrl);
-
-            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER);
-
-            if (!notificationResult.isSuccess()) {
-                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
-            }
-            return sendGrantOfferLetterSuccess(project);
-        });
-    }
-
-    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-
-            if (golWorkflowHandler.grantOfferLetterSent(project, user)) {
-                return serviceSuccess();
-            } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-            }
-        });
-    }
-
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
         Project project = projectRepository.findOne(projectId);
@@ -1005,77 +968,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
-
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isSendAllowed(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
-    }
-
-    @Override
-    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isAlreadySent(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
-    }
-
-    @Override
-    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
-
-        return getProject(projectId).andOnSuccess( project -> {
-            if(golWorkflowHandler.isReadyToApprove(project)) {
-                if(ApprovalType.APPROVED == approvalType) {
-                    return approveGOL(project)
-                        .andOnSuccess(() -> {
-
-                            if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
-                                LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
-                                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                            }
-                            notifyProjectIsLive(projectId);
-                            return serviceSuccess();
-                        }
-                    );
-                }
-            }
-            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
-        });
-    }
-
-    private ServiceResult<Void> approveGOL(Project project) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-
-            if (golWorkflowHandler.grantOfferLetterApproved(project, user)) {
-                return serviceSuccess();
-            } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-            }
-        });
-    }
-
-    @Override
-    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
-    }
-
-    @Override
-    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
-    }
-
-    @Override
     public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
         return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
-            notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
+                notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
     }
 }
