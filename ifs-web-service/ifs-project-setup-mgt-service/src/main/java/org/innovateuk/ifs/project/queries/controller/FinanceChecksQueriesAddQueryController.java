@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -38,7 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -56,7 +54,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @RequestMapping(FinanceChecksQueriesAddQueryController.FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL)
 public class FinanceChecksQueriesAddQueryController {
 
-    public static final String FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query/new-query";
+    static final String FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query/new-query";
     private static final String ATTACHMENT_COOKIE = "finance_checks_queries_new_query_attachments";
     private static final String FORM_COOKIE = "finance_checks_queries_new_query_form";
     private static final String FORM_ATTR = "form";
@@ -71,6 +69,7 @@ public class FinanceChecksQueriesAddQueryController {
     private ProjectFinanceService projectFinanceService;
     @Autowired
     private FinanceCheckService financeCheckService;
+
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping
@@ -153,15 +152,15 @@ public class FinanceChecksQueriesAddQueryController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @PostMapping(params = "uploadAttachment")
     public String uploadAttachment(Model model,
-                                         @PathVariable final Long projectId,
-                                         @PathVariable final Long organisationId,
-                                         @RequestParam(value = "query_section", required = false) String querySection,
-                                         @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddQueryForm form,
-                                         @SuppressWarnings("unused") BindingResult bindingResult,
-                                         ValidationHandler validationHandler,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                         HttpServletRequest request,
-                                         HttpServletResponse response) {
+                                   @PathVariable final Long projectId,
+                                   @PathVariable final Long organisationId,
+                                   @RequestParam(value = "query_section", required = false) String querySection,
+                                   @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddQueryForm form,
+                                   @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
+                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         Supplier<String> view = () -> {
             FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
@@ -322,40 +321,20 @@ public class FinanceChecksQueriesAddQueryController {
         cookieUtil.saveToCookie(response, getCookieName(projectId, organisationId), jsonState);
     }
 
-    private void saveFormToCookie(HttpServletResponse response, Long projectId, Long organisationId, FinanceChecksQueriesAddQueryForm form) { //Nuno
+    private void saveFormToCookie(HttpServletResponse response, Long projectId, Long organisationId, FinanceChecksQueriesAddQueryForm form) {
         String formAsJson = JsonUtil.getSerializedObject(form);
         cookieUtil.saveToCookie(response, getCookieNameForm(projectId, organisationId), formAsJson);
     }
 
     private List<Long> loadAttachmentsFromCookie(HttpServletRequest request, Long projectId, Long organisationId) {
-
-        List<Long> attachments = new LinkedList<>();
-        String json = cookieUtil.getCookieValue(request, getCookieName(projectId, organisationId));
-
-        if (json != null && !"".equals(json)) {
-            TypeReference<List<Long>> listType = new TypeReference<List<Long>>() {
-            };
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                attachments = mapper.readValue(json, listType);
-                return attachments;
-            } catch (IOException e) {
-                //ignored
-            }
-        }
-        return attachments;
+        return cookieUtil.getCookieAs(request, getCookieName(projectId, organisationId), new TypeReference<List<Long>>() {
+        });
     }
 
     private Optional<FinanceChecksQueriesAddQueryForm> loadForm(HttpServletRequest request, Long projectId, Long organisationId) {
-        String json = cookieUtil.getCookieValue(request, getCookieNameForm(projectId, organisationId));
-
-        if (json != null && !"".equals(json)) {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                return Optional.of(mapper.readValue(json, FinanceChecksQueriesAddQueryForm.class));
-            } catch (IOException e) { /*ignored*/ }
-        }
-        return Optional.empty();
+        return cookieUtil.getCookieAsList(request, getCookieNameForm(projectId, organisationId),
+                new TypeReference<FinanceChecksQueriesAddQueryForm>() {
+                });
     }
 
     private String rootView(final Long projectId, final Long organisationId) {

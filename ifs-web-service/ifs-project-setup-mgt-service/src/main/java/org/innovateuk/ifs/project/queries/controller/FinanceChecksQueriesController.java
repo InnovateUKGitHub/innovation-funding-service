@@ -79,7 +79,7 @@ public class FinanceChecksQueriesController {
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    public static final String FINANCE_CHECKS_QUERIES_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query";
+    static final String FINANCE_CHECKS_QUERIES_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query";
 
     private static final String ATTACHMENT_COOKIE = "finance_checks_queries_new_response_attachments";
     private static final String UNKNOWN_FIELD = "Unknown";
@@ -182,8 +182,7 @@ public class FinanceChecksQueriesController {
                         List<AttachmentResource> attachmentResources = new ArrayList<>();
                         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
                         attachments.forEach(attachment -> financeCheckService.getAttachment(attachment)
-                                    .ifSuccessful(foundAttachment -> attachmentResources.add(foundAttachment))
-                        );
+                                    .ifSuccessful(attachmentResources::add));
                         PostResource post = new PostResource(null, loggedInUser, form.getResponse(), attachmentResources, ZonedDateTime.now());
 
                         ValidationMessages errors = new ValidationMessages();

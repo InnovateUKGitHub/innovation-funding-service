@@ -68,7 +68,7 @@ public class FinanceChecksNotesAddNoteController {
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    public static final String FINANCE_CHECKS_NOTES_NEW_NOTE_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/note/new-note";
+    static final String FINANCE_CHECKS_NOTES_NEW_NOTE_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/note/new-note";
 
     private static final String ATTACHMENT_COOKIE = "finance_checks_notes_new_note_attachments";
     private static final String FORM_ATTR = "form";
