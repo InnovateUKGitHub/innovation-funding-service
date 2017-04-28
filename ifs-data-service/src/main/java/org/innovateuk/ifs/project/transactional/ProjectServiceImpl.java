@@ -608,52 +608,31 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
         boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccessObject();
+        boolean isLead = partnerOrganisation.equals(leadOrganisation);
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
-        ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
-        ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
-        ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
-        ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(project, spendProfileStatus, spendProfile);
-        ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(leadSpendProfileStatus, otherDocumentsStatus, project, partnerOrganisation.equals(leadOrganisation));
+        ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
+        ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
+        ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
+        ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
+        ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
 
-        ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
-
-        ProjectPartnerStatusResource projectPartnerStatusResource;
-
-        if (partnerOrganisation.equals(leadOrganisation)) {
-            projectPartnerStatusResource = new ProjectLeadStatusResource(
-                    partnerOrganisation.getId(),
-                    partnerOrganisation.getName(),
-                    organisationType,
-                    leadProjectDetailsSubmitted,
-                    monitoringOfficerStatus,
-                    bankDetailsStatus,
-                    financeChecksStatus,
-                    leadSpendProfileStatus,
-                    otherDocumentsStatus,
-                    grantOfferLetterStatus,
-                    financeContactStatus,
-                    golWorkflowHandler.isAlreadySent(project));
-        } else {
-            projectPartnerStatusResource = new ProjectPartnerStatusResource(
-                    partnerOrganisation.getId(),
-                    partnerOrganisation.getName(),
-                    organisationType,
-                    partnerProjectDetailsSubmittedStatus,
-                    NOT_REQUIRED,
-                    bankDetailsStatus,
-                    financeChecksStatus,
-                    spendProfileStatus,
-                    NOT_REQUIRED,
-                    grantOfferLetterStatus,
-                    financeContactStatus,
-                    golWorkflowHandler.isAlreadySent(project));
-        }
-
-        return projectPartnerStatusResource;
+        return new ProjectPartnerStatusResource(
+                partnerOrganisation.getId(),
+                partnerOrganisation.getName(),
+                organisationType,
+                projectDetailsStatus,
+                monitoringOfficerStatus,
+                bankDetailsStatus,
+                financeChecksStatus,
+                spendProfileStatus,
+                otherDocumentsStatus,
+                grantOfferLetterStatus,
+                financeContactStatus,
+                golWorkflowHandler.isAlreadySent(project),
+                isLead);
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {

@@ -2,12 +2,13 @@ package org.innovateuk.ifs.project.grandofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterServiceImpl;
 import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
@@ -24,11 +25,11 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GrantOfferLetterServiceImplTest {
 
-    @Mock
-    GrantOfferLetterRestService grantOfferLetterRestService;
+    @InjectMocks
+    private GrantOfferLetterServiceImpl grantOfferLetterService;
 
     @Mock
-    GrantOfferLetterService grantOfferLetterService;
+    private GrantOfferLetterRestService grantOfferLetterRestService;
 
     @Test
     public void testGetGrantOfferLetterFile() {
