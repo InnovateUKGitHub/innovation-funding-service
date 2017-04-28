@@ -23,10 +23,10 @@
             </ul>
         </div>
 
-        <div class="page-title">
-            <th:block th:insert="fragments/elements :: competition-title (competition=${model.competition})" />
-            <h1 class="heading-xlarge">Public content</h1>
-        </div>
+        <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id} : $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Public content',subTitle=${competitionTitle},size='heading-xlarge'" />
+        </th:block>
+
         <div class="message-alert">
             This information will be publicly viewable by prospective applicants.
         </div>

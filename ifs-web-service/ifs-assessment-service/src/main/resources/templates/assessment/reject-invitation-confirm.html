@@ -13,10 +13,9 @@
             <th:block th:if="${model.assessmentState.name() == 'PENDING'}" th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assigned application',linkClass='link-back',linkUrl=@{/{assessmentId}/assignment(assessmentId=${model.assessmentId})})" />
             <th:block th:unless="${model.assessmentState.name() == 'PENDING'}" th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{assessmentId}(assessmentId=${model.assessmentId})})" />
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge">Confirm rejection</h1>
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm rejection',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK.</p>
             <th:block th:insert="fragments/assessment :: assessment-reject-application-form (assessmentId=${model.assessmentId})" />

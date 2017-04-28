@@ -10,14 +10,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Integration test for testing the rest services of the milestone controller
@@ -33,7 +34,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Override
     @Autowired
-    protected void setControllerUnderTest(MilestoneController controller)  {
+    protected void setControllerUnderTest(MilestoneController controller) {
         this.controller = controller;
     }
 
@@ -78,7 +79,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testGetDateByTypeAndCompetitionId() throws Exception {
+    public void testGetMilestoneByTypeAndCompetitionId() throws Exception {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccessObject();
@@ -87,7 +88,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testGetNullDateByTypeAndCompetitionId() throws Exception {
+    public void testGetMilestoneByTypeAndCompetitionIdWithNullDate() throws Exception {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccessObject();
@@ -95,8 +96,16 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
+    public void testGetMilestoneByTypeAndCompetitionIdReturns404WhenNotPresent() throws Exception {
+        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, COMPETITION_ID_INVALID);
+        assertTrue(milestoneResult.isFailure());
+        assertEquals(milestoneResult.getErrors().size(), 1);
+        assertEquals(milestoneResult.getErrors().get(0).getStatusCode(), NOT_FOUND);
+    }
+
+    @Test
     public void testCreateSingleMilestone() throws Exception {
-        Competition newCompetition  = competitionRepository.save(newCompetition().withId((Long)null).build());
+        Competition newCompetition = competitionRepository.save(newCompetition().withId((Long) null).build());
 
         List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
         assertNotNull(milestones);
@@ -111,7 +120,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Test
     public void testCreateMilestones() throws Exception {
-        Competition newCompetition  = competitionRepository.save(newCompetition().withId((Long)null).build());
+        Competition newCompetition = competitionRepository.save(newCompetition().withId((Long) null).build());
 
         List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
 
@@ -136,27 +145,27 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         //Open date
         MilestoneResource milestone = milestones.get(0);
-        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0, 0, 0, ZoneId.systemDefault()));
 
         //Submission date
         milestone = milestones.get(1);
-        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0, 0, 0, ZoneId.systemDefault()));
 
         //Funders panel date
         milestone = milestones.get(2);
-        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0, 0, 0, ZoneId.systemDefault()));
 
         //Assesors accepts date
         milestone = milestones.get(3);
-        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0, 0, 0, ZoneId.systemDefault()));
 
         //Assessor deadline date
         milestone = milestones.get(4);
-        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0, 0, 0, ZoneId.systemDefault()));
 
         //Notifications date
         milestone = milestones.get(5);
-        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0, 0, 0, ZoneId.systemDefault()));
 
         RestResult<Void> milestoneResult = controller.saveMilestones(milestones);
         assertTrue(milestoneResult.isSuccess());
@@ -198,10 +207,10 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     private MilestoneResource createNewMilestone(MilestoneType name, Long competitionId) {
         RestResult<MilestoneResource> milestoneResult = controller.create(name, competitionId);
         assertTrue(milestoneResult.isSuccess());
-        return  milestoneResult.getSuccessObject();
+        return milestoneResult.getSuccessObject();
     }
 
-    private List<MilestoneResource> createNewMilestones(Long competitionId){
+    private List<MilestoneResource> createNewMilestones(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
         Stream.of(MilestoneType.values()).forEach(name -> {
             MilestoneResource newMilestone = createNewMilestone(name, competitionId);
@@ -211,7 +220,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         return newMilestones;
     }
 
-    private List<MilestoneResource> getMilestonesForCompetition(Long competitionId){
+    private List<MilestoneResource> getMilestonesForCompetition(Long competitionId) {
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllMilestonesByCompetitionId(competitionId);
         assertTrue(milestoneResult.isSuccess());
         return milestoneResult.getSuccessObject();
