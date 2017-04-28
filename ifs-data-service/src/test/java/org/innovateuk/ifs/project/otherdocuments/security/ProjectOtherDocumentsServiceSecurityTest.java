@@ -9,7 +9,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -335,26 +334,7 @@ public class ProjectOtherDocumentsServiceSecurityTest extends BaseServiceSecurit
         public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
             return null;
         }
-        @Override
-        public ServiceResult<Void> sendGrantOfferLetter(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) { return null; }
-
-        @Override
-        public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) { return null; }
-
-        @Override
-        public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
-            return null;
-        }
-
+        
         @Override
         public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
             return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());

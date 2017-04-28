@@ -83,7 +83,7 @@ import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
@@ -92,7 +92,7 @@ import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficer
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
@@ -435,7 +435,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProjectMonitoringOfficerService projectMonitoringOfficerServiceMock;
 
     @Mock
-    protected ProjectGrantOfferService projectGrantOfferServiceMock;
+    protected GrantOfferLetterService grantOfferLetterServiceMock;
 
     @Mock
     protected ProjectStatusService projectStatusServiceMock;
