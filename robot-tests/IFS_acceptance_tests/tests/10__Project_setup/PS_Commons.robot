@@ -166,7 +166,7 @@ ${shortCode_two}  000004
 *** Keywords ***
 partner submits his bank details
     [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
-    log in as a different user                       ${email}    ${short_password}
+    log in as a different user                       ${email}  ${short_password}
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
     the user enters text to a text field             id=bank-acc-number  ${account_number}
     the user enters text to a text field             id=bank-sort-code  ${sort_code}
@@ -174,5 +174,3 @@ partner submits his bank details
     the user should see the element                  jQuery=#registeredAddress h3:contains("Confirm billing address")
     wait until keyword succeeds without screenshots  30  200ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
-    wait until element is visible                    jQuery=dt:contains("Account number") + dd:contains("*****")
-    # Added this readonly check to verify that the bank details are indeed marked as done

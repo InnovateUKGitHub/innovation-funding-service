@@ -174,7 +174,7 @@ Bank details for Academic
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
-    When the user submits the bank account details along with the organisation address     00000123    000004
+    When partner submits his bank details  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     Then wait until element is visible  jQuery=.error-summary-list:contains("Bank details cannot be validated.")
     When the user enters text to a text field      name=accountNumber  ${account_one}
     And the user enters text to a text field       name=sortCode  ${shortCode_one}
@@ -224,7 +224,7 @@ Bank details for non-lead partner
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
-    When the user submits the bank account details along with the organisation address     00000123    000004
+    When partner submits his bank details  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     Then the user should see the element  jQuery=.error-summary-list:contains("Bank details cannot be validated.")
     When the user enters text to a text field      name=accountNumber  ${account_one}
     Then the user enters text to a text field      name=sortCode  ${shortCode_one}
