@@ -76,7 +76,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         addMappedSectionsDetails(openSectionViewModel, applicantSection);
 
-        addCompletedDetails(openSectionViewModel, sectionApplicationViewModel, applicantSection);
+        addCompletedDetails(openSectionViewModel, applicantSection);
 
         openSectionViewModel.setSectionAssignableViewModel(addAssignableDetails(applicantSection));
         sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(openSectionViewModel, applicantSection));
@@ -118,7 +118,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
                 .collect(Collectors.toList()));
     }
 
-    private void addCompletedDetails(OpenSectionViewModel openSectionViewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicantSectionResource applicantSection) {
+    private void addCompletedDetails(OpenSectionViewModel openSectionViewModel, ApplicantSectionResource applicantSection) {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(applicantSection.getApplication().getId());
         Set<Long> sectionsMarkedAsComplete = convertToCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 

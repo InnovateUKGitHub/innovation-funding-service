@@ -45,7 +45,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
         addQuestionsDetails(openFinanceSectionViewModel, applicantSection, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, form, applicantSection);
         addOrganisationAndUserFinanceDetails(openFinanceSectionViewModel, form, applicantSection);
-        addFundingSection(openFinanceSectionViewModel, applicantSection);
+            addFundingSection(openFinanceSectionViewModel, applicantSection);
 
         sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(openFinanceSectionViewModel, applicantSection)
                 || SectionType.FINANCE.equals(applicantSection.getSection().getType()));

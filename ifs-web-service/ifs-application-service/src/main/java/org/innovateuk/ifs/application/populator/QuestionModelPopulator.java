@@ -161,7 +161,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
         Map<Long, QuestionStatusResource> questionAssignees;
 
-        QuestionStatusResource questionStatusResource = question.getQuestionStatuses().stream()
+        QuestionStatusResource questionStatusResource = question.allAssignedStatuses()
                 .filter(status -> status.getAssignee().getOrganisation().getId().equals(question.getCurrentApplicant().getOrganisation().getId()))
                 .findAny()
                 .map(ApplicantQuestionStatusResource::getStatus)

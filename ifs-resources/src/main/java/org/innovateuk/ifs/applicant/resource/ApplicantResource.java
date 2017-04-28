@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.applicant.resource;
 
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -50,5 +51,7 @@ public class ApplicantResource {
     public boolean isLead() {
         return getProcessRole().getRoleName().equals("leadapplicant");
     }
+
+    public boolean isResearch() { return getOrganisation().getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId()); }
 
 }
