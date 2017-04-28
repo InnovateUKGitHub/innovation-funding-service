@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
-import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -197,9 +196,10 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
                                                    Supplier<Boolean> ruleCheck) {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withOrganisationId(456L).
                         withOrganisationType(BUSINESS).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -223,9 +223,10 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
                                                       Supplier<Boolean> ruleCheck) {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withOrganisationId(456L).
                         withOrganisationType(BUSINESS).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withOrganisationId(789L).
