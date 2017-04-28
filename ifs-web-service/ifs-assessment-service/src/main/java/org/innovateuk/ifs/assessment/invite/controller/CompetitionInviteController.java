@@ -58,19 +58,22 @@ public class CompetitionInviteController {
         return "assessor-competition-invite";
     }
 
-    @PostMapping("/invite/competition/{inviteHash}")
-    public String handleDecision(@PathVariable("inviteHash") String inviteHash,
-                                 @Valid @ModelAttribute("form") RejectCompetitionForm form,
+    @PostMapping("/invite/competition/{inviteHash}/decision")
+    public String handleDecision(Model model,
+                                 @PathVariable("inviteHash") String inviteHash,
                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                 @SuppressWarnings("unused") BindingResult bindingResult,
-                                 ValidationHandler validationHandler,
-                                 Model model) {
+                                 @Valid @ModelAttribute("form") RejectCompetitionForm form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler) {
 
-        if (form.getAcceptInvitation()) {
-            return doAcceptInvite(inviteHash, loggedInUser, model);
-        } else {
-            return doRejectInvite(model, inviteHash, form, bindingResult, validationHandler);
-        }
+        Supplier<String> failureView = () -> openInvite(inviteHash, form, loggedInUser, model);
+        return validationHandler.failNowOrSucceedWith(failureView,  () -> {
+            if (form.getAcceptInvitation()) {
+                return doAcceptInvite(inviteHash, loggedInUser, model);
+            } else {
+                return doRejectInvite(model, inviteHash, form, bindingResult, validationHandler);
+            }
+        });
     }
 
 //    @PostMapping("/invite/competition/{inviteHash}/accept")

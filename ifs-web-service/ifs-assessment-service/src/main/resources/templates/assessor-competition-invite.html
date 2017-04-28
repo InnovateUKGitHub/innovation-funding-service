@@ -49,38 +49,38 @@
                 </ul>
             </section>
 
-            <form th:action="@{/invite/competition/{inviteHash}(inviteHash=${model.competitionInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
+            <form th:action="@{/invite/competition/{inviteHash}/decision(inviteHash=${model.competitionInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
                 <div class="form-group">
                     <fieldset>
                         <legend class="heading-medium">
                             Select your ability to assess the competition
-                            <!-- <th:block th:if="${#fields.hasErrors('competitionChoice')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('assessmentChoice')}" th:text="${err}" />
-                            </th:block> -->
+                            <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                            </th:block>
                         </legend>
 
                         <div class="block-form">
-                            <label class="block-label selection-button-radio" for="updateMe">
-                                <input id="updateMe" name="update" value="true" type="radio" required="required"
+                            <label class="block-label selection-button-radio" for="acceptCompetition">
+                                <input id="acceptCompetition" name="update" value="true" type="radio" required="required"
                                        th:field="*{acceptInvitation}"/>
                                 Yes, I am able to assess applications to this competition
                                 <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
                             </label>
                         </div>
 
-                        <div class="block-form" for="updateMe2">
-                            <label class="block-label selection-button-radio" for="updateMe2" data-target="reject-competition">
-                                <input id="updateMe2" name="update" value="false" type="radio" required="required"
+                        <div class="block-form" for="rejectCompetition">
+                            <label class="block-label selection-button-radio" for="rejectCompetition" data-target="reject-competition">
+                                <input id="rejectCompetition" name="update" value="false" type="radio" required="required"
                                        th:field="*{acceptInvitation}"/>
                                 No, I am not able to assess applications to this competition
                             </label>
                         </div>
                         <div class="panel js-hidden" id="reject-competition">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
-                                <label class="form-label" th:for="${#ids.next('rejectReason')}">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
+                                <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
                                     Please select a reason for rejecting the competition
-                                    <th:block th:if="${#fields.hasErrors('rejectReason')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
+                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
                                 </label>
                                 <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
