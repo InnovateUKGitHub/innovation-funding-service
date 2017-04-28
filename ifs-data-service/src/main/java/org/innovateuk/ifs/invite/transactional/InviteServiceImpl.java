@@ -11,6 +11,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -109,6 +111,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     LocalValidatorFactoryBean validator;
 
@@ -309,11 +314,21 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
                     if (inviteOrganisation.getInvites().size() < 2) {
                         inviteOrganisationRepository.delete(inviteOrganisation);
+                        deleteOrganisationsApplicationData(inviteOrganisation.getOrganisation(), applicationInvite.getTarget());
                     } else {
                         inviteOrganisation.getInvites().remove(applicationInvite);
                         inviteOrganisationRepository.save(inviteOrganisation);
                     }
                 });
+    }
+
+    private void deleteOrganisationsApplicationData(Organisation organisation, Application application) {
+        if (organisation != null) {
+            ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            if (finance != null) {
+                applicationFinanceRepository.delete(finance);
+            }
+        }
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
