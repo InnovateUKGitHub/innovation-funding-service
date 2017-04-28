@@ -14,8 +14,7 @@
                  th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}"
                  th:remove="tag" />
 
-            <h1 class="heading-xlarge">Travel and subsistence rates</h1>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Travel and subsistence rates',size='heading-xlarge'" />
             <div>
                 <h2 class="heading-medium">Travel and subsistence rates for non-civil service contracted personnel</h2>
 

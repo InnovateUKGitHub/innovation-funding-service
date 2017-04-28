@@ -40,7 +40,7 @@ public class FreemarkerGOLTemplateRendererTest extends BaseServiceUnitTest<FileT
         assertTrue(renderResult.isSuccess());
         assertEquals("", renderResult.getSuccessObject());
 
-        Map<String, Object> expectedTemplateArguments = asMap("arg1", "1&amp;", "arg2", 2L, "arg3", "3&quot;", "arg4", "4&lt;", "arg5", "5&gt;", "arg6", "6&apos;");
+        Map<String, Object> expectedTemplateArguments = asMap("arg1", "1&", "arg2", 2L, "arg3", "3\"", "arg4", "4<", "arg5", "5>", "arg6", "6'");
         verify(freemarkerTemplateMock).process(eq(expectedTemplateArguments), isA(Writer.class));
     }
 

@@ -19,11 +19,7 @@
         </ul>
     </div>
 
-    <div class="page-title">
-        <p class="subtitle" th:text="${competitionName}"></p>
-        <h1 class="heading-xlarge" th:if="${editable}">Edit 'Application details'</h1>
-        <h1 class="heading-xlarge" th:unless="${editable}"> Application details</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${editable} ? 'Edit \'Application details\'' : 'Application details',subTitle=${competitionName},size='heading-xlarge'" />
     <p>These are the default questions included in the application details section.</p>
 
     <form th:if="${editable}"

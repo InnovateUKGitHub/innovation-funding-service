@@ -10,16 +10,13 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='heading-xlarge'" />
 
             <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
                 <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
                 </ul>
-            </div>
-
-            <div class="page-title">
-                <h1 class="heading-xlarge" th:text="|Invitation to assess '${model.competitionName}'|">Invitation to assess 'My Competition'</h1>
             </div>
 
             <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>

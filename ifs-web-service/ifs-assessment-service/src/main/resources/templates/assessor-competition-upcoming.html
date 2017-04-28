@@ -12,10 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
-            <div class="page-title">
-                <h1 class="heading-xlarge" th:text="|Upcoming competition '${model.competitionName}'|">Upcoming competition 'My Competition'</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Upcoming competition '${model.competitionName}'|,size='heading-xlarge'" />
             <p th:text="|You have agreed to be an assessor for the upcoming competition '${model.competitionName}'|">You have agreed to be an assessor for the upcoming competition 'My Competition'</p>
 
             <section class="boxed" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'dd MMMM yyyy' : 'dd MMMM'">

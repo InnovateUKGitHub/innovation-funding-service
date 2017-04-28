@@ -4,7 +4,7 @@
 <div th:fragment="comp-dashboard-header(searchQuery)">
     <div class="grid-row">
         <div class="column-half">
-            <h1 class="heading-large">All competitions</h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='All competitions',size='heading-large'" />
         </div>
         <div class="column-half alignright">
             <div class="form-search">
