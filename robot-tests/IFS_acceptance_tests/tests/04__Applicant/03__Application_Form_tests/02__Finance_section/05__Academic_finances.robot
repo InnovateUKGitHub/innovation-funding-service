@@ -105,7 +105,7 @@ Lead applicant can't view the file on the finances page
 Lead applicant can view the file on the finances overview page
     [Documentation]    INFUND-917
     [Tags]    Pending
-    # TODO EC: Still waiting on confirmation from BA about expected behaviour here
+    # TODO Pending due to INFUND-9372
     When the user navigates to the finance overview of the academic
     And the user should see the text in the page    ${valid_pdf}
     When the user opens the link in new window  ${valid_pdf}
@@ -132,9 +132,8 @@ Mark all as complete
     Then textfield value should be    id=tsb-ref    123123
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the user redirects to the page    This is a breakdown of your project costs    Your finances
-#    TODO: Pending due to INFUND-9340
-#    And the user navigates to the finance overview of the academic
-#    And the user should see the element    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
+    And the user navigates to the finance overview of the academic
+    And the user should see the element    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
 
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
