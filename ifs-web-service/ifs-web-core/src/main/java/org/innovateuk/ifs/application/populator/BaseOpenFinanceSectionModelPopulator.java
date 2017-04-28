@@ -81,9 +81,7 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
         addUserDetails(viewModel, applicantSection);
         addMappedSectionsDetails(viewModel, applicantSection);
 
-        if (!SectionType.FINANCE.equals(applicantSection.getSection().getType())) {
-            viewModel.setSectionAssignableViewModel(addAssignableDetails(applicantSection));
-        }
+        viewModel.setSectionAssignableViewModel(addAssignableDetails(applicantSection));
         addCompletedDetails(sectionApplicationViewModel, applicantSection);
 
         sectionApplicationViewModel.setUserOrganisation(applicantSection.getCurrentApplicant().getOrganisation());

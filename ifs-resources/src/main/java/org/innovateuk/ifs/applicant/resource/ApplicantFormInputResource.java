@@ -2,6 +2,8 @@ package org.innovateuk.ifs.applicant.resource;
 
 import org.innovateuk.ifs.form.resource.FormInputResource;
 
+import java.util.List;
+
 /**
  * Created by luke.harper on 25/04/2017.
  */
@@ -9,7 +11,7 @@ public class ApplicantFormInputResource {
 
     private FormInputResource formInput;
 
-    private ApplicantFormInputResponseResource response;
+    private List<ApplicantFormInputResponseResource> applicantResponses;
 
     public FormInputResource getFormInput() {
         return formInput;
@@ -19,11 +21,11 @@ public class ApplicantFormInputResource {
         this.formInput = formInput;
     }
 
-    public ApplicantFormInputResponseResource getResponse() {
-        return response;
+    public List<ApplicantFormInputResponseResource> getApplicantResponses() {
+        return applicantResponses;
     }
 
-    public void setResponse(ApplicantFormInputResponseResource response) {
-        this.response = response;
+    public void setApplicantResponses(List<ApplicantFormInputResponseResource> applicantResponses) {
+        this.applicantResponses = applicantResponses;
     }
 }

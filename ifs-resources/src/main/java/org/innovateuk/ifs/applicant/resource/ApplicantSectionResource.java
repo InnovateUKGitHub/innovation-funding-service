@@ -76,9 +76,7 @@ public class ApplicantSectionResource extends AbstractApplicantResource {
     }
 
     public Stream<ApplicantFormInputResponseResource> allResponses() {
-        return allQuestions().map(ApplicantQuestionResource::getFormInputs)
-                .flatMap(List::stream)
-                .map(ApplicantFormInputResource::getResponse);
+        return allQuestions().flatMap(ApplicantQuestionResource::allResponses);
     }
 
     public Stream<ApplicantSectionResource> allSections() {

@@ -131,8 +131,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     }
 
     private void addQuestionsDetails(ApplicantQuestionResource questionResource, QuestionViewModel questionViewModel, ApplicationForm form) {
-        List<FormInputResponseResource> responses = questionResource.getFormInputs().stream()
-                .map(ApplicantFormInputResource::getResponse)
+        List<FormInputResponseResource> responses = questionResource.allResponses()
                 .map(ApplicantFormInputResponseResource::getResponse)
                 .collect(Collectors.toList());
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);

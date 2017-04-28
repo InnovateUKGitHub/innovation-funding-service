@@ -3,6 +3,7 @@ package org.innovateuk.ifs.applicant.resource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by luke.harper on 25/04/2017.
@@ -37,5 +38,11 @@ public class ApplicantQuestionResource extends AbstractApplicantResource {
 
     public void setQuestionStatuses(List<ApplicantQuestionStatusResource> questionStatuses) {
         this.questionStatuses = questionStatuses;
+    }
+
+    public Stream<ApplicantFormInputResponseResource> allResponses() {
+        return getFormInputs().stream()
+                .map(ApplicantFormInputResource::getApplicantResponses)
+                .flatMap(List::stream);
     }
 }

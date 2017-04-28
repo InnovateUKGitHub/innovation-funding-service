@@ -59,7 +59,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         ApplicantQuestionResource applicant = new ApplicantQuestionResource();
         populateAbstractApplicantResource(applicant, applicationId, userId, results);
 
-        populateQuestion(results, applicant, questionId, applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
+        populateQuestion(results, applicant, questionId, applicationId, applicant.getApplicants());
 
         return results.toSingle().andOnSuccessReturn(() -> applicant);
     }
@@ -86,10 +86,10 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     }
 
 
-    private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, Long organisationId, List<ApplicantResource> applicants) {
+    private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
         results.trackResult(questionService.getQuestionById(questionId), applicant::setQuestion);
         results.trackResult(questionService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId), questionStatusResources -> applicant.setQuestionStatuses(mapToApplicantStatuses(questionStatusResources, applicants)));
-        results.trackResult(mapFormInputs(results, questionId, applicationId, organisationId), applicant::setFormInputs);
+        results.trackResult(mapFormInputs(results, questionId, applicationId, applicants), applicant::setFormInputs);
     }
 
     private List<ApplicantQuestionStatusResource> mapToApplicantStatuses(List<QuestionStatusResource> questionStatusResources, List<ApplicantResource> applicants) {
@@ -111,7 +111,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
         applicant.getSection().getQuestions().forEach(questionId -> {
             ApplicantQuestionResource applicantQuestionResource = new ApplicantQuestionResource();
-            populateQuestion(results, applicantQuestionResource, questionId, applicationId, organisationId, applicants);
+            populateQuestion(results, applicantQuestionResource, questionId, applicationId, applicants);
             applicant.addQuestion(applicantQuestionResource);
         });
     }
@@ -133,27 +133,31 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
             }));
     }
 
-    private ServiceResult<List<ApplicantFormInputResource>> mapFormInputs(ServiceResults results, Long questionId, Long applicationId, Long organisationId) {
+    private ServiceResult<List<ApplicantFormInputResource>> mapFormInputs(ServiceResults results, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
         List<ApplicantFormInputResource> applicantFormInputResources = new ArrayList<>();
         results.trackResult(formInputService.findByQuestionIdAndScope(questionId, FormInputScope.APPLICATION), formInputResources -> formInputResources.forEach(formInputResource -> {
             ApplicantFormInputResource applicantFormInputResource = new ApplicantFormInputResource();
             applicantFormInputResources.add(applicantFormInputResource);
             applicantFormInputResource.setFormInput(formInputResource);
-            results.trackResult(mapFormInputResponse(results, formInputResource, applicationId, organisationId), applicantFormInputResource::setResponse);
+            results.trackResult(mapFormInputResponse(results, formInputResource, applicationId, applicants), applicantFormInputResource::setApplicantResponses);
         }));
         return serviceSuccess(applicantFormInputResources);
     }
 
-    private ServiceResult<ApplicantFormInputResponseResource> mapFormInputResponse(ServiceResults results, FormInputResource formInputResource, Long applicationId, Long organisationId) {
-        ApplicantFormInputResponseResource applicantFormInputResponseResource = new ApplicantFormInputResponseResource();
-        //TODO get(0)
+    private ServiceResult<List<ApplicantFormInputResponseResource>> mapFormInputResponse(ServiceResults results, FormInputResource formInputResource, Long applicationId, List<ApplicantResource> applicants) {
+        List<ApplicantFormInputResponseResource> responses = new ArrayList<>();
         results.trackResult(formInputService.findResponsesByFormInputIdAndApplicationId(formInputResource.getId(), applicationId),
                 formInputResponseResources -> {
-                    if (!formInputResponseResources.isEmpty()) {
-                        applicantFormInputResponseResource.setResponse(formInputResponseResources.get(0));
-                    }
+                    formInputResponseResources.forEach(formInputResponseResource -> {
+                        ApplicantFormInputResponseResource applicantResponse = new ApplicantFormInputResponseResource();
+                        applicantResponse.setResponse(formInputResponseResource);
+                        applicantResponse.setApplicant(applicants.stream()
+                                .filter(applicant -> formInputResponseResource.getUpdatedBy().equals(applicant.getProcessRole().getId()))
+                                .findAny().orElse(null));
+                        responses.add(applicantResponse);
+                    });
                 });
-        return serviceSuccess(applicantFormInputResponseResource);
+        return serviceSuccess(responses);
     }
 
     private ServiceResult<ApplicantResource> toApplicant(ServiceResults results, ProcessRoleResource role) {
