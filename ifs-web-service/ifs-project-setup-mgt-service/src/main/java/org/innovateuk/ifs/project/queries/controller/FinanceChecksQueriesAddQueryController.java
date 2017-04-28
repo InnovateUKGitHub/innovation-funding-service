@@ -74,16 +74,14 @@ public class FinanceChecksQueriesAddQueryController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping
-    public String viewNewQuery(@PathVariable final Long projectId,
-                               @PathVariable final Long organisationId,
-                               @RequestParam(value = "query_section", required = false) final String querySection,
-                               Model model,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
-
+    public String viewNew(@PathVariable final Long projectId,
+                          @PathVariable final Long organisationId,
+                          @RequestParam(value = "query_section", required = false) final String querySection,
+                          Model model,
+                          @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                          HttpServletRequest request,
+                          HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-
         FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddQueryForm()));
@@ -140,8 +138,7 @@ public class FinanceChecksQueriesAddQueryController {
             validationHandler.addAnyErrors(result);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
-                        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
-                        cookieUtil.removeCookie(response, getCookieNameForm(projectId, organisationId));
+                        deleteCookies(response, projectId, organisationId);
                         return redirectTo(queriesListView(projectId, organisationId));
                     });
         });
@@ -160,26 +157,20 @@ public class FinanceChecksQueriesAddQueryController {
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-        Supplier<String> view = () -> {
-            FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
-            model.addAttribute("model", viewModel);
-            model.addAttribute("form", form);
-            return redirectTo(rootView(projectId, organisationId, querySection));
-        };
+        Supplier<String> view = () -> redirectTo(rootView(projectId, organisationId, querySection));
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
 
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-            if (result.isSuccess()) {
-                attachments.add(result.getSuccessObject().id);
+            result.ifSuccessful(uploadedAttachment -> {
+                attachments.add(uploadedAttachment.id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId);
                 saveFormToCookie(response, projectId, organisationId, form);
-            }
+            });
 
-            FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
-            model.addAttribute("model", viewModel);
+            model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, querySection, attachments));
             return result;
         });
     }
@@ -243,21 +234,16 @@ public class FinanceChecksQueriesAddQueryController {
                                 HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         attachments.forEach((id -> financeCheckService.deleteFile(id)));
-
-        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
-        cookieUtil.removeCookie(response, getCookieNameForm(projectId, organisationId));
+        deleteCookies(response, projectId, organisationId);
 
         return redirectTo(queriesListView(projectId, organisationId));
     }
 
     private FinanceChecksQueriesAddQueryViewModel populateQueriesViewModel(Long projectId, Long organisationId, String querySection, List<Long> attachmentFileIds) {
-
         ProjectResource project = projectService.getById(projectId);
-
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
-
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
         Map<Long, String> attachmentLinks = new HashMap<>();
@@ -303,7 +289,7 @@ public class FinanceChecksQueriesAddQueryController {
         return ATTACHMENT_COOKIE + "_" + projectId + "_" + organisationId;
     }
 
-    private String getCookieNameForm(Long projectId, Long organisationId) {
+    private String getFormCookieName(Long projectId, Long organisationId) {
         return FORM_COOKIE + "_" + projectId + "_" + organisationId;
     }
 
@@ -312,17 +298,17 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     private void saveFormToCookie(HttpServletResponse response, Long projectId, Long organisationId, FinanceChecksQueriesAddQueryForm form) {
-        cookieUtil.saveToCookie(response, getCookieNameForm(projectId, organisationId), JsonUtil.getSerializedObject(form));
+        cookieUtil.saveToCookie(response, getFormCookieName(projectId, organisationId), JsonUtil.getSerializedObject(form));
     }
 
     private List<Long> loadAttachmentsFromCookie(HttpServletRequest request, Long projectId, Long organisationId) {
-        return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId),
-                new TypeReference<List<Long>>() {});
+        return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId), new TypeReference<List<Long>>() {});
     }
 
     private Optional<FinanceChecksQueriesAddQueryForm> loadForm(HttpServletRequest request, Long projectId, Long organisationId) {
-        return cookieUtil.getCookieAs(request, getCookieNameForm(projectId, organisationId),
-                new TypeReference<FinanceChecksQueriesAddQueryForm>() {});
+        return cookieUtil.getCookieAs(request, getFormCookieName(projectId, organisationId),
+                new TypeReference<FinanceChecksQueriesAddQueryForm>() {
+                });
     }
 
     private String rootView(final Long projectId, final Long organisationId, String querySection) {
@@ -335,5 +321,10 @@ public class FinanceChecksQueriesAddQueryController {
 
     private String redirectTo(final String path) {
         return "redirect:" + path;
+    }
+
+    private void deleteCookies(HttpServletResponse response, Long projectId, Long organisationId) {
+        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
+        cookieUtil.removeCookie(response, getFormCookieName(projectId, organisationId));
     }
 }
