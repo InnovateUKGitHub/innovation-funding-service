@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -200,18 +202,28 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, Role role, ActivityState activityState) {
-        ProcessRole processRole = new ProcessRole();
-        processRole.setUser(assessor);
-        processRole.setApplicationId(application.getId());
-        processRole.setRole(role);
 
-        ProcessRole newProcessRole = processRoleRepository.save(processRole);
+        ProcessRole processRole = getExistingOrCreateNewProcessRole(assessor, application, role);
 
-        Assessment assessment = new Assessment(application, newProcessRole);
+        Assessment assessment = new Assessment(application, processRole);
         assessment.setActivityState(activityState);
 
         return serviceSuccess(assessmentRepository.save(assessment))
                 .andOnSuccessReturn(assessmentMapper::mapToResource);
+    }
+
+    private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, Role role) {
+        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(assessor.getId(), application.getId());
+
+        if (processRole == null) {
+            processRole = new ProcessRole();
+            processRole.setUser(assessor);
+            processRole.setApplicationId(application.getId());
+            processRole.setRole(role);
+            processRole = processRoleRepository.save(processRole);
+        }
+
+        return processRole;
     }
 
     private ServiceResult<User> getAssessor(Long assessorId) {

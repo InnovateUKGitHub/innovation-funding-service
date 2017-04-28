@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.workflow.configuration;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.repository.ApplicationProcessRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationOutcome;
@@ -83,8 +84,8 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
         return fireEvent(applicationMessage(application, ApplicationOutcome.SUBMITTED), application);
     }
 
-    public boolean markIneligible(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationOutcome.MARK_INELIGIBLE), application);
+    public boolean markIneligible(Application application, IneligibleOutcome ineligibleOutcome) {
+        return fireEvent(markIneligibleMessage(application, ineligibleOutcome), application);
     }
 
     public boolean informIneligible(Application application) {
@@ -120,9 +121,15 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
         }
     }
 
+    private static MessageBuilder<ApplicationOutcome> markIneligibleMessage(Application application, IneligibleOutcome ineligibleOutcome) {
+        return applicationMessage(application, ApplicationOutcome.MARK_INELIGIBLE)
+                .setHeader("ineligible", ineligibleOutcome);
+    }
+
     private static MessageBuilder<ApplicationOutcome> applicationMessage(Application application, ApplicationOutcome event) {
         return MessageBuilder
                 .withPayload(event)
-                .setHeader("target", application);
+                .setHeader("target", application)
+                .setHeader("applicationProcess", application.getApplicationProcess());
     }
 }

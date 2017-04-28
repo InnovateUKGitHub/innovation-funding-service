@@ -97,4 +97,9 @@ public interface ApplicationService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId);
 
+    @SecuredBySpring(value = "INFORM_APPLICATION_IS_INELIGIBLE",
+        description = "Comp admins and project finance users can inform applicants that their application is ineligible")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource);
+
 }

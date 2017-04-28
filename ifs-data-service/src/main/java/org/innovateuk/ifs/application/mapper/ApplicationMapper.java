@@ -24,7 +24,8 @@ import org.mapstruct.Mappings;
                 ApplicationInviteMapper.class,
                 FileEntryMapper.class,
                 ResearchCategoryMapper.class,
-                InnovationAreaMapper.class
+                InnovationAreaMapper.class,
+                IneligibleOutcomeMapper.class
         }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
@@ -40,6 +41,7 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "competition.name", target = "competitionName"),
             @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
             @Mapping(source = "applicationProcess.activityState", target = "applicationState"),
+            @Mapping(source = "applicationProcess.ineligibleOutcomes", target = "ineligibleOutcome")
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);
@@ -51,7 +53,6 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(target = "applicationFinances", ignore = true),
             @Mapping(target = "processRoles", ignore = true),
             @Mapping(target = "manageFundingEmailDate", ignore = true)
-
     })
     @Override
     public abstract Application mapToDomain(ApplicationResource resource);
