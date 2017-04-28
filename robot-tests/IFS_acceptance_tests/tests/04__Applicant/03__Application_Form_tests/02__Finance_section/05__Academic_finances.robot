@@ -20,7 +20,7 @@ Academic finances should be editable when lead marks them as complete
     [Documentation]    INFUND-2314
     [Tags]    HappyPath
     [Setup]    Lead applicant marks the finances as complete
-    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     And the user clicks the button/link    link=Your project costs
     Then the user should not see the element    css=#incurred-staff[readonly]
@@ -29,7 +29,7 @@ Academic finances should be editable when lead marks them as complete
 Academic finance validations
     [Documentation]    INFUND-2399
     [Tags]
-    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    Guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     And the user clicks the button/link    link=Your project costs
     And the applicant enters invalid inputs
@@ -72,7 +72,7 @@ Lead applicant can't upload a JeS file
 Academics upload
     [Documentation]    INFUND-917
     [Tags]    HappyPath
-    [Setup]    log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    log in as a different user    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     And the user clicks the button/link    link=Your project costs
     When the academic partner uploads a file    ${valid_pdf}
@@ -115,7 +115,7 @@ Lead applicant can view the file on the finances overview page
 Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
     [Tags]
-    [Setup]    log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    [Setup]    log in as a different user    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     Then the user should not see the element    link=Your funding
     When the user clicks the button/link    link=Your project costs
@@ -124,7 +124,7 @@ Academic finances JeS link showing
 Mark all as complete
     [Documentation]    INFUND-918
     [Tags]
-    Given log in as a different user    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    Given log in as a different user    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     And the user navigates to the academic application finances
     And the user clicks the button/link    link=Your project costs
     And the user should see the element    link=testing.pdf (opens in a new window)
@@ -188,12 +188,12 @@ the academic partner uploads a file
 
 the finance table should be correct
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £9,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    £3,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    £1,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    £1,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £0
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    £1,000
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    £3,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    £1,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    £1,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £0
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    £1,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
     guest user log-in    steve.smith@empire.com    Passw0rd

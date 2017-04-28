@@ -179,7 +179,7 @@ the red warning should be visible
 Lead enters a valid research participation value
     When the user navigates to the academic application finances
     the user clicks the button/link       link=Your project costs
-    run keyword and ignore error    the user clicks the button/link    jQuery=.buttonlink:contains("Edit")
+    run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=.buttonlink:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
