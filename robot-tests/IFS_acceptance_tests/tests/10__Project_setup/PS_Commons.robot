@@ -174,3 +174,4 @@ partner submits his bank details
     the user should see the element                  jQuery=#registeredAddress h3:contains("Confirm billing address")
     wait until keyword succeeds without screenshots  30  200ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
+    wait until element is not visible                jQuery=.button[name="submit-app-details"]  #have added this wait to give some more timing in execution of steps
