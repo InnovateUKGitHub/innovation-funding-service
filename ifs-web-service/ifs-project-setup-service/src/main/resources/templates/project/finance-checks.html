@@ -67,7 +67,7 @@
                     </li>
                 </ul>
             </th:block>
-            <li th:unless="${iteration.index == 0}">
+            <th:block th:unless="${iteration.index == 0}">
                 <div class="panel">
                     <p>
                         <strong th:text="${post.username}">Created by user</strong>
@@ -135,7 +135,7 @@
                         <ul>
                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                                <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                             </li>
                         </ul>
                     </fieldset>

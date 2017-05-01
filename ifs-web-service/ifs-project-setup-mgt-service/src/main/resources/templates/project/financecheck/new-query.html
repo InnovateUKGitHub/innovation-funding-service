@@ -108,7 +108,7 @@
                 </div>
             </div>
         </fieldset>
-        <li th:unless="${model.newAttachmentLinks.isEmpty()}">
+        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
             <fieldset>
                 <legend class="heading-small">Supporting documentation</legend>
                 <ul>
