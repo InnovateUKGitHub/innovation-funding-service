@@ -108,13 +108,15 @@
                 </div>
             </div>
         </fieldset>
-        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
+        <li th:unless="${model.newAttachmentLinks.isEmpty()}">
             <fieldset>
                 <legend class="heading-small">Supporting documentation</legend>
-                <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                    <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
-                </th:block>
+                <ul>
+                    <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                        <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                    </li>
+                </ul>
             </fieldset>
         </th:block>
         <fieldset>

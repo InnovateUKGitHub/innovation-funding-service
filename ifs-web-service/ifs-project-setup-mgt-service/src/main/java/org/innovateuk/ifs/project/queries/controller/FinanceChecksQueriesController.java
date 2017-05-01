@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -41,7 +40,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -128,7 +126,7 @@ public class FinanceChecksQueriesController {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
-        model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddResponseForm()));
+        model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
         return "project/financecheck/queries";
     }
 
@@ -212,7 +210,7 @@ public class FinanceChecksQueriesController {
             result.ifSuccessful(uploadedAttachment -> {
                 attachments.add(result.getSuccessObject().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
-                saveFormToCookie(response, projectId, organisationId, form);
+                saveFormToCookie(response, projectId, organisationId, queryId, form);
             });
 
             model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
@@ -267,7 +265,7 @@ public class FinanceChecksQueriesController {
                     attachments.remove(attachments.indexOf(attachmentId)));
         }
         saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
-        saveFormToCookie(response, projectId, organisationId, form);
+        saveFormToCookie(response, projectId, organisationId, queryId, form);
 
         return redirectTo(rootView(projectId, organisationId, queryId));
     }
@@ -378,49 +376,33 @@ public class FinanceChecksQueriesController {
         return ATTACHMENT_COOKIE + "_" + projectId + "_" + organisationId + "_" + queryId;
     }
 
-    private void saveAttachmentsToCookie(HttpServletResponse response, List<Long> attachmentFileIds, Long projectId, Long organisationId, Long queryId) {
+    private void saveAttachmentsToCookie(HttpServletResponse response, List<Long> attachmentFileIds, Long projectId,
+                                         Long organisationId, Long queryId) {
         String jsonState = JsonUtil.getSerializedObject(attachmentFileIds);
         cookieUtil.saveToCookie(response, getCookieName(projectId, organisationId, queryId), jsonState);
     }
 
     private List<Long> loadAttachmentsFromCookie(HttpServletRequest request, Long projectId, Long organisationId, Long queryId) {
-
-        List<Long> attachments = new LinkedList<>();
-        String json = cookieUtil.getCookieValue(request, getCookieName(projectId, organisationId, queryId));
-
-        if (json != null && !"".equals(json)) {
-            TypeReference<List<Long>> listType = new TypeReference<List<Long>>() {
-            };
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                attachments = mapper.readValue(json, listType);
-                return attachments;
-            } catch (IOException e) {
-                //ignored
-            }
-        }
-        return attachments;
+        return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId, queryId),
+                new TypeReference<List<Long>>() {});
     }
 
 
-    private String getFormCookieName(Long projectId, Long organisationId) {
-        return FORM_COOKIE + "_" + projectId + "_" + organisationId;
+    private String getFormCookieName(Long projectId, Long organisationId, Long queryId) {
+        return FORM_COOKIE + "_" + projectId + "_" + organisationId + "_" + queryId;
     }
 
-    private void saveAttachmentsToCookie(HttpServletResponse response, Long queryId, List<Long> attachmentFileIds,
-                                         Long projectId, Long organisationId) {
-        cookieUtil.saveToCookie(response, getCookieName(projectId, organisationId, queryId),
-                JsonUtil.getSerializedObject(attachmentFileIds));
+    private void saveFormToCookie(HttpServletResponse response, Long projectId,
+                                  Long organisationId, Long queryId,
+                                  FinanceChecksQueriesAddResponseForm form) {
+        cookieUtil.saveToCookie(response, getFormCookieName(projectId, organisationId, queryId),
+                JsonUtil.getSerializedObject(form));
     }
 
-    private void saveFormToCookie(HttpServletResponse response, Long projectId, Long organisationId, FinanceChecksQueriesAddResponseForm form) {
-        cookieUtil.saveToCookie(response, getFormCookieName(projectId, organisationId), JsonUtil.getSerializedObject(form));
-    }
-
-    private Optional<FinanceChecksQueriesAddResponseForm> loadForm(HttpServletRequest request, Long projectId, Long organisationId) {
-        return cookieUtil.getCookieAs(request, getFormCookieName(projectId, organisationId),
-                new TypeReference<FinanceChecksQueriesAddResponseForm>() {
-                });
+    private Optional<FinanceChecksQueriesAddResponseForm> loadForm(HttpServletRequest request, Long projectId,
+                                                                   Long organisationId, Long queryId) {
+        return cookieUtil.getCookieAs(request, getFormCookieName(projectId, organisationId, queryId),
+                new TypeReference<FinanceChecksQueriesAddResponseForm>() {});
     }
 
     private String rootView(final Long projectId, final Long organisationId, Long queryId) {
@@ -437,6 +419,7 @@ public class FinanceChecksQueriesController {
 
     private void deleteCookies(HttpServletResponse response, Long projectId, Long organisationId, Long queryId) {
         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
-        cookieUtil.removeCookie(response, getFormCookieName(projectId, organisationId));
+        cookieUtil.removeCookie(response, getFormCookieName(projectId,
+                organisationId, queryId));
     }
 }

@@ -71,9 +71,11 @@
                     </p>
                     <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
                     <legend th:unless="${post.attachments.isEmpty()}" class="heading-small">Supporting documentation</legend>
-                    <th:block th:each="attachment : ${post.attachments}">
-                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a><br />
-                    </th:block>
+                    <ul>
+                        <li th:each="attachment : ${post.attachments}">
+                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
+                        </li>
+                    </ul>
                 </th:block>
                 <th:block th:unless="${iteration.index == 0}">
                     <div class="panel">
@@ -86,9 +88,11 @@
                         </p>
                         <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
                         <h3 th:unless="${post.attachments.isEmpty()}" class="heading-small">Supporting documentation</h3>
-                        <th:block th:each="attachment : ${post.attachments}">
-                            <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}">file</a>
-                        </th:block>
+                        <ul>
+                            <li th:each="attachment : ${post.attachments}">
+                                <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}">file</a>
+                            </li>
+                        </ul>
                     </div>
                 </th:block>
             </th:block>
@@ -135,13 +139,15 @@
                             </div>
                         </div>
                     </fieldset>
-                    <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+                    <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                         <fieldset>
                             <legend class="heading-small">Supporting documentation</legend>
-                            <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
-                            </th:block>
+                            <ul>
+                                <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                                    <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                                </li>
+                            </ul>
                         </fieldset>
                     </th:block>
                     <fieldset>
