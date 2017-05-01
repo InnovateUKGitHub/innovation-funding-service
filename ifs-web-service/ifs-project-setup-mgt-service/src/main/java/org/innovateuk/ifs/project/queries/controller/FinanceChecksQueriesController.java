@@ -128,7 +128,6 @@ public class FinanceChecksQueriesController {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
-//        FinanceChecksQueriesAddResponseForm form = new FinanceChecksQueriesAddResponseForm();
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddResponseForm()));
         return "project/financecheck/queries";
     }

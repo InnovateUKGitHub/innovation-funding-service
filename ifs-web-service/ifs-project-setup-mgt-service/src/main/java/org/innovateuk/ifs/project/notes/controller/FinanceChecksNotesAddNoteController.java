@@ -223,7 +223,6 @@ public class FinanceChecksNotesAddNoteController {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         attachments.forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);
-
         return redirectToNotePage(projectId, organisationId);
     }
 
