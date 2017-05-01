@@ -346,7 +346,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
     @Test
     public void registerAssessorByHash_passwordTooShort() throws Exception {
-        String password = RandomStringUtils.random(9, "abcdefghijklmnopqrstuvwxyz");
+        String password = RandomStringUtils.random(7, "abcdefghijklmnopqrstuvwxyz");
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -368,36 +368,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRegistrationResource)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("password", password, "validation.standard.password.length.min", "", "10", "2147483647")))));
-
-        verify(assessorServiceMock, never()).registerAssessorByHash(isA(String.class), isA(UserRegistrationResource.class));
-    }
-
-    @Test
-    public void registerAssessorByHash_passwordTooLong() throws Exception {
-        String password = RandomStringUtils.random(31, "abcdefghijklmnopqrstuvwxyz");
-
-        UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
-                .withFirstName("First")
-                .withLastName("Last")
-                .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withPassword(password)
-                .withAddress(newAddressResource()
-                        .withAddressLine1("Electric Works")
-                        .withTown("Sheffield")
-                        .withPostcode("S1 2BJ")
-                        .build())
-                .build();
-
-        mockMvc.perform(post("/assessor/register/{hash}", "testhash")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userRegistrationResource)))
-                .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("password", password, "validation.standard.password.length.max", "", "30", "0")))));
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("password", password, "validation.standard.password.length.min", "", "8", "2147483647")))));
 
         verify(assessorServiceMock, never()).registerAssessorByHash(isA(String.class), isA(UserRegistrationResource.class));
     }

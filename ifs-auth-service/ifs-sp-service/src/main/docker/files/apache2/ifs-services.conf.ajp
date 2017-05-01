@@ -61,7 +61,7 @@ ShibCompatValidUser On
   ErrorDocument 500 /holding/holding.html
   ErrorDocument 502 /holding/holding.html
   ErrorDocument 503 /holding/holding.html
-  ErrorDocument 504 /holding/holding.html
+  ErrorDocument 504 /holding/maintenance.html
 
   <Location ~ "/login/.*">
     AuthType shibboleth

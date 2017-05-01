@@ -169,14 +169,25 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> activateUserAndSendDiversitySurvey(long userId) {
+    public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId) {
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
-                .andOnSuccessReturnVoid(this::sendDiversitySurvey);
+                .andOnSuccessReturnVoid(this::sendApplicantDiversitySurvey);
     }
 
-    private ServiceResult<Void> sendDiversitySurvey(User user) {
-        return userSurveyService.sendDiversitySurvey(user);
+    @Override
+    public ServiceResult<Void> activateAssessorAndSendDiversitySurvey(long userId) {
+        return getUser(userId)
+                .andOnSuccess(this::activateUser)
+                .andOnSuccessReturnVoid(this::sendAssessorDiversitySurvey);
+    }
+
+    private ServiceResult<Void> sendApplicantDiversitySurvey(User user) {
+        return userSurveyService.sendApplicantDiversitySurvey(user);
+    }
+
+    private ServiceResult<Void> sendAssessorDiversitySurvey(User user) {
+        return userSurveyService.sendAssessorDiversitySurvey(user);
     }
 
     private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {

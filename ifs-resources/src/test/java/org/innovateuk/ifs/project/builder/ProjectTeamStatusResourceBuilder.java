@@ -1,16 +1,15 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.project.resource.ProjectLeadStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.addListToList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.addToList;
-import static java.util.Collections.emptyList;
 
 public class ProjectTeamStatusResourceBuilder extends BaseBuilder<ProjectTeamStatusResource, ProjectTeamStatusResourceBuilder> {
 
@@ -39,7 +38,7 @@ public class ProjectTeamStatusResourceBuilder extends BaseBuilder<ProjectTeamSta
         return withArray((statuses, projectTeamStatusResource) -> addListToList("partnerStatuses", statuses, projectTeamStatusResource), partnerStatuses);
     }
 
-    public ProjectTeamStatusResourceBuilder withProjectLeadStatus(ProjectLeadStatusResource... projectLeadStatus) {
+    public ProjectTeamStatusResourceBuilder withProjectLeadStatus(ProjectPartnerStatusResource... projectLeadStatus) {
         return withArray((status, projectTeamStatusResource) -> addToList("partnerStatuses", status, projectTeamStatusResource), projectLeadStatus);
     }
 

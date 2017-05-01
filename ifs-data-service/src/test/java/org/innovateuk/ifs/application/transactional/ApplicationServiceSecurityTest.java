@@ -29,13 +29,13 @@ import java.util.function.Supplier;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
+import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -78,6 +78,15 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                     verify(applicationRules).internalUsersCanViewApplications(isA(ApplicationResource.class), isA(UserResource.class));
                 }
         );
+    }
+
+    @Test
+    public void informIneligible() {
+        long applicationId = 1L;
+        ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.informIneligible(applicationId, applicationIneligibleSendResource),
+                PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
@@ -412,6 +421,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final ZonedDateTime fundingEmailDate) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
             return null;
         }
     }
