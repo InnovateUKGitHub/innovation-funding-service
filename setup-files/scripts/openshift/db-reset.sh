@@ -25,9 +25,9 @@ INTERNAL_REGISTRY=172.30.80.28:5000
 echo "Resetting the $PROJECT Openshift project"
 
 function dbReset() {
-    until oc create -f os-files-tmp/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+    until oc create -f os-files-tmp/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
     do
-      oc delete -f os-files-tmp/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+      oc delete -f os-files-tmp/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
       sleep 10
     done
 }
