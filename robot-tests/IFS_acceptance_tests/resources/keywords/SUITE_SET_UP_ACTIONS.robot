@@ -210,7 +210,8 @@ The user navigates to the finance overview of the academic
     And the user clicks the button/link    link=Finances overview
 
 The user marks the academic application finances as incomplete
-    When The user navigates to the academic application finances
+    the user navigates to the academic application finances
+    the user clicks the button/link    link=Your project costs
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
     wait for autosave
@@ -294,7 +295,6 @@ the user enters the details and clicks the create account
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ${REG_EMAIL}
     Input Password    id=password    Passw0rd123
-    Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
     Submit Form
@@ -305,6 +305,5 @@ the user fills the create account form
     Input Text    id=lastName    ${LAST_NAME}
     Input Text    id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
-    Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")

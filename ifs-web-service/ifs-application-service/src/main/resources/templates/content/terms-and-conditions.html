@@ -13,9 +13,8 @@
 
     <div class="grid-row">
         <div class="column-two-thirds">
-            <div class="page-title">
-                <h1 class="heading-xlarge no-margin">Terms and conditions</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions',size='heading-xlarge'" />
+
             <h2 class="heading-large">1. Terms of use</h2>
             <p>Innovate UK owns this website. This page and any pages it links to explains our terms of use. You must agree to these to use the Innovate UK website.</p>
             <h3 class="heading-medium">1.1. Using our site</h3>

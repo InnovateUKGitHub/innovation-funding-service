@@ -11,10 +11,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
-
-    <div class="page-title">
-        <h1 class="heading-xlarge no-margin">Terms and conditions</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions',size='heading-xlarge'" />
 
     <h2 class="heading-large">1. Overview</h2>
     <h3 class="heading-medium">1.1. Information about us</h3>
