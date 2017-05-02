@@ -210,7 +210,8 @@ The user navigates to the finance overview of the academic
     And the user clicks the button/link    link=Finances overview
 
 The user marks the academic application finances as incomplete
-    When The user navigates to the academic application finances
+    the user navigates to the academic application finances
+    the user clicks the button/link    link=Your project costs
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
     wait for autosave

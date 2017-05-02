@@ -76,6 +76,7 @@ import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
+import org.innovateuk.ifs.project.otherdocuments.transactional.ProjectOtherDocumentsService;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
 import org.innovateuk.ifs.project.queries.service.FinanceCheckQueriesService;
@@ -433,6 +434,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectMonitoringOfficerService projectMonitoringOfficerServiceMock;
+
+    @Mock
+    protected ProjectOtherDocumentsService projectOtherDocumentsServiceMock;
 
     @Mock
     protected GrantOfferLetterService grantOfferLetterServiceMock;
