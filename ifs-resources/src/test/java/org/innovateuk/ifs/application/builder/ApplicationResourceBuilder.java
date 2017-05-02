@@ -92,8 +92,4 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     public ApplicationResourceBuilder withNoInnovationAreaApplicable(Boolean... noInnovationAreaApplicableArray) {
         return withArray((noInnovationAreaApplicable, application) -> setField("noInnovationAreaApplicable", noInnovationAreaApplicable, application), noInnovationAreaApplicableArray);
     }
-
-    public ApplicationResourceBuilder withIneligibleReason(String reason) {
-        return with(applicationResource -> applicationResource.setIneligibleReason(reason));
-    }
 }

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -103,7 +104,10 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                                               ApplicationForm applicationForm,
                                               UserResource user,
                                               Model model) {
-        ServiceResult<Void> result = applicationService.markAsIneligible(applicationId, applicationForm.getIneligibleReason());
+        IneligibleOutcomeResource ineligibleOutcomeResource =
+                new IneligibleOutcomeResource(applicationForm.getIneligibleReason());
+
+        ServiceResult<Void> result = applicationService.markAsIneligible(applicationId, ineligibleOutcomeResource);
 
         if (result != null && result.isSuccess()) {
             return "redirect:/competition/" + competitionId + "/applications/submitted";

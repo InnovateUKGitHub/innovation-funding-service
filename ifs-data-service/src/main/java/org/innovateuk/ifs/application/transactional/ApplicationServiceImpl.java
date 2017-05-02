@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
@@ -72,21 +73,13 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
-    enum Notifications {
-        APPLICATION_SUBMITTED,
-        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
-        APPLICATION_INELIGIBLE
-    }
-
-    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
-
     // TODO DW - INFUND-1555 - put into a DTO
     public static final String READY_FOR_SUBMIT = "readyForSubmit";
     public static final String PROGRESS = "progress";
     public static final String RESEARCH_PARTICIPATION = "researchParticipation";
     public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
     public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
-
+    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
     @Autowired
     private FileService fileService;
     @Autowired
@@ -111,6 +104,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationWorkflowHandler applicationWorkflowHandler;
     @Autowired
     private ActivityStateRepository activityStateRepository;
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
         boolean contains = false;
@@ -122,9 +117,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return contains;
     }
-
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -508,12 +500,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> markAsIneligible(long applicationId, String reason) {
+    public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason) {
         return find(application(applicationId)).andOnSuccess((application) -> {
-            if (!applicationWorkflowHandler.markIneligible(application)) {
+            if (!applicationWorkflowHandler.markIneligible(application, reason)) {
                 return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
             }
-            application.setIneligibleReason(reason);
             applicationRepository.save(application);
             return serviceSuccess();
         });
@@ -612,5 +603,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus());
         }
         return true;
+    }
+
+    enum Notifications {
+        APPLICATION_SUBMITTED,
+        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+        APPLICATION_INELIGIBLE
     }
 }

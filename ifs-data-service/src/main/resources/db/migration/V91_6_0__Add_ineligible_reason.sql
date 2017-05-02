@@ -1,1 +1,0 @@
-ALTER TABLE `application` ADD COLUMN ineligible_reason VARCHAR(255) NULL DEFAULT NULL;

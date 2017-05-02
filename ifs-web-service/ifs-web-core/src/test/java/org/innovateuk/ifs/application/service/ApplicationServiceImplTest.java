@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -148,7 +149,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void markAsIneligible() throws Exception {
         long applicationId = 1L;
-        String reason = "reason";
+        IneligibleOutcomeResource reason = new IneligibleOutcomeResource("reason");
 
         when(applicationRestService.markAsIneligible(applicationId, reason)).thenReturn(restSuccess());
 

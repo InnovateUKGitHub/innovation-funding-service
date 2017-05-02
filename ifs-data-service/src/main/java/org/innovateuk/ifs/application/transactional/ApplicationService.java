@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -100,7 +101,7 @@ public interface ApplicationService {
     @SecuredBySpring(value = "MARK_AS_INELIGIBLE",
             description = "Comp admins and project finance users can mark applications as ineligible")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<Void> markAsIneligible(long applicationId, String reason);
+    ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason);
 
     @SecuredBySpring(value = "INFORM_APPLICATION_IS_INELIGIBLE",
         description = "Comp admins and project finance users can inform applicants that their application is ineligible")

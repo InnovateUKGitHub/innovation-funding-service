@@ -68,7 +68,6 @@ public class ApplicationResource {
     private InnovationAreaResource innovationArea;
 
     private boolean noInnovationAreaApplicable;
-    private String ineligibleReason;
 
     private IneligibleOutcomeResource ineligibleOutcome;
 
@@ -287,13 +286,5 @@ public class ApplicationResource {
 
     public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
-    }
-
-    public String getIneligibleReason() {
-        return ineligibleReason;
-    }
-
-    public void setIneligibleReason(String ineligibleReason) {
-        this.ineligibleReason = ineligibleReason;
     }
 }

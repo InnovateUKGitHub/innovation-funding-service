@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
@@ -50,13 +51,14 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.Notifications.APPLICATION_SUBMITTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -91,12 +93,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
             ApplicationState.REJECTED), ApplicationState::getBackingState);
 
     private Application openApplication;
-
-    @Override
-    protected ApplicationService supplyServiceUnderTest() {
-        return new ApplicationServiceImpl();
-    }
-
     private FormInput formInput;
     private FormInputType formInputType;
     private Question question;
@@ -107,6 +103,11 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
     private Long organisationId = 456L;
+
+    @Override
+    protected ApplicationService supplyServiceUnderTest() {
+        return new ApplicationServiceImpl();
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -1163,16 +1164,20 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 .withId(applicationId)
                 .build();
 
+        IneligibleOutcome ineligibleOutcome = newIneligibleOutcome()
+                .withReason(reason)
+                .build();
+
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(applicationWorkflowHandlerMock.markIneligible(application)).thenReturn(true);
+        when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(true);
         when(applicationRepositoryMock.save(application)).thenReturn(application);
 
-        ServiceResult<Void> result = service.markAsIneligible(applicationId, reason);
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
 
         assertTrue(result.isSuccess());
 
         verify(applicationRepositoryMock).findOne(applicationId);
-        verify(applicationWorkflowHandlerMock).markIneligible(application);
+        verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
         verify(applicationRepositoryMock).save(application);
     }
 
@@ -1186,16 +1191,20 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 .withId(applicationId)
                 .build();
 
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(applicationWorkflowHandlerMock.markIneligible(application)).thenReturn(false);
+        IneligibleOutcome ineligibleOutcome = newIneligibleOutcome()
+                .withReason(reason)
+                .build();
 
-        ServiceResult<Void> result = service.markAsIneligible(applicationId, reason);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(false);
+
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
 
         assertTrue(result.isFailure());
         assertEquals(APPLICATION_MUST_BE_SUBMITTED.getErrorKey(), result.getErrors().get(0).getErrorKey());
 
         verify(applicationRepositoryMock).findOne(applicationId);
-        verify(applicationWorkflowHandlerMock).markIneligible(application);
+        verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
     }
 
     @Test

@@ -89,8 +89,6 @@ public class Application implements ProcessActivity {
 
     private Boolean stateAidAgreed;
 
-    private String ineligibleReason;
-
     public Application() {
     }
 
@@ -359,14 +357,6 @@ public class Application implements ProcessActivity {
         }
 
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
-    }
-
-    public String getIneligibleReason() {
-        return ineligibleReason;
-    }
-
-    public void setIneligibleReason(String ineligibleReason) {
-        this.ineligibleReason = ineligibleReason;
     }
 
     public ApplicationProcess getApplicationProcess() {

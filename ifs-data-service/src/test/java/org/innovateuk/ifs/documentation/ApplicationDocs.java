@@ -51,6 +51,5 @@ public class ApplicationDocs {
             .withCompletion(new BigDecimal(30L))
             .withResearchCategory(new ResearchCategoryResource())
             .withInnovationArea(new InnovationAreaResource())
-            .withNoInnovationAreaApplicable(false)
-            .withIneligibleReason("reason");
+            .withNoInnovationAreaApplicable(false);
 }
