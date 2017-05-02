@@ -65,7 +65,6 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     private static final Long PUBLIC_CONTENT_ID = 4L;
     private static final String SEARCH_STRING_TOO_LONG = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
 
-
     @Override
     protected PublicContentItemServiceImpl supplyServiceUnderTest() {
         return new PublicContentItemServiceImpl();
@@ -99,7 +98,6 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         when(publicContentRepository.findAllPublishedForOpenCompetitionByInnovationId(expectedCompetitionIds, new PageRequest(0, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
 
-
         List<Competition> competitions  = newCompetition()
                 .withId(COMPETITION_ID)
                 .build(1);
@@ -129,13 +127,11 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(expectedPublicContentIds, new PageRequest(0, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
 
-
         List<Competition> competitions = newCompetition()
                 .withId(COMPETITION_ID)
                 .build(1);
 
         when(competitionRepository.findByInnovationSectorCategoryId(2L)).thenReturn(competitions);
-
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of("Big data"), Optional.empty(), 10);
 
@@ -185,7 +181,6 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         verify(publicContentRepository, times(1)).findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(any(), any(),any());
     }
 
-
     @Test
     public void findFilteredItems_searchStringTooLong() {
         makePublicContentIdsFound();
@@ -198,13 +193,11 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(expectedPublicContentIds, new PageRequest(0, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
 
-
         List<Competition> competitions = newCompetition()
                 .withId(COMPETITION_ID)
                 .build(1);
 
         when(competitionRepository.findByInnovationSectorCategoryId(2L)).thenReturn(competitions);
-
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of(SEARCH_STRING_TOO_LONG), Optional.empty(), 10);
 
@@ -227,7 +220,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
         ).build();
-        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
+        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).withPublishDate(ZonedDateTime.now()).build();
         PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
         when(competitionRepository.findById(competitionId)).thenReturn(competition);
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
@@ -258,7 +251,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
         ).build();
-        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
+        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).withPublishDate(ZonedDateTime.now()).build();
         PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
         when(competitionRepository.findById(competitionId)).thenReturn(competition);
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
@@ -293,6 +286,28 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         verify(competitionRepository, only()).findById(competitionId);
     }
 
+    @Test
+    public void testByCompetitionIdNotPublished() {
+        Long competitionId = 4L;
+
+        Competition competition = newCompetition().withNonIfs(false).withId(competitionId).withSetupComplete(true)
+                .withMilestones(newMilestone()
+                        .withDate(LocalDateTime.of(2017,1,2,3,4).atZone(ZoneId.systemDefault()), LocalDateTime.of(2017,3,2,1,4).atZone(ZoneId.systemDefault()))
+                        .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
+                        .build(2)
+                ).build();
+        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
+        PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
+        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+        when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
+        when(publicContentMapper.mapToResource(publicContent)).thenReturn(publicContentResource);
+
+        ServiceResult<PublicContentItemResource> result = service.byCompetitionId(competitionId);
+        assertTrue(result.isFailure());
+
+        verify(publicContentRepository, only()).findByCompetitionId(competitionId);
+        verify(competitionRepository, only()).findById(competitionId);
+    }
     private void makePublicContentIdsFound() {
         PublicContent publicContent = newPublicContent().withId(PUBLIC_CONTENT_ID).withCompetitionId(COMPETITION_ID).build();
 
@@ -323,14 +338,5 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         assertEquals(40, result.getSuccessObject().getContent().size());
         assertThat(NON_IFS_URL, equalTo(result.getSuccessObject().getContent().get(0).getNonIfsUrl()));
-    }
-
-    private void testResultEmpty(ServiceResult<PublicContentItemPageResource> result) {
-        assertEquals(0, result.getSuccessObject().getSize());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(0L, result.getSuccessObject().getTotalElements());
-        assertEquals(0, result.getSuccessObject().getTotalPages());
-
-        assertEquals(0, result.getSuccessObject().getContent().size());
     }
 }
