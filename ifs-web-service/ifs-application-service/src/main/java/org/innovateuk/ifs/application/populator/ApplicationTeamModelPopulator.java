@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -44,6 +45,7 @@ public class ApplicationTeamModelPopulator {
 
     public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
+        checkIfApplicationAlreadySubmitted(applicationResource);
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
@@ -54,6 +56,12 @@ public class ApplicationTeamModelPopulator {
 
     private boolean isApplicationStateCreated(ApplicationResource applicationResource) {
         return ApplicationState.CREATED == applicationResource.getApplicationState();
+    }
+
+    private void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
+        if (applicationResource.hasBeenSubmitted()){
+            throw new ForbiddenActionException("Application has already been submitted");
+        }
     }
 
     private List<ApplicationTeamOrganisationRowViewModel> getOrganisationViewModels(long applicationId, long loggedInUserId,
