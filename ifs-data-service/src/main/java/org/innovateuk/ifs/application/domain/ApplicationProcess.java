@@ -5,10 +5,9 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The current state of an {@link Application}.
@@ -23,6 +22,11 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
+
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name="process_id")
+    @OrderBy("id ASC")
+    private List<IneligibleOutcome> ineligibleOutcomes = new ArrayList<>();
 
     ApplicationProcess() {
     }
@@ -56,5 +60,9 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     @Override
     public ApplicationState getActivityState() {
         return ApplicationState.fromState(activityState.getState());
+    }
+
+    public List<IneligibleOutcome> getIneligibleOutcomes() {
+        return ineligibleOutcomes;
     }
 }

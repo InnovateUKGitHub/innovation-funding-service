@@ -10,41 +10,32 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.AssessorCountOption;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
-import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
-import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -118,6 +109,7 @@ public class CompetitionSetupServiceImplTest {
 		Competition competition = newCompetition().build();
 		Competition competitionTemplate = newCompetition()
 				.withCompetitionType(competitionType)
+				.withAcademicGrantPercentage(222)
 				.withSections(newSection()
 						.withSectionType(SectionType.GENERAL)
 						.withQuestions(newQuestion()
@@ -128,7 +120,8 @@ public class CompetitionSetupServiceImplTest {
 										).build(2)
 								).build(1)
 						).build(1)
-				).build();
+				)
+				.build();
 
 		competitionType.setTemplate(competitionTemplate);
 
@@ -141,6 +134,7 @@ public class CompetitionSetupServiceImplTest {
 		assertTrue(result.isSuccess());
 		assertEquals(competitionType, competition.getCompetitionType());
 		assertEquals(competitionTemplate.getSections(), competition.getSections());
+		assertEquals(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
 		Section section = competition.getSections().get(0);
 		Question question = section.getQuestions().get(0);
 		assertFalse(question.getFormInputs().get(0).getActive());

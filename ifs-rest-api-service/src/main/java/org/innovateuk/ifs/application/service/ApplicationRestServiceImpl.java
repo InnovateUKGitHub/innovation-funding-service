@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -87,5 +88,10 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return getWithRestResult(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
+    }
+
+    @Override
+    public RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+        return postWithRestResult(applicationRestURL + "/informIneligible/" + applicationId, applicationIneligibleSendResource, Void.class);
     }
 }
