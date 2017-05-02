@@ -134,23 +134,6 @@ public class ApplicationController {
         return "redirect:/application/" + applicationId;
     }
 
-    @ProfileExecution
-    @GetMapping("/{applicationId}/section/{sectionId}")
-    public String applicationDetailsOpenSection(ApplicationForm form, Model model,
-                                                @PathVariable("applicationId") long applicationId,
-                                                @PathVariable("sectionId") long sectionId,
-                                                @ModelAttribute("loggedInUser") UserResource user) {
-        ApplicationResource application = applicationService.getById(applicationId);
-        SectionResource section = sectionService.getById(sectionId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
-
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-        model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(user, application));
-        return "application-details";
-    }
-
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
@@ -320,27 +303,6 @@ public class ApplicationController {
                                    Model model,
                                    @ModelAttribute("loggedInUser") UserResource user) {
         return applicationPrintPopulator.print(applicationId, model, user);
-    }
-
-    /**
-     * Assign a question to a user
-     *
-     * @param applicationId the application for which the user is assigned
-     * @param sectionId     section id for showing details
-     * @param request       request parameters
-     * @return
-     */
-    @ProfileExecution
-    @PostMapping("/{applicationId}/section/{sectionId}")
-    public String assignQuestion(@PathVariable("applicationId") long applicationId,
-                                 @PathVariable("sectionId") long sectionId,
-                                 @ModelAttribute("loggedInUser") UserResource user,
-                                 HttpServletRequest request,
-                                 HttpServletResponse response) {
-
-        doAssignQuestion(applicationId, user, request, response);
-
-        return "redirect:/application/" + applicationId + "/section/" + sectionId;
     }
 
     private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
