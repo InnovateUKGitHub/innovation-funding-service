@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
@@ -17,11 +18,14 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.*;
@@ -69,10 +73,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName,
+    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, List<String> innovationAreaNames,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
                                                 String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay,
-                                                Boolean multiStream, String collaborationLevelCode, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
+                                                Boolean multiStream, String collaborationLevelCode, List<OrganisationTypeEnum> leadApplicantTypes, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
 
         return asCompAdmin(data -> {
 
@@ -82,15 +86,21 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
                     competition.setCompetitionType(competitionType.getId());
                 }
-                Long innovationArea = getInnovationAreaIdOrNull(innovationAreaName);
+
+                List<Long> innovationAreas = simpleFilter(
+                        simpleMap(innovationAreaNames, this::getInnovationAreaIdOrNull),
+                        Objects::nonNull
+                );
                 Long innovationSector = getInnovationSectorIdOrNull(innovationSectorName);
                 Long researchCategory = getResearchCategoryIdOrNull(researchCategoryName);
 
                 CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
 
+                List<Long> leadApplicantTypeIds = simpleMap(leadApplicantTypes, OrganisationTypeEnum::getId);
+
                 competition.setName(name);
                 competition.setDescription(description);
-                competition.setInnovationAreas(innovationArea == null ? emptySet() : singleton(innovationArea));
+                competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(researchCategory == null ? emptySet() : singleton(researchCategory));
                 competition.setMaxResearchRatio(30);
@@ -102,6 +112,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setBudgetCode(budgetCode);
                 competition.setActivityCode(activityCode);
                 competition.setCollaborationLevel(collaborationLevel);
+                competition.setLeadApplicantTypes(leadApplicantTypeIds);
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);
@@ -113,7 +124,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private Long getInnovationAreaIdOrNull(String name) {
-        return !isBlank(name) ? simpleFindFirst(innovationAreaRepository.findAll(), c -> name.equals(c.getName())).get().getId() : null;
+        return !isBlank(name) ? innovationAreaRepository.findByName(name).getId() : null;
     }
 
     private Long getInnovationSectorIdOrNull(String name) {
