@@ -49,7 +49,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.management.viewmodel.ApplicationOverviewIneligibilityViewModel.createViewModelEligible;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -437,7 +436,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                     .andExpect(model().attribute("responses", new HashMap<>()))
                     .andExpect(model().attribute("assessorFeedback", expectedAssessorFeedback))
                     .andExpect(model().attribute("researchCategories", researchCategories))
-                    .andExpect(model().attribute("ineligibility", createViewModelEligible()))
+                    .andExpect(model().attribute("ineligibility", new ApplicationOverviewIneligibilityViewModel()))
                     .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
         } catch (Exception e) {
             throw new RuntimeException(e);

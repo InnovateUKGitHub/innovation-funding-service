@@ -15,7 +15,7 @@ public class ApplicationOverviewIneligibilityViewModel {
     private final ZonedDateTime removedOn;
     private final String reasonForRemoval;
 
-    private ApplicationOverviewIneligibilityViewModel() {
+    public ApplicationOverviewIneligibilityViewModel() {
         this.ineligible = false;
         this.removedBy = null;
         this.removedOn = null;
@@ -45,10 +45,6 @@ public class ApplicationOverviewIneligibilityViewModel {
 
     public String getReasonForRemoval() {
         return reasonForRemoval;
-    }
-
-    public static ApplicationOverviewIneligibilityViewModel createViewModelEligible() {
-        return new ApplicationOverviewIneligibilityViewModel();
     }
 
     @Override

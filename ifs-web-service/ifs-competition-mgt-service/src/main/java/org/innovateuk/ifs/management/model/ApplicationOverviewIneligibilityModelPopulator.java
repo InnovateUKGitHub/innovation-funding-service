@@ -9,7 +9,6 @@ import java.util.EnumSet;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
-import static org.innovateuk.ifs.management.viewmodel.ApplicationOverviewIneligibilityViewModel.createViewModelEligible;
 
 /**
  * Build the model for the Competition Management Application Overview Application Ineligibility details.
@@ -24,7 +23,7 @@ public class ApplicationOverviewIneligibilityModelPopulator {
                     ineligibleOutcome.getRemovedOn(), ineligibleOutcome.getReason());
         }
 
-        return createViewModelEligible();
+        return new ApplicationOverviewIneligibilityViewModel();
     }
 
     private boolean isApplicationIneligible(final ApplicationResource applicationResource) {
