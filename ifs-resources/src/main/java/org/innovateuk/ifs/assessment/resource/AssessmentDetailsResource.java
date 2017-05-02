@@ -41,9 +41,6 @@ public class AssessmentDetailsResource {
     }
 
     public AssessmentDetailsResource() {
-//        questions = null;
-//        assessmentFormInputs = null;
-//        assessorFormInputResponses = null;
     }
 
     @Deprecated

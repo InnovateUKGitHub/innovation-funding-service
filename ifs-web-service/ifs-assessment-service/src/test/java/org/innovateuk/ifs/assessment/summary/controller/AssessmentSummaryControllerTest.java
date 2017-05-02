@@ -481,24 +481,6 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         assessmentFormInputs = combineLists(formInputsForQuestion1, formInputsForQuestion2, formInputsForQuestion3, formInputsForQuestion4);
 
-//        assessorResponses = newAssessorFormInputResponseResource()
-//                .withQuestion(
-//                        question2.getId(),
-//                        question2.getId(),
-//                        question3.getId(),
-//                        question3.getId(),
-//                        question3.getId(),
-//                        question4.getId())
-//                .withFormInput(
-//                        formInputsForQuestion2.get(0).getId(),
-//                        formInputsForQuestion2.get(1).getId(),
-//                        formInputsForQuestion3.get(0).getId(),
-//                        formInputsForQuestion3.get(1).getId(),
-//                        formInputsForQuestion3.get(2).getId(),
-//                        formInputsForQuestion4.get(0).getId())
-//                .withValue("another response", "true", "another response", "15", "feedback", "another response")
-//                .build(6);
-
         question1AssessorResponse = emptyList();
         question2AssessorResponse = newAssessorFormInputResponseResource()
                 .withQuestion(
