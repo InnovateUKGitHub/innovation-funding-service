@@ -79,7 +79,8 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
 
     private void addCompletedDetails(SectionApplicationViewModel sectionApplicationViewModel, ApplicantSectionResource applicantSection) {
         Set<Long> markedAsComplete = applicantSection.allCompleteQuestionStatuses()
-                .filter(status -> status.getMarkedAsCompleteBy().hasSameOrganisation(applicantSection.getCurrentApplicant()))
+                .filter(status -> status.getMarkedAsCompleteBy().hasSameOrganisation(applicantSection.getCurrentApplicant())
+                 && status.getStatus().getMarkedAsComplete())
                 .map(status -> status.getStatus().getQuestion())
                 .collect(Collectors.toSet());
         sectionApplicationViewModel.setMarkedAsComplete(markedAsComplete);
