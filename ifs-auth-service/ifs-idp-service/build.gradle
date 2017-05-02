@@ -56,6 +56,15 @@ task buildDocker(type: Docker) {
     applicationName = 'idp-service'
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
+        configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts
+                .each { artifact ->
+            project.copy {
+                from artifact.file
+                into "${buildDir}/docker"
+                rename { "regapi.war" }
+            }
+        }
+
         copy {
             from fileTree('src/main/docker/apache')
             into "${stageDir}/apache"
