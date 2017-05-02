@@ -29,7 +29,7 @@ Filtering the Assessors in the Allocate Applications page
     ...
     ...    INFUND-8062
     Given the user clicks the button/Link    jQuery=tr:contains(Neural Industries) .no-margin
-    And the user should see the element    jQuery=h3:contains("Innovation area") ~ span:contains("Urban living")
+    And the user should see the element    jQuery=h3:contains("Innovation area") ~ span:contains("Smart infrastructure")
     Then the user should see the element    jQuery=tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
     When the user selects the option from the drop-down menu    Materials, process and manufacturing design technologies    id=filterInnovationArea
     And the user clicks the button/link    jQuery=button:contains(Filter)
