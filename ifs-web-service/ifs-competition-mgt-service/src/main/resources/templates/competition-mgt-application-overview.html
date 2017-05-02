@@ -17,10 +17,10 @@
     </th:block>
 
     <th:block th:if="${ineligibility.ineligible}">
-        <h3 class="heading-small">Removed by</h3>
+        <h2 class="heading-small">Removed by</h2>
         <p th:text="|${ineligibility.removedBy}, ${#temporals.format(ineligibility.removedOn, 'dd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
 
-        <h3 class="heading-small">Reason for removal</h3>
+        <h2 class="heading-small">Reason for removal</h2>
         <p th:text="${ineligibility.reasonForRemoval}"></p>
 
         <div class="extra-margin">
@@ -30,7 +30,7 @@
 
         <div class="modal-reinstate" role="dialog" aria-hidden="true" style="margin-top: -174px;">
             <form th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" method="post">
-                <button class="js-close close" aria-label="Close Popup" type="button">X</button>
+                <th:block th:insert="fragments/modals :: close-button" />
                 <div>
                     <h2 class="heading-medium no-margin">Reinstate application</h2>
                     <p>Are you sure that you wish to reinstate this application?</p>
