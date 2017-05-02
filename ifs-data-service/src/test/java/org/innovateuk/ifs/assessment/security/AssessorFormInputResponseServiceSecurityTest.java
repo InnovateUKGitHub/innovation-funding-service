@@ -4,10 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
@@ -119,12 +116,12 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
     public static class TestAssessorFormInputResponseService implements AssessorFormInputResponseService {
         @Override
-        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
+        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {
             return null;
         }
 
         @Override
-        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(Long assessmentId, Long questionId) {
+        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
             return null;
         }
 
@@ -145,6 +142,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         @Override
         public FormInputResponse mapToFormInputResponse(AssessorFormInputResponseResource response) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
             return null;
         }
     }
