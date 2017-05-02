@@ -16,13 +16,13 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectDocs.*;
 import static org.innovateuk.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -31,7 +31,8 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -348,7 +349,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     private ProjectTeamStatusResource buildTeamStatus(){
-        ProjectLeadStatusResource projectLeadStatusResource = newProjectLeadStatusResource().build();
+        ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
 
         projectLeadStatusResource.setName("Nomensa");

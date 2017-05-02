@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.otherdocuments.transactional.ProjectOtherDocumentsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,10 +51,10 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        BiFunction<ProjectOtherDocumentsService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", projectOtherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod(document));
     }
 
@@ -63,10 +63,10 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
+        BiFunction<ProjectOtherDocumentsService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
                 (service, fileToUpload) -> service.updateCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", projectServiceMock, serviceCallToUpload).
+        assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", projectOtherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileUpdateMethod(document));
     }
 
@@ -75,11 +75,11 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        Function<ProjectService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        Function<ProjectOtherDocumentsService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getCollaborationAgreementFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[] {projectId}, emptyMap(),
-                projectServiceMock, serviceCallToUpload).
+                projectOtherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod(document));
     }
 
@@ -88,11 +88,11 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        Function<ProjectService, ServiceResult<FileAndContents>> serviceCallToUpload =
+        Function<ProjectOtherDocumentsService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getCollaborationAgreementFileContents(projectId);
 
         assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
-                emptyMap(), projectServiceMock, serviceCallToUpload).
+                emptyMap(), projectOtherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileGetContentsMethod(document));
     }
 
@@ -101,11 +101,11 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
+        Function<ProjectOtherDocumentsService, ServiceResult<Void>> serviceCallToDelete =
                 service -> service.deleteCollaborationAgreementFile(projectId);
 
         assertDeleteFile("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
-                emptyMap(), projectServiceMock, serviceCallToDelete).
+                emptyMap(), projectOtherDocumentsServiceMock, serviceCallToDelete).
                 andDo(documentFileDeleteMethod(document));
     }
 
@@ -114,10 +114,10 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        BiFunction<ProjectOtherDocumentsService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/exploitation-plan", projectServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/exploitation-plan", projectOtherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod(document));
     }
 
@@ -126,10 +126,10 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        BiFunction<ProjectService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
+        BiFunction<ProjectOtherDocumentsService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
                 (service, fileToUpload) -> service.updateExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUpdateProcess("/project/" + projectId + "/exploitation-plan", projectServiceMock, serviceCallToUpload).
+        assertFileUpdateProcess("/project/" + projectId + "/exploitation-plan", projectOtherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileUpdateMethod(document));
     }
 
@@ -138,11 +138,11 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        Function<ProjectService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+        Function<ProjectOtherDocumentsService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getExploitationPlanFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/exploitation-plan/details", new Object[] {projectId}, emptyMap(),
-                projectServiceMock, serviceCallToUpload).
+                projectOtherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod(document));
     }
 
@@ -151,11 +151,11 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        Function<ProjectService, ServiceResult<FileAndContents>> serviceCallToUpload =
+        Function<ProjectOtherDocumentsService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getExploitationPlanFileContents(projectId);
 
         assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[] {projectId},
-                emptyMap(), projectServiceMock, serviceCallToUpload).
+                emptyMap(), projectOtherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileGetContentsMethod(document));
     }
 
@@ -164,23 +164,23 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
 
         Long projectId = 123L;
 
-        Function<ProjectService, ServiceResult<Void>> serviceCallToDelete =
+        Function<ProjectOtherDocumentsService, ServiceResult<Void>> serviceCallToDelete =
                 service -> service.deleteExploitationPlanFile(projectId);
 
         assertDeleteFile("/project/{projectId}/exploitation-plan", new Object[] {projectId},
-                emptyMap(), projectServiceMock, serviceCallToDelete).
+                emptyMap(), projectOtherDocumentsServiceMock, serviceCallToDelete).
                 andDo(documentFileDeleteMethod(document));
     }
 
     @Test
     public void acceptOrRejectOtherDocuments() throws Exception {
-        when(projectServiceMock.acceptOrRejectOtherDocuments(1L, true)).thenReturn(serviceSuccess());
+        when(projectOtherDocumentsServiceMock.acceptOrRejectOtherDocuments(1L, true)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/1/partner/documents/approved/{approved}", true).
                 contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(projectServiceMock).acceptOrRejectOtherDocuments(1L, true);
+        verify(projectOtherDocumentsServiceMock).acceptOrRejectOtherDocuments(1L, true);
     }
 
     @Test
@@ -193,7 +193,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         MockHttpServletRequestBuilder mainRequest = get("/project/{projectId}/partner/documents/ready", 123L)
                 .header("IFS_AUTH_TOKEN", "123abc");
 
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
+        when(projectOtherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         mockMvc.perform(mainRequest)
