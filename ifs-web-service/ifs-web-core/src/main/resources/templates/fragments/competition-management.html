@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-<!--/* id of the competition for in the page title */-->
-<!--/* TODO: Why ask for competition object when all you need is id here?  Can you please ask for just two value parameters instead?  It simplifies view model: */-->
-<th:block th:fragment="competition-id(competition)">
-    <th:block th:insert="fragments/competition-management :: competition-id-simple(${competition.competitionId})" />
-</th:block>
 
-<!--/* TODO: Following on from previous to do, we can do it like this: */-->
-<th:block th:fragment="competition-id-simple(competitionId)">
-    <p class="subtitle"><th:block th:text="${competitionId}" /> : Innovate UK</p>
-</th:block>
-
-<th:block th:fragment="competition-id-and-name(competitionId, competitionName)">
-    <p class="subtitle"><th:block th:text="${competitionId}"/> : <th:block th:text="${competitionName}"/></p>
-</th:block>
 
 <!--/* competition status with blue block */-->
 <th:block th:fragment="competition-status(competition)">

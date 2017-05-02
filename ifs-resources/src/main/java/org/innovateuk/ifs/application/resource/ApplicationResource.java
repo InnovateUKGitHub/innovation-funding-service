@@ -26,14 +26,15 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 @FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
 public class ApplicationResource {
     private static final int MIN_DURATION_IN_MONTHS = 1;
+
     private static final int MAX_DURATION_IN_MONTHS = 36;
 
     private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
+
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
     private static final List<CompetitionStatus> SUBMITTABLE_COMPETITION_STATES = asList(OPEN);
     private static final List<ApplicationState> SUBMITTED_APPLICATION_STATES =
             asList(ApplicationState.SUBMITTED, ApplicationState.APPROVED, ApplicationState.REJECTED);
-
     private Long id;
 
     @NotBlank(message ="{validation.project.name.must.not.be.empty}")
@@ -41,12 +42,13 @@ public class ApplicationResource {
 
     @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
-    private ZonedDateTime submittedDate;
 
+    private ZonedDateTime submittedDate;
     @Min(value=MIN_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
     @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
     @NotNull
     private Long durationInMonths;
+
     private ApplicationState applicationState;
     private Long competition;
     private String competitionName;
@@ -54,14 +56,20 @@ public class ApplicationResource {
     private CompetitionStatus competitionStatus;
     private BigDecimal completion;
     private Boolean stateAidAgreed;
-
     @NotNull(message="{validation.application.must.indicate.resubmission.or.not}")
     private Boolean resubmission;
+
     private String previousApplicationNumber;
     private String previousApplicationTitle;
+    @NotNull(message="{validation.application.research.category.required}")
     private ResearchCategoryResource researchCategory;
+
+    @NotNull(message="{validation.application.innovationarea.category.required}")
     private InnovationAreaResource innovationArea;
+
     private boolean noInnovationAreaApplicable;
+
+    private IneligibleOutcomeResource ineligibleOutcome;
 
     public Long getId() {
         return id;
@@ -133,17 +141,25 @@ public class ApplicationResource {
     public boolean isOpen(){
         return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
     }
+
     @JsonIgnore
     public void enableViewMode(){
         setApplicationState(ApplicationState.SUBMITTED);
     }
-
     public Long getAssessorFeedbackFileEntry() {
         return assessorFeedbackFileEntry;
     }
 
     public void setAssessorFeedbackFileEntry(Long assessorFeedbackFileEntry) {
         this.assessorFeedbackFileEntry = assessorFeedbackFileEntry;
+    }
+
+    public IneligibleOutcomeResource getIneligibleOutcome() {
+        return ineligibleOutcome;
+    }
+
+    public void setIneligibleOutcome(final IneligibleOutcomeResource ineligibleOutcome) {
+        this.ineligibleOutcome = ineligibleOutcome;
     }
 
     @Override
@@ -160,6 +176,7 @@ public class ApplicationResource {
                 .append(startDate, that.startDate)
                 .append(durationInMonths, that.durationInMonths)
                 .append(applicationState, that.applicationState)
+                .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(competition, that.competition)
                 .append(assessorFeedbackFileEntry, that.assessorFeedbackFileEntry)
                 .isEquals();
@@ -173,6 +190,7 @@ public class ApplicationResource {
                 .append(startDate)
                 .append(durationInMonths)
                 .append(applicationState)
+                .append(ineligibleOutcome)
                 .append(competition)
                 .append(assessorFeedbackFileEntry)
                 .toHashCode();

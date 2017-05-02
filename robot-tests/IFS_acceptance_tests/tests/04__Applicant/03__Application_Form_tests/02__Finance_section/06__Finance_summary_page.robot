@@ -10,10 +10,13 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 ...
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
+...
+...               INFUND-8397  Permission denied when submitting your finances as a collaborator
+...
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Applicant  Failing
-# TODO This fails because of Finance Summary/Summaries link
+Force Tags        Applicant
+# This Suite is failing due to INFUND-9145
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
@@ -87,6 +90,13 @@ Green check should show when the finances are complete
     When the user clicks the button/link    link=Finances overview
     Then Green check should be visible
 
+Collaborator marks finances as complete
+    [Documentation]    INFUND-8397
+    [Tags]
+    log in as a different user    &{collaborator1_credentials}
+    When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}
+
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
@@ -94,7 +104,7 @@ Alert shows If the academic research participation is too high
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
-    When the user enters text to a text field      id=incurred-staff    1000
+    When the user enters text to a text field      id=incurred-staff    1000000
     And log in as a different user  &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are not within the required range
@@ -107,8 +117,8 @@ Alert shows If the academic research participation is too high
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
     [Tags]
-    [Setup]    Log in as a different user   &{lead_applicant_credentials}
-    When Lead enters a valid research participation value
+    [Setup]
+    When lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are within the required range
     And the user navigates to the page    ${DASHBOARD_URL}
@@ -169,6 +179,7 @@ the red warning should be visible
 Lead enters a valid research participation value
     When the user navigates to the academic application finances
     the user clicks the button/link       link=Your project costs
+    run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=.buttonlink:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')

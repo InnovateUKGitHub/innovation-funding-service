@@ -6,13 +6,13 @@ import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmoun
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.LeadApplicantType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -20,6 +20,9 @@ import java.util.Optional;
  */
 @Service
 public class EligibilitySectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+
+	public static final String RESEARCH_CATEGORY_ID = "researchCategoryId";
+	public static final String LEAD_APPLICANT_TYPES = "leadApplicantTypes";
 
 	@Autowired
 	private CompetitionService competitionService;
@@ -54,29 +57,35 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 		CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
 		competition.setCollaborationLevel(level);
 		
-		LeadApplicantType type = LeadApplicantType.fromCode(eligibilityForm.getLeadApplicantType());
-		competition.setLeadApplicantType(type);
+		competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
 		
 		return competitionService.update(competition);
 	}
 
 	@Override
 	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
-        if("researchCategoryId".equals(fieldName)) {
-            processResearchCategoryForAutoSave(value, competitionResource);
+        if(RESEARCH_CATEGORY_ID.equals(fieldName)) {
+            removeIfPresentAddIfNot(value, competitionResource.getResearchCategories());
             return competitionService.update(competitionResource);
         }
+        if(LEAD_APPLICANT_TYPES.equals(fieldName)){
+			removeIfPresentAddIfNot(value, competitionResource.getLeadApplicantTypes());
+			return competitionService.update(competitionResource);
+		}
 		return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
 	}
 
-	private void processResearchCategoryForAutoSave(String inputValue, CompetitionResource competitionResource) {
-        Long value = Long.parseLong(inputValue);
-        if (competitionResource.getResearchCategories().contains(value)) {
-			competitionResource.getResearchCategories().remove(value);
-        } else {
-			competitionResource.getResearchCategories().add(value);
-        }
-    }
+
+	private void removeIfPresentAddIfNot(String inputValue, Collection<Long> collection){
+		Long value = Long.parseLong(inputValue);
+		if (collection.contains(value)) {
+			collection.remove(value);
+		} else {
+			collection.add(value);
+		}
+	}
+
+
 
 	@Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {

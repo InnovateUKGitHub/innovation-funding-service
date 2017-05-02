@@ -16,14 +16,14 @@ public class OrganisationAddressViewModel {
     }
 
     public boolean isResearch() {
-        return OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationType.getId());
+        return OrganisationTypeEnum.RESEARCH.getId().equals(organisationType.getId());
     }
 
     public String getOrganisationTypeName() {
         return organisationType.getName().toLowerCase();
     }
 
-    public boolean isLeadApplicant() {
-        return isLeadApplicant;
+    public Boolean isShowOrgType() {
+        return !isLeadApplicant;
     }
 }

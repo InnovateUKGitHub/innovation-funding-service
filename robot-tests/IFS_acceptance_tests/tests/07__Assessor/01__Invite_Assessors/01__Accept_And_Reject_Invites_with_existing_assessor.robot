@@ -61,12 +61,12 @@ Competition brief link can be seen
     [Documentation]    INFUND-5494
     [Tags]
     When the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then the user should see the element    link=View competition brief
+    Then The user opens the link in new window  View competition brief
 
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When the user clicks the button/link    link=View competition brief
+    When The user opens the link in new window  View competition brief
     Then The user should get a competition brief window
     And the user should not see an error in the page
     And the user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
@@ -184,7 +184,7 @@ Number of days remaining until assessment submission
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
     [Tags]    MySQL    HappyPath
-    Then the total calculation in dashboard should be correct    Competitions for assessment    //div[3]/div/ul/li
+    Then the total calculation in dashboard should be correct    Competitions for assessment    //div/div/ul/li
 
 Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895

@@ -30,12 +30,12 @@ public class ProjectTeamStatusResource {
 
     @JsonIgnore
     public ProjectPartnerStatusResource getLeadPartnerStatus() {
-        return partnerStatuses.stream().filter(status -> status instanceof ProjectLeadStatusResource).findFirst().orElse(null);
+        return partnerStatuses.stream().filter(ProjectPartnerStatusResource::isLead).findFirst().orElse(null);
     }
 
     @JsonIgnore
     public List<ProjectPartnerStatusResource> getOtherPartnersStatuses(){
-        return partnerStatuses.stream().filter(status -> !(status instanceof ProjectLeadStatusResource)).collect(Collectors.toList());
+        return partnerStatuses.stream().filter(status -> !status.isLead()).collect(Collectors.toList());
     }
 
     @JsonIgnore

@@ -348,8 +348,7 @@ the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
 the user selects feasibility studies and no to resubmission
-    the user clicks the button/link    jQuery=legend:contains("Research category")
-    the user clicks the button/link    jQuery=button:contains("Choose your research")
+    the user clicks the button/link    jQuery=label:contains("Research category")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
@@ -494,7 +493,6 @@ the user completes the new account creation
     the user enters text to a text field     JQuery=input[id="lastName"]   smithson
     the user enters text to a text field     jQuery=input[id="phoneNumber"]   077712567890
     the user enters text to a text field     jQuery=input[id="password"]  ${correct_password}
-    the user enters text to a text field    jQuery=input[id="retypedPassword"]  ${correct_password}
     the user selects the checkbox      termsAndConditions
     the user clicks the button/link     jQuery=button:contains("Create account")
     the user should see the text in the page    Please verify your email address

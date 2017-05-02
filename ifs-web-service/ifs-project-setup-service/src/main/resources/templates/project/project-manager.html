@@ -11,11 +11,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
-
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
-                <h1 class="heading-xlarge">Project Manager</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project Manager',subTitle=${model.projectName},size='heading-xlarge'" />
 
             <p>As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 

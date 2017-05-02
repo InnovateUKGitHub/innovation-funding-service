@@ -10,17 +10,8 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-
-            <div th:include="fragments/layout :: header-sub"
-                 th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}"
-                 th:remove="tag" />
-
-            <h1 class="heading-xlarge">
-                <span class="heading-secondary">
-                    <th:block th:text="|${model.competitionId}: ${model.competitionName}|">00000001: Connected digital additive manufacturing</th:block>
-                </span>
-                Applications
-            </h1>
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
             <h2 class="heading-medium">Key statistics</h2>
             <ul class="grid-row">
@@ -47,9 +38,6 @@
                         <small>Applications submitted</small>
                     </div>
                 </li>
-
-                <!--/* TODO: Implement ineligible applications - INFUND-7373
-
                 <li class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
                         <span class="heading-large" th:text="${model.ineligibleApplications}">0</span>
@@ -57,7 +45,6 @@
                         <small>Ineligible applications</small>
                     </div>
                 </li>
-                */-->
             </ul>
 
             <h2 class="heading-medium">Applications navigation</h2>
@@ -79,14 +66,9 @@
                 </li>
 
                 */-->
-
-                <!--/* TODO: Implement ineligible applications - INFUND-7373
-
                 <li>
-                    <a class="" href="#">Ineligible applications</a>
+                    <a class="" th:href="@{/competition/{cid}/applications/ineligible(cid=${model.competitionId})}">Ineligible applications</a>
                 </li>
-
-                */-->
             </ul>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

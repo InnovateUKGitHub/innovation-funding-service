@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.User;
@@ -15,6 +16,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -108,5 +110,17 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()));
+    }
+
+    @Test
+    public void informIneligible() throws Exception {
+        long applicationId = 1L;
+        ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource().build();
+        when(applicationServiceMock.informIneligible(applicationId, resource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(resource)))
+                .andExpect(status().isOk());
     }
 }

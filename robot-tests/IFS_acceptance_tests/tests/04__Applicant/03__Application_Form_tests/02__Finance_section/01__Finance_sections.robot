@@ -11,6 +11,8 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-2961: ‘Working days per year’ in Labour Costs do not default to 232.
 ...
 ...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
+...
+...               INFUND-8355: Project finance team - overheads
 Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -18,7 +20,7 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
-${applicationName}  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}
 # ${OPEN_COMPETITION_APPLICATION_2_NAME} == Planetary science Pluto\'s telltale heart
 
 *** Test Cases ***
@@ -136,12 +138,14 @@ File upload mandatory for Academic partner to mark section as complete
     then the user should see a field error     css=a.uploaded-file
 
 Applicant chooses Calculate overheads option
-    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
+    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405 , INFUND-8355
     [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page  ${applicationName}
     then the user fills in the project costs       ${applicationName}
+    When the user clicks the button/link      link=Your project costs
+    then the user should see the text in the page     ${excel_file}
 
 *** Keywords ***
 Custom Suite Setup
@@ -191,3 +195,4 @@ the user should see the funding guidance
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
     the user should not see the element           jQuery=#details-content-0 p
+

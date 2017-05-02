@@ -9,12 +9,10 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:insert="fragments/layout :: header-sub"
-         th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}"
-         th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
     <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
-        <h2 class="heading-medium no-margin">Submit to lead partner</h2>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit to lead partner',size='heading-medium'" />
         <p>Are you sure you want to submit your spend profile to the lead partner?</p>
         <hr />
         <input type="submit" class="button large" value="Submit"/>

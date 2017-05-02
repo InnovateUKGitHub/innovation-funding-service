@@ -21,16 +21,26 @@ items:
         creationTimestamp: null
         labels:
           deploymentconfig: application-svc
-
-
       spec:
         containers:
         - image: innovateuk/application-service:1.0-SNAPSHOT
+          name: application-svc
+          livenessProbe:
+            httpGet:
+              path: /monitoring/live
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /health
+              path: /monitoring/ready
               port: 8080
-          name: application-svc
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           imagePullPolicy: Always
           env:
           - name: SPRING_APPLICATION_JSON

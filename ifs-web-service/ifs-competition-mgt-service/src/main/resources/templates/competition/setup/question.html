@@ -14,20 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${currentSection.toString() == 'HOME'}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${competition.id})}" th:if="${currentSection.toString() != 'HOME'}" />
 
-
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <div class="page-title">
-              <h1 th:if="${currentSection.toString() == 'HOME'}" class="heading-xlarge">Competition Setup</h1>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-title">
-        <p class="subtitle" th:text="${competitionName}"></p>
-        <h1 class="heading-xlarge" th:if="${editable}">Edit '<th:block th:text="${competitionSetupForm.question.shortTitle}" />'</h1>
-        <h1 class="heading-xlarge" th:unless="${editable}" th:text="${competitionSetupForm.question.shortTitle}" />
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${editable} ? |Edit '${competitionSetupForm.question.shortTitle}'| : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='heading-xlarge'" />
 
     <p class="extra-margin">
         You can edit this question for the applicant as well as the guidance for assessors.
