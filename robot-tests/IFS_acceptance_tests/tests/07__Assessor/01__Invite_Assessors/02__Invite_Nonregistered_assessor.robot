@@ -101,8 +101,8 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the text in the page    There are currently no assessments for you to review.
-    And the user reads his email and clicks the link    ${test_mailbox_one}+thomas.fister@gmail.com    	Innovate UK applicant questionnaire   Please complete the short diversity survey
-    [Teardown]      the user navigates to the page    ${LOGIN_URL}
+    And the user reads his email and clicks the link    ${test_mailbox_one}+thomas.fister@gmail.com    Innovate UK assessor questionnaire    diversity survey
+    [Teardown]    the user navigates to the page    ${LOGIN_URL}
 
 Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
