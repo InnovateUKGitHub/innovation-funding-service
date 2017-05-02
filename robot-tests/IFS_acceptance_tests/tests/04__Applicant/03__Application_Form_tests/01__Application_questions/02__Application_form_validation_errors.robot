@@ -103,7 +103,7 @@ Application details server side
     Then The user should see an error    Please enter the full title of the project.
     And the user should see an error    Please enter a future date.
     And the user should see an error    This field cannot be left blank.
-    And the user should see an error    Please tell us if this application is a resubmission or not.
+    And the user should see an error    Is this application a resubmission?
     And the user should see an error    Please enter the full title of the project.
     And the user should see an error    Please select a research category.
     And the user should see the element    css=.error-summary-list
