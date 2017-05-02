@@ -60,7 +60,8 @@ public class ApplicationTeamAddOrganisationController {
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                      @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        //checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        validateRequest(applicationResource, loggedInUser.getId());
 
         if (form.getApplicants().isEmpty()) {
             form.getApplicants().add(new ApplicantInviteForm());
@@ -77,7 +78,8 @@ public class ApplicationTeamAddOrganisationController {
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        //checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        validateRequest(applicationResource, loggedInUser.getId());
 
         validateUniqueEmails(form, bindingResult);
 
@@ -97,7 +99,8 @@ public class ApplicationTeamAddOrganisationController {
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        //checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        validateRequest(applicationResource, loggedInUser.getId());
         form.getApplicants().add(new ApplicantInviteForm());
         return doViewAddOrganisation(model, applicationResource);
     }
@@ -109,9 +112,22 @@ public class ApplicationTeamAddOrganisationController {
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        //checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        validateRequest(applicationResource, loggedInUser.getId());
         form.getApplicants().remove(position.intValue());
         return doViewAddOrganisation(model, applicationResource);
+    }
+
+
+    private void validateRequest(ApplicationResource applicationResource, long loggedInUserId) {
+        checkIfApplicationAlreadySubmitted(applicationResource);
+        checkUserIsLeadApplicant(applicationResource, loggedInUserId);
+    }
+
+    private void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
+        if (applicationResource.hasBeenSubmitted()){
+            throw new ForbiddenActionException("Application has already been submitted");
+        }
     }
 
     private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
