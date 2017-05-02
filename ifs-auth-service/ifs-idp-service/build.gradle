@@ -29,6 +29,8 @@ def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"1234567890"
 
 task prepareDockerFile(type: Copy) {
+    dependsOn ':ifs-auth-service:prepareSecrets'
+
     doFirst {
         assert file(idpProxyKeyFile).exists() 
         assert file(idpProxyCertificateFile).exists() 
@@ -46,25 +48,18 @@ task prepareDockerFile(type: Copy) {
     into 'src/main/docker/'
     include 'Dockerfile-template'
     rename 'Dockerfile-template', 'Dockerfile'
-    filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey])
+    filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
+                                   version: project.properties['version']])
 }
 
 task buildDocker(type: Docker) {
+    dependsOn ':ifs-auth-service:ifs-registration-service:build'
     dependsOn prepareDockerFile
 
     push = false
     applicationName = 'idp-service'
     dockerfile = file('src/main/docker/Dockerfile')
     doFirst {
-        configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts
-                .each { artifact ->
-            project.copy {
-                from artifact.file
-                into "${buildDir}/docker"
-                rename { "regapi.war" }
-            }
-        }
-
         copy {
             from fileTree('src/main/docker/apache')
             into "${stageDir}/apache"
@@ -88,6 +83,13 @@ task buildDocker(type: Docker) {
         copy {
             from fileTree('src/main/docker/certs')
             into "${stageDir}/certs"
+        }
+        configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts
+                .each { artifact ->
+            project.copy {
+                from artifact.file
+                into "${stageDir}/idp"
+            }
         }
     }
 }

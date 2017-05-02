@@ -26,25 +26,27 @@ def String idpSigningCertificateFile = "${buildDir}/idp-signing.crt"
 def String idpEncryptionKeyFile = "${buildDir}/idp-encryption.key"
 def String idpEncryptionCertificateFile = "${buildDir}/idp-encryption.crt"
 
-task prepareIDPProxySecrets(type: Exec) {
+def String opensslConfigurationFile = project.hasProperty('openssl.configuration.file') ? project['openssl.configuration.file'] : '/System/Library/OpenSSL/openssl.cnf'
+
+task prepareIDPProxySecrets {
     onlyIf { !file(idpProxyKeyFile).exists() || !file(idpProxyCertificateFile).exists() || !file(idpProxyCacertificateFile).exists() }
     buildDir.mkdir()
 
-    executable = 'openssl'
-    args = ['req', '-x509',
-            '-newkey', 'rsa:4096',
-            '-keyout', idpProxyKeyFile,
-            '-out', idpProxyCertificateFile,
-            '-days', '3650',
-            '-nodes',
-            '-subj', '/C=GB/ST=Wiltshire/L=Swindon/O=Innovate UK/OU=IFS/CN=auth.local-dev'
-    ]
+    doFirst {
+        // Generating a self-signed certificate with a SAN can only be done using a configuration file
+	assert file(opensslConfigurationFile).exists()
+        new File('/tmp/openssl.cnf').write(file(opensslConfigurationFile).text + '\n[SAN]\nsubjectAltName=DNS:iuk-auth-localdev')
+
+        // a valid CA certificate is required for the data service to work
+        assert project.hasProperty('idp.proxy.key')
+        new File(idpProxyKeyFile).write(project['idp.proxy.key'])
+        assert project.hasProperty('idp.proxy.certificate')
+        new File(idpProxyCertificateFile).write(project['idp.proxy.certificate'])
+        assert project.hasProperty('idp.proxy.cacertificate')
+        new File(idpProxyCacertificateFile).write(project['idp.proxy.cacertificate'])
+    }
+
     doLast {
-        copy {
-            from file(idpProxyCertificateFile)
-            into buildDir
-            rename 'idp_proxy_certificate.pem', 'idp_proxy_cacertificate.pem'
-        }
         copy {
             from file(idpProxyKeyFile)
             from file(idpProxyCertificateFile)

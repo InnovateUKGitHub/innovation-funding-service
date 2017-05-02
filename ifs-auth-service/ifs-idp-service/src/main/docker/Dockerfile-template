@@ -28,7 +28,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
   LDAPRRETURNATTRIBUTE="mail,uid" \
   LDAPVALIDATEPERIOD="PT20S" \
   REGAPIKEY=@auth_idp_regapikey@ \
-  REGAPIVER="0.0.16" \
   IDP_PROXY_KEY="idp_proxy_key.pem" \
   IDP_PROXY_CERTIFICATE="idp_proxy_certificate.pem" \
   IDP_PROXY_CACERTIFICATE="idp_proxy_cacertificate.pem" \
@@ -105,7 +104,7 @@ RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f
   mkdir /etc/tomcat8/certs && chown root:tomcat8 /etc/tomcat8/certs && chmod 0710 /etc/tomcat8/certs && \
   mv /idp/server.xml /etc/tomcat8/ && chmod 644 /etc/tomcat8/server.xml && \
   mv /idp/tomcat8 /etc/default/tomcat8 && \
-  mv /idp/shibboleth-api-${REGAPIVER}.war /var/lib/tomcat8/webapps/shibboleth-api.war && chmod 644 /var/lib/tomcat8/webapps/shibboleth-api.war && \
+  mv /idp/ifs-registration-service-@version@.war /var/lib/tomcat8/webapps/shibboleth-api.war && chmod 644 /var/lib/tomcat8/webapps/shibboleth-api.war && \
   openssl req -subj "/CN=auth.local-dev" -new -newkey rsa:2048 -days 7300 -nodes -x509 -sha256 -keyout /etc/tomcat8/certs/server.key -out /etc/tomcat8/certs/server.crt && \
   openssl req -subj "/CN=auth.local-dev" -new -newkey rsa:2048 -days 7300 -nodes -x509 -sha256 -keyout /etc/apache2/certs/proxy.key -out /etc/apache2/certs/proxy.pem && \
   cat /etc/apache2/certs/proxy.key >> /etc/apache2/certs/proxy.pem && rm -f /etc/apache2/certs/proxy.key && \
@@ -129,6 +128,7 @@ RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f
   mv /idp/idp-signing.* . && \
   mv /idp/idp-encryption.* . && \
   mv /idp/sealer.* . && \
+  cp /opt/shibboleth-idp/credentials/* /var/lib/tomcat8/lib/ && \
   cp /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
   mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
   chgrp -R 0 /etc/shibboleth \
