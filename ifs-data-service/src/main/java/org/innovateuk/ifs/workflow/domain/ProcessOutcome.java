@@ -2,13 +2,14 @@ package org.innovateuk.ifs.workflow.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.util.AuditableEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "outcome_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class ProcessOutcome<ProcessType extends Process> {
+public abstract class ProcessOutcome<ProcessType extends Process> extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

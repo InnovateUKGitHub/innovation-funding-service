@@ -10,13 +10,8 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-
-            <div class="page-title">
-                <h1 class="heading-xlarge">Confirm rejection</h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm rejection',size='heading-xlarge'" />
             <p>Are you sure you want to reject <strong>'<span th:text="${model.competitionName}" th:remove="tag" />'</strong>?</p>
-
             <th:block th:insert="fragments/assessment :: assessor-reject-competition-form (inviteHash=${model.competitionInviteHash})" />
 
             <th:block th:insert="fragments/layout :: main-content-end" />

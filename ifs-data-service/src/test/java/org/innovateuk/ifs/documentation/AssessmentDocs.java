@@ -6,7 +6,6 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -20,7 +19,6 @@ public class AssessmentDocs {
     public static final FieldDescriptor[] assessmentFields = {
             fieldWithPath("id").description("Id of the assessment"),
             fieldWithPath("event").description("currently not used"),
-            fieldWithPath("lastModified").description("last modified"),
             fieldWithPath("startDate").description("start date of the assessment"),
             fieldWithPath("endDate").description("end date of the assessment"),
             fieldWithPath("fundingDecision").description("Response to the application funding confirmation"),
@@ -41,7 +39,6 @@ public class AssessmentDocs {
             .withRejection(assessmentRejectOutcomeResourceBuilder)
             .withActivityState(OPEN)
             .withProcessEvent(ProcessEvent.ASSESSMENT)
-            .withLastModifiedDate(ZonedDateTime.now())
             .withProcessRole(1L)
             .withApplication(2L);
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.viewmodel;
 
+import org.innovateuk.ifs.project.spendprofile.controller.OrganisationReviewDetails;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,23 +16,20 @@ public class ProjectSpendProfileProjectSummaryViewModel {
     private Long projectId;
     private Long applicationId;
     private String projectName;
-    private Map<String, Boolean> partnerSpendProfileProgress;
-    private Map<String, Boolean> editablePartners;
+    private Map<Long, OrganisationReviewDetails> editablePartners;
     private List<OrganisationResource> partnerOrganisations;
     private OrganisationResource leadOrganisation;
     private boolean submitted;
     private boolean approved;
 
     public ProjectSpendProfileProjectSummaryViewModel(Long projectId, Long applicationId, String projectName,
-                                                      Map<String, Boolean> partnerSpendProfileProgress,
                                                       List<OrganisationResource> partnerOrganisations,
                                                       OrganisationResource leadOrganisation, boolean submitted,
-                                                      Map<String, Boolean> editablePartners,
+                                                      Map<Long, OrganisationReviewDetails> editablePartners,
                                                       boolean approved) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
-        this.partnerSpendProfileProgress = partnerSpendProfileProgress;
         this.partnerOrganisations = partnerOrganisations;
         this.leadOrganisation = leadOrganisation;
         this.submitted = submitted;
@@ -55,17 +53,10 @@ public class ProjectSpendProfileProjectSummaryViewModel {
         this.projectName = projectName;
     }
 
-    public Map<String, Boolean> getPartnerSpendProfileProgress() {
-        return partnerSpendProfileProgress;
-    }
-
-    public Map<String, Boolean> getEditablePartners() {
+    public Map<Long, OrganisationReviewDetails> getEditablePartners() {
         return editablePartners;
     }
 
-    public void setPartnerSpendProfileProgress(Map<String, Boolean> partnerSpendProfileProgress) {
-        this.partnerSpendProfileProgress = partnerSpendProfileProgress;
-    }
 
     public List<OrganisationResource> getPartnerOrganisations() {
         return partnerOrganisations;
@@ -80,9 +71,9 @@ public class ProjectSpendProfileProjectSummaryViewModel {
     }
 
     public Boolean isMarkAsComplete() {
-        return partnerSpendProfileProgress.values()
+        return editablePartners.values()
                 .stream()
-                .allMatch(markAsComplete -> markAsComplete);
+                .allMatch(partner -> partner.isMarkedComplete());
     }
 
     public boolean isSubmitted() {
@@ -108,7 +99,6 @@ public class ProjectSpendProfileProjectSummaryViewModel {
                 .append(projectId, that.projectId)
                 .append(applicationId, that.applicationId)
                 .append(projectName, that.projectName)
-                .append(partnerSpendProfileProgress, that.partnerSpendProfileProgress)
                 .append(editablePartners, that.editablePartners)
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .append(approved, that.approved)
@@ -121,7 +111,6 @@ public class ProjectSpendProfileProjectSummaryViewModel {
                 .append(projectId)
                 .append(applicationId)
                 .append(projectName)
-                .append(partnerSpendProfileProgress)
                 .append(editablePartners)
                 .append(partnerOrganisations)
                 .append(submitted)

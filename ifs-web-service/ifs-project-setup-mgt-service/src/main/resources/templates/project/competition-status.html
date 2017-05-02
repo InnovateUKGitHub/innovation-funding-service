@@ -13,10 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}"/>
     <div class="grid-row">
       <div class="column-two-thirds">
-        <div class="page-title">
-          <p class="subtitle no-margin" th:text="${model.competitionProjectsStatusResource.competitionNumber+': Innovate UK'}" />
-          <h1 class="heading-xlarge" th:text="${model.competitionProjectsStatusResource.competitionName}" />
-        </div>
+          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
       </div>
         <div class="column-third alignright extra-margin">
           <h2 class="bold-small blue-block">Projects in setup</h2>

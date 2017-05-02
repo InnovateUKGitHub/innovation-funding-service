@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
@@ -97,5 +98,11 @@ public class ApplicationController {
     public RestResult<Void> markAsIneligible(@PathVariable("applicationId") long applicationId,
                                              @RequestBody IneligibleReasonResource reason) {
         return applicationService.markAsIneligible(applicationId, reason.getReason()).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/informIneligible/{applicationId}")
+    public RestResult<Void> informIneligible(@PathVariable("applicationId") final long applicationId,
+                                             @RequestBody ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+        return applicationService.informIneligible(applicationId, applicationIneligibleSendResource).toPostResponse();
     }
 }

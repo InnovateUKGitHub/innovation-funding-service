@@ -11,12 +11,7 @@
 <main tabindex="-1" id="content" class="no-grid" th:with="project=${model.project}">
     <div class="grid-container">
         <th:block th:insert="fragments/layout :: main-content-start" />
-
-
-        <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectName=${project.name})" />
-            <h1 class="heading-xlarge">Spend profile</h1>
-        </div>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='heading-xlarge'" />
 
         <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
             <div class="error-summary" th:if="${#fields.hasErrors('*')}">
