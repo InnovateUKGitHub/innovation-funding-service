@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Class for converting between
+ * Class for providing competition resource and domain objects for security checks
  */
 
 @Component
