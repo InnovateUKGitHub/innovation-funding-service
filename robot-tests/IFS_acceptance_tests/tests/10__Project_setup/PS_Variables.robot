@@ -3,11 +3,11 @@ Resource    ../../resources/variables/GLOBAL_VARIABLES.robot
 *** Variables ***
 #Project: London underground – enhancements to existing stock and logistics
 # GOL = Grant Offer Letter
-${Gabtype_Id}       53
+${Gabtype_Id}       52
 ${Gabtype_Name}     Gabtype
-${Kazio_Id}         54
+${Kazio_Id}         53
 ${Kazio_Name}       Kazio
-${Cogilith_Id}      55
+${Cogilith_Id}      54
 ${Cogilith_Name}    Cogilith
 ${PS_GOL_Competition_Id}  10
 ${PS_GOL_APPLICATION_NO}         80
@@ -25,11 +25,11 @@ ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.c
 
 #Project: High-speed rail and its effects on air quality
 # MD = Mandatory Documents
-${Ooba_Id}          50
+${Ooba_Id}          49
 ${Ooba_Name}        Ooba
-${Wordpedia_Id}     51
+${Wordpedia_Id}     50
 ${Wordpedia_Name}   Wordpedia
-${Jabbertype_Id}    52
+${Jabbertype_Id}    51
 ${Jabbertype_Name}  Jabbertype
 ${PS_MD_Competition_Id}         10
 ${PS_MD_Competition_Name}       Rolling stock future developments
@@ -47,11 +47,11 @@ ${PS_MD_APPLICATION_ACADEMIC_EMAIL}          antonio.jenkins@jabbertype.example.
 
 #Project: Point control and automated monitoring
 # SP = Spend Profile
-${Katz_Id}         47
+${Katz_Id}         46
 ${Katz_Name}       Katz
-${Meembee_Id}      48
+${Meembee_Id}      47
 ${Meembee_Name}    Meembee
-${Zooveo_Id}       49
+${Zooveo_Id}       48
 ${Zooveo_Name}     Zooveo
 ${PS_SP_Competition_Id}         10
 ${PS_SP_Competition_Name}       Rolling stock future developments
@@ -69,11 +69,11 @@ ${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
 
 #Project: Grade crossing manufacture and supply
 # BD = Bank Details
-${Vitruvius_Id}       44
+${Vitruvius_Id}       32
 ${Vitruvius_Name}     Vitruvius Stonework Limited
-${A_B_Cad_Services_Id}    45
+${A_B_Cad_Services_Id}    44
 ${A_B_Cad_Services_Name}  A B Cad Services
-${Armstrong_Butler_Id}       46
+${Armstrong_Butler_Id}       45
 ${Armstrong_Butler_Name}     Armstrong & Butler Ltd
 ${PS_BD_Competition_Id}         10
 ${PS_BD_Competition_Name}       Rolling stock future developments
@@ -95,13 +95,13 @@ ${PS_BD_APPLICATION_ACADEMIC_FINANCE}        Sara Armstrong
 
 #Project: New materials for lighter stock
 # EF = Experian feedback
-${Ntag_Id}        41
+${Ntag_Id}        40
 ${Ntag_Name}      Ntag
 ${Ntag_No}        18451018
 ${Ntag_Street}    39357 Fisk Drive
-${Jetpulse_Id}    42
+${Jetpulse_Id}    41
 ${Jetpulse_Name}  Jetpulse
-${Wikivu_Id}      43
+${Wikivu_Id}      42
 ${Wikivu_Name}    Wikivu
 ${PS_EF_Competition_Id}         10
 ${PS_EF_Competition_Name}       Rolling stock future developments
