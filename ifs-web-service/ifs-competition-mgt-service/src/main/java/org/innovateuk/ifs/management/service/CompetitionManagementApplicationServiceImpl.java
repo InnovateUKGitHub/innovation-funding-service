@@ -92,6 +92,9 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     public String displayApplicationOverview(UserResource user, long competitionId, ApplicationForm form, String origin, MultiValueMap<String, String> queryParams, Model model, ApplicationResource application) {
         form.setAdminMode(true);
 
+        // so the mode is viewonly
+        application.enableViewMode();
+
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
