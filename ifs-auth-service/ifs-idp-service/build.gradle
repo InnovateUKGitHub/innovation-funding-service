@@ -9,6 +9,10 @@ buildscript {
     }
 }
 
+dependencies{
+    runtime project(path: ':ifs-auth-service:ifs-registration-service', configuration: 'war')
+}
+
 def String idpCertsVolume = 'src/main/docker/certs'
 
 def String idpProxyKeyFile = "${idpCertsVolume}/idp_proxy_key.pem"

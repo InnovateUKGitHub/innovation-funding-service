@@ -40,3 +40,11 @@ dependencies {
     providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-logging-juli', version:'8.0.14'
     providedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version:'8.0.14'
 }
+
+configurations {
+    war {}
+}
+
+artifacts {
+    war tasks.war
+}
