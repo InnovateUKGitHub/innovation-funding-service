@@ -31,7 +31,7 @@ function dbReset() {
       sleep 10
     done
 
-    oc rsh $(oc get pods | grep data-service | awk '{ print $1 }') rm -rf  /mnt/ifs_storage
+    oc rsh $(oc get pods | grep data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && ls | grep -v .trashcan | xargs rm -rf'
 }
 
 function blockUntilServiceIsUp() {
