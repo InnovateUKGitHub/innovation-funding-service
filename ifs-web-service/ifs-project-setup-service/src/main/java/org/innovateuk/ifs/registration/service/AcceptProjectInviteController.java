@@ -53,7 +53,7 @@ public class AcceptProjectInviteController {
     //===================================
     // Initial landing of the invite link
     //===================================
-
+/*
     @GetMapping(ACCEPT_INVITE_MAPPING + "{hash}")
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
@@ -74,6 +74,37 @@ public class AcceptProjectInviteController {
                 return restSuccess("redirect:" + ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING);
             }
         }).getSuccessObject();
+    }*/
+
+    @GetMapping(ACCEPT_INVITE_MAPPING + "{hash}")
+    public String inviteEntryPage(
+            @PathVariable("hash") final String hash,
+            HttpServletResponse response,
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        RestResult<String> result = find(inviteByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, userExists) -> {
+            ValidationMessages errors = errorMessages(loggedInUser, invite);
+            if (errors.hasErrors()) {
+                return populateModelWithErrorsAndReturnErrorView(errors, model);
+            }
+            cookieUtil.saveToCookie(response, INVITE_HASH, hash);
+            if (userExists && loggedInUser == null) {
+                return restSuccess(ACCEPT_INVITE_USER_EXISTS_BUT_NOT_LOGGED_IN_VIEW);
+            } else if (userExists) {
+                return restSuccess("redirect:" + ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING);
+            } else {
+                return restSuccess("redirect:" + ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING);
+            }
+        });
+
+        if (result.isFailure()) {
+            // Do something here
+            return ACCEPT_INVITE_FAILURE;
+        } else {
+            return result.getSuccessObject();
+        }
+
     }
 
     //==================================
