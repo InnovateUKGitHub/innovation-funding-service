@@ -60,7 +60,6 @@ public class ApplicationTeamAddOrganisationController {
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                      @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        //checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         validateRequest(applicationResource, loggedInUser.getId());
 
         if (form.getApplicants().isEmpty()) {
@@ -78,7 +77,6 @@ public class ApplicationTeamAddOrganisationController {
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        //checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         validateRequest(applicationResource, loggedInUser.getId());
 
         validateUniqueEmails(form, bindingResult);
@@ -99,7 +97,6 @@ public class ApplicationTeamAddOrganisationController {
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        //checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         validateRequest(applicationResource, loggedInUser.getId());
         form.getApplicants().add(new ApplicantInviteForm());
         return doViewAddOrganisation(model, applicationResource);
@@ -112,7 +109,6 @@ public class ApplicationTeamAddOrganisationController {
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        //checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         validateRequest(applicationResource, loggedInUser.getId());
         form.getApplicants().remove(position.intValue());
         return doViewAddOrganisation(model, applicationResource);
