@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -253,7 +254,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             Stream.of(MilestoneType.presetValues()).forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(
-                                failure -> milestoneService.create(type, data.getCompetition().getId()),
+                                failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccessObjectOrThrowException(),
                                 success -> success
                         )
             )
@@ -330,12 +331,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            MilestoneResource milestone =
-                    milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
-
-            if (milestone.getId() == null) {
-                milestone = milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
-            }
+            MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId())
+                    .handleSuccessOrFailure(
+                            failure -> milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException(),
+                            success -> success
+                    );
 
             milestone.setDate(date);
             milestoneService.updateMilestone(milestone);
