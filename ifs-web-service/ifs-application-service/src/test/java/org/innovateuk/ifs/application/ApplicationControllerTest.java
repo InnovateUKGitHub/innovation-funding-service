@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.viewmodel.AssessQuestionFeedbackViewModel;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
@@ -40,8 +39,6 @@ import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
@@ -437,38 +434,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
                 .andExpect(model().attribute("message", "1234 not found"))
                 .andExpect(model().attributeExists("stacktrace"));
-    }
-
-    @Test
-    public void testApplicationDetailsOpenSection() throws Exception {
-        ApplicationResource app = applications.get(0);
-        SectionResource section = sectionResources.get(2);
-
-        Map<Long, SectionResource> collectedSections =
-                sectionResources.stream().collect(Collectors.toMap(SectionResource::getId,
-                        Function.identity()));
-
-        when(applicationService.getById(app.getId())).thenReturn(app);
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        LOG.debug("Show dashboard for application: " + app.getId());
-        mockMvc.perform(get("/application/" + app.getId() + "/section/" + section.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-details"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("sections", collectedSections))
-                .andExpect(model().attribute("currentSectionId", section.getId()))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
-                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
     }
 
     @Test
