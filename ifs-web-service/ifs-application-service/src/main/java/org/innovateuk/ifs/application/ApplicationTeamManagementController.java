@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -370,8 +371,9 @@ public class ApplicationTeamManagementController {
         throw new ObjectNotFoundException("Organisation id not found in application id provided.", Collections.emptyList());
     }
 
-    private String validateOrganisationInviteAndApplicationId(Long applicationId, Long organisationInivteId, Supplier<String> supplier) {
-        if(inviteOrganisationRestService.getById(organisationInivteId).getSuccessObjectOrThrowException().getInviteResources().get(0).getApplication().equals(applicationId)) {
+    private String validateOrganisationInviteAndApplicationId(Long applicationId, Long organisationInviteId, Supplier<String> supplier) {
+        InviteOrganisationResource organisation = inviteOrganisationRestService.getById(organisationInviteId).getSuccessObjectOrThrowException();
+        if(organisation.getInviteResources().stream().anyMatch(applicationInviteResource -> applicationInviteResource.getApplication().equals(applicationId))) {
             return supplier.get();
         }
         throw new ObjectNotFoundException("Organisation invite id not found in application id provided.", Collections.emptyList());
