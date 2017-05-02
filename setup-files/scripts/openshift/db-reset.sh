@@ -30,6 +30,8 @@ function dbReset() {
       oc delete -f os-files-tmp/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
       sleep 10
     done
+
+    oc rsh $(oc get pods | grep data-service | awk '{ print $1 }') rm -rf  /mnt/ifs_storage
 }
 
 function blockUntilServiceIsUp() {
