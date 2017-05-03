@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
+# This script is called by a Coscale agent to return metrics about the service.
+# It is initially called with the '-c' argument to return the configuration.
+# It is then regularly polled with the '-d' argument which returns the data metrics defined by the config.
+
 for i in "$@"
 do
     case $i in
 
         -c)
-            # Configuration mode: return the custom metrics data should be defined
+            # Configuration mode: return the definition of the custom metrics (JSON format)
 
             echo -n '{';
             # First we define how long the script is allowed to run
@@ -30,7 +34,7 @@ do
             ;;
 
         -d)
-            # Data retrieval mode: return the data for the custom metrics
+            # Data retrieval mode: return the data for the custom metrics (format is defined by the config above)
 
             # Get the number of connections to port 8009
             echo "M1 $(netstat -t -n | awk '{print $4}' | grep ':8009' | wc -l)"
