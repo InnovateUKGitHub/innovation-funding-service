@@ -43,12 +43,8 @@ public class ApplicationTeamModelPopulator {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private ApplicationUtil applicationUtil;
-
     public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        applicationUtil.checkIfApplicationAlreadySubmitted(applicationResource);
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;

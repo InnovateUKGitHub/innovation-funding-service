@@ -15,7 +15,7 @@ public class ApplicationUtil {
     @Autowired
     private UserService userService;
 
-    public void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
+/*    public void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
         if (applicationResource.hasBeenSubmitted()){
             throw new ForbiddenActionException("Application has already been submitted");
         }
@@ -29,5 +29,5 @@ public class ApplicationUtil {
 
     private long getLeadApplicantId(ApplicationResource applicationResource) {
         return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
-    }
+    }*/
 }
