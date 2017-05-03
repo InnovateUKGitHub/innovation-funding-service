@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.login.form.ResetPasswordForm;
 import org.innovateuk.ifs.login.form.ResetPasswordRequestForm;
-import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
