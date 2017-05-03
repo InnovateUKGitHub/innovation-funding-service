@@ -4,9 +4,7 @@ import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,9 +29,6 @@ public class ApplicationTeamController {
     @Autowired
     private ApplicationService applicationService;
 
-/*    @Autowired
-    private UserService userService;*/
-
     @Autowired
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
@@ -55,16 +50,6 @@ public class ApplicationTeamController {
         changeApplicationStatusToOpen(applicationResource);
         return format("redirect:/application/%s", applicationResource.getId());
     }
-
-/*    private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
-        if (loggedInUserId != getLeadApplicantId(applicationResource)) {
-            throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
-        }
-    }*/
-
-/*    private long getLeadApplicantId(ApplicationResource applicationResource) {
-        return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
-    }*/
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
         if (ApplicationState.CREATED == applicationResource.getApplicationState()) {

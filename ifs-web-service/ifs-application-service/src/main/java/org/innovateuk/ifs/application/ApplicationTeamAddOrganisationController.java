@@ -5,14 +5,12 @@ import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamAddOrganisationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,9 +46,6 @@ public class ApplicationTeamAddOrganisationController {
 
     @Autowired
     private InviteRestService inviteRestService;
-/*
-    @Autowired
-    private UserService userService;*/
 
     @Autowired
     private ApplicationUtil applicationUtil;
@@ -123,22 +118,6 @@ public class ApplicationTeamAddOrganisationController {
         applicationUtil.checkIfApplicationAlreadySubmitted(applicationResource);
         applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUserId);
     }
-
-    /*private void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
-        if (applicationResource.hasBeenSubmitted()){
-            throw new ForbiddenActionException("Application has already been submitted");
-        }
-    }
-
-    private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
-        if (loggedInUserId != getLeadApplicantId(applicationResource)) {
-            throw new ForbiddenActionException("User must be Lead Applicant");
-        }
-    }
-
-    private long getLeadApplicantId(ApplicationResource applicationResource) {
-        return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
-    }*/
 
     private String doViewAddOrganisation(Model model, ApplicationResource applicationResource) {
         model.addAttribute("model", applicationTeamAddOrganisationModelPopulator.populateModel(applicationResource));
