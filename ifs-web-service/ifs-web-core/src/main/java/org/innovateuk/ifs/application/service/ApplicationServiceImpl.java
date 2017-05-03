@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -46,11 +45,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Boolean isApplicationReadyForSubmit(Long applicationId) {
         return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> updateState(Long applicationId, ApplicationState state) {
-        return applicationRestService.updateApplicationState(applicationId, state).toServiceResult();
     }
 
     @Override

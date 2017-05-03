@@ -16,6 +16,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -65,6 +66,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
         return find(milestoneRepository.findByTypeAndCompetitionId(type, id), notFoundError(MilestoneResource.class, type, id))
                 .andOnSuccess(milestone -> serviceSuccess(milestoneMapper.mapToResource(milestone)));

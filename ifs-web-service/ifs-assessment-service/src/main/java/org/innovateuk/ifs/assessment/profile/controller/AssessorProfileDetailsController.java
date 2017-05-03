@@ -5,9 +5,7 @@ import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDetailsMod
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditDetailsModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;

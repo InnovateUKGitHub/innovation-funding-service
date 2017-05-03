@@ -20,7 +20,6 @@ public interface CompetitionManagementApplicationService {
                                                         String> success);
 
     String displayApplicationOverview(UserResource user,
-                                      long applicationId,
                                       long competitionId,
                                       ApplicationForm form,
                                       String origin,

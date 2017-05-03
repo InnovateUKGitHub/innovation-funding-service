@@ -16,7 +16,38 @@
         <th:block th:insert="fragments/layout :: page-title " th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge '" />
     </th:block>
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
+            <th:block th:if="${ineligibility.ineligible}">
+        <h2 class="heading-small">Removed by</h2>
+        <p th:text="|${ineligibility.removedBy}, ${#temporals.format(ineligibility.removedOn, 'dd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
+
+        <h2 class="heading-small">Reason for removal</h2>
+        <p th:text="${ineligibility.reasonForRemoval}"></p>
+
+        <div class="extra-margin">
+            <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}"
+               class="button button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
+        </div>
+
+        <div class="modal-reinstate" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+            <form th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" method="post">
+                <th:block th:insert="fragments/modals :: close-button" />
+                <div>
+                    <h2 class="heading-medium no-margin">Reinstate application</h2>
+                    <p>Are you sure that you wish to reinstate this application?</p>
+                    <p>It will be added to applications requiring assessment, and will require assessors to be assigned to it.</p>
+
+                    <hr>
+
+                    <div class="alignright-button">
+                        <button class="js-close buttonlink" type="button">Cancel</button>
+                        <button class="button" type="submit">Reinstate application</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </th:block>
+
+    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
                   method="post" enctype="multipart/form-data"
                   th:object="${form}" class="form-serialize-js section-overview">
 

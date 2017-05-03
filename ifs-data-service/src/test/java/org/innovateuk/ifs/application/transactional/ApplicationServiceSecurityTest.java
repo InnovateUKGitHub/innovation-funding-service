@@ -33,6 +33,7 @@ import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -67,7 +68,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                 () -> verify(applicationRules).aLeadApplicantCanSendApplicationSubmittedNotification(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
-
 
     @Test
     public void testGetApplicationResource() {
@@ -120,7 +120,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
     }
 
-   @Test
+    @Test
     public void testCreateApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
         EnumSet<UserRoleType> nonApplicantRoles = complementOf(of(APPLICANT, SYSTEM_REGISTRATION_USER));
 
@@ -310,6 +310,19 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         );
     }
 
+    @Test
+    public void updateApplicationState() {
+        when(applicationLookupStrategy.getApplicationResource(1L)).thenReturn(newApplicationResource().build());
+
+        assertAccessDenied(
+                () -> classUnderTest.updateApplicationState(1L, SUBMITTED),
+                () -> {
+                    verify(applicationRules).compAdminCanUpdateApplicationState(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules).leadApplicantCanUpdateApplicationState(isA(ApplicationResource.class), isA(UserResource.class));
+                }
+        );
+    }
+
     @Override
     protected Class<? extends ApplicationService> getClassUnderTest() {
         return TestApplicationService.class;
@@ -406,7 +419,8 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
-        @Override public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
+        @Override
+        public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
             return null;
         }
 
@@ -420,7 +434,8 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
-        @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final ZonedDateTime fundingEmailDate) {
+        @Override
+        public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final ZonedDateTime fundingEmailDate) {
             return null;
         }
 

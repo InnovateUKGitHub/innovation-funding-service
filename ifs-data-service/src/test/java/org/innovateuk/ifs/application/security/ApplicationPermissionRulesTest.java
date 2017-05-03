@@ -399,4 +399,18 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         verify(projectRepositoryMock).findOneByApplicationId(application.getId());
         verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
     }
+
+    @Test
+    public void testLeadApplicantCanUpdateApplicationState() throws Exception {
+        assertTrue(rules.leadApplicantCanUpdateApplicationState(applicationResource1, leadOnApplication1));
+        assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, compAdmin));
+        assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, user2));
+    }
+
+    @Test
+    public void testCompAdminCanUpdateApplicationState() throws Exception {
+        assertTrue(rules.compAdminCanUpdateApplicationState(applicationResource1, compAdmin));
+        assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, leadOnApplication1));
+        assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, user2));
+    }
 }

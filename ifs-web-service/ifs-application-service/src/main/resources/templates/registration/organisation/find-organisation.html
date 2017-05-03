@@ -75,7 +75,7 @@
             <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress}">
                 <details th:attr="open=${isOpen} ? 'open' : null ">
                     <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>
-                    <div class="panel"th:attr="aria-hidden=${isOpen} ? 'false' : 'true'">
+                    <div class="panel" th:attr="aria-hidden=${isOpen} ? 'false' : null">
                         <h2 class="heading-medium">Enter your organisation details</h2>
                         <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
                         <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>

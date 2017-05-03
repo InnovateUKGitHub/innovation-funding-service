@@ -20,7 +20,7 @@ public class IneligibleOutcomeResourceBuilder extends BaseBuilder<IneligibleOutc
     }
 
     @Override
-    protected IneligibleOutcomeResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, IneligibleOutcomeResource>> actions) {
+protected IneligibleOutcomeResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, IneligibleOutcomeResource>> actions) {
         return new IneligibleOutcomeResourceBuilder(actions);
     }
 
