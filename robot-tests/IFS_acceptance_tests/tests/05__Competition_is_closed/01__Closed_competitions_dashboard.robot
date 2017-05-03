@@ -25,7 +25,7 @@ Competition dashboard
     And The user should see the text in the page    Closed
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Infrastructure systems
-    And The user should see the text in the page    Connected transport
+    And The user should see the text in the page    Smart infrastructure
     And the user should not see the element    link=View and update competition setup
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
