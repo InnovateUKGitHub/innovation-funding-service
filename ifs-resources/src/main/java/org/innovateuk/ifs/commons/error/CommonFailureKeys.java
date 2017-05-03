@@ -60,6 +60,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Applications
      */
     ASSIGNEE_SHOULD_BE_APPLICANT(BAD_REQUEST),
+    APPLICATION_MUST_BE_INELIGIBLE(BAD_REQUEST),
 
     /**
      * Public content

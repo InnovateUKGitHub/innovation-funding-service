@@ -7,16 +7,16 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.registration.OrganisationCreationController;
 import org.innovateuk.ifs.registration.RegistrationController;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -101,6 +101,33 @@ public class ApplicationCreationController {
 
         }
         return null;
+    }
+
+    @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
+    @GetMapping("/{competitionId}")
+    public String applicationCreatePage() {
+        return "application-create";
+    }
+
+    @ProfileExecution
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping("/{competitionId}")
+    public String applicationCreate(Model model,
+                                    @PathVariable("competitionId") long competitionId,
+                                    @RequestParam(value = "application_name", required = true) String applicationName,
+                                    @ModelAttribute("loggedInUser") UserResource user) {
+        Long userId = user.getId();
+
+        String applicationNameWithoutWhiteSpace = applicationName.replaceAll("\\s", "");
+
+        if (applicationNameWithoutWhiteSpace.length() > 0) {
+            ApplicationResource application = applicationService.createApplication(competitionId, userId, applicationName);
+            return "redirect:/application/" + application.getId();
+        } else {
+            model.addAttribute("applicationNameEmpty", true);
+            return "application-create";
+        }
     }
 
     private boolean isCompetitionReady(PublicContentItemResource publicContentItem) {

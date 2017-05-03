@@ -394,7 +394,7 @@ public class CompetitionResource {
     }
 
     public void setInnovationAreaNames(Set<String> innovationAreaNames) {
-        this.innovationAreaNames = innovationAreaNames;
+        this.innovationAreaNames = new TreeSet<>(innovationAreaNames);
     }
 
     public Set<Long> getResearchCategories() {

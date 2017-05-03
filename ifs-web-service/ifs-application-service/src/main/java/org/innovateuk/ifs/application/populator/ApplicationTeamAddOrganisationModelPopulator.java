@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamAddOrganisationViewModel;
+import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamAddOrganisationViewModel;
 import org.springframework.stereotype.Component;
 
 /**
