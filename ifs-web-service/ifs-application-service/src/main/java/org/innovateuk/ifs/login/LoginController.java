@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.login.form.ResetPasswordForm;
 import org.innovateuk.ifs.login.form.ResetPasswordRequestForm;
+import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +46,7 @@ public class LoginController {
         return LOGIN_BASE + "/" + RESET_PASSWORD;
     }
 
+    @ProfileExecution
     @PostMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD)
     public String requestPasswordResetPost(@ModelAttribute @Valid ResetPasswordRequestForm resetPasswordRequestForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {

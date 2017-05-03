@@ -209,6 +209,10 @@ public abstract class BaseRestService {
         return adaptor.restGetAsync(getDataRestServiceURL() + path, clazz);
     }
 
+    protected <T> Future<RestResult<T>> getWithRestResultAsyncAnonymous(String path, Class<T> returnType) {
+        return anonymousRestTemplateAdaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
+    }
+
     protected HttpHeaders createFileUploadHeader(String contentType, long contentLength){
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));
