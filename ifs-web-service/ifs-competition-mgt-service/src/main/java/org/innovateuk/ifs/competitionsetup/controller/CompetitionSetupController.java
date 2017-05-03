@@ -89,7 +89,7 @@ public class CompetitionSetupController {
     private Validator validator;
 
     @GetMapping("/{competitionId}")
-    public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
+    public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.isNonIfs()) {
@@ -102,7 +102,7 @@ public class CompetitionSetupController {
     }
 
     @PostMapping("/{competitionId}/section/{sectionPath}/edit")
-    public String setSectionAsIncomplete(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+    public String setSectionAsIncomplete(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                          @PathVariable(SECTION_PATH_KEY) String sectionPath) {
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         if (section == null) {
@@ -125,7 +125,7 @@ public class CompetitionSetupController {
     }
 
     @GetMapping("/{competitionId}/section/{sectionPath}")
-    public String editCompetitionSetupSection(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+    public String editCompetitionSetupSection(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                               @PathVariable(SECTION_PATH_KEY) String sectionPath,
                                               Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -165,7 +165,7 @@ public class CompetitionSetupController {
     public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
                                     @RequestParam("value") String value,
                                     @RequestParam(name = "objectId", required = false) Long objectId,
-                                    @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable(SECTION_PATH_KEY) String sectionPath,
                                     @PathVariable(SUBSECTION_PATH_KEY) String subsectionPath) {
 
@@ -200,7 +200,7 @@ public class CompetitionSetupController {
     public JsonNode saveFormElement(@RequestParam("fieldName") String fieldName,
                                     @RequestParam("value") String value,
                                     @RequestParam(name = "objectId", required = false) Long objectId,
-                                    @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable(SECTION_PATH_KEY) String sectionPath) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -238,7 +238,7 @@ public class CompetitionSetupController {
             @Validated({Unrestricted.class, Default.class}) @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) InitialDetailsForm competitionSetupForm,
             @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+            @PathVariable(COMPETITION_ID_KEY) long competitionId,
             Model model
     ) {
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
@@ -249,14 +249,14 @@ public class CompetitionSetupController {
     public String submitInitialSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) InitialDetailsForm competitionSetupForm,
                                               @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                               ValidationHandler validationHandler,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                               Model model) {
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
     }
 
     private String doSubmitInitialSectionDetails(InitialDetailsForm competitionSetupForm,
                                                  ValidationHandler validationHandler,
-                                                 Long competitionId,
+                                                 long competitionId,
                                                  Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
         checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competition, model);
@@ -268,7 +268,7 @@ public class CompetitionSetupController {
     public String submitAdditionalSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) AdditionalInfoForm competitionSetupForm,
                                                  BindingResult bindingResult,
                                                  ValidationHandler validationHandler,
-                                                 @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                  Model model, HttpServletRequest request) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -299,7 +299,7 @@ public class CompetitionSetupController {
     public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) EligibilityForm competitionSetupForm,
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler,
-                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                   Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -314,7 +314,7 @@ public class CompetitionSetupController {
     public String submitMilestonesSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) MilestonesForm competitionSetupForm,
                                                  BindingResult bindingResult,
                                                  ValidationHandler validationHandler,
-                                                 @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                  Model model) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -330,7 +330,7 @@ public class CompetitionSetupController {
     public String submitApplicationFormSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) LandingPageForm competitionSetupForm,
                                                       @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                       ValidationHandler validationHandler,
-                                                      @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                      @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                       Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -342,7 +342,7 @@ public class CompetitionSetupController {
     public String submitAssessorsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) AssessorsForm competitionSetupForm,
                                                 @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                 ValidationHandler validationHandler,
-                                                @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                 Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -350,7 +350,7 @@ public class CompetitionSetupController {
     }
 
     @GetMapping("/{competitionId}/ready-to-open")
-    public String setAsReadyToOpen(@PathVariable(COMPETITION_ID_KEY) Long competitionId) {
+    public String setAsReadyToOpen(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
         competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
@@ -366,7 +366,7 @@ public class CompetitionSetupController {
     /* AJAX Function */
     @GetMapping("/{competitionId}/generateCompetitionCode")
     @ResponseBody
-    public JsonNode generateCompetitionCode(@PathVariable(COMPETITION_ID_KEY) Long competitionId) {
+    public JsonNode generateCompetitionCode(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.getStartDate() != null) {
