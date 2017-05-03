@@ -33,7 +33,8 @@ Invited User gets an email to assess the competition
 Invited user accepts the invitation and follows the registration flow
     [Documentation]    INFUND-8092
     Given the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
-    And the user clicks the button/link    jQuery=.button:contains("Yes, create account")
+    And the user selects the radio button  acceptInvitation  true
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user should see the text in the page    ${test_mailbox_one}+AJE2E@gmail.com
     And The user fills and submits the registration form
