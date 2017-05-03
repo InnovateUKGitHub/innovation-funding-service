@@ -59,8 +59,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -484,12 +482,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    public void testApplicationCreateView() throws Exception {
-        mockMvc.perform(get("/application/create/1"))
-                .andExpect(view().name("application-create"));
-    }
-
-    @Test
     public void testApplicationTrack() throws Exception {
         ApplicationResource app = applications.get(0);
 
@@ -509,55 +501,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(get("/application/terms-and-conditions"))
                 .andExpect(view().name("application-terms-and-conditions"));
 
-    }
-
-    @Test
-    public void testApplicationCreateWithoutApplicationName() throws Exception {
-        ApplicationResource application = new ApplicationResource();
-        application.setName("application");
-
-        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-
-        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
-        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        mockMvc.perform(post("/application/create/1").param("application_name", ""))
-                .andExpect(view().name("application-create"))
-                .andExpect(model().attribute("applicationNameEmpty", true));
-    }
-
-    @Test
-    public void testApplicationCreateWithWhitespaceAsApplicationName() throws Exception {
-        ApplicationResource application = new ApplicationResource();
-        application.setName("application");
-
-        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-
-        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
-        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        mockMvc.perform(post("/application/create/1").param("application_name", "     "))
-                .andExpect(view().name("application-create"))
-                .andExpect(model().attribute("applicationNameEmpty", true));
-    }
-
-    @Test
-    public void testApplicationCreateWithApplicationName() throws Exception {
-        ApplicationResource application = new ApplicationResource();
-        application.setName("application");
-        application.setId(1L);
-
-        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-
-        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
-        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        mockMvc.perform(post("/application/create/1").param("application_name", "testApplication"))
-                .andExpect(view().name("redirect:/application/" + application.getId()))
-                .andExpect(model().attributeDoesNotExist("applicationNameEmpty"));
-    }
-
-    @Test
-    public void testApplicationCreateConfirmCompetitionView() throws Exception {
-        mockMvc.perform(get("/application/create-confirm-competition"))
-                .andExpect(view().name("application-create-confirm-competition"));
     }
 
     @Test
