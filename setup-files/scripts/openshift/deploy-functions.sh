@@ -77,7 +77,6 @@ function tailorAppInstance() {
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
-        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/named-envs/*.yml
     fi
 }
 
