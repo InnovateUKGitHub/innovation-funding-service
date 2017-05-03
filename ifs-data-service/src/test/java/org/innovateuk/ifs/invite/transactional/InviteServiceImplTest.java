@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -48,6 +49,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
@@ -78,6 +80,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     ApplicationInviteMapper applicationInviteMapper;
     @Mock
     InviteOrganisationMapper inviteOrganisationMapper;
+
 
     @InjectMocks
     private InviteServiceImpl inviteService = new InviteServiceImpl();
@@ -597,11 +600,12 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     public void removeApplicationInvite_deletesInviteOrganisationOnLastInvite() throws Exception {
         User user = newUser().build();
         Application application = newApplication().build();
+        Organisation organisation = newOrganisation().build();
         ApplicationInvite applicationInvite = newApplicationInvite()
                 .withId(24521L)
                 .withUser(user)
                 .withApplication(application)
-                .withInviteOrganisation(newInviteOrganisation().build())
+                .withInviteOrganisation(newInviteOrganisation().withOrganisation(organisation).build())
                 .build();
 
         List<ProcessRole> inviteProcessRoles = newProcessRole()
@@ -611,17 +615,22 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withOrganisationId(1L)
                 .build(1);
 
+        ApplicationFinance applicationFinance = newApplicationFinance().build();
+
         when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
         when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(inviteProcessRoles);
         when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId()))
                 .thenReturn(organisationProcessRoles);
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(applicationFinance);
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInvite.getId());
 
-        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
+        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock, applicationFinanceRepositoryMock);
         inOrder.verify(processRoleRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId());
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
         inOrder.verify(inviteOrganisationRepositoryMock).delete(applicationInvite.getInviteOrganisation());
+        inOrder.verify(applicationFinanceRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+        inOrder.verify(applicationFinanceRepositoryMock).delete(applicationFinance);
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(applicationInviteResult.isSuccess());

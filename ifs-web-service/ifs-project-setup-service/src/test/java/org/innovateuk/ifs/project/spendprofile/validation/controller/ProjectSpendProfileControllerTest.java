@@ -5,11 +5,11 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
-import org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.spendprofile.controller.OrganisationReviewDetails;
 import org.innovateuk.ifs.project.spendprofile.controller.ProjectSpendProfileController;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
@@ -35,6 +35,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -387,8 +388,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     private ProjectTeamStatusResource buildProjectTeamStatusResource() {
 
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(2);
-        ProjectPartnerStatusResource leadProjectPartnerStatusResource = ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource()
+        ProjectPartnerStatusResource leadProjectPartnerStatusResource = newProjectPartnerStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.ACTION_REQUIRED)
+                .withIsLeadPartner(true)
                 .build();
         partnerStatuses.add(leadProjectPartnerStatusResource);
 
@@ -544,6 +546,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         loggedInUser.setRoles(roleResources);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(projectService.getLeadOrganisation(organisationId)).thenReturn(partnerOrganisations.get(0));
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
         when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(partnerOrganisations);
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
@@ -551,7 +554,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
 
-        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true);
+        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true, false, true);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -632,18 +635,14 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         return expectedTable;
     }
 
-    private ProjectSpendProfileProjectSummaryViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(ProjectResource projectResource, List<OrganisationResource> partnerOrganisations, String partner, Boolean editable) {
+    private ProjectSpendProfileProjectSummaryViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(ProjectResource projectResource, List<OrganisationResource> partnerOrganisations, String partner, Boolean editable, Boolean markedComplete, Boolean userPartOfThisOrganisation) {
 
-        Map<String, Boolean> partnersSpendProfileProgress = new HashMap<>();
-        partnersSpendProfileProgress.put(partner, false);
-
-        Map<String, Boolean> editablePartners = new HashMap<>();
+        Map<Long, OrganisationReviewDetails> editablePartners = new HashMap<>();
         final OrganisationResource leadOrganisation = partnerOrganisations.get(0);
-        editablePartners.put(partner, editable);
+        editablePartners.put(1L, new OrganisationReviewDetails(leadOrganisation.getName(), markedComplete, userPartOfThisOrganisation, editable));
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectResource.getId(),
                 projectResource.getApplication(), projectResource.getName(),
-                partnersSpendProfileProgress,
                 partnerOrganisations,
                 leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,

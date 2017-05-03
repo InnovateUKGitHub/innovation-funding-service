@@ -13,15 +13,9 @@
 <main tabindex="-1" id="content" class="no-grid">
     <div class="grid-container">
         <th:block th:insert="fragments/layout :: main-content-start" />
-        <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub"
-             th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
-        <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub"
-             th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
-
-        <div class="page-title">
-            <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
-            <h1 class="heading-xlarge">Spend profile</h1>
-        </div>
+        <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+        <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='heading-xlarge'" />
 
         <th:block th:if="${form != null}" th:object="${form}">
             <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">

@@ -4,13 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 public class AssessmentResource {
     private Long id;
     private String event;
     private AssessmentStates assessmentState;
-    private ZonedDateTime lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
     private AssessmentFundingDecisionOutcomeResource fundingDecision;
@@ -43,14 +41,6 @@ public class AssessmentResource {
 
     public void setAssessmentState(AssessmentStates assessmentState) {
         this.assessmentState = assessmentState;
-    }
-
-    public ZonedDateTime getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(ZonedDateTime lastModified) {
-        this.lastModified = lastModified;
     }
 
     public LocalDate getStartDate() {
@@ -141,7 +131,6 @@ public class AssessmentResource {
                 .append(id, that.id)
                 .append(event, that.event)
                 .append(assessmentState, that.assessmentState)
-                .append(lastModified, that.lastModified)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
                 .append(fundingDecision, that.fundingDecision)
@@ -160,7 +149,6 @@ public class AssessmentResource {
                 .append(id)
                 .append(event)
                 .append(assessmentState)
-                .append(lastModified)
                 .append(startDate)
                 .append(endDate)
                 .append(fundingDecision)
