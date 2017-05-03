@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesAddNoteController;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
@@ -78,7 +77,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void testViewNewQuery() throws Exception {
+    public void testViewNewNote() throws Exception {
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note"))
                 .andExpect(view().name("project/financecheck/new-note"))
@@ -129,7 +128,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void testSaveNewQueryNoFieldsSet() throws Exception {
+    public void testSaveNewNoteNoFieldsSet() throws Exception {
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -156,7 +155,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void testSaveNewQueryFieldsTooLong() throws Exception {
+    public void testSaveNewNoteFieldsTooLong() throws Exception {
 
         String tooLong = StringUtils.leftPad("a", 4001, 'a');
 
@@ -185,7 +184,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void testSaveNewQueryTooManyWords() throws Exception {
+    public void testSaveNewNoteTooManyWords() throws Exception {
 
         String tooManyWords = StringUtils.leftPad("a ", 802, "a ");
 
@@ -212,7 +211,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void testSaveNewQueryAttachment() throws Exception {
+    public void testSaveNewNoteAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
@@ -224,7 +223,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note").
                         file(uploadedFile).param("uploadAttachment", ""))
                 .andExpect(cookie().exists("finance_checks_notes_new_note_attachments_"+projectId+"_"+applicantOrganisationId))
-                .andExpect(view().name("project/financecheck/new-note"))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note**"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
@@ -251,7 +250,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void testCancelNewQuery() throws Exception {
+    public void testCancelNewNote() throws Exception {
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -273,7 +272,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void testViewNewQueryWithAttachments() throws Exception {
+    public void testViewNewNoteWithAttachments() throws Exception {
 
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
@@ -319,7 +318,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", "Title")
                 .param("note", "Query"))
-                .andExpect(view().name("project/financecheck/new-note"))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note**"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
@@ -332,9 +331,6 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals("Title", form.getNoteTitle());
         assertEquals("Query", form.getNote());
         assertEquals(null, form.getAttachment());
-
-        FinanceChecksNotesAddNoteViewModel noteViewModel = (FinanceChecksNotesAddNoteViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(0, noteViewModel.getNewAttachmentLinks().size());
     }
 
     @Test
@@ -354,7 +350,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", "Title")
                 .param("note", "Query"))
-                .andExpect(view().name("project/financecheck/new-note"))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note**"))
                 .andReturn();
 
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(attachmentIds), CharEncoding.UTF_8),
@@ -364,11 +360,6 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals("Title", form.getNoteTitle());
         assertEquals("Query", form.getNote());
         assertEquals(null, form.getAttachment());
-
-
-        FinanceChecksNotesAddNoteViewModel noteViewModel = (FinanceChecksNotesAddNoteViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(1, noteViewModel.getNewAttachmentLinks().size());
-        assertEquals("name", noteViewModel.getNewAttachmentLinks().get(1L));
     }
 
     private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception{

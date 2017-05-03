@@ -80,19 +80,9 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(Arrays.asList(financeTeamRole)).build();
     UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
 
-
     NoteResource thread;
-    UserResource user1;
-    PostResource firstPost;
-    UserResource user2;
-    PostResource firstResponse;
-
     NoteResource thread2;
-    PostResource firstPost2;
-
     NoteResource thread3;
-    PostResource firstPost1 ;
-    PostResource firstResponse1;
 
     List<NoteResource> notes;
 
@@ -384,7 +374,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                         file(uploadedFile).
                         param("uploadAttachment", ""))
                 .andExpect(cookie().exists("finance_checks_notes_new_comment_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L))
-                .andExpect(view().name("project/financecheck/notes"))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment**"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
@@ -482,12 +472,12 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie cookie = createAttachmentsCookie(attachmentIds);
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment/")
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment/")
                 .param("removeAttachment", "1")
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("comment", "Query"))
-                .andExpect(view().name("project/financecheck/notes"))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment**"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
@@ -499,9 +489,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         FinanceChecksNotesAddCommentForm form = (FinanceChecksNotesAddCommentForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getComment());
         assertEquals(null, form.getAttachment());
-
-        FinanceChecksNotesViewModel noteViewModel = (FinanceChecksNotesViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(0, noteViewModel.getNewAttachmentLinks().size());
     }
 
     @Test
@@ -523,7 +510,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("comment", "Query"))
-                .andExpect(view().name("project/financecheck/notes"))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment**"))
                 .andReturn();
 
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(attachmentIds), CharEncoding.UTF_8),
@@ -532,10 +519,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         FinanceChecksNotesAddCommentForm form = (FinanceChecksNotesAddCommentForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getComment());
         assertEquals(null, form.getAttachment());
-
-        FinanceChecksNotesViewModel noteViewModel = (FinanceChecksNotesViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(1, noteViewModel.getNewAttachmentLinks().size());
-        assertEquals("name", noteViewModel.getNewAttachmentLinks().get(1L));
     }
 
     private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception{

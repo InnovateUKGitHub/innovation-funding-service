@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
@@ -113,7 +112,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 .param("queryTitle", "Title")
                 .param("query", "Query text")
                 .param("section", FinanceChecksSectionType.ELIGIBILITY.name()))
-                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
                 .andReturn();
 
         verify(financeCheckServiceMock).saveQuery(saveQueryArgumentCaptor.capture());
@@ -239,7 +238,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility").
                         file(uploadedFile).param("uploadAttachment", ""))
                 .andExpect(cookie().exists("finance_checks_queries_new_query_attachments_"+projectId+"_"+applicantOrganisationId))
-                .andExpect(view().name("project/financecheck/new-query"))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
@@ -248,7 +247,6 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_query_attachments_"+projectId+"_"+applicantOrganisationId));
 
         // TODO verify file saved
-
     }
 
     @Test
@@ -276,7 +274,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility")
                 .cookie(ck))
-                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
                 .andReturn();
 
         Optional<Cookie> cookieFound = Arrays.stream(result.getResponse().getCookies())
@@ -339,7 +337,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 .param("queryTitle", "Title")
                 .param("query", "Query")
                 .param("section", FinanceChecksSectionType.VIABILITY.name()))
-                .andExpect(view().name("project/financecheck/new-query"))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
@@ -353,9 +351,6 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals("Query", form.getQuery());
         assertEquals(FinanceChecksSectionType.VIABILITY.name(), form.getSection().toUpperCase());
         assertEquals(null, form.getAttachment());
-
-        FinanceChecksQueriesAddQueryViewModel queryViewModel = (FinanceChecksQueriesAddQueryViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(0, queryViewModel.getNewAttachmentLinks().size());
     }
 
     @Test
@@ -375,7 +370,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 .param("queryTitle", "Title")
                 .param("query", "Query")
                 .param("section", FinanceChecksSectionType.VIABILITY.name()))
-                .andExpect(view().name("project/financecheck/new-query"))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility"))
                 .andReturn();
 
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(attachmentIds), CharEncoding.UTF_8),
@@ -387,10 +382,6 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals(FinanceChecksSectionType.VIABILITY.name(), form.getSection().toUpperCase());
         assertEquals(null, form.getAttachment());
 
-
-        FinanceChecksQueriesAddQueryViewModel queryViewModel = (FinanceChecksQueriesAddQueryViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(1, queryViewModel.getNewAttachmentLinks().size());
-        assertEquals("name", queryViewModel.getNewAttachmentLinks().get(1L));
     }
 
     private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception{

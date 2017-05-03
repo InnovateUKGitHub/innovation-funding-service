@@ -201,7 +201,7 @@ public class FinanceChecksQueriesController {
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        Supplier<String> view = () -> redirectTo(rootView(projectId, organisationId, queryId));
+        Supplier<String> view = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
@@ -267,7 +267,7 @@ public class FinanceChecksQueriesController {
         saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
         saveFormToCookie(response, projectId, organisationId, queryId, form);
 
-        return redirectTo(rootView(projectId, organisationId, queryId));
+        return redirectTo(rootView(projectId, organisationId, queryId, querySection));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -281,7 +281,7 @@ public class FinanceChecksQueriesController {
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         loadAttachmentsFromCookie(request, projectId, organisationId, queryId).forEach(financeCheckService::deleteFile);
-        deleteCookies(response, queryId, projectId, organisationId);
+        deleteCookies(response, projectId, organisationId, queryId);
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
@@ -361,7 +361,11 @@ public class FinanceChecksQueriesController {
     }
 
     private String redirectToQueryPage(Long projectId, Long organisationId, String querySection) {
-        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/query?query_section=" + querySection;
+        return addQuerySection("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/query", querySection);
+    }
+
+    private String addQuerySection(String url, String querySection) {
+        return url + (querySection != null ? "?query_section=" + querySection : "");
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
@@ -405,12 +409,8 @@ public class FinanceChecksQueriesController {
                 new TypeReference<FinanceChecksQueriesAddResponseForm>() {});
     }
 
-    private String rootView(final Long projectId, final Long organisationId, Long queryId) {
-        return String.format(NEW_RESPONSE_URL, projectId, organisationId, queryId);
-    }
-
-    private String queriesListView(Long projectId, Long organisationId) {
-        return String.format(FINANCE_CHECKS_QUERIES_BASE_URL, projectId, organisationId);
+    private String rootView(final Long projectId, final Long organisationId, Long queryId, String querySection) {
+        return addQuerySection(String.format(NEW_RESPONSE_URL, projectId, organisationId, queryId), querySection);
     }
 
     private String redirectTo(final String path) {

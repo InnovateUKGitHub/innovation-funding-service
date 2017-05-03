@@ -138,7 +138,7 @@ public class FinanceChecksQueriesAddQueryController {
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
                         deleteCookies(response, projectId, organisationId);
-                        return redirectTo(queriesListView(projectId, organisationId));
+                        return redirectTo(queriesListView(projectId, organisationId, querySection));
                     });
         });
     }
@@ -233,7 +233,7 @@ public class FinanceChecksQueriesAddQueryController {
                                 HttpServletResponse response) {
         loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);
-        return redirectTo(queriesListView(projectId, organisationId));
+        return redirectTo(queriesListView(projectId, organisationId, querySection));
     }
 
     private FinanceChecksQueriesAddQueryViewModel populateQueriesViewModel(Long projectId, Long organisationId, String querySection, List<Long> attachmentFileIds) {
@@ -310,11 +310,15 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     private String rootView(final Long projectId, final Long organisationId, String querySection) {
-        return String.format(FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL, projectId, organisationId) + "?query_section=" + querySection;
+        return addQuerySection(String.format(FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL, projectId, organisationId), querySection);
     }
 
-    private String queriesListView(Long projectId, Long organisationId) {
-        return String.format(FINANCE_CHECKS_QUERIES_LIST, projectId, organisationId);
+    private String queriesListView(Long projectId, Long organisationId, String querySection) {
+        return addQuerySection(String.format(FINANCE_CHECKS_QUERIES_LIST, projectId, organisationId), querySection);
+    }
+
+    private String addQuerySection(String url, String querySection) {
+        return url + (querySection != null ? "?query_section=" + querySection : "");
     }
 
     private String redirectTo(final String path) {

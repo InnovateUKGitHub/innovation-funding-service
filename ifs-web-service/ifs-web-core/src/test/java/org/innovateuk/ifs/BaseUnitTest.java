@@ -788,6 +788,8 @@ public class BaseUnitTest {
         doCallRealMethod().when(cookieUtil).getCookie(any(HttpServletRequest.class), any(String.class));
         doCallRealMethod().when(cookieUtil).getCookieValue(any(HttpServletRequest.class), any(String.class));
         doCallRealMethod().when(cookieUtil).removeCookie(any(HttpServletResponse.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getCookieAs(any(HttpServletRequest.class), any(String.class), any());
+        doCallRealMethod().when(cookieUtil).getCookieAsList(any(HttpServletRequest.class), any(String.class), any());
     }
 
     public String getDecryptedCookieValue(Cookie[] cookies, String cookieName) {
