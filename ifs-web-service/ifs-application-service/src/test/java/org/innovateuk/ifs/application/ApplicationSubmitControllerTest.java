@@ -216,6 +216,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationRestService.updateApplicationState(app.getId(), SUBMITTED)).thenReturn(restSuccess());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
 
@@ -224,7 +225,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app));
 
-        verify(applicationService).updateState(app.getId(), SUBMITTED);
+        verify(applicationRestService).updateApplicationState(app.getId(), SUBMITTED);
     }
 
     @Test
@@ -242,7 +243,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
-        verify(applicationService, never()).updateState(any(Long.class), any(ApplicationState.class));
+        verify(applicationRestService, never()).updateApplicationState(any(Long.class), any(ApplicationState.class));
     }
 
 
