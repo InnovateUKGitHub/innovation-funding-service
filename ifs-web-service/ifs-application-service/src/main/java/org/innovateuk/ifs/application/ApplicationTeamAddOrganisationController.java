@@ -13,6 +13,7 @@ import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -47,9 +48,12 @@ public class ApplicationTeamAddOrganisationController {
 
     @Autowired
     private InviteRestService inviteRestService;
+/*
+    @Autowired
+    private UserService userService;*/
 
     @Autowired
-    private UserService userService;
+    private ApplicationUtil applicationUtil;
 
     @Autowired
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
@@ -116,11 +120,11 @@ public class ApplicationTeamAddOrganisationController {
 
 
     private void validateRequest(ApplicationResource applicationResource, long loggedInUserId) {
-        checkIfApplicationAlreadySubmitted(applicationResource);
-        checkUserIsLeadApplicant(applicationResource, loggedInUserId);
+        applicationUtil.checkIfApplicationAlreadySubmitted(applicationResource);
+        applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUserId);
     }
 
-    private void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
+    /*private void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
         if (applicationResource.hasBeenSubmitted()){
             throw new ForbiddenActionException("Application has already been submitted");
         }
@@ -134,7 +138,7 @@ public class ApplicationTeamAddOrganisationController {
 
     private long getLeadApplicantId(ApplicationResource applicationResource) {
         return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
-    }
+    }*/
 
     private String doViewAddOrganisation(Model model, ApplicationResource applicationResource) {
         model.addAttribute("model", applicationTeamAddOrganisationModelPopulator.populateModel(applicationResource));
