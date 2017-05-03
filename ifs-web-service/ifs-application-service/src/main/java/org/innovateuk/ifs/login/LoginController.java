@@ -46,7 +46,6 @@ public class LoginController {
         return LOGIN_BASE + "/" + RESET_PASSWORD;
     }
 
-    @ProfileExecution
     @PostMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD)
     public String requestPasswordResetPost(@ModelAttribute @Valid ResetPasswordRequestForm resetPasswordRequestForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
