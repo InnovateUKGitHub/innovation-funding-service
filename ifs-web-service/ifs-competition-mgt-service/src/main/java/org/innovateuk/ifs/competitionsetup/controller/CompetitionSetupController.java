@@ -92,7 +92,7 @@ public class CompetitionSetupController {
     public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
-        if(competition.isNonIfs()) {
+        if (competition.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
@@ -102,22 +102,22 @@ public class CompetitionSetupController {
     }
 
     @PostMapping("/{competitionId}/section/{sectionPath}/edit")
-    public String setSectionAsIncomplete(@PathVariable(COMPETITION_ID_KEY) Long competitionId, @PathVariable(SECTION_PATH_KEY) String sectionPath) {
-    	CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
-    	if(section == null) {
-    		LOG.error("Invalid section path specified: " + sectionPath);
+    public String setSectionAsIncomplete(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                         @PathVariable(SECTION_PATH_KEY) String sectionPath) {
+        CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
+        if (section == null) {
+            LOG.error("Invalid section path specified: " + sectionPath);
             return "redirect:/dashboard";
-    	}
+        }
 
         CompetitionResource competition = competitionService.getById(competitionId);
-    	if(section.preventEdit(competition)) {
+        if (section.preventEdit(competition)) {
             LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competitionId, section));
             return "redirect:/dashboard";
         }
 
-
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section).getSuccessObjectOrThrowException();
-        if(!competition.isSetupAndLive()) {
+        if (!competition.isSetupAndLive()) {
             competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
         }
 
@@ -128,34 +128,28 @@ public class CompetitionSetupController {
     public String editCompetitionSetupSection(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               @PathVariable(SECTION_PATH_KEY) String sectionPath,
                                               Model model) {
-
+        CompetitionResource competition = competitionService.getById(competitionId);
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
-        if(section == null) {
+
+        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+            return "redirect:/dashboard";
+        }
+
+        if (section == null) {
             LOG.error("Invalid section path specified: " + sectionPath);
             return "redirect:/dashboard";
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
             return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
-        } else if (section == CompetitionSetupSection.CONTENT){
+        } else if (section == CompetitionSetupSection.CONTENT) {
             return PUBLIC_CONTENT_LANDING_REDIRECT + competitionId;
         }
 
-        CompetitionResource competition = competitionService.getById(competitionId);
-
-        if(competition.isNonIfs()) {
+        if (competition.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
         model.addAttribute("competitionSetupForm", competitionSetupService.getSectionFormData(competition, section));
-
-        if(model.containsAttribute("isInitialComplete")) {
-            Map<String, Object> modelMap = model.asMap();
-
-            if(!(Boolean) modelMap.get("isInitialComplete") && !section.equals(CompetitionSetupSection.INITIAL_DETAILS)) {
-                LOG.error("User should first fill the initial details");
-                return "redirect:/dashboard";
-            }
-        }
 
         checkRestrictionOfInitialDetails(section, competition, model);
 
@@ -175,23 +169,24 @@ public class CompetitionSetupController {
                                     @PathVariable(SECTION_PATH_KEY) String sectionPath,
                                     @PathVariable(SUBSECTION_PATH_KEY) String subsectionPath) {
 
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.fromPath(subsectionPath);
 
         List<String> errors = new ArrayList<>();
         try {
             errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSubsection(
-                    competitionResource,
+                    competition,
                     section, subsection,
                     fieldName, value,
                     Optional.ofNullable(objectId)
                     ).getErrors()
             );
-            return this.createJsonObjectNode(true);
+
+            return createJsonObjectNode(true);
         } catch (Exception e) {
             errors.add(e.getMessage());
-            return this.createJsonObjectNode(false);
+            return createJsonObjectNode(false);
         }
     }
 
@@ -208,17 +203,22 @@ public class CompetitionSetupController {
                                     @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                     @PathVariable(SECTION_PATH_KEY) String sectionPath) {
 
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
-
         List<String> errors = new ArrayList<>();
         try {
-            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(competitionResource, section, fieldName, value, Optional.ofNullable(objectId)).getErrors());
+            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(
+                    competition,
+                    section,
+                    fieldName,
+                    value,
+                    Optional.ofNullable(objectId)
+            ).getErrors());
 
-            return this.createJsonObjectNode(true);
+            return createJsonObjectNode(true);
         } catch (Exception e) {
             errors.add(e.getMessage());
-            return this.createJsonObjectNode(false);
+            return createJsonObjectNode(false);
         }
     }
 
@@ -256,21 +256,23 @@ public class CompetitionSetupController {
 
     private String doSubmitInitialSectionDetails(InitialDetailsForm competitionSetupForm,
                                                  ValidationHandler validationHandler,
-                                                 @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                 Long competitionId,
                                                  Model model) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
-        checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competitionResource, model);
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.INITIAL_DETAILS, model);
+        CompetitionResource competition = competitionService.getById(competitionId);
+        checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competition, model);
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.INITIAL_DETAILS, model);
     }
 
     @PostMapping("/{competitionId}/section/additional")
     public String submitAdditionalSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) AdditionalInfoForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              ValidationHandler validationHandler,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model, HttpServletRequest request) {
+                                                 BindingResult bindingResult,
+                                                 ValidationHandler validationHandler,
+                                                 @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                 Model model, HttpServletRequest request) {
+        CompetitionResource competition = competitionService.getById(competitionId);
+
         if (request.getParameterMap().containsKey("generate-code")) {
-            CompetitionResource competition = competitionService.getById(competitionId);
             if (competition.getStartDate() != null) {
                 String competitionCode = competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
                 competitionSetupForm.setCompetitionCode(competitionCode);
@@ -290,33 +292,38 @@ public class CompetitionSetupController {
         //Validate after competition code generated and co funders added/removed.
         validator.validate(competitionSetupForm, bindingResult);
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.ADDITIONAL_INFO, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
 
     @PostMapping("/{competitionId}/section/eligibility")
     public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) EligibilityForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              ValidationHandler validationHandler,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
+                                                  BindingResult bindingResult,
+                                                  ValidationHandler validationHandler,
+                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                  Model model) {
+        CompetitionResource competition = competitionService.getById(competitionId);
 
-    	if("yes".equals(competitionSetupForm.getMultipleStream()) && StringUtils.isEmpty(competitionSetupForm.getStreamName())){
-    		bindingResult.addError(new FieldError("competitionSetupForm", "streamName", "A stream name is required"));
-    	}
+        if ("yes".equals(competitionSetupForm.getMultipleStream()) && StringUtils.isEmpty(competitionSetupForm.getStreamName())) {
+            bindingResult.addError(new FieldError("competitionSetupForm", "streamName", "A stream name is required"));
+        }
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.ELIGIBILITY, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ELIGIBILITY, model);
     }
 
     @PostMapping("/{competitionId}/section/milestones")
     public String submitMilestonesSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) MilestonesForm competitionSetupForm,
-                                              BindingResult bindingResult,
-                                              ValidationHandler validationHandler,
-                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                              Model model) {
+                                                 BindingResult bindingResult,
+                                                 ValidationHandler validationHandler,
+                                                 @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                 Model model) {
+
+        CompetitionResource competition = competitionService.getById(competitionId);
+
         if (bindingResult.hasErrors()) {
             competitionSetupMilestoneService.sortMilestones(competitionSetupForm);
         }
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.MILESTONES, model);
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.MILESTONES, model);
     }
 
     @PostMapping("/{competitionId}/section/application")
@@ -325,19 +332,21 @@ public class CompetitionSetupController {
                                                       ValidationHandler validationHandler,
                                                       @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                                       Model model) {
+        CompetitionResource competition = competitionService.getById(competitionId);
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.APPLICATION_FORM, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.APPLICATION_FORM, model);
     }
 
 
     @PostMapping("/{competitionId}/section/assessors")
     public String submitAssessorsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) AssessorsForm competitionSetupForm,
-                                                  @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
-                                                  ValidationHandler validationHandler,
-                                                  @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                                                  Model model) {
+                                                @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                                ValidationHandler validationHandler,
+                                                @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+                                                Model model) {
+        CompetitionResource competition = competitionService.getById(competitionId);
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competitionId, CompetitionSetupSection.ASSESSORS, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, model);
     }
 
     @GetMapping("/{competitionId}/ready-to-open")
@@ -362,18 +371,20 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.getStartDate() != null) {
             return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
-        }
-        else {
+        } else {
             return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
         }
     }
 
-    private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, ValidationHandler validationHandler, Long competitionId, CompetitionSetupSection section, Model model) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-        if(competition.isNonIfs()) {
-            return "redirect:/non-ifs-competition/setup/" + competitionId;
+    private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
+                                                  ValidationHandler validationHandler,
+                                                  CompetitionResource competition,
+                                                  CompetitionSetupSection section,
+                                                  Model model) {
+        if (competition.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
-        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPath();
         Supplier<String> failureView = () -> {
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
             return "competition/setup";
@@ -394,6 +405,7 @@ public class CompetitionSetupController {
 
         return node;
     }
+
     private ObjectNode createJsonObjectNode(boolean success) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
@@ -403,12 +415,11 @@ public class CompetitionSetupController {
     }
 
     private void checkRestrictionOfInitialDetails(CompetitionSetupSection section,
-                                                CompetitionResource competitionResource,
-                                                Model model) {
+                                                  CompetitionResource competitionResource,
+                                                  Model model) {
         if (section == CompetitionSetupSection.INITIAL_DETAILS &&
                 competitionResource.getSectionSetupStatus().containsKey(section)) {
             model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
     }
-
 }
