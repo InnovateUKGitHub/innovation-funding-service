@@ -107,19 +107,15 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<PublicContentItemResource> byCompetitionId(Long id) {
-        Competition competition = competitionRepository.findById(id);
-        PublicContent publicContent = publicContentRepository.findByCompetitionId(id);
+    public ServiceResult<PublicContentItemResource> byCompetitionId(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        PublicContent publicContent = publicContentRepository.findByCompetitionId(competitionId);
 
-        if(null == competition || null == publicContent || !isPublicContentPublished(publicContent)) {
+        if(null == competition || null == publicContent) {
             return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND));
         }
 
         return ServiceResult.serviceSuccess(mapPublicContentToPublicContentItemResource(publicContent, competition));
-    }
-
-    private boolean isPublicContentPublished(PublicContent publicContent) {
-        return null != publicContent.getPublishDate();
     }
 
     private List<String> separateSearchStringToList(String searchString) {

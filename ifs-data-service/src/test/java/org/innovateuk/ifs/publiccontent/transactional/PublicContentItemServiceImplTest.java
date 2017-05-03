@@ -220,7 +220,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
         ).build();
-        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).withPublishDate(ZonedDateTime.now()).build();
+        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
         PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
         when(competitionRepository.findById(competitionId)).thenReturn(competition);
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
@@ -251,7 +251,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
         ).build();
-        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).withPublishDate(ZonedDateTime.now()).build();
+        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
         PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
         when(competitionRepository.findById(competitionId)).thenReturn(competition);
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
@@ -286,28 +286,6 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         verify(competitionRepository, only()).findById(competitionId);
     }
 
-    @Test
-    public void testByCompetitionIdNotPublished() {
-        Long competitionId = 4L;
-
-        Competition competition = newCompetition().withNonIfs(false).withId(competitionId).withSetupComplete(true)
-                .withMilestones(newMilestone()
-                        .withDate(LocalDateTime.of(2017,1,2,3,4).atZone(ZoneId.systemDefault()), LocalDateTime.of(2017,3,2,1,4).atZone(ZoneId.systemDefault()))
-                        .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
-                        .build(2)
-                ).build();
-        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
-        PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
-        when(competitionRepository.findById(competitionId)).thenReturn(competition);
-        when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
-        when(publicContentMapper.mapToResource(publicContent)).thenReturn(publicContentResource);
-
-        ServiceResult<PublicContentItemResource> result = service.byCompetitionId(competitionId);
-        assertTrue(result.isFailure());
-
-        verify(publicContentRepository, only()).findByCompetitionId(competitionId);
-        verify(competitionRepository, only()).findById(competitionId);
-    }
     private void makePublicContentIdsFound() {
         PublicContent publicContent = newPublicContent().withId(PUBLIC_CONTENT_ID).withCompetitionId(COMPETITION_ID).build();
 
