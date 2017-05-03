@@ -126,7 +126,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
@@ -231,14 +230,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
 
         ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatus.CREATED);
 
         InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
-
 
         List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
         RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.restSuccess(inviteOrgResources, HttpStatus.OK);
@@ -459,6 +456,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
+        when(applicationService.isApplicationReadyForSubmit(app.getId())).thenReturn(Boolean.TRUE);
 
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
@@ -469,14 +467,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    public void testApplicationSubmitAppisNotSubmittable() throws Exception {
+    public void testApplicationSubmitAppIsNotSubmittable() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
 
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
@@ -593,5 +590,23 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("uri"));
 
         verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(UserResource.class));
+    }
+
+    @Test
+    public void testApplicationSubmitApplicationNotReady() throws Exception {
+        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
+        when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        when(applicationService.isApplicationReadyForSubmit(app.getId())).thenReturn(Boolean.FALSE);
+
+        mockMvc.perform(post("/application/1/submit")
+                .param("agreeTerms", "yes"))
+                .andExpect(redirectedUrl("/application/1/confirm-submit"));
+
+        verify(applicationService, never()).updateState(app.getId(), SUBMITTED);
     }
 }

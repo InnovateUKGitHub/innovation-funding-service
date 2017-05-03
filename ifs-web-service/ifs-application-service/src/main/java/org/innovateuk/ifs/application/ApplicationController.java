@@ -135,7 +135,7 @@ public class ApplicationController {
     }
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
+        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable() && applicationService.isApplicationReadyForSubmit(application.getId());
     }
 
     @ProfileExecution
