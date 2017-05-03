@@ -135,7 +135,7 @@ public class ApplicationController {
     }
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
+        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable() && applicationService.isApplicationReadyForSubmit(application.getId());
     }
 
     @ProfileExecution
@@ -247,37 +247,6 @@ public class ApplicationController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-track";
-    }
-
-    @ProfileExecution
-    @GetMapping("/create/{competitionId}")
-    public String applicationCreatePage() {
-        return "application-create";
-    }
-
-    @ProfileExecution
-    @PostMapping("/create/{competitionId}")
-    public String applicationCreate(Model model,
-                                    @PathVariable("competitionId") long competitionId,
-                                    @RequestParam(value = "application_name", required = true) String applicationName,
-                                    @ModelAttribute("loggedInUser") UserResource user) {
-        Long userId = user.getId();
-
-        String applicationNameWithoutWhiteSpace = applicationName.replaceAll("\\s", "");
-
-        if (applicationNameWithoutWhiteSpace.length() > 0) {
-            ApplicationResource application = applicationService.createApplication(competitionId, userId, applicationName);
-            return "redirect:/application/" + application.getId();
-        } else {
-            model.addAttribute("applicationNameEmpty", true);
-            return "application-create";
-        }
-    }
-
-    @ProfileExecution
-    @GetMapping(value = "/create-confirm-competition")
-    public String competitionCreateApplication() {
-        return "application-create-confirm-competition";
     }
 
     @GetMapping("/terms-and-conditions")

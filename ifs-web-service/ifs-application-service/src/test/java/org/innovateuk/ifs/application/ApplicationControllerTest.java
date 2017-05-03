@@ -59,8 +59,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -125,7 +123,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
 
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
@@ -231,14 +228,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
 
         ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatus.CREATED);
 
         InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
-
 
         List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
         RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.restSuccess(inviteOrgResources, HttpStatus.OK);
@@ -459,6 +454,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
+        when(applicationService.isApplicationReadyForSubmit(app.getId())).thenReturn(Boolean.TRUE);
 
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
@@ -469,7 +465,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    public void testApplicationSubmitAppisNotSubmittable() throws Exception {
+    public void testApplicationSubmitAppIsNotSubmittable() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
@@ -477,19 +473,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
         verify(applicationService, never()).updateState(any(Long.class), any(ApplicationState.class));
-    }
-
-    @Test
-    public void testApplicationCreateView() throws Exception {
-        mockMvc.perform(get("/application/create/1"))
-                .andExpect(view().name("application-create"));
     }
 
     @Test
@@ -512,55 +501,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(get("/application/terms-and-conditions"))
                 .andExpect(view().name("application-terms-and-conditions"));
 
-    }
-
-    @Test
-    public void testApplicationCreateWithoutApplicationName() throws Exception {
-        ApplicationResource application = new ApplicationResource();
-        application.setName("application");
-
-        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-
-        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
-        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        mockMvc.perform(post("/application/create/1").param("application_name", ""))
-                .andExpect(view().name("application-create"))
-                .andExpect(model().attribute("applicationNameEmpty", true));
-    }
-
-    @Test
-    public void testApplicationCreateWithWhitespaceAsApplicationName() throws Exception {
-        ApplicationResource application = new ApplicationResource();
-        application.setName("application");
-
-        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-
-        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
-        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        mockMvc.perform(post("/application/create/1").param("application_name", "     "))
-                .andExpect(view().name("application-create"))
-                .andExpect(model().attribute("applicationNameEmpty", true));
-    }
-
-    @Test
-    public void testApplicationCreateWithApplicationName() throws Exception {
-        ApplicationResource application = new ApplicationResource();
-        application.setName("application");
-        application.setId(1L);
-
-        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
-
-        when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
-        when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        mockMvc.perform(post("/application/create/1").param("application_name", "testApplication"))
-                .andExpect(view().name("redirect:/application/" + application.getId()))
-                .andExpect(model().attributeDoesNotExist("applicationNameEmpty"));
-    }
-
-    @Test
-    public void testApplicationCreateConfirmCompetitionView() throws Exception {
-        mockMvc.perform(get("/application/create-confirm-competition"))
-                .andExpect(view().name("application-create-confirm-competition"));
     }
 
     @Test
@@ -593,5 +533,23 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("uri"));
 
         verify(applicationPrintPopulator).print(eq(1L), any(Model.class), any(UserResource.class));
+    }
+
+    @Test
+    public void testApplicationSubmitApplicationNotReady() throws Exception {
+        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
+        when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
+
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        when(applicationService.isApplicationReadyForSubmit(app.getId())).thenReturn(Boolean.FALSE);
+
+        mockMvc.perform(post("/application/1/submit")
+                .param("agreeTerms", "yes"))
+                .andExpect(redirectedUrl("/application/1/confirm-submit"));
+
+        verify(applicationService, never()).updateState(app.getId(), SUBMITTED);
     }
 }

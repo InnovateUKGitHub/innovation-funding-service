@@ -9,6 +9,9 @@ import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
 import org.innovateuk.ifs.application.security.FormInputResponseFileUploadRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,6 +33,7 @@ import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -47,6 +51,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     private FormInputResponseFileUploadLookupStrategies fileUploadLookup;
     private ApplicationPermissionRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
+    private CompetitionLookupStrategy competitionLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
@@ -54,6 +59,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         fileUploadLookup = getMockPermissionEntityLookupStrategiesBean(FormInputResponseFileUploadLookupStrategies.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
+        competitionLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy.class);
     }
 
     @Test
@@ -81,10 +87,17 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
 
-    @Test
-    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
-        classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId() {
+        Long competitionId = 123L;
+        Long userId = 456L;
+        setLoggedInUser(newUserResource().withId(userId).withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
+        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(newCompetitionResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build());
+        assertAccessDenied(
+                () -> classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", competitionId, userId),
+                () -> {
+                    verify(applicationRules).userCanCreateNewApplication(isA(CompetitionResource.class), isA(UserResource.class));
+                }
+        );
     }
 
     @Test

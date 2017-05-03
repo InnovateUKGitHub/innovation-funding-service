@@ -8,10 +8,8 @@
         </div>
         <button class="button disabled" disabled="disabled">Apply now</button>
     </div>
-    <div th:if="${currentCompetition.isOpen()}" th:remove="tag">
-        <a class="button"
-           th:href="@{/competition/{competitionId}/info/eligibility(competitionId=${competitionId})}">Apply now</a>
-    </div>
+    <a class="button" th:if="${currentCompetition.open}"
+       th:href="@{/competition/{competitionId}/info/eligibility(competitionId=${competitionId})}">Apply now</a>
 </div>
 
 <div th:fragment="sign-in-to-apply-button">
