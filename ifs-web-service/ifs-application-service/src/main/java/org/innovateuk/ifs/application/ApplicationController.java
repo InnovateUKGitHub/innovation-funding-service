@@ -3,22 +3,13 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.service.FormInputResponseRestService;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -26,8 +17,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,14 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
-import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -59,9 +42,6 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
-
-    @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -88,15 +68,6 @@ public class ApplicationController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    private ApplicationPrintPopulator applicationPrintPopulator;
-
-    @Autowired
-    private FormInputResponseService formInputResponseService;
-
-    @Autowired
-    private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
@@ -104,12 +75,6 @@ public class ApplicationController {
 
     @Autowired
     private UserRestService userRestService;
-
-    @Autowired
-    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-
-    @Autowired
-    private AssessmentRestService assessmentRestService;
 
     public static String redirectToApplication(ApplicationResource application) {
         return "redirect:/application/" + application.getId();
@@ -119,9 +84,17 @@ public class ApplicationController {
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute("loggedInUser") UserResource user) {
+        ApplicationResource application = applicationService.getById(applicationId);
+
+        if(form == null){
+            form = new ApplicationForm();
+        }
+
+        form.setApplication(application);
 
         Long userId = user.getId();
-        applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model);
+        model.addAttribute("form", form);
+        model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
         return "application-details";
     }
 
@@ -135,62 +108,6 @@ public class ApplicationController {
 
         questionService.assignQuestion(applicationId, request, assignedBy);
         return "redirect:/application/" + applicationId;
-    }
-
-    @ProfileExecution
-    @GetMapping("/{applicationId}/section/{sectionId}")
-    public String applicationDetailsOpenSection(ApplicationForm form, Model model,
-                                                @PathVariable("applicationId") long applicationId,
-                                                @PathVariable("sectionId") long sectionId,
-                                                @ModelAttribute("loggedInUser") UserResource user) {
-        ApplicationResource application = applicationService.getById(applicationId);
-        SectionResource section = sectionService.getById(sectionId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
-
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-        model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(user, application));
-        return "application-details";
-    }
-
-    private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
-    }
-
-    @ProfileExecution
-    @GetMapping("/{applicationId}/summary")
-    public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource user) {
-        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
-        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
-
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
-
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-
-        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
-
-        if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
-            OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
-            model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
-        }
-
-        if (competition.getCompetitionStatus().isFeedbackReleased()) {
-            model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
-            model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
-                    .getSuccessObjectOrThrowException()
-                    .getFeedback()
-            );
-
-            return "application-feedback-summary";
-        } else {
-            return "application-summary";
-        }
     }
 
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
@@ -305,26 +222,6 @@ public class ApplicationController {
         return "application-terms-and-conditions";
     }
 
-    @GetMapping("/{applicationId}/assessorFeedback")
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
-            @PathVariable("applicationId") long applicationId) {
-
-        ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
-        FileEntryResource fileDetails = assessorFeedbackRestService.getAssessorFeedbackFileDetails(applicationId).getSuccessObjectOrThrowException();
-        return getFileResponseEntity(resource, fileDetails);
-    }
-
-    /**
-     * Printable version of the application
-     */
-    @GetMapping(value = "/{applicationId}/print")
-    public String printApplication(@PathVariable("applicationId") long applicationId,
-                                   Model model,
-                                   @ModelAttribute("loggedInUser") UserResource user) {
-        return applicationPrintPopulator.print(applicationId, model, user);
-    }
-
     /**
      * Assign a question to a user
      *
@@ -340,24 +237,9 @@ public class ApplicationController {
                                  @ModelAttribute("loggedInUser") UserResource user,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
-
         doAssignQuestion(applicationId, user, request, response);
 
         return "redirect:/application/" + applicationId + "/section/" + sectionId;
-    }
-
-    private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
-
-        boolean readonly = true;
-
-        Long assessorFeedbackFileEntry = application.getAssessorFeedbackFileEntry();
-
-        if (assessorFeedbackFileEntry != null) {
-            RestResult<FileEntryResource> fileEntry = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
-            return OptionalFileDetailsViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
-        } else {
-            return OptionalFileDetailsViewModel.withNoFile(readonly);
-        }
     }
 
     private void doAssignQuestion(Long applicationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
@@ -365,14 +247,5 @@ public class ApplicationController {
 
         questionService.assignQuestion(applicationId, request, assignedBy);
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-    }
-
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, final Model model, final ApplicationForm form) {
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, userId, Optional.empty(), Optional.empty(), model, form);
-    }
-
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
-        organisationDetailsModelPopulator.populateModel(model, application.getId());
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
     }
 }
