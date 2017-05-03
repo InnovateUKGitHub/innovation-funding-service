@@ -6,7 +6,6 @@ import org.innovateuk.ifs.management.controller.CompetitionManagementApplication
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
-import org.springframework.validation.BindingResult;
 
 import java.util.function.Function;
 
@@ -21,7 +20,6 @@ public interface CompetitionManagementApplicationService {
                                                         String> success);
 
     String displayApplicationOverview(UserResource user,
-                                      long applicationId,
                                       long competitionId,
                                       ApplicationForm form,
                                       String origin,
