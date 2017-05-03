@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -135,7 +136,7 @@ public class ApplicationController {
     }
 
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable() && applicationService.isApplicationReadyForSubmit(application.getId());
+        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
 
     @ProfileExecution
@@ -227,7 +228,9 @@ public class ApplicationController {
                                     HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
 
-        if (!ableToSubmitApplication(user, application)) {
+        if(!applicationService.isApplicationReadyForSubmit(application.getId())) {
+            throw new ForbiddenActionException();
+        } else if (!ableToSubmitApplication(user, application)) {
             cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
             return "redirect:/application/" + applicationId + "/confirm-submit";
         }

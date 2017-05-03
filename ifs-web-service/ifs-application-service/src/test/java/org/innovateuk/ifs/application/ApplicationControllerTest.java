@@ -473,6 +473,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
+        when(applicationService.isApplicationReadyForSubmit(app.getId())).thenReturn(Boolean.TRUE);
+
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
@@ -548,7 +550,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
-                .andExpect(redirectedUrl("/application/1/confirm-submit"));
+                .andExpect(status().isForbidden());
 
         verify(applicationService, never()).updateState(app.getId(), SUBMITTED);
     }
