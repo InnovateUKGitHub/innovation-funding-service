@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.util;
+package org.innovateuk.ifs.application.util;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
