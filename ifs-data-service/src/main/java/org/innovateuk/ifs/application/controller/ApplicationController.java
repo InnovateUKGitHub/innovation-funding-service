@@ -55,7 +55,7 @@ public class ApplicationController {
 
     @PutMapping("/updateApplicationState")
     public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
-                                                    @RequestParam("state") final ApplicationState state) {
+                                                   @RequestParam("state") final ApplicationState state) {
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationState(id, state);
 
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {
@@ -65,7 +65,6 @@ public class ApplicationController {
 
         return updateStatusResult.toPutResponse();
     }
-
 
     @GetMapping("/applicationReadyForSubmit/{applicationId}")
     public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id) {

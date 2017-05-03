@@ -303,7 +303,7 @@ public class ExperianEndpointController {
                         "  \"registrationNumber\": \"60674010\",\n" +
                         "  \"firstName\": \"NA\",\n" +
                         "  \"lastName\": \"NA\",\n" +
-                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Springbank Chapel Green\", \"street\":\"Charlmont Road\",\"locality\":\"\",\"town\":\"\",\"postcode\": \"SW17 9AB\"}\n" +
+                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Springbank Chapel Green\", \"street\":\"Charlmont Road\",\"locality\":\"\",\"town\":\"London\",\"postcode\": \"SW17 9AB\"}\n" +
                         "}", AccountDetails.class),
                 fromJson("{\n" +
                         "  \"VerificationResult\": {\n" +
@@ -328,7 +328,7 @@ public class ExperianEndpointController {
                         "  \"registrationNumber\": \"06624503\",\n" +
                         "  \"firstName\": \"NA\",\n" +
                         "  \"lastName\": \"NA\",\n" +
-                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Woodhouse Farm\", \"street\":\"Abbots Close\",\"locality\":\"\",\"town\":\"\",\"postcode\": \"TA19 0EF\"}\n" +
+                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Woodhouse Farm\", \"street\":\"Abbots Close\",\"locality\":\"\",\"town\":\"Somerset\",\"postcode\": \"TA19 0EF\"}\n" +
                         "}", AccountDetails.class),
                 fromJson("{\n" +
                         "  \"VerificationResult\": {\n" +
@@ -353,7 +353,7 @@ public class ExperianEndpointController {
                         "  \"registrationNumber\": \"57012850\",\n" +
                         "  \"firstName\": \"NA\",\n" +
                         "  \"lastName\": \"NA\",\n" +
-                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Woodhouse Farm\", \"street\":\"Admaston Road\",\"locality\":\"\",\"town\":\"\",\"postcode\": \"SE18 2TF\"}\n" +
+                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Woodhouse Farm\", \"street\":\"Admaston Road\",\"locality\":\"\",\"town\":\"London\",\"postcode\": \"SE18 2TF\"}\n" +
                         "}", AccountDetails.class),
                 fromJson("{\n" +
                         "  \"VerificationResult\": {\n" +
