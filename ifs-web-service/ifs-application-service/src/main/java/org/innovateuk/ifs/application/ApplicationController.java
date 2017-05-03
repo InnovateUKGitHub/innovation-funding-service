@@ -1,21 +1,16 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -48,28 +43,13 @@ public class ApplicationController {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private SectionService sectionService;
-
-    @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private ApplicationModelPopulator applicationModelPopulator;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
-    @Autowired
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
-
-    @Autowired
-    private UserRestService userRestService;
 
     public static String redirectToApplication(ApplicationResource application) {
         return "redirect:/application/" + application.getId();
@@ -81,7 +61,7 @@ public class ApplicationController {
                                      @ModelAttribute("loggedInUser") UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
 
-        if(form == null){
+        if (form == null) {
             form = new ApplicationForm();
         }
 

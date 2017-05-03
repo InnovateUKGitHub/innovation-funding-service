@@ -119,15 +119,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
-    public void testUpdateStatus() throws Exception {
-        Long applicationId = 2L;
-        ApplicationState status = ApplicationState.APPROVED;
-        when(applicationRestService.updateApplicationState(applicationId, status)).thenReturn(restSuccess());
-        service.updateState(applicationId, status);
-        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationState(applicationId, status);
-    }
-
-    @Test
     public void testSave() throws Exception {
         ApplicationResource application = new ApplicationResource();
 

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
@@ -69,6 +68,9 @@ public class ApplicationSubmitController {
     private ApplicationService applicationService;
 
     @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
     private CompetitionService competitionService;
 
     @Autowired
@@ -85,9 +87,6 @@ public class ApplicationSubmitController {
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
-    @Autowired
-    private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
 
     @Autowired
     private UserRestService userRestService;
@@ -184,7 +183,7 @@ public class ApplicationSubmitController {
             return "redirect:/application/" + applicationId + "/confirm-submit";
         }
 
-        applicationService.updateState(applicationId, SUBMITTED);
+        applicationRestService.updateApplicationState(applicationId, SUBMITTED).getSuccessObjectOrThrowException();
         application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
@@ -202,7 +201,8 @@ public class ApplicationSubmitController {
     }
 
     @GetMapping("/{applicationId}/assessorFeedback")
-    public @ResponseBody
+    public
+    @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
             @PathVariable("applicationId") long applicationId) {
 
