@@ -242,8 +242,11 @@ public class CompetitionSetupApplicationController {
 
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
         ServiceResult<CompetitionSetupQuestionResource> questionResource = competitionSetupQuestionService.getQuestion(questionId);
-
-        CompetitionSetupQuestionType type = questionResource.getSuccessObjectOrThrowException().getType();
+        final CompetitionSetupQuestionResource successObjectOrThrowException = questionResource.getSuccessObjectOrThrowException();
+        if(successObjectOrThrowException == null){
+            return "redirect:/non-ifs-competition/setup/" + questionId;
+        }
+        CompetitionSetupQuestionType type = successObjectOrThrowException.getType();
         CompetitionSetupSubsection setupSubsection;
 
         if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
