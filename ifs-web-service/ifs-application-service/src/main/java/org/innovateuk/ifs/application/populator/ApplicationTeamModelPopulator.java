@@ -15,6 +15,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.ApplicationUtil;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,9 +44,12 @@ public class ApplicationTeamModelPopulator {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ApplicationUtil applicationUtil;
+
     public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkIfApplicationAlreadySubmitted(applicationResource);
+        applicationUtil.checkIfApplicationAlreadySubmitted(applicationResource);
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
@@ -58,11 +62,11 @@ public class ApplicationTeamModelPopulator {
         return ApplicationState.CREATED == applicationResource.getApplicationState();
     }
 
-    private void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
+/*    private void checkIfApplicationAlreadySubmitted(ApplicationResource applicationResource) {
         if (applicationResource.hasBeenSubmitted()){
             throw new ForbiddenActionException("Application has already been submitted");
         }
-    }
+    }*/
 
     private List<ApplicationTeamOrganisationRowViewModel> getOrganisationViewModels(long applicationId, long loggedInUserId,
                                                                                     UserResource leadApplicant) {

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,11 +31,14 @@ public class ApplicationTeamController {
     @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
-    private UserService userService;
+/*    @Autowired
+    private UserService userService;*/
 
     @Autowired
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+
+    @Autowired
+    private ApplicationUtil applicationUtil;
 
     @GetMapping("/team")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
@@ -47,20 +51,20 @@ public class ApplicationTeamController {
     public String beginApplication(@PathVariable("applicationId") long applicationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         changeApplicationStatusToOpen(applicationResource);
         return format("redirect:/application/%s", applicationResource.getId());
     }
 
-    private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
+/*    private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
         if (loggedInUserId != getLeadApplicantId(applicationResource)) {
             throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
         }
-    }
+    }*/
 
-    private long getLeadApplicantId(ApplicationResource applicationResource) {
+/*    private long getLeadApplicantId(ApplicationResource applicationResource) {
         return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
-    }
+    }*/
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
         if (ApplicationState.CREATED == applicationResource.getApplicationState()) {
