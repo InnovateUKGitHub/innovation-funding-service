@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
@@ -25,9 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
  * Service for operations around the usage and processing of Competitions questions in setup.
@@ -52,7 +48,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
         Question question = questionRepository.findOne(questionId);
-        if(question == null) return ServiceResult.serviceSuccess(null);
+        if(question == null) {
+            return ServiceResult.serviceSuccess(null);
+        }
         CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
 
         question.getFormInputs().forEach(formInput -> {
