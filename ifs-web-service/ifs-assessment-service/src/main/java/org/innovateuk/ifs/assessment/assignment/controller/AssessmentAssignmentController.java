@@ -47,11 +47,25 @@ public class AssessmentAssignmentController {
         return "assessment/assessment-invitation";
     }
 
-    @PostMapping("assignment/accept")
-    public String acceptAssignment(@PathVariable("assessmentId") Long assessmentId) {
-        AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
-        assessmentService.acceptInvitation(assessment.getId());
-        return redirectToAssessorCompetitionDashboard(assessment.getCompetition());
+    @PostMapping("assignment/respond")
+    public String respondToAssignment(Model model,
+                                      @PathVariable("assessmentId") long assessmentId,
+                                      @Valid @ModelAttribute("form") AssessmentAssignmentForm form,
+                                      BindingResult bindingResult,
+                                      ValidationHandler validationHandler) {
+        Supplier<String> failureView = () -> viewAssignment(assessmentId, form, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView,  () -> {
+            AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
+            ServiceResult<Void> updateResult;
+            if (form.getAssessmentAccept()) {
+                updateResult = assessmentService.acceptInvitation(assessment.getId());
+            } else {
+                updateResult = assessmentService.rejectInvitation(assessment.getId(), form.getRejectReason(), form.getRejectComment());
+            }
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> redirectToAssessorCompetitionDashboard(assessment.getCompetition()));
+        });
     }
 
     @PostMapping("assignment/reject")
