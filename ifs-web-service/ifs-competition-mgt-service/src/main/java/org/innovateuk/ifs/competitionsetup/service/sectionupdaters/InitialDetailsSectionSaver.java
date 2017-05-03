@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,9 +41,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Service
 public class InitialDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
 
-	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
-
+	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
 	@Autowired
 	private CompetitionService competitionService;
 
@@ -55,6 +55,9 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	@Autowired
 	private CategoryRestService categoryRestService;
 
+	@Autowired
+    private UserService userService;
+
 	@Override
 	public CompetitionSetupSection sectionToSave() {
 		return CompetitionSetupSection.INITIAL_DETAILS;
@@ -65,8 +68,20 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {
-            competition.setExecutive(initialDetailsForm.getExecutiveUserId());
-            competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
+            if (userService.isCompetitionExecutive(initialDetailsForm.getExecutiveUserId())) {
+                competition.setExecutive(initialDetailsForm.getExecutiveUserId());
+            } else if (initialDetailsForm.getExecutiveUserId() != null) {
+                return serviceFailure(fieldError("executiveUserId",
+                        initialDetailsForm.getExecutiveUserId(),
+                        "competition.setup.invalid.comp.exec", (Object) null));
+            }
+            if (userService.isCompetitionTechnologist(initialDetailsForm.getLeadTechnologistUserId())) {
+                competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
+            } else if (initialDetailsForm.getLeadTechnologistUserId() != null) {
+                return serviceFailure(fieldError("leadTechnologistUserId",
+                        initialDetailsForm.getLeadTechnologistUserId(),
+                        "competition.setup.invalid.comp.technologist", (Object) null));
+            }
 
             if (!Boolean.TRUE.equals(competition.getSetupComplete())) {
 

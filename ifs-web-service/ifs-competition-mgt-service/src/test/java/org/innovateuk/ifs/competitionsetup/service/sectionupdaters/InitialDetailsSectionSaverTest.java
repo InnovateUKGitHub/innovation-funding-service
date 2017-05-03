@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
@@ -52,12 +53,15 @@ public class InitialDetailsSectionSaverTest {
     @Mock
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
+    @Mock
+    private UserService userService;
+
     //TODO: Create tests for situations surrounding Milestone saving
     //TODO: Create test for invalid date handling
     //TODO: Create test for situations surrounding retrieval of innovation sector
 
     @Test
-    public void testSaveCompetitionSetupSection() {
+    public void saveCompetitionSetupSection() {
         Long executiveUserId = 1L;
         Long competitionTypeId = 2L;
         Long leadTechnologistId = 3L;
@@ -96,6 +100,8 @@ public class InitialDetailsSectionSaverTest {
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
         when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(milestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
+        when(userService.isCompetitionExecutive(executiveUserId)).thenReturn(true);
+        when(userService.isCompetitionTechnologist(leadTechnologistId)).thenReturn(true);
 
         service.saveSection(competition, competitionSetupForm);
 
@@ -117,7 +123,7 @@ public class InitialDetailsSectionSaverTest {
     }
 
     @Test
-    public void testAutoSaveCompetitionSetupSection() {
+    public void autoSaveCompetitionSetupSection() {
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(singletonList(10L));
         when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(singletonList(getMilestone())));
@@ -132,7 +138,7 @@ public class InitialDetailsSectionSaverTest {
     }
 
     @Test
-    public void testAutoSaveInnovationAreaCategoryIds() {
+    public void autoSaveInnovationAreaCategoryIds() {
 
         CompetitionResource competition = newCompetitionResource().build();
         competition.setInnovationAreas(Collections.singleton(999L));
@@ -148,7 +154,7 @@ public class InitialDetailsSectionSaverTest {
     }
 
     @Test
-    public void testAutoSaveCompetitionSetupSectionUnknown() {
+    public void autoSaveCompetitionSetupSectionUnknown() {
         CompetitionResource competition = newCompetitionResource().build();
 
         ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "notExisting", "Strange!@#1Value", null);
@@ -158,7 +164,7 @@ public class InitialDetailsSectionSaverTest {
     }
 
     @Test
-    public void testCompletedCompetitionCanSetOnlyLeadTechnologistAndExecutive() {
+    public void completedCompetitionCanSetOnlyLeadTechnologistAndExecutive() {
         String newTitle = "New title";
         Long newExec = 1L;
         Long leadTechnologistId = 2L;
@@ -181,6 +187,8 @@ public class InitialDetailsSectionSaverTest {
         form.setCompetitionTypeId(competitionTypeId);
         form.setInnovationSectorCategoryId(innovationSectorId);
 
+        when(userService.isCompetitionExecutive(newExec)).thenReturn(true);
+        when(userService.isCompetitionTechnologist(leadTechnologistId)).thenReturn(true);
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
         service.saveSection(competition, form);
@@ -202,8 +210,87 @@ public class InitialDetailsSectionSaverTest {
     }
 
     @Test
-    public void testsSupportsForm() {
+    public void supportsForm() {
         assertTrue(service.supportsForm(InitialDetailsForm.class));
         assertFalse(service.supportsForm(CompetitionSetupForm.class));
+    }
+
+    @Test
+    public void compExecNotValid() {
+        Long executiveUserId = 1L;
+        Long competitionTypeId = 2L;
+        Long leadTechnologistId = 3L;
+        Long innovationAreaId = 4L;
+        Long innovationSectorId = 5L;
+
+        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+
+        InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
+        competitionSetupForm.setTitle("title");
+        competitionSetupForm.setExecutiveUserId(executiveUserId);
+        competitionSetupForm.setOpeningDateDay(openingDate.getDayOfMonth());
+        competitionSetupForm.setOpeningDateMonth(openingDate.getMonthValue());
+        competitionSetupForm.setOpeningDateYear(openingDate.getYear());
+        competitionSetupForm.setLeadTechnologistUserId(leadTechnologistId);
+        competitionSetupForm.setCompetitionTypeId(competitionTypeId);
+        competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
+
+        competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationAreaId, 1L, 2L, 3L));
+
+        List<Long> milestonesIds = new ArrayList<>();
+        milestonesIds.add(10L);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("compcode").build();
+        competition.setMilestones(milestonesIds);
+        competition.setSetupComplete(false);
+
+        when(userService.isCompetitionExecutive(executiveUserId)).thenReturn(false);
+
+        ServiceResult<Void> result = service.saveSection(competition, competitionSetupForm);
+
+        assertTrue(result.isFailure());
+        assertEquals("competition.setup.invalid.comp.exec", result.getFailure().getErrors().get(0).getErrorKey());
+        assertEquals("executiveUserId", result.getFailure().getErrors().get(0).getFieldName());
+    }
+
+    @Test
+    public void compTechnologistNotValid() {
+        Long executiveUserId = 1L;
+        Long competitionTypeId = 2L;
+        Long leadTechnologistId = 3L;
+        Long innovationAreaId = 4L;
+        Long innovationSectorId = 5L;
+
+        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+
+        InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
+        competitionSetupForm.setTitle("title");
+        competitionSetupForm.setExecutiveUserId(executiveUserId);
+        competitionSetupForm.setOpeningDateDay(openingDate.getDayOfMonth());
+        competitionSetupForm.setOpeningDateMonth(openingDate.getMonthValue());
+        competitionSetupForm.setOpeningDateYear(openingDate.getYear());
+        competitionSetupForm.setLeadTechnologistUserId(leadTechnologistId);
+        competitionSetupForm.setCompetitionTypeId(competitionTypeId);
+        competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
+
+        competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationAreaId, 1L, 2L, 3L));
+
+        List<Long> milestonesIds = new ArrayList<>();
+        milestonesIds.add(10L);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("compcode").build();
+        competition.setMilestones(milestonesIds);
+        competition.setSetupComplete(false);
+
+        when(userService.isCompetitionExecutive(executiveUserId)).thenReturn(true);
+        when(userService.isCompetitionTechnologist(leadTechnologistId)).thenReturn(false);
+
+        ServiceResult<Void> result = service.saveSection(competition, competitionSetupForm);
+
+        assertTrue(result.isFailure());
+        assertEquals("competition.setup.invalid.comp.technologist", result.getFailure().getErrors().get(0).getErrorKey());
+        assertEquals("leadTechnologistUserId", result.getFailure().getErrors().get(0).getFieldName());
     }
 }

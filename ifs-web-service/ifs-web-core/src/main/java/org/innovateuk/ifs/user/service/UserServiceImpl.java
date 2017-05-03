@@ -6,7 +6,10 @@ import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +26,11 @@ import static java.lang.String.format;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
     @Autowired
     private UserRestService userRestService;
-
     @Autowired
     private ProcessRoleService processRoleService;
-
-    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     @Override
     public UserResource findById(Long userId) {
@@ -47,6 +48,16 @@ public class UserServiceImpl implements UserService {
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().equals(userId));
 
+    }
+
+    @Override
+    public Boolean isCompetitionExecutive(Long userId) {
+        return isUserRoleType(userId, UserRoleType.COMP_ADMIN);
+    }
+
+    @Override
+    public Boolean isCompetitionTechnologist(Long userId) {
+        return isUserRoleType(userId, UserRoleType.COMP_TECHNOLOGIST);
     }
 
     @Override
@@ -162,5 +173,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email).getOptionalSuccessObject();
+    }
+
+    private boolean isUserRoleType(Long userId, UserRoleType role) {
+        UserResource execUser;
+
+        try {
+            execUser = findById(userId);
+        } catch (ObjectNotFoundException e) {
+            return false;
+        }
+
+        if (execUser != null) {
+            List<RoleResource> roles = execUser
+                    .getRoles()
+                    .stream()
+                    .filter(x -> role.getName().equals(x.getName()))
+                    .collect(Collectors.toList());
+
+            return roles != null && !roles.isEmpty();
+        }
+        return false;
     }
 }
