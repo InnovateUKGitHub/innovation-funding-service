@@ -4,8 +4,8 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -121,7 +121,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
             return "redirect:/competition/" + competitionId + "/applications/submitted";
         } else {
             return displayApplicationOverview(user,
-                    applicationId,
                     competitionId,
                     applicationForm,
                     origin,

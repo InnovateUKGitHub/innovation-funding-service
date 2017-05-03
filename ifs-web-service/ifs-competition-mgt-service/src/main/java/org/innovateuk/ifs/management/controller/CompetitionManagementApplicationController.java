@@ -48,18 +48,11 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 public class CompetitionManagementApplicationController {
 
     @Autowired
-    private ApplicationRestService applicationRestService;
-
-    @Autowired
-    private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
-
-    @Autowired
     protected ProcessRoleService processRoleService;
     @Autowired
     protected ApplicationPrintPopulator applicationPrintPopulator;
+    @Autowired
+    private ApplicationRestService applicationRestService;
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
     @Autowired
