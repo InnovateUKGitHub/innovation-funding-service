@@ -297,9 +297,8 @@ public abstract class BaseSectionViewModel {
         return Boolean.TRUE;
     }
 
-    public Boolean isOrgFinancialOverview(Long questionId) {
-        return isSubFinanceSection()
-                && (questionFormInputs.containsKey(questionId) && questionFormInputs.get(questionId).stream().anyMatch(formInputResource -> FormInputType.FINANCIAL_OVERVIEW_ROW.equals(formInputResource.getType())));
+    public Boolean isYourOrganisation() {
+        return currentSection.getType().equals(SectionType.ORGANISATION_FINANCES);
     }
 
     public List<FormInputResource> getFormInputsOrganisationSize(Long questionId) {

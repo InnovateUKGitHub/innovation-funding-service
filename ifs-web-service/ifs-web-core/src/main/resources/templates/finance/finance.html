@@ -227,15 +227,16 @@
                 <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
                     <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
                         <th:block th:if="${formInput.type.displayableFinanceType}">
-                            <div th:replace="finance/finance :: ${formInput.type.nameLower} (viewmode=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'approved' : 'edit')" th:with="formInputIndex=(${status.index})" />
+                            <th:block th:insert="finance/finance :: ${formInput.type.nameLower} (viewmode=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'approved' : 'edit')" th:with="formInputIndex=(${status.index})" />
                         </th:block>
                         <th:block th:if="${formInput.type.displayableQuestionType}">
-                            <div th:replace="question-type/types :: ${formInput.type.nameLower} (complete=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
+                            <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (complete=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
                         </th:block>
                     </th:block>
                 </th:block>
             </div>
         </section>
+
         <div class="grid-row total-cost">
             <div class="column-half">
                 <label for="total-cost" class="heading-medium">'<th:block th:text="${userOrganisation.name}"></th:block>' Total project costs</label>
