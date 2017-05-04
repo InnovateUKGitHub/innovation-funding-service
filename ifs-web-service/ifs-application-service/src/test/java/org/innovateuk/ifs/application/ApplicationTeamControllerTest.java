@@ -120,22 +120,6 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void getApplicationTeam_applicationAlreadySubmitted() throws Exception {
-        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
-        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
-
-        //doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
-
-        mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
-                .andExpect(status().isForbidden())
-                .andReturn();
-
-        InOrder inOrder = inOrder(applicationService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
     public void getApplicationTeam_loggedInUserIsNonLead() throws Exception {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
@@ -383,25 +367,6 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())));
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void beginApplication_nonLeadApplicantCannotBeginTheApplication() throws Exception {
-        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
-        ApplicationResource applicationResource = setupApplicationResource(organisationsMap, CREATED);
-        Map<String, UserResource> usersMap = setupUserResources();
-        setupLeadApplicant(applicationResource, usersMap);
-
-        setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
-
-        //doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 17L);
-
-        mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
-                .andExpect(status().isForbidden());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
