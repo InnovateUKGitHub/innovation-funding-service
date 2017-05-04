@@ -20,6 +20,10 @@ Guest user navigates to Front Door
     When the user clicks the button/link     link=Contact us
     Then the user should see the element     jQuery=h1:contains("Contact us")
     And the user should not see an error in the page
+    When the user clicks the button/link     jQuery=a:contains("feedback")
+    And the user selects feedback window
+    Then the user should see the element     css=.title-text
+    [Teardown]    close survey window
 
 Guest user can see Competitions and their information
     [Documentation]  INFUND-6923
@@ -131,3 +135,10 @@ Guest user can apply to a competition
 the user navigates to the front door
     the user clicks the button/link     jQuery=span:contains("Need help signing in or creating an account")
     the user clicks the button/link     jQuery=a:contains("competitions listings page")
+
+Close survey window
+    Close Window
+    Select Window
+
+the user selects feedback window
+    Select Window    title=Innovation Funding Service - Feedback Survey
