@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application;
 
+import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
+import org.innovateuk.ifs.application.security.OrganisationPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -16,24 +18,28 @@ public class ApplicationTeamAddOrganisationControllerSecurityTest extends BaseAp
     @Test
     public void testGetAddOrganisation() {
         assertSecured(() -> classUnderTest.getAddOrganisation(null, 123L, null, null),
-                permissionRules -> permissionRules.viewAddOrganisationPage(eq(123L), isA(UserResource.class)));
+                (OrganisationPermissionRules permissionRules) -> permissionRules.viewAddOrganisationPage(eq(123L), isA(UserResource.class)),
+                OrganisationPermissionRules.class);
     }
 
     @Test
     public void testSubmitAddOrganisation() {
         assertSecured(() -> classUnderTest.submitAddOrganisation(null, 123L, null, null, null, null),
-                permissionRules -> permissionRules.addNewOrganisation(eq(123L), isA(UserResource.class)));
+                (OrganisationPermissionRules permissionRules) -> permissionRules.addNewOrganisation(eq(123L), isA(UserResource.class)),
+                OrganisationPermissionRules.class);
     }
 
     @Test
     public void testAddApplicant() {
         assertSecured(() -> classUnderTest.addApplicant(null, 123L, null, null),
-                permissionRules -> permissionRules.addApplicant(eq(123L), isA(UserResource.class)));
+                (ApplicationPermissionRules permissionRules) -> permissionRules.addApplicant(eq(123L), isA(UserResource.class)),
+                ApplicationPermissionRules.class);
     }
 
     @Test
     public void testRemoveApplicant() {
         assertSecured(() -> classUnderTest.removeApplicant(null, 123L, null, null, null),
-                permissionRules -> permissionRules.removeApplicant(eq(123L), isA(UserResource.class)));
+                (ApplicationPermissionRules permissionRules) -> permissionRules.removeApplicant(eq(123L), isA(UserResource.class)),
+                ApplicationPermissionRules.class);
     }
 }

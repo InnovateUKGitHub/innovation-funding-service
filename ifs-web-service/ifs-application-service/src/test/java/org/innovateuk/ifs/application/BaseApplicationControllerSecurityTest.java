@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application;
 
-import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
-import org.junit.Before;
 import org.mockito.Mockito;
 
 import java.util.function.Consumer;
@@ -13,14 +11,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public abstract class BaseApplicationControllerSecurityTest<ControllerType> extends BaseControllerSecurityTest<ControllerType> {
 
-    private ApplicationPermissionRules permissionRules;
+    protected <T> void assertSecured(Runnable invokeControllerFn, Consumer<T> verification, Class clazz) {
 
-    @Before
-    public void lookupPermissionRules() {
-        permissionRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
-    }
+        T permissionRules = (T) getMockPermissionRulesBean(clazz);
 
-    protected void assertSecured(Runnable invokeControllerFn, Consumer<ApplicationPermissionRules> verification) {
         assertAccessDenied(
                 invokeControllerFn::run,
                 () -> {
