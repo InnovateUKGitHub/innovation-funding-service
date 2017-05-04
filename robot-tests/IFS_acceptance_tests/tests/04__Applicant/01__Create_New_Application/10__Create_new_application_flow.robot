@@ -16,53 +16,30 @@ Resource          ../../../resources/defaultResources.robot
 ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/99/form/question/428
 
 *** Test Cases ***
-Non registered users CH route
-    [Documentation]    INFUND-669
-    ...
-    ...    INFUND-1904
-    ...
-    ...    INFUND-1920
-    ...
-    ...    INFUND-1785
+Non registered users CH route: lead org Business
+    [Documentation]    INFUND-669  INFUND-1904  INFUND-1920  INFUND-1785  INFUND-9280
     [Tags]    HappyPath    SmokeTest
     [Setup]    The guest user opens the browser
-    the new user account creation   radio-1
-    And the user enters the details and clicks the create account   Phil Smith  ${test_mailbox_one}+business@gmail.com
+    the new user account creation   radio-1   # business
+    And the user enters the details and clicks the create account   Phil   Smith   ${test_mailbox_one}+business@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the new user account creation  radio-3
-    And the user enters the details and clicks the create account   Lee Tess   ${test_mailbox_one}+rto@gmail.com
-    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-
-# TODO non-registered user : RTO lead org - collboratory any
-
-Non registered users CH route (email step)
-    [Documentation]    INFUND-669
-    ...
-    ...    INFUND-1904
-    ...
-    ...    INFUND-1920
-    ...
-    ...    INFUND-1785
-    [Tags]    HappyPath    Email    SmokeTest
     the email verification   ${test_mailbox_one}+rto@gmail.com
+    [Teardown]    the user closes the browser
+
+Non registered users CH route : lead org RTO
+    [Documentation]    INFUND-669  INFUND-1904  INFUND-1785
+    [Tags]    HappyPath    Email    SmokeTest
+    [Setup]    The guest user opens the browser
+    the new user account creation   radio-3   # RTO
+    And the user enters the details and clicks the create account   Lee    Tess    ${test_mailbox_one}+rto@gmail.com
+    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the email verification   ${test_mailbox_one}+business@gmail.com
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
     [Tags]
-    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user enters text to a text field    id=organisationSearchName    Innovate
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button    organisationTypeId    radio-1
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    Then the user should not see the text in the page    ${test_mailbox_one}+1@gmail.com
+    the new user account creation    radio-1
+    Then the user should not see the text in the page    ${test_mailbox_one}+rto@gmail.com
     [Teardown]    the user closes the browser
 
 Non registered users non CH route
@@ -81,7 +58,7 @@ Non registered users non CH route
     And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user enters the details and clicks the create account    ${test_mailbox_one}+2@gmail.com
+    And the user enters the details and clicks the create account   Stuart    Downing   ${test_mailbox_one}+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Non registered users non CH route (email step)
@@ -104,7 +81,7 @@ Verify the name of the new application
     ...
     ...    INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
-    When log in as a different user    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
+    When log in as a different user    ${test_mailbox_one}+business@gmail.com    Passw0rd123
     And the user edits the competition title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
@@ -134,7 +111,7 @@ Special Project Finance role
     And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
+    And the user enters the details and clicks the create account   Alex    Snape   ${test_mailbox_one}+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Special Project Finance role (email step)
@@ -152,7 +129,6 @@ the new user account creation
     Given the user navigates to the page    ${SERVER}/competition/${OPEN_COMPETITION}/overview/
     When the user clicks the button/link    jQuery=a:contains("Start new application")
     And the user clicks the button/link    jQuery=.button:contains("Create account")
-    #And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    LINK=INNOVATE LTD
@@ -162,15 +138,13 @@ the new user account creation
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     # TODO add assertion for Confirm Organisation page and link for back button
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    #And the user enters the details and clicks the create account    ${test_mailbox_one}+${unique_email_number}@gmail.com
-    #And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 the email verification
     [Arguments]    ${email_id}
     Given the user reads his email and clicks the link    ${email_id}    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${email_id}   Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
