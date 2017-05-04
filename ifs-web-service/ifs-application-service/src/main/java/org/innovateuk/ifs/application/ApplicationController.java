@@ -97,12 +97,6 @@ public class ApplicationController {
 
     }
 
-    @ProfileExecution
-    @GetMapping(value = "/create-confirm-competition")
-    public String competitionCreateApplication() {
-        return "application-create-confirm-competition";
-    }
-
     @GetMapping("/terms-and-conditions")
     public String termsAndConditions() {
         return "application-terms-and-conditions";
