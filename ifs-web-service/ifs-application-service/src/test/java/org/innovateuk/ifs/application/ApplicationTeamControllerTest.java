@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.util.ApplicationUtil;
+//import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamViewModel;
@@ -58,8 +58,8 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     @InjectMocks
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
-    @Mock
-    public ApplicationUtil applicationUtil;
+/*    @Mock
+    public ApplicationUtil applicationUtil;*/
 
     @Override
     protected ApplicationTeamController supplyControllerUnderTest() {
@@ -124,7 +124,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
 
-        doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
+        //doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
 
         mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
                 .andExpect(status().isForbidden())
@@ -398,7 +398,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
 
-        doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 17L);
+        //doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 17L);
 
         mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
                 .andExpect(status().isForbidden());

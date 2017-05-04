@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamAddOrganisationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.util.ApplicationUtil;
+//import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamAddOrganisationViewModel;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
@@ -44,8 +44,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationTeamAddOrganisationControllerTest extends BaseControllerMockMVCTest<ApplicationTeamAddOrganisationController> {
 
-    @Mock
-    public ApplicationUtil applicationUtil;
+/*    @Mock
+    public ApplicationUtil applicationUtil;*/
 
     @Spy
     @InjectMocks
@@ -88,7 +88,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         setupLeadApplicant(applicationResource);
 
 
-        doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
+        //doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
 
         mockMvc.perform(get("/application/{applicationId}/team/addOrganisation", applicationResource.getId()))
                 .andExpect(status().isForbidden())
@@ -105,7 +105,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         setupLeadApplicant(applicationResource);
 
 
-        doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
+        //doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
 
         mockMvc.perform(get("/application/{applicationId}/team/addOrganisation", applicationResource.getId()))
                 .andExpect(status().isForbidden())
@@ -153,7 +153,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         ApplicationResource applicationResource = setupApplicationResource();
         setupLeadApplicant(applicationResource);
 
-        doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
+       // doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
 
         mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -172,7 +172,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         ApplicationResource applicationResource = setupApplicationResource();
         setupLeadApplicant(applicationResource);
 
-        doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
+        //doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
 
         mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -400,7 +400,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         ApplicationResource applicationResource = setupApplicationResource();
         setupLeadApplicant(applicationResource);
 
-        doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
+       // doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
 
         mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -420,7 +420,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         ApplicationResource applicationResource = setupApplicationResource();
         setupLeadApplicant(applicationResource);
 
-        doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
+      //  doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
 
         mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -475,7 +475,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         ApplicationResource applicationResource = setupApplicationResource();
         setupLeadApplicant(applicationResource);
 
-        doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
+        //doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
 
         mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -496,7 +496,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         ApplicationResource applicationResource = setupApplicationResource();
         setupLeadApplicant(applicationResource);
 
-        doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
+        //doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
 
         mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
