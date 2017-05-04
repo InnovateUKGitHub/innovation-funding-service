@@ -4,11 +4,14 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -17,10 +20,9 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -56,6 +58,9 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
+    private ApplicationOverviewIneligibilityModelPopulator applicationOverviewIneligibilityModelPopulator;
+
+    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
@@ -70,33 +75,16 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     @Autowired
     private ProcessRoleService processRoleService;
 
-    public enum ApplicationOverviewOrigin {
-        ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
-        SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
-        INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
-        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
-        FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
-        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");
-
-        private String baseOriginUrl;
-
-        ApplicationOverviewOrigin(String baseOriginUrl) {
-            this.baseOriginUrl = baseOriginUrl;
-        }
-
-        public String getBaseOriginUrl() {
-            return baseOriginUrl;
-        }
-    }
-
     @Override
-    public String displayApplicationOverview(UserResource user, long applicationId, long competitionId, ApplicationForm form, String origin, MultiValueMap<String, String> queryParams, Model model, ApplicationResource application) {
+    public String displayApplicationOverview(UserResource user, long competitionId, ApplicationForm form, String origin, MultiValueMap<String, String> queryParams, Model model, ApplicationResource application) {
         form.setAdminMode(true);
 
-        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
-
         // so the mode is viewonly
-        application.enableViewMode();
+        if (application.isOpen()) {
+            application.setApplicationState(ApplicationState.SUBMITTED);
+        }
+
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
@@ -110,6 +98,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
+        model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application));
 
         OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
@@ -117,6 +106,32 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("backUrl", buildBackUrl(origin, applicationId, competitionId, queryParams));
 
         return "competition-mgt-application-overview";
+    }
+
+    @Override
+    public String markApplicationAsIneligible(long applicationId,
+                                              long competitionId,
+                                              String origin,
+                                              MultiValueMap<String, String> queryParams,
+                                              ApplicationForm applicationForm,
+                                              UserResource user,
+                                              Model model) {
+        IneligibleOutcomeResource ineligibleOutcomeResource =
+                new IneligibleOutcomeResource(applicationForm.getIneligibleReason());
+
+        ServiceResult<Void> result = applicationService.markAsIneligible(applicationId, ineligibleOutcomeResource);
+
+        if (result != null && result.isSuccess()) {
+            return "redirect:/competition/" + competitionId + "/applications/submitted";
+        } else {
+            return displayApplicationOverview(user,
+                    competitionId,
+                    applicationForm,
+                    origin,
+                    queryParams,
+                    model,
+                    applicationService.getById(applicationId));
+        }
     }
 
     @Override
@@ -167,6 +182,25 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
             return OptionalFileDetailsViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
         } else {
             return OptionalFileDetailsViewModel.withNoFile(readonly);
+        }
+    }
+
+    public enum ApplicationOverviewOrigin {
+        ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
+        SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
+        INELIGIBLE_APPLICATIONS("/competition/{competitionId}/applications/ineligible"),
+        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
+        FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
+        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");
+
+        private String baseOriginUrl;
+
+        ApplicationOverviewOrigin(String baseOriginUrl) {
+            this.baseOriginUrl = baseOriginUrl;
+        }
+
+        public String getBaseOriginUrl() {
+            return baseOriginUrl;
         }
     }
 }

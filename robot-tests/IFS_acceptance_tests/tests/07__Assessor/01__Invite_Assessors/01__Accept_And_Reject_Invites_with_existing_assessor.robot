@@ -96,16 +96,14 @@ Existing assessor: Reject invitation from Dashboard
     Given the user clicks the button/link    link=Photonics for health
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
-    And the user clicks the button/link    css=form a
-    And the user clicks the button/link    jQuery=button:contains(Cancel)
     And the user should not see the element    id=rejectComment
-    And the user clicks the button/link    css=form a
+    And the user selects the radio button  acceptInvitation  false
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \\ a a a a \\ a a a a a a \\ a a a a a \\ a a a a \\ a a a a \\ a a a a a a a a a a a \\ a a \\ a a a a a a a a a a \\ a a a a a a a a a a a a a a a a a a a \\ a a a a a a a \\ a a a \\ a a \\ aa \\ a a a a a a a a a a a a a a \\ a
-    And the user clicks the button/link    jQuery=button:contains("Reject")
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should see an error    The reason cannot be blank.
     And the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And the assessor fills all fields with valid inputs
-    And the user clicks the button/link    jQuery=button:contains("Reject")
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     And the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
 
 Existing Assessor tries to accept closed competition
@@ -137,7 +135,8 @@ Existing assessor: Accept invitation from the invite link
     And the user should see the text in the page    12 January 2068 to 28 January 2068: Assessment period
     And the user should see the text in the page    taking place at 12:00am on 15 April.
     And the user should see the text in the page    100 per application.
-    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
+    And the user selects the radio button  acceptInvitation  true
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should see the text in the page    Your email address is linked to an existing account.
     And the user clicks the button/link    jQuery=a:contains("Click here to sign in")
     And Invited guest user log in    &{existing_assessor1_credentials}
@@ -190,7 +189,8 @@ Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895
     [Tags]
     Given the user navigates to the page    ${Invitation_nonexisting_assessor2}
-    When the user clicks the button/link    jQuery=.button:contains("Yes")
+    And the user selects the radio button  acceptInvitation  true
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then The user should see permissions error message
 
 The user should not be able to accept or reject the same applications
