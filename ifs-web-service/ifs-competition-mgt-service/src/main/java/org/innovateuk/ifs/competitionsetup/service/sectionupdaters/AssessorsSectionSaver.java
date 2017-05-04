@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.form.AssessorsForm;
@@ -11,9 +10,6 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -39,20 +35,15 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 		AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
 
 		if(!sectionToSave().preventEdit(competition)) {
-            List<AssessorCountOptionResource> assessorOptions = competitionService
-                    .getAssessorOptionsForCompetitionType(competition.getCompetitionType())
-                    .stream()
-                    .filter(assessorOption -> assessorsForm.getAssessorCount().equals(assessorOption.getOptionValue()))
-                    .collect(Collectors.toList());
-			if(assessorOptions != null && !assessorOptions.isEmpty()) {
+			if(competitionService.getAssessorOptionsForCompetitionType(competition.getCompetitionType()).stream().anyMatch(assessorOption -> assessorsForm.getAssessorCount().equals(assessorOption.getOptionValue()))) {
                 setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm);
                 setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm);
 
                 return competitionService.update(competition);
             } else {
-			    return serviceFailure(singletonList(fieldError("assessorCount",
+			    return serviceFailure(fieldError("assessorCount",
                         assessorsForm.getAssessorCount(),
-                        "competition.setup.invalid.assessor.count", (Object) null)));
+                        "competition.setup.invalid.assessor.count", (Object) null));
             }
 		}
 		else {

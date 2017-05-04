@@ -5,9 +5,9 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +51,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean isCompetitionExecutive(Long userId) {
+    public boolean isCompetitionExecutive(Long userId) {
         return isUserRoleType(userId, UserRoleType.COMP_ADMIN);
     }
 
     @Override
-    public Boolean isCompetitionTechnologist(Long userId) {
+    public boolean isCompetitionTechnologist(Long userId) {
         return isUserRoleType(userId, UserRoleType.COMP_TECHNOLOGIST);
     }
 
@@ -176,23 +176,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isUserRoleType(Long userId, UserRoleType role) {
-        UserResource execUser;
+        RestResult<UserResource> result = userRestService.retrieveUserById(userId);
 
-        try {
-            execUser = findById(userId);
-        } catch (ObjectNotFoundException e) {
+        if (result.isFailure()) {
             return false;
         }
 
-        if (execUser != null) {
-            List<RoleResource> roles = execUser
-                    .getRoles()
-                    .stream()
-                    .filter(x -> role.getName().equals(x.getName()))
-                    .collect(Collectors.toList());
+        UserResource execUser = result.getSuccessObject();
 
-            return roles != null && !roles.isEmpty();
-        }
-        return false;
+        return execUser != null && execUser.hasRole(role);
     }
 }

@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -142,7 +143,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void isCompetitionExecutive_userNotFound() {
         Long userId = 1L;
 
-        when(userRestService.retrieveUserById(userId)).thenThrow(new ObjectNotFoundException());
+        Error error = CommonErrors.notFoundError(UserResource.class, userId);
+        when(userRestService.retrieveUserById(userId)).thenReturn(restFailure(error));
 
         assertFalse(service.isCompetitionExecutive(userId));
     }
@@ -183,7 +185,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void isCompetitionTechnologist_userNotFound() {
         Long userId = 1L;
 
-        when(userRestService.retrieveUserById(userId)).thenThrow(new ObjectNotFoundException());
+        Error error = CommonErrors.notFoundError(UserResource.class, userId);
+        when(userRestService.retrieveUserById(userId)).thenReturn(restFailure(error));
 
         assertFalse(service.isCompetitionTechnologist(userId));
     }
