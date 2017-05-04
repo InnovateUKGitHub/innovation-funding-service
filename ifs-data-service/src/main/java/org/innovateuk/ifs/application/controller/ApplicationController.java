@@ -2,10 +2,8 @@ package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -22,6 +20,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/application")
 public class ApplicationController {
+
+    @Autowired
+    private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
     @Autowired
     private ApplicationService applicationService;
@@ -90,6 +91,14 @@ public class ApplicationController {
         ServiceResult<ApplicationResource> applicationResult =
                 applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
         return applicationResult.toPostCreateResponse();
+    }
+
+    @PostMapping("/{applicationId}/ineligible")
+    public RestResult<Void> markAsIneligible(@PathVariable("applicationId") long applicationId,
+                                             @RequestBody IneligibleOutcomeResource reason) {
+        return applicationService
+                .markAsIneligible(applicationId, ineligibleOutcomeMapper.mapToDomain(reason))
+                .toPostWithBodyResponse();
     }
 
     @PostMapping("/informIneligible/{applicationId}")

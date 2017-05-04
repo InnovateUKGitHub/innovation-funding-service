@@ -1,37 +1,30 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
  * This controller will handle all requests that are related to a competition.
  */
-
 @Controller
-@RequestMapping("/competition")
+@RequestMapping("/competition/{competitionId}")
 @PreAuthorize("permitAll")
 public class CompetitionController {
-    public static final String TEMPLATE_PATH = "competition/";
-
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -39,60 +32,53 @@ public class CompetitionController {
     @Autowired
     private CompetitionOverviewPopulator overviewPopulator;
 
-    @GetMapping("/{competitionId}/overview")
-    public String competitionOverview(Model model,
-                                      @PathVariable("competitionId") final Long competitionId,
-                                     HttpServletRequest request) {
-        PublicContentItemResource publicContentItem = competitionService
-                .getPublicContentOfCompetition(competitionId);
-
-        model.addAttribute("model", overviewPopulator.populateViewModel(
-                publicContentItem,
-                userIsLoggedIn(request)));
-        return TEMPLATE_PATH + "overview";
+    @GetMapping("overview")
+    public String competitionOverview(final Model model,
+                                      @PathVariable("competitionId") final long competitionId,
+                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        final PublicContentItemResource publicContentItem = competitionService.getPublicContentOfCompetition(competitionId);
+        model.addAttribute("model", overviewPopulator.populateViewModel(publicContentItem, loggedInUser != null));
+        return "competition/overview";
     }
 
-    @GetMapping("/{competitionId}/download/{contentGroupId}")
-    public ResponseEntity<ByteArrayResource> getFileDetails(Model model,
-                                                            @PathVariable("competitionId") Long competitionId,
-                                                            @PathVariable("contentGroupId") Long contentGroupId) {
+    @GetMapping("download/{contentGroupId}")
+    public ResponseEntity<ByteArrayResource> getFileDetails(@PathVariable("competitionId") final long competitionId,
+                                                            @PathVariable("contentGroupId") final long contentGroupId) {
         final ByteArrayResource resource = competitionService.downloadPublicContentAttachment(contentGroupId);
-        FileEntryResource fileDetails = competitionService.getPublicContentFileDetails(contentGroupId);
+        final FileEntryResource fileDetails = competitionService.getPublicContentFileDetails(contentGroupId);
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    @GetMapping("/{competitionId}/details")
-    public String competitionDetails(Model model, @PathVariable("competitionId") final Long competitionId,
-                                     HttpServletRequest request) {
-        addUserToModel(model, request);
+    @GetMapping("details")
+    public String competitionDetails(final Model model, @PathVariable("competitionId") final long competitionId) {
         addCompetitionToModel(model, competitionId);
-        return TEMPLATE_PATH + "details";
+        return "competition/details";
     }
 
-    @GetMapping("/{competitionId}/info/{templateName}")
-    public String getInfoPage(Model model, @PathVariable("competitionId") final Long competitionId,
-                              HttpServletRequest request, @PathVariable("templateName") String templateName) {
-        addUserToModel(model, request);
+    @GetMapping("info/before-you-apply")
+    public String beforeYouApply(final Model model, @PathVariable("competitionId") final long competitionId) {
         addCompetitionToModel(model, competitionId);
-        return TEMPLATE_PATH+"info/"+ templateName;
+        return "competition/info/before-you-apply";
     }
 
-    private void addUserToModel(Model model, HttpServletRequest request) {
-        boolean userIsLoggedIn = userIsLoggedIn(request);
-        model.addAttribute("userIsLoggedIn", userIsLoggedIn);
+    @GetMapping("info/eligibility")
+    public String eligibility(final Model model, @PathVariable("competitionId") final long competitionId) {
+        addCompetitionToModel(model, competitionId);
+        return "competition/info/eligibility";
     }
 
-    private void addCompetitionToModel(Model model, Long competitionId) {
+    @GetMapping("info/terms-and-conditions")
+    public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
+        return "competition/info/terms-and-conditions";
+    }
+
+    @GetMapping("info/what-we-ask-you")
+    public String whatWeAskYou(final Model model, @PathVariable("competitionId") final long competitionId) {
+        addCompetitionToModel(model, competitionId);
+        return "competition/info/what-we-ask-you";
+    }
+
+    private void addCompetitionToModel(final Model model, final long competitionId) {
         model.addAttribute("currentCompetition", competitionService.getPublishedById(competitionId));
     }
-
-    private boolean userIsLoggedIn(HttpServletRequest request) {
-        Authentication authentication = userAuthenticationService.getAuthentication(request);
-        if(authentication != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
-

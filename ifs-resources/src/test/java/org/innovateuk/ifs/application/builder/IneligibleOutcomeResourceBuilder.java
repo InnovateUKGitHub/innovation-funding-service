@@ -9,11 +9,9 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class IneligibleOutcomeResourceBuilder
-        extends BaseBuilder<IneligibleOutcomeResource, IneligibleOutcomeResourceBuilder> {
+public class IneligibleOutcomeResourceBuilder extends BaseBuilder<IneligibleOutcomeResource, IneligibleOutcomeResourceBuilder> {
 
-    private IneligibleOutcomeResourceBuilder(List<BiConsumer<Integer,
-            IneligibleOutcomeResource>> multiActions) {
+    private IneligibleOutcomeResourceBuilder(List<BiConsumer<Integer, IneligibleOutcomeResource>> multiActions) {
         super(multiActions);
     }
 
@@ -22,8 +20,7 @@ public class IneligibleOutcomeResourceBuilder
     }
 
     @Override
-    protected IneligibleOutcomeResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer,
-            IneligibleOutcomeResource>> actions) {
+    protected IneligibleOutcomeResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, IneligibleOutcomeResource>> actions) {
         return new IneligibleOutcomeResourceBuilder(actions);
     }
 

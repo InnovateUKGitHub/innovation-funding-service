@@ -23,15 +23,25 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
 
     public static final int PRECEDENCE = 1400;
     public static final String ATTR_NAME = "utext";
-    public static final Whitelist WHITELIST = Whitelist.relaxed()
-            .addAttributes("ul", "class", "id")
-            .addAttributes("li", "class", "id")
-            .addAttributes("ol", "class", "id")
+    public static final Whitelist WHITELIST = Whitelist.none()
+            // Tags and attributes should be in alphabetical order for ease of lookup
+            .addTags(
+                    "a", "caption", "h1", "h2", "h3", "div", "em", "li", "ol", "p", "span",
+                    "strong", "table", "tbody", "tfoot", "thead", "td", "th", "tr", "ul"
+            )
+            .addAttributes("a", "href", "target", "title")
+            .addAttributes("div", "class", "id", "aria-hidden")
+            .addAttributes("h1", "class", "id")
             .addAttributes("h2", "class", "id")
             .addAttributes("h3", "class", "id")
-            .addAttributes("th", "style")
-            .addAttributes("div", "class", "id", "aria-hidden")
-            .addAttributes("a", "href","target");
+            .addAttributes("li", "class", "id")
+            .addAttributes("ol", "class", "id")
+            .addAttributes("table", "summary", "width")
+            .addAttributes("td", "colspan", "rowspan", "width")
+            .addAttributes("th", "colspan", "rowspan", "scope", "style", "width")
+            .addAttributes("ul", "class", "id")
+
+            .addProtocols("a", "href", "ftp", "http", "https", "mailto");
 
 
     public EnhancedUtextProcessor(final TemplateMode templateMode, final String dialectPrefix) {

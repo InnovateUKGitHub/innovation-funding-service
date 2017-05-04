@@ -44,24 +44,19 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class CompetitionManagementApplicationController {
 
     @Autowired
-    private ApplicationRestService applicationRestService;
-
-    @Autowired
-    private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
-
-    @Autowired
     protected ProcessRoleService processRoleService;
-
     @Autowired
     protected ApplicationPrintPopulator applicationPrintPopulator;
-
+    @Autowired
+    private ApplicationRestService applicationRestService;
+    @Autowired
+    private FormInputResponseRestService formInputResponseRestService;
+    @Autowired
+    private AssessorFeedbackRestService assessorFeedbackRestService;
     @Autowired
     private CompetitionManagementApplicationService competitionManagementApplicationService;
 
@@ -79,6 +74,25 @@ public class CompetitionManagementApplicationController {
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> competitionManagementApplicationService
                         .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application));
+    }
+
+    @GetMapping("/{applicationId}/markIneligible")
+    public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
+                                   @PathVariable("competitionId") final long competitionId,
+                                   @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                   @RequestParam MultiValueMap<String, String> queryParams,
+                                   @ModelAttribute("form") ApplicationForm applicationForm,
+                                   @ModelAttribute("loggedInUser") UserResource user,
+                                   Model model) {
+        return competitionManagementApplicationService
+                .markApplicationAsIneligible(
+                        applicationId,
+                        competitionId,
+                        origin,
+                        queryParams,
+                        applicationForm,
+                        user,
+                        model);
     }
 
     @GetMapping("/{applicationId}/assessorFeedback")

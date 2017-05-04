@@ -5,8 +5,10 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -44,8 +46,11 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -53,6 +58,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -402,6 +408,50 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()));
 
         verify(assessorFeedbackRestService).removeAssessorFeedbackDocument(applications.get(0).getId());
+    }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
+        when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/markIneligible", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/applications/submitted"));
+
+        verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
+    }
+
+    @Test
+    public void markAsIneligible_notSubmitted() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
+
+        when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
+        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+        when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
+
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/markIneligible"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition-mgt-application-overview"));
+
+        verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
     }
 
     private void assertApplicationOverviewWithBackUrl(final String origin, final String expectedBackUrl) throws Exception {
