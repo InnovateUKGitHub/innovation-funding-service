@@ -2,7 +2,7 @@
 set -e
 
 LDAP_VERSION=0.4.0
-IDP_VERSION=0.6.1
+IDP_VERSION=0.6.2
 SP_VERSION=0.5.2
 
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com

@@ -24,11 +24,8 @@ import java.util.function.Supplier;
  */
 public interface ApplicationService {
 
-    @PreAuthorize("hasAuthority('applicant') || hasAnyAuthority('applicant', 'system_registrar')")
-    @SecuredBySpring(value = "CREATE",
-            description = "Any logged in user with Global roles or user with system registrar role can create and application",
-            securedType = ApplicationResource.class)
-    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'CREATE')")
+    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(final String applicationName, @P("competitionId") final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
     ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
