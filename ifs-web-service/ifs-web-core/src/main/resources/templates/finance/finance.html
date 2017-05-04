@@ -706,13 +706,13 @@
                         <td th:text="${cost.getItem()}"></td>
                         <td class="numeric" th:text="${cost.getQuantity()}"></td>
                         <td class="numeric" th:text="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,'COMMA',0,'POINT') : '0'}"></td>
-                        <td class="numeric" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatDecimal(cost.total,0,'COMMA',0,'POINT')}"></td>
+                        <td class="numeric" th:text="'£ ' + ${#numbers.formatDecimal(cost.total,0,'COMMA',0,'POINT')}"></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th scope="row" colspan="3">Total materials costs</th>
-                        <td th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" class="numeric"></td>
+                        <td th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" class="numeric"></td>
                     </tr>
                 </tfoot>
             </table>
