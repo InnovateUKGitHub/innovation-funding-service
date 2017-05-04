@@ -83,40 +83,6 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
     }
 
     @Test
-    public void getAddOrganisation_applicationAlreadySubmitted() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-
-        //doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
-
-        mockMvc.perform(get("/application/{applicationId}/team/addOrganisation", applicationResource.getId()))
-                .andExpect(status().isForbidden())
-                .andReturn();
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void getAddOrganisation_userIsNotLeadApplicant() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-
-        //doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
-
-        mockMvc.perform(get("/application/{applicationId}/team/addOrganisation", applicationResource.getId()))
-                .andExpect(status().isForbidden())
-                .andReturn();
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
     public void submitAddOrganisation() throws Exception {
         ApplicationResource applicationResource = setupApplicationResource();
         UserResource leadApplicant = setupLeadApplicant(applicationResource);
@@ -142,47 +108,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(inviteRestService);
         inOrder.verify(inviteRestService).createInvitesByInviteOrganisation("Ludlow", expectedInvites);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void submitAddOrganisation_applicationAlreadySubmitted() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-       // doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void submitAddOrganisation_userIsNotLeadApplicant() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-        //doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -222,7 +149,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertEquals("Please add at least one person to invite.", bindingResult.getFieldError("applicants").getDefaultMessage());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService, times(2)).getById(applicationResource.getId());
+        inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -269,7 +196,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertEquals("Please enter an email address.", bindingResult.getFieldError("applicants[1].email").getDefaultMessage());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService, times(2)).getById(applicationResource.getId());
+        inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -313,7 +240,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertEquals("Please enter a valid email address.", bindingResult.getFieldError("applicants[1].email").getDefaultMessage());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService, times(2)).getById(applicationResource.getId());
+        inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -357,7 +284,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertEquals("validation.applicationteamaddorganisationform.email.notUnique", bindingResult.getFieldError("applicants[1].email").getCode());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService, times(2)).getById(applicationResource.getId());
+        inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -396,46 +323,6 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
     }
 
     @Test
-    public void addApplicant_applicationAlreadySubmitted() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-       // doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .param("addApplicant", "")
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void addApplicant_userIsNotLeadApplicant() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-      //  doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .param("addApplicant", "")
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
     public void removeApplicant() throws Exception {
         ApplicationResource applicationResource = setupApplicationResource();
         UserResource leadApplicant = setupLeadApplicant(applicationResource);
@@ -464,48 +351,6 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         assertEquals("Ludlow", form.getOrganisationName());
         assertTrue("The list of applicants should be empty", form.getApplicants().isEmpty());
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void removeApplicant_applicationAlreadySubmitted() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-        //doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                // Remove the row at index 0
-                .param("removeApplicant", "0")
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void removeApplicant_userIsNotLeadApplicant() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-        //doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 1L);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                // Remove the row at index 0
-                .param("removeApplicant", "0")
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
 
         InOrder inOrder = inOrder(applicationService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
