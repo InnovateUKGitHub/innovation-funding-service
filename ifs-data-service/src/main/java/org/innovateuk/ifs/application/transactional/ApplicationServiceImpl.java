@@ -73,13 +73,21 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+    enum Notifications {
+        APPLICATION_SUBMITTED,
+        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+        APPLICATION_INELIGIBLE
+    }
+
+    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
+
     // TODO DW - INFUND-1555 - put into a DTO
     public static final String READY_FOR_SUBMIT = "readyForSubmit";
     public static final String PROGRESS = "progress";
     public static final String RESEARCH_PARTICIPATION = "researchParticipation";
     public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
     public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
-    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
+
     @Autowired
     private FileService fileService;
     @Autowired
@@ -106,17 +114,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ActivityStateRepository activityStateRepository;
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
-
-    private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
-        boolean contains = false;
-        int i = 0;
-        while (!contains && i < roles.size()) {
-            contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
-            i++;
-        }
-
-        return contains;
-    }
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -437,6 +434,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(filteredResource);
     }
 
+    private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
+        boolean contains = false;
+        int i = 0;
+        while (!contains && i < roles.size()) {
+            contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
+            i++;
+        }
+
+        return contains;
+    }
+
     @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
         return getProcessRole(id).andOnSuccessReturn(processRole -> {
@@ -603,11 +611,5 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus());
         }
         return true;
-    }
-
-    enum Notifications {
-        APPLICATION_SUBMITTED,
-        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
-        APPLICATION_INELIGIBLE
     }
 }
