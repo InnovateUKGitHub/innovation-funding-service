@@ -24,12 +24,11 @@ public class ThymeleafUtilTest {
     public void formPostUri() throws Exception {
         final String servletPath = "/application/1/form";
         final String queryString = "test=true,newApplication=true";
-        final String expected = servletPath + "?" + queryString;
 
         final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getServletPath()).thenReturn(servletPath);
         when(request.getQueryString()).thenReturn(queryString);
-        assertEquals(expected, thymeleafUtil.formPostUri(request));
+        assertEquals(servletPath, thymeleafUtil.formPostUri(request));
     }
 
     @Test(expected = IllegalArgumentException.class)
