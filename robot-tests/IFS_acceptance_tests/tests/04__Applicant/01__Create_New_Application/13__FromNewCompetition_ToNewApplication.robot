@@ -6,6 +6,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...               INFUND-6395 s an Applicant I will be invited to add Projected growth, and Organisation size where the include projected growth table is set to Yes within the Finances page of Competition setup
 ...
 ...               INFUND-6895 As an Lead Applicant I will be advised that changing my Research category after completing Funding level will reset the 'Funding level'
+...
+...               INFUND-9151 Update 'Application details' where a single 'Innovation area' set in 'Initial details'
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Applicant    CompAdmin
@@ -82,10 +84,13 @@ Applicant visits his Finances
 
 Applicant fills in the Application Details
     [Documentation]    INFUND-6895
+    ...
+    ...    INFUND-9151
     [Tags]    HappyPath
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
+    And The user should not see the element    link=Choose your innovation area
     And the user selects feasibility studies and no to resubmission
     And the user enters text to a text field    css=#application_details-startdate_day    ${tomorrowday}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
@@ -493,7 +498,6 @@ the user completes the new account creation
     the user enters text to a text field     JQuery=input[id="lastName"]   smithson
     the user enters text to a text field     jQuery=input[id="phoneNumber"]   077712567890
     the user enters text to a text field     jQuery=input[id="password"]  ${correct_password}
-    the user enters text to a text field    jQuery=input[id="retypedPassword"]  ${correct_password}
     the user selects the checkbox      termsAndConditions
     the user clicks the button/link     jQuery=button:contains("Create account")
     the user should see the text in the page    Please verify your email address

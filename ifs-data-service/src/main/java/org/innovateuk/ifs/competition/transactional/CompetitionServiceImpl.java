@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
@@ -114,7 +115,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return new CompetitionSearchResultItem(c.getId(),
                 c.getName(),
                 ofNullable(c.getInnovationAreas()).orElseGet(Collections::emptySet)
-                        .stream().map(Category::getName).collect(Collectors.toSet()),
+                        .stream()
+                        .map(Category::getName)
+                        .collect(Collectors.toCollection(TreeSet::new)),
                 c.getApplications().size(),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),

@@ -1,0 +1,5 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+${bodyPlain}
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

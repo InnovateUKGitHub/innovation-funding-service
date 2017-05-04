@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -23,6 +24,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
@@ -398,5 +400,38 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
         verify(projectRepositoryMock).findOneByApplicationId(application.getId());
         verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void testLeadApplicantCanUpdateApplicationState() throws Exception {
+        assertTrue(rules.leadApplicantCanUpdateApplicationState(applicationResource1, leadOnApplication1));
+        assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, compAdmin));
+        assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, user2));
+    }
+
+    @Test
+    public void testCompAdminCanUpdateApplicationState() throws Exception {
+        assertTrue(rules.compAdminCanUpdateApplicationState(applicationResource1, compAdmin));
+        assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, leadOnApplication1));
+        assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, user2));
+    }
+
+    @Test
+    public void testUserCanCreateNewApplication() {
+        // For each possible Competition Status...
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+
+            // For each possible role
+            allGlobalRoleUsers.forEach(user -> {
+                CompetitionResource competition = newCompetitionResource().withCompetitionStatus(competitionStatus).build();
+
+                // if the user has global role applicant or system registrar and competition is open
+                if ((user.hasRole(APPLICANT) || user.hasRole(SYSTEM_REGISTRATION_USER)) && competition.isOpen()) {
+                    assertTrue(rules.userCanCreateNewApplication(competition, user));
+                } else {
+                    assertFalse(rules.userCanCreateNewApplication(competition, user));
+                }
+            });
+        });
     }
 }

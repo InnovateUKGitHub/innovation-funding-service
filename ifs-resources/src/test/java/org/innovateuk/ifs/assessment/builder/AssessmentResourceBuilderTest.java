@@ -39,7 +39,6 @@ public class AssessmentResourceBuilderTest {
                 .withId(expectedId)
                 .withProcessEvent(expectedEvent)
                 .withActivityState(expectedStatus)
-                .withLastModifiedDate(expectedLastModifiedDate)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
                 .withFundingDecision(expectedFundingDecision)
@@ -53,7 +52,6 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedId, assessment.getId());
         assertEquals(expectedEvent.name(), assessment.getEvent());
         assertEquals(expectedStatus, assessment.getAssessmentState());
-        assertEquals(expectedLastModifiedDate, assessment.getLastModified());
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
         assertEquals(expectedFundingDecision, assessment.getFundingDecision());
@@ -85,7 +83,6 @@ public class AssessmentResourceBuilderTest {
                 .withId(expectedIds)
                 .withProcessEvent(expectedEvents)
                 .withActivityState(expectedStatuss)
-                .withLastModifiedDate(expectedLastModifiedDates)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)
                 .withFundingDecision(expectedFundingDecisions)
@@ -100,7 +97,6 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedEvents[0].name(), first.getEvent());
         assertEquals(expectedStatuss[0], first.getAssessmentState());
-        assertEquals(expectedLastModifiedDates[0], first.getLastModified());
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
         assertEquals(expectedFundingDecisions[0], first.getFundingDecision());
@@ -114,7 +110,6 @@ public class AssessmentResourceBuilderTest {
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedEvents[1].name(), second.getEvent());
         assertEquals(expectedStatuss[1], second.getAssessmentState());
-        assertEquals(expectedLastModifiedDates[1], second.getLastModified());
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());
         assertEquals(expectedFundingDecisions[1], second.getFundingDecision());

@@ -39,7 +39,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -205,6 +204,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
 
         attachSections(competition, sectionsWithoutParentSections, null);
+
+        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
 
         competitionRepository.save(competition);
 
