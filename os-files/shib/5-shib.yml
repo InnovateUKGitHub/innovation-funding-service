@@ -44,7 +44,7 @@ items:
           - containerPort: 9080
           resources:
             limits:
-              memory: 1G
+              memory: 2G
           test: false
     triggers:
     - type: ConfigChange
