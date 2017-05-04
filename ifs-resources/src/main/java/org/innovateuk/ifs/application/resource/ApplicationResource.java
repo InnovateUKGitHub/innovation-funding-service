@@ -142,10 +142,6 @@ public class ApplicationResource {
         return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
     }
 
-    @JsonIgnore
-    public void enableViewMode(){
-        setApplicationState(ApplicationState.SUBMITTED);
-    }
     public Long getAssessorFeedbackFileEntry() {
         return assessorFeedbackFileEntry;
     }
