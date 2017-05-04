@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.workflow.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.resource.ProcessStates;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,11 +27,14 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     @ManyToOne(fetch = FetchType.LAZY)
     protected ActivityState activityState;
 
-    @Version
-    private ZonedDateTime lastModified;
+    @LastModifiedDate
+    private ZonedDateTime lastModified = ZonedDateTime.now();
 
     private LocalDate startDate;
     private LocalDate endDate;
+
+    @Version
+    private int version = 0;
 
     @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
     @OrderBy("id ASC")
@@ -103,11 +106,6 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return processOutcomes;
     }
 
-    @JsonIgnore
-    public ZonedDateTime getVersion() {
-        return lastModified;
-    }
-
     public abstract void setParticipant(ParticipantType participant);
 
     public abstract ParticipantType getParticipant();
@@ -145,9 +143,9 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
                 .append(id, process.id)
                 .append(event, process.event)
                 .append(activityState, process.activityState)
-                .append(lastModified, process.lastModified)
                 .append(startDate, process.startDate)
                 .append(endDate, process.endDate)
+                .append(version, process.version)
                 .append(internalParticipant, process.internalParticipant)
                 .isEquals();
     }
@@ -158,9 +156,9 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
                 .append(id)
                 .append(event)
                 .append(activityState)
-                .append(lastModified)
                 .append(startDate)
                 .append(endDate)
+                .append(version)
                 .append(internalParticipant)
                 .toHashCode();
     }
