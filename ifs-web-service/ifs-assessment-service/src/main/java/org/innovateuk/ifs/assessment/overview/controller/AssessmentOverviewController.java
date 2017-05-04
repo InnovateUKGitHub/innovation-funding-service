@@ -58,9 +58,9 @@ public class AssessmentOverviewController {
 
     @GetMapping
     public String getOverview(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
+                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) AssessmentOverviewForm form,
                               @PathVariable("assessmentId") Long assessmentId,
-                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         model.addAttribute("model", assessmentOverviewModelPopulator.populateModel(assessmentId));
         return "assessment/application-overview";
@@ -76,7 +76,7 @@ public class AssessmentOverviewController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
 
         final ByteArrayResource resource = formInputResponseRestService

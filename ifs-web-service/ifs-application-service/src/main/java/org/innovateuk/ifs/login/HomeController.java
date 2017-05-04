@@ -71,7 +71,7 @@ public class HomeController {
 
     @GetMapping("/roleSelection")
     public String selectRole(Model model,
-                             @ModelAttribute("form") RoleSelectionForm form) {
+                             @ModelAttribute(value = "form", binding = false) RoleSelectionForm form) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
@@ -84,7 +84,7 @@ public class HomeController {
 
     @PostMapping("/roleSelection")
     public String processRole(Model model,
-                              @ModelAttribute("loggedInUser") UserResource user,
+                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                               @Valid @ModelAttribute("form") RoleSelectionForm form,
                               BindingResult bindingResult,
                               ValidationHandler validationHandler,

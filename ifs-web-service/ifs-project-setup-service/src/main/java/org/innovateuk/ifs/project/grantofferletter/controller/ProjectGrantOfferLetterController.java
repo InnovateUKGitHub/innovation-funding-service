@@ -48,7 +48,7 @@ public class ProjectGrantOfferLetterController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
     public String viewGrantOfferLetterPage(@PathVariable("projectId") Long projectId, Model model,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         ProjectGrantOfferLetterForm form = new ProjectGrantOfferLetterForm();
 
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
@@ -68,7 +68,7 @@ public class ProjectGrantOfferLetterController {
                          @SuppressWarnings("unused") BindingResult bindingResult,
                          ValidationHandler validationHandler,
                          Model model,
-                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
 
         return validationHandler.performActionOrBindErrorsToField("",
@@ -85,7 +85,7 @@ public class ProjectGrantOfferLetterController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
 
             MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
@@ -103,7 +103,7 @@ public class ProjectGrantOfferLetterController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
             return projectService.removeSignedGrantOfferLetter(projectId);
         });

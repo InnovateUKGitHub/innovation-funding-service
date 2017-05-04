@@ -59,6 +59,8 @@ public class CompetitionManagementFundingController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
+
+    // TODO Split this method!!!!11111!!111!!!!1!!!!!111
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public String applications(Model model,
                                @PathVariable("competitionId") Long competitionId,

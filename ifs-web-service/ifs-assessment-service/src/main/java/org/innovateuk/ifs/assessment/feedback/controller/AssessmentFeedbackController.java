@@ -75,7 +75,7 @@ public class AssessmentFeedbackController {
 
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) Form form,
+                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) Form form,
                               @PathVariable("assessmentId") Long assessmentId,
                               @PathVariable("questionId") Long questionId) {
 

@@ -28,7 +28,7 @@
 
     <form th:if="${editable}"
           data-autosave="compSetup"
-          th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
+          th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:object="${competitionSetupForm}" method="post"
           data-th-attr="data-competition=${competitionId}"
           data-section="application" data-subsection="detail">

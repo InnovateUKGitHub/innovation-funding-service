@@ -28,12 +28,12 @@ public class ThymeleafUtil {
      * @param request
      * @return
      */
-    public String uriWithQueryString(final HttpServletRequest request) {
+    public String formPostUri(final HttpServletRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("Cannot determine request URI with query string for null request.");
         }
         LOG.debug("Creating URI for request " + request.getClass() + " with URI " + request.getRequestURI());
-        return UriComponentsBuilder.fromPath(request.getServletPath()).query(request.getQueryString()).build().normalize().toUriString();
+        return UriComponentsBuilder.fromPath(request.getServletPath()).build().normalize().toUriString();
     }
 
     /**

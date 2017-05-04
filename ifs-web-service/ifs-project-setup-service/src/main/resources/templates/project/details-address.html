@@ -19,7 +19,7 @@
 
             <p>We will assign a Monitoring Officer who will visit your project at this address.</p>
 
-            <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" >
+            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" >
                 <div th:class="${#fields.hasErrors('*{addressType}')}? 'form-group error':'form-group'">
                     <fieldset>
                         <legend>

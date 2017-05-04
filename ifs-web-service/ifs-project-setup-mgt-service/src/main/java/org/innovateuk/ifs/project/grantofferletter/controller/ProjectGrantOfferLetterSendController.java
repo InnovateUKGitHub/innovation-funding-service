@@ -58,7 +58,7 @@ public class ProjectGrantOfferLetterSendController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/send")
-    public String viewGrantOfferLetterSend(@PathVariable Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String viewGrantOfferLetterSend(@PathVariable Long projectId, Model model, @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         ProjectGrantOfferLetterSendForm form = new ProjectGrantOfferLetterSendForm();
         return doViewGrantOfferLetterSend(projectId, model, form);
     }
@@ -188,7 +188,7 @@ public class ProjectGrantOfferLetterSendController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, "annex", form, () -> {
 

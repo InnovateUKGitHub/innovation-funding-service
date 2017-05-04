@@ -48,9 +48,9 @@ public class ProjectOtherDocumentsController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
-    public String viewOtherDocumentsPage(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
+    public String viewOtherDocumentsPage(Model model, @ModelAttribute(value = FORM_ATTR, binding = false) ProjectPartnerDocumentsForm form,
                                          @PathVariable("projectId") Long projectId,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
     }
 
@@ -60,7 +60,7 @@ public class ProjectOtherDocumentsController {
                                                BindingResult bindingResult,
                                                ValidationHandler validationhandler,
                                                @PathVariable("projectId") Long projectId,
-                                               @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return validationhandler.performActionOrBindErrorsToField("approved",
                 () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),

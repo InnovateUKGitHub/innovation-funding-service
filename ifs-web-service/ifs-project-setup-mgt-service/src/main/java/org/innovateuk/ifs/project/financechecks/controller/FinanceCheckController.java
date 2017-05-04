@@ -53,7 +53,7 @@ public class FinanceCheckController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
-                                          @ModelAttribute FinanceCheckSummaryForm form) {
+                                          @ModelAttribute(binding = false) FinanceCheckSummaryForm form) {
         return doViewFinanceCheckSummary(projectId, model);
     }
 

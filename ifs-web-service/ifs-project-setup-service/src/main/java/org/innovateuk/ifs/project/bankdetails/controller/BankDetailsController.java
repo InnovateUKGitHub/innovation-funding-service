@@ -51,8 +51,8 @@ public class BankDetailsController extends AddressLookupBaseController {
     @GetMapping
     public String bankDetails(Model model,
                               @PathVariable("projectId") final Long projectId,
-                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                              @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form) {
+                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
@@ -67,8 +67,8 @@ public class BankDetailsController extends AddressLookupBaseController {
     @GetMapping("readonly")
     public String bankDetailsAsReadOnly(Model model,
                               @PathVariable("projectId") final Long projectId,
-                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                              @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form) {
+                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
@@ -87,7 +87,7 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     @SuppressWarnings("unused") BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable("projectId") final Long projectId,
-                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         final Supplier<String> failureView = () -> bankDetails(model, projectId, loggedInUser, form);
 
@@ -121,7 +121,7 @@ public class BankDetailsController extends AddressLookupBaseController {
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler,
                                      @PathVariable("projectId") final Long projectId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
@@ -138,7 +138,7 @@ public class BankDetailsController extends AddressLookupBaseController {
                                 @PathVariable("projectId") Long projectId,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 BindingResult bindingResult,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         if(StringUtils.isEmpty(form.getAddressForm().getPostcodeInput())){
             bindingResult.addError(createPostcodeSearchFieldError());
         }
@@ -156,7 +156,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     public String selectAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         form.getAddressForm().setSelectedPostcode(null);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
@@ -169,7 +169,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     public String manualAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 @PathVariable("projectId") Long projectId,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         AddressForm addressForm = form.getAddressForm();
         addressForm.setManualAddress(true);
         ProjectResource project = projectService.getById(projectId);

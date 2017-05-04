@@ -30,7 +30,7 @@ public class ApplicantController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpServletRequest request,
-                            @ModelAttribute("loggedInUser") UserResource user) {
+                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
 
         model.addAttribute("model", applicantDashboardPopulator.populate(user));
 
