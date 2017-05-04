@@ -22,7 +22,9 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -87,13 +89,13 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         applicationModelPopulator.addApplicationAndSections(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles);
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
 
         // Having to pass getImpersonateOrganisationId here because look at the horrible code inside addOrganisationAndUserFinanceDetails with impersonation org id :(
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, form.getImpersonateOrganisationId());
-        addAppendices(applicationId, responses, model);
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, form.getImpersonateOrganisationId());
+        addAppendices(application.getId(), responses, model);
 
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
@@ -103,7 +105,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
-        model.addAttribute("backUrl", buildBackUrl(origin, applicationId, competitionId, queryParams));
+        model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, queryParams));
 
         return "competition-mgt-application-overview";
     }
