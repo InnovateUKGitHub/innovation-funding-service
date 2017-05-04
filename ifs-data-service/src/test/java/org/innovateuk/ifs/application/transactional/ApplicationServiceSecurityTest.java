@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
@@ -34,6 +35,7 @@ import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -314,6 +316,14 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
+    public void markAsIneligible() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.markAsIneligible(1L, newIneligibleOutcome().build()),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
     public void updateApplicationState() {
         when(applicationLookupStrategy.getApplicationResource(1L)).thenReturn(newApplicationResource().build());
 
@@ -429,6 +439,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason) {
             return null;
         }
 
