@@ -72,7 +72,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
         }
 
-        return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId))
+        return find(question, notFoundError(Question.class, questionId))
             .andOnSuccess(questionResource -> ServiceResult.serviceSuccess(setupResource));
     }
 
