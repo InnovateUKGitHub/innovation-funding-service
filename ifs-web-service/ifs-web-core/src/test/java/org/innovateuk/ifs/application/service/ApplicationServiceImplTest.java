@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -21,6 +22,7 @@ import java.util.List;
 import static java.math.BigDecimal.ZERO;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
@@ -140,7 +142,9 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void markAsIneligible() throws Exception {
         long applicationId = 1L;
-        IneligibleOutcomeResource reason = new IneligibleOutcomeResource("reason");
+        IneligibleOutcomeResource reason = newIneligibleOutcomeResource()
+                .withReason("reason")
+                .build();
 
         when(applicationRestService.markAsIneligible(applicationId, reason)).thenReturn(restSuccess());
 
@@ -148,8 +152,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         assertTrue(result.isSuccess());
 
-        inOrder(applicationRestService)
-                .verify(applicationRestService, calls(1))
-                .markAsIneligible(applicationId, reason);
+        InOrder inOrder = inOrder(applicationRestService);
+        inOrder.verify(applicationRestService).markAsIneligible(applicationId, reason);
+        inOrder.verifyNoMoreInteractions();
     }
 }

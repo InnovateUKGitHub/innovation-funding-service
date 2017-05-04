@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.ne
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -135,6 +136,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(ineligibleOutcomeResource)))
                 .andExpect(status().isOk());
+
+        verify(ineligibleOutcomeMapperMock).mapToDomain(ineligibleOutcomeResource);
+        verify(applicationServiceMock).markAsIneligible(applicationId, reason);
     }
 
     @Test
