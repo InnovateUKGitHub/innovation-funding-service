@@ -30,7 +30,4 @@ public abstract class BaseApplicationControllerSecurityTest<ControllerType> exte
                 }
         );
     }
-
-    //protected abstract Consumer<ApplicationPermissionRules> getVerification();
-
 }

@@ -5,17 +5,14 @@ import org.innovateuk.ifs.application.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamAddOrganisationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-//import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamAddOrganisationViewModel;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -43,9 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationTeamAddOrganisationControllerTest extends BaseControllerMockMVCTest<ApplicationTeamAddOrganisationController> {
-
-/*    @Mock
-    public ApplicationUtil applicationUtil;*/
 
     @Spy
     @InjectMocks
