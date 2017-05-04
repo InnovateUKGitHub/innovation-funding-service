@@ -112,6 +112,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationWorkflowHandler applicationWorkflowHandler;
     @Autowired
     private ActivityStateRepository activityStateRepository;
+
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
