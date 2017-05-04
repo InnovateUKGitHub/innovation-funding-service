@@ -26,7 +26,7 @@ Non registered users CH route: lead org Business
     the email verification   ${test_mailbox_one}+rto@gmail.com
     [Teardown]    the user closes the browser
 
-Non registered users CH route : lead org RTO
+Non registered users CH route: lead org RTO
     [Documentation]    INFUND-669  INFUND-1904  INFUND-1785
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
