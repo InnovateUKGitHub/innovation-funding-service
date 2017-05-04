@@ -6,19 +6,27 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
+if [[ (${TARGET} == "local") ]]; then
+  HOST=ifs-local
+  ROUTE_DOMAIN=apps.$HOST
+elif [[ ${TARGET} == "production" ]]; then
+  HOST=apply-for-innovation-funding.service.gov.uk
+  ROUTE_DOMAIN=$HOST
+  PROJECT="production"
+else
+  HOST=prod.ifs-test-clusters.com
+  ROUTE_DOMAIN=apps.$HOST
+fi
+
 if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
 if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
 if [[ ${TARGET} == "sysint" ]]; then PROJECT="sysint"; fi
-
-if [[ (${TARGET} == "local") ]]; then HOST=ifs-local; else HOST=prod.ifs-test-clusters.com; fi
 
 if [ -z "$bamboo_openshift_svc_account_token" ]; then  SVC_ACCOUNT_TOKEN=$(oc whoami -t); else SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}; fi
 
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
 REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN};
 
-ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
