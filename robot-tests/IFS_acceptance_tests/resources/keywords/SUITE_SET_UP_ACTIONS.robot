@@ -287,11 +287,11 @@ the user follows the flow to register their organisation
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
-    [Arguments]    ${REG_EMAIL}
+    [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}
     Wait Until Page Contains Element Without Screenshots    link=terms and conditions
     Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
-    Input Text    id=firstName    Stuart
-    Input Text    id=lastName    ANDERSON
+    Input Text    id=firstName    ${first_name}
+    Input Text    id=lastName    ${last_name}
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ${REG_EMAIL}
     Input Password    id=password    Passw0rd123
