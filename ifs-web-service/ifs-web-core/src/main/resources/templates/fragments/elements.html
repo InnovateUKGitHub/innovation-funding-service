@@ -114,8 +114,8 @@
 
 <!-- =========================== Element: Notification / event =========================== -->
 <th:block th:fragment="notification">
-    <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
-        <p><span th:text="${notification?.assignedByName + ' has assigned ' + questions + ' to you'}"></span></p>
+    <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, applicantQuestions=${notifications?.size()>1 ? 'applicantQuestions' : 'a question'}">
+        <p><span th:text="${notification?.assignedByName + ' has assigned ' + applicantQuestions + ' to you'}"></span></p>
     </div>
 
     <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" >

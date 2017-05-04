@@ -3,7 +3,6 @@ package org.innovateuk.ifs.applicant.resource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 
 /**
  * Created by luke.harper on 25/04/2017.
@@ -11,8 +10,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 public class ApplicantResource {
 
     private ProcessRoleResource processRole;
-
-    private UserResource user;
 
     private OrganisationResource organisation;
 
@@ -24,14 +21,6 @@ public class ApplicantResource {
         this.processRole = processRole;
     }
 
-    public UserResource getUser() {
-        return user;
-    }
-
-    public void setUser(UserResource user) {
-        this.user = user;
-    }
-
     public OrganisationResource getOrganisation() {
         return organisation;
     }
@@ -40,12 +29,16 @@ public class ApplicantResource {
         this.organisation = organisation;
     }
 
+    public String getName() {
+        return processRole.getUserName();
+    }
+
     public boolean hasSameOrganisation(ApplicantResource other) {
         return other.getOrganisation().getId().equals(organisation.getId());
     }
 
     public boolean isSameUser(ApplicantResource other) {
-        return other.getUser().getId().equals(user.getId());
+        return other.getProcessRole().getId().equals(processRole.getId());
     }
 
     public boolean isLead() {

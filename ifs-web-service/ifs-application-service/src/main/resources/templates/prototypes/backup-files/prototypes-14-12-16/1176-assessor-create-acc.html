@@ -55,7 +55,7 @@
 				<input class="form-control" id="last-name" name="last-name" type="text" th:value="${(param.edit == null ? '':'Bloggs')}"/>
 			</div>
 
-			<th:block th:insert="prototypes/fragments/diversity :: diversity-questions" />
+			<th:block th:insert="prototypes/fragments/diversity :: diversity-applicantQuestions" />
 
 			<div class="form-group" th:unless="${param.edit != null}">
 				<label class="form-label" for="postcode-check">

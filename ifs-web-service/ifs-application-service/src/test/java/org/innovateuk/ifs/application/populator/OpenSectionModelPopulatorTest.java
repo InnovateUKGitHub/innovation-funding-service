@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.AbstractSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -116,7 +116,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, organisationId);
+        AbstractSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, organisationId);
 
         assertEquals(OpenSectionViewModel.class, result.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
@@ -153,7 +153,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(0);
         setupServices(competition, application, user, formInputs);
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, organisationId);
+        AbstractSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, organisationId);
 
         assertEquals(OpenSectionViewModel.class, result.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;

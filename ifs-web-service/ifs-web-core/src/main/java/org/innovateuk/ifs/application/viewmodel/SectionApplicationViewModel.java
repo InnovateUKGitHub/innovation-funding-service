@@ -7,7 +7,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import java.util.Set;
 
 /**
- * Shared Application viewModel used by {@link BaseSectionViewModel}
+ * Shared Application viewModel used by {@link AbstractSectionViewModel}
  */
 public class SectionApplicationViewModel {
     private Set<Long> markedAsComplete;

@@ -28,4 +28,10 @@ public class ApplicantFormInputResource {
     public void setApplicantResponses(List<ApplicantFormInputResponseResource> applicantResponses) {
         this.applicantResponses = applicantResponses;
     }
+
+    public ApplicantFormInputResponseResource responseForApplicant(ApplicantResource applicantResource, ApplicantQuestionResource questionResource) {
+        return applicantResponses.stream().filter(response ->
+                !questionResource.getQuestion().hasMultipleStatuses() ||
+                response.getApplicant().hasSameOrganisation(applicantResource)).findAny().orElse(null);
+    }
 }

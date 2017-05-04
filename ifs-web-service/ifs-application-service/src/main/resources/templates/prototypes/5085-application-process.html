@@ -19,14 +19,14 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Application process'}, ${null})" />
 
-  <h2 class="heading-medium extra-margin">Programme competition questions</h2>
+  <h2 class="heading-medium extra-margin">Programme competition applicantQuestions</h2>
 
-	<p>You can review and edit the application and assessment questions and guidance. Any changes you make will be applied to this competition only. The default template will not be affected.</p>
+	<p>You can review and edit the application and assessment applicantQuestions and guidance. Any changes you make will be applied to this competition only. The default template will not be affected.</p>
 
 	<!--<div class="grid-row">-->
 		<!--<div class="column-half">-->
-			<!--<div class="comp-setup-questions">-->
-				<!--<h3 class="heading-small no-margin">Assessed questions</h3>-->
+			<!--<div class="comp-setup-applicantQuestions">-->
+				<!--<h3 class="heading-small no-margin">Assessed applicantQuestions</h3>-->
 				<!--<ol class="list-number">-->
 					<!--<li><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5154-question-details?compStatus=ready' : '/prototypes/5154-question-details')}">Business opportunity</a></li>-->
 					<!--<li><a href="#">Project exploitation</a></li>-->
@@ -42,7 +42,7 @@
 			<!--</div>-->
 		<!--</div>-->
 		<!--<div class="column-half">-->
-			<!--<div class="comp-setup-questions">-->
+			<!--<div class="comp-setup-applicantQuestions">-->
 				<!--<h3 class="heading-small no-margin">Application details</h3>-->
 				<!--<ul>-->
 					<!--<li><a href="/prototypes/5209-application-details">Application details</a></li>-->
@@ -51,7 +51,7 @@
 					<!--<li><a href="/prototypes/5210-project-scope">Scope</a></li>-->
 				<!--</ul>-->
 			<!--</div>-->
-			<!--<div class="comp-setup-questions">-->
+			<!--<div class="comp-setup-applicantQuestions">-->
 				<!--<h3 class="heading-small no-margin">Finances</h3>-->
 				<!--<ul>-->
 					<!--<li><a href="/prototypes/5089-application-finances">Finances</a></li>-->
@@ -67,7 +67,7 @@
         <li><div class="task"><h4 class="heading-small"><a href="/prototypes/5210-project-scope">Scope</a></h4></div><div class="task-status-complete"><span>Completed</span></div></li>
     </ul>
 
-    <h3 class="heading-small">Assessed questions</h3>
+    <h3 class="heading-small">Assessed applicantQuestions</h3>
     <ul class="task-list">
         <li><div class="task"><h4 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5154-question-details?compStatus=ready' : '/prototypes/5154-question-details')}">1. Business opportunity</a></h4></div><div class="task-status-complete"><span>Completed</span></div></li>
         <li><div class="task"><h4 class="heading-small"><a href="#">2. Project exploitation</a></h4></div><div class="task-status-complete"><span>Completed</span></div></li>

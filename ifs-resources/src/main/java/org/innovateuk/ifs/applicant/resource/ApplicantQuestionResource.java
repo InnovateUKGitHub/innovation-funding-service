@@ -12,9 +12,9 @@ public class ApplicantQuestionResource extends AbstractApplicantResource {
 
     private QuestionResource question;
 
-    private List<ApplicantFormInputResource> formInputs;
+    private List<ApplicantFormInputResource> applicantFormInputs;
 
-    private List<ApplicantQuestionStatusResource> questionStatuses;
+    private List<ApplicantQuestionStatusResource> applicantQuestionStatuses;
 
     public QuestionResource getQuestion() {
         return question;
@@ -24,33 +24,41 @@ public class ApplicantQuestionResource extends AbstractApplicantResource {
         this.question = question;
     }
 
-    public List<ApplicantFormInputResource> getFormInputs() {
-        return formInputs;
+    public List<ApplicantFormInputResource> getApplicantFormInputs() {
+        return applicantFormInputs;
     }
 
-    public void setFormInputs(List<ApplicantFormInputResource> formInputs) {
-        this.formInputs = formInputs;
+    public void setApplicantFormInputs(List<ApplicantFormInputResource> applicantFormInputs) {
+        this.applicantFormInputs = applicantFormInputs;
     }
 
-    public List<ApplicantQuestionStatusResource> getQuestionStatuses() {
-        return questionStatuses;
+    public List<ApplicantQuestionStatusResource> getApplicantQuestionStatuses() {
+        return applicantQuestionStatuses;
     }
 
-    public void setQuestionStatuses(List<ApplicantQuestionStatusResource> questionStatuses) {
-        this.questionStatuses = questionStatuses;
+    public void setApplicantQuestionStatuses(List<ApplicantQuestionStatusResource> applicantQuestionStatuses) {
+        this.applicantQuestionStatuses = applicantQuestionStatuses;
     }
 
     public Stream<ApplicantFormInputResponseResource> allResponses() {
-        return getFormInputs().stream()
+        return getApplicantFormInputs().stream()
                 .map(ApplicantFormInputResource::getApplicantResponses)
                 .flatMap(List::stream);
     }
 
     public Stream<ApplicantQuestionStatusResource> allCompleteStatuses() {
-        return getQuestionStatuses().stream().filter(status -> status.getMarkedAsCompleteBy() != null);
+        return getApplicantQuestionStatuses().stream().filter(status -> status.getMarkedAsCompleteBy() != null);
+    }
+
+
+    public boolean isCompleteByApplicant(ApplicantResource applicantResource) {
+        return getApplicantQuestionStatuses().stream().filter(status ->
+                Boolean.TRUE.equals(status.getStatus().getMarkedAsComplete()) &&
+                (!this.getQuestion().getMultipleStatuses() ||
+                        (status.getMarkedAsCompleteBy() != null && status.getMarkedAsCompleteBy().hasSameOrganisation(applicantResource)))).count() > 0;
     }
 
     public Stream<ApplicantQuestionStatusResource> allAssignedStatuses() {
-        return getQuestionStatuses().stream().filter(status -> status.getAssignee() != null);
+        return getApplicantQuestionStatuses().stream().filter(status -> status.getAssignee() != null);
     }
 }

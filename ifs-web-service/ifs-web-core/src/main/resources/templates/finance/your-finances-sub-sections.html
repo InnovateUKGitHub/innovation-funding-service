@@ -36,61 +36,73 @@
                            organisationFinanceSize=(${model.finance.organisationFinanceSize}),
                            organisationSizes=(${model.finance.organisationSizes}),
                            maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage})">
-            <div class="question" th:each="formInput, status : ${model.getFormInputsOrganisationSize(question.id)}" th:id="'form-input-'+${formInput.getId()}">
-                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
-                    <div th:replace="'finance/'+${model.finance.financeView} :: organisation_size" />
-                </th:block>
-            </div>
-
-            <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialEndYear(question.id)}" th:id="'form-input-'+${formInput.getId()}">
-                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
-                    <div th:replace="'finance/'+${model.finance.financeView} :: financial_year_end" />
-                </th:block>
-            </div>
-
-            <fieldset>
-                <legend class="heading-medium no-margin-bottom">Financial overview</legend>
-                <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
-                <div class="grid-row">
-                    <div class="column-half">
-                        <table class="extra-margin-bottom">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Section</th>
-                                    <th scope="col" class="numeric" id="last-year">Last financial year (£)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="formInput, status : ${model.getFormInputsFinancialOverview(question.id)}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="form-group">
-                                    <td>
-                                        <label th:for="${'input-'+formInput.id}">
-                                            <span th:text="${formInput.description}"></span>
-                                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-                                        </label>
-                                    </td>
-                                    <td class="numeric">
-                                        <input class="form-control width-small"
-                                               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and model.application.markedAsComplete?.contains(question.id))}"
-                                               th:id="${'input-'+formInput.id}"
-                                               th:name="'formInput['+${formInput.id}+']'"
-                                               th:value="*{formInput[__${formInput.id}__]}"
-                                               th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'field-error' : ''"
-                                               required="required"
-                                               min="-2147483647"
-                                               max="2147483647"
-                                               type="number"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <th:block th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}">
+                <div class="question" th:each="formInput, status : ${model.getFormInputsOrganisationSize(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                        <div th:replace="'finance/'+${model.finance.financeView} :: organisation_size" />
+                    </th:block>
                 </div>
-            </fieldset>
-            <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialStaffCount(question.id)}" th:id="'form-input-'+${formInput.getId()}">
-                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
-                    <div th:replace="'finance/'+${model.finance.financeView} :: staff_count" />
-                </th:block>
-            </div>
+
+                <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialEndYear(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                        <div th:replace="'finance/'+${model.finance.financeView} :: financial_year_end" />
+                    </th:block>
+                </div>
+
+                <fieldset th:unless="${model.getFormInputsFinancialOverview(question.id).isEmpty()}">
+                    <legend class="heading-medium no-margin-bottom">Financial overview</legend>
+                    <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
+                    <div class="grid-row">
+                        <div class="column-half">
+                            <table class="extra-margin-bottom">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Section</th>
+                                        <th scope="col" class="numeric" id="last-year">Last financial year (£)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="formInput, status : ${model.getFormInputsFinancialOverview(question.id)}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="form-group">
+                                        <td>
+                                            <label th:for="${'input-'+formInput.id}">
+                                                <span th:text="${formInput.description}"></span>
+                                                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+                                            </label>
+                                        </td>
+                                        <td class="numeric">
+                                            <input class="form-control width-small"
+                                                   th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and model.application.markedAsComplete?.contains(question.id))}"
+                                                   th:id="${'input-'+formInput.id}"
+                                                   th:name="'formInput['+${formInput.id}+']'"
+                                                   th:value="*{formInput[__${formInput.id}__]}"
+                                                   th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'field-error' : ''"
+                                                   required="required"
+                                                   min="-2147483647"
+                                                   max="2147483647"
+                                                   type="number"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialStaffCount(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                        <div th:replace="'finance/'+${model.finance.financeView} :: staff_count" />
+                    </th:block>
+                </div>
+                <div class="question" th:each="formInput, status : ${model.getFormInputStaffCount(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                        <div th:replace="'finance/'+${model.finance.financeView} :: staff_count" />
+                    </th:block>
+                </div>
+                <div class="question" th:each="formInput, status : ${model.getFormInputOrganisationTurnover(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                        <div th:replace="'finance/'+${model.finance.financeView} :: organisation_turnover" />
+                    </th:block>
+                </div>
+            </th:block>
         </th:block>
     </th:block>
 
@@ -192,6 +204,51 @@
                 </tbody>
             </table>
         </div>
+    </th:block>
+
+    <th:block th:fragment="your_project_costs">
+        <th:block th:if="${model.hasFinanceView && !model.isYourOrganisation()}" th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}">
+            <div class="question" th:each="formInput, status : ${model.questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
+                 th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),questionAssignee=(${model.assignable.questionAssignees.get(question.getId())})">
+
+
+                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) or (model.isFinanceOverview and formInput.type.displayableFinancialSummaryType)}"
+                          th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
+                                                markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
+                                                subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
+                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}),
+                                                currentApplication=(${model.application.currentApplication}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
+                                                subFinanceSection=${model.subFinanceSection}, filename=${model.financeViewModel.filename}">
+
+                    <th:block th:if="${formInput.type.displayableQuestionType}">
+                        <th:block th:insert="question-type/types :: ${formInput.type.nameLower}" />
+                    </th:block>
+
+                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
+                              th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
+                                                       organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
+                                                       organisationFinanceSize=(${model.finance.organisationFinanceSize}), organisationSizes=(${model.finance.organisationSizes}),
+                                                       maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage}), financeQuestions=(${model.finance.financeQuestions})">
+                        <th:block th:insert="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
+                    </th:block>
+
+                    <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and !model.finance.hasOrganisationFinance}"
+                              th:with="academicFinance=(${model.finance.academicFinance}), title=(${model.finance.title})">
+                        <th:block th:insert="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
+                    </th:block>
+
+                    <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
+                        <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
+                                                currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
+                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
+                            <th:block th:insert="finance/finance-summary :: ${formInput.type.nameLower}" />
+                        </th:block>
+                    </th:block>
+
+                </th:block>
+
+            </div>
+        </th:block>
     </th:block>
 
 </html>

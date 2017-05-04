@@ -72,9 +72,11 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
         populateSection(results, applicant, sectionId, applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
 
-        ApplicantSectionResource parent = new ApplicantSectionResource();
-        populateSection(results, parent, applicant.getSection().getParentSection(), applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
-        applicant.setParentSection(parent);
+        if (applicant.getSection().getParentSection() != null) {
+            ApplicantSectionResource parent = new ApplicantSectionResource();
+            populateSection(results, parent, applicant.getSection().getParentSection(), applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
+            applicant.setApplicantParentSection(parent);
+        }
 
         applicant.getSection().getChildSections().forEach(subSectionId -> {
             ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
@@ -88,8 +90,8 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
         results.trackResult(questionService.getQuestionById(questionId), applicant::setQuestion);
-        results.trackResult(questionService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId), questionStatusResources -> applicant.setQuestionStatuses(mapToApplicantStatuses(questionStatusResources, applicants)));
-        results.trackResult(mapFormInputs(results, questionId, applicationId, applicants), applicant::setFormInputs);
+        results.trackResult(questionService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId), questionStatusResources -> applicant.setApplicantQuestionStatuses(mapToApplicantStatuses(questionStatusResources, applicants)));
+        results.trackResult(mapFormInputs(results, questionId, applicationId, applicants), applicant::setApplicantFormInputs);
     }
 
     private List<ApplicantQuestionStatusResource> mapToApplicantStatuses(List<QuestionStatusResource> questionStatusResources, List<ApplicantResource> applicants) {
@@ -98,6 +100,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
             questionStatus.setStatus(questionStatusResource);
             if (questionStatusResource.getAssignee() != null) {
                 questionStatus.setAssignee(applicants.stream().filter(applicantResource -> applicantResource.getProcessRole().getId().equals(questionStatusResource.getAssignee())).findAny().orElse(null));
+                questionStatus.setAssignedBy(applicants.stream().filter(applicantResource -> applicantResource.getProcessRole().getId().equals(questionStatusResource.getAssignedBy())).findAny().orElse(null));
             }
             if (questionStatusResource.getMarkedAsCompleteBy() != null) {
                 questionStatus.setMarkedAsCompleteBy(applicants.stream().filter(applicantResource -> applicantResource.getProcessRole().getId().equals(questionStatusResource.getMarkedAsCompleteBy())).findAny().orElse(null));;
@@ -118,6 +121,8 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private <R extends AbstractApplicantResource> void populateAbstractApplicantResource(R resource, Long applicationId, Long userId, ServiceResults results) {
         mapApplicants(results, resource, applicationId, userId);
+
+        results.trackResult(baseUserService.getUserById(userId), resource::setCurrentUser);
         results.trackResult(applicationService.getApplicationById(applicationId), resource::setApplication);
         results.trackResult(competitionService.getCompetitionById(resource.getApplication().getCompetition()), resource::setCompetition);
         results.trackResult(usersRolesService.getAssignableProcessRolesByApplicationId(applicationId), resource::setAssignableProcessRoles);
@@ -162,7 +167,6 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private ServiceResult<ApplicantResource> toApplicant(ServiceResults results, ProcessRoleResource role) {
         ApplicantResource applicantResource = new ApplicantResource();
-        results.trackResult(baseUserService.getUserById(role.getUser()), applicantResource::setUser);
         results.trackResult(organisationService.findById(role.getOrganisationId()), applicantResource::setOrganisation);
         applicantResource.setProcessRole(role);
         return serviceSuccess(applicantResource);

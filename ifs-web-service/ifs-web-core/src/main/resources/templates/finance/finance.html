@@ -2,151 +2,143 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
     <!-- ===========================Form: finance =========================== -->
-    <th:block th:fragment="finance">
-        <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-            <th:block th:unless="${readonly}">
-                <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +']}')}? 'error'">
-                    <label class="form-label form-label-bold" for="cost-financegrantclaim">
-                        <div th:text="'Enter your funding level (maximum ' + ${maximumGrantClaimPercentage} + '%).'" />
-                        <span class="form-hint" th:text="'The maximum funding level is ' + ${maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId+'-grantClaimPercentage'})" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId})" />
-                    </label>
-                    <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                    <input type="number"
-                           min="0"
-                           required="required"
-                           th:max="${maximumGrantClaimPercentage}"
-                           th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                           th:class="${maximumGrantClaimPercentage != null and maximumGrantClaimPercentage &lt; organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
-                           id="cost-financegrantclaim"
-                           th:name="${'finance-grantclaimpercentage-' + question.id + '-' + organisationGrantClaimPercentageId}"
-                           th:value="${organisationGrantClaimPercentage}"
-                           placeholder="0"
-                           th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
-                                    data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
-                            />%
-                </div>
-            </th:block>
-            <th:block th:if="${readonly}">
-                <dl class="readonly-data" th:unles="${organisationGrantClaimPercentage == null}">
-                    <dt th:text="${question.name}">Your Funding level</dt>
-                    <dd th:text="${organisationGrantClaimPercentage+'%'}">50%</dd>
-                </dl>
-            </th:block>
+    <th:block th:fragment="finance(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+        <th:block th:unless="${readonly}">
+            <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ model.organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ model.organisationGrantClaimPercentageId +']}')}? 'error'">
+                <label class="form-label form-label-bold" for="cost-financegrantclaim">
+                    <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'" />
+                    <span class="form-hint" th:text="'The maximum funding level is ' + ${maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+model.organisationGrantClaimPercentageId+'-grantClaimPercentage'})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+model.organisationGrantClaimPercentageId})" />
+                </label>
+                <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+                <input type="number"
+                       min="0"
+                       required="required"
+                       th:max="${model.maximumGrantClaimPercentage}"
+                       th:readonly="${readonly}"
+                       th:class="${model.maximumGrantClaimPercentage != null and model.maximumGrantClaimPercentage &lt; model.organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
+                       id="cost-financegrantclaim"
+                       th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
+                       th:value="${model.organisationGrantClaimPercentage}"
+                       placeholder="0"
+                       th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
+                                data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
+                        />%
+            </div>
+        </th:block>
+        <th:block th:if="${readonly}">
+            <dl class="readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
+                <dt th:text="${question.name}">Your Funding level</dt>
+                <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
+            </dl>
         </th:block>
     </th:block>
 
     <!-- ===========================Form: organisation_size =========================== -->
-    <th:block th:fragment="organisation_size">
+    <th:block th:fragment="organisation_size(model)" th:with="formInput=${model.formInput}, question=${model.question}">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
             <h2 class="heading-small no-margin">Organisation size determines funding</h2>
             <p>The organisation size is used to calculate your funding level in the application.</p>
             <p>Changing this selection will reset your funding level.</p>
         </div>
-        <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-            <th:block th:unless="${readonly}">
-                <!--/* edit */-->
-                <div class="form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? error">
-                    <fieldset>
-                        <legend>
-                            <span class="form-label form-label-bold" th:text="${question.name}"/>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-                            <th:block th:if="${#fields.hasErrors('organisationSize')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}" />
-                            </th:block>
-                        </legend>
-                        <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                        <label class="block-label selection-button-radio" th:for="'financePosition-organisationSize-'+${size.id}" th:each="size : ${organisationSizes}">
-                            <input type="radio"
-                                   th:id="'financePosition-organisationSize-'+${size.id}"
-                                   th:name="'financePosition-organisationSize'"
-                                   th:value="${size.id}"
-                                   th:checked="${size.id == model.finance.organisationFinanceSize}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}"/>
-                            <th:block th:text="${size.description}" />
-                        </label>
-                    </fieldset>
-                </div>
-            </th:block>
-            <th:block th:if="${readonly}">
-                <!--/* view  */-->
-                <dl class="readonly-data">
-                    <dt th:text="${formInput.description}">Organisation size</dt>
+        <th:block th:unless="${readonly}">
+            <!--/* edit */-->
+            <div class="form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? error">
+                <fieldset>
+                    <legend>
+                        <span class="form-label form-label-bold" th:text="${question.name}"/>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+                        <th:block th:if="${#fields.hasErrors('organisationSize')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}" />
+                        </th:block>
+                    </legend>
+                    <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+                    <label class="block-label selection-button-radio" th:for="'financePosition-organisationSize-'+${size.id}" th:each="size : ${model.organisationSizes}">
+                        <input type="radio"
+                               th:id="'financePosition-organisationSize-'+${size.id}"
+                               th:name="'financePosition-organisationSize'"
+                               th:value="${size.id}"
+                               th:checked="${size.id == model.organisationFinanceSize}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}"/>
+                        <th:block th:text="${size.description}" />
+                    </label>
+                </fieldset>
+            </div>
+        </th:block>
+        <th:block th:if="${readonly}">
+            <!--/* view  */-->
+            <dl class="readonly-data">
+                <dt th:text="${formInput.description}">Organisation size</dt>
 
-                    <th:block th:unless="${model.finance.organisationFinanceSize == null}" th:each="size : ${organisationSizes}">
-                        <dd th:if="${model.finance.organisationFinanceSize == size.id}" th:text="${size.description}">Micro / small: claim up to 70%</dd>
-                    </th:block>
-                </dl>
-            </th:block>
+                <th:block th:unless="${model.finance.organisationFinanceSize == null}" th:each="size : ${organisationSizes}">
+                    <dd th:if="${model.organisationFinanceSize == size.id}" th:text="${size.description}">Micro / small: claim up to 70%</dd>
+                </th:block>
+            </dl>
         </th:block>
     </th:block>
 
     <!-- =========================== Form: Organisation Turnover =========================== -->
-    <th:block th:fragment="organisation_turnover">
-        <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-            <th:block th:unless="${readonly}">
-                <!--/* edit */-->
-                <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
-                    <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
-                        <span class="form-label form-label-bold" th:text="${formInput.description}"/>
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-                    </label>
-                    <input class="form-control width-medium"
-                           th:id="'formInput-'+${formInput.id}"
-                           th:name="'formInput['+${formInput.id}+']'"
-                           th:value="*{formInput[__${formInput.id}__]}"
-                           required="required"
-                           min="0"
-                           max="2147483647"
-                           type="number" />
-                </div>
-            </th:block>
-            <th:block th:if="${readonly}">
-                <!--/* view  */-->
-                <dl class="readonly-data">
-                    <dt th:text="${formInput.description}">Turnover (&pound;)</dt>
-                    <dd th:text="'£ '+ *{#numbers.formatInteger(formInput[__${formInput.id}__],0,'COMMA')}">&pound; 100,000,000</dd>
-                </dl>
-            </th:block>
+    <th:block th:fragment="organisation_turnover(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+        <th:block th:unless="${readonly}">
+            <!--/* edit */-->
+            <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+                <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+                    <span class="form-label form-label-bold" th:text="${formInput.description}"/>
+                    <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+                </label>
+                <input class="form-control width-medium"
+                       th:id="'formInput-'+${formInput.id}"
+                       th:name="'formInput['+${formInput.id}+']'"
+                       th:value="*{formInput[__${formInput.id}__]}"
+                       required="required"
+                       min="0"
+                       max="2147483647"
+                       type="number" />
+            </div>
+        </th:block>
+        <th:block th:if="${readonly}">
+            <!--/* view  */-->
+            <dl class="readonly-data">
+                <dt th:text="${formInput.description}">Turnover (&pound;)</dt>
+                <dd th:text="'£ '+ *{#numbers.formatInteger(formInput[__${formInput.id}__],0,'COMMA')}">&pound; 100,000,000</dd>
+            </dl>
         </th:block>
     </th:block>
 
     <!-- =========================== Form: Staff Count =========================== -->
-    <th:block th:fragment="staff_count">
-        <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-            <th:block th:unless="${readonly}">
-                <!--/* edit */-->
-                <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
-                    <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
-                        <span class="form-label form-label-bold" th:text="${formInput.description}" />
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-                    </label>
-                    <input class="form-control width-medium"
-                           type="number"
-                           th:id="'formInput-'+${formInput.id}"
-                           th:name="'formInput['+${formInput.id}+']'"
-                           min="0"
-                           max="2147483647"
-                           th:value="*{formInput[__${formInput.id}__]}"
-                           required="required" />
-                </div>
-            </th:block>
-            <th:block th:if="${readonly}">
-                <!--/* view */-->
-                <dl class="readonly-data">
-                    <dt th:text="${formInput.description}">Full time employees</dt>
-                    <dd th:text="*{formInput[__${formInput.id}__]}">440</dd>
-                </dl>
-            </th:block>
+    <th:block th:fragment="staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}">
+        <th:block th:unless="${readonly}">
+            <!--/* edit */-->
+            <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+                <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+                    <span class="form-label form-label-bold" th:text="${formInput.description}" />
+                    <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+                </label>
+                <input class="form-control width-medium"
+                       type="number"
+                       th:id="'formInput-'+${formInput.id}"
+                       th:name="'formInput['+${formInput.id}+']'"
+                       min="0"
+                       max="2147483647"
+                       th:value="*{formInput[__${formInput.id}__]}"
+                       required="required" />
+            </div>
+        </th:block>
+        <th:block th:if="${readonly}">
+            <!--/* view */-->
+            <dl class="readonly-data">
+                <dt th:text="${formInput.description}">Full time employees</dt>
+                <dd th:text="*{formInput[__${formInput.id}__]}">440</dd>
+            </dl>
         </th:block>
     </th:block>
 
     <!-- =========================== Form: Financial Year End =========================== -->
-    <div th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''">
+    <div th:fragment="financial_year_end(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''">
         <fieldset th:with="value=(*{formInput[__${formInput.id}__]})">
             <legend>
                 <span class="form-label form-label-bold">End of last financial year</span>
@@ -163,7 +155,7 @@
                         <span>Month</span>
                     </label>
                     <input class="form-control width-extra-small"
-                           th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                           th:disabled="${readonly}"
                            th:id="${formInput.id}+'.MMYYYY.month'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
                            th:value="${month}"
@@ -179,7 +171,7 @@
                         <span>Year</span>
                     </label>
                     <input class="form-control width-extra-small"
-                           th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                           th:disabled="${readonly}"
                            th:id="${formInput.id}+'.MMYYYY.year'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
                            th:value="${year}"
@@ -194,14 +186,14 @@
     </div>
 
     <!-- =========================== Form: Financial Staff Count =========================== -->
-    <div th:fragment="financial_staff_count" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+    <div th:fragment="financial_staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
             <span th:text="${formInput.description}"/>
             <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
         <input class="form-control width-medium"
-               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+               th:disabled="${readonly}"
                type="number"
                th:id="${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
@@ -213,33 +205,29 @@
     </div>
 
     <!-- ===========================Form: your_finance =========================== -->
-    <th:block th:fragment="your_finance">
+    <th:block th:fragment="your_finance(model)" th:with="formInput=${model.formInput}, question=${model.question}">
         <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',
-        userOrganisation.name)}" />
+        model.userOrganisation.name)}" />
         <p ifs:utext="${question.description}" />
 
-        <section class="collapsible" th:each="subSection : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
+        <section class="collapsible" th:each="formInputViewModel : ${model.formInputViewModels}">
             <h2>
-                <th:block th:text="${subSection.getName()}" />
-                <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
+                <th:block th:text="${formInputViewModel.section.name}" />
+                <span th:attr="data-mirror='#section-total-'+${formInputViewModel.section.id}" />
             </h2>
             <div class="collapsible-content">
-                <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
-                    <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
-                        <th:block th:if="${formInput.type.displayableFinanceType}">
-                            <th:block th:insert="finance/finance :: ${formInput.type.nameLower} (viewmode=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'approved' : 'edit')" th:with="formInputIndex=(${status.index})" />
-                        </th:block>
-                        <th:block th:if="${formInput.type.displayableQuestionType}">
-                            <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (complete=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
-                        </th:block>
-                    </th:block>
+                <th:block th:if="${formInputViewModel.formInput.type.displayableFinanceType}">
+                    <th:block th:insert="finance/finance :: ${formInput.type.nameLower} (formInputViewModel))" />
+                </th:block>
+                <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
+                    <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (formInputViewModel)" />
                 </th:block>
             </div>
         </section>
 
         <div class="grid-row total-cost">
             <div class="column-half">
-                <label for="total-cost" class="heading-medium">'<th:block th:text="${userOrganisation.name}"></th:block>' Total project costs</label>
+                <label for="total-cost" class="heading-medium">'<th:block th:text="${model.userOrganisation.name}"></th:block>' Total project costs</label>
             </div>
             <div class="column-half alignright">
                 <input type="text"
@@ -248,13 +236,13 @@
                        class="heading-medium width-full alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
-                       th:value="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
+                       th:value="'£ ' + ${#numbers.formatDecimal(model.organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
             </div>
         </div>
     </th:block>
 
     <!-- ===========================Form: labour =========================== -->
-    <th:block th:fragment="labour (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},formInputIndex=${status.index}">
+    <th:block th:fragment="labour (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
         <p th:text="${question.getDescription()}"></p>
         <th:block th:if="${viewmode == 'approved'}">
 
@@ -453,7 +441,7 @@
         </th:block>
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
-    <th:block th:fragment="overheads(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower},labourQuestion=${financeQuestions.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)}">
+    <th:block th:fragment="overheads(model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
         <th:block th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
 
             <th:block th:if="${viewmode == 'approved'}">
@@ -686,7 +674,7 @@
     </th:block>
 
     <!-- ===========================Form: materials =========================== -->
-    <th:block th:fragment="materials (viewmode)"  th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+    <th:block th:fragment="materials (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
         <p th:text="${question.getDescription()}"></p>
 
         <th:block th:if="${(viewmode == 'approved')}">
@@ -846,7 +834,7 @@
     </th:block>
 
     <!-- ===========================Form: capital usage =========================== -->
-    <th:block th:fragment="capital_usage(viewmode)"  th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+    <th:block th:fragment="capital_usage(model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
         <p th:text="${question.getDescription()}"></p>
         <th:block th:if="${(viewmode == 'approved')}">
             <table id="capital-usage-table">
@@ -1047,7 +1035,7 @@
     </th:block>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
-    <th:block th:fragment="subcontracting (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+    <th:block th:fragment="subcontracting (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
         <p th:text="${question.getDescription()}"></p>
         <th:block th:if="${viewmode == 'approved'}">
             <table id="subcontracting-table">
@@ -1175,7 +1163,7 @@
 
     <!-- ===========================Form: travel cost =========================== -->
 
-    <th:block th:fragment="travel (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+    <th:block th:fragment="travel (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
         <p th:text="${question.description}"></p>
 
         <th:block th:if="${(viewmode == 'approved')}">
@@ -1326,7 +1314,7 @@
     </th:block>
 
     <!-- ===========================Form: other cost =========================== -->
-    <th:block th:fragment="other_costs (viewmode)"  th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
+    <th:block th:fragment="other_costs (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
         <p th:text="${question.description}" />
         <th:block th:if="${(viewmode == 'approved')}">
             <table id="other-costs-table">
@@ -1427,7 +1415,7 @@
 
 
     <!-- ===========================Form: Other funding=========================== -->
-    <th:block th:fragment="other_funding"  th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+    <th:block th:fragment="other_funding(model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
         <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
             <th:block th:if="${readonly}">
                 <h2 class="heading-medium">Other funding for this project</h2>

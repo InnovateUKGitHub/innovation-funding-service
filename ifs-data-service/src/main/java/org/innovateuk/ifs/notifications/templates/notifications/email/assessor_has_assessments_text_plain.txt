@@ -9,7 +9,7 @@ ${competitionUrl}
 - your response is required by ${acceptsDeadline}
 - the assessment deadline is ${assessmentDeadline}
 
-If you have any questions around the assessments, please contact the Competitions Team.
+If you have any applicantQuestions around the assessments, please contact the Competitions Team.
 
 Yours sincerely,
 

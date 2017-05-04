@@ -28,31 +28,31 @@
         <div class="collapsible section-overview">
 
             <h2>Labour<span data-mirror="#section-total-1">&pound; 126,207</span></h2>
-              <th:block th:insert="prototypes/fragments/finance-questions :: finance-question-labour" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
-              <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-labour" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-applicantQuestions :: finance-question-labour" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-labour" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
             <h2>Overheads <span data-mirror="#section-total-2">&pound; 0</span></h2>
-              <th:block th:insert="prototypes/fragments/finance-questions :: finance-question-admin-support" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
-              <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-admin-support" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-applicantQuestions :: finance-question-admin-support" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-admin-support" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Materials<span data-mirror="#section-total-3">&pound; 10,076</span></h2>
-              <th:block th:insert="prototypes/fragments/finance-questions :: finance-question-materials" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
-              <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-materials" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-applicantQuestions :: finance-question-materials" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-materials" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Capital usage <span data-mirror="#section-total-4">&pound; 0</span></h2>
-              <th:block th:insert="prototypes/fragments/finance-questions :: finance-question-capital" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
-              <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-capital" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-applicantQuestions :: finance-question-capital" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-capital" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Subcontracting <span data-mirror="#section-total-5">&pound; 150,000</span></h2>
-              <th:block th:insert="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
-              <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-applicantQuestions :: finance-question-subcontracting" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-subcontracting" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Travel and subsistence <span data-mirror="#section-total-6">&pound; 0</span></h2>
-              <th:block th:insert="prototypes/fragments/finance-questions :: finance-question-travel" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
-              <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-travel" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-applicantQuestions :: finance-question-travel" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-travel" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
 
             <h2>Other costs <span data-mirror="#section-total-3">&pound; 0</span></h2>
-              <th:block th:insert="prototypes/fragments/finance-questions :: finance-question-other" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
-              <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-other" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-applicantQuestions :: finance-question-other" th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
+              <th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-other" th:with="status=partnerView" th:if="${param.status != null and param.status[0] == 'readOnly'}" />
         </div>
 
         <div class="grid-row total-cost">
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <!-- <th:block th:insert="prototypes/fragments/finance-questions :: finance-other-funding" /> -->
+        <!-- <th:block th:insert="prototypes/fragments/finance-applicantQuestions :: finance-other-funding" /> -->
         <form class="extra-margin-bottom">
           <div class="form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
             <fieldset>

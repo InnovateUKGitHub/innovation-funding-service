@@ -15,18 +15,18 @@ public class ApplicantSectionResource extends AbstractApplicantResource {
 
     private SectionResource section;
 
-    private List<ApplicantQuestionResource> questions = new ArrayList<>();
+    private List<ApplicantQuestionResource> applicantQuestions = new ArrayList<>();
 
-    private ApplicantSectionResource parentSection;
+    private ApplicantSectionResource applicantParentSection;
 
-    private List<ApplicantSectionResource> childSections = new ArrayList<>();
+    private List<ApplicantSectionResource> applicantChildrenSections = new ArrayList<>();
 
-    public List<ApplicantQuestionResource> getQuestions() {
-        return questions;
+    public List<ApplicantQuestionResource> getApplicantQuestions() {
+        return applicantQuestions;
     }
 
-    public void setQuestions(List<ApplicantQuestionResource> questions) {
-        this.questions = questions;
+    public void setApplicantQuestions(List<ApplicantQuestionResource> applicantQuestions) {
+        this.applicantQuestions = applicantQuestions;
     }
 
     public SectionResource getSection() {
@@ -37,28 +37,28 @@ public class ApplicantSectionResource extends AbstractApplicantResource {
         this.section = section;
     }
 
-    public ApplicantSectionResource getParentSection() {
-        return parentSection;
+    public ApplicantSectionResource getApplicantParentSection() {
+        return applicantParentSection;
     }
 
-    public void setParentSection(ApplicantSectionResource parentSection) {
-        this.parentSection = parentSection;
+    public void setApplicantParentSection(ApplicantSectionResource applicantParentSection) {
+        this.applicantParentSection = applicantParentSection;
     }
 
     public void addChildSection(ApplicantSectionResource childSection) {
-        childSections.add(childSection);
+        applicantChildrenSections.add(childSection);
     }
 
     public void addQuestion(ApplicantQuestionResource question) {
-        questions.add(question);
+        applicantQuestions.add(question);
     }
 
-    public List<ApplicantSectionResource> getChildSections() {
-        return childSections;
+    public List<ApplicantSectionResource> getApplicantChildrenSections() {
+        return applicantChildrenSections;
     }
 
-    public void setChildSections(List<ApplicantSectionResource> childSections) {
-        this.childSections = childSections;
+    public void setApplicantChildrenSections(List<ApplicantSectionResource> applicantChildrenSections) {
+        this.applicantChildrenSections = applicantChildrenSections;
     }
 
     public List<ApplicantQuestionResource> questionsWithType(QuestionType questionType) {
@@ -67,8 +67,8 @@ public class ApplicantSectionResource extends AbstractApplicantResource {
     }
 
     public Stream<ApplicantQuestionResource> allQuestions() {
-        return Stream.concat(childSections.stream().map(ApplicantSectionResource::getQuestions).flatMap(List::stream),
-                questions.stream());
+        return Stream.concat(applicantChildrenSections.stream().map(ApplicantSectionResource::getApplicantQuestions).flatMap(List::stream),
+                applicantQuestions.stream());
     }
 
     public Stream<ApplicantQuestionStatusResource> allCompleteQuestionStatuses() {
@@ -83,7 +83,7 @@ public class ApplicantSectionResource extends AbstractApplicantResource {
     }
 
     public Stream<ApplicantSectionResource> allSections() {
-        return Stream.concat(childSections.stream(), Stream.of(this));
+        return Stream.concat(applicantChildrenSections.stream(), Stream.of(this));
     }
 
 }

@@ -140,15 +140,15 @@ include::{snippets}/section/get-section-by-question-id/curl-request.adoc[]
 
 ===Get Questions For Section And Subsections
 ==== Request
-include::{snippets}/section/get-questions-for-section-and-subsections/http-request.adoc[]
-include::{snippets}/section/get-questions-for-section-and-subsections/path-parameters.adoc[]
+include::{snippets}/section/get-applicantQuestions-for-section-and-subsections/http-request.adoc[]
+include::{snippets}/section/get-applicantQuestions-for-section-and-subsections/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/section/get-questions-for-section-and-subsections/http-response.adoc[]
-include::{snippets}/section/get-questions-for-section-and-subsections/response-fields.adoc[]
+include::{snippets}/section/get-applicantQuestions-for-section-and-subsections/http-response.adoc[]
+include::{snippets}/section/get-applicantQuestions-for-section-and-subsections/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/section/get-questions-for-section-and-subsections/curl-request.adoc[]
+include::{snippets}/section/get-applicantQuestions-for-section-and-subsections/curl-request.adoc[]
 
 
 ===Get Sections By Competition Id And Type

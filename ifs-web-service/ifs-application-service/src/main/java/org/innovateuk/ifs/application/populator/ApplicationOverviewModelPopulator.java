@@ -2,9 +2,13 @@ package org.innovateuk.ifs.application.populator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -45,6 +49,9 @@ public class ApplicationOverviewModelPopulator {
     private static final Log LOG = LogFactory.getLog(ApplicationOverviewModelPopulator.class);
 
     @Autowired
+    private AssignButtonsPopulator assignButtonsPopulator;
+
+    @Autowired
     private ApplicationService applicationService;
 
     @Autowired
@@ -76,6 +83,9 @@ public class ApplicationOverviewModelPopulator {
 
     @Autowired
     private CategoryRestService categoryRestService;
+
+    @Autowired
+    private ApplicantRestService applicantRestService;
     
     public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
         ApplicationResource application = applicationService.getById(applicationId);
@@ -92,7 +102,7 @@ public class ApplicationOverviewModelPopulator {
 
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
         addCompletedDetails(model, application, userOrganisation);
-        addSections(model, competition);
+        addSections(model, competition, userId, applicationId);
         addYourFinancesStatus(model, application);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
@@ -107,10 +117,10 @@ public class ApplicationOverviewModelPopulator {
         model.addAttribute("researchCategories", categoryRestService.getResearchCategories().getSuccessObjectOrThrowException());
     }
     
-    private void addSections(Model model, CompetitionResource competition) {
+    private void addSections(Model model, CompetitionResource competition, Long userId, Long applicationId) {
         final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
-        final List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
+        final List<ApplicantSectionResource> parentApplicantSections = parentSections.stream().map(sectionResource -> applicantRestService.getSection(userId, applicationId, sectionResource.getId())).collect(Collectors.toList());
 
         final SortedMap<Long, SectionResource> sections = CollectionFunctions.toSortedMap(parentSections, SectionResource::getId,
                 Function.identity());
@@ -120,11 +130,11 @@ public class ApplicationOverviewModelPopulator {
                 SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
             ));
 
-        final Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
+        final Map<Long, List<QuestionResource>> sectionQuestions = parentApplicantSections.stream()
             .collect(Collectors.toMap(
-                SectionResource::getId,
-                s -> getQuestionsBySection(s.getQuestions(), questions)
-            ));
+                s -> s.getSection().getId(),
+                s -> s.getApplicantQuestions().stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()))
+            );
 
         final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
 
@@ -135,9 +145,19 @@ public class ApplicationOverviewModelPopulator {
             financeSectionId = financeSections.get(0).getId();
         }
 
+        Map<Long, AssignButtonsViewModel> assignButtonViewModels = new HashMap<>();
+
+        parentApplicantSections.forEach(applicantSectionResource -> {
+            applicantSectionResource.getApplicantQuestions().forEach(questionResource -> {
+                assignButtonViewModels.put(questionResource.getQuestion().getId(), assignButtonsPopulator.populate(applicantSectionResource, questionResource, questionResource.isCompleteByApplicant(applicantSectionResource.getCurrentApplicant())));
+            });
+        });
+
+
         model.addAttribute("sections", sections);
         model.addAttribute("subSections", subSections);
         model.addAttribute("sectionQuestions", sectionQuestions);
+        model.addAttribute("assignButtonViewModels", assignButtonViewModels);
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
     }

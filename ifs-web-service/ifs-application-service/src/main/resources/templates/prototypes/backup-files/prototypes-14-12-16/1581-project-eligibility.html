@@ -119,43 +119,43 @@
 		       <span data-mirror="#section-total-1">&pound; 126,207</span> <span class="section-percentage">50%</span>
 	       	</h2>
 
-			<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-labour" />
+			<th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-labour" />
 
 	    	<h2>Administration support costs
 	    		<span data-mirror="#section-total-2">&pound; 0</span> <span class="section-percentage">(40% of labour) 20%</span>
 	       	</h2>
 
-			<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-admin-support" />
+			<th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-admin-support" />
 
 			<h2>Materials
 		        <span data-mirror="#section-total-3">&pound; 8,600</span> <span class="section-percentage">10%</span>
 	       	</h2>
 
-			<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-materials" />
+			<th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-materials" />
 
 	    	<h2>Capital usage
 		        <span data-mirror="#section-total-4">&pound; 0</span> <span class="section-percentage">0%</span>
 	       	</h2>
 
-			<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-capital" />
+			<th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-capital" />
 
 	    	<h2>Subcontracting costs
 		        <span data-mirror="#section-total-5">&pound; 150,000</span> <span class="section-percentage">20%</span>
 	       	</h2>
 
-			<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-subcontracting" />
+			<th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-subcontracting" />
 
 	    	<h2>Travel and subsistence
 		        <span data-mirror="#section-total-6">&pound; 0</span> <span class="section-percentage">0%</span>
 	       	</h2>
 
-			<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-travel" />
+			<th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-travel" />
 
 	    	<h2>Other costs
 				<span data-mirror="#section-total-3">&pound; 0</span> <span class="section-percentage">0%</span>
 	       	</h2>
 
-			<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-other" />
+			<th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-other" />
 
 	    </div>
 
@@ -170,7 +170,7 @@
 
 	    <h3 class="heading-medium">Other funding</h3>
 
-	    <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-other-funding" />
+	    <th:block th:insert="prototypes/fragments/finance-review-applicantQuestions :: finance-question-other-funding" />
 
 		<!-- <div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or param.status != null and param.status[0] == 'changeGrant'}">
 			<a th:href="@{'?status=changeGrant#change-grant'}">Change % grant</a>

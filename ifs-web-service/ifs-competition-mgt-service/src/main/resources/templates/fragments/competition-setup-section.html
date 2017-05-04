@@ -897,7 +897,7 @@
     </ul>
 </th:block>
 
-<!-- =================== Comp setup section - Application questions (5) ============================== -->
+<!-- =================== Comp setup section - Application applicantQuestions (5) ============================== -->
 <th:block th:fragment="section-application">
     <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
         <h2 class="heading-medium error-summary-heading">Unable to mark as complete.</h2>
@@ -908,19 +908,19 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',size='heading-xlarge'" />
 
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-        <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
+        <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition applicantQuestions'}" />
 
-        <p>Here you can review and amend the application and assessment questions and guidance for this competition.
+        <p>Here you can review and amend the application and assessment applicantQuestions and guidance for this competition.
             Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
 
-        <p>If you're happy with the default questions for this competition type, mark this section as done and continue.</p>
+        <p>If you're happy with the default applicantQuestions for this competition type, mark this section as done and continue.</p>
 
         <div class="grid-row">
             <div class="column-half">
                 <div class="grey-box">
-                    <h3 class="heading-small no-margin">Assessed questions</h3>
+                    <h3 class="heading-small no-margin">Assessed applicantQuestions</h3>
                     <ol class="list-number">
-                        <li th:each="question : ${questions}">
+                        <li th:each="question : ${applicantQuestions}">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}"
                                th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
                         </li>

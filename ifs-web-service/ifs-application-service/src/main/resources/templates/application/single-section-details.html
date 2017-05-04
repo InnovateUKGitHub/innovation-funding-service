@@ -13,10 +13,11 @@
         </h3>
       </div>
       <th:block th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">
+
         <!--/* lead */-->
-        <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons" th:with="hideAssignedTo=${true}" />
-        <!--/* collabr */-->
-        <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to" />
+        <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons (${assignButtonViewModels.get(question.id)})" th:with="hideAssignedTo=${true}" />
+          <!--/* collabr */-->
+        <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to (${assignButtonViewModels.get(question.id)})" />
       </th:block>
       <div class="task-status-complete"
            th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">

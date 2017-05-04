@@ -58,13 +58,6 @@ public class QuestionApplicationViewModel {
         return userOrganisation;
     }
 
-    public Boolean getApplicationIsClosed() {
-        return !currentCompetition.isOpen() || !currentApplication.isOpen();
-    }
-
-    public Boolean getApplicationIsReadOnly() {
-        return !currentCompetition.isOpen() || !currentApplication.isOpen();
-    }
 
     public String getSelectedInnovationAreaName() {
         return selectedInnovationAreaName;

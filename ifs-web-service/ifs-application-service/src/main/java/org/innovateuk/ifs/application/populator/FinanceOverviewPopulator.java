@@ -50,9 +50,9 @@ public class FinanceOverviewPopulator {
             applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId(), Optional.of(applicantSection.getCurrentApplicant().getOrganisation().getId()));
             if(!form.isAdminMode()){
 
-                if(applicantSection.getCompetition().isOpen()) {
-                    openSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentApplicant().getUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
-                }
+//                if(applicantSection.getCompetition().isOpen()) {
+//                    openSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentApplicant().getUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
+//                }
             }
         }
     }

@@ -12,7 +12,6 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
@@ -75,7 +74,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -271,10 +269,10 @@ public class ApplicationFormController {
             OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(
                     form, model, bindingResult, applicantSection);
 
-            if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
-                viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(applicantSection.getSection(), applicantSection.getApplication().getId(),
-                        asList(SectionType.ORGANISATION_FINANCES, SectionType.FUNDING_FINANCES)));
-            }
+//            if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
+//                viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(applicantSection.getSection(), applicantSection.getApplication().getId(),
+//                        asList(SectionType.ORGANISATION_FINANCES, SectionType.FUNDING_FINANCES)));
+//            }
 
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }

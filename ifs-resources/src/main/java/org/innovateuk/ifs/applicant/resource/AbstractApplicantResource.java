@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ public abstract class AbstractApplicantResource {
     private CompetitionResource competition;
 
     private ApplicantResource currentApplicant;
+
+    private UserResource currentUser;
 
     private List<ApplicantResource> applicants = new ArrayList<>();
 
@@ -42,6 +45,14 @@ public abstract class AbstractApplicantResource {
 
     public ApplicantResource getCurrentApplicant() {
         return currentApplicant;
+    }
+
+    public UserResource getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(UserResource currentUser) {
+        this.currentUser = currentUser;
     }
 
     public void setCurrentApplicant(ApplicantResource user) {
