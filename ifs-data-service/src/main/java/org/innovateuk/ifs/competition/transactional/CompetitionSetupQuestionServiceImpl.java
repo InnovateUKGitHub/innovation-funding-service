@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service for operations around the usage and processing of Competitions questions in setup.
@@ -48,29 +50,30 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
         Question question = questionRepository.findOne(questionId);
-        if(question == null) {
-            return ServiceResult.serviceSuccess(null);
-        }
+
         CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
 
-        question.getFormInputs().forEach(formInput -> {
-            if(FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
-                mapAssessmentFormInput(formInput, setupResource);
-            } else {
-                mapApplicationFormInput(formInput, setupResource);
-            }
-        });
+        if(question != null) {
+            question.getFormInputs().forEach(formInput -> {
+                if (FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
+                    mapAssessmentFormInput(formInput, setupResource);
+                } else {
+                    mapApplicationFormInput(formInput, setupResource);
+                }
+            });
 
-        setupResource.setScoreTotal(question.getAssessorMaximumScore());
-        setupResource.setNumber(question.getQuestionNumber());
-        setupResource.setShortTitle(question.getShortName());
-        setupResource.setTitle(question.getName());
-        setupResource.setSubTitle(question.getDescription());
-        setupResource.setQuestionId(question.getId());
-        setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
-        setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
+            setupResource.setScoreTotal(question.getAssessorMaximumScore());
+            setupResource.setNumber(question.getQuestionNumber());
+            setupResource.setShortTitle(question.getShortName());
+            setupResource.setTitle(question.getName());
+            setupResource.setSubTitle(question.getDescription());
+            setupResource.setQuestionId(question.getId());
+            setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
+            setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
+        }
 
-        return ServiceResult.serviceSuccess(setupResource);
+        return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId))
+            .andOnSuccess(questionResource -> ServiceResult.serviceSuccess(setupResource));
     }
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {

@@ -242,9 +242,14 @@ public class CompetitionSetupApplicationController {
 
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
         ServiceResult<CompetitionSetupQuestionResource> questionResource = competitionSetupQuestionService.getQuestion(questionId);
-        final CompetitionSetupQuestionResource successObjectOrThrowException = questionResource.getSuccessObjectOrThrowException();
-        if(successObjectOrThrowException == null){
-            return "redirect:/non-ifs-competition/setup/" + questionId;
+        final CompetitionSetupQuestionResource successObjectOrThrowException;
+        try {
+            successObjectOrThrowException = questionResource.getSuccessObjectOrThrowException();
+        } catch (Exception e) {
+            if(e.getMessage().contains("GENERAL_NOT_FOUND")) {
+                return "redirect:/non-ifs-competition/setup/" + questionId;
+            }
+            else throw e;
         }
         CompetitionSetupQuestionType type = successObjectOrThrowException.getType();
         CompetitionSetupSubsection setupSubsection;
