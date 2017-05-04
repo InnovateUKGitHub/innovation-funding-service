@@ -17,29 +17,229 @@ import static org.mockito.Mockito.when;
 public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<ApplicationPermissionRules> {
 
     @Test
-    public void isLeadApplicantWhenLoggedInAsLead() {
-
-        long loggedInUserId = 2L;
-        long leadApplicantUserId = 2L;
-        long applicationId = 14L;
-
-        UserResource loggedInUser = setUpIsLeadApplicantMocking(loggedInUserId, leadApplicantUserId, applicationId);
-        assertTrue(rules.isLeadApplicant(applicationId, loggedInUser));
-    }
-
-    @Test
-    public void isLeadApplicantWhenLoggedInAsNonLead() {
+    public void viewAddOrganisationPageWhenNotLoggedInAsLeadAndApplicationNotSubmitted() {
 
         long loggedInUserId = 7L;
         long leadApplicantUserId = 2L;
         long applicationId = 14L;
 
-        UserResource loggedInUser = setUpIsLeadApplicantMocking(loggedInUserId, leadApplicantUserId, applicationId);
-        assertFalse(rules.isLeadApplicant(applicationId, loggedInUser));
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
     }
 
-    private UserResource setUpIsLeadApplicantMocking(long loggedInUserId, long leadApplicantUserId, long applicationId) {
-        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
+    @Test
+    public void viewAddOrganisationPageWhenNotLoggedInAsLeadAndApplicationSubmitted() {
+
+        long loggedInUserId = 7L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void viewAddOrganisationPageWhenLoggedInAsLeadAndApplicationSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.viewAddOrganisationPage(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void viewAddOrganisationPageWhenLoggedInAsLeadAndApplicationNotSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertTrue(rules.viewAddOrganisationPage(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void addNewOrganisationWhenNotLoggedInAsLeadAndApplicationNotSubmitted() {
+
+        long loggedInUserId = 7L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertFalse(rules.addNewOrganisation(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void addNewOrganisationWhenNotLoggedInAsLeadAndApplicationSubmitted() {
+
+        long loggedInUserId = 7L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.addNewOrganisation(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void addNewOrganisationWhenLoggedInAsLeadAndApplicationSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.addNewOrganisation(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void addNewOrganisationWhenLoggedInAsLeadAndApplicationNotSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertTrue(rules.addNewOrganisation(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void addApplicantWhenNotLoggedInAsLeadAndApplicationNotSubmitted() {
+
+        long loggedInUserId = 7L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertFalse(rules.addApplicant(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void addApplicantWhenNotLoggedInAsLeadAndApplicationSubmitted() {
+
+        long loggedInUserId = 7L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.addApplicant(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void addApplicantWhenLoggedInAsLeadAndApplicationSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.addApplicant(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void addApplicantWhenLoggedInAsLeadAndApplicationNotSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertTrue(rules.addApplicant(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void removeApplicantWhenNotLoggedInAsLeadAndApplicationNotSubmitted() {
+
+        long loggedInUserId = 7L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertFalse(rules.removeApplicant(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void removeApplicantWhenNotLoggedInAsLeadAndApplicationSubmitted() {
+
+        long loggedInUserId = 7L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.removeApplicant(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void removeApplicantWhenLoggedInAsLeadAndApplicationSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.removeApplicant(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void removeApplicantWhenLoggedInAsLeadAndApplicationNotSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertTrue(rules.removeApplicant(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void viewApplicationTeamPageWhenApplicationSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.SUBMITTED);
+        assertFalse(rules.viewApplicationTeamPage(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void viewApplicationTeamPageWhenApplicationNotSubmitted() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertTrue(rules.viewApplicationTeamPage(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void beginApplicationWhenNotLoggedInAsLead() {
+
+        long loggedInUserId = 7L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertFalse(rules.beginApplication(applicationId, loggedInUser));
+    }
+
+    @Test
+    public void beginApplicationWhenLoggedInAsLead() {
+
+        long loggedInUserId = 2L;
+        long leadApplicantUserId = 2L;
+        long applicationId = 14L;
+
+        UserResource loggedInUser = setUpMocking(loggedInUserId, leadApplicantUserId, applicationId, ApplicationState.OPEN);
+        assertTrue(rules.beginApplication(applicationId, loggedInUser));
+    }
+
+    private UserResource setUpMocking(long loggedInUserId, long leadApplicantUserId, long applicationId, ApplicationState applicationState) {
+        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource()
+                .withApplicationState(applicationState)
+                .build();
         when(applicationServiceMock.getById(applicationId)).thenReturn(applicationResource);
 
         ProcessRoleResource processRoleResource = ProcessRoleResourceBuilder.newProcessRoleResource()
@@ -50,53 +250,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         UserResource loggedInUser = new UserResource();
         loggedInUser.setId(loggedInUserId);
         return loggedInUser;
-    }
-
-    @Test
-    public void applicationNotYetSubmittedWhenApplicationIsSubmitted() {
-
-        long applicationId = 14L;
-
-        setUpApplicationNotYetSubmittedMocking(applicationId, ApplicationState.SUBMITTED);
-
-        assertFalse(rules.applicationNotYetSubmitted(applicationId, new UserResource()));
-    }
-
-    @Test
-    public void applicationNotYetSubmittedWhenApplicationIsRejected() {
-
-        long applicationId = 14L;
-
-        setUpApplicationNotYetSubmittedMocking(applicationId, ApplicationState.REJECTED);
-
-        assertFalse(rules.applicationNotYetSubmitted(applicationId, new UserResource()));
-    }
-
-    @Test
-    public void applicationNotYetSubmittedWhenApplicationIsApproved() {
-
-        long applicationId = 14L;
-
-        setUpApplicationNotYetSubmittedMocking(applicationId, ApplicationState.APPROVED);
-
-        assertFalse(rules.applicationNotYetSubmitted(applicationId, new UserResource()));
-    }
-
-    @Test
-    public void applicationNotYetSubmittedWhenApplicationIsNotSubmitted() {
-
-        long applicationId = 14L;
-
-        setUpApplicationNotYetSubmittedMocking(applicationId, ApplicationState.OPEN);
-
-        assertTrue(rules.applicationNotYetSubmitted(applicationId, new UserResource()));
-    }
-
-    private void setUpApplicationNotYetSubmittedMocking(long applicationId, ApplicationState applicationState) {
-        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource()
-                .withApplicationState(applicationState)
-                .build();
-        when(applicationServiceMock.getById(applicationId)).thenReturn(applicationResource);
     }
 
     @Override

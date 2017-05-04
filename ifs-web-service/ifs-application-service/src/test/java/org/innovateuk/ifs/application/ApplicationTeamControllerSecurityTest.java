@@ -16,12 +16,12 @@ public class ApplicationTeamControllerSecurityTest extends BaseApplicationContro
     @Test
     public void testGetApplicationTeam() {
         assertSecured(() -> classUnderTest.getApplicationTeam(null, 123L, null),
-                permissionRules -> permissionRules.applicationNotYetSubmitted(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.viewApplicationTeamPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testBeginApplication() {
         assertSecured(() -> classUnderTest.beginApplication(123L, null),
-                permissionRules -> permissionRules.isLeadApplicant(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.beginApplication(eq(123L), isA(UserResource.class)));
     }
 }

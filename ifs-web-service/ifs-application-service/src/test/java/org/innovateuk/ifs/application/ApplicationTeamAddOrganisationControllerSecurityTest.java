@@ -16,24 +16,24 @@ public class ApplicationTeamAddOrganisationControllerSecurityTest extends BaseAp
     @Test
     public void testGetAddOrganisation() {
         assertSecured(() -> classUnderTest.getAddOrganisation(null, 123L, null, null),
-                permissionRules -> permissionRules.isLeadApplicant(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.viewAddOrganisationPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testSubmitAddOrganisation() {
         assertSecured(() -> classUnderTest.submitAddOrganisation(null, 123L, null, null, null, null),
-                permissionRules -> permissionRules.isLeadApplicant(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.addNewOrganisation(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testAddApplicant() {
         assertSecured(() -> classUnderTest.addApplicant(null, 123L, null, null),
-                permissionRules -> permissionRules.isLeadApplicant(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.addApplicant(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testRemoveApplicant() {
         assertSecured(() -> classUnderTest.removeApplicant(null, 123L, null, null, null),
-                permissionRules -> permissionRules.isLeadApplicant(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.removeApplicant(eq(123L), isA(UserResource.class)));
     }
 }
