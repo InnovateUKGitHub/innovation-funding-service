@@ -36,10 +36,15 @@ Non registered users CH route
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user selects the radio button    organisationTypeId    radio-1
+    # TODO add check that only 2 options available business n RTO
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    # TODO add assertion for Confirm Organisation page and link for back button
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+${unique_email_number}@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+
+# TODO non-registered user: RTO lead account creation
+# TODO non-registered user : RTO lead org - collboratory any
 
 Non registered users CH route (email step)
     [Documentation]    INFUND-669
