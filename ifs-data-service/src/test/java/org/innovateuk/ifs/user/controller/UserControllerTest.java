@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.controller;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.token.domain.Token;
@@ -23,18 +22,11 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VER
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
-import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
-import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
-import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESET;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -185,7 +177,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long userId = 1L;
         final Token token = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), userId, hash, now(), null);
         when(tokenServiceMock.getEmailToken(hash)).thenReturn(serviceSuccess((token)));
-        when(registrationServiceMock.activateUserAndSendDiversitySurvey(1L)).thenReturn(serviceSuccess());
+        when(registrationServiceMock.activateApplicantAndSendDiversitySurvey(1L)).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/" + URL_VERIFY_EMAIL + "/{hash}", hash))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""))
@@ -277,155 +269,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    public void getProfileSkills() throws Exception {
-        Long userId = 1L;
-        ProfileSkillsResource profileSkillsResource = newProfileSkillsResource().build();
 
-        when(userProfileServiceMock.getProfileSkills(userId)).thenReturn(serviceSuccess(profileSkillsResource));
 
-        mockMvc.perform(get("/user/id/{id}/getProfileSkills", userId))
-                .andExpect(status().isOk())
-                .andExpect(content().string(toJson(profileSkillsResource)));
-
-        verify(userProfileServiceMock, only()).getProfileSkills(userId);
-    }
-
-    @Test
-    public void updateProfileSkills() throws Exception {
-        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
-                .withSkillsAreas(RandomStringUtils.random(5000))
-                .build();
-
-        Long userId = 1L;
-
-        when(userProfileServiceMock.updateProfileSkills(userId, profileSkillsEditResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/user/id/{id}/updateProfileSkills", userId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(profileSkillsEditResource)))
-                .andExpect(status().isOk());
-
-        verify(userProfileServiceMock, only()).updateProfileSkills(userId, profileSkillsEditResource);
-    }
-
-    @Test
-    public void updateProfileSkills_invalid() throws Exception {
-        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
-                .withSkillsAreas(RandomStringUtils.random(5001))
-                .build();
-
-        Long userId = 1L;
-
-        when(userProfileServiceMock.updateProfileSkills(userId, profileSkillsEditResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/user/id/{id}/updateProfileSkills", userId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(profileSkillsEditResource)))
-                .andExpect(status().isNotAcceptable());
-
-        verify(userProfileServiceMock, never()).updateProfileSkills(userId, profileSkillsEditResource);
-    }
-
-    @Test
-    public void getProfileAgreement() throws Exception {
-        Long userId = 1L;
-        ProfileAgreementResource profileAgreementResource = newProfileAgreementResource().build();
-
-        when(userProfileServiceMock.getProfileAgreement(userId)).thenReturn(serviceSuccess(profileAgreementResource));
-
-        mockMvc.perform(get("/user/id/{id}/getProfileAgreement", userId))
-                .andExpect(status().isOk())
-                .andExpect(content().string(toJson(profileAgreementResource)));
-
-        verify(userProfileServiceMock, only()).getProfileAgreement(userId);
-    }
-
-    @Test
-    public void updateProfileAgreement() throws Exception {
-        Long userId = 1L;
-
-        when(userProfileServiceMock.updateProfileAgreement(userId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/user/id/{id}/updateProfileAgreement", userId))
-                .andExpect(status().isOk());
-
-        verify(userProfileServiceMock, only()).updateProfileAgreement(userId);
-    }
-
-    @Test
-    public void getUserAffiliations() throws Exception {
-        Long userId = 1L;
-        List<AffiliationResource> affiliations = newAffiliationResource().build(2);
-
-        when(userProfileServiceMock.getUserAffiliations(userId)).thenReturn(serviceSuccess(affiliations));
-
-        mockMvc.perform(get("/user/id/{id}/getUserAffiliations", userId)
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(content().string(toJson(affiliations)));
-
-        verify(userProfileServiceMock, only()).getUserAffiliations(userId);
-    }
-
-    @Test
-    public void updateUserAffiliations() throws Exception {
-        Long userId = 1L;
-        List<AffiliationResource> affiliations = newAffiliationResource().build(2);
-
-        when(userProfileServiceMock.updateUserAffiliations(userId, affiliations)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/user/id/{id}/updateUserAffiliations", userId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(affiliations)))
-                .andExpect(status().isOk());
-
-        verify(userProfileServiceMock, only()).updateUserAffiliations(userId, affiliations);
-    }
-
-    @Test
-    public void getProfileAddress() throws Exception {
-        Long userId = 1L;
-        UserProfileResource profileDetails = newUserProfileResource().build();
-
-        when(userProfileServiceMock.getUserProfile(userId)).thenReturn(serviceSuccess(profileDetails));
-
-        mockMvc.perform(get("/user/id/{userId}/getUserProfile", userId)
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(toJson(profileDetails)));
-
-        verify(userProfileServiceMock, only()).getUserProfile(userId);
-    }
-
-    @Test
-    public void updateProfileAddress() throws Exception {
-        UserProfileResource profileDetails = newUserProfileResource().build();
-        Long userId = 1L;
-
-        when(userProfileServiceMock.updateUserProfile(userId, profileDetails)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/user/id/{userId}/updateUserProfile", userId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(profileDetails)))
-                .andExpect(status().isOk());
-
-        verify(userProfileServiceMock, only()).updateUserProfile(userId, profileDetails);
-    }
-
-    @Test
-    public void getUserProfileStatus() throws Exception {
-        UserProfileStatusResource profileStatus = newUserProfileStatusResource().build();
-        Long userId = 1L;
-
-        when(userProfileServiceMock.getUserProfileStatus(userId)).thenReturn(serviceSuccess(profileStatus));
-
-        mockMvc.perform(get("/user/id/{userId}/profileStatus", userId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(profileStatus)))
-                .andExpect(status().isOk());
-
-        verify(userProfileServiceMock, only()).getUserProfileStatus(userId);
-    }
 }

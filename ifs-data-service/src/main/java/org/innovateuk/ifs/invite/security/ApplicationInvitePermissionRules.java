@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.invite.security;
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationProcess;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.commons.security.PermissionRule;
+import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.commons.security.PermissionRule;
-import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -25,10 +29,15 @@ public class ApplicationInvitePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
+
     @Autowired
     private RoleRepository roleRepository;
+
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @PermissionRule(value = "SEND", description = "lead applicant can invite to the application")
     public boolean leadApplicantCanInviteToTheApplication(final ApplicationInvite invite, final UserResource user) {
@@ -37,17 +46,17 @@ public class ApplicationInvitePermissionRules {
 
     @PermissionRule(value = "SEND", description = "collaborator can invite to the application for thier organisation")
     public boolean collaboratorCanInviteToApplicationForTheirOrganisation(final ApplicationInvite invite, final UserResource user) {
-        return isCollaboratorOnInvite(invite, user);
+        return applicationIsEditable(invite.getTarget()) && isCollaboratorOnInvite(invite, user);
     }
 
     @PermissionRule(value = "SAVE", description = "lead applicant can save invite to the application")
     public boolean leadApplicantCanSaveInviteToTheApplication(final ApplicationInviteResource invite, final UserResource user) {
-        return isLeadForInvite(invite, user);
+        return applicationIsEditableById(invite.getApplication()) && isLeadForInvite(invite, user);
     }
 
     @PermissionRule(value = "SAVE", description = "collaborator can save invite to the application for thier organisation")
     public boolean collaboratorCanSaveInviteToApplicationForTheirOrganisation(final ApplicationInviteResource invite, final UserResource user) {
-        return isCollaboratorOnInvite(invite, user);
+        return applicationIsEditableById(invite.getApplication()) && isCollaboratorOnInvite(invite, user);
     }
 
     @PermissionRule(value = "READ", description = "collaborator can view an invite to the application on for their organisation")
@@ -62,7 +71,7 @@ public class ApplicationInvitePermissionRules {
 
     @PermissionRule(value = "DELETE", description = "lead applicant can delete an invite from the application and applicant can not delete his own invite from the application")
     public boolean leadApplicantAndNotDeleteOwnInviteToTheApplication(final ApplicationInviteResource invite, final UserResource user) {
-        return isNotOwnInvite(invite, user) && isLeadForInvite(invite, user);
+        return applicationIsEditableById(invite.getApplication()) && isNotOwnInvite(invite, user) && isLeadForInvite(invite, user);
     }
 
     private boolean isNotOwnInvite(final ApplicationInviteResource invite, final UserResource user) {
@@ -99,5 +108,14 @@ public class ApplicationInvitePermissionRules {
 
     private boolean isLeadForInvite(final ApplicationInviteResource invite, final UserResource user) {
         return checkProcessRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+    }
+
+    private boolean applicationIsEditableById(final Long applicationId) {
+        return applicationIsEditable(applicationRepository.findOne(applicationId));
+    }
+
+    private boolean applicationIsEditable(final Application application) {
+        ApplicationProcess state = application.getApplicationProcess();
+        return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPEN);
     }
 }

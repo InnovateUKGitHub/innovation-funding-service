@@ -107,7 +107,7 @@ Lead Adds/Removes partner organisation
     And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     Then The user clicks the button/link    jQuery=a:contains('Delete organisation')
-    And The user clicks the button/link     jQuery=.modal-delete-organisation button:contains('Delete organisation')
+    And The user clicks the button/link    jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should not see the text in the page    Fannie May
     And the user should see the text in the page    Application team
 
@@ -190,6 +190,7 @@ Partner should be able to log-in and see the new company name
     When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Innovate UK applicant questionnaire    diversity survey
 
 Parner can see the Application team
     [Documentation]    INFUND-7976

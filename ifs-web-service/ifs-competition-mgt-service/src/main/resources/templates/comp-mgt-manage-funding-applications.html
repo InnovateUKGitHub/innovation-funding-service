@@ -17,10 +17,7 @@
             <li th:classappend="list-header" th:text="${err}" th:each="err : ${#fields.errors('${manageFundingApplicationsQueryForm.*}')}"></li>
         </ul>
     </div>
-
-    <h1 class="heading-xlarge">
-        <span class="heading-secondary" th:text="|${model.competitionId}: ${model.competitionName}|">123456: Manage funding applications</span>
-    </h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage funding applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
     <form method="GET" th:object="${manageFundingApplicationsQueryForm}">

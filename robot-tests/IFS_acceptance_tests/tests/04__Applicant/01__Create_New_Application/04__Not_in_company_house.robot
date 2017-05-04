@@ -41,6 +41,8 @@ The address can be manually added and the details pass to the confirmation page
     And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    POPPS123
     And the user enters text to a text field    name=organisationName    Top of the Popps
     And the user clicks the button/link    jQuery=button:contains("Continue")
+    And the user selects the radio button  organisationTypeId  radio-1
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     Then the user should see the text in the page    The East Wing
     And the user should see the text in the page    Popple Manor
     And the user should see the text in the page    1, Popple Boulevard

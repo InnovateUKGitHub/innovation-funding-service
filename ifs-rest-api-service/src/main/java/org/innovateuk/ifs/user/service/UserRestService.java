@@ -27,7 +27,7 @@ public interface UserRestService {
     Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId);
     RestResult<Void> verifyEmail(String hash);
     RestResult<Void> resendEmailVerificationNotification(String email);
-    RestResult<Void> sendPasswordResetNotification(String email);
+    Future<RestResult<Void>> sendPasswordResetNotification(String email);
     RestResult<Void> checkPasswordResetHash(String hash);
     RestResult<Void> resetPassword(String hash, String password);
 
@@ -37,13 +37,4 @@ public interface UserRestService {
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Boolean allowMarketingEmails);
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
-    RestResult<ProfileSkillsResource> getProfileSkills(Long userId);
-    RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkills);
-    RestResult<ProfileAgreementResource> getProfileAgreement(Long userId);
-    RestResult<Void> updateProfileAgreement(Long userId);
-    RestResult<List<AffiliationResource>> getUserAffiliations(Long userId);
-    RestResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
-    RestResult<UserProfileResource> getUserProfile(Long userId);
-    RestResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile);
-    RestResult<UserProfileStatusResource> getUserProfileStatus(Long userId);
 }

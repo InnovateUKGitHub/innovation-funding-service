@@ -493,7 +493,7 @@ public class ApplicationFormController {
                 errors.addAll(saveErrors);
             }
 
-            markOrganisationFinancesAsNotRequired(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
+            markAcademicFinancesAsNotRequired(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
         }
 
         if (isMarkQuestionRequest(params)) {
@@ -532,12 +532,14 @@ public class ApplicationFormController {
         }
     }
 
-    private void markOrganisationFinancesAsNotRequired(Long organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
+    private void markAcademicFinancesAsNotRequired(long organisationType, SectionResource selectedSection, long applicationId, long competitionId, long processRoleId) {
 
-        if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
+        if (selectedSection != null && SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
                 && OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
+            SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
             sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
+            sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
         }
     }
 
@@ -575,10 +577,7 @@ public class ApplicationFormController {
                         .forEach(e -> {
                             if (validationMessage.getObjectName().equals("target")) {
                                 if (hasText(e.getErrorKey())) {
-                                    toFieldErrors.addError(fieldError("formInput[application." + validationMessage.getObjectId() + "-" + e.getFieldName() + "]", e.getFieldRejectedValue(), e.getErrorKey()));
-                                    if (e.getErrorKey().equals("durationInMonths")) {
-                                        application.setDurationInMonths(null);
-                                    }
+                                    toFieldErrors.addError(fieldError("application." + e.getFieldName(), e.getFieldRejectedValue(), e.getErrorKey()));
                                 }
                             }
                         }));
@@ -712,10 +711,6 @@ public class ApplicationFormController {
         return emptyList();
     }
 
-    /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
-     */
     @ProfileExecution
     @PostMapping(SECTION_URL + "{sectionId}")
     public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
@@ -771,7 +766,7 @@ public class ApplicationFormController {
             }
         }
 
-        if (SectionType.PROJECT_COST_FINANCES.equals(section.getType())) {
+        if (SectionType.PROJECT_COST_FINANCES.equals(section.getType()) && !userIsResearch(userId)) {
             if (!form.isStateAidAgreed()) {
                 bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
                 valid = Boolean.FALSE;
@@ -788,6 +783,10 @@ public class ApplicationFormController {
         }
 
         return valid;
+    }
+
+    private boolean userIsResearch(Long userId) {
+        return organisationService.getOrganisationForUser(userId).getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
     }
 
     private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {

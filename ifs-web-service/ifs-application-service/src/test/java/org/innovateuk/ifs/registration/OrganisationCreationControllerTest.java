@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration;
 
 import org.apache.commons.lang3.CharEncoding;
-import org.hamcrest.*;
+import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
@@ -9,7 +9,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,11 +36,12 @@ import java.util.Arrays;
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -53,6 +57,10 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
 
     @Mock
     private AddressRestService addressRestService;
+
+    @Spy
+    @InjectMocks
+    private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
@@ -108,7 +116,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         assertNotNull(cookies[0]);
         assertNotNull(cookies[1]);
         assertEquals("", Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("flashMessage")).findAny().get().getValue());
-        assertEquals(URLEncoder.encode("{\"organisationType\":1,\"selectedByDefault\":true}", CharEncoding.UTF_8),
+        assertEquals(URLEncoder.encode("{\"organisationType\":1,\"leadApplicant\":true}", CharEncoding.UTF_8),
                 getDecryptedCookieValue(cookies, "organisationType"));
     }
 
@@ -484,6 +492,27 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/confirm-organisation"));
+    }
+
+    @Test
+    public void testSelectedBusinessSaveLeadBusiness() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/lead-organisation-type")
+                .param("organisationTypeId", OrganisationTypeEnum.RTO.getId().toString())
+                .cookie(organisationForm)
+        )
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/confirm-organisation"));
+    }
+
+
+    @Test
+    public void testSelectedInvalidLeadOrganisationType() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/lead-organisation-type")
+                .param("organisationTypeId", OrganisationTypeEnum.RESEARCH.getId().toString())
+                .cookie(organisationForm)
+        )
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/lead-organisation-type"))
+                .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationType"));
     }
 
     /**

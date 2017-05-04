@@ -48,7 +48,7 @@ public abstract class ApplicationSummaryMapper {
         result.setName(source.getName());
         result.setDuration(source.getDurationInMonths());
         result.setManageFundingEmailDate(source.getManageFundingEmailDate());
-
+        result.setIneligibleInformed(source.getApplicationProcess().getActivityState() == ApplicationState.INELIGIBLE_INFORMED);
         if (source.getLeadApplicant() != null) {
             result.setLeadApplicant(source.getLeadApplicant().getName());
         }

@@ -46,7 +46,7 @@ public class CompetitionSetupTransactionalServiceImpl extends BaseTransactionalS
 
     @Override
     public ServiceResult<FormInput> turnoverInput(Long competitionId) {
-        return getOnlyForCompetition(competitionId, STAFF_TURNOVER);
+        return getOnlyForCompetition(competitionId, ORGANISATION_TURNOVER);
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
@@ -20,7 +21,7 @@ import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.CompAdminEmailRepository;
-import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.ProjectFinanceEmailRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -168,14 +169,25 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> activateUserAndSendDiversitySurvey(long userId) {
+    public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId) {
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
-                .andOnSuccessReturnVoid(this::sendDiversitySurvey);
+                .andOnSuccessReturnVoid(this::sendApplicantDiversitySurvey);
     }
 
-    private ServiceResult<Void> sendDiversitySurvey(User user) {
-        return userSurveyService.sendDiversitySurvey(user);
+    @Override
+    public ServiceResult<Void> activateAssessorAndSendDiversitySurvey(long userId) {
+        return getUser(userId)
+                .andOnSuccess(this::activateUser)
+                .andOnSuccessReturnVoid(this::sendAssessorDiversitySurvey);
+    }
+
+    private ServiceResult<Void> sendApplicantDiversitySurvey(User user) {
+        return userSurveyService.sendApplicantDiversitySurvey(user);
+    }
+
+    private ServiceResult<Void> sendAssessorDiversitySurvey(User user) {
+        return userSurveyService.sendAssessorDiversitySurvey(user);
     }
 
     private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
