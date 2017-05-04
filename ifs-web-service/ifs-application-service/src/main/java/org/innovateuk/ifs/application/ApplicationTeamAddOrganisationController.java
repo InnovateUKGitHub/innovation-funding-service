@@ -50,7 +50,7 @@ public class ApplicationTeamAddOrganisationController {
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
 
     @GetMapping("/addOrganisation")
-    @PreAuthorize("hasPermission(#applicationId, 'LEAD_APPLICANT') and hasPermission(#applicationId, 'APPLICATION_NOT_YET_SUBMITTED')")
+    @PreAuthorize("hasPermission(#applicationId, 'VIEW_ADD_ORGANISATION_PAGE')")
     public String getAddOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -65,7 +65,7 @@ public class ApplicationTeamAddOrganisationController {
     }
 
     @PostMapping("/addOrganisation")
-    @PreAuthorize("hasPermission(#applicationId, 'LEAD_APPLICANT') and hasPermission(#applicationId, 'APPLICATION_NOT_YET_SUBMITTED')")
+    @PreAuthorize("hasPermission(#applicationId, 'ADD_NEW_ORGANISATION')")
     public String submitAddOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -85,7 +85,7 @@ public class ApplicationTeamAddOrganisationController {
     }
 
     @PostMapping(value = "/addOrganisation", params = {"addApplicant"})
-    @PreAuthorize("hasPermission(#applicationId, 'LEAD_APPLICANT') and hasPermission(#applicationId, 'APPLICATION_NOT_YET_SUBMITTED')")
+    @PreAuthorize("hasPermission(#applicationId, 'ADD_APPLICANT')")
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -96,7 +96,7 @@ public class ApplicationTeamAddOrganisationController {
     }
 
     @PostMapping(value = "/addOrganisation", params = {"removeApplicant"})
-    @PreAuthorize("hasPermission(#applicationId, 'LEAD_APPLICANT') and hasPermission(#applicationId, 'APPLICATION_NOT_YET_SUBMITTED')")
+    @PreAuthorize("hasPermission(#applicationId, 'REMOVE_APPLICANT')")
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,

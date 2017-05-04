@@ -22,8 +22,37 @@ public class ApplicationPermissionRules {
     @Autowired
     private UserService userService;
 
-    @PermissionRule(value = "LEAD_APPLICANT", description = "The logged in user is the lead applicant")
-    public boolean isLeadApplicant(Long applicationId, UserResource loggedInUser) {
+    @PermissionRule(value = "VIEW_ADD_ORGANISATION_PAGE", description = "Allowed to view the add organisation page")
+    public boolean viewAddOrganisationPage(Long applicationId, UserResource loggedInUser) {
+        return isLeadApplicant(applicationId, loggedInUser) && applicationNotYetSubmitted(applicationId);
+    }
+
+    @PermissionRule(value = "ADD_NEW_ORGANISATION", description = "Allowed to add a new organisation")
+    public boolean addNewOrganisation(Long applicationId, UserResource loggedInUser) {
+        return isLeadApplicant(applicationId, loggedInUser) && applicationNotYetSubmitted(applicationId);
+    }
+
+    @PermissionRule(value = "ADD_APPLICANT", description = "Allowed to add a new applicant")
+    public boolean addApplicant(Long applicationId, UserResource loggedInUser) {
+        return isLeadApplicant(applicationId, loggedInUser) && applicationNotYetSubmitted(applicationId);
+    }
+
+    @PermissionRule(value = "REMOVE_APPLICANT", description = "Allowed to remove an existing applicant")
+    public boolean removeApplicant(Long applicationId, UserResource loggedInUser) {
+        return isLeadApplicant(applicationId, loggedInUser) && applicationNotYetSubmitted(applicationId);
+    }
+
+    @PermissionRule(value = "VIEW_APPLICATION_TEAM_PAGE", description = "Allowed to view the application team page")
+    public boolean viewApplicationTeamPage(Long applicationId, UserResource loggedInUser) {
+        return applicationNotYetSubmitted(applicationId);
+    }
+
+    @PermissionRule(value = "BEGIN_APPLICATION", description = "Allowed to begin an application")
+    public boolean beginApplication(Long applicationId, UserResource loggedInUser) {
+        return isLeadApplicant(applicationId, loggedInUser);
+    }
+
+    private boolean isLeadApplicant(Long applicationId, UserResource loggedInUser) {
         ApplicationResource applicationResource = getApplication(applicationId);
         return loggedInUser.getId() == getLeadApplicantId(applicationResource);
     }
@@ -32,8 +61,7 @@ public class ApplicationPermissionRules {
         return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
     }
 
-    @PermissionRule(value = "APPLICATION_NOT_YET_SUBMITTED", description = "The application is not yet submitted")
-    public boolean applicationNotYetSubmitted(Long applicationId, UserResource loggedInUser) {
+    private boolean applicationNotYetSubmitted(Long applicationId) {
         ApplicationResource applicationResource = getApplication(applicationId);
         return !applicationResource.hasBeenSubmitted();
     }

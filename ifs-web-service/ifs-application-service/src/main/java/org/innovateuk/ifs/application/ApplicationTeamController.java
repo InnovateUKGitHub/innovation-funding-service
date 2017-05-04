@@ -32,7 +32,7 @@ public class ApplicationTeamController {
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @GetMapping("/team")
-    @PreAuthorize("hasPermission(#applicationId, 'APPLICATION_NOT_YET_SUBMITTED')")
+    @PreAuthorize("hasPermission(#applicationId, 'VIEW_APPLICATION_TEAM_PAGE')")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
@@ -40,7 +40,7 @@ public class ApplicationTeamController {
     }
 
     @GetMapping("/begin")
-    @PreAuthorize("hasPermission(#applicationId, 'LEAD_APPLICANT')")
+    @PreAuthorize("hasPermission(#applicationId, 'BEGIN_APPLICATION')")
     public String beginApplication(@PathVariable("applicationId") long applicationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
