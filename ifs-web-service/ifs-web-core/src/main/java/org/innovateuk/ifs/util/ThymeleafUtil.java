@@ -23,7 +23,7 @@ public class ThymeleafUtil {
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mma");
 
     /**
-     * Combines the request URI with the query string where present.
+     * Gets the uri for used for form posts.
      *
      * @param request
      * @return
