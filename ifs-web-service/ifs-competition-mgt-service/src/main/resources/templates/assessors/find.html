@@ -12,13 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-            <div class="page-title">
-                <h1 class="heading-xlarge">
-                    <span class="heading-secondary" th:text="${model.competitionName}">Technology inspired</span>
-                    Invite assessors
-                </h1>
-            </div>
-
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
             <h2 class="heading-medium">Key statistics</h2>
 
             <div class="grid-row">

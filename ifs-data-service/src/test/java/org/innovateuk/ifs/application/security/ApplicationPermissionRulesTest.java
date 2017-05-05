@@ -403,6 +403,20 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void testLeadApplicantCanUpdateApplicationState() throws Exception {
+        assertTrue(rules.leadApplicantCanUpdateApplicationState(applicationResource1, leadOnApplication1));
+        assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, compAdmin));
+        assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, user2));
+    }
+
+    @Test
+    public void testCompAdminCanUpdateApplicationState() throws Exception {
+        assertTrue(rules.compAdminCanUpdateApplicationState(applicationResource1, compAdmin));
+        assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, leadOnApplication1));
+        assertFalse(rules.compAdminCanUpdateApplicationState(applicationResource1, user2));
+    }
+
+    @Test
     public void testUserCanCreateNewApplication() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {

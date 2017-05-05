@@ -10,31 +10,24 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:insert="fragments/layout :: header-sub"
-         th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}"
-         th:remove="tag"/>
-    <h1 class="heading-large">Join a project</h1>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
-    <div>
-        <p>You have been invited to join a project.</p>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join a project',size='heading-large'" />
+    <p>You have been invited to join a project.</p>
+    <dl class="standard-definition-list">
+        <dt>Project</dt>
+        <dd th:text="${model.projectName}"></dd>
 
-        <dl class="standard-definition-list">
-            <dt>Project</dt>
-            <dd th:text="${model.projectName}"></dd>
+        <dt>Competition</dt>
+        <dd th:text="${model.competitionName}"></dd>
 
-            <dt>Competition</dt>
-            <dd th:text="${model.competitionName}"></dd>
+        <dt>Lead organisation</dt>
+        <dd th:text="${model.leadOrganisationName}"></dd>
 
-            <dt>Lead organisation</dt>
-            <dd th:text="${model.leadOrganisationName}"></dd>
-
-            <dt>Lead applicant</dt>
-            <dd th:text="${model.leadApplicantName}"></dd>
-        </dl>
-
-        <p>You have been invited to join this project on behalf of the following organisation: <strong th:text="${model.organisationName}"></strong>
-        </p>
-    </div>
+        <dt>Lead applicant</dt>
+        <dd th:text="${model.leadApplicantName}"></dd>
+    </dl>
+    <p>You have been invited to join this project on behalf of the following organisation: <strong th:text="${model.organisationName}"></strong></p>
 
     <a th:href="@{/registration/accept-invite-user-exist-confirm}" class="button button-large extra-margin"
        name="select-org-size" th:unless="${!userExists}">Continue to project</a>

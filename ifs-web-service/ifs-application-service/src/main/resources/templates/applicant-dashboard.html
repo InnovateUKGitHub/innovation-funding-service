@@ -2,7 +2,7 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your dashboard'" />
 </head>
 
 <body th:with="context='applicant'" class="app-dashboard">
@@ -20,7 +20,7 @@
         </div>
 
         <div class="my-applications">
-            <h1 class="heading-large">Your dashboard</h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your dashboard',size='heading-large'" />
             <section th:if="${model.projectsInSetupNotEmpty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="heading-medium">Set up your project</h2>
@@ -124,6 +124,7 @@
                                 <p th:if="${model.applicationIsRejected(app.id)}" class="status-msg msg-progress">Unsuccessful</p>
                                 <p th:if="${model.applicationIsApproved(app.id)}" class="status-msg msg-progress">Successful</p>
                                 <p th:if="${model.applicationIsCreatedOrOpen(app.id)}" class="status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${model.applicationIsInformedIneligible(app.id)}" class="status-msg msg-progress">Ineligible</p>
                             </div>
                         </li>
                     </ul>

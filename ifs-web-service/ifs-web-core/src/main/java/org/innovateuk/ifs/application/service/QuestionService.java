@@ -36,7 +36,7 @@ public interface QuestionService {
     List<QuestionStatusResource> findQuestionStatusesByQuestionAndApplicationId(Long questionId, Long applicationId);
     List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
     QuestionResource save(QuestionResource questionResource);
-    List<QuestionResource> getQuestionsByAssessment(Long assessmentId);
+    List<QuestionResource> getQuestionsByAssessment(long assessmentId);
     void assignQuestion(Long applicationId, HttpServletRequest request, ProcessRoleResource assignedBy);
     Long extractQuestionProcessRoleIdFromAssignSubmit(HttpServletRequest request);
 }

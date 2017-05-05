@@ -10,7 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <h1 class="heading-large">Sorry, you are unable to accept this invitation.</h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sorry, you are unable to accept this invitation.',size='heading-large'" />
     <p>If you want to remain in the same organisation but join a different application, please contact the helpdesk on 0300 321 4357</p>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

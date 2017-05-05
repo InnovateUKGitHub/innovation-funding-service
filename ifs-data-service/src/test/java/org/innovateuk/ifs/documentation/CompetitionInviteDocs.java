@@ -22,7 +22,9 @@ public class CompetitionInviteDocs {
 
     public static final FieldDescriptor[] competitionInviteFields = {
             fieldWithPath("id").description("Id of the competition invite"),
+            fieldWithPath("competitionId").description("Id of the competition"),
             fieldWithPath("competitionName").description("Name of the competition"),
+            fieldWithPath("competitionDescription").description("Description of the competition"),
             fieldWithPath("email").description("Email of the competition invitee"),
             fieldWithPath("hash").description("Hash id of the competition invite"),
             fieldWithPath("status").description("Status of the competition invite"),
