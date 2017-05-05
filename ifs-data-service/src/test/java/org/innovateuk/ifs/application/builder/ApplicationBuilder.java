@@ -76,10 +76,6 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((fundingDecision, application) -> application.setFundingDecision(fundingDecision), fundingDecisionStatus);
     }
 
-    public ApplicationBuilder withAssessorFeedbackFileEntry(FileEntry... fileEntry) {
-        return withArray((file, application) -> application.setAssessorFeedbackFileEntry(file), fileEntry);
-    }
-
     public ApplicationBuilder withDurationInMonths(Long... durationInMonths) {
         return withArray((duration, application) -> application.setDurationInMonths(duration), durationInMonths);
     }

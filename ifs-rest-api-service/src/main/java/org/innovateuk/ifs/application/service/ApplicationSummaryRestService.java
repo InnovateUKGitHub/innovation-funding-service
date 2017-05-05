@@ -19,8 +19,6 @@ public interface ApplicationSummaryRestService {
 
     RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter);
 
-    RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter);
-    
     RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId);
 
     RestResult<ByteArrayResource> downloadByCompetition(long competitionId);

@@ -6,11 +6,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.AssessorFeedbackRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.model.ReinstateIneligibleApplicationModelPopulator;
@@ -28,15 +25,12 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
@@ -55,8 +49,6 @@ public class CompetitionManagementApplicationController {
     private ApplicationRestService applicationRestService;
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
-    @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
     @Autowired
     private CompetitionManagementApplicationService competitionManagementApplicationService;
 
@@ -95,43 +87,6 @@ public class CompetitionManagementApplicationController {
                         model);
     }
 
-    @GetMapping("/{applicationId}/assessorFeedback")
-    @ResponseBody
-    public ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
-            @PathVariable("applicationId") final Long applicationId) {
-
-        final ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
-        final FileEntryResource fileDetails = assessorFeedbackRestService.getAssessorFeedbackFileDetails(applicationId).getSuccessObjectOrThrowException();
-        return getFileResponseEntity(resource, fileDetails);
-    }
-
-    @PostMapping(value = "/{applicationId}", params = "uploadAssessorFeedback")
-    public String uploadAssessorFeedbackFile(
-            @PathVariable("competitionId") final Long competitionId,
-            @PathVariable("applicationId") final Long applicationId,
-            @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
-            @RequestParam MultiValueMap<String, String> queryParams,
-            @ModelAttribute("form") ApplicationForm applicationForm,
-            @ModelAttribute("loggedInUser") UserResource user,
-            @SuppressWarnings("unused") BindingResult bindingResult,
-            ValidationHandler validationHandler,
-            Model model) {
-
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            MultipartFile file = applicationForm.getAssessorFeedback();
-
-            RestResult<FileEntryResource> uploadFileResult = assessorFeedbackRestService.addAssessorFeedbackDocument(applicationId,
-                    file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-
-            return validationHandler.
-                    addAnyErrors(uploadFileResult, toField("assessorFeedback")).
-                    failNowOrSucceedWith(failureView, () -> redirectToApplicationOverview(competitionId, applicationId));
-        });
-    }
-
     @PostMapping(value = "/{applicationId}/reinstateIneligibleApplication")
     public String reinstateIneligibleApplication(Model model,
                                                  @PathVariable("competitionId") final long competitionId,
@@ -155,29 +110,6 @@ public class CompetitionManagementApplicationController {
                                                         @ModelAttribute("form") final ReinstateIneligibleApplicationForm form,
                                                         @PathVariable("applicationId") final long applicationId) {
         return doReinstateIneligibleApplicationConfirm(model, applicationId);
-    }
-
-    @PostMapping(value = "/{applicationId}", params = "removeAssessorFeedback")
-    public String removeAssessorFeedbackFile(@PathVariable("competitionId") final Long competitionId,
-                                             @PathVariable("applicationId") final Long applicationId,
-                                             @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
-                                             @RequestParam MultiValueMap<String, String> queryParams,
-                                             Model model,
-                                             @ModelAttribute("form") ApplicationForm applicationForm,
-                                             @ModelAttribute("loggedInUser") UserResource user,
-                                             @SuppressWarnings("unused") BindingResult bindingResult,
-                                             ValidationHandler validationHandler) {
-
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            RestResult<Void> removeFileResult = assessorFeedbackRestService.removeAssessorFeedbackDocument(applicationId);
-
-            return validationHandler.
-                    addAnyErrors(removeFileResult, toField("assessorFeedback")).
-                    failNowOrSucceedWith(failureView, () -> redirectToApplicationOverview(competitionId, applicationId));
-        });
     }
 
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
