@@ -32,6 +32,8 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -56,9 +58,9 @@ public class InitialDetailsSectionSaverTest {
     @Mock
     private UserService userService;
 
-    //TODO: Create tests for situations surrounding Milestone saving
-    //TODO: Create test for invalid date handling
-    //TODO: Create test for situations surrounding retrieval of innovation sector
+    //TODO INFUND-9493: Create tests for situations surrounding Milestone saving
+    //TODO INFUND-9493: Create test for invalid date handling
+    //TODO INFUND-9493: Create test for situations surrounding retrieval of innovation sector
 
     @Test
     public void saveCompetitionSetupSection() {
@@ -100,8 +102,8 @@ public class InitialDetailsSectionSaverTest {
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
         when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(milestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
-        when(userService.isCompetitionExecutive(executiveUserId)).thenReturn(true);
-        when(userService.isCompetitionTechnologist(leadTechnologistId)).thenReturn(true);
+        when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
+        when(userService.existsAndHasRole(leadTechnologistId, COMP_TECHNOLOGIST)).thenReturn(true);
 
         service.saveSection(competition, competitionSetupForm);
 
@@ -120,6 +122,8 @@ public class InitialDetailsSectionSaverTest {
 
         verify(competitionService).update(competition);
         verify(competitionService).initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId());
+        verify(userService).existsAndHasRole(executiveUserId, COMP_ADMIN);
+        verify(userService).existsAndHasRole(leadTechnologistId, COMP_TECHNOLOGIST);
     }
 
     @Test
@@ -187,8 +191,8 @@ public class InitialDetailsSectionSaverTest {
         form.setCompetitionTypeId(competitionTypeId);
         form.setInnovationSectorCategoryId(innovationSectorId);
 
-        when(userService.isCompetitionExecutive(newExec)).thenReturn(true);
-        when(userService.isCompetitionTechnologist(leadTechnologistId)).thenReturn(true);
+        when(userService.existsAndHasRole(newExec, COMP_ADMIN)).thenReturn(true);
+        when(userService.existsAndHasRole(leadTechnologistId, COMP_TECHNOLOGIST)).thenReturn(true);
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
         service.saveSection(competition, form);
@@ -198,6 +202,9 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getExecutive(), newExec);
         assertNull(competition.getCompetitionType());
         assertNull(competition.getInnovationSector());
+
+        verify(userService).existsAndHasRole(newExec, COMP_ADMIN);
+        verify(userService).existsAndHasRole(leadTechnologistId, COMP_TECHNOLOGIST);
     }
 
     private MilestoneResource getMilestone(){
@@ -245,13 +252,15 @@ public class InitialDetailsSectionSaverTest {
         competition.setMilestones(milestonesIds);
         competition.setSetupComplete(false);
 
-        when(userService.isCompetitionExecutive(executiveUserId)).thenReturn(false);
+        when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(false);
 
         ServiceResult<Void> result = service.saveSection(competition, competitionSetupForm);
 
         assertTrue(result.isFailure());
         assertEquals("competition.setup.invalid.comp.exec", result.getFailure().getErrors().get(0).getErrorKey());
         assertEquals("executiveUserId", result.getFailure().getErrors().get(0).getFieldName());
+
+        verify(userService).existsAndHasRole(executiveUserId, COMP_ADMIN);
     }
 
     @Test
@@ -284,13 +293,16 @@ public class InitialDetailsSectionSaverTest {
         competition.setMilestones(milestonesIds);
         competition.setSetupComplete(false);
 
-        when(userService.isCompetitionExecutive(executiveUserId)).thenReturn(true);
-        when(userService.isCompetitionTechnologist(leadTechnologistId)).thenReturn(false);
+        when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
+        when(userService.existsAndHasRole(leadTechnologistId, COMP_TECHNOLOGIST)).thenReturn(false);
 
         ServiceResult<Void> result = service.saveSection(competition, competitionSetupForm);
 
         assertTrue(result.isFailure());
         assertEquals("competition.setup.invalid.comp.technologist", result.getFailure().getErrors().get(0).getErrorKey());
         assertEquals("leadTechnologistUserId", result.getFailure().getErrors().get(0).getFieldName());
+
+        verify(userService).existsAndHasRole(executiveUserId, COMP_ADMIN);
+        verify(userService).existsAndHasRole(leadTechnologistId, COMP_TECHNOLOGIST);
     }
 }

@@ -33,6 +33,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -68,19 +70,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {
-            if (userService.isCompetitionExecutive(initialDetailsForm.getExecutiveUserId())) {
-                competition.setExecutive(initialDetailsForm.getExecutiveUserId());
-            } else if (initialDetailsForm.getExecutiveUserId() != null) {
-                return serviceFailure(fieldError("executiveUserId",
-                        initialDetailsForm.getExecutiveUserId(),
-                        "competition.setup.invalid.comp.exec", (Object) null));
-            }
-            if (userService.isCompetitionTechnologist(initialDetailsForm.getLeadTechnologistUserId())) {
-                competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
-            } else if (initialDetailsForm.getLeadTechnologistUserId() != null) {
-                return serviceFailure(fieldError("leadTechnologistUserId",
-                        initialDetailsForm.getLeadTechnologistUserId(),
-                        "competition.setup.invalid.comp.technologist", (Object) null));
+            Error error = saveAssignedUsers(competition, initialDetailsForm);
+
+            if (error != null) {
+                return serviceFailure(error);
             }
 
             if (!Boolean.TRUE.equals(competition.getSetupComplete())) {
@@ -130,7 +123,27 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         }
    }
 
-   private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {
+    private Error saveAssignedUsers(final CompetitionResource competition, InitialDetailsForm initialDetailsForm) {
+        if (userService.existsAndHasRole(initialDetailsForm.getExecutiveUserId(), COMP_ADMIN)) {
+            competition.setExecutive(initialDetailsForm.getExecutiveUserId());
+        } else if (initialDetailsForm.getExecutiveUserId() != null) {
+            return fieldError("executiveUserId",
+                    initialDetailsForm.getExecutiveUserId(),
+                    "competition.setup.invalid.comp.exec");
+        }
+
+        if (userService.existsAndHasRole(initialDetailsForm.getLeadTechnologistUserId(), COMP_TECHNOLOGIST)) {
+            competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
+        } else if (initialDetailsForm.getLeadTechnologistUserId() != null) {
+            return fieldError("leadTechnologistUserId",
+                    initialDetailsForm.getLeadTechnologistUserId(),
+                    "competition.setup.invalid.comp.technologist");
+        }
+
+        return null;
+    }
+
+    private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {
        return initialDetailsForm.isMarkAsCompleteAction() ||
                (initialDetailsForm.getOpeningDateYear() != null &&
                initialDetailsForm.getOpeningDateMonth() != null &&

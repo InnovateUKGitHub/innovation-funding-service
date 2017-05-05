@@ -23,6 +23,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
@@ -108,10 +110,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void isCompetitionExecutive() {
+    public void existsAndHasRole() {
         Long userId = 1L;
         RoleResource roleResource = newRoleResource()
-                .withType(UserRoleType.COMP_ADMIN)
+                .withType(COMP_ADMIN)
                 .build();
         UserResource userResource = newUserResource()
                 .withId(userId)
@@ -120,14 +122,14 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
 
-        assertTrue(service.isCompetitionExecutive(userId));
+        assertTrue(service.existsAndHasRole(userId, COMP_ADMIN));
     }
 
     @Test
-    public void isCompetitionExecutive_wrongRole() {
+    public void existsAndHasRole_wrongRole() {
         Long userId = 1L;
         RoleResource roleResource = newRoleResource()
-                .withType(UserRoleType.FINANCE_CONTACT)
+                .withType(FINANCE_CONTACT)
                 .build();
         UserResource userResource = newUserResource()
                 .withId(userId)
@@ -136,58 +138,16 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
 
-        assertFalse(service.isCompetitionExecutive(userId));
+        assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
     }
 
     @Test
-    public void isCompetitionExecutive_userNotFound() {
+    public void existsAndHasRole_userNotFound() {
         Long userId = 1L;
 
         Error error = CommonErrors.notFoundError(UserResource.class, userId);
         when(userRestService.retrieveUserById(userId)).thenReturn(restFailure(error));
 
-        assertFalse(service.isCompetitionExecutive(userId));
-    }
-
-    @Test
-    public void isCompetitionTechnologist() {
-        Long userId = 1L;
-        RoleResource roleResource = newRoleResource()
-                .withType(UserRoleType.COMP_TECHNOLOGIST)
-                .build();
-        UserResource userResource = newUserResource()
-                .withId(userId)
-                .withRolesGlobal(singletonList(roleResource))
-                .build();
-
-        when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
-
-        assertTrue(service.isCompetitionTechnologist(userId));
-    }
-
-    @Test
-    public void isCompetitionTechnologist_wrongRole() {
-        Long userId = 1L;
-        RoleResource roleResource = newRoleResource()
-                .withType(UserRoleType.FINANCE_CONTACT)
-                .build();
-        UserResource userResource = newUserResource()
-                .withId(userId)
-                .withRolesGlobal(singletonList(roleResource))
-                .build();
-
-        when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
-
-        assertFalse(service.isCompetitionTechnologist(userId));
-    }
-
-    @Test
-    public void isCompetitionTechnologist_userNotFound() {
-        Long userId = 1L;
-
-        Error error = CommonErrors.notFoundError(UserResource.class, userId);
-        when(userRestService.retrieveUserById(userId)).thenReturn(restFailure(error));
-
-        assertFalse(service.isCompetitionTechnologist(userId));
+        assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
     }
 }

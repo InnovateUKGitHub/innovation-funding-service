@@ -51,16 +51,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isCompetitionExecutive(Long userId) {
-        return isUserRoleType(userId, UserRoleType.COMP_ADMIN);
-    }
-
-    @Override
-    public boolean isCompetitionTechnologist(Long userId) {
-        return isUserRoleType(userId, UserRoleType.COMP_TECHNOLOGIST);
-    }
-
-    @Override
     public ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
         for(final ProcessRoleResource processRole : userApplicationRoles){
@@ -175,7 +165,8 @@ public class UserServiceImpl implements UserService {
         return userRestService.findUserByEmail(email).getOptionalSuccessObject();
     }
 
-    private boolean isUserRoleType(Long userId, UserRoleType role) {
+    @Override
+    public boolean existsAndHasRole(long userId, UserRoleType role) {
         RestResult<UserResource> result = userRestService.retrieveUserById(userId);
 
         if (result.isFailure()) {
