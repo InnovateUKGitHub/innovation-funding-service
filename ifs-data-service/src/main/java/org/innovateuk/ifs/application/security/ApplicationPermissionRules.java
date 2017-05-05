@@ -141,6 +141,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isLeadApplicant(applicationResource.getId(), user);
     }
 
+    @PermissionRule(value = "UPDATE_APPLICATION_STATE", description = "A lead applicant can update their application's state")
+    public boolean leadApplicantCanUpdateApplicationState(ApplicationResource applicationResource, UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
     @PermissionRule(
             value = "UPLOAD_ASSESSOR_FEEDBACK",
             description = "An Internal user can upload Assessor Feedback documentation for an Application whilst " +

@@ -72,6 +72,15 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         );
     }
 
+    @Test
+    public void testUpdateApplicationState() {
+        final long applicationId = 1L;
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.updateApplicationState(applicationId, ApplicationState.CREATED),
+                () -> verify(applicationRules).leadApplicantCanUpdateApplicationState(isA(ApplicationResource.class), isA(UserResource.class))
+        );
+    }
 
     @Test
     public void testGetApplicationResource() {
@@ -85,7 +94,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                 }
         );
     }
-
 
     public void testCreateApplicationByAppNameForUserIdAndCompetitionId() {
         Long competitionId = 123L;
