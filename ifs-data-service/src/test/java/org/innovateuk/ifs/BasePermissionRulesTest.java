@@ -1,5 +1,7 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.commons.security.evaluator.PermissionMethodHandler;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -12,11 +14,15 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -28,10 +34,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.when;
 
 /**
@@ -74,6 +76,10 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected UserResource systemRegistrationUser() {
         return getUserWithRole(SYSTEM_REGISTRATION_USER);
+    }
+
+    protected UserResource anonymousUser() {
+        return (UserResource) ReflectionTestUtils.getField(new PermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
     }
 
     @Before

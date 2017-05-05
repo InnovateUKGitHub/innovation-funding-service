@@ -299,5 +299,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
         return hasPermission(authentication, targetId, clazz, permission);
     }
+
+    List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
+        return permissionMethodSupplier.getPermissions(authentication, targetDomainObject);
+    }
 }
 

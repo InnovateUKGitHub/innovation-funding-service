@@ -3,11 +3,9 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
-import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -18,7 +16,6 @@ public class FinanceRowMetaFieldPermissionRulesTest extends BasePermissionRulesT
 
     private FinanceRowMetaFieldResource financeRowMetaFieldResource;
     private UserResource user1;
-    private UserResource anonymousUser;
 
     @Override
     protected FinanceRowMetaFieldPermissionsRules supplyPermissionRulesUnderTest() {
@@ -28,7 +25,6 @@ public class FinanceRowMetaFieldPermissionRulesTest extends BasePermissionRulesT
     @Before
     public void setup() throws Exception {
         user1 = newUserResource().build();
-        anonymousUser = (UserResource)ReflectionTestUtils.getField(new CustomPermissionEvaluator(), "ANONYMOUS_USER");
         financeRowMetaFieldResource = FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource().with(id(1L)).build();
     }
 
@@ -39,6 +35,6 @@ public class FinanceRowMetaFieldPermissionRulesTest extends BasePermissionRulesT
 
     @Test
     public void nonLoggedInUserCannotSeeCostFields() {
-        assertFalse(rules.loggedInUsersCanReadCostFieldReferenceData(financeRowMetaFieldResource, anonymousUser));
+        assertFalse(rules.loggedInUsersCanReadCostFieldReferenceData(financeRowMetaFieldResource, anonymousUser()));
     }
 }

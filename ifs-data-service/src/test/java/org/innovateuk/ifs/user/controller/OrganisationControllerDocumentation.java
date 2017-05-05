@@ -6,7 +6,7 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -18,9 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,7 +31,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
     @Test
     public void findByApplicationId() throws Exception {
         long applicationId = 1L;
-        Set<OrganisationResource> organisationResourceSet = organisationResourceBuilder.buildSet(1);
+        List<OrganisationResource> organisationResourceSet = organisationResourceBuilder.build(1);
         when(organisationServiceMock.findByApplicationId(applicationId)).thenReturn(serviceSuccess(organisationResourceSet));
 
         mockMvc.perform(get("/organisation/findByApplicationId/{applicationId}", applicationId))

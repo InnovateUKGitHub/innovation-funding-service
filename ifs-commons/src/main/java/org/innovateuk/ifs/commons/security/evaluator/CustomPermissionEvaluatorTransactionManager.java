@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.commons.security.evaluator;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
+
 import java.util.function.Supplier;
 
 /**
@@ -8,7 +10,9 @@ import java.util.function.Supplier;
  */
 public interface CustomPermissionEvaluatorTransactionManager {
 
+    @NotSecured(value = "This method is called during the permission checking process", mustBeSecuredByOtherServices = false)
     void doWithinTransaction(Runnable runnable);
 
+    @NotSecured(value = "This method is called during the permission checking process", mustBeSecuredByOtherServices = false)
     <T> T doWithinTransaction(Supplier<T> supplier);
 }

@@ -3,6 +3,9 @@ package org.innovateuk.ifs.commons.security;
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionMethodHandler;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
@@ -23,6 +26,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -198,21 +202,20 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
-        CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap =
-                (CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
+        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator);
 
         Set<Class<?>> securedEntities = rulesMap.keySet();
 
         securedEntities.forEach(clazz -> {
 
 
-            Map<String, CustomPermissionEvaluator.ListOfOwnerAndMethod> rulesForSecuringEntity = rulesMap.get(clazz);
+            Map<String, ListOfOwnerAndMethod> rulesForSecuringEntity = rulesMap.get(clazz);
             Set<String> actionsSecuredForEntity = rulesForSecuringEntity.keySet();
 
 
             actionsSecuredForEntity.forEach(actionName -> {
 
-                CustomPermissionEvaluator.ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
+                ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
 
                 permissionRuleMethodsForThisAction.forEach(serviceAndMethod -> {
 
@@ -232,6 +235,15 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
             });
         });
         return permissionRuleRows;
+    }
+
+    private PermissionedObjectClassToPermissionsToPermissionsMethods getRulesMap(CustomPermissionEvaluator permissionEvaluator) {
+        PermissionMethodHandler permissionMethodHandler = getPermissionMethodHandler(permissionEvaluator);
+        return (PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(permissionMethodHandler, "rulesMap");
+    }
+
+    private PermissionMethodHandler getPermissionMethodHandler(CustomPermissionEvaluator permissionEvaluator) {
+        return (PermissionMethodHandler) ReflectionTestUtils.getField(permissionEvaluator, "permissionMethodSupplier");
     }
 
     private String getMethodCallDescription(Method ruleMethod) {

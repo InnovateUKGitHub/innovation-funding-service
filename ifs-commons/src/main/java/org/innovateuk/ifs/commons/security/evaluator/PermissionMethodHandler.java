@@ -179,6 +179,16 @@ public class PermissionMethodHandler {
         return hasPermission;
     }
 
+    List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
+        return rulesMap.getOrDefault(targetDomainObject.getClass(), emptyPermissions()).keySet().stream().filter(
+                permission -> hasPermission(authentication, targetDomainObject, permission, targetDomainObject.getClass())
+        ).sorted().collect(toList());
+    }
+
+    private static PermissionsToPermissionsMethods emptyPermissions() {
+        return new PermissionsToPermissionsMethods();
+    }
+
     public static boolean isAnonymous(UserResource user) {
         return user == ANONYMOUS_USER;
     }

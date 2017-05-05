@@ -1,16 +1,11 @@
-package org.innovateuk.ifs.commons.security;
+package org.innovateuk.ifs.commons.security.evaluator;
 
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
-import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.ListOfOwnerAndMethod;
-import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsMethods;
-import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
+import org.innovateuk.ifs.commons.security.*;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
-import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsMethods;
-import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
+import org.innovateuk.ifs.security.TransactionalCustomPermissionEvaluatorTransactionManager;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +27,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getPermissionLookupStrategyMap;
+import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -160,6 +157,8 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Before
     public void setup() {
 
+        ReflectionTestUtils.setField(permissionEvaluator, "transactionManager", new TransactionalCustomPermissionEvaluatorTransactionManager());
+
         List<Object> allPermissionBeans = asList(rulesBeans1, rulesBeans2, rulesBeans3);
         Map<String, Object> allPermissionBeansToMap = allPermissionBeans.stream().collect(Collectors.toMap(bean -> bean.hashCode() + "", identity()));
 
@@ -248,7 +247,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         permissionEvaluator.generateRules();
 
-        Map<Class<?>, Map<String, List<Pair<Object, Method>>>> rulesMap = getRulesMap();
+        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(permissionEvaluator);
 
         // test that we have picked up and set the values for Strings, Integers and Longs
         {
@@ -259,7 +258,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         // test the rules against Strings
         {
-            Map<String, List<Pair<Object, Method>>> rulesByAction = rulesMap.get(String.class);
+            PermissionsToPermissionsMethods rulesByAction = rulesMap.get(String.class);
             assertEquals(2, rulesByAction.size());
             assertThat(rulesByAction.keySet(), containsInAnyOrder("Read", "Write"));
 
@@ -271,7 +270,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         // test the rules against Integers
         {
-            Map<String, List<Pair<Object, Method>>> rulesByAction = rulesMap.get(Integer.class);
+            PermissionsToPermissionsMethods rulesByAction = rulesMap.get(Integer.class);
             assertEquals(1, rulesByAction.size());
             assertThat(rulesByAction.keySet(), containsInAnyOrder("Read"));
 
@@ -347,7 +346,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         permissionEvaluator.generateLookupStrategies();
 
-        Map<Class<?>, ListOfOwnerAndMethod> permissionLookupStrategyMap = getPermissionLookupStrategyMap();
+        Map<Class<?>, ListOfOwnerAndMethod> permissionLookupStrategyMap = getPermissionLookupStrategyMap(permissionEvaluator);
 
         // test that we have picked up and set the values for Strings, Integers and Longs
         {
@@ -480,16 +479,6 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
                 permissionEvaluator.getPermissions(new UserAuthentication(new UserResource()), 1.0f));
 
     }
-
-
-    private Map<Class<?>, Map<String, List<Pair<Object, Method>>>> getRulesMap() {
-        return (Map<Class<?>, Map<String, List<Pair<Object, Method>>>>) ReflectionTestUtils.getField(permissionEvaluator, "rulesMap");
-    }
-
-    private Map<Class<?>, ListOfOwnerAndMethod> getPermissionLookupStrategyMap() {
-        return (Map<Class<?>, ListOfOwnerAndMethod>) ReflectionTestUtils.getField(permissionEvaluator, "lookupStrategyMap");
-    }
-
 }
 
 

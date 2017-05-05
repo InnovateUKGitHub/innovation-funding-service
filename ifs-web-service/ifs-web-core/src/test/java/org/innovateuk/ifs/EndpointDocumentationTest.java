@@ -2,8 +2,10 @@ package org.innovateuk.ifs;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
 import org.innovateuk.ifs.commons.security.PermissionRule;
+import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionMethodHandler;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -61,8 +63,8 @@ public abstract class EndpointDocumentationTest extends BaseIntegrationTest {
     private List<String[]> getPermissionRules(PermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
-        CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods ruleMap =
-                (CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
+        PermissionedObjectClassToPermissionsToPermissionsMethods ruleMap =
+                (PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
 
         ruleMap.values().forEach(mapEntry -> {
             mapEntry.entrySet().forEach(ruleEntry -> {
@@ -136,4 +138,10 @@ public abstract class EndpointDocumentationTest extends BaseIntegrationTest {
         String[] header = new String[] {"path", "method", "constraint", "rule", "description"};
         writeCsv(filename, header, rows);
     }
+
+    private PermissionedObjectClassToPermissionsToPermissionsMethods getRulesMap(CustomPermissionEvaluator permissionEvaluator) {
+        PermissionMethodHandler permissionMethodHandler = getPermissionMethodHandler(permissionEvaluator);
+        return (PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(permissionMethodHandler, "rulesMap");
+    }
+
 }
