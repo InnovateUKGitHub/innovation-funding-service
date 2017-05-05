@@ -9,9 +9,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
@@ -24,13 +26,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.HashMap;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -46,17 +50,16 @@ import static org.mockito.Mockito.when;
 
 public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<ProjectFinanceRowServiceImpl> {
     @Mock
+    private ProjectFinanceHandler projectFinanceHandlerMock;
+
+    @Mock
     private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
 
     private HashMap<FinanceRowType, Question> costTypeQuestion;
 
-    private Competition competition;
-
     private Organisation organisation;
 
     private Project project;
-
-    private Application application;
 
     private ProjectFinanceRow materialCost;
 
@@ -78,11 +81,11 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
 
         Long questionId = 789L;
 
-        competition = newCompetition().withCompetitionStatus(CompetitionStatus.CLOSED).build();
+        Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.CLOSED).build();
 
         organisation = newOrganisation().withId(organisationId).withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
 
-        application = newApplication().withCompetition(competition).build();
+        Application application = newApplication().withCompetition(competition).build();
 
         project = newProject().withId(projectId).withApplication(application).build();
 
@@ -181,6 +184,24 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
         assertTrue(financeRowHandler instanceof MaterialsHandler);
     }
 
+    @Test
+    public void testFinanceCheckDetails() {
+        ProjectFinanceResourceId projectFinanceResourceId = new ProjectFinanceResourceId(project.getId(), organisation.getId());
+        ProjectFinanceResource expected = newProjectFinanceResource().build();
+
+        //successful test
+        when(projectFinanceHandlerMock.getProjectOrganisationFinances(projectFinanceResourceId)).thenReturn(serviceSuccess(expected));
+        ServiceResult<ProjectFinanceResource> result = service.financeChecksDetails(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertEquals(result.getSuccessObject(), expected);
+
+        //unsuccessful test
+        when(projectFinanceHandlerMock.getProjectOrganisationFinances(projectFinanceResourceId)).thenReturn(serviceFailure(notFoundError(ProjectFinanceResource.class)));
+        result = service.financeChecksDetails(project.getId(), organisation.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getErrors().contains(notFoundError(ProjectFinanceResource.class)));
+    }
+
     @Override
     protected ProjectFinanceRowServiceImpl supplyServiceUnderTest() {
         return new ProjectFinanceRowServiceImpl();
@@ -190,7 +211,7 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
         FormInput formInput = newFormInput()
                 .withType(costType.getFormInputType())
                 .build();
-        Question question = newQuestion().withFormInputs(Arrays.asList(formInput)).build();
+        Question question = newQuestion().withFormInputs(singletonList(formInput)).build();
 
         costTypeQuestion.put(costType, question);
         when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType()))).thenReturn(serviceSuccess(question));

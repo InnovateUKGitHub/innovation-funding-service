@@ -6,13 +6,12 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.*;
-import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
+import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
-import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
@@ -47,7 +46,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     @Autowired
-    private ApplicationFinanceHandler applicationFinanceHandler;
+    private ProjectFinanceHandler projectFinanceHandler;
 
     @Autowired
     private ProjectFinanceRowRepository projectFinanceRowRepository;
@@ -57,9 +56,6 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
-
-    @Autowired
-    private ProjectFinanceRowMapper projectFinanceRowMapper;
 
     @Autowired
     OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
@@ -160,7 +156,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
-        return find(applicationFinanceHandler.getFinanceChecksTotals(projectId), notFoundError(ProjectFinance.class, projectId));
+        return find(projectFinanceHandler.getFinanceChecksTotals(projectId), notFoundError(ProjectFinance.class, projectId));
     }
 
     @Override
@@ -177,7 +173,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     private ServiceResult<ProjectFinanceResource> getProjectFinanceForOrganisation(ProjectFinanceResourceId projectFinanceResourceId) {
-        return serviceSuccess(applicationFinanceHandler.getProjectOrganisationFinances(projectFinanceResourceId));
+        return projectFinanceHandler.getProjectOrganisationFinances(projectFinanceResourceId);
     }
 
     private FinanceRow addCostItem(ProjectFinance projectFinance, Question question, FinanceRowItem newCostItem) {
@@ -195,7 +191,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
         List<FinanceRowMetaValue> costValues = cost.getFinanceRowMetadata();
         cost.setFinanceRowMetadata(new ArrayList<>());
         ProjectFinanceRow persistedCost = projectFinanceRowRepository.save(cost);
-        costValues.stream().forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
+        costValues.forEach(costVal -> costVal.setFinanceRowId(persistedCost.getId()));
         persistedCost.setFinanceRowMetadata(costValues);
         financeRowMetaValueRepository.save(costValues);
         return projectFinanceRowRepository.save(persistedCost);
