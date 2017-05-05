@@ -115,7 +115,7 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource user) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
 
         Long userId = user.getId();
         applicationOverviewModelPopulator.populateModel(applicationId, userId, form, model);
@@ -125,7 +125,7 @@ public class ApplicationController {
     @ProfileExecution
     @PostMapping(value = "/{applicationId}")
     public String applicationDetails(@PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource user,
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                      HttpServletRequest request) {
 
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
@@ -134,31 +134,14 @@ public class ApplicationController {
         return "redirect:/application/" + applicationId;
     }
 
-    @ProfileExecution
-    @GetMapping("/{applicationId}/section/{sectionId}")
-    public String applicationDetailsOpenSection(ApplicationForm form, Model model,
-                                                @PathVariable("applicationId") long applicationId,
-                                                @PathVariable("sectionId") long sectionId,
-                                                @ModelAttribute("loggedInUser") UserResource user) {
-        ApplicationResource application = applicationService.getById(applicationId);
-        SectionResource section = sectionService.getById(sectionId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
-
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-        model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(user, application));
-        return "application-details";
-    }
-
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
+        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable() && applicationService.isApplicationReadyForSubmit(application.getId());
     }
 
     @ProfileExecution
     @GetMapping("/{applicationId}/summary")
-    public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource user) {
+    public String applicationSummary(@ModelAttribute(name = "form", binding = false) ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
@@ -205,7 +188,7 @@ public class ApplicationController {
     @ProfileExecution
     @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
-                                           @ModelAttribute("loggedInUser") UserResource user,
+                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                            HttpServletRequest request) {
 
         Map<String, String[]> params = request.getParameterMap();
@@ -231,7 +214,7 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                           @ModelAttribute("loggedInUser") UserResource user) {
+                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
@@ -240,7 +223,7 @@ public class ApplicationController {
 
     @PostMapping("/{applicationId}/submit")
     public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                    @ModelAttribute("loggedInUser") UserResource user,
+                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                     HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
 
@@ -259,42 +242,11 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                   @ModelAttribute("loggedInUser") UserResource user) {
+                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
         return "application-track";
-    }
-
-    @ProfileExecution
-    @GetMapping("/create/{competitionId}")
-    public String applicationCreatePage() {
-        return "application-create";
-    }
-
-    @ProfileExecution
-    @PostMapping("/create/{competitionId}")
-    public String applicationCreate(Model model,
-                                    @PathVariable("competitionId") long competitionId,
-                                    @RequestParam(value = "application_name", required = true) String applicationName,
-                                    @ModelAttribute("loggedInUser") UserResource user) {
-        Long userId = user.getId();
-
-        String applicationNameWithoutWhiteSpace = applicationName.replaceAll("\\s", "");
-
-        if (applicationNameWithoutWhiteSpace.length() > 0) {
-            ApplicationResource application = applicationService.createApplication(competitionId, userId, applicationName);
-            return "redirect:/application/" + application.getId();
-        } else {
-            model.addAttribute("applicationNameEmpty", true);
-            return "application-create";
-        }
-    }
-
-    @ProfileExecution
-    @GetMapping(value = "/create-confirm-competition")
-    public String competitionCreateApplication() {
-        return "application-create-confirm-competition";
     }
 
     @GetMapping("/terms-and-conditions")
@@ -318,29 +270,8 @@ public class ApplicationController {
     @GetMapping(value = "/{applicationId}/print")
     public String printApplication(@PathVariable("applicationId") long applicationId,
                                    Model model,
-                                   @ModelAttribute("loggedInUser") UserResource user) {
+                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         return applicationPrintPopulator.print(applicationId, model, user);
-    }
-
-    /**
-     * Assign a question to a user
-     *
-     * @param applicationId the application for which the user is assigned
-     * @param sectionId     section id for showing details
-     * @param request       request parameters
-     * @return
-     */
-    @ProfileExecution
-    @PostMapping("/{applicationId}/section/{sectionId}")
-    public String assignQuestion(@PathVariable("applicationId") long applicationId,
-                                 @PathVariable("sectionId") long sectionId,
-                                 @ModelAttribute("loggedInUser") UserResource user,
-                                 HttpServletRequest request,
-                                 HttpServletResponse response) {
-
-        doAssignQuestion(applicationId, user, request, response);
-
-        return "redirect:/application/" + applicationId + "/section/" + sectionId;
     }
 
     private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {

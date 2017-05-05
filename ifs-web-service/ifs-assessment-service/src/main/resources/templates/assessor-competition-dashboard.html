@@ -48,7 +48,7 @@
 
                 <div class="in-progress" th:unless="${#lists.isEmpty(model.outstanding)}">
 
-                    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+                    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
 
                         <div class="progress-list">
                             <h2 class="heading-medium no-margin">Applications for assessment (<span

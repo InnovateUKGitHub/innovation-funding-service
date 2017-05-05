@@ -14,9 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 public class GoogleAnalyticsHandlerInterceptor extends HandlerInterceptorAdapter {
     private static final String EMPTY_VALUE = "empty";
 
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
     @Value("${ifs.web.googleanalytics.trackingid:" + EMPTY_VALUE + "}")
     private String googleAnalyticsKeys;
 

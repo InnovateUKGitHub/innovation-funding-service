@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.security;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -20,8 +21,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 @PermissionRules
 @Component
@@ -184,6 +184,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
         ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), application.getId());
         return processRole != null;
+    }
+
+    @PermissionRule(value = "CREATE",
+            description = "Any logged in user with global roles or user with system registrar role can create an application but only for open competitions",
+            particularBusinessState = "Competition is in Open state")
+    public boolean userCanCreateNewApplication(CompetitionResource competition, UserResource user) {
+        return competition.isOpen() && (user.hasRole(APPLICANT) || user.hasRole(SYSTEM_REGISTRATION_USER));
     }
 }
 

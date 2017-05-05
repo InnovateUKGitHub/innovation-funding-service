@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.eq;
@@ -56,7 +57,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         setLoggedInUser(null);
         String email = "test@test.nl";
-        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(restSuccess());
+        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(completedFuture(restSuccess()));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD)
@@ -72,7 +73,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         setLoggedInUser(null);
         String email = "testtest.nl";
-        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(restSuccess());
+        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(completedFuture(restSuccess()));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD)

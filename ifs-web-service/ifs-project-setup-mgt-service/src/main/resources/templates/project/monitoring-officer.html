@@ -89,7 +89,7 @@
 									  data-required-errormessage=#{validation.standard.phonenumber.required}" />
 						  </div>
 
-						  <a th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">
+						  <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">
 							  Change Monitoring Officer
 						  </a>
 
