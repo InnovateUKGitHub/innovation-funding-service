@@ -96,7 +96,7 @@ Special Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     [Setup]    the guest user opens the browser
-    Given the user follows the flow to create an account     radio-1
+    Given the user follows the flow to register their organisation    radio-1
     And the user enters the details and clicks the create account   Alex    Snape   ${test_mailbox_one}+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 

@@ -220,18 +220,6 @@ invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the guest user opens the browser
     the user follows the flow to register their organisation    radio-1
-#    the user navigates to the page    ${COMPETITION_DETAILS_URL}
-#    the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-#    the user clicks the button/link    jQuery=.button:contains("Create account")
-#    the user clicks the button/link    jQuery=.button:contains("Create")
-#    the user enters text to a text field    id=organisationSearchName    Innovate
-#    the user clicks the button/link    id=org-search
-#    the user clicks the button/link    LINK=INNOVATE LTD
-#    the user selects the checkbox    address-same
-#    the user clicks the button/link    jQuery=.button:contains("Continue")
-#    And the user selects the radio button  organisationTypeId  radio-1
-#    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-#    the user clicks the button/link    jQuery=.button:contains("Save and continue")
     the user enters the details and clicks the create account    Stuart   Anderson   ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    Once verified you can sign into your account
@@ -252,19 +240,7 @@ invite a registered user
 
 we create a new user
     [Arguments]    ${EMAIL_INVITED}
-     the user follows the flow to register their organisation     radio-1
-#    The user navigates to the page    ${COMPETITION_DETAILS_URL}
-#    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-#    The user clicks the button/link    jQuery=.button:contains("Create account")
-#    The user clicks the button/link    jQuery=.button:contains("Create")
-#    The user enters text to a text field    id=organisationSearchName    Innovate
-#    The user clicks the button/link    id=org-search
-#    The user clicks the button/link    LINK=INNOVATE LTD
-#    The user selects the checkbox    address-same
-#    The user clicks the button/link    jQuery=.button:contains("Continue")
-#    And the user selects the radio button  organisationTypeId  radio-1
-#    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-#    The user clicks the button/link    jQuery=.button:contains("Save and continue")
+    the user follows the flow to register their organisation     radio-1
     The user enters the details and clicks the create account     Stuart   Anderson   ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    Once verified you can sign into your account
