@@ -17,6 +17,7 @@ import org.innovateuk.ifs.user.resource.Title;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,7 +75,8 @@ public class CrmServiceImpl extends BaseTransactionalService implements CrmServi
 
     private SilAddress silRegisteredAddress(Organisation organisation) {
         return organisation.getAddresses().stream()
-                .filter(organisationAddress -> organisationAddress.getAddressType().getId().equals(OrganisationAddressType.REGISTERED.getOrdinal()))
+                .filter(organisationAddress -> Arrays.asList(OrganisationAddressType.OPERATING.getOrdinal(), OrganisationAddressType.REGISTERED.getOrdinal())
+                        .contains(organisationAddress.getAddressType().getId()))
                 .findAny()
                 .map(organisationAddress -> {
                     Address address = organisationAddress.getAddress();
