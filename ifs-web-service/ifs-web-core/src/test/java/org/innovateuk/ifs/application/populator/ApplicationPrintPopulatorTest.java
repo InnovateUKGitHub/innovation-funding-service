@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
@@ -67,6 +68,9 @@ public class ApplicationPrintPopulatorTest {
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
 
+    @Mock
+    private SectionService sectionService;
+
     @Test
     public void testPrint() {
         Long applicationId = 1L;
@@ -86,6 +90,7 @@ public class ApplicationPrintPopulatorTest {
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
         when(applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles)).thenReturn(userOrganisation);
         when(formInputResponseService.mapFormInputResponsesToFormInput(responses)).thenReturn(mappedResponses);
+        when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(emptyMap());
 
         target.print(applicationId, model, user);
 

@@ -201,14 +201,13 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         sectionsMarkedAsComplete.add(completedSectionId);
         List<ResearchCategoryResource> categoryResources = ResearchCategoryResourceBuilder.newResearchCategoryResource().build(3);
 
-        when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(completedSectionsByOrganisation);
         when(questionService.getMarkedAsComplete(application.getId(), organisationId)).thenReturn(markedAsComplete);
         when(sectionService.allSectionsMarkedAsComplete(application.getId())).thenReturn(allQuestionsCompleted);
         when(sectionService.getFinanceSection(application.getCompetition())).thenReturn(financeSection);
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
         when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(categoryResources));
 
-        target.addCompletedDetails(model, application, Optional.of(userOrganisation), emptyMap());
+        target.addCompletedDetails(model, application, Optional.of(userOrganisation), completedSectionsByOrganisation);
 
         verify(model).addAttribute("markedAsComplete", markedAsComplete);
         verify(model).addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
