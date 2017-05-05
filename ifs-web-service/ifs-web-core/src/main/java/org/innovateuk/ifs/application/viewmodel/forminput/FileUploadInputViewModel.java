@@ -1,19 +1,14 @@
 package org.innovateuk.ifs.application.viewmodel.forminput;
 
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
 public class FileUploadInputViewModel extends AbstractFormInputViewModel {
 
-    private String filename; // r
-    private String downloadUrl; //
-    private String viewmode; /*
-    ${readonly} or
-                ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or
-                ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
-                (questionAssignee?.assignee==null and !userIsLeadApplicant and !subFinanceSection)} ? 'readonly' : 'edit',
-                */
-    private boolean mayRemove; // ${viewmode == 'edit'}
+    private String filename;
+    private String viewmode;
+    private ApplicationResource application;
 
     @Override
     protected FormInputType formInputType() {
@@ -28,14 +23,6 @@ public class FileUploadInputViewModel extends AbstractFormInputViewModel {
         this.filename = filename;
     }
 
-    public String getDownloadUrl() {
-        return downloadUrl;
-    }
-
-    public void setDownloadUrl(String downloadUrl) {
-        this.downloadUrl = downloadUrl;
-    }
-
     public String getViewmode() {
         return viewmode;
     }
@@ -44,11 +31,16 @@ public class FileUploadInputViewModel extends AbstractFormInputViewModel {
         this.viewmode = viewmode;
     }
 
-    public boolean isMayRemove() {
-        return mayRemove;
+    public ApplicationResource getApplication() {
+        return application;
     }
 
-    public void setMayRemove(boolean mayRemove) {
-        this.mayRemove = mayRemove;
+    public void setApplication(ApplicationResource application) {
+        this.application = application;
+    }
+
+    /* View logic methods. */
+    public boolean isMayRemove() {
+        return viewmode.equals("edit");
     }
 }

@@ -84,10 +84,10 @@
     <div th:fragment="fileupload(model)" class="upload-section"
          th:with="
          formInput=${model.formInput},
-         question=${model.question}
+         question=${model.question},
          filename=${model.filename},
-         downloadUrl=${model.downloadUrl},
-         viewmode=${model.viewmode}
+         downloadUrl=${isCompManagementDownload} ? @{${model.application.id + '/forminput/' + formInput.id + '/download'}} : @{${'/application/' + model.application.id + '/form/question/' + question.id + '/forminput/' + formInput.id + '/download'}},
+         viewmode=${model.viewmode},
          mayRemove=${model.mayRemove},
          inputField='formInput['+${formInput.id}+']',
          validationField=${inputField},
@@ -158,8 +158,8 @@
 
     <!-- ===========================Form: application_details =========================== -->
 
-    <th:block th:fragment="application_details(model)" th:with="formInput=${model.formInput}, question=${model.question}, application=${model.application}, competition=${model.competition}">
-        <th:block th:unless="${readonly}">
+    <th:block th:fragment="application_details(model)" th:with="formInput=${model.formInput}, question=${model.question}, competition=${model.competition}">
+        <th:block th:unless="${model.readonly}">
         <!--/* start of edit template */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
                 <label for="application_details-title">
@@ -208,7 +208,7 @@
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
                 </label>
-                <div th:if="${model.questionApplicationViewModel.researchCategoryHasBeenSelected()}">
+                <div th:if="${model.researchCategoryHasBeenSelected}">
                     Chosen research category: <th:block th:text="${model.selectedResearchCategoryName}"/>
 
                     <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
@@ -228,7 +228,7 @@
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.innovationArea')" />
                 </label>
-                <div th:if="${model.innovationAreaHasBeenSelected()}">
+                <div th:if="${model.innovationAreaHasBeenSelected}">
                     Chosen innovation area:
                     <th:block th:unless="${model.noInnovationAreaApplicable}" th:text="${model.selectedInnovationAreaName}"/>
                     <th:block th:if="${model.noInnovationAreaApplicable}" th:text="#{ifs.application.no_innovation_area}"/>
@@ -238,7 +238,7 @@
                 </button>
             </div>
             <!--/* Input is used here to easily check if a Innovation Area has been selected for mark as complete validation */-->
-            <input type="hidden" th:if="${model.innovationAreaHasBeenSelected()}" th:field="*{__application.innovationArea.name__}" value="Innovation area name has been selected"/>
+            <input type="hidden" th:if="${model.innovationAreaHasBeenSelected}" th:field="*{__application.innovationArea.name__}" value="Innovation area name has been selected"/>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                 <fieldset>
@@ -248,7 +248,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                     </legend>
                     <label class="block-label selection-button-radio "
-                           th:classappend="${application.resubmission != null and application.resubmission} ? 'selected'"
+                           th:classappend="${model.application.resubmission != null and model.application.resubmission} ? 'selected'"
                            for="application.resubmission-yes"
                            data-target="resubmission-details">
                         <input type="radio"
@@ -256,19 +256,19 @@
                                th:field="*{__application.resubmission__}"
                                value="true"
                                required="required"
-                               th:checked="${application.resubmission != null and application.resubmission}"
+                               th:checked="${model.application.resubmission != null and model.application.resubmission}"
                                th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
                                 Yes
                     </label>
                     <label class="block-label selection-button-radio"
-                           th:classappend="${application.resubmission != null and !application.resubmission} ? 'selected'"
+                           th:classappend="${model.application.resubmission != null and !model.application.resubmission} ? 'selected'"
                            for="application.resubmission-no">
                             <input type="radio"
                                    id="application.resubmission-no"
                                    th:field="*{__application.resubmission__}"
                                    value="false"
                                    required="required"
-                                   th:checked="${application.resubmission != null and !application.resubmission}"
+                                   th:checked="${model.application.resubmission != null and !model.application.resubmission}"
                                    th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
                                 No
                     </label>
@@ -305,46 +305,38 @@
             </div>
         </th:block>
         <!--/* end of edit template */-->
-        <th:block th:if="${readonly}">
-            <th:block th:if="${complete}">
+        <th:block th:if="${model.readonly}">
+            <th:block th:if="${model.complete}">
                 <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
             </th:block>
 
             <dl class="readonly-data">
                 <dt>Application title</dt>
-                <dd th:text="${application.name}"></dd>
+                <dd th:text="${model.application.name}"></dd>
             </dl>
             <h2 class="heading-medium">Estimated timescales</h2>
             <dl class="readonly-data">
                 <dt>When do you wish to start your project?</dt>
-                <dd th:if="${application.startDate}" th:text="${#temporals.format(application.startDate, 'd MMMM yyyy')}"></dd>
+                <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
                 <dt>Duration in months</dt>
-                <dd><th:block th:text="${application.durationInMonths}"/> months</dd>
+                <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
                 <dt>Research category</dt>
-                <dd th:text="${application.researchCategory.name}"></dd>
+                <dd th:text="${model.application.researchCategory.name}"></dd>
                 <dt>Innovation area</dt>
-                <dd th:text="${application.innovationArea.name} ?: 'Not listed'"></dd>
-                <th:block th:unless="${application.resubmission == null}">
+                <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
+                <th:block th:unless="${model.application.resubmission == null}">
                     <dt>Is this application a resubmission?</dt>
-                    <dd th:text="${application.resubmission ? 'Yes' : 'No'}"></dd>
-                    <th:block th:if="${application.resubmission == true}">
+                    <dd th:text="${model.application.resubmission ? 'Yes' : 'No'}"></dd>
+                    <th:block th:if="${model.application.resubmission == true}">
                         <dt>Previous application number</dt>
-                        <dd th:text="${application.previousApplicationNumber}"></dd>
+                        <dd th:text="${model.application.previousApplicationNumber}"></dd>
                         <dt>Previous application title</dt>
-                        <dd th:text="${application.previousApplicationTitle}"></dd>
+                        <dd th:text="${model.application.previousApplicationTitle}"></dd>
                     </th:block>
                 </th:block>
             </dl>
         </th:block>
-        <th:block th:unless="${model.footerUnless}">
-            <div class="form-footer" th:unless="${appIsClosed}">
-                <div class="form-footer__actions">
-                    <th:block th:if="${readonly}"
-                              th:insert="question-type/form-elements :: form-edit-question-button"/>
-                    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons"/>
-                </div>
-            </div>
-        </th:block>
+        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})"/>
     </th:block>
 
                     <!-- ===========================Form: empty / no question =========================== -->

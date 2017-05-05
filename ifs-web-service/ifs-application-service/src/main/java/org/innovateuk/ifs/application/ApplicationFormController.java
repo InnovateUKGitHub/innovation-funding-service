@@ -16,10 +16,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
-import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
-import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
-import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.application.viewmodel.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -72,11 +69,13 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
@@ -195,6 +194,14 @@ public class ApplicationFormController {
     @Autowired
     private ApplicantRestService applicantRestService;
 
+    private Map<SectionType, AbstractSectionPopulator> sectionPopulators;
+
+
+    @Autowired
+    private void setPopulators(List<AbstractSectionPopulator> populators) {
+        sectionPopulators = populators.stream().collect(toMap(AbstractSectionPopulator::getSectionType, Function.identity()));
+    }
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
@@ -251,8 +258,10 @@ public class ApplicationFormController {
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  @ModelAttribute("loggedInUser") UserResource user) {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        populateSection(model, form, bindingResult, applicantSection);
-
+        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form);
+//        populateSection(model, form, bindingResult, applicantSection);
+        model.addAttribute("model", sectionViewModel);
+        model.addAttribute("form", form);
         return APPLICATION_FORM;
     }
 

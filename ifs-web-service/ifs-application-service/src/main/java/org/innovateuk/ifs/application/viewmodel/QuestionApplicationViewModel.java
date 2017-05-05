@@ -75,19 +75,12 @@ public class QuestionApplicationViewModel {
         this.selectedResearchCategoryName = selectedResearchCategoryName;
     }
 
-    public boolean isNoInnovationAreaApplicable() {
-        return noInnovationAreaApplicable;
-    }
-
-    public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
-        this.noInnovationAreaApplicable = noInnovationAreaApplicable;
-    }
 
     public boolean researchCategoryHasBeenSelected() {
         return this.selectedResearchCategoryName != null;
     }
 
     public boolean innovationAreaHasBeenSelected() {
-        return this.noInnovationAreaApplicable == true || selectedInnovationAreaName != null;
+        return currentApplication.getNoInnovationAreaApplicable()  || selectedInnovationAreaName != null;
     }
 }

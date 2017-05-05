@@ -31,7 +31,9 @@ public abstract class AbstractFormInputPopulator<R extends AbstractApplicantReso
 
     @Override
     public void addToForm(ApplicationForm form, M viewModel) {
-        form.addFormInput(viewModel.getFormInput().getId().toString(), viewModel.getResponse().getValue());
+        if (viewModel.getHasResponse()) {
+            form.addFormInput(viewModel.getFormInput().getId().toString(), viewModel.getResponse().getValue());
+        }
     }
 
 

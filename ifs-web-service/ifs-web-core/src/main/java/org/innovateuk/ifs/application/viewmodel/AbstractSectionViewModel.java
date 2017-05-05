@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 
 import java.util.List;
@@ -14,8 +15,11 @@ public abstract class AbstractSectionViewModel extends AbstractApplicantViewMode
         super(applicantResource, formInputViewModels, navigationViewModel);
     }
 
+    @Override
     public String getTitle() {
         return applicantResource.getSection().getName();
     }
+
+    public SectionResource getSection() { return applicantResource.getSection(); }
 
 }

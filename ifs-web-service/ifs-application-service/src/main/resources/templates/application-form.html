@@ -34,17 +34,7 @@
                     <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
                 </th:block>
 
-
-                <!--
-    th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}), question=(${model.currentQuestion}),
-                     questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
-                     currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
-                     pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}, summary=false
-                -->
-
-
-                <!--/* Application Form for a single Question. */-->
+                <!--/* Application Form for a Question. */-->
                 <div class="question" th:if="${model.isQuestion()}"
                      th:each="formInputViewModel : ${model.formInputViewModels}"
                      th:with="formInput=${formInputViewModel.formInput}"
@@ -57,14 +47,16 @@
 
                 <!--/* Application Form for a Section. */-->
                 <th:block th:if="${model.isSection()}">
-                    <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
+                    <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}" />
+
+                    <!--
                     <th:block th:unless="${model.hasFinanceView}">
                         <div class="warning-alert">
                             Registration is now closed, you are no longer able to submit your application.
                         </div>
                     </th:block>
-
-                    <th:block th:switch="${model.currentSection.type.name()}">
+                    -->
+                    <th:block th:switch="${model.section.type.name()}">
                         <th:block th:case="'FINANCE'">
                             <th:block th:include="finance/your-finances-sub-sections :: your_finances" />
                         </th:block>

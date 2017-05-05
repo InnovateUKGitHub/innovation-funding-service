@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -21,21 +19,7 @@ public abstract class BaseModelPopulator {
         return form;
     }
 
-    protected void addApplicationFormDetailInputs(ApplicationResource application, Form form) {
-        Map<String, String> formInputs = form.getFormInput();
-        formInputs.put("application_details-title", application.getName());
-        formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() == null){
-            formInputs.put("application_details-startdate_day", "");
-            formInputs.put("application_details-startdate_month", "");
-            formInputs.put("application_details-startdate_year", "");
-        }else{
-            formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
-            formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
-            formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
-        }
-        form.setFormInput(formInputs);
-    }
+
 
     protected Boolean isApplicationInViewMode(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         if(!application.isOpen() || !userOrganisation.isPresent()){
