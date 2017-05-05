@@ -14,7 +14,7 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
-Suite Setup       Log in and create a new application fro the Aerospace competition
+Suite Setup       Log in and create a new application for the Aerospace competition
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -181,7 +181,7 @@ the finance summary page should show a warning
     The user clicks the button/link    link=Your finances
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
 
-Log in and create a new application fro the Aerospace competition
+Log in and create a new application for the Aerospace competition
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/details/
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
