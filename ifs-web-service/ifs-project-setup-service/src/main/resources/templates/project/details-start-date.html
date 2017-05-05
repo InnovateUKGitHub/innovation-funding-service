@@ -21,7 +21,7 @@
                 <li>You have received, signed and returned the grant offer letter on behalf of the project.</li>
             </ol>
 
-            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
                 <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate') ? 'error' : ''}">
                     <fieldset>
                         <legend>
