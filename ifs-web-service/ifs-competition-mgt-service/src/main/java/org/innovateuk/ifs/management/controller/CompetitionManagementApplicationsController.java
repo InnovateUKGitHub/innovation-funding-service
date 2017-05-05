@@ -77,7 +77,7 @@ public class CompetitionManagementApplicationsController {
 
     @GetMapping("/ineligible")
     public String ineligibleApplications(Model model,
-                                         @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME)IneligibleApplicationsForm filterForm,
+                                         @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) IneligibleApplicationsForm filterForm,
                                          @PathVariable("competitionId") long competitionId,
                                          @RequestParam MultiValueMap<String, String> queryParams,
                                          @RequestParam(value = "page", defaultValue = "0") int page,

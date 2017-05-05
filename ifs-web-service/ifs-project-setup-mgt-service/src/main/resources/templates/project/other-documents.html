@@ -12,7 +12,7 @@
          th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"
          th:remove="tag"/>
 
-    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='heading-xlarge'" />
         <hr/>
