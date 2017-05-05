@@ -20,25 +20,25 @@ Non registered users CH route: lead org Business
     [Documentation]    INFUND-669  INFUND-1904  INFUND-1920  INFUND-1785  INFUND-9280
     [Tags]    HappyPath    SmokeTest
     [Setup]    The guest user opens the browser
-    the new user account creation   radio-1   # business
+    Given the user follows the flow to register their organisation    radio-1  # business
     And the user enters the details and clicks the create account   Phil   Smith   ${test_mailbox_one}+business@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the email verification   ${test_mailbox_one}+rto@gmail.com
+    and the user does the email verification   ${test_mailbox_one}+business@gmail.com
     [Teardown]    the user closes the browser
 
 Non registered users CH route: lead org RTO
     [Documentation]    INFUND-669  INFUND-1904  INFUND-1785
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    the new user account creation   radio-3   # RTO
+    Given the user follows the flow to register their organisation   radio-3   # RTO
     And the user enters the details and clicks the create account   Lee    Tess    ${test_mailbox_one}+rto@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the email verification   ${test_mailbox_one}+business@gmail.com
+    and the user does the email verification   ${test_mailbox_one}+rto@gmail.com
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
     [Tags]
-    the new user account creation    radio-1
+    Given the user follows the flow to register their organisation   radio-1
     Then the user should not see the text in the page    ${test_mailbox_one}+rto@gmail.com
     [Teardown]    the user closes the browser
 
@@ -50,14 +50,7 @@ Non registered users non CH route
     ...    INFUND-1920
     [Tags]    HappyPath
     [Setup]    the guest user opens the browser
-    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user clicks the Not on company house link
-    And the user selects the radio button    organisationTypeId    radio-1
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    Given the user follows the flow to register their organisation     radio-1
     And the user enters the details and clicks the create account   Stuart    Downing   ${test_mailbox_one}+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
@@ -103,14 +96,7 @@ Special Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     [Setup]    the guest user opens the browser
-    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user clicks the Not on company house link
-    And the user selects the radio button    organisationTypeId    radio-1
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    Given the user follows the flow to create an account     radio-1
     And the user enters the details and clicks the create account   Alex    Snape   ${test_mailbox_one}+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
@@ -124,22 +110,7 @@ Special Project Finance role (email step)
     Then the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
 
 *** Keywords ***
-the new user account creation
-    [Arguments]     ${orgType}
-    Given the user navigates to the page    ${SERVER}/competition/${OPEN_COMPETITION}/overview/
-    When the user clicks the button/link    jQuery=a:contains("Start new application")
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user enters text to a text field    id=organisationSearchName    Innovate
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    LINK=INNOVATE LTD
-    And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button    organisationTypeId    ${orgType}
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    # TODO add assertion for Confirm Organisation page and link for back button
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-
-the email verification
+the user does the email verification
     [Arguments]    ${email_id}
     Given the user reads his email and clicks the link    ${email_id}    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
