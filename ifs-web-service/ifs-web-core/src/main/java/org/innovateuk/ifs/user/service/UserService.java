@@ -17,7 +17,7 @@ public interface UserService {
     UserResource findById(Long userId);
     List<UserResource> getAssignable(Long applicationId);
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
-    boolean existsAndHasRole(long userId, UserRoleType role);
+    boolean existsAndHasRole(Long userId, UserRoleType role);
     ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
     Void verifyEmail(String hash);

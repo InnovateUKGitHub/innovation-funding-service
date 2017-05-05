@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsAndHasRole(long userId, UserRoleType role) {
+    public boolean existsAndHasRole(Long userId, UserRoleType role) {
         RestResult<UserResource> result = userRestService.retrieveUserById(userId);
 
         if (result.isFailure()) {
