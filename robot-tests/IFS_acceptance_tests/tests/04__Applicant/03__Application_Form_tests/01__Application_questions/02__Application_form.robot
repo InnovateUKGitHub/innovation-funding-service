@@ -12,7 +12,9 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
-Suite Setup       log in and create new application if there is not one already
+...
+...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
+Suite Setup       Log in and create a new application fro the Aerospace competition
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -21,7 +23,7 @@ Resource          ../../../../resources/defaultResources.robot
 Application details: Previous submission
     [Documentation]    INFUND-4694
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Aerospace test application
     And the user clicks the button/link    link=Application details
     When the user clicks the button/link    jQuery=label:contains(Yes)
     Then the user should see the text in the page    Please provide the details of this previous application
@@ -33,7 +35,7 @@ Application details: Previous submission
 Application details: Research category
     [Documentation]    INFUND-6823
     Given The user clicks the button/link    jQuery=button:contains("Choose your research category")
-    and the user should not see the text in the page     Changing the research category will reset the funding level for all business participants.
+    and the user should not see the text in the page    Changing the research category will reset the funding level for all business participants.
     Then the user should see the element    jQuery=label:contains("Industrial research")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
@@ -41,89 +43,70 @@ Application details: Research category
     Then the user should see an error    This field cannot be left blank
     and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     and the user clicks the button/link    jQuery=button:contains(Save)
-    and the user should see the element     jQuery=div:contains("Chosen research category: Feasibility studies")
+    and the user should see the element    jQuery=div:contains("Chosen research category: Feasibility studies")
 
 Research Category : Autosave not applicable
     [Documentation]    INFUND-6823, INFUND-8251
-    the user clicks the button/link      jQuery=button:contains("Change your research category")
-    #  TODO commented due to INFUND-9212
-    # and the user should see the text in the page     Changing the research category will reset the funding level for all business participants.
-    the user should see the element      jQuery=label:contains("Industrial research")
-    and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
-    and the user clicks the button/link     jQuery=a:contains("Application details")
-    and the user should see the element     jQuery=div:contains("Chosen research category: Feasibility studies")
+    When the user clicks the button/link    jQuery=button:contains("Change your research category")
+    #    TODO commented due to INFUND-9212
+    # and the user should see the text in the page    Changing the research category will reset the funding level for all business participants.
+    And the user should see the element    jQuery=label:contains("Industrial research")
+    And the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
+    And the user clicks the button/link    jQuery=a:contains("Application details")
+    And the user should see the element    jQuery=div:contains("Chosen research category: Feasibility studies")
     And the finance summary page should show a warning
 
-Application details: Innovation Area - Materials and manufacturing
+Application details: Innovation area section is visible
     [Documentation]    INFUND-8115
-    [Tags]    Pending
-    #TODO INFUND-9151
+    ...
+    ...    INFUND-9154
+    [Tags]
     Given the user clicks the button/link    link=Application overview
     And the user clicks the button/link    link=Application details
-    and the user should not see the element      jQuery=button:contains("Change your innovation area")
-    and The user clicks the button/link   jQuery=button:contains("Choose your innovation area")
-    Then the user should see the element    jQuery=label:contains("Composite materials"):contains("New composite materials with enhanced or new properties and performance.")
+    Given the user should not see the element    jQuery=button:contains("Change your innovation area")
+    When The user clicks the button/link    jQuery=button:contains("Choose your innovation area")
+    Then the user should see the element    jQuery=label:contains("Digital manufacturing"):contains("Process analysis and control technologies including digital, sensor technology and metrology.")
     And the user should see the element    jQuery=label:contains("My innovation area is not listed")
     And the user should see the element    jQuery=a:contains("Cancel")
     and the user clicks the button/link    jQuery=button:contains(Save)
-    #Then the user should see an error       This field cannot be left blank
-    #TODO : INFUND-9097
-    and the user clicks the button/link   jQuery=label:contains("Metals / metallurgy")
-    and the user clicks the button/link     jQuery=button:contains(Save)
-    Then the user should see the element     jQuery=button:contains("Change your innovation area")
-
-Application details: Innovation Area - Infrastructe
-    [Documentation]    INFUND-8443
-    [Tags]  MySQL    Pending
-    #TODO INFUND-9151
-    [Setup]  Set the competition innovation sector to Infrastructure
-    Given the user clicks the button/link   jQuery=button:contains("Change your innovation area")
-    Then the user should see the element    jQuery=label:contains("Energy efficiency"):contains("Improve energy end-use efficiency, for example, in buildings, domestic appliances, industrial processes or vehicles.")
-    And the user should see the element    jQuery=label:contains("My innovation area is not listed")
-    And the user should see the element    jQuery=a:contains("Cancel")
+    Then the user should see an error    This field cannot be left blank
+    and the user clicks the button/link    jQuery=label:contains("Digital manufacturing")
     and the user clicks the button/link    jQuery=button:contains(Save)
-    #Then the user should see an error       This field cannot be left blank
-    #TODO : INFUND-9097
-    and the user clicks the button/link   jQuery=label:contains("Energy systems")
-    and the user clicks the button/link     jQuery=button:contains(Save)
-    Then the user should see the element     jQuery=button:contains("Change your innovation area")
-    [Teardown]  Set the competition innovation sector to Materials and manufacturing
+    Then the user should see the element    jQuery=button:contains("Change your innovation area")
 
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]    HappyPath
     [Setup]
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Aerospace test application
     When the user clicks the button/link    link=Application details
     then the application details need to be autosaved
-    and the user clicks the button/link     link=Application overview
+    and the user clicks the button/link    link=Application overview
     And the user clicks the button/link    link=Project summary
-    When the user edits the project summary question
+    When The user enters text to a text field    css=.editor    I am a robot
     And the user reloads the page
     Then the text should be visible
 
 Word count works
     [Documentation]    INFUND-198
     [Tags]    HappyPath
-    When the Applicant edits the Project summary
+    When The user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Then the word count should be correct for the Project summary
-    And the Applicant edits the Project description question (300 words)
-    Then the word count for the Project description question should be correct (100 words)
 
 Guidance of the questions
     [Documentation]    INFUND-190
     [Tags]
-    When the user clicks the button/link    css=#form-input-1039 .summary
+    When the user clicks the button/link    css=.summary
     Then the user should see the element    css=#details-content-0 p
 
 Marking a question as complete
     [Documentation]    INFUND-210,
     ...    INFUND-202
     [Tags]    HappyPath
-    When the Applicant edits Project summary and marks it as complete
+    When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the text box should turn to green
-    And the button state should change to 'Edit'
+    And the user should see the element    jQuery=button:contains("Edit")
     And the question should be marked as complete on the application overview page
 
 Mark a question as incomplete
@@ -131,15 +114,15 @@ Mark a question as incomplete
     ...    INFUND-202
     [Tags]    HappyPath
     Given the user clicks the button/link    link=Project summary
-    When the user clicks the button/link    css=#form-input-1039 div.form-footer .form-footer__actions > button[name="mark_as_incomplete"]
+    When the user clicks the button/link    jQuery=button:contains("Edit")
     Then the text box should be editable
-    And the button state should change to 'Mark as complete'
+    And the user should see the element    jQuery=button:contains("Mark as complete")
     And the question should not be marked as complete on the application overview page
 
 Review and submit button
     [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=Aerospace test application
     When the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the user should see the text in the page    Application summary
     And the user should see the text in the page    Please review your application before final submission
@@ -147,94 +130,66 @@ Review and submit button
 Collaborator: read only view of Application details
     [Documentation]    INFUND-8251 , INFUND-8260
     [Tags]
-    [Setup]  Log in as a different user     &{collaborator1_credentials}
+    [Setup]    Log in as a different user    &{collaborator1_credentials}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${Competition_E2E}
     When the user clicks the button/link    link=Application details
-    then the user should not see the element      css=input
-    and the user should see the element      jQuery=a:contains("Return to application overview")
+    then the user should not see the element    css=input
+    and the user should see the element    jQuery=a:contains("Return to application overview")
 
 *** Keywords ***
 the text should be visible
-    Wait Until Element Contains Without Screenshots    css=#form-input-1039 .editor    I am a robot
-
-The user clicks the section link and is redirected to the correct section
-    [Arguments]    ${link}    ${url}
-    The user clicks the button/link    link=${link}
-    The user should be redirected to the correct page    ${url}
-    The user clicks the button/link    link=Application overview
+    Wait Until Element Contains Without Screenshots    css=.editor    I am a robot
 
 the application details need to be autosaved
-   the user enters text to a text field      application.durationInMonths   22
-   wait for autosave
-   the user clicks the button/link      link=Application overview
-   the user clicks the button/link      link=Application details
-   the user should not see the text in the element       application.durationInMonths   22
-
-
-the Applicant edits the Project summary
-    Clear Element Text    css=#form-input-1039 .editor
-    Press Key    css=#form-input-1039 .editor    \\8
-    Focus    css=.app-submit-btn
-    Wait Until Element Contains Without Screenshots    css=#form-input-1039 .count-down    400
-    Focus    css=#form-input-1039 .editor
-    The user enters text to a text field    css=#form-input-1039 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
-    Focus    css=.app-submit-btn
+    the user enters text to a text field    application.durationInMonths    22
     wait for autosave
+    the user clicks the button/link    link=Application overview
+    the user clicks the button/link    link=Application details
+    the user should not see the text in the element    application.durationInMonths    22
 
 the word count should be correct for the Project summary
-    Wait Until Element Contains Without Screenshots    css=#form-input-1039 .count-down    369
-
-the Applicant edits the Project description question (300 words)
-    Clear Element Text    css=#form-input-1039 .editor
-    Press Key    css=#form-input-1039 .editor    \\8
-    The user enters text to a text field    css=#form-input-1039 .editor    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
-    Focus    css=.app-submit-btn
-    wait for autosave
+    Wait Until Element Contains Without Screenshots    css=.count-down    369
 
 the text box should turn to green
-    the user should see the element    css=#form-input-1039 div.success-alert
-    Element Should Be Disabled    css=#form-input-1039 textarea
-
-the button state should change to 'Edit'
-    the user should see the element    jQuery=button:contains("Edit")
-
-the word count for the Project description question should be correct (100 words)
-    Element Should Contain    css=#form-input-1039 .count-down    100
+    the user should see the element    css=div.success-alert
+    Element Should Be Disabled    css= textarea
 
 the Applicant edits Project summary and marks it as complete
-    focus    css=#form-input-1039 .editor
-    Clear Element Text    css=#form-input-1039 .editor
-    Press Key    css=#form-input-1039 .editor    \\8
-    focus    css=#form-input-1039 .editor
-    The user enters text to a text field    css=#form-input-1039 .editor    Hi, I’m a robot @#$@#$@#$
-    the user clicks the button/link    css=#form-input-1039 .form-footer .form-footer__actions button[name="mark_as_complete"]
+    focus    css=.editor
+    Clear Element Text    css=.editor
+    Press Key    css=.editor    \\8
+    focus    css=.editor
+    The user enters text to a text field    css=.editor    Hi, I’m a robot @#$@#$@#$
+    the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    The user should see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
+    The user should see the element    jQuery=li:nth-child(2) span:contains("Complete")
 
 the text box should be editable
-    Wait Until Element Is Enabled Without Screenshots    css=#form-input-1039 textarea
-
-the button state should change to 'Mark as complete'
-    the user should see the element    jQuery=button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    css= textarea
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
     Run Keyword And Ignore Error Without Screenshots    confirm action
-    the user should see the element    jQuery=#section-184 li:nth-child(2)
-    the user should not see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
+    the user should see the element    jQuery=li:nth-child(2)
+    the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
 
 the finance summary page should show a warning
     The user clicks the button/link    link=Application overview
     The user clicks the button/link    link=Your finances
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
 
-Set the competition innovation sector to Infrastructure
-    Connect to Database    @{database}
-    Execute sql string    UPDATE `${database_name}`.`category_link` SET category_id=(SELECT id FROM `${database_name}`.`category` WHERE `name` = 'Infrastructure systems') WHERE class_name = "org.innovateuk.ifs.competition.domain.Competition#innovationSector" AND class_pk = '${OPEN_COMPETITION}'
-
-Set the competition innovation sector to Materials and manufacturing
-    Connect to Database    @{database}
-    execute sql string    UPDATE `${database_name}`.`category_link` SET category_id=(SELECT id FROM `${database_name}`.`category` WHERE `name` = 'Materials and manufacturing') WHERE class_name = "org.innovateuk.ifs.competition.domain.Competition#innovationSector" AND class_pk = '${OPEN_COMPETITION}';
+Log in and create a new application fro the Aerospace competition
+    Given Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/details/
+    And the user clicks the button/link    jQuery=.button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Apply now")
+    #The following two lines are failing if we don't have any other application for the same competition
+    Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+    Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
+    And the user clicks the button/link    link=Application details
+    And the user enters text to a text field    id=application_details-title    Aerospace test application
+    And the user clicks the button/link    jQuery=button:contains("Save and return")
