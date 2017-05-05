@@ -64,6 +64,7 @@ public class CrmServiceImpl extends BaseTransactionalService implements CrmServi
         SilOrganisation silOrganisation = new SilOrganisation();
         silOrganisation.setName(organisation.getName());
         silOrganisation.setRegistrationNumber(organisation.getCompanyHouseNumber());
+        silOrganisation.setSrcSysOrgId(String.valueOf(organisation.getId()));
 
         SilAddress silRegisteredAddress = silRegisteredAddress(organisation);
         silOrganisation.setRegisteredAddress(silRegisteredAddress);

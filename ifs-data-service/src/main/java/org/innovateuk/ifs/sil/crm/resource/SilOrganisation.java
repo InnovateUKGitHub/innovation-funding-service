@@ -5,6 +5,7 @@ public class SilOrganisation {
     private String name;
     private String registrationNumber;
     private SilAddress registeredAddress;
+    private String srcSysOrgId;
 
     public String getName() {
         return name;
@@ -30,4 +31,11 @@ public class SilOrganisation {
         this.registeredAddress = registeredAddress;
     }
 
+    public String getSrcSysOrgId() {
+        return srcSysOrgId;
+    }
+
+    public void setSrcSysOrgId(String srcSysOrgId) {
+        this.srcSysOrgId = srcSysOrgId;
+    }
 }
