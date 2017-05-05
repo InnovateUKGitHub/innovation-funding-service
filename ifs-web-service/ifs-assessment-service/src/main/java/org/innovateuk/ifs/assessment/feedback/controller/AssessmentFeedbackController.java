@@ -13,7 +13,7 @@ import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelP
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
-import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentNavigationViewModel;
+import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -144,10 +144,10 @@ public class AssessmentFeedbackController {
         return form;
     }
 
-    private String doViewQuestion(Model model, Long assessmentId, QuestionResource question) {
+    private String doViewQuestion(Model model, long assessmentId, QuestionResource question) {
         AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, question);
         model.addAttribute("model", viewModel);
-        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question.getId()));
+        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question));
         return "assessment/application-question";
     }
 
@@ -160,9 +160,9 @@ public class AssessmentFeedbackController {
         return applicationFormInputs.stream().anyMatch(formInputResource -> FormInputType.APPLICATION_DETAILS == formInputResource.getType());
     }
 
-    private String getApplicationDetails(Model model, Long assessmentId, QuestionResource question) {
+    private String getApplicationDetails(Model model, long assessmentId, QuestionResource question) {
         AssessmentFeedbackApplicationDetailsViewModel viewModel = assessmentFeedbackApplicationDetailsModelPopulator.populateModel(assessmentId, question);
-        AssessmentNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question.getId());
+        AssessmentFeedbackNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question);
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", navigationViewModel);
 

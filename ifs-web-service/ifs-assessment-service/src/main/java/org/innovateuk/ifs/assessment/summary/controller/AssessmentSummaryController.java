@@ -39,7 +39,7 @@ public class AssessmentSummaryController {
     public String getSummary(Model model,
                              @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
                              BindingResult bindingResult,
-                             @PathVariable("assessmentId") Long assessmentId) {
+                             @PathVariable("assessmentId") long assessmentId) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(form, assessment);
