@@ -63,7 +63,7 @@ public class AssessorProfileDeclarationController {
 
     @GetMapping(path = "/edit")
     public String getEditDeclaration(@ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                     @ModelAttribute(value = FORM_ATTR_NAME, binding = false) AssessorProfileDeclarationForm form,
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorProfileDeclarationForm form,
                                      BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             assessorProfileDeclarationFormPopulator.populateForm(form, loggedInUser);

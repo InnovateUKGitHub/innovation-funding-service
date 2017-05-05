@@ -55,7 +55,7 @@ public class AssessorProfileDetailsController {
     @GetMapping("/edit")
     public String getDetailsEdit(Model model,
                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                 @ModelAttribute(value = FORM_ATTR_NAME, binding = false) AssessorProfileEditDetailsForm form,
+                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorProfileEditDetailsForm form,
                                  BindingResult bindingResult) {
         return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
     }

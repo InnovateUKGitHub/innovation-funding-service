@@ -148,9 +148,6 @@ public class ApplicationFormController {
     private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     @Autowired
@@ -199,7 +196,7 @@ public class ApplicationFormController {
 
     @ProfileExecution
     @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
-    public String showQuestion(@ModelAttribute(value = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+    public String showQuestion(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                @SuppressWarnings("unused") ValidationHandler validationHandler,
                                Model model,
@@ -241,7 +238,7 @@ public class ApplicationFormController {
 
     @ProfileExecution
     @GetMapping(SECTION_URL + "{sectionId}")
-    public String applicationFormWithOpenSection(@Valid @ModelAttribute(value = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
+    public String applicationFormWithOpenSection(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
@@ -393,7 +390,7 @@ public class ApplicationFormController {
     }
 
     @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
-    public String addCostRow(@ModelAttribute(value = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+    public String addCostRow(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
                              @PathVariable(APPLICATION_ID) final Long applicationId,

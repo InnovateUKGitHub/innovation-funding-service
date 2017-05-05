@@ -75,7 +75,7 @@ public class AssessorRegistrationController {
     @GetMapping("/{inviteHash}/register")
     public String yourDetails(Model model,
                               @PathVariable("inviteHash") String inviteHash,
-                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) AssessorRegistrationForm form) {
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorRegistrationForm form) {
         return doViewYourDetails(model, inviteHash);
     }
 

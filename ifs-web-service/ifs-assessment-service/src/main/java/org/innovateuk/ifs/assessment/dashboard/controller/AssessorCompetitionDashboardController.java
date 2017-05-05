@@ -38,7 +38,7 @@ public class AssessorCompetitionDashboardController {
     public String competitionDashboard(final Model model,
                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                        @PathVariable("competitionId") final Long competitionId,
-                                       @ModelAttribute(value = FORM_ATTR_NAME, binding = false) AssessorCompetitionDashboardAssessmentForm form) {
+                                       @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorCompetitionDashboardAssessmentForm form) {
 
         model.addAttribute("model", assessorCompetitionDashboardModelPopulator.populateModel(competitionId, loggedInUser.getId()));
         return "assessor-competition-dashboard";

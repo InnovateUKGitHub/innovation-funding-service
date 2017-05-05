@@ -52,7 +52,7 @@ public class AssessorProfileSkillsController {
     @GetMapping("/edit")
     public String getSkills(Model model,
                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                            @ModelAttribute(value = FORM_ATTR_NAME, binding = false) AssessorProfileSkillsForm form,
+                            @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorProfileSkillsForm form,
                             BindingResult bindingResult) {
         return doViewEditSkills(model, loggedInUser, form, bindingResult);
     }

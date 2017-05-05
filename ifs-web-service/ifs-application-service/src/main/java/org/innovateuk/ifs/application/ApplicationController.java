@@ -140,7 +140,7 @@ public class ApplicationController {
 
     @ProfileExecution
     @GetMapping("/{applicationId}/summary")
-    public String applicationSummary(@ModelAttribute(value = "form", binding = false) ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
+    public String applicationSummary(@ModelAttribute(name = "form", binding = false) ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));

@@ -58,7 +58,7 @@ public class AssessmentOverviewController {
 
     @GetMapping
     public String getOverview(Model model,
-                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) AssessmentOverviewForm form,
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessmentOverviewForm form,
                               @PathVariable("assessmentId") Long assessmentId,
                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 

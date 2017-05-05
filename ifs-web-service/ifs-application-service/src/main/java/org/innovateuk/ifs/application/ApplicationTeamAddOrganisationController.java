@@ -57,7 +57,7 @@ public class ApplicationTeamAddOrganisationController {
     public String getAddOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                     @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationTeamAddOrganisationForm form) {
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         validateRequest(applicationResource, loggedInUser.getId());
 

@@ -18,7 +18,6 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -115,7 +114,7 @@ public class FinanceChecksEligibilityController {
     @GetMapping
     public String viewEligibility(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
-                                  @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationForm form,
+                                  @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationForm form,
                                   BindingResult bindingResult,
                                   Model model,
                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
@@ -175,7 +174,7 @@ public class FinanceChecksEligibilityController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")
-    public String addCostRow(@ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationForm form,
+    public String addCostRow(@ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
                              @PathVariable("projectId") Long projectId,

@@ -52,7 +52,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     public String bankDetails(Model model,
                               @PathVariable("projectId") final Long projectId,
                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
@@ -68,7 +68,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     public String bankDetailsAsReadOnly(Model model,
                               @PathVariable("projectId") final Long projectId,
                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());

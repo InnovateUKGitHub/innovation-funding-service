@@ -49,7 +49,7 @@ public class CompetitionInviteController {
 
     @GetMapping("/invite/competition/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
-                             @ModelAttribute(value = "form", binding = false) RejectCompetitionForm form,
+                             @ModelAttribute(name = "form", binding = false) RejectCompetitionForm form,
                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                              Model model) {
         boolean userLoggedIn = loggedInUser != null;

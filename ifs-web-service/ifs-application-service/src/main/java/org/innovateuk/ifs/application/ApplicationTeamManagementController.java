@@ -70,7 +70,7 @@ public class ApplicationTeamManagementController {
                                         @PathVariable("applicationId") long applicationId,
                                         @RequestParam(name = "organisation") long organisationId,
                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                        @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
+                                        @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByOrganisationId(
                     applicationId, organisationId, loggedInUser.getId());
@@ -85,7 +85,7 @@ public class ApplicationTeamManagementController {
                                                             @PathVariable("applicationId") long applicationId,
                                                             @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
                                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                                            @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
+                                                            @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
         return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
             ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
                     applicationId, inviteOrganisationId, loggedInUser.getId());

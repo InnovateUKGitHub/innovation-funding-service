@@ -126,7 +126,7 @@ public class ProfileController {
     }
 
     @GetMapping("/edit")
-    public String editUserProfile(@ModelAttribute(value = "loggedInUser", binding = false) UserResource user,
+    public String editUserProfile(@ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                   HttpServletRequest request, Model model) {
         populateUserDetailsForm(model, user);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());

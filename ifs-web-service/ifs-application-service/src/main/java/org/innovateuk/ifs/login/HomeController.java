@@ -38,9 +38,6 @@ import static org.springframework.util.StringUtils.hasText;
 public class HomeController {
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private RoleSelectionModelPopulator roleSelectionModelPopulator;
 
     @Autowired
@@ -71,7 +68,7 @@ public class HomeController {
 
     @GetMapping("/roleSelection")
     public String selectRole(Model model,
-                             @ModelAttribute(value = "form", binding = false) RoleSelectionForm form) {
+                             @ModelAttribute(name = "form", binding = false) RoleSelectionForm form) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();

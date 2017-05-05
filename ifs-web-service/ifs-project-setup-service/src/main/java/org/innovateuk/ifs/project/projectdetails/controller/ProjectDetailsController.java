@@ -157,7 +157,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String viewFinanceContact(@PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
                                      Model model,
-                                     @ModelAttribute(value = FORM_ATTR_NAME, binding = false) FinanceContactForm financeContactForm,
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) FinanceContactForm financeContactForm,
                                      @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
     }
@@ -258,7 +258,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details/project-manager")
     public String viewProjectManager(@PathVariable("projectId") final Long projectId, Model model,
-                                     @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ProjectManagerForm projectManagerForm,
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectManagerForm projectManagerForm,
                                      @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
@@ -285,7 +285,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details/start-date")
     public String viewStartDate(@PathVariable("projectId") final Long projectId, Model model,
-                                @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
+                                @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
@@ -317,7 +317,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @GetMapping("/{projectId}/details/project-address")
     public String viewAddress(@PathVariable("projectId") final Long projectId,
                               Model model,
-                              @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ProjectDetailsAddressForm form) {
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsAddressForm form) {
 
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);

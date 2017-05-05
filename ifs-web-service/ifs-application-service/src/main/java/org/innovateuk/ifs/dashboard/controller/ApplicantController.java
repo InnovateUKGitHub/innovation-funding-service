@@ -23,13 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 public class ApplicantController {
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private ApplicantDashboardPopulator applicantDashboardPopulator;
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model, HttpServletRequest request,
+    public String dashboard(Model model,
                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
 
         model.addAttribute("model", applicantDashboardPopulator.populate(user));

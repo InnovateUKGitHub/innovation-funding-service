@@ -99,7 +99,7 @@ public class ProjectSpendProfileController {
     @GetMapping("/edit")
     public String editSpendProfile(Model model,
                                    HttpServletRequest request,
-                                   @ModelAttribute(value = FORM_ATTR_NAME, binding = false) SpendProfileForm form,
+                                   @ModelAttribute(name = FORM_ATTR_NAME, binding = false) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
                                    @PathVariable("projectId") final Long projectId,

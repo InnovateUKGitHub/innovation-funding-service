@@ -41,7 +41,7 @@ public class AssessmentAssignmentController {
 
     @GetMapping("assignment")
     public String viewAssignment(@PathVariable("assessmentId") Long assessmentId,
-                                 @ModelAttribute(value = "form", binding = false) AssessmentAssignmentForm form,
+                                 @ModelAttribute(name = "form", binding = false) AssessmentAssignmentForm form,
                                  Model model) {
         model.addAttribute("model", assessmentAssignmentModelPopulator.populateModel(assessmentId));
         return "assessment/assessment-invitation";
@@ -73,7 +73,7 @@ public class AssessmentAssignmentController {
 
     @GetMapping("assignment/reject/confirm")
     public String rejectAssignmentConfirm(Model model,
-                                          @ModelAttribute(value = "form", binding = false) AssessmentAssignmentForm form,
+                                          @ModelAttribute(name = "form", binding = false) AssessmentAssignmentForm form,
                                           @PathVariable("assessmentId") Long assessmentId) {
         return doViewRejectAssignmentConfirm(model, assessmentId);
     }

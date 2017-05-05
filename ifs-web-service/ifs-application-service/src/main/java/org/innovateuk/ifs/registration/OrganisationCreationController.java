@@ -125,7 +125,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"})
-    public String createOrganisation(@ModelAttribute(value = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
@@ -293,7 +293,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
-    public String amendOrganisationAddress(@ModelAttribute(value = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String amendOrganisationAddress(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                            Model model,
                                            @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                            HttpServletRequest request,
@@ -329,7 +329,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{selectedPostcodeIndex}")
-    public String amendOrganisationAddressPostCode(@ModelAttribute(value = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String amendOrganisationAddressPostCode(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                                    Model model,
                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                                    HttpServletRequest request,
@@ -354,7 +354,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping("/selected-organisation/{searchOrganisationId}/search-postcode")
-    public String amendOrganisationAddressPostcode(@ModelAttribute(value = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String amendOrganisationAddressPostcode(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                                    Model model,
                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                                    @RequestParam(value="searchTerm", required=false) String searchTerm,
@@ -528,7 +528,7 @@ public class OrganisationCreationController {
      * Confirm the company details (user input, not from company-house)
      */
     @GetMapping("/" + CONFIRM_ORGANISATION)
-    public String confirmCompany(@ModelAttribute(value = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String confirmCompany(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
                                  HttpServletRequest request) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -550,7 +550,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping("/save-organisation")
-    public String saveOrganisation(@ModelAttribute(value = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();

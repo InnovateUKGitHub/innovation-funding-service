@@ -38,7 +38,7 @@ public class CompetitionManagementSendInviteController {
     @GetMapping
     public String getSendInvites(Model model,
                                  @PathVariable("inviteId") long inviteId,
-                                 @ModelAttribute(value = "form", binding = false) SendInviteForm form,
+                                 @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                  BindingResult bindingResult) {
         AssessorInviteToSendResource invite = competitionInviteRestService.getCreated(inviteId).getSuccessObjectOrThrowException();
         model.addAttribute("model", sendInviteModelPopulator.populateModel(inviteId, invite));

@@ -57,7 +57,7 @@ public class CompetitionManagementApplicationController {
     @GetMapping("/{applicationId}")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
-                                             @ModelAttribute(value = "form", binding = false) ApplicationForm form,
+                                             @ModelAttribute(name = "form", binding = false) ApplicationForm form,
                                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                              @RequestParam MultiValueMap<String, String> queryParams,

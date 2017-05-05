@@ -122,7 +122,7 @@ public class BankDetailsManagementController {
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-            @ModelAttribute(value = FORM_ATTR_NAME, binding = false) ChangeBankDetailsForm form) {
+            @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ChangeBankDetailsForm form) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
