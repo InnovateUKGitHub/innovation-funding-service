@@ -181,12 +181,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testLeadApplicantCanUpdateApplicationState() {
-        assertTrue(rules.leadApplicantCanUpdateApplicationState(applicationResource1, leadOnApplication1));
-        assertFalse(rules.leadApplicantCanUpdateApplicationState(applicationResource1, user2));
-    }
-
-    @Test
     public void leadApplicantCanSeeTheApplicationFinanceDetailsTest() {
         assertTrue(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, leadOnApplication1));
         assertFalse(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, user2));
