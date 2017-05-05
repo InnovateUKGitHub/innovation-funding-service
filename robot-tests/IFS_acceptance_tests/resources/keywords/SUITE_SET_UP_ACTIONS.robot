@@ -188,7 +188,7 @@ The user redirects to the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
