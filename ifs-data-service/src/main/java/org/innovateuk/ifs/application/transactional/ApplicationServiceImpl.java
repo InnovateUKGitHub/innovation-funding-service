@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -48,7 +47,6 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -493,6 +491,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
+    @Override
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId,
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
@@ -520,7 +519,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
                         "competitionName", application.getCompetition().getName(),
-                        "dashboardUrl", processRole.getRole().getUrl()));
+                        "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
         EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
 

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
@@ -21,10 +22,8 @@ import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.WITHDRAWN;
@@ -118,11 +117,13 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId) {
         return serviceSuccess(new ApplicationAssessmentFeedbackResource(
-                    simpleMap(
-                            assessmentRepository.findByTargetId(applicationId),
-                            assessment -> assessment.getFundingDecision().getFeedback()
-                    )
-        ));
+                            assessmentRepository.findByTargetId(applicationId).stream()
+                                    .map(Assessment::getFundingDecision)
+                                    .filter(Objects::nonNull)
+                                    .map(AssessmentFundingDecisionOutcome::getFeedback)
+                                    .collect(Collectors.toList())
+                )
+        );
     }
 
     @Override
