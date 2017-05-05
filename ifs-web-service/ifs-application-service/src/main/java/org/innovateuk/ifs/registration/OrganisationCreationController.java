@@ -446,8 +446,7 @@ public class OrganisationCreationController {
                                    BindingResult bindingResult,
                                    Model model,
                                    HttpServletRequest request, HttpServletResponse response,
-                                   @RequestHeader(value = REFERER, required = false) final String referer
-    ) {
+                                   @RequestHeader(value = REFERER, required = false) final String referer) {
         organisationForm.setTriedToSave(true);
         addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
@@ -456,8 +455,6 @@ public class OrganisationCreationController {
         validator.validate(organisationForm, bindingResult);
         BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
         organisationFormValidate(organisationForm, bindingResult, addressBindingResult);
-
-
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
@@ -490,14 +487,15 @@ public class OrganisationCreationController {
     }
 
     @PostMapping("/" + LEAD_ORGANISATION_TYPE)
-    public String confirmSelectOrganisationType(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+    public String confirmSelectOrganisationType(Model model,
+                                                @Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 BindingResult bindingResult,
-                                                Model model,
                                                 HttpServletResponse response) {
 
         OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
-        if (!isValidLeadOrganisationType(selectOrgTypeViewModel, organisationForm.getOrganisationTypeId())) {
-            bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "{validation.standard.organisationtype.required}"));
+        if (organisationForm.getOrganisationTypeId() != null &&
+                !isValidLeadOrganisationType(selectOrgTypeViewModel, organisationForm.getOrganisationTypeId())) {
+            bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
         }
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
@@ -517,7 +515,6 @@ public class OrganisationCreationController {
     }
 
     private boolean isValidLeadOrganisationType(OrganisationCreationSelectTypeViewModel viewModel, Long organisationTypeId) {
-
         return viewModel.getTypes()
                 .stream()
                 .anyMatch(validOrganisationType -> organisationTypeId.equals(validOrganisationType.getId()));
@@ -604,7 +601,6 @@ public class OrganisationCreationController {
             );
         }
     }
-
 
     private List<AddressResource> searchPostcode(String postcodeInput) {
         RestResult<List<AddressResource>>  addressLookupRestResult =

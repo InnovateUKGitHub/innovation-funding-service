@@ -202,7 +202,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(false))))
-                .andExpect(model().attributeHasFieldErrors("organisationForm", "addressForm.postcodeInput"));;
+                .andExpect(model().attributeHasFieldErrors("organisationForm", "addressForm.postcodeInput"));
     }
 
     @Test
@@ -498,21 +498,28 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     public void testSelectedBusinessSaveLeadBusiness() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/lead-organisation-type")
                 .param("organisationTypeId", OrganisationTypeEnum.RTO.getId().toString())
-                .cookie(organisationForm)
-        )
+                .cookie(organisationForm))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/confirm-organisation"));
     }
-
 
     @Test
     public void testSelectedInvalidLeadOrganisationType() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/lead-organisation-type")
                 .param("organisationTypeId", OrganisationTypeEnum.RESEARCH.getId().toString())
-                .cookie(organisationForm)
-        )
+                .cookie(organisationForm))
                 .andExpect(MockMvcResultMatchers.view().name("registration/organisation/lead-organisation-type"))
-                .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationType"));
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
+    }
+
+    @Test
+    public void testLeadOrganisationTypeNotSelected() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/lead-organisation-type")
+                .cookie(organisationForm))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/lead-organisation-type"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
     }
 
     /**
