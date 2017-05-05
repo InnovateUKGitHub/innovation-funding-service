@@ -19,7 +19,7 @@
                 </p>
             </div>
 
-            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'error'">
                     <fieldset>
                         <legend class="extra-margin-bottom">

@@ -56,8 +56,8 @@ public class ApplicationTeamAddOrganisationController {
     @GetMapping("/addOrganisation")
     public String getAddOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         validateRequest(applicationResource, loggedInUser.getId());
 
@@ -71,7 +71,7 @@ public class ApplicationTeamAddOrganisationController {
     @PostMapping("/addOrganisation")
     public String submitAddOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
-                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler) {
@@ -93,7 +93,7 @@ public class ApplicationTeamAddOrganisationController {
     @PostMapping(value = "/addOrganisation", params = {"addApplicant"})
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         validateRequest(applicationResource, loggedInUser.getId());
@@ -104,7 +104,7 @@ public class ApplicationTeamAddOrganisationController {
     @PostMapping(value = "/addOrganisation", params = {"removeApplicant"})
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
-                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);

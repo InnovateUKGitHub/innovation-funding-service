@@ -45,7 +45,7 @@ public class ProjectDetailsController {
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());

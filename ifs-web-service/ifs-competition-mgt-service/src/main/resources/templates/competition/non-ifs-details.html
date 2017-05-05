@@ -23,7 +23,7 @@
         <h1 class="heading-xlarge">Non-IFS competition details</h1>
     </div>
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="POST" th:object="${form}" novalidate="novalidate">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" th:object="${form}" novalidate="novalidate">
         <fieldset>
             <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
                 <label class="form-label" for="title">

@@ -37,14 +37,14 @@ public class ApplicationTeamController {
 
     @GetMapping("/team")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
         return "application-team/team";
     }
 
     @GetMapping("/begin")
     public String beginApplication(@PathVariable("applicationId") long applicationId,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         changeApplicationStatusToOpen(applicationResource);
