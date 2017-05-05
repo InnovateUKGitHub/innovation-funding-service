@@ -15,7 +15,7 @@
 
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})" />
 
-        <p><span th:text="${results.totalElements}" class="heading-xlarge"></span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="@{'/dashboard/live'}">Clear filters</a></p>
+        <p><span th:text="${results.totalElements}" class="heading-xlarge"></span> <strong>competitions</strong> with the term <strong th:if="${param.searchQuery}" th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="@{'/dashboard/live'}">Clear filters</a></p>
 
         <section th:with="openComps=${results.mappedCompetitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN)}">
             <div th:unless="${openComps == null}">

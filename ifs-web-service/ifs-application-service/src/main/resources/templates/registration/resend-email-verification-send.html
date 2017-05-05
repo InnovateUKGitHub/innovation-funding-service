@@ -10,9 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <h1 class="heading-large">Please verify your email address</h1>
-
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please verify your email address',size='heading-large'" />
     <p>To keep your account and application secure click on the link in the email we have sent you to verify your email address.</p>
     <p>You can contact customer services with any queries regarding your account. This includes requests to change your registered email address. Please contact them at <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
     <th:block th:insert="fragments/layout :: main-content-end" />

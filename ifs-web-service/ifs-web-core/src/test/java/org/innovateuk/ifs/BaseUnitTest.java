@@ -53,7 +53,9 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStatusRestService;
@@ -209,6 +211,8 @@ public class BaseUnitTest {
     @Mock
     public ProjectMonitoringOfficerService projectMonitoringOfficerService;
     @Mock
+    public ProjectOtherDocumentsService projectOtherDocumentsService;
+    @Mock
     public ProjectFinanceService projectFinanceService;
     @Mock
     protected ProjectFinanceRowRestService projectFinanceRowRestService;
@@ -248,6 +252,9 @@ public class BaseUnitTest {
     protected OrganisationDetailsRestService organisationDetailsRestService;
     @Mock
     protected ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
+
+    @Mock
+    public GrantOfferLetterService grantOfferLetterService;
 
     @Spy
     @InjectMocks
@@ -651,8 +658,6 @@ public class BaseUnitTest {
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(0).getId())).thenReturn(completedMap);
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(1).getId())).thenReturn(completedMap);
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(2).getId())).thenReturn(completedMap);
-
-        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(ServiceResult.serviceSuccess(idsToApplicationResources.get(pr.getApplicationId()))));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));

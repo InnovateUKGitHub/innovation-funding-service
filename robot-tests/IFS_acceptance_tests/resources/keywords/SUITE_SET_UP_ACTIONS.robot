@@ -188,7 +188,7 @@ The user redirects to the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -210,7 +210,8 @@ The user navigates to the finance overview of the academic
     And the user clicks the button/link    link=Finances overview
 
 The user marks the academic application finances as incomplete
-    When The user navigates to the academic application finances
+    the user navigates to the academic application finances
+    the user clicks the button/link    link=Your project costs
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
     wait for autosave
@@ -294,7 +295,6 @@ the user enters the details and clicks the create account
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ${REG_EMAIL}
     Input Password    id=password    Passw0rd123
-    Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
     Submit Form
@@ -305,6 +305,5 @@ the user fills the create account form
     Input Text    id=lastName    ${LAST_NAME}
     Input Text    id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
-    Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")

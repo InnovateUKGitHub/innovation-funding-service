@@ -2,29 +2,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, leadApplicant , section, currentApplication)" th:remove="tag">
-  <th:block th:each="question : ${sectionQuestions.get(section.id)}">
-    <li th:with="questionAssignee=(${questionAssignees.get(question.getId())})"
-        th:id="'form-input-'+${question.getId()}">
+<th:block th:fragment="sectionDetails (questionAssignees, userIsLeadApplicant, section, currentApplication, currentUser)">
+  <th:block th:each="question : ${model.section.sectionQuestions.get(section.id)}"
+            th:with="leadApplicant=${model.user.leadApplicant},
+            assignableUsers=${model.assignable.assignableUsers},
+            pendingAssignableUsers=${model.assignable.pendingAssignableUsers},
+            markedAsComplete=${model.completed.markedAsComplete}">
+    <li th:with="questionAssignee=(${questionAssignees.get(question.id)})"
+        th:id="'form-input-'+${question.id}">
       <div class="task">
         <h3 class="heading-small">
-          <a th:href="'/application/'+${currentApplication.getId()}+'/form/question/'+${question.getId()}"
-             th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
+          <a th:href="'/application/'+${currentApplication.id}+'/form/question/'+${question.id}"
+             th:text="${question.questionNumber != null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
         </h3>
       </div>
-      <th:block th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">
+      <th:block th:unless="${model.completed.completedOrMarkedAsComplete(question, section)}">
         <!--/* lead */-->
         <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons" th:with="hideAssignedTo=${true}" />
         <!--/* collabr */-->
         <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to" />
       </th:block>
       <div class="task-status-complete"
-           th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">
-          <span class="visuallyhidden" th:text="${section.getName()}"></span>
+           th:if="${model.completed.completedOrMarkedAsComplete(question, section)}">
+          <span class="visuallyhidden" th:text="${section.name}"></span>
           <span>Complete</span>
       </div>
     </li>
   </th:block>
-</ul>
+</th:block>
+
 </body>
 </html>

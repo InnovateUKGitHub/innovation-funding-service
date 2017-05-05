@@ -11,72 +11,71 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}, currentCompetition=${model.currentCompetition}"></th:block>
 
+    <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
+  	<th:block th:insert="fragments/elements :: competition-status-message (app=${model.currentApplication}, competition=${model.currentCompetition})" />
 
-    <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
-  	<th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
-
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
-        <h1 class="heading-xlarge">Application overview</h1>
-    </div>
+    <th:block th:with="applicationName=${#strings.isEmpty(model.currentApplication.name)} ? #{ifs.application.no_title} : ${model.currentApplication.name}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
+    </th:block>
 
     <div class="grid-row">
         <div class="column-half">
           <dl class="font-xsmall">
             <dt>Application number:</dt>
-            <dd th:text="${currentApplication.id}" />
+            <dd th:text="${model.currentApplication.id}" />
             <dt>Competition:</dt>
-            <dd th:text="${currentCompetition.name}" />
+            <dd th:text="${model.currentCompetition.name}" />
             <dt>Funding body:</dt>
             <dd>Innovate UK</dd>
             <dt>Application deadline:</dt>
             <dd>
-              <th:block th:text="${#strings.toLowerCase(#temporals.format(currentCompetition.endDate, 'hh:mma '))}" />
-              <th:block th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
+              <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentCompetition.endDate, 'hh:mma '))}" />
+              <th:block th:text="${#temporals.format(model.currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
             </dd>
           </dl>
           <h2 class="heading-medium no-margin-bottom">Application progress</h2>
-          <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" class="extra-margin" />
+          <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="extra-margin" />
         </div>
         <div class="column-half">
             <ul class="list list-bullet">
-                <li><a th:href="@{/application/{applicationId}/team(applicationId=${currentApplication.id})}">view team members and add collaborators</a></li>
-                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${currentCompetition.id})}">view the grant terms and conditions</a></li>
+                <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view team members and add collaborators</a></li>
+                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">view the grant terms and conditions</a></li>
             </ul>
         </div>
     </div>
 
-    <div th:if="${assessorFeedback != null}" th:remove="tag">
+    <th:block th:if="${model.assessorFeedback.present}">
         <div th:replace="question-type/form-elements :: readonly-file-download
-                    (filename=${assessorFeedback?.filename},
-                     filesizeKbytes=${assessorFeedback?.filesizeKbytes},
+                    (filename=${model.assessorFeedback.get.filename},
+                     filesizeKbytes=${model.assessorFeedback.get.filesizeKbytes},
                      fileDescription=${'View your application feedback:'},
-                     downloadURL=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.getId()})})">
+                     downloadURL=@{/application/{applicationId}/assessorFeedback(applicationId=${model.currentApplication.id})})">
         </div>
-    </div>
+    </th:block>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
-        <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
-            <section th:id="'section-'+${section.getId()}">
-                <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
+        <th:block th:each="section,iteration : ${model.section.sections.values()}">
+            <section th:id="'section-'+${section.id}">
+                <h2 th:text="${section.name}" th:class="${iteration.index == 0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
                 <p th:text="${section.description}"></p>
                 <ul th:with="currentUser=${#authentication.getDetails()}" class="task-list">
-                    <th:block th:if="${subSections.get(section.id).size() ==0}">
-                        <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
+                    <th:block th:unless="${model.section.hasSubSection(section.id)}">
+                        <div th:replace="application/single-section-details :: sectionDetails (questionAssignees=${model.assignable.questionAssignees},
+                        userIsLeadApplicant=${model.user.userIsLeadApplicant}, section=${section}, currentApplication=${model.currentApplication}, currentUser=${currentUser})"></div>
                     </th:block>
-                    <th:block th:unless="${subSections.get(section.id).size() ==0 }">
-                        <li th:each="childSection : ${subSections.get(section.id)}">
+                    <th:block th:if="${model.section.hasSubSection(section.id)}">
+                        <li th:each="childSection : ${model.section.subSections.get(section.id)}">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${childSection.getId()}"
+                                    <a th:href="'/application/'+${model.currentApplication.id}+'/form/section/'+${childSection.id}"
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
-                            <th:block th:if="${childSection.getId().equals(financeSectionId)}">
-                                <span th:unless="${userFinanceSectionCompleted}" class="action-required"><strong>Incomplete</strong></span>
-                                <div th:if="${userFinanceSectionCompleted}"
+                            <th:block th:if="${childSection.id.equals(model.financeSectionId)}">
+                                <span th:unless="${model.completed.userFinanceSectionCompleted}" class="action-required"><strong>Incomplete</strong></span>
+                                <div th:if="${model.completed.userFinanceSectionCompleted}"
                                      class="task-status-complete">
                                     <span>Complete</span>
                                 </div>
@@ -85,11 +84,11 @@
                     </th:block>
                 </ul>
             </section>
-        </div>
+        </th:block>
     </form>
 
-    <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
-    <a class="button button-clear" th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><span class="icon icon-print"></span> Print your application</a>
+    <a class="button"  th:href="@{/application/{id}/summary(id=${model.currentApplication.id})}" th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
+    <a class="button button-clear" th:href="@{/application/{id}/print(id=${model.currentApplication.id})}" rel="nofollow" target="_blank"><span class="icon icon-print"></span> Print your application</a>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />

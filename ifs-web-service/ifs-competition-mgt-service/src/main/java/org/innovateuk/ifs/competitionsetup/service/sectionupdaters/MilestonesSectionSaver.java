@@ -46,18 +46,18 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
-	@Override
-	public CompetitionSetupSection sectionToSave() {
-		return CompetitionSetupSection.MILESTONES;
-	}
+    @Override
+    public CompetitionSetupSection sectionToSave() {
+        return CompetitionSetupSection.MILESTONES;
+    }
 
-	@Override
-	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+    @Override
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
         LinkedMap<String, MilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
 
         List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             competitionSetupMilestoneService.sortMilestones(milestonesForm);
             return serviceFailure(errors);
         }
@@ -80,12 +80,12 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         }
 
         List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(filteredMilestoneEntries);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             return errors;
         }
 
         ServiceResult<Void> result = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, filteredMilestoneEntries, competition.getId());
-        if(result.isFailure()) {
+        if (result.isFailure()) {
             return result.getErrors();
         }
 
@@ -93,7 +93,9 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     @Override
-    public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) { return MilestonesForm.class.equals(clazz); }
+    public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
+        return MilestonesForm.class.equals(clazz);
+    }
 
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
         List<Error> errors = updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
@@ -106,29 +108,30 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     private List<Error> updateMilestoneWithValueByFieldname(CompetitionResource competitionResource, String fieldName, String value) {
         List<Error> errors = new ArrayList<>();
-        try{
+        try {
             MilestoneResource milestone = milestoneRestService.getMilestoneByTypeAndCompetitionId(
-                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId()).getSuccessObjectOrThrowException();
+                    MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId())
+                    .getSuccessObjectOrThrowException();
 
             errors.addAll(validateMilestoneDateOnAutosave(milestone, fieldName, value));
 
-            if(!errors.isEmpty()) {
+            if (!errors.isEmpty()) {
                 return errors;
             }
             milestoneRestService.updateMilestone(milestone).getSuccessObjectOrThrowException();
-        }catch(Exception ex){
+        } catch (Exception ex) {
             LOG.error(ex.getMessage());
             return makeErrorList();
         }
-        return  errors;
+        return errors;
     }
 
     private List<Error> validateMilestoneDateOnAutosave(MilestoneResource milestone, String fieldName, String value) {
         Integer day = null, month = null, year = null, hour = 0;
         ZonedDateTime currentDate = milestone.getDate();
 
-	    if(isTimeField(fieldName)) {
-            if(null != currentDate) {
+        if (isTimeField(fieldName)) {
+            if (null != currentDate) {
                 day = currentDate.getDayOfMonth();
                 month = currentDate.getMonthValue();
                 year = currentDate.getYear();
@@ -140,15 +143,14 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             month = Integer.parseInt(dateParts[1]);
             year = Integer.parseInt(dateParts[2]);
 
-            if(null != currentDate) {
+            if (null != currentDate) {
                 hour = milestone.getDate().getHour();
             }
         }
 
-        if(!competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
+        if (!competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
             return asList(fieldError(fieldName, fieldName, "error.milestone.invalid"));
-        }
-        else {
+        } else {
             milestone.setDate(TimeZoneUtil.fromUkTimeZone(year, month, day, hour));
         }
 
@@ -156,10 +158,10 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     private boolean isTimeField(String fieldName) {
-	    return fieldName.endsWith(".time");
+        return fieldName.endsWith(".time");
     }
 
-    private List<Error> makeErrorList()  {
+    private List<Error> makeErrorList() {
         return asList(fieldError("", null, "error.milestone.autosave.unable"));
     }
 

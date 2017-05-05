@@ -12,11 +12,8 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition eligibility',linkClass='link-back',linkUrl=@{eligibility},currentApplication=${currentApplication}" />
 
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Before you apply',subTitle=${currentCompetition.name},size='heading-xlarge'" />
 
-    <div class="page-title">
-        <h1 class="heading-xlarge no-margin" th:text="${currentCompetition.name}" />
-        <h2 class="heading-large">Before you apply</h2>
-    </div>
     <p>This innovation funding service is an online service run by Innovate UK. It provides the process and online support to apply for funding offered through Innovate UK competitions. As the lead organisation you will be seeking funding for your project.</p>
     <hr />
 
