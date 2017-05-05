@@ -57,7 +57,7 @@ Contribution to project and funding sought should not be negative number
 
 Your Finance includes Finance summary table for lead applicant
     [Documentation]    INFUND-6893
-    [Tags]    HappyPath
+    [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the finance summary table in Your Finances has correct values for lead
