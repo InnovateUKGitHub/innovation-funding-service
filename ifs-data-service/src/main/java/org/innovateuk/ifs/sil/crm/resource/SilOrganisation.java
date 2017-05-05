@@ -5,9 +5,6 @@ public class SilOrganisation {
     private String name;
     private String registrationNumber;
     private SilAddress registeredAddress;
-    private String verifiedFlg;
-    private final String sourceSystem = "IFS";
-    private String srcSysOrgId;
 
     public String getName() {
         return name;
@@ -31,26 +28,6 @@ public class SilOrganisation {
 
     public void setRegisteredAddress(SilAddress registeredAddress) {
         this.registeredAddress = registeredAddress;
-    }
-
-    public String getVerifiedFlg() {
-        return verifiedFlg;
-    }
-
-    public void setVerifiedFlg(String verifiedFlg) {
-        this.verifiedFlg = verifiedFlg;
-    }
-
-    public String getSourceSystem() {
-        return sourceSystem;
-    }
-
-    public String getSrcSysOrgId() {
-        return srcSysOrgId;
-    }
-
-    public void setSrcSysOrgId(String srcSysOrgId) {
-        this.srcSysOrgId = srcSysOrgId;
     }
 
 }
