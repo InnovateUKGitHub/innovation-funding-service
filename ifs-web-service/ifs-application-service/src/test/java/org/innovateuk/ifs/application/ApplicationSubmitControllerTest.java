@@ -92,6 +92,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         this.setupFinances();
         this.setupInvites();
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
+        when(organisationRestService.getOrganisationsByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(application1Organisations));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }
 

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -28,6 +27,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,11 +41,13 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyMap;
@@ -106,7 +108,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         allSections.forEach(loopSection -> when(sectionService.getById(loopSection.getId())).thenReturn(loopSection));
 
-        target.addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+        target.addMappedSectionsDetails(model, competition, section, userOrganisation, emptyMap());
 
         verify(model).addAttribute(eq("completedSections"), anyMap());
         verify(model).addAttribute(eq("sections"), anyMap());
@@ -123,6 +125,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
                 .withApplicationState(ApplicationState.OPEN).build();
         Long userId = 1L;
+        UserResource user = newUserResource().withId(userId).build();
         Long organisationId = 3L;
         Optional<SectionResource> section = Optional.of(newSectionResource().build());
         Long questionId = 2L;
@@ -142,7 +145,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         when(questionService.getNotificationsForUser(anyList(), eq(userId))).thenReturn(notifications);
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(invites));
 
-        target.addAssignableDetails(model, application, userOrganisation, userId, section, currentQuestionId);
+        target.addAssignableDetails(model, application, userOrganisation, user, section, currentQuestionId);
 
         //Verify model attributes
         verify(model).addAttribute("questionAssignee", questionAssignee);
@@ -205,7 +208,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
         when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(categoryResources));
 
-        target.addCompletedDetails(model, application, Optional.of(userOrganisation));
+        target.addCompletedDetails(model, application, Optional.of(userOrganisation), emptyMap());
 
         verify(model).addAttribute("markedAsComplete", markedAsComplete);
         verify(model).addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);

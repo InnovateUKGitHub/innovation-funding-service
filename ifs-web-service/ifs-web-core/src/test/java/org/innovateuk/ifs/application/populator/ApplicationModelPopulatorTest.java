@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -106,7 +107,7 @@ public class ApplicationModelPopulatorTest {
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
 
 
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
+        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles);
 
         //Verify added attributes
         verify(model).addAttribute("currentApplication", application);
@@ -120,9 +121,9 @@ public class ApplicationModelPopulatorTest {
 
         //Verify other model calls
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, form);
-        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, section, userOrganisation);
-        verify(applicationSectionAndQuestionModelPopulator).addAssignableDetails(model, application, organisationResource, userId, section, currentQuestionId);
-        verify(applicationSectionAndQuestionModelPopulator).addCompletedDetails(model, application, userOrganisation);
+        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, competition, section, userOrganisation, emptyMap());
+        verify(applicationSectionAndQuestionModelPopulator).addAssignableDetails(model, application, organisationResource, user, section, currentQuestionId);
+        verify(applicationSectionAndQuestionModelPopulator).addCompletedDetails(model, application, userOrganisation, emptyMap());
         verify(applicationSectionAndQuestionModelPopulator).addSectionDetails(model, section);
 
         //Verify form inputs

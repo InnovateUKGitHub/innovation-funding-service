@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
@@ -27,11 +26,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.*;
 
@@ -99,9 +98,9 @@ public class ApplicationPrintPopulatorTest {
         //verify populators called
         verify(organisationDetailsModelPopulator).populateModel(model, application.getId(), userApplicationRoles);
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, null);
-        verify(applicationModelPopulator).addUserDetails(model, application, user.getId(), userApplicationRoles);
+        verify(applicationModelPopulator).addUserDetails(model, user, userApplicationRoles);
         verify(applicationModelPopulator).addApplicationInputs(application, model);
-        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
+        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, competition, Optional.empty(), userOrganisation, emptyMap());
         verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
 
     }
