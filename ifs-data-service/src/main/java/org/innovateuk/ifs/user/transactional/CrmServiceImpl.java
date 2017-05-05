@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.CommonErrors;
@@ -30,6 +32,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class CrmServiceImpl extends BaseTransactionalService implements CrmService {
 
+    private static final Log LOG = LogFactory.getLog(CrmServiceImpl.class);
     @Autowired
     private UserRepository userRepository;
 
@@ -47,7 +50,9 @@ public class CrmServiceImpl extends BaseTransactionalService implements CrmServi
                 if (organisations.size() != 1) {
                     return serviceFailure(CommonErrors.notFoundError(Organisation.class));
                 }
-                return silCrmEndpoint.updateContact(toSilContact(user, organisations.get(0)));
+                SilContact silContact = toSilContact(user, organisations.get(0));
+                LOG.error("Updating CRM contact " + silContact.getEmail());
+                return silCrmEndpoint.updateContact(silContact);
             }
             return serviceSuccess();
         });
