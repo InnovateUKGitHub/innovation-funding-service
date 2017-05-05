@@ -78,7 +78,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void testCompetitionSummariesAfterUnsuccessfulApplicationSubmit() throws Exception {
+    public void testCompetitionSummariesAfterApplicationSubmit() throws Exception {
         RestResult<CompetitionSummaryResource> result = controller.getCompetitionSummary(COMPETITION_ID);
 
         assertTrue(result.isSuccess());
@@ -96,10 +96,10 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertTrue(result.isSuccess());
         resource = result.getSuccessObject();
         assertEquals(6, resource.getTotalNumberOfApplications());
-        assertEquals(1, resource.getApplicationsStarted());
+        assertEquals(0, resource.getApplicationsStarted());
         assertEquals(0, resource.getApplicationsInProgress());
-        assertEquals(1, resource.getApplicationsNotSubmitted());
-        assertEquals(5, resource.getApplicationsSubmitted());
+        assertEquals(0, resource.getApplicationsNotSubmitted());
+        assertEquals(6, resource.getApplicationsSubmitted());
     }
 
 
