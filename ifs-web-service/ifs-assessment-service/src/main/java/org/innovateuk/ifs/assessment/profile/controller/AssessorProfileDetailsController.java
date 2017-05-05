@@ -45,21 +45,21 @@ public class AssessorProfileDetailsController {
 
     @GetMapping
     public String getDetails(Model model,
-                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         return doViewYourDetails(loggedInUser, model);
     }
 
     @GetMapping("/edit")
     public String getDetailsEdit(Model model,
-                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                 @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
+                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorProfileEditDetailsForm form,
                                  BindingResult bindingResult) {
         return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
     }
 
     @PostMapping("/edit")
     public String submitDetails(Model model,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
                                 BindingResult bindingResult,
                                 ValidationHandler validationHandler) {

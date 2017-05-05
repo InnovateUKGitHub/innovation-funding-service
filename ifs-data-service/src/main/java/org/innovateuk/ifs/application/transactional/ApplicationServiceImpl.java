@@ -495,6 +495,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
+    @Override
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId,
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
@@ -558,7 +559,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
                         "competitionName", application.getCompetition().getName(),
-                        "dashboardUrl", processRole.getRole().getUrl()));
+                        "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
         EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
 
