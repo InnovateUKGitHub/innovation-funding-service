@@ -231,7 +231,7 @@ invite a registered user
     And the user selects the radio button  organisationTypeId  radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    the user enters the details and clicks the create account    ${EMAIL_LEAD}
+    the user enters the details and clicks the create account    Stuart   Anderson   ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    Once verified you can sign into your account
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
@@ -263,7 +263,7 @@ we create a new user
     And the user selects the radio button  organisationTypeId  radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     The user clicks the button/link    jQuery=.button:contains("Save and continue")
-    The user enters the details and clicks the create account    ${EMAIL_INVITED}
+    The user enters the details and clicks the create account     Stuart   Anderson   ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    Once verified you can sign into your account
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
