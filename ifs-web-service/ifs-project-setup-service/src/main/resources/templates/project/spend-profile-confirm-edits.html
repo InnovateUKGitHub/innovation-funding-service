@@ -11,8 +11,8 @@
     <th:block th:insert="fragments/layout :: main-content-start"/>
     <th:block th:insert="fragments/layout :: header-sub"/>
 
-    <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${projectId},organisationId=${organisationId})}" method="POST" >
-        <h2 class="heading-medium no-margin">Allow partner to edit</h2>
+    <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${projectId},organisationId=${organisationId})}" method="POST">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Allow partner to edit',size='heading-medium'" />
         <p><span class="heading-small no-margin"><th:block th:text="${model.getOrganisationName()}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />
         <input type="submit" class="button large" value="Allow edits"/>

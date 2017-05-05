@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_RENDER_TEMPLATE;
@@ -35,10 +33,8 @@ public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
 
         return handlingErrors(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_RENDER_TEMPLATE), () -> {
 
-            Map<String, Object> replacementsWithCommonObjects = new HashMap<>(templateReplacements);
-
             try {
-                return getStringServiceResult(templatePath, replacementsWithCommonObjects);
+                return getStringServiceResult(templatePath, templateReplacements);
             } catch (IOException | TemplateException e) {
                 LOG.error("Error rendering GOL template " + templatePath, e);
                 return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_RENDER_TEMPLATE));
@@ -46,23 +42,12 @@ public class FreemarkerGOLTemplateRenderer implements FileTemplateRenderer {
         });
     }
 
-    private ServiceResult<String> getStringServiceResult(String templatePath, Map<String, Object> replacementsWithCommonObjects) throws IOException, TemplateException {
+    private ServiceResult<String> getStringServiceResult(String templatePath, Map<String, Object> replacements) throws IOException, TemplateException {
         Template temp = configuration.getTemplate(templatePath);
 
         StringWriter writer = new StringWriter();
-        preProcessReplacements(replacementsWithCommonObjects);
-        temp.process(replacementsWithCommonObjects, writer);
+        temp.process(replacements, writer);
         return serviceSuccess(writer.getBuffer().toString());
-    }
-
-    private void preProcessReplacements(final Map<String, Object> replacementsWithCommonObjects) {
-        for (Map.Entry<String, Object> entry : replacementsWithCommonObjects.entrySet()) {
-            Object value = entry.getValue();
-            if (value instanceof String) {
-                String valueStr = (String)value;
-                entry.setValue(StringEscapeUtils.escapeXml10(valueStr));
-            }
-        }
     }
 
 }

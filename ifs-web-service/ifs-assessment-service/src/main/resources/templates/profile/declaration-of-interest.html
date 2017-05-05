@@ -12,8 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
 
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
-
-            <h1 class="heading-xlarge">Declaration of interest</h1>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Declaration of interest',size='heading-xlarge'" />
 
             <h2 class="heading-medium no-margin-bottom">Principal employer and role</h2>
             <p th:if="${model.principalEmployer}">
@@ -89,13 +88,14 @@
                 None declared
             </p>
 
-            <div class="grid-row extra-margin-top">
-                <div class="column-half">
-                    <a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>
+            <div class="form-footer">
+                <div class="form-footer__actions">
+                    <a th:href="@{/profile/declaration/edit}">Edit</a>
                 </div>
-                <div class="column-half alignright">
-                    <a th:href="@{/profile/declaration/edit}" class="button-secondary">Edit</a>
-                </div>
+            </div>
+
+            <div class="extra-margin">
+                <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
             </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

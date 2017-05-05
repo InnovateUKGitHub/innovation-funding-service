@@ -588,7 +588,7 @@ employeeType: active
 
 dn: uid=7a73febb-a639-4338-b030-303650b974e7,dc=nodomain
 uid: 7a73febb-a639-4338-b030-303650b974e7
-mail: diane.scott@eadel.example.com
+mail: diane.scott@vitruvius.example.com
 sn:: IA==
 cn:: IA==
 objectClass: inetOrgPerson
@@ -600,7 +600,7 @@ employeeType: active
 
 dn: uid=0e1026ca-36c0-444c-b9a8-9255bd0f0fd6,dc=nodomain
 uid: 0e1026ca-36c0-444c-b9a8-9255bd0f0fd6
-mail: ryan.welch@bluezoom.example.com
+mail: ryan.welch@abcad.example.com
 sn:: IA==
 cn:: IA==
 objectClass: inetOrgPerson
@@ -612,7 +612,7 @@ employeeType: active
 
 dn: uid=dc4de4b2-31b6-4a97-861e-802d34ecb080,dc=nodomain
 uid: dc4de4b2-31b6-4a97-861e-802d34ecb080
-mail: sara.armstrong@npath.example.com
+mail: sara.armstrong@armstrong.example.com
 sn:: IA==
 cn:: IA==
 objectClass: inetOrgPerson

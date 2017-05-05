@@ -35,7 +35,7 @@ Non registered users CH route
     And the user clicks the button/link    LINK=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button  organisationTypeId  radio-1
+    And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+${unique_email_number}@gmail.com
@@ -59,7 +59,8 @@ Non registered users CH route (email step)
     And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
-    [Teardown]    logout as user
+    And logout as user
+    And the user reads his email and clicks the link    ${test_mailbox_one}+${unique_email_number}@gmail.com    Innovate UK applicant questionnaire    diversity survey
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -73,12 +74,11 @@ The email address does not stay in the cookie
     And the user clicks the button/link    link=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button  organisationTypeId  radio-1
+    And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     Then the user should not see the text in the page    ${test_mailbox_one}+1@gmail.com
     [Teardown]    the user closes the browser
-
 
 Non registered users non CH route
     [Documentation]    INFUND-669
@@ -93,12 +93,11 @@ Non registered users non CH route
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
-    And the user selects the radio button  organisationTypeId  radio-1
+    And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-
 
 Non registered users non CH route (email step)
     [Documentation]    INFUND-669
@@ -138,7 +137,6 @@ Marketing emails information should have updated on the profile
     Then the user should see that the checkbox is selected    allowMarketingEmails
     [Teardown]    the user closes the browser
 
-
 Special Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
@@ -148,7 +146,7 @@ Special Project Finance role
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
-    And the user selects the radio button  organisationTypeId  radio-1
+    And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
@@ -162,7 +160,6 @@ Special Project Finance role (email step)
     And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
-
 
 *** Keywords ***
 the new application should be visible in the dashboard page

@@ -32,7 +32,8 @@ Non-registered assessor: Accept invitation
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
-    When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
+    And the user selects the radio button  acceptInvitation  true
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should see the text in the page    Become an assessor for Innovate UK
     And the user should see the element    jQuery=.button:contains("Create account")
 
@@ -101,11 +102,14 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the text in the page    There are currently no assessments for you to review.
+    And the user reads his email and clicks the link    ${test_mailbox_one}+thomas.fister@gmail.com    Innovate UK assessor questionnaire    diversity survey
+    [Teardown]    the user navigates to the page    ${LOGIN_URL}
 
 Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
     [Tags]
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    #Note opening a new browser here as the end of the previous test is on survery monkey page.
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    jQuery=a:contains(81 to)
@@ -123,11 +127,11 @@ Non-registered assessor: Reject invitation
     [Tags]
     When the user navigates to the page    ${Invitation_nonregistered_assessor2}
     Then the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
-    And the user clicks the button/link    css=form a
-    When the user clicks the button/link    jQuery=button:contains("Reject")
+    And the user selects the radio button  acceptInvitation  false
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should see an error    The reason cannot be blank.
     And the assessor fills in all fields
-    And the user clicks the button/link    jQuery=button:contains("Reject")
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
     And the assessor shouldn't be able to reject the rejected competition
     And the assessor shouldn't be able to accept the rejected competition

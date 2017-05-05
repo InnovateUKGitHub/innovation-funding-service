@@ -53,8 +53,8 @@ public class ApplicationTeamAddOrganisationController {
     @PreAuthorize("hasPermission(#applicationId, 'VIEW_ADD_ORGANISATION_PAGE')")
     public String getAddOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
 
         if (form.getApplicants().isEmpty()) {
@@ -68,7 +68,7 @@ public class ApplicationTeamAddOrganisationController {
     @PreAuthorize("hasPermission(#applicationId, 'ADD_NEW_ORGANISATION')")
     public String submitAddOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
-                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler) {
@@ -88,7 +88,7 @@ public class ApplicationTeamAddOrganisationController {
     @PreAuthorize("hasPermission(#applicationId, 'ADD_APPLICANT')")
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         form.getApplicants().add(new ApplicantInviteForm());
@@ -99,7 +99,7 @@ public class ApplicationTeamAddOrganisationController {
     @PreAuthorize("hasPermission(#applicationId, 'REMOVE_APPLICANT')")
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
-                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);

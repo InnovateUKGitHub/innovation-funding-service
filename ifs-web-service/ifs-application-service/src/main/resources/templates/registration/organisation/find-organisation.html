@@ -13,11 +13,10 @@
     <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/type/new-account-organisation-type',currentApplication=${currentApplication}" />
     <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back ',linkClass='link-back',linkUrl='javascript:history.back()'" />
 
-    <h1 class="heading-xlarge">
-        <span class="heading-secondary">Create your account</span>
-        <th:block th:if="${isLeadApplicant}">Your organisation</th:block>
-        <th:block th:unless="${isLeadApplicant}" th:text="${organisationForm.organisationType.name}"/>
-    </h1>
+    <th:block th:with="orgTitle=${isLeadApplicant} ? 'Your organisation' : ${organisationForm.organisationType.name}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='heading-xlarge'" />
+    </th:block>
+
     <th:block th:if="${organisationForm.notResearch}">
         <div class="message-alert">
             <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
@@ -76,7 +75,7 @@
             <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress}">
                 <details th:attr="open=${isOpen} ? 'open' : null ">
                     <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>
-                    <div class="panel"th:attr="aria-hidden=${isOpen} ? 'false' : 'true'">
+                    <div class="panel" th:attr="aria-hidden=${isOpen} ? 'false' : null">
                         <h2 class="heading-medium">Enter your organisation details</h2>
                         <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
                         <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
