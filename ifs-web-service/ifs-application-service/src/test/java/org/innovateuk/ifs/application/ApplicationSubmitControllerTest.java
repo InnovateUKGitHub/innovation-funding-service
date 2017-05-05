@@ -125,8 +125,6 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         ApplicationResource app = applications.get(0);
         app.setCompetition(competition.getId());
 
-        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/special").build();
-
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
