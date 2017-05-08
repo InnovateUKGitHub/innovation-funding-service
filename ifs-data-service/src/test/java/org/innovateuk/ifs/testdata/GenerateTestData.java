@@ -91,7 +91,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@Ignore
+//@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
@@ -630,6 +630,13 @@ public class GenerateTestData extends BaseIntegrationTest {
                 }
             }
         });
+
+        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(line.status)) {
+            baseBuilder = baseBuilder.markApplicationIneligible(line.ineligibleReason);
+            if (line.status == ApplicationState.INELIGIBLE_INFORMED) {
+                baseBuilder = baseBuilder.informApplicationIneligible();
+            }
+        }
 
         return baseBuilder.withFinances(financeBuilders);
     }
