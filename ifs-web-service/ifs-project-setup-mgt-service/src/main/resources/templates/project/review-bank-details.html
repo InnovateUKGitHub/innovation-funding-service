@@ -11,7 +11,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/review-all-bank-details(projectId=${model.projectId})}" />
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
         <div class="grid-row">
             <div class="column-two-thirds">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank Details',subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge'" />

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.CommonErrors;
@@ -17,6 +19,7 @@ import org.innovateuk.ifs.user.resource.Title;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class CrmServiceImpl extends BaseTransactionalService implements CrmService {
 
+    private static final Log LOG = LogFactory.getLog(CrmServiceImpl.class);
     @Autowired
     private UserRepository userRepository;
 
@@ -46,7 +50,9 @@ public class CrmServiceImpl extends BaseTransactionalService implements CrmServi
                 if (organisations.size() != 1) {
                     return serviceFailure(CommonErrors.notFoundError(Organisation.class));
                 }
-                return silCrmEndpoint.updateContact(toSilContact(user, organisations.get(0)));
+                SilContact silContact = toSilContact(user, organisations.get(0));
+                LOG.error("Updating CRM contact " + silContact.getEmail());
+                return silCrmEndpoint.updateContact(silContact);
             }
             return serviceSuccess();
         });
@@ -74,7 +80,8 @@ public class CrmServiceImpl extends BaseTransactionalService implements CrmServi
 
     private SilAddress silRegisteredAddress(Organisation organisation) {
         return organisation.getAddresses().stream()
-                .filter(organisationAddress -> organisationAddress.getAddressType().getId().equals(OrganisationAddressType.REGISTERED.getOrdinal()))
+                .filter(organisationAddress -> Arrays.asList(OrganisationAddressType.OPERATING.getOrdinal(), OrganisationAddressType.REGISTERED.getOrdinal())
+                        .contains(organisationAddress.getAddressType().getId()))
                 .findAny()
                 .map(organisationAddress -> {
                     Address address = organisationAddress.getAddress();

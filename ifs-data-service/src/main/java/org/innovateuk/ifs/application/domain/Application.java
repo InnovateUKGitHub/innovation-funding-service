@@ -110,16 +110,20 @@ public class Application implements ProcessActivity {
         return other instanceof Application;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Boolean getResubmission() {
@@ -144,10 +148,6 @@ public class Application implements ProcessActivity {
 
     public void setPreviousApplicationTitle(String previousApplicationTitle) {
         this.previousApplicationTitle = previousApplicationTitle;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<ProcessRole> getProcessRoles() {
@@ -197,16 +197,16 @@ public class Application implements ProcessActivity {
         return applicationFinances;
     }
 
+    public void setApplicationFinances(List<ApplicationFinance> applicationFinances) {
+        this.applicationFinances = applicationFinances;
+    }
+
     public Long getDurationInMonths() {
         return durationInMonths;
     }
 
     public void setDurationInMonths(Long durationInMonths) {
         this.durationInMonths = durationInMonths;
-    }
-
-    public void setApplicationFinances(List<ApplicationFinance> applicationFinances) {
-        this.applicationFinances = applicationFinances;
     }
 
     public ProcessRole getLeadApplicantProcessRole() {
@@ -229,12 +229,12 @@ public class Application implements ProcessActivity {
         return this.invites;
     }
 
-    public boolean isOpen() {
-        return applicationProcess.isInState(ApplicationState.OPEN);
-    }
-
     public void setInvites(List<ApplicationInvite> invites) {
         this.invites = invites;
+    }
+
+    public boolean isOpen() {
+        return applicationProcess.isInState(ApplicationState.OPEN);
     }
 
     public ZonedDateTime getSubmittedDate() {
@@ -245,12 +245,12 @@ public class Application implements ProcessActivity {
         this.submittedDate = submittedDate;
     }
 
-    public void setFundingDecision(FundingDecisionStatus fundingDecision) {
-        this.fundingDecision = fundingDecision;
-    }
-
     public FundingDecisionStatus getFundingDecision() {
         return fundingDecision;
+    }
+
+    public void setFundingDecision(FundingDecisionStatus fundingDecision) {
+        this.fundingDecision = fundingDecision;
     }
 
     public FileEntry getAssessorFeedbackFileEntry() {

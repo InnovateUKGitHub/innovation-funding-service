@@ -109,6 +109,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         List<Assessment> assessments =
                 newAssessment().
+                        withId().
                         withParticipant(processRole).
                         withApplication(application).
                         withActivityState(openState).
@@ -156,6 +157,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
+                        withId().
                         withParticipant(processRole).
                         withApplication(application).
                         withActivityState(openState).
@@ -248,6 +250,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         List<Assessment> assessments =
                 newAssessment().
+                        withId().
                         withParticipant(processRole).
                         withApplication(application).
                         withActivityState(openState).
@@ -291,6 +294,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         List<Assessment> assessments =
                 newAssessment().
+                        withId().
                         withParticipant(processRole).
                         withApplication(application).
                         withActivityState(openState).

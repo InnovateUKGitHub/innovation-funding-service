@@ -44,7 +44,7 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
     public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
@@ -63,7 +63,7 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
@@ -74,7 +74,7 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/readonly")
     public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
-                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
@@ -116,7 +116,7 @@ public class ProjectOtherDocumentsController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form, () -> {
 
@@ -134,7 +134,7 @@ public class ProjectOtherDocumentsController {
                                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                                    ValidationHandler validationHandler,
                                                    Model model,
-                                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form,
                 () -> projectOtherDocumentsService.removeCollaborationAgreementDocument(projectId));
@@ -168,7 +168,7 @@ public class ProjectOtherDocumentsController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form, () -> {
 
@@ -194,7 +194,7 @@ public class ProjectOtherDocumentsController {
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
                                              Model model,
-                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form,
                 () -> projectOtherDocumentsService.removeExploitationPlanDocument(projectId));

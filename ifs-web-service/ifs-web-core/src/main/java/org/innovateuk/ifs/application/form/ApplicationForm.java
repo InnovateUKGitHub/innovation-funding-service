@@ -25,6 +25,8 @@ public class ApplicationForm extends Form {
 
     private Long impersonateOrganisationId;
 
+    private String ineligibleReason;
+
     public ApplicationForm() {
         super();
     }
@@ -90,5 +92,13 @@ public class ApplicationForm extends Form {
         FieldError fieldError = getBindingResult().getFieldError("formInput[" + fieldId + "]");
         Object rejectedValue = fieldError != null ? fieldError.getRejectedValue() : null;
         return rejectedValue != null ? rejectedValue.toString() : null;
+    }
+
+    public String getIneligibleReason() {
+        return ineligibleReason;
+    }
+
+    public void setIneligibleReason(String ineligibleReason) {
+        this.ineligibleReason = ineligibleReason;
     }
 }

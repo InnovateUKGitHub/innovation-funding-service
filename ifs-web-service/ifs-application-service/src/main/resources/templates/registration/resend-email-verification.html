@@ -16,7 +16,7 @@
       We will send a new link to this email address which will allow you to verify your account.
       Please note that verification links are only valid for 24 hours.
     </p>
-    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${resendEmailVerificationForm}" method="POST">
+    <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${resendEmailVerificationForm}" method="POST">
             <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
                 <label class="form-label" for="id_email">
                     <span class="form-label-bold">Enter Email Address</span>
