@@ -72,6 +72,6 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isGrantOfferLetterSent() {
-        return projectTeamStatus.getLeadPartnerStatus().getIsGrantOfferLetterSent();
+        return projectTeamStatus.getLeadPartnerStatus().isGrantOfferLetterSent();
     }
 }

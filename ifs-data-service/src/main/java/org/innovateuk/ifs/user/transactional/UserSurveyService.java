@@ -10,5 +10,8 @@ import org.innovateuk.ifs.user.domain.User;
 public interface UserSurveyService {
 
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
-    ServiceResult<Void> sendDiversitySurvey(User user);
+    ServiceResult<Void> sendApplicantDiversitySurvey(User user);
+
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    ServiceResult<Void> sendAssessorDiversitySurvey(User user);
 }

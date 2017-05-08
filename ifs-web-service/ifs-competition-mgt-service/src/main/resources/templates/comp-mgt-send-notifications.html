@@ -24,7 +24,7 @@
 
     <p>This email can be edited. It will be received by all applicants associated with each of the applications you selected.</p>
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:object="${form}"
           novalidate="novalidate"
           method="POST">

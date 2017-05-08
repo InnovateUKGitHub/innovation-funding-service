@@ -4,10 +4,12 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -21,6 +23,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -34,9 +37,6 @@ public class ProjectController {
 
     @Autowired
     private ProjectStatusService projectStatusService;
-
-    @Autowired
-    private ProjectGrantOfferService projectGrantOfferService;
 
     @GetMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
@@ -127,7 +127,7 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/team-status")
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
-                                       @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
+                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 
@@ -139,35 +139,5 @@ public class ProjectController {
     @GetMapping("/{projectId}/status")
     public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
-    }
-
-    @GetMapping("/{projectId}/is-send-grant-offer-letter-allowed")
-    public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId) {
-        return projectService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
-    }
-    @PostMapping("/{projectId}/grant-offer/send")
-    public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") final Long projectId) {
-        return projectService.sendGrantOfferLetter(projectId).toPostResponse();
-    }
-
-    @GetMapping("/{projectId}/is-grant-offer-letter-already-sent")
-    public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
-        return projectService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
-    }
-
-    @PostMapping("/{projectId}/signed-grant-offer-letter/approval/{approvalType}")
-    public RestResult<Void> approveOrRejectSignedGrantOfferLetter(@PathVariable("projectId") final Long projectId,
-                                                                  @PathVariable("approvalType") final ApprovalType approvalType) {
-        return projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
-    }
-
-    @GetMapping("/{projectId}/signed-grant-offer-letter/approval")
-    public RestResult<Boolean> isSignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
-        return projectService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
-    }
-
-    @GetMapping("/{projectId}/grant-offer-letter/state")
-    public RestResult<GOLState> getGrantOfferLetterWorkflowState(@PathVariable("projectId") final Long projectId) {
-        return projectService.getGrantOfferLetterWorkflowState(projectId).toGetResponse();
     }
 }

@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamOrganisationRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamApplicantRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,8 +43,12 @@ public class ApplicationTeamModelPopulator {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ApplicationUtil applicationUtil;
+
     public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
+        applicationUtil.checkIfApplicationAlreadySubmitted(applicationResource);
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
