@@ -259,6 +259,7 @@ the user follows the flow to register their organisation
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
     And the user selects the checkbox    address-same
+    and the user should not see the element     jQuery=h3:contains("Organisation type")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user selects the radio button  organisationTypeId   ${orgType}
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
