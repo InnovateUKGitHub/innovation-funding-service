@@ -59,22 +59,20 @@
                             </th:block>
                         </legend>
 
-                        <div class="form-block">
-                            <label class="block-label selection-button-radio" data-target="accept-application" for="acceptAssessment">
-                                <input id="acceptAssessment" value="true" th:field="*{assessmentAccept}" type="radio" required="required">
-                                Accept, I am able to assess this application
-                            </label>
-                        </div>
+                        <label class="block-label selection-button-radio" data-target="accept-application" for="acceptAssessment">
+                            <input id="acceptAssessment" value="true" th:field="*{assessmentAccept}" type="radio" required="required">
+                            Accept, I am able to assess this application
+                        </label>
+
                         <div class="panel js-hidden" id="accept-application">
                             <p>You will still have the option to reject after accepting and viewing the full application</p>
                         </div>
 
-                        <div class="form-block">
-                            <label class="block-label selection-button-radio" data-target="reject-application" for="rejectAssessment">
-                                <input id="rejectAssessment" value="false" th:field="*{assessmentAccept}" type="radio" required="required">
-                                Reject, I am not able to assess this application
-                            </label>
-                        </div>
+                        <label class="block-label selection-button-radio" data-target="reject-application" for="rejectAssessment">
+                            <input id="rejectAssessment" value="false" th:field="*{assessmentAccept}" type="radio" required="required">
+                            Reject, I am not able to assess this application
+                        </label>
+
                         <div class="panel js-hidden" id="reject-application">
                             <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
                                 <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">

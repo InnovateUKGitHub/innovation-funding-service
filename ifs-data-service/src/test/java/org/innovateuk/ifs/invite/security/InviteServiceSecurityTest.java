@@ -69,7 +69,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         assertAccessDenied(
                 () -> classUnderTest.createApplicationInvites(inviteOrganisation),
                 () -> {
-                    verify(inviteOrganisationPermissionRules).leadApplicantCanInviteAnOrganisationToTheApplication(eq(inviteOrganisation), any(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).leadApplicantCanCreateApplicationInvitesIfApplicationEditable(eq(inviteOrganisation), any(UserResource.class));
                 });
     }
 
