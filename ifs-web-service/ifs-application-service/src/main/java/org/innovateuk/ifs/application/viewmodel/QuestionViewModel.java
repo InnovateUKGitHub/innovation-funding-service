@@ -10,12 +10,10 @@ import java.util.List;
  */
 public class QuestionViewModel extends AbstractApplicantViewModel<ApplicantQuestionResource> {
     private QuestionAssignableViewModel questionAssignableViewModel;
-    private boolean allReadOnly;
 
-    public QuestionViewModel(ApplicantQuestionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, QuestionAssignableViewModel questionAssignableViewModel, boolean allReadOnly) {
-        super(applicantResource, formInputViewModels, navigationViewModel);
+    public QuestionViewModel(ApplicantQuestionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, QuestionAssignableViewModel questionAssignableViewModel) {
+        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
         this.questionAssignableViewModel = questionAssignableViewModel;
-        this.allReadOnly = allReadOnly;
     }
 
 
@@ -41,10 +39,6 @@ public class QuestionViewModel extends AbstractApplicantViewModel<ApplicantQuest
 
     public Boolean isShowReturnButtons() {
         return Boolean.TRUE;
-    }
-
-    public boolean isAllReadOnly() {
-        return allReadOnly;
     }
 
     @Override

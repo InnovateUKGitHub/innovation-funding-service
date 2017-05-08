@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -46,7 +47,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         NavigationViewModel navigationViewModel = applicationNavigationPopulator.addNavigation(question.getQuestion(), question.getApplication().getId());
         QuestionAssignableViewModel questionAssignableViewModel = addAssignableDetails(question);
 
-        return new QuestionViewModel(question, formInputViewModels, navigationViewModel, questionAssignableViewModel, formInputViewModels.stream().anyMatch(AbstractFormInputViewModel::isReadonly));
+        return new QuestionViewModel(question, formInputViewModels, navigationViewModel, formInputViewModels.stream().anyMatch(AbstractFormInputViewModel::isReadonly), questionAssignableViewModel);
     }
 
 

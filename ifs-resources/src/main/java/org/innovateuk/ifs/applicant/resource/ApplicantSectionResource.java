@@ -86,4 +86,8 @@ public class ApplicantSectionResource extends AbstractApplicantResource {
         return Stream.concat(applicantChildrenSections.stream(), Stream.of(this));
     }
 
+    public boolean isComplete(ApplicantResource applicant) {
+        return allQuestions().allMatch(questionResource -> questionResource.isCompleteByApplicant(applicant));
+    }
+
 }

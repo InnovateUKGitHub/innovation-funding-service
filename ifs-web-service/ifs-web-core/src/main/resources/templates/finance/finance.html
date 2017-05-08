@@ -7,7 +7,7 @@
             <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ model.organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ model.organisationGrantClaimPercentageId +']}')}? 'error'">
                 <label class="form-label form-label-bold" for="cost-financegrantclaim">
                     <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'" />
-                    <span class="form-hint" th:text="'The maximum funding level is ' + ${maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
+                    <span class="form-hint" th:text="'The maximum funding level is ' + ${model.maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+model.organisationGrantClaimPercentageId+'-grantClaimPercentage'})" />
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+model.organisationGrantClaimPercentageId})" />
                 </label>
@@ -24,7 +24,7 @@
                        placeholder="0"
                        th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
                                 data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
-                        />%
+                />%
             </div>
         </th:block>
         <th:block th:if="${readonly}">
@@ -204,30 +204,31 @@
         />
     </div>
 
-    <!-- ===========================Form: your_finance =========================== -->
-    <th:block th:fragment="your_finance(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-        <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',
-        model.userOrganisation.name)}" />
-        <p ifs:utext="${question.description}" />
+    <th:block th:fragment="your_finance(model)">
+        <h2 class="heading-medium no-margin" th:text="${#strings.replace(model.question.name,'{organisationName}',
+        model.currentApplicant.organisation.name)}" />
+        <p ifs:utext="${model.question.description}" />
 
-        <section class="collapsible" th:each="formInputViewModel : ${model.formInputViewModels}">
+        <section class="collapsible" th:each="projectCostSection : ${model.defaultProjectCostSections}">
             <h2>
-                <th:block th:text="${formInputViewModel.section.name}" />
-                <span th:attr="data-mirror='#section-total-'+${formInputViewModel.section.id}" />
+                <th:block th:text="${projectCostSection.applicantSection.section.name}" />
+                <span th:attr="data-mirror='#section-total-'+${projectCostSection.applicantSection.section.id}" />
             </h2>
             <div class="collapsible-content">
-                <th:block th:if="${formInputViewModel.formInput.type.displayableFinanceType}">
-                    <th:block th:insert="finance/finance :: ${formInput.type.nameLower} (formInputViewModel))" />
-                </th:block>
-                <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
-                    <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (formInputViewModel)" />
+                <th:block th:each="costViewModel : ${projectCostSection.costViews}">
+                    <th:block th:if="${costViewModel.formInput.type.displayableFinanceType}">
+                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" />
+                    </th:block>
+                    <th:block th:if="${costViewModel.formInput.type.displayableQuestionType}">
+                        <th:block th:insert="question-type/types :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" />
+                    </th:block>
                 </th:block>
             </div>
         </section>
 
         <div class="grid-row total-cost">
             <div class="column-half">
-                <label for="total-cost" class="heading-medium">'<th:block th:text="${model.userOrganisation.name}"></th:block>' Total project costs</label>
+                <label for="total-cost" class="heading-medium">'<th:block th:text="${model.currentApplicant.organisation.name}"></th:block>' Total project costs</label>
             </div>
             <div class="column-half alignright">
                 <input type="text"
@@ -236,13 +237,13 @@
                        class="heading-medium width-full alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
-                       th:value="'£ ' + ${#numbers.formatDecimal(model.organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
+                       th:value="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
             </div>
         </div>
     </th:block>
 
     <!-- ===========================Form: labour =========================== -->
-    <th:block th:fragment="labour (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
+    <th:block th:fragment="labour (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p th:text="${question.getDescription()}"></p>
         <th:block th:if="${viewmode == 'approved'}">
 
@@ -441,7 +442,7 @@
         </th:block>
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
-    <th:block th:fragment="overheads(model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
+    <th:block th:fragment="overheads (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <th:block th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
 
             <th:block th:if="${viewmode == 'approved'}">
@@ -576,7 +577,7 @@
                                class="form-control form-control-1-4 alignright"
                                readonly="readonly"
                                th:id="${'section-total-'+subSection.id+'-default'}"
-                               th:attr="data-calculation-fields=${'#section-total-'+labourQuestion.section+',0.2'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               th:attr="data-calculation-fields=${'#section-total-'+costViewModel.labourQuestion.section+',0.2'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'" />
                     </div>
@@ -615,7 +616,7 @@
                                class="form-control form-control-1-4 alignright"
                                readonly="readonly"
                                th:id="${'section-total-'+subSection.id+'-custom'}"
-                               th:attr="data-calculation-fields=${'#section-total-'+labourQuestion.section+',100,#cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               th:attr="data-calculation-fields=${'#section-total-'+costViewModel.labourQuestion.section+',100,#cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="/,*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
                     </div>
@@ -674,7 +675,7 @@
     </th:block>
 
     <!-- ===========================Form: materials =========================== -->
-    <th:block th:fragment="materials (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
+    <th:block th:fragment="materials (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p th:text="${question.getDescription()}"></p>
 
         <th:block th:if="${(viewmode == 'approved')}">
@@ -695,13 +696,13 @@
                         <td th:text="${cost.getItem()}"></td>
                         <td class="numeric" th:text="${cost.getQuantity()}"></td>
                         <td class="numeric" th:text="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,'COMMA',0,'POINT') : '0'}"></td>
-                        <td class="numeric" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatDecimal(cost.total,0,'COMMA',0,'POINT')}"></td>
+                        <td class="numeric" th:text="'£ ' + ${#numbers.formatDecimal(cost.total,0,'COMMA',0,'POINT')}"></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th scope="row" colspan="3">Total materials costs</th>
-                        <td th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" class="numeric"></td>
+                        <td th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" class="numeric"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -834,7 +835,7 @@
     </th:block>
 
     <!-- ===========================Form: capital usage =========================== -->
-    <th:block th:fragment="capital_usage(model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
+    <th:block th:fragment="capital_usage (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p th:text="${question.getDescription()}"></p>
         <th:block th:if="${(viewmode == 'approved')}">
             <table id="capital-usage-table">
@@ -1035,7 +1036,7 @@
     </th:block>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
-    <th:block th:fragment="subcontracting (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
+    <th:block th:fragment="subcontracting (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p th:text="${question.getDescription()}"></p>
         <th:block th:if="${viewmode == 'approved'}">
             <table id="subcontracting-table">
@@ -1163,7 +1164,7 @@
 
     <!-- ===========================Form: travel cost =========================== -->
 
-    <th:block th:fragment="travel (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
+    <th:block th:fragment="travel (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p th:text="${question.description}"></p>
 
         <th:block th:if="${(viewmode == 'approved')}">
@@ -1314,7 +1315,7 @@
     </th:block>
 
     <!-- ===========================Form: other cost =========================== -->
-    <th:block th:fragment="other_costs (model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
+    <th:block th:fragment="other_costs (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
         <p th:text="${question.description}" />
         <th:block th:if="${(viewmode == 'approved')}">
             <table id="other-costs-table">
@@ -1415,108 +1416,106 @@
 
 
     <!-- ===========================Form: Other funding=========================== -->
-    <th:block th:fragment="other_funding(model)" th:with="costCategory=${model.costCategory}, formInput=${model.formInput}, question=${model.question}, viewmode=${model.viewmode}">
-        <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-            <th:block th:if="${readonly}">
-                <h2 class="heading-medium">Other funding for this project</h2>
-                <th:block th:if="${costCategory.otherPublicFunding?.equals('No')}">
-                    <p>No other funding</p>
-                </th:block>
-                <th:block th:if="${costCategory.otherPublicFunding?.equals('Yes')}">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th id="other-funding-source">Source of funding</th>
-                            <th id="other-funding-date" class="width-medium">Date secured</th>
-                            <th id="other-funding-amount" class="width-medium">Funding amount</th>
+    <th:block th:fragment="other_funding (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}, readonly=${costViewModel.readonly}">
+        <th:block th:if="${readonly}">
+            <h2 class="heading-medium">Other funding for this project</h2>
+            <th:block th:if="${costCategory.otherPublicFunding?.equals('No')}">
+                <p>No other funding</p>
+            </th:block>
+            <th:block th:if="${costCategory.otherPublicFunding?.equals('Yes')}">
+                <table>
+                    <thead>
+                    <tr>
+                        <th id="other-funding-source">Source of funding</th>
+                        <th id="other-funding-date" class="width-medium">Date secured</th>
+                        <th id="other-funding-amount" class="width-medium">Funding amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="cost : ${costCategory.costs}" th:unless="${cost.fundingAmount == null}">
+                            <th scope="row" th:text="${cost.fundingSource}">National rail</th>
+                            <td th:text="${cost.securedDate}">17 April 2016</td>
+                            <td class="numeric" th:text="'£ ' + ${cost.fundingAmount != null ? #numbers.formatInteger(cost.fundingAmount,0,'COMMA') : '0'}"></td>
                         </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="cost : ${costCategory.costs}" th:unless="${cost.fundingAmount == null}">
-                                <th scope="row" th:text="${cost.fundingSource}">National rail</th>
-                                <td th:text="${cost.securedDate}">17 April 2016</td>
-                                <td class="numeric" th:text="'£ ' + ${cost.fundingAmount != null ? #numbers.formatInteger(cost.fundingAmount,0,'COMMA') : '0'}"></td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th scope="row" colspan="2">Total other funding</th>
-                                <td class="numeric" th:text="'£ ' + ${#numbers.formatInteger(costCategory.getTotal(), 0, 'COMMA')}"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </th:block>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="row" colspan="2">Total other funding</th>
+                            <td class="numeric" th:text="'£ ' + ${#numbers.formatInteger(costCategory.getTotal(), 0, 'COMMA')}"></td>
+                        </tr>
+                    </tfoot>
+                </table>
             </th:block>
-            <th:block th:unless="${readonly}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">
-                    <h2 th:text="${question.getName()}" class="heading-medium"></h2>
-                    <fieldset class="inline" id="otherFundingShowHideToggle">
-                        <legend>
-                            <span class="visuallyhidden" th:text="${question.getName()}"></span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
-                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
-                        </legend>
-                        <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                        <div class="form-block inline">
-                            <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
-                                   th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
-                                   data-target="other-funding-table">
-                                <input type="radio"
-                                       th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
-                                       th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                                       value="Yes"
-                                       required="required"
-                                       th:checked="${costCategory.otherPublicFunding?.equals('Yes')}" />
-                                Yes
-                            </label>
-                            <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
-                                   th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
-                                <input type="radio"
-                                       th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
-                                       th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                                       value="No"
-                                       required="required"
-                                       th:checked="${costCategory.otherPublicFunding?.equals('No')}" />
-                                No
-                            </label>
+        </th:block>
+        <th:block th:unless="${readonly}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">
+                <h2 th:text="${question.getName()}" class="heading-medium"></h2>
+                <fieldset class="inline" id="otherFundingShowHideToggle">
+                    <legend>
+                        <span class="visuallyhidden" th:text="${question.getName()}"></span>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
+                    </legend>
+                    <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+                    <div class="form-block inline">
+                        <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
+                               th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                               data-target="other-funding-table">
+                            <input type="radio"
+                                   th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                                   th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                                   value="Yes"
+                                   required="required"
+                                   th:checked="${costCategory.otherPublicFunding?.equals('Yes')}" />
+                            Yes
+                        </label>
+                        <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
+                               th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
+                            <input type="radio"
+                                   th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
+                                   th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                                   value="No"
+                                   required="required"
+                                   th:checked="${costCategory.otherPublicFunding?.equals('No')}" />
+                            No
+                        </label>
+                    </div>
+                    <div id="other-funding-table">
+                        <div class="form-group" th:attr="data-repeatable-container=${question.getId()}">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" id="other-funding-source">Source of funding</th>
+                                        <th scope="col" id="other-funding-date" class="width-medium">Date secured</th>
+                                        <th scope="col" id="other-funding-amount" class="width-medium">Funding amount (£)</th>
+                                        <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <th:block th:each="cost : ${costCategory.costs}">
+                                        <th:block th:insert="finance/finance :: other_funding_row" />
+                                    </th:block>
+                                </tbody>
+                            </table>
+                            <p class="alignright">
+                                <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
+                            </p>
                         </div>
-                        <div id="other-funding-table">
-                            <div class="form-group" th:attr="data-repeatable-container=${question.getId()}">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" id="other-funding-source">Source of funding</th>
-                                            <th scope="col" id="other-funding-date" class="width-medium">Date secured</th>
-                                            <th scope="col" id="other-funding-amount" class="width-medium">Funding amount (£)</th>
-                                            <th scope="col"><span class="visuallyhidden">Actions</span></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <th:block th:each="cost : ${costCategory.costs}">
-                                            <th:block th:insert="finance/finance :: other_funding_row" />
-                                        </th:block>
-                                    </tbody>
-                                </table>
-                                <p class="alignright">
-                                    <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
-                                </p>
-                            </div>
-                            <div class="form-group alignright inline">
-                                <label for="other-funding-total">Total other funding</label>
-                                <input class="form-control form-control-1-4 alignright"
-                                       data-calculation-fields="[id*=fundingAmount]"
-                                       data-calculation-operations="+"
-                                       id="other-funding-total"
-                                       th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                                       readonly="readonly"
-                                       type="text"
-                                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
-                            </div>
+                        <div class="form-group alignright inline">
+                            <label for="other-funding-total">Total other funding</label>
+                            <input class="form-control form-control-1-4 alignright"
+                                   data-calculation-fields="[id*=fundingAmount]"
+                                   data-calculation-operations="+"
+                                   id="other-funding-total"
+                                   th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                                   readonly="readonly"
+                                   type="text"
+                                   th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                         </div>
-                    </fieldset>
-                </div>
-            </th:block>
+                    </div>
+                </fieldset>
+            </div>
         </th:block>
     </th:block>
 

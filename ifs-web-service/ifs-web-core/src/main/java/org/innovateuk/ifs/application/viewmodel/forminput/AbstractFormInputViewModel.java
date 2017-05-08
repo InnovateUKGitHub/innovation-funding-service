@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.application.viewmodel.forminput;
 
 
-import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
-import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.resource.*;
 import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -13,12 +11,16 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 public abstract class AbstractFormInputViewModel {
     protected boolean complete;
     protected boolean readonly;
+    protected ApplicantSectionResource applicantSection;
     protected ApplicantQuestionResource applicantQuestion;
     protected ApplicantFormInputResource applicantFormInput;
     protected ApplicantFormInputResponseResource applicantResponse;
     protected ApplicantResource currentApplicant;
 
     protected abstract FormInputType formInputType();
+    public SectionResource getSection() {
+        return applicantSection.getSection();
+    }
     public QuestionResource getQuestion() {
         return applicantQuestion.getQuestion();
     }
@@ -75,6 +77,14 @@ public abstract class AbstractFormInputViewModel {
 
     public void setCurrentApplicant(ApplicantResource currentApplicant) {
         this.currentApplicant = currentApplicant;
+    }
+
+    public ApplicantSectionResource getApplicantSection() {
+        return applicantSection;
+    }
+
+    public void setApplicantSection(ApplicantSectionResource applicantSection) {
+        this.applicantSection = applicantSection;
     }
 
     public boolean getHasResponse() {

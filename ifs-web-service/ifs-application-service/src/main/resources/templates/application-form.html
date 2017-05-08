@@ -43,6 +43,13 @@
                     <th:block th:if="${formInput.type.displayableQuestionType}">
                         <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModel})" />
                     </th:block>
+
+                    <th:block th:if="${model.allReadOnly}">
+                        <a th:href="${backURL}" class="button-secondary" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
+                    </th:block>
+                    <th:block th:unless="${model.allReadOnly}">
+                        <button th:unless="${model.isSection()}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
+                    </th:block>
                 </div>
 
                 <!--/* Application Form for a Section. */-->
@@ -58,42 +65,29 @@
                     -->
                     <th:block th:switch="${model.section.type.name()}">
                         <th:block th:case="'FINANCE'">
-                            <th:block th:include="finance/your-finances-sub-sections :: your_finances" />
+                            <th:block th:include="finance/your-finances-sub-sections :: your_finances (${model})" />
                         </th:block>
                         <th:block th:case="'PROJECT_COST_FINANCES'">
-                            <th:block th:insert="finance/your-finances-sub-sections :: your_project_costs" />
+                            <th:block th:insert="finance/your-finances-sub-sections :: your_project_costs (${model})" />
                         </th:block>
                         <th:block th:case="'ORGANISATION_FINANCES'">
-                            <th:block th:insert="finance/your-finances-sub-sections :: your_organisation" />
+                            <th:block th:insert="finance/your-finances-sub-sections :: your_organisation (${model})" />
                         </th:block>
                         <th:block th:case="'FUNDING_FINANCES'">
-                            <th:block th:insert="finance/your-finances-sub-sections :: your_funding" />
+                            <th:block th:insert="finance/your-finances-sub-sections :: your_funding (${model})" />
                         </th:block>
                         <th:block th:case="'OVERVIEW_FINANCES'">
                         </th:block>
                     </th:block>
-
-                    <th:block th:include="finance/your-finances-sub-sections :: agree_terms" />
-
-                    <th:block th:include="finance/your-finances-sub-sections :: subsection_buttons" />
-
                 </th:block>
 
                 <input type="hidden" id="application_id" th:value="${model.application.id}"/>
                 <input type="hidden" id="competition_id" th:value="${model.competition.id}"/>
 
-                <th:block th:if="${model.isQuestion()}">
-                    <th:block th:if="${model.allReadOnly}">
-                        <a th:href="${backURL}" class="button-secondary" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-                    </th:block>
-                    <th:block th:unless="${model.allReadOnly}">
-                        <button th:unless="${model.isSection()}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
-                    </th:block>
-                </th:block>
-            </form>
-            <input type="hidden" id="cacheTest" value="" />
+                <input type="hidden" id="cacheTest" value="" />
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </form>
         </main>
 
         <th:block th:insert="fragments/layout :: footer" />

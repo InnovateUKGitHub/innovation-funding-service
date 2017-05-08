@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
@@ -17,11 +18,13 @@ public abstract class AbstractApplicantViewModel<R extends AbstractApplicantReso
     protected R applicantResource;
     protected NavigationViewModel navigationViewModel;
     private List<AbstractFormInputViewModel> formInputViewModels;
+    private boolean allReadOnly;
 
-    public AbstractApplicantViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel) {
+    public AbstractApplicantViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
         this.applicantResource = applicantResource;
         this.formInputViewModels = formInputViewModels;
         this.navigationViewModel = navigationViewModel;
+        this.allReadOnly = allReadOnly;
     }
 
     public List<AbstractFormInputViewModel> getFormInputViewModels() {
@@ -33,6 +36,10 @@ public abstract class AbstractApplicantViewModel<R extends AbstractApplicantReso
     }
 
     public abstract String getTitle();
+
+    public boolean isAllReadOnly() {
+        return allReadOnly;
+    }
 
     public Boolean getApplicationIsClosed() {
         return !getCompetition().isOpen() || !getApplication().isOpen();
@@ -63,4 +70,6 @@ public abstract class AbstractApplicantViewModel<R extends AbstractApplicantReso
     public boolean isLeadApplicant() {
         return applicantResource.getCurrentApplicant().isLead();
     }
+
+    public ApplicantResource getCurrentApplicant() { return applicantResource.getCurrentApplicant(); }
 }

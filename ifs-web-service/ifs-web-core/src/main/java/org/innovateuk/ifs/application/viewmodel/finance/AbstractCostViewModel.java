@@ -1,21 +1,32 @@
 package org.innovateuk.ifs.application.viewmodel.finance;
 
-
-import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+/**
+ * Created by luke.harper on 08/05/2017.
+ */
 public abstract class AbstractCostViewModel extends AbstractFormInputViewModel {
 
-    private String viewmode;
-    private ApplicantSectionResource applicantSection;
     private FinanceRowCostCategory costCategory;
+    private String viewmode;
 
-    public abstract FinanceRowType rowType();
+    public abstract FinanceRowType getFinanceRowType();
 
-    public SectionResource getSection() {
-        return applicantSection.getSection();
+    public FinanceRowCostCategory getCostCategory() {
+        return costCategory;
+    }
+
+    public void setCostCategory(FinanceRowCostCategory costCategory) {
+        this.costCategory = costCategory;
+    }
+
+    public String getViewmode() {
+        return viewmode;
+    }
+
+    public void setViewmode(String viewmode) {
+        this.viewmode = viewmode;
     }
 }

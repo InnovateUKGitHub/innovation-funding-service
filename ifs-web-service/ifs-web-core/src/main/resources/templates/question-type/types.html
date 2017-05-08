@@ -342,7 +342,7 @@
                     <!-- ===========================Form: empty / no question =========================== -->
     <th:block th:fragment="empty(model)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block ifs:utext="${question.getDescription()}" />
-        <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:unless="${model.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
     </th:block>
 
 </html>
