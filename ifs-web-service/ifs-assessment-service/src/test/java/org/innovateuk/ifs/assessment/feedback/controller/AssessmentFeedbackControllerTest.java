@@ -6,16 +6,16 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
-import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentNavigationViewModel;
+import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -61,9 +61,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -131,24 +134,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource ->
                 String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
 
-        AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(assessmentResource.getId(),
+        AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
                 of(previousQuestionResource), of(nextQuestionResource));
 
         AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(
-                assessmentResource.getId(),
-                3,
-                50,
-                applicationId,
-                "Application name",
-                questionResource.getId(),
-                "1",
-                "Market opportunity",
-                "1. What is the business opportunity that this project addresses?",
-                50,
+                assessmentResource,
+                competitionResource,
+                questionResource,
                 "Applicant response",
                 assessmentFormInputs,
                 true,
-                false,
                 false,
                 null,
                 null);
@@ -160,17 +155,17 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-question"));
 
-        InOrder inOrder = inOrder(questionService, formInputService, assessorFormInputResponseService, assessmentService,
-                competitionService, formInputResponseService, categoryServiceMock);
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseService, assessmentService,
+                competitionService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
                 assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(competitionService).getById(competitionResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
-        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
-        inOrder.verify(formInputService).findAssessmentInputsByQuestion(questionResource.getId());
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
+        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
         inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
         inOrder.verify(questionService).getNextQuestion(questionResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -211,28 +206,19 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource ->
                 String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
 
-        AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(assessmentResource.getId(),
+        AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
                 of(previousQuestionResource), of(nextQuestionResource));
 
         FileDetailsViewModel expectedFileDetailsViewModel = new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
                 "File 1",
                 1024L);
 
-        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource.getId(),
-                3,
-                50,
-                applicationId,
-                "Application name",
-                questionResource.getId(),
-                "1",
-                "Market opportunity",
-                "1. What is the business opportunity that this project addresses?",
-                50,
+        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource,
+                questionResource,
                 "Applicant response",
                 assessmentFormInputs,
                 true,
                 false,
-                true,
                 expectedFileDetailsViewModel,
                 null);
 
@@ -243,17 +229,17 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-question"));
 
-        InOrder inOrder = inOrder(questionService, formInputService, assessorFormInputResponseService, assessmentService,
-                competitionService, formInputResponseService, categoryServiceMock);
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseService, assessmentService,
+                competitionService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
                 assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(competitionService).getById(competitionResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
-        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
-        inOrder.verify(formInputService).findAssessmentInputsByQuestion(questionResource.getId());
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
+        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
         inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
         inOrder.verify(questionService).getNextQuestion(questionResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -294,7 +280,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Form expectedForm = new Form();
         expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource ->
                 String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
-        AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(assessmentResource.getId(), of(previousQuestionResource), empty());
+        AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(), of(previousQuestionResource), empty());
 
         mockMvc.perform(get("/{assessmentId}/question/{questionId}", assessmentResource.getId(), questionResource.getId()))
                 .andExpect(status().isOk())
@@ -336,7 +322,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));
 
-        AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(assessmentResource.getId(),
+        AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
                 empty(), of(nextQuestionResource));
 
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), APPLICATION_DETAILS);
@@ -363,9 +349,9 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-details"));
 
-        InOrder inOrder = inOrder(questionService, formInputService, assessmentService, applicationService, sectionService);
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessmentService, applicationService, sectionService);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
@@ -411,25 +397,15 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Form expectedForm = new Form();
         expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource ->
                 String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
-        AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(assessmentResource.getId(),
+        AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
                 of(previousQuestionResource), of(nextQuestionResource));
         List<ResearchCategoryResource> researchCategoryResources = setupResearchCategories();
 
-        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource.getId(),
-                3,
-                50,
-                applicationId,
-                "Application name",
-                questionResource.getId(),
-                "1",
-                "Market opportunity",
-                "1. What is the business opportunity that this project addresses?",
-                50,
+        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource, questionResource,
                 "Applicant response",
                 assessmentFormInputs,
                 false,
                 true,
-                false,
                 null,
                 researchCategoryResources);
 
@@ -441,17 +417,17 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-question"));
 
-        InOrder inOrder = inOrder(questionService, formInputService, assessorFormInputResponseService, assessmentService,
-                competitionService, formInputResponseService, categoryServiceMock);
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseService, assessmentService,
+                competitionService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(competitionService).getById(competitionResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
-        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
-        inOrder.verify(formInputService).findAssessmentInputsByQuestion(questionResource.getId());
-        inOrder.verify(categoryServiceMock).getResearchCategories();
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
+        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
+        inOrder.verify(categoryRestServiceMock).getResearchCategories();
         inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
         inOrder.verify(questionService).getNextQuestion(questionResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -492,26 +468,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Form expectedForm = new Form();
         expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource ->
                 String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
-        AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(assessmentResource.getId(),
+        AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
                 of(previousQuestionResource), of(nextQuestionResource));
         // Expect no research categories to be populated
         List<ResearchCategoryResource> researchCategoryResources = null;
 
-        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource.getId(),
-                3,
-                50,
-                applicationId,
-                "Application name",
-                questionResource.getId(),
-                "1",
-                "Market opportunity",
-                "1. What is the business opportunity that this project addresses?",
-                50,
+        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource, questionResource,
                 "Applicant response",
                 assessmentFormInputs,
                 false,
                 true,
-                false,
                 null,
                 researchCategoryResources);
 
@@ -523,16 +489,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-question"));
 
-        InOrder inOrder = inOrder(questionService, formInputService, assessorFormInputResponseService, assessmentService,
-                competitionService, formInputResponseService, categoryServiceMock);
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseService, assessmentService,
+                competitionService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(competitionService).getById(competitionResource.getId());
-        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
-        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
-        inOrder.verify(formInputService).findAssessmentInputsByQuestion(questionResource.getId());
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
+        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
+        inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
         inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
         inOrder.verify(questionService).getNextQuestion(questionResource.getId());
         inOrder.verifyNoMoreInteractions();
@@ -784,23 +750,25 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         when(questionService.getNextQuestion(questionId)).thenReturn(next);
     }
 
-    private List<FormInputResource> setupApplicationFormInputs(Long questionId, FormInputType... formInputTypes) {
+    private List<FormInputResource> setupApplicationFormInputs(long questionId, FormInputType... formInputTypes) {
         List<FormInputResource> formInputs = stream(formInputTypes).map(formInputType ->
                 newFormInputResource()
                         .withType(formInputType)
+                        .withQuestion(questionId)
                         .build()
         ).collect(toList());
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(formInputs);
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(formInputs));
         return formInputs;
     }
 
-    private List<FormInputResource> setupAssessmentFormInputs(Long questionId, FormInputType... formInputTypes) {
+    private List<FormInputResource> setupAssessmentFormInputs(long questionId, FormInputType... formInputTypes) {
         List<FormInputResource> formInputs = stream(formInputTypes).map(formInputType ->
                 newFormInputResource()
                         .withType(formInputType)
+                        .withQuestion(questionId)
                         .build()
         ).collect(toList());
-        when(formInputService.findAssessmentInputsByQuestion(questionId)).thenReturn(formInputs);
+        when(formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)).thenReturn(restSuccess(formInputs));
         return formInputs;
     }
 
@@ -821,16 +789,17 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                     }
                 }
         ).collect(Collectors.toList());
-        applicantResponses.forEach(formInputResponse -> when(formInputResponseService.getByFormInputIdAndApplication(
+        applicantResponses.forEach(formInputResponse -> when(formInputResponseRestService.getByFormInputIdAndApplication(
                 formInputResponse.getFormInput(), applicationId)).thenReturn(restSuccess(singletonList(formInputResponse))));
         return applicantResponses;
     }
 
-    private List<AssessorFormInputResponseResource> setupAssessorResponses(Long assessmentId, Long questionId, List<FormInputResource> formInputs) {
+    private List<AssessorFormInputResponseResource> setupAssessorResponses(long assessmentId, long questionId, List<FormInputResource> formInputs) {
         List<AssessorFormInputResponseResource> assessorResponses = formInputs.stream().map(formInput ->
                 newAssessorFormInputResponseResource()
                         .withFormInput(formInput.getId())
                         .withValue("Assessor response")
+                        .withQuestion(questionId)
                         .build()
         ).collect(toList());
         when(assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId)).thenReturn(assessorResponses);
@@ -852,7 +821,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .withName("Research category")
                 .build(1);
 
-        when(categoryServiceMock.getResearchCategories()).thenReturn(categories);
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(categories));
         return categories;
     }
 }

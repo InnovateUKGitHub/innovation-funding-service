@@ -5,8 +5,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
+import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -102,6 +105,16 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         verifyNoMoreInteractions(userRules);
     }
 
+    @Test
+    public void updateDetails() {
+        UserResource user = newUserResource().build();
+
+        assertAccessDenied(() -> classUnderTest.updateDetails(user), () -> {
+            verify(userRules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
+            verifyNoMoreInteractions(userRules);
+        });
+    }
+
     @Override
     protected Class<? extends UserService> getClassUnderTest() {
         return TestUserService.class;
@@ -140,5 +153,11 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         public ServiceResult<Void> changePassword(@P("hash") String hash, String password) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated) {
+            return null;
+        }
+
     }
 }

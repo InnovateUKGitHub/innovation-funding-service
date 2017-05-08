@@ -1,17 +1,20 @@
 package org.innovateuk.ifs.project.financecheck.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategoryGroup;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryGroupRepository;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 
 /**

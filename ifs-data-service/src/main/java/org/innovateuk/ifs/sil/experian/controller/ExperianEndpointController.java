@@ -24,10 +24,10 @@ import static org.hibernate.jpa.internal.QueryImpl.LOG;
 @Profile("local")
 public class ExperianEndpointController {
     public static HashMap<SILBankDetails, ValidationResultWrapper> validationErrors;
-    public static HashMap<SILBankDetails, SilError> otherErrorsDuringValidation;
+    public static HashMap<SILBankDetails, SilExperianError> otherErrorsDuringValidation;
     public static ValidationResultWrapper defaultValidationResult;
     public static HashMap<AccountDetails, VerificationResultWrapper> verificationResults;
-    public static HashMap<AccountDetails, SilError> otherErrorsDuringVerification;
+    public static HashMap<AccountDetails, SilExperianError> otherErrorsDuringVerification;
     public static VerificationResultWrapper defaultVerificationResult;
 
     static {
@@ -40,7 +40,7 @@ public class ExperianEndpointController {
         LOG.info("Stubbing out SIL experian validation: " + bankDetails);
         ValidationResultWrapper validationResultWrapper = validationErrors.get(bankDetails);
         if (validationResultWrapper == null) {
-            SilError silError = otherErrorsDuringValidation.get(bankDetails);
+            SilExperianError silError = otherErrorsDuringValidation.get(bankDetails);
             if(silError == null) {
                 validationResultWrapper = defaultValidationResult;
             } else {
@@ -54,7 +54,7 @@ public class ExperianEndpointController {
     public RestResult<Object> experianVerify(@RequestBody AccountDetails accountDetails) {
         VerificationResultWrapper verificationResultWrapper = verificationResults.get(accountDetails);
         if (verificationResultWrapper == null) {
-            SilError silError = otherErrorsDuringVerification.get(accountDetails);
+            SilExperianError silError = otherErrorsDuringVerification.get(accountDetails);
             if(silError == null) {
                 verificationResultWrapper = defaultVerificationResult;
             } else {
@@ -303,7 +303,7 @@ public class ExperianEndpointController {
                         "  \"registrationNumber\": \"60674010\",\n" +
                         "  \"firstName\": \"NA\",\n" +
                         "  \"lastName\": \"NA\",\n" +
-                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Springbank Chapel Green\", \"street\":\"Charlmont Road\",\"locality\":\"\",\"town\":\"\",\"postcode\": \"SW17 9AB\"}\n" +
+                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Springbank Chapel Green\", \"street\":\"Charlmont Road\",\"locality\":\"\",\"town\":\"London\",\"postcode\": \"SW17 9AB\"}\n" +
                         "}", AccountDetails.class),
                 fromJson("{\n" +
                         "  \"VerificationResult\": {\n" +
@@ -328,7 +328,7 @@ public class ExperianEndpointController {
                         "  \"registrationNumber\": \"06624503\",\n" +
                         "  \"firstName\": \"NA\",\n" +
                         "  \"lastName\": \"NA\",\n" +
-                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Woodhouse Farm\", \"street\":\"Abbots Close\",\"locality\":\"\",\"town\":\"\",\"postcode\": \"TA19 0EF\"}\n" +
+                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Woodhouse Farm\", \"street\":\"Abbots Close\",\"locality\":\"\",\"town\":\"Somerset\",\"postcode\": \"TA19 0EF\"}\n" +
                         "}", AccountDetails.class),
                 fromJson("{\n" +
                         "  \"VerificationResult\": {\n" +
@@ -353,7 +353,7 @@ public class ExperianEndpointController {
                         "  \"registrationNumber\": \"57012850\",\n" +
                         "  \"firstName\": \"NA\",\n" +
                         "  \"lastName\": \"NA\",\n" +
-                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Woodhouse Farm\", \"street\":\"Admaston Road\",\"locality\":\"\",\"town\":\"\",\"postcode\": \"SE18 2TF\"}\n" +
+                        "  \"address\": {\"organisation\":\"\", \"buildingName\":\"Woodhouse Farm\", \"street\":\"Admaston Road\",\"locality\":\"\",\"town\":\"London\",\"postcode\": \"SE18 2TF\"}\n" +
                         "}", AccountDetails.class),
                 fromJson("{\n" +
                         "  \"VerificationResult\": {\n" +
@@ -505,7 +505,7 @@ public class ExperianEndpointController {
                         "  \"type\": \"Status report\",\n" +
                         "  \"message\": \"Invalid Parameter\",\n" +
                         "  \"description\": \"Invalid Parameter\"\n" +
-                        "}", SilError.class)
+                        "}", SilExperianError.class)
         );
 
         defaultVerificationResult = new VerificationResultWrapper(new VerificationResult("1", "7", "3", "No Match", singletonList(new Condition("warning", 2, "Modulus check algorithm is unavailable for these account details"))));

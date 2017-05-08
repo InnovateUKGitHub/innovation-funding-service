@@ -54,21 +54,18 @@ public class ProfileController {
     private EthnicityRestService ethnicityRestService;
 
     @Autowired
-    UserAuthenticationService userAuthenticationService;
-
+    private UserAuthenticationService userAuthenticationService;
 
     @GetMapping("/view")
-    public String viewUserProfile(Model model, HttpServletRequest request) {
-        final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request, true);
+    public String viewUserProfile(Model model,
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource userResource) {
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
 
         model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccessObjectOrThrowException()));
-        model.addAttribute("userIsLoggedIn", userIsLoggedIn(request));
         return "profile/user-profile";
     }
 
-    private void populateUserDetailsForm(Model model, HttpServletRequest request){
-        final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request);
+    private void populateUserDetailsForm(Model model, UserResource userResource){
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
         UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource, organisationResource);
         setFormActionURL(userDetailsForm);
@@ -108,19 +105,18 @@ public class ProfileController {
 
 
     @PostMapping("/edit")
-    public String submitUserProfile(@Valid @ModelAttribute UserDetailsForm userDetailsForm, BindingResult bindingResult,
-                                    Model model, HttpServletRequest request) {
+    public String submitUserProfile(@Valid @ModelAttribute("userDetailsForm") UserDetailsForm userDetailsForm, BindingResult bindingResult,
+                                    Model model,
+                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                    HttpServletRequest request) {
         String destination = "profile/edit-user-profile";
-
-        boolean userIsLoggedIn = userIsLoggedIn(request);
-        model.addAttribute("userIsLoggedIn", userIsLoggedIn);
-        final UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
         if(!bindingResult.hasErrors()) {
             ServiceResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
 
             if (updateProfileResult.isSuccess()) {
-                destination = viewUserProfile(model, request);
+                loggedInUser = userAuthenticationService.getAuthenticatedUser(request, true);
+                destination = viewUserProfile(model, loggedInUser);
             } else {
                 addEnvelopeErrorsToBindingResultErrors(updateProfileResult.getFailure().getErrors(), bindingResult);
             }
@@ -130,22 +126,15 @@ public class ProfileController {
     }
 
     @GetMapping("/edit")
-    public String editUserProfile(HttpServletRequest request, Model model) {
-        populateUserDetailsForm(model, request);
-        boolean userIsLoggedIn = userIsLoggedIn(request);
-        model.addAttribute("userIsLoggedIn", userIsLoggedIn);
+    public String editUserProfile(@ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                  HttpServletRequest request, Model model) {
+        populateUserDetailsForm(model, user);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "profile/edit-user-profile";
     }
 
     private List<EthnicityResource> getEthnicityOptions() {
         return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
-    }
-
-    private boolean userIsLoggedIn(HttpServletRequest request) {
-        Authentication authentication = userAuthenticationService.getAuthentication(request);
-
-        return authentication != null;
     }
 
     private void setFormActionURL(UserDetailsForm userDetailsForm) {

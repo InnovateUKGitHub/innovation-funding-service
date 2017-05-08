@@ -16,6 +16,9 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-6482 Extra validation message showing on fields
 ...
 ...               INFUND-8276 Content: Bank Details: should not say "each"
+...
+...               INFUND-8688 Experian response - Error message if wrong bank details are submitted
+
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -127,16 +130,20 @@ Bank account postcode lookup
     And the address fields should be filled
 
 Bank details experian validations
-    [Documentation]    INFUND-3010
+    [Documentation]    INFUND-3010, INFUND-8688
     [Tags]    Experian
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     When the user submits the bank account details    12345673    000003
     Then the user should see the text in the page    Bank account details are incorrect, please check and try again
+    When the user submits the bank account details    00000123    000004 
+    Then the user views the error response from the stub
 
 Bank details submission
-    [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109
+    [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
+    Given the user submits the bank account details   00000123    000004 
+    Then the user views the error response from the stub
     When the user enters text to a text field         name=accountNumber    12345677
     And the user enters text to a text field          name=sortCode    000004
     When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
@@ -156,7 +163,7 @@ Bank details submission
     Then the user should see the element              jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action
 
 Bank details for Academic
-    [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018
+    [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018, INFUND-8688
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
@@ -168,6 +175,8 @@ Bank details for Academic
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
+    When the user submits the bank account details along with the organisation address     00000123    000004
+    Then the user views the error response from the stub
     When the user enters text to a text field      name=accountNumber  51406795
     And the user enters text to a text field       name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -203,7 +212,7 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(7).status          # GOL
 
 Bank details for non-lead partner
-    [Documentation]    INFUND-3010, INFUND-6018
+    [Documentation]    INFUND-3010, INFUND-6018, INFUND-8688
     [Tags]    HappyPath
     #TODO pending due to INFUND-6090  Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
@@ -217,6 +226,8 @@ Bank details for non-lead partner
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
+    When the user submits the bank account details along with the organisation address     00000123    000004
+    Then the user views the error response from the stub
     When the user enters text to a text field      name=accountNumber  51406795
     Then the user enters text to a text field      name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -249,24 +260,23 @@ Project Finance can see the progress of partners bank details
     Then the user should see the element            jQuery=li:nth-child(1):contains("Review required")
     And the user should see the element             jQuery=li:nth-child(2):contains("Review required")
     And the user should see the element             jQuery=li:nth-child(3):contains("Review required")
-    When the user clicks the button/link            link=${Eadel_Name}
-    Then the user should see the text in the page   ${Eadel_Name} - Account details
+    When the user clicks the button/link            link=${Vitruvius_Name}
+    Then the user should see the text in the page   ${Vitruvius_Name} - Account details
     And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_FINANCE}
     And the user should see the element             jQuery=a:contains("${PS_BD_APPLICATION_PM_EMAIL}")
     And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_TELEPHONE}
     And the user goes back to the previous page
-    When the user clicks the button/link            link=${Bluezoom_Name}
-    Then the user should see the text in the page   ${Bluezoom_Name} - Account details
+    When the user clicks the button/link            link=${A_B_Cad_Services_Name}
+    Then the user should see the text in the page   ${A_B_Cad_Services_Name} - Account details
     And the user should see the text in the page    Ryan Welch
     And the user should see the text in the page    ${PS_BD_APPLICATION_PARTNER_EMAIL}
     And the user goes back to the previous page
-    When the user clicks the button/link            link=${Npath_Name}
-    Then the user should see the text in the page   ${Npath_Name} - Account details
+    When the user clicks the button/link            link=${Armstrong_Butler_Name}
+    Then the user should see the text in the page   ${Armstrong_Butler_Name} - Account details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_FINANCE}
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
     Then the user clicks the button/link            link=Bank details
     [Teardown]  the user clicks the button/link     link=Projects in setup
-
 
 Project Finance can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903
@@ -280,9 +290,9 @@ Project Finance can see Bank Details
     And the user should see the text in the page  each partner has submitted their bank details
     Then the user should see the element          jQuery=li:nth-child(1):contains("Review required")
     And the user should see the element           jQuery=li:nth-child(2):contains("Review required")
-    And the user should see the element           jQuery=li:nth-child(1) a:contains("${Eadel_Name}")
+    And the user should see the element           jQuery=li:nth-child(1) a:contains("${Vitruvius_Name}")
     And the user should see the element           jQuery=li:nth-child(3):contains("Review required")
-    When the user clicks the button/link          link=${Eadel_Name}
+    When the user clicks the button/link          link=${Vitruvius_Name}
     Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
 Other internal users do not have access to bank details export
@@ -313,10 +323,24 @@ the user submits the bank account details
     the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link    jQuery=.button:contains("Submit")
 
+the user submits the bank account details along with the organisation address
+    [Arguments]    ${account_number}    ${sort_code}
+    the user enters text to a text field    name=accountNumber    ${account_number}
+    the user enters text to a text field    name=sortCode    ${sort_code}
+    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link     jQuery=.button:contains("Submit")
+
+the user views the error response from the stub
+    the user should see the text in the page    Bank details cannot be validated. 
+    the user should see the text in the page    please check your account number 
+    the user should see the text in the page    please check your sort code 
+
 finance contacts are submitted by all users
-    user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Npath_Id}
-    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${Bluezoom_Id}
-    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Eadel_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Armstrong_Butler_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${A_B_Cad_Services_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Vitruvius_Id}
     logout as user
     close any open browsers
 
@@ -331,20 +355,20 @@ the project finance user downloads the bank details
     the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
 
 the user opens the excel and checks the content
-    ${contents}=                read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${eadel_details}=           get from list  ${contents}  7
-    ${eadel}=                   get from list  ${eadel_details}  0
-    should be equal             ${eadel}  ${Eadel_Name}
-    ${Npath_details}=           get from list  ${contents}  8
-    ${Npath}=                   get from list  ${Npath_details}  0
-    should be equal             ${Npath}  ${Npath_Name}
-    ${application_number}=      get from list  ${eadel_details}  1
-    should be equal             ${application_number}  ${PS_BD_APPLICATION_NUMBER}
-    ${postcode}=                get from list  ${eadel_details}  8
-    should be equal             ${postcode}  CH64 3RU
-    ${bank_account_name}=       get from list  ${eadel_details}  9
-    should be equal             ${bank_account_name}  ${Eadel_Name}
-    ${bank_account_number}=     get from list  ${eadel_details}  10
-    should be equal             ${bank_account_number}  12345677
-    ${bank_account_sort_code}=  get from list  ${eadel_details}  11
-    should be equal             ${bank_account_sort_code}  000004
+    ${contents}=                    read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
+    ${vitruvius_details}=               get from list  ${contents}  7
+    ${vitruvius}=                       get from list  ${vitruvius_details}  0
+    should be equal                 ${vitruvius}  ${Vitruvius_Name}
+    ${Armstrong_Butler_details}=    get from list  ${contents}  8
+    ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0
+    should be equal                 ${Armstrong_Butler}  ${Armstrong_Butler_Name}
+    ${application_number}=          get from list  ${vitruvius_details}  1
+    should be equal                 ${application_number}  ${PS_BD_APPLICATION_NUMBER}
+    ${postcode}=                    get from list  ${vitruvius_details}  8
+    should be equal                 ${postcode}  CH64 3RU
+    ${bank_account_name}=           get from list  ${vitruvius_details}  9
+    should be equal                 ${bank_account_name}  ${Vitruvius_Name}
+    ${bank_account_number}=         get from list  ${vitruvius_details}  10
+    should be equal                 ${bank_account_number}  12345677
+    ${bank_account_sort_code}=      get from list  ${vitruvius_details}  11
+    should be equal                 ${bank_account_sort_code}  000004

@@ -3,10 +3,13 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamOrganisationRowViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+
+import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamApplicantRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamOrganisationRowViewModel;
+import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -15,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -27,10 +31,9 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -41,6 +44,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,6 +57,9 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     @Spy
     @InjectMocks
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+
+    @Mock
+    public ApplicationUtil applicationUtil;
 
     @Override
     protected ApplicationTeamController supplyControllerUnderTest() {
@@ -113,6 +120,22 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void getApplicationTeam_applicationAlreadySubmitted() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+
+        doThrow(new ForbiddenActionException("Application has already been submitted")).when(applicationUtil).checkIfApplicationAlreadySubmitted(applicationResource);
+
+        mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        InOrder inOrder = inOrder(applicationService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void getApplicationTeam_loggedInUserIsNonLead() throws Exception {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
@@ -151,6 +174,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         );
 
         setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
+
         mockMvc.perform(get("/application/{applicationId}/team", applicationResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
@@ -333,17 +357,17 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         Map<String, UserResource> usersMap = setupUserResources();
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
-        when(applicationService.updateStatus(applicationResource.getId(), OPEN)).thenReturn(serviceSuccess());
+        when(applicationRestService.getApplicationById(applicationResource.getId())).thenReturn(restSuccess(applicationResource));
+        when(applicationRestService.updateApplicationState(applicationResource.getId(), OPEN)).thenReturn(restSuccess());
 
         setLoggedInUser(leadApplicant);
         mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
-        inOrder.verify(applicationService).updateStatus(applicationResource.getId(), OPEN);
+        InOrder inOrder = inOrder(applicationRestService, inviteRestService);
+        inOrder.verify(applicationRestService).getApplicationById(applicationResource.getId());
+        inOrder.verify(applicationRestService).updateApplicationState(applicationResource.getId(), OPEN);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -356,14 +380,15 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
 
         // Assert the request is redirected to the application page without attempting to change the status
 
+        when(applicationRestService.getApplicationById(applicationResource.getId())).thenReturn(restSuccess(applicationResource));
+
         setLoggedInUser(leadApplicant);
         mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        InOrder inOrder = inOrder(applicationRestService, inviteRestService);
+        inOrder.verify(applicationRestService).getApplicationById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -374,13 +399,18 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         Map<String, UserResource> usersMap = setupUserResources();
         setupLeadApplicant(applicationResource, usersMap);
 
+        when(applicationRestService.getApplicationById(applicationResource.getId())).thenReturn(restSuccess(applicationResource));
+
         setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
+
+        doThrow(new ForbiddenActionException("User must be Lead Applicant")).when(applicationUtil).checkUserIsLeadApplicant(applicationResource, 17L);
+
         mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
                 .andExpect(status().isForbidden());
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        InOrder inOrder = inOrder(applicationRestService, inviteRestService);
+        inOrder.verify(applicationRestService).getApplicationById(applicationResource.getId());
+
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -388,10 +418,10 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         return setupApplicationResource(organisationsMap, OPEN);
     }
 
-    private ApplicationResource setupApplicationResource(Map<String, OrganisationResource> organisationsMap, ApplicationStatus applicationStatus) {
+    private ApplicationResource setupApplicationResource(Map<String, OrganisationResource> organisationsMap, ApplicationState applicationState) {
         ApplicationResource applicationResource = newApplicationResource()
                 .withName("Application name")
-                .withApplicationStatus(applicationStatus)
+                .withApplicationState(applicationState)
                 .build();
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);

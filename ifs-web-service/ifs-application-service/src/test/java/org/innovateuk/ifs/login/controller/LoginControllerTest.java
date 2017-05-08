@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.eq;
@@ -56,7 +57,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         setLoggedInUser(null);
         String email = "test@test.nl";
-        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(restSuccess());
+        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(completedFuture(restSuccess()));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD)
@@ -72,7 +73,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         setLoggedInUser(null);
         String email = "testtest.nl";
-        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(restSuccess());
+        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(completedFuture(restSuccess()));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD)
@@ -113,28 +114,9 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
                         .param("password", password)
-                        .param("retypedPassword", password)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name(LoginController.LOGIN_BASE + "/" + LoginController.PASSWORD_CHANGED));
-
-    }
-
-    @Test
-    public void testResetPasswordPostInvalidPassword() throws Exception {
-
-        String hash = UUID.randomUUID().toString();
-        String password = "Passw0rd";
-        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(serviceSuccess());
-
-        mockMvc.perform(
-                post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
-                        .param("password", password)
-                        .param("retypedPassword", "something else")
-        )
-                .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors("resetPasswordForm", "retypedPassword"))
-                .andExpect(view().name(LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD_FORM));
 
     }
 
@@ -151,10 +133,25 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
                         .param("password", password)
-                        .param("retypedPassword", password)
         )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("resetPasswordForm", "password", "registration.INVALID_PASSWORD"))
+                .andExpect(view().name(LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD_FORM));
+
+    }
+
+    @Test
+    public void testResetPasswordPostPasswordTooShort() throws Exception {
+
+        String hash = UUID.randomUUID().toString();
+        String password = "letm3In";
+        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
+                        .param("password", password)
+        )
+                .andExpect(status().isOk())
                 .andExpect(view().name(LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD_FORM));
 
     }
@@ -169,7 +166,6 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
                         .param("password", password)
-                        .param("retypedPassword", password)
         )
                 .andExpect(status().isAlreadyReported())
                 .andExpect(view().name(ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE));

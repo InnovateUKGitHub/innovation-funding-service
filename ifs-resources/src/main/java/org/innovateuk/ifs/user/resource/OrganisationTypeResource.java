@@ -4,6 +4,7 @@ public class OrganisationTypeResource {
     private Long id;
     private String name;
     private String description;
+    private Boolean visibleInSetup;
     private Long parentOrganisationType;
 
     public OrganisationTypeResource(Long id, String name, Long parentOrganisationType) {
@@ -38,6 +39,14 @@ public class OrganisationTypeResource {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getVisibleInSetup() {
+        return visibleInSetup;
+    }
+
+    public void setVisibleInSetup(Boolean visibleInSetup) {
+        this.visibleInSetup = visibleInSetup;
     }
 
     public Long getParentOrganisationType() {

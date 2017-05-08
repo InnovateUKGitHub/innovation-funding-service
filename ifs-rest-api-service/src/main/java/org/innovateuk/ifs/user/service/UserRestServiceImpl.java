@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.user.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.user.resource.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 
 
@@ -41,11 +41,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<Void> sendPasswordResetNotification(String email) {
-        if(StringUtils.isEmpty(email))
-            return restFailure(CommonErrors.notFoundError(UserResource.class, email));
-
-        return getWithRestResultAnonymous(userRestURL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
+    public Future<RestResult<Void>> sendPasswordResetNotification(String email) {
+        return getWithRestResultAsyncAnonymous(userRestURL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
     }
 
     @Override
@@ -141,7 +138,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
-                                                                                        String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId) {
+                                                                                        String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Long competitionId, Boolean allowMarketingEmails) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -159,6 +156,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(!StringUtils.isEmpty(disability)) {
             user.setDisability(Disability.valueOf(disability));
         }
+        user.setAllowMarketingEmails(allowMarketingEmails);
 
         String url;
         if(competitionId != null){
@@ -172,8 +170,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                       String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId) {
-        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, null);
+                                                                       String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Boolean allowMarketingEmails) {
+        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, null, allowMarketingEmails);
     }
 
     @Override
@@ -199,50 +197,4 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         String url = userRestURL + "/updateDetails";
         return postWithRestResult(url, user, UserResource.class);
     }
-
-    @Override
-    public RestResult<ProfileSkillsResource> getProfileSkills(Long userId) {
-        return getWithRestResult(format("%s/id/%s/getProfileSkills", userRestURL, userId), ProfileSkillsResource.class);
-    }
-
-    @Override
-    public RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkillsEditResource) {
-        return putWithRestResult(format("%s/id/%s/updateProfileSkills", userRestURL, userId), profileSkillsEditResource, Void.class);
-    }
-
-    @Override
-    public RestResult<ProfileAgreementResource> getProfileAgreement(Long userId) {
-        return getWithRestResult(format("%s/id/%s/getProfileAgreement", userRestURL, userId), ProfileAgreementResource.class);
-    }
-
-    @Override
-    public RestResult<Void> updateProfileAgreement(Long userId) {
-        return putWithRestResult(format("%s/id/%s/updateProfileAgreement", userRestURL, userId), Void.class);
-    }
-
-    @Override
-    public RestResult<List<AffiliationResource>> getUserAffiliations(Long userId) {
-        return getWithRestResult(format("%s/id/%s/getUserAffiliations", userRestURL, userId), affiliationResourceListType());
-    }
-
-    @Override
-    public RestResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations) {
-        return putWithRestResult(format("%s/id/%s/updateUserAffiliations", userRestURL, userId), affiliations, Void.class);
-    }
-
-    @Override
-    public RestResult<UserProfileResource> getUserProfile(Long userId) {
-        return getWithRestResult(format("%s/id/%s/getUserProfile", userRestURL, userId), UserProfileResource.class);
-    }
-
-    @Override
-    public RestResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile) {
-        return putWithRestResult(format("%s/id/%s/updateUserProfile", userRestURL, userId), userProfile, Void.class);
-    }
-
-    @Override
-    public RestResult<UserProfileStatusResource> getUserProfileStatus(Long userId) {
-        return getWithRestResult(format("%s/id/%s/profileStatus", userRestURL, userId), UserProfileStatusResource.class);
-    }
-
 }

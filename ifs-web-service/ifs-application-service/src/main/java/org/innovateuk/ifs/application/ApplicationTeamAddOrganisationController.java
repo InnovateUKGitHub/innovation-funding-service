@@ -5,14 +5,13 @@ import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamAddOrganisationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -49,7 +48,7 @@ public class ApplicationTeamAddOrganisationController {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private UserService userService;
+    private ApplicationUtil applicationUtil;
 
     @Autowired
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
@@ -57,10 +56,10 @@ public class ApplicationTeamAddOrganisationController {
     @GetMapping("/addOrganisation")
     public String getAddOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        validateRequest(applicationResource, loggedInUser.getId());
 
         if (form.getApplicants().isEmpty()) {
             form.getApplicants().add(new ApplicantInviteForm());
@@ -72,12 +71,12 @@ public class ApplicationTeamAddOrganisationController {
     @PostMapping("/addOrganisation")
     public String submitAddOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
-                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        validateRequest(applicationResource, loggedInUser.getId());
 
         validateUniqueEmails(form, bindingResult);
 
@@ -94,10 +93,10 @@ public class ApplicationTeamAddOrganisationController {
     @PostMapping(value = "/addOrganisation", params = {"addApplicant"})
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        validateRequest(applicationResource, loggedInUser.getId());
         form.getApplicants().add(new ApplicantInviteForm());
         return doViewAddOrganisation(model, applicationResource);
     }
@@ -105,23 +104,19 @@ public class ApplicationTeamAddOrganisationController {
     @PostMapping(value = "/addOrganisation", params = {"removeApplicant"})
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
-                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        validateRequest(applicationResource, loggedInUser.getId());
         form.getApplicants().remove(position.intValue());
         return doViewAddOrganisation(model, applicationResource);
     }
 
-    private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
-        if (loggedInUserId != getLeadApplicantId(applicationResource)) {
-            throw new ForbiddenActionException("User must be Lead Applicant");
-        }
-    }
 
-    private long getLeadApplicantId(ApplicationResource applicationResource) {
-        return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
+    private void validateRequest(ApplicationResource applicationResource, long loggedInUserId) {
+        applicationUtil.checkIfApplicationAlreadySubmitted(applicationResource);
+        applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUserId);
     }
 
     private String doViewAddOrganisation(Model model, ApplicationResource applicationResource) {

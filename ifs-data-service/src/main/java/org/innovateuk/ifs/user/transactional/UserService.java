@@ -34,4 +34,8 @@ public interface UserService {
 
     @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.token.domain.Token', 'CHANGE_PASSWORD')")
     ServiceResult<Void> changePassword(@P("hash") String hash, String password);
+
+    @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
+    ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);
+
 }

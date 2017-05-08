@@ -10,8 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <h1 class="heading-large">Create your account</h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create your account',size='heading-large'" />
 
     <div class="message-alert">
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
@@ -19,7 +18,7 @@
 
     <h2 class="heading-medium" th:text="${organisationForm.organisationType.name}"></h2>
 
-    <th:block th:insert="fragments/addresses :: organisation-details" />
+    <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${true}" />
 
     <a th:href="@{/organisation/create/save-company}" name="save-company" class="button button-large">Save</a>
 

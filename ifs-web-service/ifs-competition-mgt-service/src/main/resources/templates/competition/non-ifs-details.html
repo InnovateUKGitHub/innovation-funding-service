@@ -19,11 +19,9 @@
         </ul>
     </div>
 
-    <div class="page-title">
-        <h1 class="heading-xlarge">Non-IFS competition details</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Non-IFS competition details',size='heading-xlarge'" />
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="POST" th:object="${form}" novalidate="novalidate">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" th:object="${form}" novalidate="novalidate">
         <fieldset>
             <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
                 <label class="form-label" for="title">

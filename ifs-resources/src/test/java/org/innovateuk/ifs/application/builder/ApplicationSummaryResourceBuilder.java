@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 
@@ -81,5 +82,9 @@ public class ApplicationSummaryResourceBuilder extends BaseBuilder<ApplicationSu
 
     public ApplicationSummaryResourceBuilder withInnovationArea(String... innovationArea) {
         return withArraySetFieldByReflection("innovationArea", innovationArea);
+    }
+
+    public ApplicationSummaryResourceBuilder withIneligibleInformed(Boolean... ineligibleInformed) {
+        return withArraySetFieldByReflection("ineligibleInformed", ineligibleInformed);
     }
 }

@@ -1,10 +1,10 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
-
-Congratulations, you have successfully submitted an application for funding to Innovate UK's ${competitionName} competition.
-
+You have successfully submitted an application for funding to Innovate UK's ${competitionName} competition.
+We will be in touch with the result of your application soon.
+Please sign into your IFS account to find out what happens next.
 If you have any queries with your submission please contact our customer support services at support@innovateuk.gov.uk or 0300 321 4357.
-
+Yours sincerely,
 <@layout.senderPlainText />
 </@layout.defaultPlainText>

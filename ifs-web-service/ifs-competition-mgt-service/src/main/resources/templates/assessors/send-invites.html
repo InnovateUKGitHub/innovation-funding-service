@@ -11,13 +11,7 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Invite assessor',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
-
-            <div class="page-title">
-                <h1 class="heading-xlarge">
-                    <span class="heading-secondary" th:text="${model.competitionName}">Technology inspired</span>
-                    Invite to be an assessor
-                </h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite to be an assessor',subTitle=${model.competitionName},size='heading-xlarge'" />
 
             <p class="heading-medium" th:text="|Recipient: ${model.recipient}|">Dave smith</p>
 

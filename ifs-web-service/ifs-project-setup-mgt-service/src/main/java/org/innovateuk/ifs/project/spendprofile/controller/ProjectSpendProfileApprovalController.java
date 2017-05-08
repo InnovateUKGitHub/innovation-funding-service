@@ -10,9 +10,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.CaseInsensitiveConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.spendprofile.form.ProjectSpendProfileApprovalForm;
+import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -51,7 +51,7 @@ public class ProjectSpendProfileApprovalController {
     private UserService userService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private SpendProfileService spendProfileService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -73,7 +73,7 @@ public class ProjectSpendProfileApprovalController {
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> doViewSpendProfileApproval(projectId, model);
-        ServiceResult<Void> generateResult = projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType);
+        ServiceResult<Void> generateResult = spendProfileService.approveOrRejectSpendProfile(projectId, approvalType);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
                 redirectToCompetitionSummaryPage(projectId)
@@ -94,7 +94,7 @@ public class ProjectSpendProfileApprovalController {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         String leadTechnologist = competition.getLeadTechnologist() != null ? userService.findById(competition.getLeadTechnologist()).getName() : "";
-        ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(projectId);
+        ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
 

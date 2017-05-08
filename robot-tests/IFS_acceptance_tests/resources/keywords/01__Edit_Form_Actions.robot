@@ -11,7 +11,7 @@ the user selects the checkbox
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
@@ -22,7 +22,7 @@ the user unselects the checkbox
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user should see the checkbox
     [Arguments]    ${checkbox}
@@ -31,7 +31,7 @@ the user should see the checkbox
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 
 the user should see that the checkbox is disabled
@@ -41,7 +41,16 @@ the user should see that the checkbox is disabled
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
+
+the user should see that the checkbox is selected
+    [Arguments]    ${checkbox}
+     Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}" and @checked='checked']/ancestor::label[contains(@class,"selected")]
+     # Error checking
+     the user should not see an error in the page
+     # Header checking (INFUND-1892)
+     Element Should Be Visible    id=global-header
+     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 
 the user should not see the checkbox
@@ -51,7 +60,7 @@ the user should not see the checkbox
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 
 the user selects the radio button
@@ -62,7 +71,7 @@ the user selects the radio button
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user moves focus to the element
     [Arguments]    ${element}
@@ -70,7 +79,7 @@ the user moves focus to the element
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
     Wait Until Element Is Visible Without Screenshots    ${element}
     focus    ${element}
 
@@ -81,7 +90,7 @@ the user should see the radio button in the page
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 
 the user sees that the radio button is selected
@@ -92,7 +101,7 @@ the user sees that the radio button is selected
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user sees that the radio button is not selected
     [Arguments]    ${RADIO_BUTTON}
@@ -101,7 +110,7 @@ the user sees that the radio button is not selected
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -112,14 +121,14 @@ the user selects the option from the drop-down menu
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user submits the form
     Submit Form
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 Question should be editable
     [Arguments]    ${Mark_question_as_incomplete}
@@ -157,7 +166,7 @@ the user clears the text from the element
     the user should not see an error in the page
     # Header checking    (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
@@ -173,7 +182,7 @@ the user selects the index from the drop-down menu
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user should see the option in the drop-down menu
     [Arguments]    ${option}    ${drop-down}
@@ -185,7 +194,7 @@ the user should see the option in the drop-down menu
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 
 the user moves the mouse away from the element
@@ -194,7 +203,7 @@ the user moves the mouse away from the element
     the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
     Wait Until Element Is Visible Without Screenshots    ${element}
     mouse out    ${element}
 
@@ -205,7 +214,7 @@ the user should see the dropdown option selected
     the user should not see an error in the page
     # Header checking    (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user edits the project summary question
     focus    css=#form-input-1039 .editor
