@@ -61,9 +61,12 @@
                                     </div>
                                     <div class="column-third">
                                         <p th:unless=${question.shortName.equals('Scope')} class="form-hint no-margin">No feedback provided</p>
-                                        <p th:if=${question.shortName.equals('Scope')}>
-                                            In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span> Yes
-                                        </p>
+                                        <th:block th:if="${question.shortName.equals('Scope')}">
+                                            <p th:unless=${scores.scopeAssessed} class="form-hint no-margin">No feedback provided</p>
+                                            <p th:if="${scores.scopeAssessed}" th:text="||">
+                                                In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span>
+                                            </p>
+                                        </th:block>
                                     </div>
                                 </div>
                             </li>
