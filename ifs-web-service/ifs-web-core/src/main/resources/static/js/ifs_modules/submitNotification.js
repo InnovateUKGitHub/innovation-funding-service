@@ -3,7 +3,7 @@ IFS.core.submitNotification = (function () {
   var s // private alias to settings
   return {
     settings: {
-      element: '.submit-notification'
+      element: '[data-submitted-text]'
     },
     init: function () {
       s = this.settings
