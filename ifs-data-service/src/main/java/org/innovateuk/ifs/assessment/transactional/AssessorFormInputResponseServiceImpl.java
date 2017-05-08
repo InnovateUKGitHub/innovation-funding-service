@@ -126,7 +126,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
             }
         }
 
-        // Infer that assessment of the Scope is required if there are Scope responses
+        // Infer that assessment of the Scope question is required if there are Scope responses
         boolean scopeAssessed = totalScope > 0;
 
         return serviceSuccess(new ApplicationAssessmentAggregateResource(scopeAssessed, totalScope, totalInScope,
