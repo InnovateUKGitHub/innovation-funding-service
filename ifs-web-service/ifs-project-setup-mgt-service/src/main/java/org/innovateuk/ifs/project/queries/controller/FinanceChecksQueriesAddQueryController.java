@@ -157,8 +157,14 @@ public class FinanceChecksQueriesAddQueryController {
                                    HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         Supplier<String> view = () -> redirectTo(rootView(projectId, organisationId, querySection));
+        Supplier<String> errorView = () -> {
+            FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
+            model.addAttribute("model", viewModel);
+            model.addAttribute("form", form);
+            return "project/financecheck/new-query";
+        };
 
-        return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
+        return validationHandler.performActionOrBindErrorsToField("attachment", errorView, view, () -> {
             MultipartFile file = form.getAttachment();
 
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),

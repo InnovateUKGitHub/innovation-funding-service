@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
+import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -80,7 +81,7 @@ public class FinanceChecksNotesAddNoteController {
                               HttpServletResponse response) {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-        model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, attachments));
+        model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksNotesAddNoteForm()));
         return "project/financecheck/new-note";
     }
@@ -98,7 +99,7 @@ public class FinanceChecksNotesAddNoteController {
                            HttpServletResponse response) {
         Supplier<String> failureView = () -> {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            FinanceChecksNotesAddNoteViewModel viewModel = populateQueriesViewModel(projectId, organisationId, attachments);
+            FinanceChecksNotesAddNoteViewModel viewModel = populateNoteViewModel(projectId, organisationId, attachments);
             model.addAttribute("model", viewModel);
             model.addAttribute(FORM_ATTR, form);
             return "project/financecheck/new-note";
@@ -147,8 +148,13 @@ public class FinanceChecksNotesAddNoteController {
                                         HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         Supplier<String> view = () -> redirectTo(rootView(projectId, organisationId));
-
-        return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
+        Supplier<String> errorView = () -> {
+            model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
+            model.addAttribute("form", form);
+            return "project/financecheck/new-query";
+        };
+        
+        return validationHandler.performActionOrBindErrorsToField("attachment", errorView, view, () -> {
             MultipartFile file = form.getAttachment();
 
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
@@ -158,7 +164,7 @@ public class FinanceChecksNotesAddNoteController {
                 saveFormToCookie(response, projectId, organisationId, form);
             });
 
-            model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, attachments));
+            model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
             return result;
         });
     }
@@ -226,7 +232,7 @@ public class FinanceChecksNotesAddNoteController {
         return redirectToNotePage(projectId, organisationId);
     }
 
-    private FinanceChecksNotesAddNoteViewModel populateQueriesViewModel(Long projectId, Long organisationId, List<Long> attachmentFileIds) {
+    private FinanceChecksNotesAddNoteViewModel populateNoteViewModel(Long projectId, Long organisationId, List<Long> attachmentFileIds) {
 
         ProjectResource project = projectService.getById(projectId);
 
