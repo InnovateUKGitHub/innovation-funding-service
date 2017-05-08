@@ -360,13 +360,7 @@ public class CompetitionSetupController {
     @GetMapping("/getInnovationArea/{innovationSectorId}")
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
-
-        // For the 'Open' sector all innovation areas required
-        if (innovationSectorId == 0) {
-            return categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
-        } else {
-            return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
-        }
+        return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
     }
 
     /* AJAX Function */
