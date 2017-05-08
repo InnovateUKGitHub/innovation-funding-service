@@ -220,13 +220,14 @@ invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the guest user opens the browser
     the user follows the flow to register their organisation    radio-1
-    the user enters the details and clicks the create account    Stuart   Anderson   ${EMAIL_LEAD}
-    the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    Once verified you can sign into your account
-    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    the user clicks the button/link    jQuery=.button:contains("Sign in")
-    the guest user inserts user email & password    ${EMAIL_LEAD}    ${correct_password}
-    the guest user clicks the log-in button
+    the user verifies email                                     ${EMAIL_LEAD}
+#    the user enters the details and clicks the create account    Stuart   Anderson   ${EMAIL_LEAD}
+#    the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+#    the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    Once verified you can sign into your account
+#    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+#    the user clicks the button/link    jQuery=.button:contains("Sign in")
+#    the guest user inserts user email & password    ${EMAIL_LEAD}    ${correct_password}
+#    the guest user clicks the log-in button
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     the user enters text to a text field    name=organisationName    innovate
@@ -239,31 +240,34 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${EMAIL_INVITED}
+    [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
     the user follows the flow to register their organisation     radio-1
-    The user enters the details and clicks the create account     Stuart   Anderson   ${EMAIL_INVITED}
-    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    Once verified you can sign into your account
-    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Sign in")
-    The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
+    the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
+
+the user verifies email
+    [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    The user enters the details and clicks the create account  ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    The user should be redirected to the correct page          ${REGISTRATION_SUCCESS}
+    the user reads his email and clicks the link               ${EMAIL_INVITED}  Please verify your email address  Once verified you can sign into your account
+    The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
+    The user clicks the button/link                            jQuery=.button:contains("Sign in")
+    The guest user inserts user email & password               ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
-    the user closes the browser
 
 the user follows the flow to register their organisation
     [Arguments]     ${orgType}
-    Given the user navigates to the page    ${COMPETITION_OVERVIEW_URL}
-    When the user clicks the button/link    jQuery=a:contains("Start new application")
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user enters text to a text field    id=organisationSearchName    Innovate
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox    address-same
-    and the user should not see the element     jQuery=h3:contains("Organisation type")
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button  organisationTypeId   ${orgType}
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    the user navigates to the page    ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link    jQuery=a:contains("Start new application")
+    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user enters text to a text field    id=organisationSearchName    Innovate
+    the user clicks the button/link    id=org-search
+    the user clicks the button/link    link=INNOVATE LTD
+    the user selects the checkbox    address-same
+    the user should not see the element     jQuery=h3:contains("Organisation type")
+    the user clicks the button/link    jQuery=.button:contains("Continue")
+    the user selects the radio button  organisationTypeId   ${orgType}
+    the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    the user clicks the button/link    jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}

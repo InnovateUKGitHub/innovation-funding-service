@@ -20,70 +20,51 @@ Non registered users CH route: lead org Business
     [Documentation]    INFUND-669  INFUND-1904  INFUND-1920  INFUND-1785  INFUND-9280
     [Tags]    HappyPath    SmokeTest
     [Setup]    The guest user opens the browser
-    Given the user follows the flow to register their organisation    radio-1  # business
-    When the user enters the details and clicks the create account   Phil   Smith   ${test_mailbox_one}+business@gmail.com
-    then the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    and the user does the email verification   ${test_mailbox_one}+business@gmail.com
+    When the user follows the flow to register their organisation      radio-1  # business
+    then the user verifies email                                       Phil   Smith    ${test_mailbox_one}+business@gmail.com
+    and the user directed to correct dashboaard                        ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    and the user reads his email and clicks the link                   ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
     [Teardown]    the user closes the browser
 
 Non registered users CH route: lead org RTO
     [Documentation]    INFUND-669  INFUND-1904  INFUND-1785
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    Given the user follows the flow to register their organisation   radio-3   # RTO
-    When the user enters the details and clicks the create account   Lee    Tess    ${test_mailbox_one}+rto@gmail.com
-    then the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    and the user does the email verification   ${test_mailbox_one}+rto@gmail.com
+    When the user follows the flow to register their organisation     radio-3   # RTO
+    then the user verifies email                                      Lee    Tess    ${test_mailbox_one}+rto@gmail.com
+    and the user directed to correct dashboaard                       ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    and the user reads his email and clicks the link                  ${test_mailbox_one}+rto@gmail.com   Innovate UK applicant questionnaire    diversity survey
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
     [Tags]
-    Given the user follows the flow to register their organisation   radio-1
-    Then the user should not see the text in the page    ${test_mailbox_one}+rto@gmail.com
+    Given the user follows the flow to register their organisation    radio-1
+    Then the user should not see the text in the page                 ${test_mailbox_one}+rto@gmail.com
     [Teardown]    the user closes the browser
 
 Non registered users non CH route
-    [Documentation]    INFUND-669
-    ...
-    ...    INFUND-1904
-    ...
-    ...    INFUND-1920
+    [Documentation]    INFUND-669  INFUND-1904  INFUND-1920
     [Tags]    HappyPath
     [Setup]    the guest user opens the browser
     Given the user follows the flow to register their organisation     radio-1
-    And the user enters the details and clicks the create account   Stuart    Downing   ${test_mailbox_one}+2@gmail.com
-    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-
-Non registered users non CH route (email step)
-    [Documentation]    INFUND-669
-    ...
-    ...    INFUND-1904
-    ...
-    ...    INFUND-1920
-    [Tags]    Email    HappyPath
-    Given the user reads his email and clicks the link    ${test_mailbox_one}+2@gmail.com    Please verify your email address    Once verified you can sign into your account
-    When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+2@gmail.com    Passw0rd123
-    And the guest user clicks the log-in button
-    Then the user should see the text in the page    Your dashboard
-    And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    And the user should see the text in the page    Application overview
+    and the user verifies email                                        Stuart   Downing  ${test_mailbox_one}+2@gmail.com
+    and the user directed to correct dashboaard                        ${UNTITLED_APPLICATION_DASHBOARD_LINK}
 
 Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
-    When log in as a different user    ${test_mailbox_one}+business@gmail.com    Passw0rd123
+    When log in as a different user                              ${test_mailbox_one}+business@gmail.com    ${correct_password}
     And the user edits the competition title
-    Then the user should see the text in the page    ${test_title}
+    Then the user should see the text in the page                ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link    link=view team members and add collaborators
-    And the user should see the text in the page    Application team
-    And the user should see the text in the page    View and manage your participants
+    And the user clicks the button/link                          link=view team members and add collaborators
+    And the user should see the text in the page                 Application team
+    And the user should see the text in the page                 View and manage your participants
     And the new application should be visible in the dashboard page
-    And the user clicks the button/link    link=${test_title}
-    And the user should see the text in the page    ${test_title}
+    And the user clicks the button/link                          link=${test_title}
+    And the user should see the text in the page                 ${test_title}
 
 Marketing emails information should have updated on the profile
     [Documentation]    INFUND-9243
@@ -96,38 +77,24 @@ Special Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
     [Setup]    the guest user opens the browser
-    Given the user follows the flow to register their organisation    radio-1
-    And the user enters the details and clicks the create account   Alex    Snape   ${test_mailbox_one}+project.finance1@gmail.com
-    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-
-Special Project Finance role (email step)
-    [Documentation]    INFUND-2609
-    [Tags]    Email
-    Given the user reads his email from the default mailbox and clicks the link    ${test_mailbox_one}+project.finance1@gmail.com    Please verify your email address    Once verified you can sign into your account
-    When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
-    And the guest user clicks the log-in button
-    Then the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
+    When the user follows the flow to register their organisation    radio-1
+    then the user verifies email                                      Alex    Snape   ${test_mailbox_one}+project.finance1@gmail.com
+    and the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
+    [Teardown]   the user closes the browser
 
 *** Keywords ***
-the user does the email verification
-    [Arguments]    ${email_id}
-    Given the user reads his email and clicks the link    ${email_id}    Please verify your email address    Once verified you can sign into your account
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${email_id}   Passw0rd123
-    And the guest user clicks the log-in button
-    Then the user should see the text in the page    Your dashboard
-    And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
-    And the user should see the text in the page    Application overview
-    And logout as user
-    And the user reads his email and clicks the link    ${email_id}   Innovate UK applicant questionnaire    diversity survey
+the user directed to correct dashboaard
+    [Arguments]      ${Application_name}
+    the user should see the text in the page      Your dashboard
+    the user clicks the button/link               link=${Application_name}
+    the user clicks the button/link               jQuery=a:contains("Begin application")
+    the user should see the text in the page      Application overview
+    logout as user
 
 the new application should be visible in the dashboard page
-    the user clicks the button/link    link= My dashboard
-    the user should see the text in the page    ${test_title}
-    the user should see the text in the page    Application number:
+    the user clicks the button/link              link= My dashboard
+    the user should see the text in the page     ${test_title}
+    the user should see the text in the page     Application number:
 
 the user clicks the Not on company house link
     the user clicks the button/link    jQuery=summary:contains("Enter details manually")
