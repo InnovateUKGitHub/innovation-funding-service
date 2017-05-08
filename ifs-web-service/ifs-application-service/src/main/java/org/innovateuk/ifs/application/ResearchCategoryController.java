@@ -39,9 +39,6 @@ public class ResearchCategoryController {
     private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
 
     @Autowired

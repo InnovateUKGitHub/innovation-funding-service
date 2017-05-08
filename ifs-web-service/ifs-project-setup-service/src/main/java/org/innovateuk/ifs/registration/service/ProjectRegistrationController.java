@@ -46,7 +46,7 @@ public class ProjectRegistrationController {
     public String registerForm(Model model,
                                HttpServletRequest request,
                                HttpServletResponse response,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
                     ValidationMessages errors = errorMessages(loggedInUser, invite);
@@ -65,7 +65,7 @@ public class ProjectRegistrationController {
                                      BindingResult bindingResult,
                                      HttpServletRequest request,
                                      Model model,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());

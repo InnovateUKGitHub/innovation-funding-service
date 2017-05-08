@@ -41,7 +41,7 @@ public class AssessmentAssignmentController {
 
     @GetMapping("assignment")
     public String viewAssignment(@PathVariable("assessmentId") Long assessmentId,
-                                 @ModelAttribute("form") AssessmentAssignmentForm form,
+                                 @ModelAttribute(name = "form", binding = false) AssessmentAssignmentForm form,
                                  Model model) {
         model.addAttribute("model", assessmentAssignmentModelPopulator.populateModel(assessmentId));
         return "assessment/assessment-invitation";
