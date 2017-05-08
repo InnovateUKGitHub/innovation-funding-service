@@ -11,7 +11,6 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -48,18 +47,15 @@ public class ApplicationTeamAddOrganisationController {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private ApplicationUtil applicationUtil;
-
-    @Autowired
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
 
     @GetMapping("/addOrganisation")
+    @PreAuthorize("hasPermission(#applicationId, 'VIEW_ADD_ORGANISATION_PAGE')")
     public String getAddOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                      @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        validateRequest(applicationResource, loggedInUser.getId());
 
         if (form.getApplicants().isEmpty()) {
             form.getApplicants().add(new ApplicantInviteForm());
@@ -69,15 +65,13 @@ public class ApplicationTeamAddOrganisationController {
     }
 
     @PostMapping("/addOrganisation")
+    @PreAuthorize("hasPermission(#applicationId, 'ADD_NEW_ORGANISATION')")
     public String submitAddOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler) {
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
-        validateRequest(applicationResource, loggedInUser.getId());
-
         validateUniqueEmails(form, bindingResult);
 
         Supplier<String> failureView = () -> getAddOrganisation(model, applicationId, loggedInUser, form);
@@ -91,32 +85,26 @@ public class ApplicationTeamAddOrganisationController {
     }
 
     @PostMapping(value = "/addOrganisation", params = {"addApplicant"})
+    @PreAuthorize("hasPermission(#applicationId, 'ADD_APPLICANT')")
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        validateRequest(applicationResource, loggedInUser.getId());
         form.getApplicants().add(new ApplicantInviteForm());
         return doViewAddOrganisation(model, applicationResource);
     }
 
     @PostMapping(value = "/addOrganisation", params = {"removeApplicant"})
+    @PreAuthorize("hasPermission(#applicationId, 'REMOVE_APPLICANT')")
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        validateRequest(applicationResource, loggedInUser.getId());
         form.getApplicants().remove(position.intValue());
         return doViewAddOrganisation(model, applicationResource);
-    }
-
-
-    private void validateRequest(ApplicationResource applicationResource, long loggedInUserId) {
-        applicationUtil.checkIfApplicationAlreadySubmitted(applicationResource);
-        applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUserId);
     }
 
     private String doViewAddOrganisation(Model model, ApplicationResource applicationResource) {
