@@ -32,7 +32,7 @@
 
             <th:block th:insert="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" />
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
+            <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <div class="question" th:id="form-input-fundingConfirmation">

@@ -10,7 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
         <!-- Link back -->
         <div th:unless="${model.competition.nonIfs}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
         <div th:if="${model.competition.nonIfs}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkClass='link-back',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>

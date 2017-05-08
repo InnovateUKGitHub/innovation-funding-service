@@ -104,7 +104,7 @@
         <p>Are you sure that you wish to submit your project details to Innovate UK?</p>
         <hr />
         <div>
-            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
                 <button class="button" name="submit-app-details">Submit</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </form>
@@ -148,7 +148,7 @@
         <h2 class="heading-medium no-margin">Submit documents</h2>
         <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
         <hr />
-        <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
                 <button class="button" name="submit-other-documents" type="submit">Submit</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>

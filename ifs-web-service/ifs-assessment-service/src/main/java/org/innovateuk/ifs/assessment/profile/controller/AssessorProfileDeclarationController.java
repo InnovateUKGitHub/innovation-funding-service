@@ -56,14 +56,14 @@ public class AssessorProfileDeclarationController {
 
     @GetMapping
     public String getDeclaration(Model model,
-                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser));
         return "profile/declaration-of-interest";
     }
 
     @GetMapping(path = "/edit")
-    public String getEditDeclaration(@ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                     @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
+    public String getEditDeclaration(@ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorProfileDeclarationForm form,
                                      BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             assessorProfileDeclarationFormPopulator.populateForm(form, loggedInUser);
@@ -72,7 +72,7 @@ public class AssessorProfileDeclarationController {
     }
 
     @PostMapping(path = "/edit")
-    public String submitDeclaration(@ModelAttribute("loggedInUser") UserResource loggedInUser,
+    public String submitDeclaration(@ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {

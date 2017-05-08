@@ -14,7 +14,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation areas',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
             <p>Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.</p>
 
-            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'error'">
                     <fieldset>
                         <legend class="extra-margin-bottom">

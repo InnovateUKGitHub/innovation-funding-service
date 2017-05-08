@@ -58,8 +58,8 @@ public class CompetitionManagementApplicationController {
     @GetMapping("/{applicationId}")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
-                                             @ModelAttribute("form") ApplicationForm form,
-                                             @ModelAttribute("loggedInUser") UserResource user,
+                                             @ModelAttribute(name = "form", binding = false) ApplicationForm form,
+                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                              @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model) {
@@ -118,7 +118,7 @@ public class CompetitionManagementApplicationController {
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
-            @ModelAttribute("loggedInUser") UserResource user) throws ExecutionException, InterruptedException {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
         if (user.hasRole(UserRoleType.COMP_ADMIN)) {
             long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
@@ -139,7 +139,7 @@ public class CompetitionManagementApplicationController {
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
-                                             @ModelAttribute("loggedInUser") UserResource user,
+                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                              Model model) {
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));

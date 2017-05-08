@@ -49,8 +49,8 @@ public class CompetitionInviteController {
 
     @GetMapping("/invite/competition/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
-                             @ModelAttribute("form") CompetitionInviteForm form,
-                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                             @ModelAttribute(name = "form", binding = false) CompetitionInviteForm form,
+                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                              Model model) {
         boolean userLoggedIn = loggedInUser != null;
         model.addAttribute("model", competitionInviteModelPopulator.populateModel(inviteHash, userLoggedIn));
@@ -61,7 +61,7 @@ public class CompetitionInviteController {
     @PostMapping("/invite/competition/{inviteHash}/decision")
     public String handleDecision(Model model,
                                  @PathVariable("inviteHash") String inviteHash,
-                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                  @Valid @ModelAttribute("form") CompetitionInviteForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler) {

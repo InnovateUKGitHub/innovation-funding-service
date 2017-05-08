@@ -907,7 +907,7 @@
     </div>
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',size='heading-xlarge'" />
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
         <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
 
         <p>Here you can review and amend the application and assessment questions and guidance for this competition.

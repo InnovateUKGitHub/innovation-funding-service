@@ -35,7 +35,7 @@ public class CompetitionController {
     @GetMapping("overview")
     public String competitionOverview(final Model model,
                                       @PathVariable("competitionId") final long competitionId,
-                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                      @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         final PublicContentItemResource publicContentItem = competitionService.getPublicContentOfCompetition(competitionId);
         model.addAttribute("model", overviewPopulator.populateViewModel(publicContentItem, loggedInUser != null));
         return "competition/overview";
