@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.commons.security.evaluator.PermissionMethodHandler;
+import org.innovateuk.ifs.commons.security.evaluator.AverageTimeSortingPermissionMethodHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -64,11 +64,11 @@ public class SecurityRuleUtil {
     }
 
     public static boolean isAnonymous(final UserResource user) {
-        return PermissionMethodHandler.isAnonymous(user);
+        return AverageTimeSortingPermissionMethodHandler.isAnonymous(user);
     }
 
     public static UserResource getAnonymous() {
-        return PermissionMethodHandler.getAnonymous();
+        return AverageTimeSortingPermissionMethodHandler.getAnonymous();
     }
 
 }

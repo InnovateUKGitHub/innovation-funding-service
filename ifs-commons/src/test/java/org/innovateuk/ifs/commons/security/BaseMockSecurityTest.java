@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
-import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.setRuleMap;
+import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -76,28 +75,31 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
 
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
+        swapRealPermissionMethodsForMocks();
+        BaseIntegrationTest.setLoggedInUser(newUserResource().build());
+    }
+
+    private void swapRealPermissionMethodsForMocks() {
 
         // get the custom permission evaluator from the applicationContext and swap its rulesMap for one containing only
         // Mockito mocks
         CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
+        cleanDownCachedPermissionRules(permissionEvaluator);
+
         originalRulesMap = getRulesMap(permissionEvaluator);
 
         Pair<PermissionRulesClassToMock, PermissionedObjectClassToPermissionsToPermissionsMethods> mocksAndRecorders =
                 generateMockedOutRulesMap(originalRulesMap);
 
-        PermissionRulesClassToMock mocks = mocksAndRecorders.getLeft();
+        mockPermissionRulesBeans = mocksAndRecorders.getLeft();
         PermissionedObjectClassToPermissionsToPermissionsMethods recordingProxies = mocksAndRecorders.getRight();
-
-        mockPermissionRulesBeans = mocks;
-        setRuleMap(permissionEvaluator, recordingProxies);
+        setRulesMap(permissionEvaluator, recordingProxies);
 
         originalLookupStrategyMap = (PermissionedObjectClassesToListOfLookup) ReflectionTestUtils.getField(permissionEvaluator, "lookupStrategyMap");
 
         Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassesToListOfLookup> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
         mockPermissionEntityLookupStrategies = mockedOut.getLeft();
         setLookupStrategyMap(permissionEvaluator, mockedOut.getRight());
-
-        BaseIntegrationTest.setLoggedInUser(newUserResource().build());
     }
 
     /**
@@ -105,8 +107,10 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      */
     @After
     public void teardown() {
+
         CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
-        setRuleMap(permissionEvaluator, originalRulesMap);
+        cleanDownCachedPermissionRules(permissionEvaluator);
+        setRulesMap(permissionEvaluator, originalRulesMap);
         setLookupStrategyMap(permissionEvaluator, originalLookupStrategyMap);
     }
 

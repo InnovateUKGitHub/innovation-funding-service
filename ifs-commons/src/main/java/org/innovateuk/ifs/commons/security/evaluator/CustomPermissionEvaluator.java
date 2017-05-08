@@ -47,7 +47,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private PermissionedObjectClassesToListOfLookup lookupStrategyMap;
 
-    private PermissionMethodHandler permissionMethodSupplier;
+    private PermissionMethodHandler permissionMethodHandler;
 
     @PostConstruct
     void generateRules() {
@@ -72,7 +72,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             })));
         }
 
-        permissionMethodSupplier = new PermissionMethodHandler(rulesMap);
+        permissionMethodHandler = new AverageTimeSortingPermissionMethodHandler(rulesMap);
     }
 
     @PostConstruct
@@ -82,6 +82,68 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         final PermissionedObjectClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
         lookupStrategyMap = PermissionedObjectClassesToListOfLookup.from(collectedPermissionLookupMethods);
         validate(lookupStrategyMap); // Fail Fast
+    }
+
+    @Override
+    public boolean hasPermission(final Authentication authentication, final Object targetObject, final Object permission) {
+
+        if (methodSecuredInStackCountInterceptor.isStackSecuredAtHigherLevel()) {
+            return true;
+        }
+
+        if (targetObject == null) {
+            return true;
+        }
+
+        Class<?> targetClass = targetObject.getClass();
+
+        return transactionManager.doWithinTransaction(() ->
+                permissionMethodHandler.hasPermission(authentication, targetObject, permission, targetClass));
+    }
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+
+        if (methodSecuredInStackCountInterceptor.isStackSecuredAtHigherLevel()) {
+            return true;
+        }
+
+        final Class<?> clazz;
+        try {
+            clazz = Class.forName(targetType);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Unable to look up class " + targetType + " that was specified in a @PermissionRule method", e);
+        }
+        return hasPermission(authentication, targetId, clazz, permission);
+    }
+
+    List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
+        return permissionMethodHandler.getPermissions(authentication, targetDomainObject);
+    }
+
+    private Pair<Object, Method> lookup(final Serializable targetId, final Class<?> targetType) {
+        final List<Pair<Object, Method>> allLookupsForTargetClass = lookupStrategyMap.get(targetType);
+        if (allLookupsForTargetClass == null) {
+            final String error = "No lookups at all found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        }
+        final List<Pair<Object, Method>> lookupsForTargetClassAndTargetIdClass = allLookupsForTargetClass.stream()
+                .filter(lookupForTargetClass -> {
+                    final Method method = lookupForTargetClass.getValue();
+                    final boolean methodAcceptsTargetId = method.getParameterTypes()[0].isAssignableFrom(targetId.getClass());
+                    return methodAcceptsTargetId;
+                }).collect(toList());
+        if (lookupsForTargetClassAndTargetIdClass.isEmpty()) {
+            final String error = "No lookup found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        } else if (lookupsForTargetClassAndTargetIdClass.size() > 1) {
+            final String error = "Multiple lookups found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        }
+        return lookupsForTargetClassAndTargetIdClass.get(0);
     }
 
     List<Pair<Object, Method>> failedPermissionMethodSignatures(ListOfOwnerAndMethod collectedRulesMethods) {
@@ -99,7 +161,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 }
         ).collect(toList());
     }
-
 
     private static final void validate(final PermissionedObjectClassesToListOfLookup lookupsStrategyMap) {
         for (final Entry<Class<?>, ListOfOwnerAndMethod> permissionedObjectClassTolookupsStrategies : lookupsStrategyMap.entrySet()) {
@@ -207,7 +268,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return map;
     }
 
-
     PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods(PermissionedObjectClassToPermissionsMethods dtoClassToMethods) {
         PermissionedObjectClassToPermissionsToPermissionsMethods map = new PermissionedObjectClassToPermissionsToPermissionsMethods();
         for (Entry<Class<?>, ListOfOwnerAndMethod> entry : dtoClassToMethods.entrySet()) {
@@ -220,23 +280,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             }
         }
         return map;
-    }
-
-    @Override
-    public boolean hasPermission(final Authentication authentication, final Object targetObject, final Object permission) {
-
-        if (methodSecuredInStackCountInterceptor.isStackSecuredAtHigherLevel()) {
-            return true;
-        }
-
-        if (targetObject == null) {
-            return true;
-        }
-
-        Class<?> targetClass = targetObject.getClass();
-
-        return transactionManager.doWithinTransaction(() ->
-                permissionMethodSupplier.hasPermission(authentication, targetObject, permission, targetClass));
     }
 
     private boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
@@ -257,51 +300,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
             return hasPermission(authentication, permissionEntity, permission);
         });
-    }
-
-    private Pair<Object, Method> lookup(final Serializable targetId, final Class<?> targetType) {
-        final List<Pair<Object, Method>> allLookupsForTargetClass = lookupStrategyMap.get(targetType);
-        if (allLookupsForTargetClass == null) {
-            final String error = "No lookups at all found for target class " + targetType + " with target id: " + targetId;
-            LOG.error(error);
-            throw new IllegalArgumentException(error);
-        }
-        final List<Pair<Object, Method>> lookupsForTargetClassAndTargetIdClass = allLookupsForTargetClass.stream()
-                .filter(lookupForTargetClass -> {
-                    final Method method = lookupForTargetClass.getValue();
-                    final boolean methodAcceptsTargetId = method.getParameterTypes()[0].isAssignableFrom(targetId.getClass());
-                    return methodAcceptsTargetId;
-                }).collect(toList());
-        if (lookupsForTargetClassAndTargetIdClass.isEmpty()) {
-            final String error = "No lookup found for target class " + targetType + " with target id: " + targetId;
-            LOG.error(error);
-            throw new IllegalArgumentException(error);
-        } else if (lookupsForTargetClassAndTargetIdClass.size() > 1) {
-            final String error = "Multiple lookups found for target class " + targetType + " with target id: " + targetId;
-            LOG.error(error);
-            throw new IllegalArgumentException(error);
-        }
-        return lookupsForTargetClassAndTargetIdClass.get(0);
-    }
-
-    @Override
-    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-
-        if (methodSecuredInStackCountInterceptor.isStackSecuredAtHigherLevel()) {
-            return true;
-        }
-
-        final Class<?> clazz;
-        try {
-            clazz = Class.forName(targetType);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Unable to look up class " + targetType + " that was specified in a @PermissionRule method", e);
-        }
-        return hasPermission(authentication, targetId, clazz, permission);
-    }
-
-    List<String> getPermissions(Authentication authentication, Object targetDomainObject) {
-        return permissionMethodSupplier.getPermissions(authentication, targetDomainObject);
     }
 }
 
