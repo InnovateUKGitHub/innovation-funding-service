@@ -361,6 +361,7 @@ public class CompetitionSetupController {
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
+        // If 'Open' sector then show all innovation areas
         if (innovationSectorId == 0) {
             return categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
         } else {
