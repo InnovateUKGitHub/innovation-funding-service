@@ -16,6 +16,7 @@ import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -118,21 +120,38 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     public ServiceResult<FinanceRowItem> addCostWithoutPersisting(final Long projectFinanceId, final Long questionId) {
         return find(question(questionId), projectFinance(projectFinanceId)).andOnSuccess((question, projectFinance) ->
                 getProject(projectFinance.getProject().getId()).andOnSuccess(project -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getId());
-                    ProjectFinanceRow cost = new ProjectFinanceRow(projectFinance, question);
-                    return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
+                    if(!questionBelongsToProjectCompetition(question, project)){
+                        return serviceFailure(notFoundError(Question.class, questionId));
+                    } else {
+                        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getId());
+                        ProjectFinanceRow cost = new ProjectFinanceRow(projectFinance, question);
+                        return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
+                    }
                 })
         );
     }
 
+    private boolean questionBelongsToProjectCompetition(Question question, Project project){
+        return question.getCompetition().getId().equals(project.getApplication().getCompetition().getId());
+    }
+
     @Override
-    public ServiceResult<Void> deleteCost(@P("costId") Long costId) {
-        return find(projectFinanceRowRepository.findOne(costId), notFoundError(ProjectFinanceRow.class)).
-                andOnSuccess(projectFinanceRow ->{
-                    financeRowMetaValueRepository.deleteByFinanceRowId(costId);
-                    projectFinanceRowRepository.delete(costId);
-                    return serviceSuccess();
-                });
+    public ServiceResult<Void> deleteCost(@P("projectId") Long projectId, @P("organisationId") Long organisationId, @P("costId") Long costId) {
+        return find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(ProjectFinance.class)).andOnSuccess((projectFinance) ->
+                find(projectFinanceRowRepository.findOne(costId), notFoundError(ProjectFinanceRow.class)).
+                        andOnSuccess(projectFinanceRow ->{
+                            if(!costBelongsToProjectFinance(projectFinance, projectFinanceRow)){
+                                return serviceFailure(notFoundError(ProjectFinanceRow.class, costId));
+                            } else {
+                                financeRowMetaValueRepository.deleteByFinanceRowId(costId);
+                                projectFinanceRowRepository.delete(costId);
+                                return serviceSuccess();
+                            }
+                        }));
+    }
+
+    private boolean costBelongsToProjectFinance(ProjectFinance projectFinance, ProjectFinanceRow projectFinanceRow){
+        return projectFinance.getId().equals(projectFinanceRow.getTarget().getId());
     }
 
     @Override

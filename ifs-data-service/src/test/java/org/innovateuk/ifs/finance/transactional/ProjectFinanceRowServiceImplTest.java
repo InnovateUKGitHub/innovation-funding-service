@@ -92,7 +92,7 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
         newFinance = new ProjectFinance(organisation, newOrganisationSize().build(), project);
         newFinance.setId(projectFinanceId);
 
-        question = newQuestion().withId(questionId).build();
+        question = newQuestion().withId(questionId).withCompetition(competition).build();
 
         material = new Materials();
         material.setCost(BigDecimal.valueOf(100));
@@ -121,6 +121,8 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
         when(questionRepositoryMock.findOne(questionId)).thenReturn(question);
 
         when(projectFinanceRepositoryMock.findOne(projectFinanceId)).thenReturn(newFinance);
+
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newFinance);
     }
 
     @Test
@@ -168,9 +170,27 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
+    public void testAddCostWithoutPersistingWhenQFromDiffComp(){
+        Competition anotherCompetition = newCompetition().build();
+        Question questionFromAnotherCompetition = newQuestion().withCompetition(anotherCompetition).build();
+        ServiceResult<FinanceRowItem> result = service.addCostWithoutPersisting(newFinance.getId(), questionFromAnotherCompetition.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getErrors().contains(notFoundError(Question.class)));
+    }
+
+    @Test
     public void testDeleteCost(){
-        ServiceResult<Void> result = service.deleteCost(materialCost.getId());
+        ServiceResult<Void> result = service.deleteCost(project.getId(), organisation.getId(), materialCost.getId());
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testDeleteCostFailsWhenNotMatchingOrg(){
+        ProjectFinance otherProjectFinance = new ProjectFinance(organisation, newOrganisationSize().build(), project);
+        ProjectFinanceRow costFromOtherProjectFinance = newProjectFinanceRow().withQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS)).withTarget(otherProjectFinance).build();
+        ServiceResult<Void> result = service.deleteCost(project.getId(), organisation.getId(), costFromOtherProjectFinance.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getErrors().contains(notFoundError(ProjectFinanceRow.class)));
     }
 
     @Test

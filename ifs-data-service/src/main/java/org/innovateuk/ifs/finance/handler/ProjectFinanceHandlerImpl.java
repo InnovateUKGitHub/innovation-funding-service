@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 /**
  * Handler for retrieving project finance data.
  */
+@Component
 public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;

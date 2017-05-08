@@ -84,7 +84,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
         }
         if (requestParams.containsKey("remove_cost")) {
             String removeCostParam = request.getParameter("remove_cost");
-            projectFinanceRowRestService.delete(Long.valueOf(removeCostParam)).getSuccessObjectOrThrowException();
+            projectFinanceRowRestService.delete(projectId, organisationId, Long.valueOf(removeCostParam)).getSuccessObjectOrThrowException();
         }
     }
 
