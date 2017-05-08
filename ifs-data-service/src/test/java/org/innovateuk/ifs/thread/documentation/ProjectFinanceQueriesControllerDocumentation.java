@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.thread.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.financecheck.controller.ProjectFinanceQueriesController;
+import org.innovateuk.ifs.project.queries.controller.ProjectFinanceQueriesController;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;

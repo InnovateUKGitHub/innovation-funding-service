@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.application.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -44,8 +46,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> updateApplicationStatus(Long applicationId, ApplicationStatus status) {
-        return putWithRestResult(applicationRestURL + "/updateApplicationStatus?applicationId=" + applicationId + "&status=" + status, Void.class);
+    public RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state) {
+        return putWithRestResult(applicationRestURL + "/updateApplicationState?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 
     // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible
@@ -84,9 +86,18 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return postWithRestResult(url, application, ApplicationResource.class);
     }
 
-
     @Override
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return getWithRestResult(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
+    }
+
+    @Override
+    public RestResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason) {
+        return postWithRestResult(applicationRestURL + "/" + applicationId + "/ineligible", reason, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+        return postWithRestResult(applicationRestURL + "/informIneligible/" + applicationId, applicationIneligibleSendResource, Void.class);
     }
 }

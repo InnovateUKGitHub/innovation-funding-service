@@ -160,7 +160,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
         when(organisationRepositoryMock.findOne(456L)).thenReturn(organisation);
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         ApplicationFinance newFinance = new ApplicationFinance(application, organisation);
 

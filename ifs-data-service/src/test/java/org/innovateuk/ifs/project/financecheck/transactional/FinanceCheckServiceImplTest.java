@@ -14,10 +14,10 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
-import org.innovateuk.ifs.project.financecheck.domain.FinanceCheck;
-import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
-import org.innovateuk.ifs.project.financecheck.service.FinanceCheckServiceImpl;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -825,8 +825,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FormInputResponse turnover = newFormInputResponse().withValue("2").withUpdatedBy(updatedBy).build();
 
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(staffCountFormInputId).withResponses(!isIncludeGrowthTable ? asList(headcount) : emptyList()).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(!isIncludeGrowthTable ? asList(turnover) : emptyList()).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(noInput ? emptyList() : asList(staffTurnoverFormInput));
+        FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(!isIncludeGrowthTable ? asList(turnover) : emptyList()).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(noInput ? emptyList() : asList(organisationTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(staffCountFormInput));
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));

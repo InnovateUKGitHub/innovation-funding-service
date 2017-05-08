@@ -18,10 +18,9 @@
 
     <div class="grid-row">
         <div class="column-two-thirds">
-            <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" />
-                <h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
-            </div>
+            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
+            </th:block>
         </div>
         <div class="column-third alignright extra-margin">
             <h2 class="bold-small blue-block">Spend profile</h2>
@@ -63,7 +62,7 @@
         <ul>
             <li th:each="organisation : ${model.organisations}">
                 <a th:href="'/project-setup-management/project/' + ${projectId} + '/partner-organisation/' + ${organisation.id} + '/spend-profile-export/csv'"
-                   th:text="${organisation.name} + '-spend-profile.csv'"
+                   th:text="${organisation.name} + '-spend-profile.csv (opens in a new window)'"
                    target="_blank">spend-profile.csv</a>
             </li>
         </ul>

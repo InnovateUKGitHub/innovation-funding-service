@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.project.finance.resource.CostGroupResource;
-import org.innovateuk.ifs.project.resource.SpendProfileResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.Calendar;

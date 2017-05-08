@@ -7,7 +7,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -61,7 +60,7 @@ public class CompetitionResource {
     private Boolean multiStream;
     private String streamName;
     private CollaborationLevel collaborationLevel;
-    private LeadApplicantType leadApplicantType;
+    private List<Long> leadApplicantTypes;
     private Set<Long> researchCategories;
 
     private Integer assessorCount;
@@ -72,7 +71,7 @@ public class CompetitionResource {
 
     private String activityCode;
 
-    private Boolean setupComplete;
+    private boolean setupComplete = false;
 
     private boolean useResubmissionQuestion;
 
@@ -112,6 +111,11 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
         return Boolean.TRUE.equals(setupComplete) && fundersPanelDate.isBefore(ZonedDateTime.now());
+    }
+
+    @JsonIgnore
+    public boolean isInitialDetailsComplete() {
+        return sectionSetupStatus.containsKey(CompetitionSetupSection.INITIAL_DETAILS) || setupComplete;
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -395,7 +399,7 @@ public class CompetitionResource {
     }
 
     public void setInnovationAreaNames(Set<String> innovationAreaNames) {
-        this.innovationAreaNames = innovationAreaNames;
+        this.innovationAreaNames = new TreeSet<>(innovationAreaNames);
     }
 
     public Set<Long> getResearchCategories() {
@@ -446,12 +450,12 @@ public class CompetitionResource {
         this.collaborationLevel = collaborationLevel;
     }
 
-    public LeadApplicantType getLeadApplicantType() {
-        return leadApplicantType;
+    public List<Long> getLeadApplicantTypes() {
+        return leadApplicantTypes;
     }
 
-    public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
-        this.leadApplicantType = leadApplicantType;
+    public void setLeadApplicantTypes(List<Long> leadApplicantTypes) {
+        this.leadApplicantTypes = leadApplicantTypes;
     }
 
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
@@ -502,11 +506,11 @@ public class CompetitionResource {
         this.assessorPay = assessorPay;
     }
 
-    public Boolean getSetupComplete() {
+    public boolean getSetupComplete() {
         return setupComplete;
     }
 
-    public void setSetupComplete(Boolean setupComplete) {
+    public void setSetupComplete(boolean setupComplete) {
         this.setupComplete = setupComplete;
     }
 

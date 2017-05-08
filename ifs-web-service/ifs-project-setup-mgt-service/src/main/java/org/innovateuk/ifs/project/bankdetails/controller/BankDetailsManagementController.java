@@ -3,10 +3,8 @@ package org.innovateuk.ifs.project.bankdetails.controller;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.ApproveBankDetailsForm;
@@ -14,10 +12,10 @@ import org.innovateuk.ifs.project.bankdetails.form.ChangeBankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.populator.BankDetailsReviewModelPopulator;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
+import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -29,15 +27,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * This controller is for serving internal project finance user, allowing them to view and manage project bank account details.
@@ -55,7 +50,7 @@ public class BankDetailsManagementController {
     private ProjectService projectService;
 
     @Autowired
-    private BankDetailsService bankDetailsService;
+    private BankDetailsRestService bankDetailsRestService;
 
     @Autowired
     private BankDetailsReviewModelPopulator bankDetailsReviewModelPopulator;
@@ -65,9 +60,10 @@ public class BankDetailsManagementController {
     public String viewPartnerBankDetails(
             Model model,
             @PathVariable("projectId") Long projectId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         model.addAttribute("isCompAdminUser", loggedInUser.hasRole(UserRoleType.COMP_ADMIN));
-        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsService.getBankDetailsByProject(projectId);
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
+                .getSuccessObjectOrThrowException();
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
     }
 
@@ -77,10 +73,10 @@ public class BankDetailsManagementController {
             Model model,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
-        final BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
         return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, new ApproveBankDetailsForm());
     }
 
@@ -93,11 +89,12 @@ public class BankDetailsManagementController {
             ValidationHandler validationHandler,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
-        final BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
+                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
         if(bankDetailsResource.isManualApproval()) {
             return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
         }
@@ -112,7 +109,7 @@ public class BankDetailsManagementController {
                 faliureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
                 () -> {
-                    Void result = bankDetailsService.updateBankDetails(projectId, bankDetailsResource).getSuccessObjectOrThrowException();
+                    Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccessObjectOrThrowException();
                     return serviceSuccess(result);
                 }
         );
@@ -124,11 +121,12 @@ public class BankDetailsManagementController {
             Model model,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser,
-            @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+            @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ChangeBankDetailsForm form) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
-        final BankDetailsResource bankDetailsResource = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
+                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
         bankDetailsReviewModelPopulator.populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
         return doViewChangeBankDetailsNotUpdated(organisationResource, project, bankDetailsResource, model);
     }
@@ -139,20 +137,21 @@ public class BankDetailsManagementController {
             Model model,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
             @Valid @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
-        final BankDetailsResource existingBankDetails = bankDetailsService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        final BankDetailsResource existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
+                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
 
         Supplier<String> failureView = () -> doViewChangeBankDetailsNotUpdated(organisationResource, project, existingBankDetails, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             final OrganisationAddressResource updatedOrganisationAddressResource = buildOrganisationAddressResource(organisationResource, form);
             final BankDetailsResource updatedBankDetailsResource = buildBankDetailsResource(existingBankDetails, projectId, organisationResource, updatedOrganisationAddressResource, form);
-            final ServiceResult<Void> updateResult = bankDetailsService.updateBankDetails(projectId, updatedBankDetailsResource);
+            final ServiceResult<Void> updateResult = bankDetailsRestService.updateBankDetails(projectId, updatedBankDetailsResource).toServiceResult();
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(
                     failureView, () -> {
                         OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);

@@ -37,7 +37,7 @@
         <nav>
             <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
         </nav>
-        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit <span th:text="${daysLeft}"></span></div>
+        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}"><th:block th:text="${daysLeft}" /> days left to submit</div>
     </div>
 </div>
 
@@ -107,70 +107,6 @@
             <strong><span th:text="${totalPercentage}+'%'" th:remove="tag">0%</span></strong>
         </p>
     </div>
-</div>
-
-
-<!-- ======== Assessor - reject competition modal ======= -->
-<div th:fragment="assessor-reject-competition-modal (inviteHash)">
-    <div class="reject-competition-modal" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-        <th:block th:insert="fragments/assessment :: assessor-reject-competition-form (inviteHash=${inviteHash})" />
-    </div>
-</div>
-
-
-<!-- ======== Assessor - reject competition form for modal and non-js page ======= -->
-<div th:fragment="assessor-reject-competition-form (inviteHash)">
-    <form action="#" th:action="@{/invite/competition/{inviteHash}/reject(inviteHash=${inviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
-        <h2 class="heading-medium no-margin">Reject invitation</h2>
-        <div class="error-summary" th:if="${#fields.hasErrors('global')}">
-            <h2 class="heading-medium error-summary-heading">We were unable to reject the competition:</h2>
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
-            </ul>
-        </div>
-
-        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
-            <label class="form-label" th:for="${#ids.next('rejectReason')}">
-                Please select a reason for rejecting the competition
-                <span th:if="${#fields.hasErrors('rejectReason')}" th:remove="tag">
-                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
-                </span>
-            </label>
-            <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
-                <option value="">Select a reason</option>
-                <option th:each="reason : ${rejectionReasons}"
-                        th:value="${reason.id}"
-                        th:text="${reason.reason}"
-                        value="1">Not available</option>
-            </select>
-        </div>
-        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
-            <label class="form-label" th:for="${#ids.next('rejectComment')}">
-                Use this space to provide more information
-                <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
-                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
-                </span>
-            </label>
-            <textarea class="form-control width-full"
-                      maxlength="5000"
-                      data-max_words="100"
-                      data-maxwordslength="100"
-                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                      th:errorclass="field-error"
-                      rows="4"
-                      th:field="*{rejectComment}"></textarea>
-            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
-                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
-            </div>
-        </div>
-        <hr />
-        <div>
-            <button class="button" name="submit-app-details">Reject</button>
-            <button class="js-close buttonlink" type="button">Cancel</button>
-        </div>
-    </form>
 </div>
 
 

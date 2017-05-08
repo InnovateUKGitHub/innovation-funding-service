@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
-import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
@@ -13,8 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -34,7 +35,7 @@ public class InitialDetailsFormPopulatorTest {
 	private InitialDetailsFormPopulator service;
 
 	@Mock
-	private CategoryService categoryService;
+	private CategoryRestService categoryRestService;
 
 	@Mock
 	private CategoryFormatter categoryFormatter;
@@ -47,7 +48,6 @@ public class InitialDetailsFormPopulatorTest {
 				
 	@Test
 	public void testGetSectionFormDataInitialDetails() {
-
 		Set<Long> innovationAreas = Stream.of(6L, 66L).collect(Collectors.toSet());
 
 		CompetitionResource competition = newCompetitionResource()
@@ -63,9 +63,8 @@ public class InitialDetailsFormPopulatorTest {
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = new ArrayList<>();
-		when(categoryService.getInnovationAreas()).thenReturn(innovationAreaCategories);
+		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaCategories));
 		when(categoryFormatter.format(innovationAreas, innovationAreaCategories)).thenReturn("formattedcategories");
-
 
 		CompetitionSetupForm result = service.populateForm(competition);
 		

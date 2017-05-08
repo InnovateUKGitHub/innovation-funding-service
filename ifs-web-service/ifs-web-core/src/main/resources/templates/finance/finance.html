@@ -83,8 +83,8 @@
         </th:block>
     </th:block>
 
-    <!-- =========================== Form: Staff Turnover =========================== -->
-    <th:block th:fragment="staff_turnover">
+    <!-- =========================== Form: Organisation Turnover =========================== -->
+    <th:block th:fragment="organisation_turnover">
         <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
             <th:block th:unless="${readonly}">
                 <!--/* edit */-->
@@ -655,7 +655,7 @@
                                                filename=${overheadCosts?.calculationFile?.get()?.name},
                                                inputField='overheadfile',
                                                validationField='',
-                                               mayRemove=${viewmode == 'readonly'},
+                                               mayRemove=${viewmode != 'readonly'},
                                                removeName='overheadfiledelete',
                                                saveName='overheadfilesubmit'">
                                 <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
@@ -706,13 +706,13 @@
                         <td th:text="${cost.getItem()}"></td>
                         <td class="numeric" th:text="${cost.getQuantity()}"></td>
                         <td class="numeric" th:text="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,'COMMA',0,'POINT') : '0'}"></td>
-                        <td class="numeric" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatDecimal(cost.total,0,'COMMA',0,'POINT')}"></td>
+                        <td class="numeric" th:text="'£ ' + ${#numbers.formatDecimal(cost.total,0,'COMMA',0,'POINT')}"></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th scope="row" colspan="3">Total materials costs</th>
-                        <td th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" class="numeric"></td>
+                        <td th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" class="numeric"></td>
                     </tr>
                 </tfoot>
             </table>

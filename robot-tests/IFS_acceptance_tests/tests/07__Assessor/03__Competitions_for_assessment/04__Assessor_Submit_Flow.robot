@@ -43,7 +43,7 @@ Summary:All the sections are present
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    HappyPath
-    Then The user should see the text in the page    Days left to submit
+    Then The user should see the text in the page    days left to submit
     And the days remaining should be correct (Top of the page)    2068-01-28
 
 Summary shows questions as incomplete
@@ -362,7 +362,8 @@ The user accepts the juggling is word that sound funny application
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link    jQuery=a:contains("Accept or reject")
     The user should see the text in the page    Accept application
-    The user clicks the button/link    jQuery=button:contains("Accept")
+    And the user selects the radio button  assessmentAccept  true
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     The user should be redirected to the correct page    ${Assessor_application_dashboard}
 
 the status of the status of the application should be correct

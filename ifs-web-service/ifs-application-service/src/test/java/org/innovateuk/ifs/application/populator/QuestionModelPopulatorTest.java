@@ -5,15 +5,19 @@ import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
-import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,13 +31,17 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -69,13 +77,10 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     private QuestionService questionService;
 
     @Mock
-    private InviteRestService inviteRestService;
+    private FormInputRestService formInputRestService;
 
     @Mock
-    private SectionService sectionService;
-
-    @Mock
-    private FormInputService formInputService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -85,9 +90,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
 
     @Mock
     private Model model;
-
-    @Mock
-    private CategoryService categoryService;
 
     private Long questionId;
     private Long applicationId;
@@ -150,10 +152,9 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     }
 
     private void setupSuccess(){
-
         when(applicationNavigationPopulator.addNavigation(any(QuestionResource.class), anyLong())).thenReturn(new NavigationViewModel());
         when(questionService.getById(questionId)).thenReturn(question);
-        when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(formInputs);
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(formInputs));
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
         when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(userApplicationRoles);
@@ -161,5 +162,9 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         when(userService.isLeadApplicant(user.getId(), application)).thenReturn(Boolean.TRUE);
         when(userService.getLeadApplicantProcessRoleOrNull(application)).thenReturn(newProcessRoleResource().withUser(user).build());
         when(userService.findById(user.getId())).thenReturn(user);
+
+        List<FormInputResponseResource> formInputResponseResources = newFormInputResponseResource().build(10);
+        when(formInputResponseRestService.getResponsesByApplicationId(applicationId)).thenReturn(restSuccess(formInputResponseResources));
+        when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponseResources)).thenReturn(new HashMap<>());
     }
 }

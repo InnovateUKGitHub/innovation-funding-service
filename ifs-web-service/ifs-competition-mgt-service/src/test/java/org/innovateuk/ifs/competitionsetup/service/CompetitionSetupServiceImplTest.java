@@ -3,9 +3,11 @@ package org.innovateuk.ifs.competitionsetup.service;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
@@ -18,14 +20,12 @@ import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -90,13 +90,12 @@ public class CompetitionSetupServiceImplTest {
 
 	private void verifyCommonModelAttributes(Model model, CompetitionResource competition,
 			CompetitionSetupSection section, List<CompetitionSetupSection> completedSections) {
-		assertEquals(10, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		assertEquals(Boolean.FALSE, model.asMap().get("isInitialComplete"));
 		assertEquals(Boolean.TRUE, model.asMap().get("editable"));
 		assertEquals(competition, model.asMap().get("competition"));
 		assertEquals(section, model.asMap().get("currentSection"));
 		assertArrayEquals(CompetitionSetupSection.values(), (Object[])model.asMap().get("allSections"));
-		assertEquals("code: name", model.asMap().get("subTitle"));
 		assertEquals(Boolean.FALSE, model.asMap().get("preventEdit"));
 		assertEquals(Boolean.FALSE, model.asMap().get("isSetupAndLive"));
 		assertEquals(Boolean.FALSE, model.asMap().get("setupComplete"));
@@ -128,7 +127,12 @@ public class CompetitionSetupServiceImplTest {
 	@Test
 	public void testSaveSection() {
 		CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
-		CompetitionResource competitionResource = newCompetitionResource().build();
+		CompetitionResource competitionResource = newCompetitionResource()
+				.withSectionSetupStatus(asMap(
+						CompetitionSetupSection.INITIAL_DETAILS, true,
+						CompetitionSetupSection.ADDITIONAL_INFO, false
+				))
+				.build();
 		
 		CompetitionSetupSectionSaver matchingSaver = mock(CompetitionSetupSectionSaver.class);
 		when(matchingSaver.sectionToSave()).thenReturn(CompetitionSetupSection.ADDITIONAL_INFO);
@@ -146,6 +150,49 @@ public class CompetitionSetupServiceImplTest {
 		
 		verify(matchingSaver).saveSection(competitionResource, competitionSetupForm);
 		verify(otherSaver, never()).saveSection(competitionResource, competitionSetupForm);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void autoSaveCompetitionSetupSection_initialDetailsMustBeComplete() throws Exception {
+		CompetitionResource competition = newCompetitionResource().build();
+		CompetitionSetupSection section = CompetitionSetupSection.ADDITIONAL_INFO;
+		String fieldName = "testField";
+		String value = "testValue";
+		Optional<Long> objectId = Optional.of(1L);
+
+		service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void autoSaveCompetitionSetupSubsection_initialDetailsMustBeComplete() throws Exception {
+		CompetitionResource competition = newCompetitionResource().build();
+		CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+		CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
+		String fieldName = "testField";
+		String value = "testValue";
+		Optional<Long> objectId = Optional.of(1L);
+
+		service.autoSaveCompetitionSetupSubsection(competition, section, subsection, fieldName, value, objectId);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void saveCompetitionSetupSection_initialDetailsMustBeComplete() throws Exception {
+		CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
+		CompetitionResource competition = newCompetitionResource().build();
+		CompetitionSetupSection section = CompetitionSetupSection.ADDITIONAL_INFO;
+
+		service.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+	}
+
+
+	@Test(expected = IllegalStateException.class)
+	public void saveCompetitionSetupSubsection_initialDetailsMustBeComplete() throws Exception {
+		CompetitionSetupForm competitionSetupForm = new ApplicationDetailsForm();
+		CompetitionResource competition = newCompetitionResource().build();
+		CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+		CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
+
+		service.saveCompetitionSetupSubsection(competitionSetupForm, competition, section, subsection);
 	}
 
 	@Test

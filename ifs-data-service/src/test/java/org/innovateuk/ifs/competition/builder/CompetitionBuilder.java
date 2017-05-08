@@ -197,4 +197,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withMaxResearchRatio(Integer... ratios) { return withArray((ratio, competition) -> competition.setMaxResearchRatio(ratio), ratios); }
 
+    public CompetitionBuilder withAcademicGrantPercentage(Integer... percentages) { return withArray((percentage, competition) -> competition.setAcademicGrantPercentage(percentage), percentages); }
+
 }

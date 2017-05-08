@@ -46,10 +46,6 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentResourceBuilder withLastModifiedDate(ZonedDateTime... value) {
-        return withArraySetFieldByReflection("lastModified", value);
-    }
-
     public AssessmentResourceBuilder withStartDate(LocalDate... value) {
         return withArraySetFieldByReflection("startDate", value);
     }

@@ -1,27 +1,24 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
@@ -33,15 +30,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -56,9 +53,6 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
     private OpenSectionModelPopulator populator;
 
     @Mock
-    private FormInputResponseService formInputResponseService;
-
-    @Mock
     private QuestionService questionService;
 
     @Mock
@@ -68,25 +62,19 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
     private ProcessRoleService processRoleService;
 
     @Mock
-    private OrganisationService organisationService;
+    private FormInputRestService formInputRestService;
 
     @Mock
-    private OrganisationRestService organisationRestService;
+    private FormInputResponseService formInputResponseService;
 
     @Mock
-    private FormInputService formInputService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
     private CompetitionService competitionService;
 
     @Mock
     private InviteRestService inviteRestService;
-
-    @Mock
-    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
-
-    @Mock
-    private FinanceHandler financeHandler;
 
     @Mock
     private BindingResult bindingResult;
@@ -193,7 +181,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         inviteOrg1.setOrganisationNameConfirmed("New name");
         inviteOrg1.setInviteResources(newApplicationInviteResource().build(2));
 
-        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(RestResult.restSuccess(asList(inviteOrg1)));
+        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(restSuccess(asList(inviteOrg1)));
 
         when(userService.isLeadApplicant(userResource.getId(), applicationResource)).thenReturn(Boolean.TRUE);
 
@@ -205,8 +193,12 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
 
         when(userService.findById(leadApplicantProcessRole.getUser())).thenReturn(userResource);
 
-        when(formInputService.findApplicationInputsByCompetition(competitionResource.getId())).thenReturn(formInputs);
+        when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn(restSuccess(formInputs));
 
         when(userService.getUserOrganisationId(userResource.getId(), applicationResource.getId())).thenReturn(organisationId);
+
+        List<FormInputResponseResource> formInputResponseResources = new ArrayList<>();
+        when(formInputResponseRestService.getResponsesByApplicationId(applicationResource.getId())).thenReturn(restSuccess(formInputResponseResources));
+        when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponseResources)).thenReturn(new HashMap<>());
     }
 }

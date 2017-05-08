@@ -99,8 +99,6 @@
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>
 
-
-
     <th:block th:fragment="fileupload-fragment(viewmode,downloadUrl,filename,inputField,validationField,mayRemove,removeName,saveName)">
         <!--/* viewmode (string) readonly / edit
                DownloadUrl (string) url where to download the file
@@ -113,7 +111,7 @@
         <!--/* file upload has been submitted to innovate uk or marked as complete */-->
         <th:block th:if="${viewmode == 'readonly'}">
             <p th:if="${#strings.isEmpty(filename)}" class="uploaded-file">No file currently uploaded</p>
-            <a th:unless="${#strings.isEmpty(filename)}" class="uploaded-file" th:href="${downloadUrl}"  th:text="${filename}">The-uploaded-file-example.pdf</a>
+            <a th:unless="${#strings.isEmpty(filename)}" class="uploaded-file" th:href="${downloadUrl}"  th:text="${filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
         </th:block>
         <!--/* file upload can still be changed */-->
         <th:block th:if="${viewmode == 'edit'}">
@@ -138,7 +136,7 @@
                     <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${formInputId}">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">
-                    <a class="uploaded-file" th:href="${downloadUrl}" th:text="${filename}">The-uploaded-file-example.pdf</a>
+                    <a class="uploaded-file" th:href="${downloadUrl}" th:text="${filename}+' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
                     <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit">Remove</button>
                 </th:block>
             </div>
@@ -161,7 +159,7 @@
     <!-- ===========================Form: application_details =========================== -->
 
     <th:block th:fragment="application_details">
-    	<th:block th:with="readonly=${readonly} or ${markedAsComplete?.contains(question.id)
+    	<th:block th:with="summary=${summary}, readonly=${readonly} or ${markedAsComplete?.contains(question.id)
                                                                        or (currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null)
                                                                        or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
             <th:block th:unless="${readonly or appIsClosed}">
@@ -208,29 +206,44 @@
                     This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
                 </div>
 
-                <div class="form-group">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-medium">Research category</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
-                        </legend>
-                        <span th:if="${model.questionApplicationViewModel.selectedResearchCategoryName != null}">Chosen research category: <th:block th:text="${model.questionApplicationViewModel.selectedResearchCategoryName}"/></span><br/>
-                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}"
-                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span></button>
-                    </fieldset>
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'error'">
+                    <label for="researchCategory">
+                        <span class="heading-medium">Research category</span>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
+                    </label>
+                    <div th:if="${model.questionApplicationViewModel.researchCategoryHasBeenSelected()}">
+                        Chosen research category: <th:block th:text="${model.questionApplicationViewModel.selectedResearchCategoryName}"/>
+
+                        <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
+                        <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>
+                    </div>
+                    <button id="researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
+                        <span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span>
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-medium">Innovation area</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
-                        </legend>
-                        <span th:if="${model.questionApplicationViewModel.selectedInnovationAreaName != null}">Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/></span><br/>
-                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}"
-                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span></button>
-                    </fieldset>
+                <div class="form-group"
+                     th:if="${#sets.size(model.questionApplicationViewModel.currentCompetition.innovationAreas) > 1}"
+                     th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'error'">
+
+                    <label for="researchArea">
+                        <span class="heading-medium">Innovation area</span>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
+                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.innovationArea')" />
+                    </label>
+                    <div th:if="${model.questionApplicationViewModel.innovationAreaHasBeenSelected()}">
+                        Chosen innovation area:
+                        <th:block th:unless="${model.questionApplicationViewModel.noInnovationAreaApplicable}" th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/>
+                        <th:block th:if="${model.questionApplicationViewModel.noInnovationAreaApplicable}" th:text="#{ifs.application.no_innovation_area}"/>
+                    </div>
+                    <button id="researchArea" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">
+                        <span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span>
+                    </button>
                 </div>
+                <!--/* Input is used here to easily check if a Innovation Area has been selected for mark as complete validation */-->
+                <input type="hidden" th:if="${model.questionApplicationViewModel.innovationAreaHasBeenSelected()}" th:field="*{__application.innovationArea.name__}" value="Innovation area name has been selected"/>
+
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                     <fieldset>
                         <legend>

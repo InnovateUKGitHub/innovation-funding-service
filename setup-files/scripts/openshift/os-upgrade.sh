@@ -6,19 +6,23 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
+if [[ (${TARGET} == "local") ]]; then
+  HOST=ifs-local
+  ROUTE_DOMAIN=apps.$HOST
+elif [[ ${TARGET} == "production" ]]; then
+  HOST=apply-for-innovation-funding.service.gov.uk
+  ROUTE_DOMAIN=$HOST
+  PROJECT="production"
+else
+  HOST=prod.ifs-test-clusters.com
+  ROUTE_DOMAIN=apps.$HOST
+fi
+
 if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
 if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
 if [[ ${TARGET} == "sysint" ]]; then PROJECT="sysint"; fi
+if [[ ${TARGET} == "perf" ]]; then PROJECT="perf"; fi
 
-if [[ (${TARGET} == "local") ]]
-then
-    HOST=ifs-local
-else
-    HOST=prod.ifs-test-clusters.com
-fi
-
-ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
@@ -41,7 +45,7 @@ function upgradeServices {
     oc apply -f os-files-tmp/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
     # shib & idp
-    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
     then
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml
     else
@@ -81,6 +85,7 @@ cloneConfig
 tailorAppInstance
 
 useContainerRegistry
+pushApplicationImages
 upgradeServices
 
 if [[ ${bamboo_openshift_force_reload} == "true" ]]

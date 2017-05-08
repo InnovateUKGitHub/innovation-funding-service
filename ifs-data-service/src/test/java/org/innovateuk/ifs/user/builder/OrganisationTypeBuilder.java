@@ -19,7 +19,7 @@ public class OrganisationTypeBuilder extends BaseBuilder<OrganisationType, Organ
 
     public OrganisationTypeBuilder withOrganisationType(OrganisationTypeEnum... organisationTypeEnums) {
         return withArray((organisationTypeEnum, organisationType) -> {
-            setField("id", organisationTypeEnum.getOrganisationTypeId(), organisationType);
+            setField("id", organisationTypeEnum.getId(), organisationType);
             setField("name", organisationTypeEnum.name(), organisationType);
         }, organisationTypeEnums);
     }
