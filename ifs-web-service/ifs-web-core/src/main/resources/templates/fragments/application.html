@@ -1,4 +1,4 @@
-<th:block th:fragment="application-summary (assessorFeedbackDownloadLink)">
+<th:block th:fragment="application-summary">
   <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
 
       <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and !currentApplication.isOpen()}"/>
@@ -38,45 +38,6 @@
 
                </div>
              </div>
-
-             <th:block th:if="${assessorFeedback != null}">
-
-                 <div class="upload-section" th:if="${form.adminMode and !assessorFeedback.readonly}">
-                     <h3 class="heading-small no-margin">Assessor feedback</h3>
-                     <p>Upload the assessor feedback page</p>
-
-                     <div th:if="${!assessorFeedback.fileUploaded}"
-                          th:action="@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition}, applicationId=${currentApplication.id})}"
-                          th:classappend="${#fields.hasErrors('assessorFeedback')} ? error : ''">
-
-                         <th:block th:if="${#fields.hasErrors('assessorFeedback')}">
-                             <span class="error-message" th:each="err : ${#fields.errors('assessorFeedback')}" th:text="${err}" />
-                         </th:block>
-
-                         <input type="file" id="assessorFeedback" name="assessorFeedback" class="inputfile"/>
-                         <label for="assessorFeedback" class="button-secondary extra-margin">+ Upload</label>
-                         <button th:if="${!assessorFeedback.fileUploaded}" name="uploadAssessorFeedback" class="button-secondary" type="submit" data-for-file-upload="assessorFeedback">Save</button>
-                     </div>
-
-                     <div th:if="${assessorFeedback.fileUploaded}">
-                         <a th:href="${assessorFeedbackDownloadLink}" class="uploaded-file" th:text="${assessorFeedback.filename}">The-uploaded-file-example.pdf</a>
-                         <button class="secondary-button" type="submit" name="removeAssessorFeedback">Remove</button>
-                     </div>
-                     <div th:if="${!assessorFeedback.fileUploaded}">
-                         <p class="uploaded-file">No file currently uploaded</p>
-                     </div>
-                 </div>
-
-                 <th:block th:if="${assessorFeedback.fileUploaded and assessorFeedback.readonly}">
-                     <th:block th:insert="question-type/form-elements :: readonly-file-download
-                                 (filename=${assessorFeedback.filename},
-                                  filesizeKbytes=${assessorFeedback.filesizeKbytes},
-                                  fileDescription=${'View the application feedback:'},
-                                  downloadURL=${assessorFeedbackDownloadLink})">
-                     </th:block>
-                 </th:block>
-
-             </th:block>
 
              <h2 th:text="${section.name}" class="heading-medium" />
          </th:block>

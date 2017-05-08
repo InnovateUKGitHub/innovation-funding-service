@@ -21,7 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.servlet.http.HttpServletResponse;
@@ -125,12 +124,8 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
 
         ApplicationResource app = applications.get(0);
         app.setCompetition(competition.getId());
-        app.setAssessorFeedbackFileEntry(123L);
-
-        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/special").build();
 
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(app.getId())).thenReturn(restSuccess(fileEntry));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
@@ -260,24 +255,5 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
 
-    }
-
-    @Test
-    public void testDownloadAssessorFeedback() throws Exception {
-
-        ByteArrayResource fileContents = new ByteArrayResource("File contents".getBytes());
-        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/special").build();
-
-        when(assessorFeedbackRestService.getAssessorFeedbackFile(123L)).thenReturn(restSuccess(fileContents));
-        when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(123L)).thenReturn(restSuccess(fileEntry));
-
-        mockMvc.perform(get("/application/123/assessorFeedback"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("File contents"))
-                .andExpect(header().string("Content-Type", "text/special"))
-                .andExpect(header().longValue("Content-Length", "File contents".length()));
-
-        verify(assessorFeedbackRestService).getAssessorFeedbackFile(123L);
-        verify(assessorFeedbackRestService).getAssessorFeedbackFileDetails(123L);
     }
 }
