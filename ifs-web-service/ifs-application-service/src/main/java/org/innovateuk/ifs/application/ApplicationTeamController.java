@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 public class ApplicationTeamController {
 
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationRestService applicationRestService;
 
     @Autowired
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
@@ -37,15 +37,15 @@ public class ApplicationTeamController {
 
     @GetMapping("/team")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
         return "application-team/team";
     }
 
     @GetMapping("/begin")
     public String beginApplication(@PathVariable("applicationId") long applicationId,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
+                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
         applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         changeApplicationStatusToOpen(applicationResource);
         return format("redirect:/application/%s", applicationResource.getId());
@@ -53,7 +53,7 @@ public class ApplicationTeamController {
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
         if (ApplicationState.CREATED == applicationResource.getApplicationState()) {
-            applicationService.updateState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
+            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
         }
     }
 }

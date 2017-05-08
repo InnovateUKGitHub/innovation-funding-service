@@ -84,7 +84,7 @@ public class FinanceChecksQueriesAddQueryController {
                                @PathVariable final Long organisationId,
                                @RequestParam(value = "query_section", required = false) final String querySection,
                                Model model,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
@@ -108,7 +108,7 @@ public class FinanceChecksQueriesAddQueryController {
                             @SuppressWarnings("unused") BindingResult bindingResult,
                             ValidationHandler validationHandler,
                             Model model,
-                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                             HttpServletRequest request,
                             HttpServletResponse response)
     {
@@ -165,7 +165,7 @@ public class FinanceChecksQueriesAddQueryController {
                                          @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddQueryForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult,
                                          ValidationHandler validationHandler,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                          HttpServletRequest request,
                                          HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
@@ -196,7 +196,7 @@ public class FinanceChecksQueriesAddQueryController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
-                                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                                          HttpServletRequest request) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         Optional<ByteArrayResource> content = Optional.empty();
@@ -225,7 +225,7 @@ public class FinanceChecksQueriesAddQueryController {
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddQueryForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
@@ -247,7 +247,7 @@ public class FinanceChecksQueriesAddQueryController {
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @RequestParam(value = "query_section", required = false) String querySection,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);

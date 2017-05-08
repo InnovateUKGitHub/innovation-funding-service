@@ -11,10 +11,8 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <div class="hgroup">
-                <h1 class="heading-xlarge no-margin-bottom">Assess competition</h1>
-                <p th:text="|You have been invited to assess competition: '${model.competitionName}'.|"></p>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assess competition',size='heading-xlarge'" />
+            <p th:text="|You have been invited to assess competition: '${model.competitionName}'.|"></p>
 
             <div class="grid-row">
                 <section class="column-half">

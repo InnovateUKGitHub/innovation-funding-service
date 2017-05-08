@@ -26,14 +26,14 @@ public class ApplicationDocs {
             fieldWithPath("competition").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition Name"),
             fieldWithPath("competitionStatus").description("Competition Status"),
-            fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application"),
             fieldWithPath("completion").description("percentage of completion of the application"),
             fieldWithPath("resubmission").description("indicator that this application is a resubmission"),
             fieldWithPath("previousApplicationNumber").description("the application number of the previous submission"),
             fieldWithPath("previousApplicationTitle").description("the application title of the previous submission"),
             fieldWithPath("researchCategory").description("Research category"),
             fieldWithPath("innovationArea").description("applicable Innovation Area"),
-            fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable")
+            fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable"),
+            fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
@@ -46,7 +46,6 @@ public class ApplicationDocs {
             .withCompetition(1L)
             .withCompetitionName("competition name")
             .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
-            .withAssessorFeedbackFileEntry(123L)
             .withCompletion(new BigDecimal(30L))
             .withResearchCategory(new ResearchCategoryResource())
             .withInnovationArea(new InnovationAreaResource())

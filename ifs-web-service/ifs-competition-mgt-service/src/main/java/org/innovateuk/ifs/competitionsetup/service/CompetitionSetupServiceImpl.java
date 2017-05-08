@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
-	
+
 	@Autowired
 	private CompetitionService competitionService;
 
@@ -45,7 +45,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	private Map<CompetitionSetupSection, CompetitionSetupSectionModelPopulator> modelPopulators;
 	private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionModelPopulator> subsectionModelPopulators;
 
-	
+
 	@Autowired
 	public void setCompetitionSetupFormPopulators(Collection<CompetitionSetupFormPopulator> populators) {
 		formPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToFill(), Function.identity()));
@@ -65,7 +65,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     public void setCompetitionSetupSubsectionSavers(Collection<CompetitionSetupSubsectionSaver> savers) {
         subsectionSavers = savers.stream().collect(Collectors.toMap(p -> p.subsectionToSave(), Function.identity()));
     }
-	
+
 	@Autowired
 	public void setCompetitionSetupSectionModelPopulators(Collection<CompetitionSetupSectionModelPopulator> populators) {
 		modelPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToPopulateModel(), Function.identity()));
@@ -107,13 +107,11 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	@Override
 	public CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
 			CompetitionSetupSection section) {
-		
 		CompetitionSetupFormPopulator populator = formPopulators.get(section);
 		if(populator == null) {
 			LOG.error("unable to populate form for section " + section);
 			throw new IllegalArgumentException();
 		}
-		
 		return populator.populateForm(competitionResource);
 	}
 
@@ -122,7 +120,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 													 CompetitionSetupSection section,
 													 CompetitionSetupSubsection subsection,
 													 Optional<Long> objectId) {
-
         checkIfSubsectionIsInSection(section, subsection);
 		CompetitionSetupSubsectionFormPopulator populator = subsectionFormPopulators.get(subsection);
 		if(populator == null) {
@@ -135,10 +132,14 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 
 	@Override
-	public ServiceResult<Void> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
-                                                       String fieldName, String value, Optional<Long> objectId) {
+	public ServiceResult<Void> autoSaveCompetitionSetupSection(CompetitionResource competitionResource,
+                                                               CompetitionSetupSection section,
+                                                               String fieldName,
+                                                               String value,
+                                                               Optional<Long> objectId) {
+        checkCompetitionInitialDetailsComplete(competitionResource, section);
 
-		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
+        CompetitionSetupSectionSaver saver = sectionSavers.get(section);
 		CompetitionSetupFormPopulator populator = formPopulators.get(section);
 		if(saver == null || populator == null) {
 			LOG.error("unable to save section " + section);
@@ -149,10 +150,15 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
     @Override
-    public ServiceResult<Void> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
-                                                          CompetitionSetupSubsection subsection, String fieldName, String value, Optional<Long> objectId) {
-
+    public ServiceResult<Void> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource,
+                                                                  CompetitionSetupSection section,
+                                                                  CompetitionSetupSubsection subsection,
+                                                                  String fieldName,
+                                                                  String value,
+                                                                  Optional<Long> objectId) {
+        checkCompetitionInitialDetailsComplete(competitionResource, section);
         checkIfSubsectionIsInSection(section, subsection);
+
         CompetitionSetupSubsectionSaver saver = subsectionSavers.get(subsection);
 		CompetitionSetupSubsectionFormPopulator populator = subsectionFormPopulators.get(subsection);
         if(saver == null || populator == null) {
@@ -165,14 +171,16 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
-														   CompetitionResource competitionResource, CompetitionSetupSection section) {
-		
+														   CompetitionResource competitionResource,
+														   CompetitionSetupSection section) {
+        checkCompetitionInitialDetailsComplete(competitionResource, section);
+
 		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
 		if(saver == null || !saver.supportsForm(competitionSetupForm.getClass())) {
 			LOG.error("unable to save section " + section);
 			throw new IllegalArgumentException();
 		}
-		
+
 		return saver.saveSection(competitionResource, competitionSetupForm).andOnSuccess(() -> {
 			if (competitionSetupForm.isMarkAsCompleteAction()) {
 				return competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
@@ -183,8 +191,11 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Override
     public ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
-                                                      CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
+                                                              CompetitionResource competitionResource,
+                                                              CompetitionSetupSection section,
+                                                              CompetitionSetupSubsection subsection) {
 
+        checkCompetitionInitialDetailsComplete(competitionResource, section);
         checkIfSubsectionIsInSection(section, subsection);
 
         CompetitionSetupSubsectionSaver saver = subsectionSavers.get(subsection);
@@ -194,6 +205,12 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         }
 
         return saver.saveSection(competitionResource, competitionSetupForm);
+    }
+
+    private void checkCompetitionInitialDetailsComplete(CompetitionResource competitionResource, CompetitionSetupSection section) {
+        if (!competitionResource.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+            throw new IllegalStateException("'Initial Details' section must be completed first");
+        }
     }
 
 	@Override
@@ -254,16 +271,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		}
 
 		model.addAttribute("allSections", CompetitionSetupSection.values());
-        model.addAttribute("isInitialComplete", isInitialComplete(competitionResource));
-		model.addAttribute("subTitle",
-				(competitionResource.getCode() != null ? competitionResource.getCode() : "Unknown") + ": "
-						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
+        model.addAttribute("isInitialComplete", competitionResource.isInitialDetailsComplete());
 
 		populateCompetitionStateModelAttributes(model, competitionResource, section);
-	}
-
-	private boolean isInitialComplete(CompetitionResource competitionResource) {
-		return competitionResource.getSectionSetupStatus().containsKey(CompetitionSetupSection.INITIAL_DETAILS) || competitionResource.getSetupComplete();
 	}
 
 	private void populateCompetitionStateModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {

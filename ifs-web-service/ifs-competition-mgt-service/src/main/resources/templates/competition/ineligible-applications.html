@@ -90,7 +90,7 @@
                             <td th:text="${row.leadApplicant}">HVM</td>
                             <td>
                                 <span th:if="${row.informed}">informed</span>
-                                <button class="button" th:if="${!row.informed}">Inform applicant</button>
+                                <a class="button no-margin-right" th:href="@{/competition/application/{applicationId}/ineligible(applicationId=${row.id})}" th:if="${!row.informed}">Inform applicant</a>
                             </td>
                         </tr>
                     </tbody>

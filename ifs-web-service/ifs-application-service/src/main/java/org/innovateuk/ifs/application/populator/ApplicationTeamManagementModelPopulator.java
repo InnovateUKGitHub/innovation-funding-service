@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamManagementApplicantRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
