@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.DefaultTransactionStatus;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SERVICE_RESULT_EXCEPTION_THROWN_DURING_PROCESSING;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SERVICE_RESULT_NULL_RESULT_RETURNED;
@@ -79,14 +80,19 @@ public class ServiceFailureExceptionHandlingAdvice {
         }
 
         if (topLevel) {
-            LOG.debug("Failure encountered during processing of a top-level ServiceResult-returning Service method - rolling back any transactions");
             try {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                if (isWritableTransaction()) {
+                    LOG.debug("Failure encountered during processing of a top-level ServiceResult-returning Service method - rolling back any transactions");
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                }
             } catch (NoTransactionException e) {
-                LOG.trace("No transaction to roll back");
-                LOG.trace(e);
+                LOG.trace("No transaction to roll back", e);
             }
         }
+    }
+
+    private boolean isWritableTransaction() {
+        return !((DefaultTransactionStatus) TransactionAspectSupport.currentTransactionStatus()).isReadOnly();
     }
 
 }

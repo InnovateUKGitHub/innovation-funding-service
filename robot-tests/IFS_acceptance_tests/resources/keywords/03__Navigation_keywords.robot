@@ -14,7 +14,7 @@ The user navigates to the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
     # "Contact us" checking (INFUND-1289)
     # Pending completion of INFUND-2544, INFUND-2545
     # Wait Until Page Contains Element Without Screenshots    link=Contact Us
@@ -54,7 +54,7 @@ The user is on the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
     # "Contact us" checking (INFUND-1289)
     # Pending completion of INFUND-2544, INFUND-2545
     # Wait Until Page Contains Element Without Screenshots    link=Contact Us
@@ -74,7 +74,7 @@ The user should be redirected to the correct page
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 the user should be redirected to the correct page without the usual headers
     [Arguments]    ${URL}
@@ -88,7 +88,7 @@ the user should be redirected to the correct page without error checking
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    Location Should Contain    ${URL}
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 The user should see permissions error message
     Wait Until Page Contains Without Screenshots    You do not have the necessary permissions for your request
@@ -117,4 +117,4 @@ the user reloads the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")

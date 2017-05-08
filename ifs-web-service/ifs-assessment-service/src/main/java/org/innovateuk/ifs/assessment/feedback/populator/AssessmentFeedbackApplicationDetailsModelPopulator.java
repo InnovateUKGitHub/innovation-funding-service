@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * Build the model for the Assessment Feedback Application Details view.
  */
 @Component
-public class AssessmentFeedbackApplicationDetailsModelPopulator {
+public class AssessmentFeedbackApplicationDetailsModelPopulator extends AssessmentModelPopulator<AssessmentFeedbackApplicationDetailsViewModel> {
 
     @Autowired
     private ApplicationService applicationService;
@@ -26,11 +26,15 @@ public class AssessmentFeedbackApplicationDetailsModelPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    public AssessmentFeedbackApplicationDetailsViewModel populateModel(Long assessmentId, QuestionResource question) {
+    @Override
+    public AssessmentFeedbackApplicationDetailsViewModel populate(long assessmentId, QuestionResource question) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
-        ApplicationResource application = applicationService.getById(assessment.getApplication());
         CompetitionResource competition = competitionService.getById(assessment.getCompetition());
-        return new AssessmentFeedbackApplicationDetailsViewModel(assessment.getApplication(),
+
+        ApplicationResource application = applicationService.getById(assessment.getApplication());
+
+        return new AssessmentFeedbackApplicationDetailsViewModel(
+                assessment.getApplication(),
                 assessment.getApplicationName(),
                 application.getStartDate(),
                 application.getDurationInMonths(),
@@ -38,5 +42,4 @@ public class AssessmentFeedbackApplicationDetailsModelPopulator {
                 competition.getAssessmentDaysLeftPercentage(),
                 question.getShortName());
     }
-
 }

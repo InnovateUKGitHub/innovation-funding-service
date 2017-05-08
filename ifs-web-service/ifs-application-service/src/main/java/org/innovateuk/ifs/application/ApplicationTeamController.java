@@ -3,10 +3,9 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,43 +27,33 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 public class ApplicationTeamController {
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
-    private UserService userService;
+    private ApplicationRestService applicationRestService;
 
     @Autowired
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
+    @Autowired
+    private ApplicationUtil applicationUtil;
+
     @GetMapping("/team")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
         return "application-team/team";
     }
 
     @GetMapping("/begin")
     public String beginApplication(@PathVariable("applicationId") long applicationId,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+        applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         changeApplicationStatusToOpen(applicationResource);
         return format("redirect:/application/%s", applicationResource.getId());
     }
 
-    private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
-        if (loggedInUserId != getLeadApplicantId(applicationResource)) {
-            throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
-        }
-    }
-
-    private long getLeadApplicantId(ApplicationResource applicationResource) {
-        return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
-    }
-
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
         if (ApplicationState.CREATED == applicationResource.getApplicationState()) {
-            applicationService.updateState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
+            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
         }
     }
 }

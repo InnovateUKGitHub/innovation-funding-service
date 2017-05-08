@@ -1,35 +1,89 @@
 .app-summary {
-	div.alignright-button {
-		padding-top:30px;
-	}
-	a.back {
-		font-size: 16px;
-		display: block;
-		margin-top:1em;
-	}
-	.question {
-		overflow: hidden;
-		margin:20px;
-	}
-}
-.no-js .app-summary .agree-to-terms-container {
-	display:none;
+
+  div.alignright-button {
+    padding-top: 30px;
+  }
+
+  a.back {
+    font-size: 16px;
+    display: block;
+    margin-top: 1em;
+  }
+
+  .question {
+    overflow: hidden;
+    margin: 20px;
+  }
 }
 
-.app-summary.is-closed [readonly],
-.app-summary.is-closed .readonly {
-	border:none;
-	padding:0;
-	background:transparent;
-	min-height: 0;
-	resize:none;
-	overflow:visible;
-	p:last-child {
-			margin-bottom:0;
-	}
+.no-js .app-summary .agree-to-terms-container {
+  display: none;
 }
-.app-summary.is-closed .textarea-footer {
-	display: none;
-	min-height:0;
-	resize:none;
+
+.app-summary.is-closed {
+
+  [readonly],
+  .readonly {
+    border:none;
+    padding:0;
+    background:transparent;
+    min-height: 0;
+    resize:none;
+    overflow:visible;
+
+    p:last-child {
+      margin-bottom:0;
+    }
+  }
+
+  .textarea-footer {
+    display: none;
+    min-height: 0;
+    resize: none;
+  }
+}
+
+// This is specifically for the eligibility toggle which might get replaced in
+// the future to bring inline with a better GDS pattern
+.collapsible-eligibility {
+
+  .form-group {
+
+    .textarea-footer {
+      display: block;
+      min-height: auto;
+      resize: inherit;
+    }
+  }
+
+  h2 {
+    border: 0;
+
+    button[aria-expanded] {
+      background-color: $grey-3;
+      border: 0;
+      border-radius: 0;
+      box-shadow: 0 2px 0 #b5babe;
+      box-sizing: border-box;
+      color: $black;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 1em;
+      font-weight: 400;
+      line-height: 1.25;
+      padding: .526315em .789473em .263157em;
+      position: relative;
+      text-decoration: none;
+      vertical-align: top;
+      width: auto;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  form {
+    margin-top: 1em;
+  }
 }

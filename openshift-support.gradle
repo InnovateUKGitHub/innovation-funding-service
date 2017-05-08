@@ -15,6 +15,11 @@ task dbResetSysint(type:Exec) {
     args = [openshiftEnv, "sysint", project.version]
 }
 
+task dbResetPerf(type:Exec) {
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
+
 task dbResetUat(type:Exec) {
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "uat", project.version]
@@ -45,6 +50,11 @@ task osDeploySysint(type:Exec) {
     args = [openshiftEnv, "sysint", project.version]
 }
 
+task osDeployPerf(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
+
 task osUpgradeRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "remote", project.version]
@@ -68,6 +78,11 @@ task osUpgradeDemo(type:Exec) {
 task osUpgradeSysint(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "sysint", project.version]
+}
+
+task osUpgradePerf(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "perf", project.version]
 }
 
 task robotTestsFilter (type: Copy) {

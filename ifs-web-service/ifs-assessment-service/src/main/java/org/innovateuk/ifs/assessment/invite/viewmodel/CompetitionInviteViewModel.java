@@ -12,17 +12,21 @@ import java.time.ZonedDateTime;
  */
 public class CompetitionInviteViewModel {
 
-    private final String competitionInviteHash;
-    private final String competitionName;
-    private final ZonedDateTime acceptsDate;
-    private final ZonedDateTime deadlineDate;
-    private final ZonedDateTime briefingDate;
-    private final BigDecimal assessorPay;
-    private final boolean userLoggedIn;
+    private String competitionInviteHash;
+    private Long competitionId;
+    private String competitionName;
+    private String competitionDescription;
+    private ZonedDateTime acceptsDate;
+    private ZonedDateTime deadlineDate;
+    private ZonedDateTime briefingDate;
+    private BigDecimal assessorPay;
+    private boolean userLoggedIn;
 
     public CompetitionInviteViewModel(String competitionInviteHash, CompetitionInviteResource invite, boolean userLoggedIn) {
         this.competitionInviteHash = competitionInviteHash;
+        this.competitionId = invite.getCompetitionId();
         this.competitionName = invite.getCompetitionName();
+        this.competitionDescription = invite.getCompetitionDescription();
         this.acceptsDate = invite.getAcceptsDate();
         this.deadlineDate = invite.getDeadlineDate();
         this.briefingDate = invite.getBriefingDate();
@@ -34,8 +38,16 @@ public class CompetitionInviteViewModel {
         return competitionInviteHash;
     }
 
+    public Long getCompetitionId() {
+        return competitionId;
+    }
+
     public String getCompetitionName() {
         return competitionName;
+    }
+
+    public String getCompetitionDescription() {
+        return competitionDescription;
     }
 
     public ZonedDateTime getAcceptsDate() {
@@ -60,24 +72,22 @@ public class CompetitionInviteViewModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         CompetitionInviteViewModel that = (CompetitionInviteViewModel) o;
 
         return new EqualsBuilder()
+                .append(userLoggedIn, that.userLoggedIn)
                 .append(competitionInviteHash, that.competitionInviteHash)
+                .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
+                .append(competitionDescription, that.competitionDescription)
                 .append(acceptsDate, that.acceptsDate)
                 .append(deadlineDate, that.deadlineDate)
                 .append(briefingDate, that.briefingDate)
                 .append(assessorPay, that.assessorPay)
-                .append(userLoggedIn, that.userLoggedIn)
                 .isEquals();
     }
 
@@ -85,7 +95,9 @@ public class CompetitionInviteViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionInviteHash)
+                .append(competitionId)
                 .append(competitionName)
+                .append(competitionDescription)
                 .append(acceptsDate)
                 .append(deadlineDate)
                 .append(briefingDate)

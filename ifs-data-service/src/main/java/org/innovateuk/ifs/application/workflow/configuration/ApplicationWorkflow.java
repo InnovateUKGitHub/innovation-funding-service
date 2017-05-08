@@ -2,7 +2,9 @@ package org.innovateuk.ifs.application.workflow.configuration;
 
 import org.innovateuk.ifs.application.resource.ApplicationOutcome;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.workflow.actions.MarkIneligibleAction;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -21,6 +23,9 @@ import static java.util.Arrays.asList;
 @Configuration
 @EnableStateMachine(name = "applicationProcessStateMachine")
 public class ApplicationWorkflow extends StateMachineConfigurerAdapter<ApplicationState, ApplicationOutcome> {
+
+    @Autowired
+    private MarkIneligibleAction markIneligibleAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<ApplicationState, ApplicationOutcome> config) throws Exception {
@@ -50,6 +55,7 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
                     .event(ApplicationOutcome.MARK_INELIGIBLE)
+                    .action(markIneligibleAction)
                     .target(ApplicationState.INELIGIBLE)
                 .and()
                 .withExternal()
