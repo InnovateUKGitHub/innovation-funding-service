@@ -21,8 +21,8 @@ Non registered users CH route: lead org Business
     [Tags]    HappyPath    SmokeTest
     [Setup]    The guest user opens the browser
     Given the user follows the flow to register their organisation    radio-1  # business
-    And the user enters the details and clicks the create account   Phil   Smith   ${test_mailbox_one}+business@gmail.com
-    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    When the user enters the details and clicks the create account   Phil   Smith   ${test_mailbox_one}+business@gmail.com
+    then the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     and the user does the email verification   ${test_mailbox_one}+business@gmail.com
     [Teardown]    the user closes the browser
 
@@ -31,8 +31,8 @@ Non registered users CH route: lead org RTO
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
     Given the user follows the flow to register their organisation   radio-3   # RTO
-    And the user enters the details and clicks the create account   Lee    Tess    ${test_mailbox_one}+rto@gmail.com
-    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    When the user enters the details and clicks the create account   Lee    Tess    ${test_mailbox_one}+rto@gmail.com
+    then the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     and the user does the email verification   ${test_mailbox_one}+rto@gmail.com
 
 The email address does not stay in the cookie
