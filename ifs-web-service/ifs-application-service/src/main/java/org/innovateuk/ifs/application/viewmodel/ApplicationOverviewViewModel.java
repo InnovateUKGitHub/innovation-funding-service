@@ -31,14 +31,13 @@ public class ApplicationOverviewViewModel {
     private ApplicationOverviewCompletedViewModel completed;
     private ApplicationOverviewSectionViewModel section;
 
-    private FileDetailsViewModel assessorFeedback;
     private List<ResearchCategoryResource> researchCategories;
 
     public ApplicationOverviewViewModel(ApplicationResource currentApplication, ProjectResource currentProject, CompetitionResource currentCompetition,
                                         OrganisationResource userOrganisation, Integer completedQuestionsPercentage, Long financeSectionId,
                                         ApplicationOverviewUserViewModel user, ApplicationOverviewAssignableViewModel assignable,
                                         ApplicationOverviewCompletedViewModel completed, ApplicationOverviewSectionViewModel section,
-                                        FileDetailsViewModel assessorFeedback, List<ResearchCategoryResource> researchCategories) {
+                                        List<ResearchCategoryResource> researchCategories) {
         this.currentApplication = currentApplication;
         this.currentProject = currentProject;
         this.currentCompetition = currentCompetition;
@@ -49,7 +48,6 @@ public class ApplicationOverviewViewModel {
         this.assignable = assignable;
         this.completed = completed;
         this.section = section;
-        this.assessorFeedback = assessorFeedback;
         this.researchCategories = researchCategories;
     }
 
@@ -71,10 +69,6 @@ public class ApplicationOverviewViewModel {
 
     public Integer getCompletedQuestionsPercentage() {
         return completedQuestionsPercentage;
-    }
-
-    public Optional<FileDetailsViewModel> getAssessorFeedback() {
-        return Optional.ofNullable(assessorFeedback);
     }
 
     public List<ResearchCategoryResource> getResearchCategories() {
