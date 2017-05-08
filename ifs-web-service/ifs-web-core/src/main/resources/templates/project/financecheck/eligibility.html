@@ -93,7 +93,7 @@
             </h3>
             <div class="collapsible-content"
                  th:with="viewmode=${summaryModel.isApproved() or summaryModel.isExternalView()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
-                <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}"
+                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
                       enctype="multipart/form-data">
                     <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
                         <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
@@ -148,7 +148,7 @@
     <input type="hidden" id="cacheTest" value="" />
     <input type="hidden" id="projectId" th:value="${summaryModel.projectId}" />
     <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}" />
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}" th:unless="${summaryModel.isExternalView()}">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}" th:unless="${summaryModel.isExternalView()}">
 
         <th:block th:unless="${summaryModel.isApproved()}">
             <h2 class="heading-medium">Approve eligibility</h2>

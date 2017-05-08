@@ -3,11 +3,11 @@ Resource    ../../resources/variables/GLOBAL_VARIABLES.robot
 *** Variables ***
 #Project: London underground – enhancements to existing stock and logistics
 # GOL = Grant Offer Letter
-${Gabtype_Id}       53
+${Gabtype_Id}       52
 ${Gabtype_Name}     Gabtype
-${Kazio_Id}         54
+${Kazio_Id}         53
 ${Kazio_Name}       Kazio
-${Cogilith_Id}      55
+${Cogilith_Id}      54
 ${Cogilith_Name}    Cogilith
 ${PS_GOL_Competition_Id}  10
 ${PS_GOL_APPLICATION_NO}         80
@@ -25,11 +25,11 @@ ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.c
 
 #Project: High-speed rail and its effects on air quality
 # MD = Mandatory Documents
-${Ooba_Id}          50
+${Ooba_Id}          49
 ${Ooba_Name}        Ooba
-${Wordpedia_Id}     51
+${Wordpedia_Id}     50
 ${Wordpedia_Name}   Wordpedia
-${Jabbertype_Id}    52
+${Jabbertype_Id}    51
 ${Jabbertype_Name}  Jabbertype
 ${PS_MD_Competition_Id}         10
 ${PS_MD_Competition_Name}       Rolling stock future developments
@@ -47,11 +47,11 @@ ${PS_MD_APPLICATION_ACADEMIC_EMAIL}          antonio.jenkins@jabbertype.example.
 
 #Project: Point control and automated monitoring
 # SP = Spend Profile
-${Katz_Id}         47
+${Katz_Id}         46
 ${Katz_Name}       Katz
-${Meembee_Id}      48
+${Meembee_Id}      47
 ${Meembee_Name}    Meembee
-${Zooveo_Id}       49
+${Zooveo_Id}       48
 ${Zooveo_Name}     Zooveo
 ${PS_SP_Competition_Id}         10
 ${PS_SP_Competition_Name}       Rolling stock future developments
@@ -69,12 +69,12 @@ ${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
 
 #Project: Grade crossing manufacture and supply
 # BD = Bank Details
-${Eadel_Id}       44
-${Eadel_Name}     Eadel
-${Bluezoom_Id}    45
-${Bluezoom_Name}  Bluezoom
-${Npath_Id}       46
-${Npath_Name}     Npath
+${Vitruvius_Id}       32
+${Vitruvius_Name}     Vitruvius Stonework Limited
+${A_B_Cad_Services_Id}    44
+${A_B_Cad_Services_Name}  A B Cad Services
+${Armstrong_Butler_Id}       45
+${Armstrong_Butler_Name}     Armstrong & Butler Ltd
 ${PS_BD_Competition_Id}         10
 ${PS_BD_Competition_Name}       Rolling stock future developments
 ${PS_BD_APPLICATION_NO}         77
@@ -82,15 +82,15 @@ ${PS_BD_APPLICATION_NUMBER}     77
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_HEADER}     ${PS_BD_APPLICATION_TITLE}
 ${PS_BD_APPLICATION_PROJECT}    9
-${PS_BD_APPLICATION_LEAD_ORGANISATION_ID}    ${Eadel_Id}
-${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Eadel_Name}
-${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}      diane.scott@eadel.example.com
-${PS_BD_APPLICATION_PM_EMAIL}                diane.scott@eadel.example.com
+${PS_BD_APPLICATION_LEAD_ORGANISATION_ID}    ${Vitruvius_Id}
+${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Vitruvius_Name}
+${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}      diane.scott@vitruvius.example.com
+${PS_BD_APPLICATION_PM_EMAIL}                diane.scott@vitruvius.example.com
 ${PS_BD_APPLICATION_LEAD_FINANCE}            Diane Scott
 ${PS_BD_APPLICATION_LEAD_TELEPHONE}          49692921151
-${PS_BD_APPLICATION_PARTNER_EMAIL}           ryan.welch@bluezoom.example.com
+${PS_BD_APPLICATION_PARTNER_EMAIL}           ryan.welch@abcad.example.com
 ${PS_BD_APPLICATION_PARTNER_FINANCE}         Ryan Welch
-${PS_BD_APPLICATION_ACADEMIC_EMAIL}          sara.armstrong@npath.example.com
+${PS_BD_APPLICATION_ACADEMIC_EMAIL}          sara.armstrong@armstrong.example.com
 ${PS_BD_APPLICATION_ACADEMIC_FINANCE}        Sara Armstrong
 
 #Project: New materials for lighter stock
@@ -134,7 +134,7 @@ ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${lead_applicant_credentials[
 ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${test_mailbox_one}+projectsetuppm@gmail.com
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}    39
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}    Ludlow
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}    5353232
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}    53532322
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    1230000
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}    4560
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credentials["email"]}

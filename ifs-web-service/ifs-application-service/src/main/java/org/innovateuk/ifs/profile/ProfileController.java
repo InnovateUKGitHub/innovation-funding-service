@@ -53,9 +53,12 @@ public class ProfileController {
     @Autowired
     private EthnicityRestService ethnicityRestService;
 
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
     @GetMapping("/view")
     public String viewUserProfile(Model model,
-                                  @ModelAttribute("loggedInUser") UserResource userResource) {
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource userResource) {
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
 
         model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccessObjectOrThrowException()));
@@ -104,13 +107,15 @@ public class ProfileController {
     @PostMapping("/edit")
     public String submitUserProfile(@Valid @ModelAttribute("userDetailsForm") UserDetailsForm userDetailsForm, BindingResult bindingResult,
                                     Model model,
-                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                    HttpServletRequest request) {
         String destination = "profile/edit-user-profile";
 
         if(!bindingResult.hasErrors()) {
             ServiceResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
 
             if (updateProfileResult.isSuccess()) {
+                loggedInUser = userAuthenticationService.getAuthenticatedUser(request, true);
                 destination = viewUserProfile(model, loggedInUser);
             } else {
                 addEnvelopeErrorsToBindingResultErrors(updateProfileResult.getFailure().getErrors(), bindingResult);
@@ -121,7 +126,7 @@ public class ProfileController {
     }
 
     @GetMapping("/edit")
-    public String editUserProfile(@ModelAttribute("loggedInUser") UserResource user,
+    public String editUserProfile(@ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                   HttpServletRequest request, Model model) {
         populateUserDetailsForm(model, user);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());

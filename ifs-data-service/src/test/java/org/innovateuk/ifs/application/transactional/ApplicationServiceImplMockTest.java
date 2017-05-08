@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
@@ -33,6 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Matchers;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -50,12 +52,14 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.Notifications.APPLICATION_SUBMITTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -88,14 +92,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED), ApplicationState::getBackingState);
+    private static final String WEB_BASE_URL = "www.baseUrl.com" ;
 
     private Application openApplication;
-
-    @Override
-    protected ApplicationService supplyServiceUnderTest() {
-        return new ApplicationServiceImpl();
-    }
-
     private FormInput formInput;
     private FormInputType formInputType;
     private Question question;
@@ -106,6 +105,11 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
     private Long organisationId = 456L;
+
+    @Override
+    protected ApplicationService supplyServiceUnderTest() {
+        return new ApplicationServiceImpl();
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -129,6 +133,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         openApplication = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
+
+        ReflectionTestUtils.setField(service, "webBaseUrl", WEB_BASE_URL);
     }
 
     @Test
@@ -769,7 +775,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -778,7 +784,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -787,7 +793,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
@@ -901,7 +907,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -910,7 +916,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -919,7 +925,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
@@ -1035,7 +1041,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -1044,7 +1050,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
                         systemNotificationSourceMock,
@@ -1053,7 +1059,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
@@ -1150,6 +1156,59 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        long applicationId = 1L;
+        String reason = "reason";
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withId(applicationId)
+                .build();
+
+        IneligibleOutcome ineligibleOutcome = newIneligibleOutcome()
+                .withReason(reason)
+                .build();
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(true);
+        when(applicationRepositoryMock.save(application)).thenReturn(application);
+
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
+
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
+        verify(applicationRepositoryMock).save(application);
+    }
+
+    @Test
+    public void markAsIneligible_applicationNotSubmitted() throws Exception {
+        long applicationId = 1L;
+        String reason = "reason";
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.OPEN)
+                .withId(applicationId)
+                .build();
+
+        IneligibleOutcome ineligibleOutcome = newIneligibleOutcome()
+                .withReason(reason)
+                .build();
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(false);
+
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
+
+        assertTrue(result.isFailure());
+        assertEquals(APPLICATION_MUST_BE_SUBMITTED.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
     }
 
     @Test

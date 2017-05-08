@@ -71,7 +71,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     applicationInnovationAreaService.setNoInnovationAreaApplies(data.getApplication().getId());
                 } else if (!innovationAreaName.isEmpty()) {
                     InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
-                    applicationInnovationAreaService.setInnovationArea(data.getApplication().getId(), innovationArea.getId());
+                    applicationInnovationAreaService.setInnovationArea(data.getApplication().getId(), innovationArea.getId())
+                            .getSuccessObjectOrThrowException();
                 }
             });
     }

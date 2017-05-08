@@ -105,7 +105,7 @@ public class CompetitionOverviewViewModel {
     }
 
     public boolean isShowClosedMessage() {
-        return nonIfs ?  getRegistrationCloseDate().isBefore(ZonedDateTime.now()) :
+        return nonIfs ? getRegistrationCloseDate().isBefore(ZonedDateTime.now()) :
                 competitionCloseDate.isBefore(ZonedDateTime.now());
     }
 

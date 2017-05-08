@@ -153,6 +153,20 @@ public class CompetitionManagementDashboardControllerTest {
     }
 
     @Test
+    public void searchDashboardWithoutSearchQuery() throws Exception {
+        CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        String searchQuery = "";
+        int defaultPage = 0;
+
+        Mockito.when(competitionDashboardSearchService.searchCompetitions(searchQuery, defaultPage)).thenReturn(searchResult);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/search"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("dashboard/search"))
+                .andExpect(MockMvcResultMatchers.model().attribute("results", is(searchResult)));
+    }
+
+    @Test
     public void searchDashboardWithExtraWhitesapce() throws Exception {
         CompetitionSearchResult searchResult = new CompetitionSearchResult();
         String searchQuery = "  search  term  ";
