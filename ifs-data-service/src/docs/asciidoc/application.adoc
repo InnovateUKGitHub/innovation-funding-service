@@ -70,18 +70,6 @@ include::{snippets}/application/get-progress-percentage-by-application-id/respon
 ==== Curl Example
 include::{snippets}/application/get-progress-percentage-by-application-id/curl-request.adoc[]
 
-=== Check is application is ready for submit
-==== Request
-include::{snippets}/application/application-ready-for-submit/http-request.adoc[]
-include::{snippets}/application/application-ready-for-submit/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/application/application-ready-for-submit/http-response.adoc[]
-include::{snippets}/application/application-ready-for-submit/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/application/application-ready-for-submit/curl-request.adoc[]
-
 === Save application details
 ==== Request
 include::{snippets}/application/save-application-details/http-request.adoc[]

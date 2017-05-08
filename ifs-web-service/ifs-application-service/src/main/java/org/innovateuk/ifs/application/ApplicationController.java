@@ -154,8 +154,6 @@ public class ApplicationController {
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
 
-        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
-
         if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
             OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
@@ -228,18 +226,19 @@ public class ApplicationController {
                                     HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
 
-        if(!applicationService.isApplicationReadyForSubmit(application.getId())) {
-            throw new ForbiddenActionException();
-        } else if (!ableToSubmitApplication(user, application)) {
+        if(!ableToSubmitApplication(user, application)) {
             cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
             return "redirect:/application/" + applicationId + "/confirm-submit";
         }
 
-        applicationService.updateState(applicationId, SUBMITTED);
-        application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
-        return "application-submitted";
+        if(applicationService.updateState(applicationId, SUBMITTED).isSuccess()) {
+            application = applicationService.getById(applicationId);
+            CompetitionResource competition = competitionService.getById(application.getCompetition());
+            addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
+            return "application-submitted";
+        } else {
+            throw new ForbiddenActionException();
+        }
     }
 
     @ProfileExecution
@@ -289,13 +288,6 @@ public class ApplicationController {
         } else {
             return OptionalFileDetailsViewModel.withNoFile(readonly);
         }
-    }
-
-    private void doAssignQuestion(Long applicationId, UserResource user, HttpServletRequest request, HttpServletResponse response) {
-        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
-
-        questionService.assignQuestion(applicationId, request, assignedBy);
-        cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, final Model model, final ApplicationForm form) {

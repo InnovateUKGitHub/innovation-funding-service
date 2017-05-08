@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.*;
@@ -388,11 +387,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<ApplicationResource> findByProcessRole(Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
             return null;
         }
 

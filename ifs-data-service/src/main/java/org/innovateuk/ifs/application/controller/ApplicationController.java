@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
@@ -64,13 +63,6 @@ public class ApplicationController {
 
         return updateStatusResult.toPutResponse();
     }
-
-
-    @GetMapping("/applicationReadyForSubmit/{applicationId}")
-    public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id) {
-        return applicationService.applicationReadyForSubmit(id).toGetResponse();
-    }
-
 
     @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,

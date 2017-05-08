@@ -15,7 +15,6 @@ public interface ApplicationService {
     ApplicationResource getById(Long applicationId);
     List<ApplicationResource> getInProgress(Long userId);
     List<ApplicationResource> getFinished(Long userId);
-    Boolean isApplicationReadyForSubmit(Long applicationId);
     ServiceResult<Void> updateState(Long applicationId, ApplicationState state);
     ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
     Integer getCompleteQuestionsPercentage(Long applicationId);

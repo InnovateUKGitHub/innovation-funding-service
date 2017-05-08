@@ -14,7 +14,6 @@ import java.util.concurrent.Future;
 public interface ApplicationRestService {
     RestResult<ApplicationResource> getApplicationById(Long applicationId);
     RestResult<List<ApplicationResource>> getApplicationsByUserId(Long userId);
-    RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId);
     RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
     RestResult<Void> saveApplication(ApplicationResource application);
     RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName);

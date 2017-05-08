@@ -145,11 +145,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Boolean isApplicationReadyForSubmit(Long applicationId) {
-        return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public ServiceResult<Void> updateState(Long applicationId, ApplicationState state) {
         return applicationRestService.updateApplicationState(applicationId, state).toServiceResult();
     }

@@ -55,13 +55,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return adapt(result, n -> n.andOnSuccessReturn(jsonResponse -> jsonResponse.get("completedPercentage").asDouble()));
     }
 
-    // TODO DW - INFUND-1555 - remove usages of the ObjectNode from the data side - replace with a dto
-    @Override
-    public RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId) {
-        RestResult<ObjectNode> result = getWithRestResult(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, ObjectNode.class);
-        return result.andOnSuccessReturn(jsonResponse -> jsonResponse.get("readyForSubmit").asBoolean(false));
-    }
-
     @Override
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
         return getWithRestResult(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, ParameterizedTypeReferences.applicationResourceListType());

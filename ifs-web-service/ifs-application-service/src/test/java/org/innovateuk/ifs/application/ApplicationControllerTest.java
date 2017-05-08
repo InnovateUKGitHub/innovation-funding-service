@@ -12,8 +12,10 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -454,7 +456,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        when(applicationService.isApplicationReadyForSubmit(app.getId())).thenReturn(Boolean.TRUE);
+        when(applicationService.updateState(app.getId(),SUBMITTED)).thenReturn(ServiceResult.serviceSuccess());
 
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
@@ -472,8 +474,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        when(applicationService.isApplicationReadyForSubmit(app.getId())).thenReturn(Boolean.TRUE);
 
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
@@ -546,12 +546,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        when(applicationService.isApplicationReadyForSubmit(app.getId())).thenReturn(Boolean.FALSE);
+        when(applicationService.updateState(app.getId(),SUBMITTED)).thenReturn(ServiceResult.serviceFailure(CommonErrors.forbiddenError()));
 
         mockMvc.perform(post("/application/1/submit")
                 .param("agreeTerms", "yes"))
                 .andExpect(status().isForbidden());
 
-        verify(applicationService, never()).updateState(app.getId(), SUBMITTED);
+        verify(applicationService).updateState(app.getId(), SUBMITTED);
     }
 }
