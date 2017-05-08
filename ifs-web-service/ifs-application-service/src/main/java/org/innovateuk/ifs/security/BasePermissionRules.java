@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.security;
+package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
