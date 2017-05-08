@@ -56,22 +56,19 @@
                             </th:block>
                         </legend>
 
-                        <div class="block-form">
-                            <label class="block-label selection-button-radio" for="acceptCompetition">
-                                <input id="acceptCompetition" value="true" type="radio" required="required"
-                                       th:field="*{acceptInvitation}"/>
-                                Yes, I am able to assess applications to this competition
-                                <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
-                            </label>
-                        </div>
+                        <label class="block-label selection-button-radio" for="acceptCompetition">
+                            <input id="acceptCompetition" value="true" type="radio" required="required"
+                                   th:field="*{acceptInvitation}"/>
+                            Yes, I am able to assess applications to this competition
+                            <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
+                        </label>
 
-                        <div class="block-form" for="rejectCompetition">
-                            <label class="block-label selection-button-radio" for="rejectCompetition" data-target="reject-competition">
-                                <input id="rejectCompetition" value="false" type="radio" required="required"
-                                       th:field="*{acceptInvitation}"/>
-                                No, I am not able to assess applications to this competition
-                            </label>
-                        </div>
+                        <label class="block-label selection-button-radio" for="rejectCompetition" data-target="reject-competition">
+                            <input id="rejectCompetition" value="false" type="radio" required="required"
+                                   th:field="*{acceptInvitation}"/>
+                            No, I am not able to assess applications to this competition
+                        </label>
+
                         <div class="panel js-hidden" id="reject-competition">
                             <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
                                 <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
