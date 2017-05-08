@@ -26,4 +26,12 @@ public interface CompetitionManagementApplicationService {
                                       MultiValueMap<String, String> queryParams,
                                       Model model,
                                       ApplicationResource application);
+
+    String markApplicationAsIneligible(long applicationId,
+                                       long competitionId,
+                                       String origin,
+                                       MultiValueMap<String, String> queryParams,
+                                       ApplicationForm applicationForm,
+                                       UserResource user,
+                                       Model model);
 }

@@ -205,8 +205,6 @@ public class BaseUnitTest {
     @Mock
     public FinanceFormHandler financeFormHandler;
     @Mock
-    protected AssessorFeedbackRestService assessorFeedbackRestService;
-    @Mock
     public ProjectService projectService;
     @Mock
     public ProjectMonitoringOfficerService projectMonitoringOfficerService;

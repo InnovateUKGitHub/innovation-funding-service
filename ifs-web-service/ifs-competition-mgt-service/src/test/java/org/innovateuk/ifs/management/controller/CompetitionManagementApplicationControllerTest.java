@@ -5,11 +5,11 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.management.model.ReinstateIneligibleApplicationModelPopulator;
@@ -24,8 +24,6 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
@@ -44,17 +42,19 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -88,8 +88,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
-
-        assertApplicationOverviewExpectations(OptionalFileDetailsViewModel.withNoFile(true));
     }
 
 
@@ -163,7 +161,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .andExpect(model().attribute("applicationReadyForSubmit", false))
                 .andExpect(model().attribute("isCompManagementDownload", true))
                 .andExpect(model().attribute("responses", new HashMap<>()))
-                .andExpect(model().attribute("assessorFeedback", OptionalFileDetailsViewModel.withNoFile(true)))
                 .andExpect(model().attribute("ineligibility", expectedIneligibility))
                 .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
     }
@@ -237,49 +234,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
             this.setupOrganisationTypes();
 
             competitionResource.setCompetitionStatus(status);
-
-            boolean expectedReadonlyState = !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(status);
-
-            assertApplicationOverviewExpectations(OptionalFileDetailsViewModel.withNoFile(expectedReadonlyState));
         });
-    }
-
-    @Test
-    public void displayApplicationForCompetitionAdministratorWithCorrectAssessorFeedbackFileEntry() throws Exception {
-        this.setupCompetition();
-        this.setupApplicationWithRoles();
-        this.loginDefaultUser();
-        this.setupInvites();
-        this.setupOrganisationTypes();
-
-        applications.get(0).setAssessorFeedbackFileEntry(123L);
-
-        FileEntryResource existingFileEntry = newFileEntryResource().withName("myfile").withFilesizeBytes(1000).build();
-
-        when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(applications.get(0).getId())).thenReturn(restSuccess(existingFileEntry));
-        assertApplicationOverviewExpectations(OptionalFileDetailsViewModel.withExistingFile("myfile", 1000, true));
-    }
-
-    @Test
-    public void downloadAssessorFeedbackFile() throws Exception {
-        this.setupCompetition();
-        this.setupApplicationWithRoles();
-        this.loginDefaultUser();
-        this.setupInvites();
-        this.setupOrganisationTypes();
-
-        ByteArrayResource fileContents = new ByteArrayResource("The returned file data".getBytes());
-        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/hello").withFilesizeBytes(1234L).build();
-
-        when(assessorFeedbackRestService.getAssessorFeedbackFile(applications.get(0).getId())).thenReturn(restSuccess(fileContents));
-        when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(applications.get(0).getId())).thenReturn(restSuccess(fileEntry));
-
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessorFeedback", competitionResource.getId(), applications.get(0).getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().string("The returned file data"))
-                .andExpect(header().string("Content-Type", "text/hello"))
-                .andExpect(header().longValue("Content-Length", "The returned file data".length()))
-        ;
     }
 
     @Test
@@ -361,47 +316,47 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void uploadAssessorFeedbackFile() throws Exception {
+    public void markAsIneligible() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("assessorFeedback", "filename.txt", "text/plain", "Content to upload".getBytes());
+        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
+        when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceSuccess());
 
-        FileEntryResource successfulCreationResult = newFileEntryResource().build();
-
-        when(assessorFeedbackRestService.addAssessorFeedbackDocument(
-                applications.get(0).getId(), "text/plain", 17L, "filename.txt", "Content to upload".getBytes())).
-                thenReturn(restSuccess(successfulCreationResult));
-
-        mockMvc.perform(fileUpload("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()).
-                file(uploadedFile).
-                param("uploadAssessorFeedback", ""))
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/markIneligible", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()));
+                .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/applications/submitted"));
 
-        verify(assessorFeedbackRestService).addAssessorFeedbackDocument(
-                applications.get(0).getId(), "text/plain", 17L, "filename.txt", "Content to upload".getBytes());
+        verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
     }
 
     @Test
-    public void removeAssessorFeedbackFile() throws Exception {
+    public void markAsIneligible_notSubmitted() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.loginDefaultUser();
         this.setupInvites();
         this.setupOrganisationTypes();
 
-        when(assessorFeedbackRestService.removeAssessorFeedbackDocument(applications.get(0).getId())).thenReturn(restSuccess());
+        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
 
-        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
-                .param("removeAssessorFeedback", ""))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()));
+        when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
+        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+        when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
 
-        verify(assessorFeedbackRestService).removeAssessorFeedbackDocument(applications.get(0).getId());
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/markIneligible"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition-mgt-application-overview"));
+
+        verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
     }
 
     private void assertApplicationOverviewWithBackUrl(final String origin, final String expectedBackUrl) throws Exception {
@@ -414,33 +369,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
                 .andExpect(model().attribute("backUrl", expectedBackUrl));
-    }
-
-    private void assertApplicationOverviewExpectations(OptionalFileDetailsViewModel expectedAssessorFeedback) {
-        setupEmptyResponses();
-
-        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
-
-        List<ResearchCategoryResource> researchCategories = setupResearchCategories();
-
-        try {
-            mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("competition-mgt-application-overview"))
-                    .andExpect(model().attribute("applicationReadyForSubmit", false))
-                    .andExpect(model().attribute("isCompManagementDownload", true))
-                    .andExpect(model().attribute("responses", new HashMap<>()))
-                    .andExpect(model().attribute("assessorFeedback", expectedAssessorFeedback))
-                    .andExpect(model().attribute("researchCategories", researchCategories))
-                    .andExpect(model().attribute("ineligibility", new ApplicationOverviewIneligibilityViewModel()))
-                    .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void setupEmptyResponses() {

@@ -332,10 +332,4 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("application-terms-and-conditions"));
 
     }
-
-    @Test
-    public void testApplicationCreateConfirmCompetitionView() throws Exception {
-        mockMvc.perform(get("/application/create-confirm-competition"))
-                .andExpect(view().name("application-create-confirm-competition"));
-    }
 }

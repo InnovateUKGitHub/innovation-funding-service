@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
@@ -20,13 +22,13 @@ import java.util.List;
 import static java.math.BigDecimal.ZERO;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.calls;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationService> {
 
@@ -135,5 +137,23 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ServiceResult<Void> result = service.removeCollaborator(applicationInviteId);
         assertTrue(result.isSuccess());
         Mockito.inOrder(inviteRestService).verify(inviteRestService, calls(1)).removeApplicationInvite(applicationInviteId);
+    }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        long applicationId = 1L;
+        IneligibleOutcomeResource reason = newIneligibleOutcomeResource()
+                .withReason("reason")
+                .build();
+
+        when(applicationRestService.markAsIneligible(applicationId, reason)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, reason);
+
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(applicationRestService);
+        inOrder.verify(applicationRestService).markAsIneligible(applicationId, reason);
+        inOrder.verifyNoMoreInteractions();
     }
 }

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
@@ -494,6 +495,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
+    @Override
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId,
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
@@ -506,6 +508,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 .stream()
                 .map(this::sendNotification)
                 .collect(toList()));
+    }
+
+    @Override
+    public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason) {
+        return find(application(applicationId)).andOnSuccess((application) -> {
+            if (!applicationWorkflowHandler.markIneligible(application, reason)) {
+                return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
+            }
+            applicationRepository.save(application);
+            return serviceSuccess();
+        });
     }
 
     @Override
@@ -546,7 +559,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
                         "competitionName", application.getCompetition().getName(),
-                        "dashboardUrl", processRole.getRole().getUrl()));
+                        "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
         EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
 

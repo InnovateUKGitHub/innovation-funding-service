@@ -58,7 +58,7 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource user) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
 
         if (form == null) {
@@ -76,7 +76,7 @@ public class ApplicationController {
     @ProfileExecution
     @PostMapping(value = "/{applicationId}")
     public String applicationDetails(@PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource user,
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                      HttpServletRequest request) {
 
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
@@ -97,12 +97,6 @@ public class ApplicationController {
 
     }
 
-    @ProfileExecution
-    @GetMapping(value = "/create-confirm-competition")
-    public String competitionCreateApplication() {
-        return "application-create-confirm-competition";
-    }
-
     @GetMapping("/terms-and-conditions")
     public String termsAndConditions() {
         return "application-terms-and-conditions";
@@ -120,7 +114,7 @@ public class ApplicationController {
     @PostMapping("/{applicationId}/section/{sectionId}")
     public String assignQuestion(@PathVariable("applicationId") long applicationId,
                                  @PathVariable("sectionId") long sectionId,
-                                 @ModelAttribute("loggedInUser") UserResource user,
+                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
         doAssignQuestion(applicationId, user, request, response);

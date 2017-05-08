@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateReso
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
+import static org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServiceImpl.assessorFormInputResponseRestUrl;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorFormInputResponseResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
@@ -24,12 +24,10 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServiceUnitTest<AssessorFormInputResponseRestServiceImpl> {
-    private static String assessorFormInputResponseRestUrl = "/assessment";
 
     @Override
     protected AssessorFormInputResponseRestServiceImpl registerRestServiceUnderTest() {
         AssessorFormInputResponseRestServiceImpl assessorFormInputResponseRestService = new AssessorFormInputResponseRestServiceImpl();
-        assessorFormInputResponseRestService.setAssessorFormInputResponseRestUrl(assessorFormInputResponseRestUrl);
         return assessorFormInputResponseRestService;
     }
 

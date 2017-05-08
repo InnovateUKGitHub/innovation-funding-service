@@ -46,16 +46,7 @@
         </div>
     </div>
 
-    <th:block th:if="${model.assessorFeedback.present}">
-        <div th:replace="question-type/form-elements :: readonly-file-download
-                    (filename=${model.assessorFeedback.get.filename},
-                     filesizeKbytes=${model.assessorFeedback.get.filesizeKbytes},
-                     fileDescription=${'View your application feedback:'},
-                     downloadURL=@{/application/{applicationId}/assessorFeedback(applicationId=${model.currentApplication.id})})">
-        </div>
-    </th:block>
-
-    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
+    <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" class="application-overview">
         <th:block th:each="section,iteration : ${model.section.sections.values()}">
             <section th:id="'section-'+${section.id}">
                 <h2 th:text="${section.name}" th:class="${iteration.index == 0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>

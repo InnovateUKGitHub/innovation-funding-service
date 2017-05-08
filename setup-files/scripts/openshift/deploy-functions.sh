@@ -38,19 +38,34 @@ function tailorAppInstance() {
     sed -i.bak $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" os-files-tmp/shib/*.yml
     sed -i.bak $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" os-files-tmp/shib/named-envs/*.yml
 
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
-    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
+
+
+    if [[ ${TARGET} == "production" ]]
+    then
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
+
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" os-files-tmp/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
+
+    else
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
+
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
+    fi
 
     sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/mail/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/spring-admin/*.yml
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
     then
         sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
 
@@ -63,6 +78,11 @@ function tailorAppInstance() {
         then
             if [ -z "${bamboo_sysint_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+        fi
+        if [[ ${TARGET} == "perf" ]]
+        then
+            if [ -z "${bamboo_perf_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
+            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
         fi
         if [[ ${TARGET} == "uat" ]]
         then
@@ -79,7 +99,6 @@ function tailorAppInstance() {
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
-        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/named-envs/*.yml
     fi
 }
 
