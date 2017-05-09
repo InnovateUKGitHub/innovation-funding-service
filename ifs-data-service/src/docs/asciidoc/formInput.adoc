@@ -10,7 +10,7 @@ include::{snippets}/forminput/document-find-by-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/forminput/document-find-by-id/curl-request.adoc[]
 
-=== Retrieve applicantFormInputs by question
+=== Retrieve formInputs by question
 ==== Request
 include::{snippets}/forminput/document-find-by-question-id/http-request.adoc[]
 include::{snippets}/forminput/document-find-by-question-id/path-parameters.adoc[]
@@ -23,7 +23,7 @@ include::{snippets}/forminput/document-find-by-question-id/response-fields.adoc[
 include::{snippets}/forminput/document-find-by-question-id/curl-request.adoc[]
 
 
-=== Retrieve applicantFormInputs by competition
+=== Retrieve formInputs by competition
 ==== Request
 include::{snippets}/forminput/document-find-by-competition-id/http-request.adoc[]
 include::{snippets}/forminput/document-find-by-competition-id/path-parameters.adoc[]

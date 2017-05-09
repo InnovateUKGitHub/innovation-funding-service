@@ -20,4 +20,4 @@ include::{snippets}/applicationassessmentsummary/get-application-assessment-summ
 include::{snippets}/applicationassessmentsummary/get-application-assessment-summary/response-fields.adoc[]
 
 ==== Curl Example
--include::{snippets}/applicationassessmentsummary/get-application-assessment-summary/curl-request.adoc[]
+include::{snippets}/applicationassessmentsummary/get-application-assessment-summary/curl-request.adoc[]
