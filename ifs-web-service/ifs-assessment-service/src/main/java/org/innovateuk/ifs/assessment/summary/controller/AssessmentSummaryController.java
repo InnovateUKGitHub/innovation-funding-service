@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.summary.controller;
 
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.summary.form.AssessmentSummaryForm;
 import org.innovateuk.ifs.assessment.summary.populator.AssessmentSummaryModelPopulator;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +45,7 @@ public class AssessmentSummaryController {
             populateFormWithExistingValues(form, assessment);
         }
         model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessment));
+        model.addAttribute("isExternalUser", false);
         return "assessment/application-summary";
     }
 
