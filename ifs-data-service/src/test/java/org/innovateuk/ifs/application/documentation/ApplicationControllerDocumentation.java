@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceFields;
@@ -137,6 +136,21 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         parameterWithName("applicationId").description("id of the application for which to update the application state"),
                         parameterWithName("state").description("new state id")
                     )
+                ));
+    }
+
+    @Test
+    public void applicationReadyForSubmit() throws Exception{
+        Long applicationId = 1L;
+
+
+        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
+                .andDo(document("application/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application")
+                        )
                 ));
     }
 

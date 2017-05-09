@@ -391,6 +391,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
+        public ServiceResult<Boolean> applicationReadyForSubmit(Long id) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
             return null;
         }

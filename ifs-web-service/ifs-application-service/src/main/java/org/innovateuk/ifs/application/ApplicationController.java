@@ -154,6 +154,8 @@ public class ApplicationController {
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
 
+        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
+
         if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
             OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);

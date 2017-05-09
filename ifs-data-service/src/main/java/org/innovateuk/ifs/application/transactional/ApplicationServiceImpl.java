@@ -387,7 +387,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
-        if (Arrays.asList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyForSubmit(id)) {
+        if (Arrays.asList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
                 return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
         }
         return find(application(id)).andOnSuccess((application) -> {
@@ -447,7 +447,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    private boolean applicationReadyForSubmit(Long id) {
+    @Override
+    public ServiceResult<Boolean>applicationReadyForSubmit(final Long id) {
+        return serviceSuccess(applicationReadyToSubmit(id));
+    }
+
+    private boolean applicationReadyToSubmit(Long id) {
         return find(application(id), () -> getProgressPercentageBigDecimalByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
                 sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
                     Competition competition = application.getCompetition();

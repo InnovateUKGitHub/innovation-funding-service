@@ -64,6 +64,12 @@ public class ApplicationController {
         return updateStatusResult.toPutResponse();
     }
 
+
+    @GetMapping("/applicationReadyForSubmit/{applicationId}")
+    public RestResult<Boolean> applicationReadyForSubmit(@PathVariable("applicationId") final Long applicationId) {
+        return applicationService.applicationReadyForSubmit(applicationId).toGetResponse();
+    }
+
     @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                                          @PathVariable("userId") final Long userId,
