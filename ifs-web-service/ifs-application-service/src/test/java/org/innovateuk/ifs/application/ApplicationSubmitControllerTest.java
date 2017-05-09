@@ -120,7 +120,8 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
 
-        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
+        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
+                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
 
         ApplicationResource app = applications.get(0);
         app.setCompetition(competition.getId());
