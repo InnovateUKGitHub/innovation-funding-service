@@ -48,7 +48,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(categoriesResult.isSuccess());
         List<InnovationSectorResource> categories = categoriesResult.getSuccessObject();
 
-        assertThat(categories, hasSize(4));
+        assertThat(categories, hasSize(5));
         assertThat(categories, everyItem(hasProperty("children", notNullValue())));
     }
 

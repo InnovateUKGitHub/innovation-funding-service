@@ -58,6 +58,7 @@ public class CompetitionSetupController {
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
     public static final String COMPETITION_NAME_KEY = "competitionName";
     public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
+    public static final Long OPEN_SECTOR_ID = 0L;
 
     @Autowired
     private CompetitionService competitionService;
@@ -330,7 +331,12 @@ public class CompetitionSetupController {
     @GetMapping("/getInnovationArea/{innovationSectorId}")
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
-        return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
+
+        if (OPEN_SECTOR_ID.equals(innovationSectorId)) {
+            return categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+        } else {
+            return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
+        }
     }
 
     /* AJAX Function */
