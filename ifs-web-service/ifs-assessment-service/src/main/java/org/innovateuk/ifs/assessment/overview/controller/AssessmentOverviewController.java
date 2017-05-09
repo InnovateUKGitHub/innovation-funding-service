@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.overview.controller;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
@@ -42,9 +41,6 @@ public class AssessmentOverviewController {
 
     @Autowired
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
-
-    @Autowired
-    private RejectAssessmentModelPopulator rejectAssessmentModelPopulator;
 
     @Autowired
     private AssessmentService assessmentService;

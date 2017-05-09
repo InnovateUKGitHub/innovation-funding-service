@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
@@ -51,7 +50,6 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -101,10 +99,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @InjectMocks
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
 
-    @Spy
-    @InjectMocks
-    private RejectAssessmentModelPopulator rejectAssessmentModelPopulator;
-
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
         return new AssessmentOverviewController();
@@ -145,12 +139,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         List<QuestionResource> questions = asList(questionApplicationDetails, questionScope, questionBusinessOpportunity, questionPotentialMarket);
 
+        @SuppressWarnings("unchecked") List<Long>[] questionIds = new List[] { asList(questionApplicationDetails.getId(), questionScope.getId()),
+                asList(questionBusinessOpportunity.getId(), questionPotentialMarket.getId()),
+                emptyList() };
+
         sections = newSectionResource()
                 .withName("Project details", "Application questions", "Finances")
-                .withQuestions(
-                        asList(questionApplicationDetails.getId(), questionScope.getId()),
-                        asList(questionBusinessOpportunity.getId(), questionPotentialMarket.getId()),
-                        emptyList())
+                .withQuestions(questionIds)
                 .withAssessorGuidanceDescription("These do not need scoring.",
                         "Each question should be given a score.",
                         "Each partner is required to submit their own finances.")
@@ -393,12 +388,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void rejectInvitation_noReason() throws Exception {
-        Long applicationId = 2L;
         String comment = String.join(" ", nCopies(100, "comment"));
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
-
-        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectComment(comment);
@@ -436,23 +428,14 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void rejectInvitation_exceedsCharacterSizeLimit() throws Exception {
-        Long applicationId = 2L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = RandomStringUtils.random(5001);
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
 
-        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
-
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
-
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessment.getId(),
-                applicationId,
-                "application name",
-                ACCEPTED
-        );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessment.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -488,23 +471,14 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void rejectInvitation_exceedsWordLimit() throws Exception {
-        Long applicationId = 2L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(101, "comment"));
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
 
-        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
-
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
-
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessment.getId(),
-                applicationId,
-                "application name",
-                ACCEPTED
-        );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessment.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -540,24 +514,15 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void rejectInvitation_eventNotAccepted() throws Exception {
-        Long applicationId = 2L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(100, "comment"));
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessment.getId(), reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
-        // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
-
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
-
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessment.getId(),
-                applicationId,
-                "application name",
-                ACCEPTED
-        );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessment.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
