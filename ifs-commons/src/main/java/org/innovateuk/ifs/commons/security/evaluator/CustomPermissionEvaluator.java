@@ -45,7 +45,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     private CustomPermissionEvaluatorTransactionManager transactionManager;
 
-    private PermissionedObjectClassesToListOfLookup lookupStrategyMap;
+    private PermissionedObjectClassToLookupMethods lookupStrategyMap;
 
     private PermissionMethodHandler permissionMethodHandler;
 
@@ -61,8 +61,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             throw new IllegalStateException(error); // Fail fast
         }
 
-        PermissionedObjectClassToPermissionsMethods collectedRulesMethods = dtoClassToMethods(allRulesMethods);
-        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = dtoClassToPermissionToMethods(collectedRulesMethods);
+        PermissionedObjectClassToPermissionsMethods collectedRulesMethods = protectedClassToMethods(allRulesMethods);
+        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = protectedClassToPermissionToMethods(collectedRulesMethods);
 
         if (LOG.isDebugEnabled()) {
             rulesMap.values().forEach(permission -> permission.values().forEach(pairs -> pairs.forEach(pair -> {
@@ -80,7 +80,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         final Collection<Object> permissionEntityLookupBeans = applicationContext.getBeansWithAnnotation(PermissionEntityLookupStrategies.class).values();
         final ListOfOwnerAndMethod allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
         final PermissionedObjectClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
-        lookupStrategyMap = PermissionedObjectClassesToListOfLookup.from(collectedPermissionLookupMethods);
+        lookupStrategyMap = PermissionedObjectClassToLookupMethods.from(collectedPermissionLookupMethods);
         validate(lookupStrategyMap); // Fail Fast
     }
 
@@ -162,7 +162,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         ).collect(toList());
     }
 
-    private static final void validate(final PermissionedObjectClassesToListOfLookup lookupsStrategyMap) {
+    private static final void validate(final PermissionedObjectClassToLookupMethods lookupsStrategyMap) {
         for (final Entry<Class<?>, ListOfOwnerAndMethod> permissionedObjectClassTolookupsStrategies : lookupsStrategyMap.entrySet()) {
             if (!lookupsWithMethodsThatDoNotHaveASingleParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()) {
                 final String error = "Lookups must have a single parameter";
@@ -250,7 +250,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return asList(owningBean.getClass().getMethods()).stream().filter(method -> findAnnotation(method, annotation) != null).collect(toList());
     }
 
-    PermissionedObjectClassToPermissionsMethods dtoClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
+    PermissionedObjectClassToPermissionsMethods protectedClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
         PermissionedObjectClassToPermissionsMethods map = new PermissionedObjectClassToPermissionsMethods();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
             map.putIfAbsent(methodAndBean.getRight().getParameterTypes()[0], new ListOfOwnerAndMethod());
@@ -268,9 +268,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return map;
     }
 
-    PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods(PermissionedObjectClassToPermissionsMethods dtoClassToMethods) {
+    PermissionedObjectClassToPermissionsToPermissionsMethods protectedClassToPermissionToMethods(PermissionedObjectClassToPermissionsMethods protectedClassToMethods) {
         PermissionedObjectClassToPermissionsToPermissionsMethods map = new PermissionedObjectClassToPermissionsToPermissionsMethods();
-        for (Entry<Class<?>, ListOfOwnerAndMethod> entry : dtoClassToMethods.entrySet()) {
+        for (Entry<Class<?>, ListOfOwnerAndMethod> entry : protectedClassToMethods.entrySet()) {
             for (Pair<Object, Method> methodAndBean : entry.getValue()) {
                 Method method = methodAndBean.getRight();
                 String permission = findAnnotation(method, PermissionRule.class).value();

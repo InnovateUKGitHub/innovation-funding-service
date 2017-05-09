@@ -190,7 +190,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     public void test_simpledDtoClassToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans1));
         // Method under test
-        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
+        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.protectedClassToMethods(rules);
         assertEquals(1, dtoClassToMethods.size());
         assertEquals(1, dtoClassToMethods.get(String.class).size());
     }
@@ -199,7 +199,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     public void test_complexDtoClassToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans2));
         // Method under test
-        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
+        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.protectedClassToMethods(rules);
         assertEquals(2, dtoClassToMethods.size());
         assertEquals(3, dtoClassToMethods.get(String.class).size());
         assertEquals(1, dtoClassToMethods.get(Integer.class).size());
@@ -208,10 +208,10 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Test
     public void test_simpleDtoClassToPermissionToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans1));
-        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
+        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.protectedClassToMethods(rules);
 
         // Method under test
-        PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.dtoClassToPermissionToMethods(dtoClassToMethods);
+        PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.protectedClassToPermissionToMethods(dtoClassToMethods);
         assertEquals(1, dtoClassToPermissionToMethods.size());
         assertNotNull(dtoClassToPermissionToMethods.get(String.class));
         assertEquals(1, dtoClassToPermissionToMethods.get(String.class).size());
@@ -222,10 +222,10 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Test
     public void test_complexDtoClassToPermissionToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans2));
-        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
+        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.protectedClassToMethods(rules);
 
         // Method under test
-        PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.dtoClassToPermissionToMethods(dtoClassToMethods);
+        PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.protectedClassToPermissionToMethods(dtoClassToMethods);
 
         assertEquals(2, dtoClassToPermissionToMethods.size());
 

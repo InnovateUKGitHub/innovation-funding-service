@@ -41,7 +41,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     private Map<Class<?>, Object> mockPermissionEntityLookupStrategies;
 
     private PermissionedObjectClassToPermissionsToPermissionsMethods originalRulesMap;
-    private PermissionedObjectClassesToListOfLookup originalLookupStrategyMap;
+    private PermissionedObjectClassToLookupMethods originalLookupStrategyMap;
 
     /**
      * Look up a Mockito mock for a given {@link PermissionRules} annotated bean class
@@ -95,9 +95,9 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         PermissionedObjectClassToPermissionsToPermissionsMethods recordingProxies = mocksAndRecorders.getRight();
         setRulesMap(permissionEvaluator, recordingProxies);
 
-        originalLookupStrategyMap = (PermissionedObjectClassesToListOfLookup) ReflectionTestUtils.getField(permissionEvaluator, "lookupStrategyMap");
+        originalLookupStrategyMap = (PermissionedObjectClassToLookupMethods) ReflectionTestUtils.getField(permissionEvaluator, "lookupStrategyMap");
 
-        Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassesToListOfLookup> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
+        Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassToLookupMethods> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
         mockPermissionEntityLookupStrategies = mockedOut.getLeft();
         setLookupStrategyMap(permissionEvaluator, mockedOut.getRight());
     }
@@ -114,13 +114,13 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         setLookupStrategyMap(permissionEvaluator, originalLookupStrategyMap);
     }
 
-    private void setLookupStrategyMap(CustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassesToListOfLookup right) {
+    private void setLookupStrategyMap(CustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassToLookupMethods right) {
         ReflectionTestUtils.setField(permissionEvaluator, "lookupStrategyMap", right);
     }
 
-    protected Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassesToListOfLookup> generateMockedOutLookupMap(PermissionedObjectClassesToListOfLookup originalLookupStrategyMap) {
+    protected Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassToLookupMethods> generateMockedOutLookupMap(PermissionedObjectClassToLookupMethods originalLookupStrategyMap) {
         final PermissionedObjectClassToMockLookupStrategyClasses mockLookupBeans = new PermissionedObjectClassToMockLookupStrategyClasses();
-        final PermissionedObjectClassesToListOfLookup newMockLookupMap = new PermissionedObjectClassesToListOfLookup();
+        final PermissionedObjectClassToLookupMethods newMockLookupMap = new PermissionedObjectClassToLookupMethods();
 
         for (Entry<Class<?>, ListOfOwnerAndMethod> entry : originalLookupStrategyMap.entrySet()) {
             final Class<?> permissionedObjectClass = entry.getKey();
