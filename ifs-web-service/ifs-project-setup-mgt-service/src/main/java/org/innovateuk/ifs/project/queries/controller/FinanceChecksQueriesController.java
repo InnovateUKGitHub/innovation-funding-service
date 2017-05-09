@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
+import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -202,8 +203,15 @@ public class FinanceChecksQueriesController {
                                             HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Supplier<String> view = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
+        Supplier<String> errorView = () -> {
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+            model.addAttribute("model", viewModel);
+            model.addAttribute("form", form);
+            return "project/financecheck/new-query";
 
-        return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
+        };
+
+        return validationHandler.performActionOrBindErrorsToField("attachment", errorView, view, () -> {
             MultipartFile file = form.getAttachment();
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
