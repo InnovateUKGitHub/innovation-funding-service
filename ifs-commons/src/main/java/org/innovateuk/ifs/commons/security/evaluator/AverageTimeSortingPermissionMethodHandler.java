@@ -25,7 +25,8 @@ public class AverageTimeSortingPermissionMethodHandler implements PermissionMeth
     private static final Log LOG = LogFactory.getLog(PermissionMethodHandler.class);
 
     private static final UserResource ANONYMOUS_USER = new UserResource();
-    public static final int MAX_SAMPLES_TO_AVERAGE_OVER = 10000;
+
+    private static final int MAX_SAMPLES_TO_AVERAGE_OVER = 10000;
 
     private PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap;
 
