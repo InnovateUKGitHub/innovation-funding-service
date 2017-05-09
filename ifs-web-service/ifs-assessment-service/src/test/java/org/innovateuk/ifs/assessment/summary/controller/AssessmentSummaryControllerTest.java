@@ -5,10 +5,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
+import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.summary.form.AssessmentSummaryForm;
 import org.innovateuk.ifs.assessment.summary.populator.AssessmentSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryQuestionViewModel;
@@ -35,7 +34,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
@@ -58,15 +56,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<AssessmentSummaryController> {
-    @Mock
-    private AssessmentService assessmentService;
 
     @Mock
-    private AssessorFormInputResponseService assessorFormInputResponseService;
+    private AssessmentService assessmentService;
 
     @Spy
     @InjectMocks
     private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
+
     private List<FormInputResource> formInputsForQuestion4;
     private List<FormInputResource> formInputsForQuestion3;
     private List<FormInputResource> formInputsForQuestion2;
@@ -512,8 +509,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         assessorResponses = combineLists(question1AssessorResponse, question2AssessorResponse, question3AssessorResponse, question4AssessorResponse);
 
-        when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId))
-                .thenReturn(assessorResponses);
+        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessmentId))
+                .thenReturn(restSuccess(assessorResponses));
 
         return questionResources;
     }

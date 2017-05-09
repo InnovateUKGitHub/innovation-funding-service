@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +21,6 @@ public class AssessorFormInputResponseController {
 
     @Autowired
     private AssessorFormInputResponseService assessorFormInputResponseService;
-
-    @Autowired
-    private FormInputRepository formInputRepository;
 
     @GetMapping("/assessment/{assessmentId}")
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(@PathVariable("assessmentId") long assessmentId) {

@@ -17,7 +17,7 @@ public interface AssessorFormInputResponseRestService {
 
     RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId);
 
-    RestResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response);
+    RestResult<Void> updateFormInputResponse(long assessmentId, long formInputId, String value);
 
     RestResult<ApplicationAssessmentAggregateResource> getApplicationAssessmentAggregate(long applicationId);
 

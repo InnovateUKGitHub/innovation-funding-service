@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
@@ -93,9 +92,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Mock
     private AssessmentService assessmentService;
-
-    @Mock
-    private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Spy
     @InjectMocks
@@ -219,7 +215,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(sectionRestService.getByCompetitionIdVisibleForAssessment(competition.getId())).thenReturn(restSuccess(sections));
         when(questionService.findByCompetition(competition.getId())).thenReturn(questions);
         when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), ASSESSMENT)).thenReturn(restSuccess(assessorFormInputs));
-        when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
+        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(restSuccess(assessorResponses));
         when(formInputResponseRestService.getResponsesByApplicationId(APPLICATION_ID)).thenReturn(restSuccess(applicantResponses));
 
 
@@ -313,13 +309,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-overview"));
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
         inOrder.verifyNoMoreInteractions();
     }
@@ -427,13 +423,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
         inOrder.verifyNoMoreInteractions();
     }
@@ -479,13 +475,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
         inOrder.verifyNoMoreInteractions();
     }
@@ -531,13 +527,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
         inOrder.verifyNoMoreInteractions();
     }
@@ -582,7 +578,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getRejectableById(assessment.getId());
         inOrder.verify(assessmentService).rejectInvitation(assessment.getId(), reason, comment);
         inOrder.verify(assessmentService).getById(assessment.getId());
@@ -590,7 +586,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
     }
 

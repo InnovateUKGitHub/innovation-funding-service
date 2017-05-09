@@ -7,14 +7,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
-import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
+import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -55,7 +55,7 @@ public class AssessmentFeedbackController {
     private QuestionService questionService;
 
     @Autowired
-    private AssessorFormInputResponseService assessorFormInputResponseService;
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     @Autowired
     private AssessmentFeedbackModelPopulator assessmentFeedbackModelPopulator;
@@ -72,8 +72,8 @@ public class AssessmentFeedbackController {
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) Form form,
-                              @PathVariable("assessmentId") Long assessmentId,
-                              @PathVariable("questionId") Long questionId) {
+                              @PathVariable("assessmentId") long assessmentId,
+                              @PathVariable("questionId") long questionId) {
 
         QuestionResource question = getQuestionForAssessment(questionId, assessmentId);
 
@@ -86,12 +86,15 @@ public class AssessmentFeedbackController {
     }
 
     @PostMapping("/formInput/{formInputId}")
-    public @ResponseBody JsonNode updateFormInputResponse(
-            @PathVariable("assessmentId") Long assessmentId,
-            @PathVariable("formInputId") Long formInputId,
+    public
+    @ResponseBody
+    JsonNode updateFormInputResponse(
+            @PathVariable("assessmentId") long assessmentId,
+            @PathVariable("formInputId") long formInputId,
             @RequestParam("value") String value) {
         try {
-            assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+            assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value)
+                    .getSuccessObjectOrThrowException();
             return createJsonObjectNode(true);
         } catch (Exception e) {
             return createJsonObjectNode(false);
@@ -104,18 +107,19 @@ public class AssessmentFeedbackController {
             @ModelAttribute(FORM_ATTR_NAME) Form form,
             @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
             ValidationHandler validationHandler,
-            @PathVariable("assessmentId") Long assessmentId,
-            @PathVariable("questionId") Long questionId) {
+            @PathVariable("assessmentId") long assessmentId,
+            @PathVariable("questionId") long questionId) {
 
         Supplier<String> failureView = () -> doViewQuestion(model, assessmentId, getQuestionForAssessment(questionId, assessmentId));
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT).getSuccessObjectOrThrowException();
             List<Pair<Long, String>> formInputResponses = getFormInputResponses(form, formInputs);
-            formInputResponses.stream().forEach(responsePair -> {
+            formInputResponses.forEach(responsePair -> {
                 // TODO INFUND-4105 optimise this to save multiple responses at a time
                 String formInputField = format("formInput[%s]", responsePair.getLeft());
-                ServiceResult<Void> updateResult = assessorFormInputResponseService.updateFormInputResponse(assessmentId, responsePair.getLeft(), responsePair.getRight());
+                ServiceResult<Void> updateResult = assessorFormInputResponseRestService.updateFormInputResponse(
+                        assessmentId, responsePair.getLeft(), responsePair.getRight()).toServiceResult();
                 validationHandler.addAnyErrors(updateResult, toField(formInputField));
             });
 
@@ -124,15 +128,16 @@ public class AssessmentFeedbackController {
         });
     }
 
-    private QuestionResource getQuestionForAssessment(Long questionId, Long assessmentId) {
+    private QuestionResource getQuestionForAssessment(long questionId, long assessmentId) {
         return questionService.getByIdAndAssessmentId(questionId, assessmentId);
     }
 
-    private List<AssessorFormInputResponseResource> getAssessorResponses(Long assessmentId, Long questionId) {
-        return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
+    private List<AssessorFormInputResponseResource> getAssessorResponses(long assessmentId, long questionId) {
+        return assessorFormInputResponseRestService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(
+                assessmentId, questionId).getSuccessObjectOrThrowException();
     }
 
-    private Form populateQuestionForm(Form form, Long assessmentId, Long questionId) {
+    private Form populateQuestionForm(Form form, long assessmentId, long questionId) {
         List<AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
         Map<Long, AssessorFormInputResponseResource> mappedResponses = simpleToMap(assessorResponses, AssessorFormInputResponseResource::getFormInput);
         mappedResponses.forEach((k, v) -> form.addFormInput(k.toString(), v.getValue()));
@@ -146,11 +151,11 @@ public class AssessmentFeedbackController {
         return "assessment/application-question";
     }
 
-    private String redirectToAssessmentOverview(Long assessmentId) {
+    private String redirectToAssessmentOverview(long assessmentId) {
         return "redirect:/" + assessmentId;
     }
 
-    private boolean isApplicationDetailsQuestion(Long questionId) {
+    private boolean isApplicationDetailsQuestion(long questionId) {
         List<FormInputResource> applicationFormInputs = getApplicationFormInputs(questionId);
         return applicationFormInputs.stream().anyMatch(formInputResource -> FormInputType.APPLICATION_DETAILS == formInputResource.getType());
     }
@@ -165,7 +170,7 @@ public class AssessmentFeedbackController {
         return "assessment/application-details";
     }
 
-    private List<FormInputResource> getApplicationFormInputs(Long questionId) {
+    private List<FormInputResource> getApplicationFormInputs(long questionId) {
         return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
     }
 
