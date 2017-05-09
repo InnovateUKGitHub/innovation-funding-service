@@ -89,8 +89,11 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
 
         finances.forEach(finance -> {
             ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
-            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getId());
-            EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(), finance.getProject().getApplication().getCompetition()));
+            OrganisationFinanceHandler organisationFinanceHandler =
+                    organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getId());
+            EnumMap<FinanceRowType, FinanceRowCostCategory> costs =
+                    new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(),
+                            finance.getProject().getApplication().getCompetition()));
             financeResource.setFinanceOrganisationDetails(costs);
             financeResources.add(financeResource);
         });
@@ -103,7 +106,8 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId());
         projectFinanceResource.setFinanceOrganisationDetails(costs);
 
-        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges = organisationFinanceHandler.getProjectOrganisationFinanceChanges(projectFinanceResource.getId());
+        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges =
+                organisationFinanceHandler.getProjectOrganisationFinanceChanges(projectFinanceResource.getId());
         projectFinanceResource.setCostChanges(costChanges);
     }
 }

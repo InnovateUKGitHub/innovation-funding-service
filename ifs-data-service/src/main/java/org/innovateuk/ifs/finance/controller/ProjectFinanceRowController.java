@@ -89,7 +89,9 @@ public class ProjectFinanceRowController {
         return restSuccess(validationMessages);
     }
     @DeleteMapping("/{projectId}/organisation/{organisationId}/delete/{costId}")
-    public RestResult<Void> delete(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, @PathVariable("costId") final Long costId) {
+    public RestResult<Void> delete(@PathVariable("projectId") final Long projectId,
+                                   @PathVariable("organisationId") final Long organisationId,
+                                   @PathVariable("costId") final Long costId) {
         return projectFinanceRowService.deleteCost(projectId, organisationId, costId).toDeleteResponse();
     }
 }
