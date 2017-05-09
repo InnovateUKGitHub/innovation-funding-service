@@ -54,7 +54,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
             throw new IllegalStateException("The competition 'Initial Details' section should be completed first.");
         }
 
@@ -67,7 +67,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 

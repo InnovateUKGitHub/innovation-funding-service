@@ -43,7 +43,7 @@ public class PublicContentMenuController {
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -59,7 +59,7 @@ public class PublicContentMenuController {
         CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
