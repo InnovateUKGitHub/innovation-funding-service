@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
+import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -60,9 +61,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class FinanceChecksQueriesController {
 
     static final String FINANCE_CHECKS_QUERIES_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query";
-    static final String NEW_RESPONSE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/new-response";
+    private static final String NEW_RESPONSE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/new-response";
     private static final String ATTACHMENT_COOKIE = "finance_checks_queries_new_response_attachments";
     private static final String FORM_COOKIE = "finance_checks_queries_new_response_form";
+    private static final String QUERIES_VIEW = "project/financecheck/queries";
     private static final String UNKNOWN_FIELD = "Unknown";
     private static final String FORM_ATTR = "form";
     @Autowired
@@ -86,7 +88,7 @@ public class FinanceChecksQueriesController {
                            Model model) {
         FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
         model.addAttribute("model", viewModel);
-        return "project/financecheck/queries";
+        return QUERIES_VIEW;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -127,7 +129,7 @@ public class FinanceChecksQueriesController {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
-        return "project/financecheck/queries";
+        return QUERIES_VIEW;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -148,7 +150,7 @@ public class FinanceChecksQueriesController {
             FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
             model.addAttribute("model", viewModel);
             model.addAttribute(FORM_ATTR, form);
-            return "project/financecheck/queries";
+            return QUERIES_VIEW;
         };
 
         Supplier<String> saveFailureView = () -> {
@@ -156,7 +158,7 @@ public class FinanceChecksQueriesController {
             model.addAttribute("model", viewModel);
             model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             model.addAttribute(FORM_ATTR, null);
-            return "project/financecheck/queries";
+            return QUERIES_VIEW;
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -201,9 +203,15 @@ public class FinanceChecksQueriesController {
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        Supplier<String> view = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
+        Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
+        Supplier<String> onError = () -> {
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
+            model.addAttribute("model", viewModel);
+            model.addAttribute("form", form);
+            return QUERIES_VIEW;
+        };
 
-        return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
+        return validationHandler.performActionOrBindErrorsToField("attachment", onError, onSuccess, () -> {
             MultipartFile file = form.getAttachment();
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
