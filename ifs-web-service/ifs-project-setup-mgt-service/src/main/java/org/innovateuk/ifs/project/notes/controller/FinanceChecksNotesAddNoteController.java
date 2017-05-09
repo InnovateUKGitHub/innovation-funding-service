@@ -151,7 +151,7 @@ public class FinanceChecksNotesAddNoteController {
         Supplier<String> errorView = () -> {
             model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
             model.addAttribute("form", form);
-            return "project/financecheck/new-query";
+            return "project/financecheck/new-note";
         };
         
         return validationHandler.performActionOrBindErrorsToField("attachment", errorView, view, () -> {
