@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,8 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -40,9 +43,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Service
 public class InitialDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
 
-	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
-
+	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
 	@Autowired
 	private CompetitionService competitionService;
 
@@ -55,6 +57,9 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	@Autowired
 	private CategoryRestService categoryRestService;
 
+	@Autowired
+    private UserService userService;
+
 	@Override
 	public CompetitionSetupSection sectionToSave() {
 		return CompetitionSetupSection.INITIAL_DETAILS;
@@ -65,8 +70,11 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {
-            competition.setExecutive(initialDetailsForm.getExecutiveUserId());
-            competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
+            Error error = saveAssignedUsers(competition, initialDetailsForm);
+
+            if (error != null) {
+                return serviceFailure(error);
+            }
 
             if (!Boolean.TRUE.equals(competition.getSetupComplete())) {
 
@@ -115,7 +123,27 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         }
    }
 
-   private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {
+    private Error saveAssignedUsers(final CompetitionResource competition, InitialDetailsForm initialDetailsForm) {
+        if (userService.existsAndHasRole(initialDetailsForm.getExecutiveUserId(), COMP_ADMIN)) {
+            competition.setExecutive(initialDetailsForm.getExecutiveUserId());
+        } else if (initialDetailsForm.getExecutiveUserId() != null) {
+            return fieldError("executiveUserId",
+                    initialDetailsForm.getExecutiveUserId(),
+                    "competition.setup.invalid.comp.exec");
+        }
+
+        if (userService.existsAndHasRole(initialDetailsForm.getLeadTechnologistUserId(), COMP_TECHNOLOGIST)) {
+            competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
+        } else if (initialDetailsForm.getLeadTechnologistUserId() != null) {
+            return fieldError("leadTechnologistUserId",
+                    initialDetailsForm.getLeadTechnologistUserId(),
+                    "competition.setup.invalid.comp.technologist");
+        }
+
+        return null;
+    }
+
+    private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {
        return initialDetailsForm.isMarkAsCompleteAction() ||
                (initialDetailsForm.getOpeningDateYear() != null &&
                initialDetailsForm.getOpeningDateMonth() != null &&

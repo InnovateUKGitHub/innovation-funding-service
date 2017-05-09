@@ -96,7 +96,7 @@
             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                 <fieldset>
-                    <legend class="heading-medium">Respond to query finance_checks.html</legend>
+                    <legend class="heading-medium">Respond to query</legend>
                     <div th:class="${#fields.hasErrors('response')}? 'form-group error':'form-group'">
                         <label for="response" class="form-label-bold">
                             <span class="heading-small no-margin">Response</span>

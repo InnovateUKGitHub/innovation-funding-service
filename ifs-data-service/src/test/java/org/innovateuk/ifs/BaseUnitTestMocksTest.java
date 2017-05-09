@@ -418,9 +418,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationAddressRepository organisationAddressRepositoryMock;
 
     @Mock
-    protected AssessorFeedbackService assessorFeedbackServiceMock;
-
-    @Mock
     protected FinanceCheckQueriesService financeCheckQueriesService;
 
     @Mock

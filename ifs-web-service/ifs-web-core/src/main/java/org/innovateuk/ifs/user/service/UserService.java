@@ -2,7 +2,9 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +17,7 @@ public interface UserService {
     UserResource findById(Long userId);
     List<UserResource> getAssignable(Long applicationId);
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
+    boolean existsAndHasRole(Long userId, UserRoleType role);
     ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
     Void verifyEmail(String hash);
