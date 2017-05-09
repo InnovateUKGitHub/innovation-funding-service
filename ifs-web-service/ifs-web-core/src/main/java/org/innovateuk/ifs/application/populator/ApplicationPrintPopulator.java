@@ -26,9 +26,6 @@ import java.util.Optional;
 public class ApplicationPrintPopulator {
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private ApplicationService applicationService;
 
     @Autowired

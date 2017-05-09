@@ -32,9 +32,6 @@ public class FileValidationConfig {
     @Value("${ifs.data.service.file.storage.assessorfeedback.max.filesize.bytes}")
     private Long maxFilesizeBytesForAssessorFeedback;
 
-    @Value("${ifs.data.service.file.storage.assessorfeedback.valid.media.types}")
-    private List<String> validMediaTypesForAssessorFeedback;
-
     @Value("${ifs.data.service.file.storage.projectsetupotherdocuments.max.filesize.bytes}")
     private Long maxFilesizeBytesForProjectSetupOtherDocuments;
 
@@ -78,11 +75,6 @@ public class FileValidationConfig {
     @Bean(name = "overheadCalculationFileValidator")
     public FileHttpHeadersValidator getOverheadCalculationFileValidator() {
         return createFileValidator(validMediaTypesForOverheadCalculation, maxFilesizeBytesForOverheadCalculation);
-    }
-
-    @Bean(name = "assessorFeedbackFileValidator")
-    public FileHttpHeadersValidator getAssessorFeedbackFileValidator() {
-        return createFileValidator(validMediaTypesForAssessorFeedback, maxFilesizeBytesForAssessorFeedback);
     }
 
     @Bean(name = "projectSetupOtherDocumentsFileValidator")

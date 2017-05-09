@@ -113,7 +113,7 @@
                 */-->
             </div>
 
-            <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+            <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <table>
                     <thead>
                         <tr>

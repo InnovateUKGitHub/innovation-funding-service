@@ -13,7 +13,7 @@ import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelP
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
-import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentNavigationViewModel;
+import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -22,7 +22,6 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,12 +69,9 @@ public class AssessmentFeedbackController {
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
-    @Autowired
-    private MessageSource messageSource;
-
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) Form form,
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) Form form,
                               @PathVariable("assessmentId") Long assessmentId,
                               @PathVariable("questionId") Long questionId) {
 
@@ -95,8 +91,8 @@ public class AssessmentFeedbackController {
             @PathVariable("formInputId") Long formInputId,
             @RequestParam("value") String value) {
         try {
-          ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
-          return createJsonObjectNode(true);
+            assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+            return createJsonObjectNode(true);
         } catch (Exception e) {
             return createJsonObjectNode(false);
         }
@@ -143,10 +139,10 @@ public class AssessmentFeedbackController {
         return form;
     }
 
-    private String doViewQuestion(Model model, Long assessmentId, QuestionResource question) {
+    private String doViewQuestion(Model model, long assessmentId, QuestionResource question) {
         AssessmentFeedbackViewModel viewModel = assessmentFeedbackModelPopulator.populateModel(assessmentId, question);
         model.addAttribute("model", viewModel);
-        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question.getId()));
+        model.addAttribute("navigation", assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question));
         return "assessment/application-question";
     }
 
@@ -159,9 +155,9 @@ public class AssessmentFeedbackController {
         return applicationFormInputs.stream().anyMatch(formInputResource -> FormInputType.APPLICATION_DETAILS == formInputResource.getType());
     }
 
-    private String getApplicationDetails(Model model, Long assessmentId, QuestionResource question) {
+    private String getApplicationDetails(Model model, long assessmentId, QuestionResource question) {
         AssessmentFeedbackApplicationDetailsViewModel viewModel = assessmentFeedbackApplicationDetailsModelPopulator.populateModel(assessmentId, question);
-        AssessmentNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question.getId());
+        AssessmentFeedbackNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question);
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", navigationViewModel);
         organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId());

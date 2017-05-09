@@ -601,8 +601,8 @@ the user should see the file without error
     the user goes back to the previous page
 
 partners submit bank details
-    partner submits his bank details   ${PS_MM_APPLICATION_LEAD_PARTNER_EMAIL}
-    partner submits his bank details   ${PS_MM_APPLICATION_ACADEMIC_EMAIL}
+    partner submits his bank details   ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}
+    partner submits his bank details   ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}
 
 partner submits his bank details
     [Arguments]  ${user}
