@@ -60,7 +60,7 @@
                         <h2 class="heading-medium">Add your comment</h2>
                         <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
                               method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                            <div th:class="${#fields.hasErrors('comment')}? 'form-group error':'form-group'">
+                            <div th:class="${#fields.hasErrors('comment')} ? 'form-group error':'form-group'">
                                 <label for="comment">
                                     <span class="form-label-bold">Comment</span>
                                     <th:block th:if="${#fields.hasErrors('comment')}">
@@ -80,7 +80,7 @@
                                                data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
                                                data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxNoteCharacters})},
                                                data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                      th:classappend="${#fields.hasErrors('comment') ? 'field-error'}"></textarea>
+                                      th:classappend="${#fields.hasErrors('comment')} ? 'field-error'"></textarea>
                                     <div class="textarea-footer" th:with="comment=*{comment}">
                                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})" />
                                     </div>

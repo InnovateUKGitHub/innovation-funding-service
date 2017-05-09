@@ -61,7 +61,7 @@
                     </div>
                     <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
                     <th:block th:unless="${post.attachments.isEmpty()}">
-                        <h3 class="heading-small">Supporting documentation</legend>
+                        <h3 class="heading-small">Supporting documentation</h3>
                         <ul>
                             <li th:each="attachment : ${post.attachments}">
                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
@@ -106,14 +106,13 @@
                         </div>
                         <div class="upload-section">
                             <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                    <h3 class="heading-small no-margin">Supporting documentation</h3>
-                                    <ul>
-                                        <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                            <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
-                                        </li>
-                                    </ul>
-                                </fieldset>
+                                <h3 class="heading-small no-margin">Supporting documentation</h3>
+                                <ul>
+                                    <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+                                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                                        <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                                    </li>
+                                </ul>
                             </th:block>
                             <h3 class="heading-small">Upload supporting documentation in pdf format</h3>
                             <div th:class="${#fields.hasErrors('attachment')} ? 'error' : ''">
