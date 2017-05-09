@@ -220,7 +220,7 @@ invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the guest user opens the browser
     the user follows the flow to register their organisation    radio-1
-    the user verifies email                                     ${EMAIL_LEAD}
+    the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
 #    the user enters the details and clicks the create account    Stuart   Anderson   ${EMAIL_LEAD}
 #    the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 #    the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    Once verified you can sign into your account

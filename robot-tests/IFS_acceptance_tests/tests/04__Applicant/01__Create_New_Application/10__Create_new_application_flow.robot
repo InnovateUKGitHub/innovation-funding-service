@@ -46,41 +46,38 @@ Non registered users non CH route
     [Documentation]    INFUND-669  INFUND-1904  INFUND-1920
     [Tags]    HappyPath
     [Setup]    the guest user opens the browser
-    Given the user follows the flow to register their organisation     radio-1
-    and the user verifies email                                        Stuart   Downing  ${test_mailbox_one}+2@gmail.com
-    and the user directed to correct dashboaard                        ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    Given the user navigates to the page            ${COMPETITION_OVERVIEW_URL}
+    When the user clicks the button/link            jQuery=a:contains("Start new application")
+    And the user clicks the button/link             jQuery=.button:contains("Create account")
+    And the user clicks the Not on company house link
+    And the user selects the radio button           organisationTypeId    radio-1
+    And the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    And the user verifies email                     Stuart   Downing  ${test_mailbox_one}+2@gmail.com
+    And the user directed to correct dashboaard     ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    [Teardown]    the user closes the browser
 
 Verify the name of the new application
-    [Documentation]    INFUND-669
-    ...
-    ...    INFUND-1163
+    [Documentation]    INFUND-669  INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
-    When log in as a different user                              ${test_mailbox_one}+business@gmail.com    ${correct_password}
+    [Setup]    the guest user opens the browser
+    When Log in as user                             ${test_mailbox_one}+business@gmail.com    Passw0rd123
     And the user edits the competition title
-    Then the user should see the text in the page                ${test_title}
+    Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link                          link=view team members and add collaborators
-    And the user should see the text in the page                 Application team
-    And the user should see the text in the page                 View and manage your participants
+    And the user clicks the button/link             link=view team members and add collaborators
+    And the user should see the text in the page    Application team
+    And the user should see the text in the page    View and manage your participants
     And the new application should be visible in the dashboard page
-    And the user clicks the button/link                          link=${test_title}
-    And the user should see the text in the page                 ${test_title}
+    And the user clicks the button/link             link=${test_title}
+    And the user should see the text in the page    ${test_title}
 
 Marketing emails information should have updated on the profile
     [Documentation]    INFUND-9243
     [Tags]    HappyPath
-    When the user navigates to the page    ${edit_profile_url}
-    Then the user should see that the checkbox is selected    allowMarketingEmails
+    When the user navigates to the page                         ${edit_profile_url}
+    Then the user should see that the checkbox is selected      allowMarketingEmails
     [Teardown]    the user closes the browser
-
-Special Project Finance role
-    [Documentation]    INFUND-2609
-    [Tags]
-    [Setup]    the guest user opens the browser
-    When the user follows the flow to register their organisation    radio-1
-    then the user verifies email                                      Alex    Snape   ${test_mailbox_one}+project.finance1@gmail.com
-    and the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
-    [Teardown]   the user closes the browser
 
 *** Keywords ***
 the user directed to correct dashboaard

@@ -10,7 +10,7 @@ Academic organisations search
     [Documentation]    INFUND-1231
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given we create a new user    ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
+    Given we create a new user                            Stuart   Downing    ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
     When the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation   3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
