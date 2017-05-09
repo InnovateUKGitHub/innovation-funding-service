@@ -7,11 +7,8 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -23,8 +20,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,8 +33,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
-import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
  * This controller will handle all submit requests that are related to the application overview.
@@ -53,10 +46,10 @@ public class ApplicationSubmitController {
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
 
     @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
+    private QuestionService questionService;
 
     @Autowired
-    private QuestionService questionService;
+    private ProcessRoleService processRoleService;
 
     @Autowired
     private SectionService sectionService;
@@ -94,9 +87,6 @@ public class ApplicationSubmitController {
     @Autowired
     private AssessmentRestService assessmentRestService;
 
-    @Autowired
-    private ProcessRoleService processRoleService;
-
     private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
         return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmittable();
     }
@@ -117,11 +107,6 @@ public class ApplicationSubmitController {
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
 
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
-
-        if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
-            OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
-            model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
-        }
 
         if (competition.getCompetitionStatus().isFeedbackReleased()) {
             model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
@@ -198,31 +183,6 @@ public class ApplicationSubmitController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form);
         return "application-track";
-    }
-
-    @GetMapping("/{applicationId}/assessorFeedback")
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
-            @PathVariable("applicationId") long applicationId) {
-
-        ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
-        FileEntryResource fileDetails = assessorFeedbackRestService.getAssessorFeedbackFileDetails(applicationId).getSuccessObjectOrThrowException();
-        return getFileResponseEntity(resource, fileDetails);
-    }
-
-    private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
-
-        boolean readonly = true;
-
-        Long assessorFeedbackFileEntry = application.getAssessorFeedbackFileEntry();
-
-        if (assessorFeedbackFileEntry != null) {
-            RestResult<FileEntryResource> fileEntry = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
-            return OptionalFileDetailsViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
-        } else {
-            return OptionalFileDetailsViewModel.withNoFile(readonly);
-        }
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, final Model model, final ApplicationForm form) {

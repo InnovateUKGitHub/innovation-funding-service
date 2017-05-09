@@ -126,10 +126,6 @@ include::application-funding-decision.adoc[]
 include::assessor.adoc[]
 include::assessor-count-options.adoc[]
 
-[[assessorfeedback]]
-== AssessorFeedback
-include::assessor-feedback.adoc[]
-
 [[question]]
 == Question
 include::question.adoc[]

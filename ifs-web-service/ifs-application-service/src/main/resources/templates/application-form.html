@@ -27,7 +27,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${applicationName},size='heading-xlarge'" />
             </th:block>
 
-            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
                     th:with="appIsClosed=${model.application.applicationIsClosed}, readonly=${model.application.applicationIsReadOnly}" novalidate="novalidate">
                 <!--/* To disable submission on pressing return (INFUND-6892) */-->
                 <th:block th:unless="${model.application.allReadOnly}">

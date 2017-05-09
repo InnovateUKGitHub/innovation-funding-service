@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.application.util.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -32,21 +31,19 @@ public class ApplicationTeamController {
     @Autowired
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
-    @Autowired
-    private ApplicationUtil applicationUtil;
-
     @GetMapping("/team")
+    @PreAuthorize("hasPermission(#applicationId, 'VIEW_APPLICATION_TEAM_PAGE')")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
         return "application-team/team";
     }
 
     @GetMapping("/begin")
+    @PreAuthorize("hasPermission(#applicationId, 'BEGIN_APPLICATION')")
     public String beginApplication(@PathVariable("applicationId") long applicationId,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
-        applicationUtil.checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
         changeApplicationStatusToOpen(applicationResource);
         return format("redirect:/application/%s", applicationResource.getId());
     }

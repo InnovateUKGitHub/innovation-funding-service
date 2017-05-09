@@ -76,7 +76,7 @@ public class AssessmentFeedbackController {
 
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) Form form,
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) Form form,
                               @PathVariable("assessmentId") Long assessmentId,
                               @PathVariable("questionId") Long questionId) {
 
@@ -96,8 +96,8 @@ public class AssessmentFeedbackController {
             @PathVariable("formInputId") Long formInputId,
             @RequestParam("value") String value) {
         try {
-          ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
-          return createJsonObjectNode(true);
+            assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+            return createJsonObjectNode(true);
         } catch (Exception e) {
             return createJsonObjectNode(false);
         }

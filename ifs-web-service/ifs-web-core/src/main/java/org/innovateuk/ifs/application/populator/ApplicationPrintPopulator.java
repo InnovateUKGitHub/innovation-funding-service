@@ -29,9 +29,6 @@ import java.util.Set;
 public class ApplicationPrintPopulator {
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private ApplicationService applicationService;
 
     @Autowired

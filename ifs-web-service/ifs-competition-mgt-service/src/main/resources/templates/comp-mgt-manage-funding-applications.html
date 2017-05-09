@@ -64,7 +64,7 @@
             </div>
         </div>
     </form>
-    <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+    <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <div class="grid-row sorting">
             <div class="column-half">
                 <div class="select-all">

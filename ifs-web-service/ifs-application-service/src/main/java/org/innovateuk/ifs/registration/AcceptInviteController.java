@@ -44,7 +44,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
     @GetMapping("/accept-invite/{hash}")
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
             HttpServletResponse response,
             Model model) {
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
@@ -68,7 +68,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
     @GetMapping("/accept-invite/confirm-invited-organisation")
     public String confirmInvitedOrganisation(HttpServletResponse response,
                                              HttpServletRequest request,
-                                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                              Model model) {
         String hash = getInviteHashCookie(request);
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
