@@ -5,8 +5,11 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +26,11 @@ import static java.lang.String.format;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
     @Autowired
     private UserRestService userRestService;
-
     @Autowired
     private ProcessRoleService processRoleService;
-
-    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     @Override
     public UserResource findById(Long userId) {
@@ -162,5 +163,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email).getOptionalSuccessObject();
+    }
+
+    @Override
+    public boolean existsAndHasRole(Long userId, UserRoleType role) {
+        RestResult<UserResource> result = userRestService.retrieveUserById(userId);
+
+        if (result.isFailure()) {
+            return false;
+        }
+
+        UserResource execUser = result.getSuccessObject();
+
+        return execUser != null && execUser.hasRole(role);
     }
 }

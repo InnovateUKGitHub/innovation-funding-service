@@ -30,7 +30,7 @@
 
 <!-- confirm submit application modal -->
 
-<th:block th:fragment="modal-confirm-submit-application (messageTitle, message, submitLink, submitText, cancelText)">
+<th:block th:fragment="modal-confirm-submit-application (messageTitle, message, submitLink, submitText, submittedText, cancelText)">
     <form method="post" th:action="${submitLink}">
         <div class="modal-confirm-submit-application" role="dialog" aria-hidden="true">
             <th:block th:insert="fragments/modals :: close-button" />
@@ -38,7 +38,7 @@
             <p th:text="${message}"></p>
             <hr />
             <div>
-                <input type="submit" tabindex="0" class="button" th:value="${submitText}"/>
+                <button type="submit" class="button" th:attr="data-submitted-text=${submittedText}" th:text="${submitText}" />
                 <button type="button" tabindex="1" class="js-close buttonlink"
                         th:text="${cancelText}"></button>
             </div>

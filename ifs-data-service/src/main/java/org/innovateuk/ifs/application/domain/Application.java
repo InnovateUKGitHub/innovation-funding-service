@@ -69,10 +69,6 @@ public class Application implements ProcessActivity {
     @Enumerated(EnumType.STRING)
     private FundingDecisionStatus fundingDecision;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assessorFeedbackFileEntryId", referencedColumnName = "id")
-    private FileEntry assessorFeedbackFileEntry;
-
     @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
 
@@ -251,14 +247,6 @@ public class Application implements ProcessActivity {
 
     public void setFundingDecision(FundingDecisionStatus fundingDecision) {
         this.fundingDecision = fundingDecision;
-    }
-
-    public FileEntry getAssessorFeedbackFileEntry() {
-        return assessorFeedbackFileEntry;
-    }
-
-    public void setAssessorFeedbackFileEntry(FileEntry assessorFeedbackFileEntry) {
-        this.assessorFeedbackFileEntry = assessorFeedbackFileEntry;
     }
 
     public List<FormInputResponse> getFormInputResponses() {
