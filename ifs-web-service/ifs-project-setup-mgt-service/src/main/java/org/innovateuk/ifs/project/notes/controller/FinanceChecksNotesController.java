@@ -60,6 +60,7 @@ public class FinanceChecksNotesController {
     private static final String ATTACHMENT_COOKIE = "finance_checks_notes_new_comment_attachments";
     private static final String FORM_COOKIE = "finance_checks_notes_new_comment_form";
     private static final String FORM_ATTR = "form";
+    private static final String NOTES_VIEW = "project/financecheck/notes";
     @Autowired
     private OrganisationService organisationService;
     @Autowired
@@ -80,7 +81,7 @@ public class FinanceChecksNotesController {
                            Model model) {
         FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, null, null);
         model.addAttribute("model", viewModel);
-        return "project/financecheck/notes";
+        return NOTES_VIEW;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
@@ -120,7 +121,7 @@ public class FinanceChecksNotesController {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
         model.addAttribute("model", populateNoteViewModel(projectId, organisationId, noteId, attachments));
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, noteId).orElse(new FinanceChecksNotesAddCommentForm()));
-        return "project/financecheck/notes";
+        return NOTES_VIEW;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
@@ -140,7 +141,7 @@ public class FinanceChecksNotesController {
             FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, noteId, attachments);
             model.addAttribute("model", viewModel);
             model.addAttribute(FORM_ATTR, form);
-            return "project/financecheck/notes";
+            return NOTES_VIEW;
         };
 
         Supplier<String> saveFailureView = () -> {
@@ -148,7 +149,7 @@ public class FinanceChecksNotesController {
             model.addAttribute("model", viewModel);
             model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             model.addAttribute(FORM_ATTR, null);
-            return "project/financecheck/notes";
+            return NOTES_VIEW;
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -190,14 +191,14 @@ public class FinanceChecksNotesController {
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
-        Supplier<String> view = () -> redirectTo(formView(projectId, organisationId, noteId));
-        Supplier<String> errorView = () -> {
+        Supplier<String> onSuccess = () -> redirectTo(formView(projectId, organisationId, noteId));
+        Supplier<String> onError = () -> {
             model.addAttribute("model", populateNoteViewModel(projectId, organisationId, noteId, attachments));
             model.addAttribute("form", form);
-            return "project/financecheck/new-query";
+            return NOTES_VIEW;
         };
 
-        return validationHandler.performActionOrBindErrorsToField("attachment", errorView, view, () -> {
+        return validationHandler.performActionOrBindErrorsToField("attachment", onError, onSuccess, () -> {
             MultipartFile file = form.getAttachment();
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             result.ifSuccessful(uploadedAttachment -> {
