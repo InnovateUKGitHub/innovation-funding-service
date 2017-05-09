@@ -4,7 +4,7 @@ We have raised a query around your project finances.
 
 You can view and respond to the query in your project setup (https://ifs-local-dev/project). Please sign in and navigate to the finance checks section.
 
-If you have any applicantQuestions please contact the competitions team using the details below.
+If you have any questions please contact the competitions team using the details below.
 
 Yours sincerely,
 
