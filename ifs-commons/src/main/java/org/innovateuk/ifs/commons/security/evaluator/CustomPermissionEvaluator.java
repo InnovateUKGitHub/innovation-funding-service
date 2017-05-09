@@ -29,7 +29,10 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
- * An implementation of PermissionEvaluator that
+ * An implementation of PermissionEvaluator that supports the inclusion of business rules into Spring Security checking
+ * via the {@link PermissionRules} and {@link PermissionRule} annotations, and the ability to provide ways of looking up
+ * a protected class (e.g. ApplicationResource) from another type (e.g. an ID in the form of a Long) via the
+ * {@link PermissionEntityLookupStrategies} and {@link PermissionEntityLookupStrategy} annotations
  */
 @Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {
