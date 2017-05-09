@@ -40,6 +40,43 @@ public class ProjectSetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess leadCanAccessProjectManagerPage(OrganisationResource organisation) {
+
+        if (isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(organisation)) {
+            return NOT_ACCESSIBLE;
+        }
+
+        return ACCESSIBLE;
+    }
+
+    public SectionAccess leadCanAccessProjectStartDatePage(OrganisationResource organisation) {
+
+        if (isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(organisation)) {
+            return NOT_ACCESSIBLE;
+        }
+
+        return ACCESSIBLE;
+    }
+
+    public SectionAccess leadCanAccessProjectAddressPage(OrganisationResource organisation) {
+
+        if (isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(organisation)) {
+            return NOT_ACCESSIBLE;
+        }
+
+        return ACCESSIBLE;
+    }
+
+    private boolean isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(OrganisationResource organisation) {
+
+        return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Project Manager page until Companies House details are complete for Organisation")
+
+                || projectSetupProgressChecker.isProjectDetailsSubmitted()
+                || !projectSetupProgressChecker.isLeadPartnerOrganisation(organisation);
+
+    }
+
     public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
