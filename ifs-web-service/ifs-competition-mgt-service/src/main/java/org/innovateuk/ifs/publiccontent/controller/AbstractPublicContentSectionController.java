@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
@@ -30,24 +32,30 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     @Autowired
     protected PublicContentService publicContentService;
 
+    @Autowired
+    protected CompetitionsRestService competitionsRestService;
+
     protected abstract PublicContentViewModelPopulator<M> modelPopulator();
     protected abstract PublicContentFormPopulator<F> formPopulator();
     protected abstract PublicContentFormSaver<F> formSaver();
 
 
     @GetMapping("/{competitionId}")
-    public String readOnly(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
+    public String readOnly(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
         return readOnly(competitionId, model, Optional.empty());
     }
 
     @GetMapping("/{competitionId}/edit")
-    public String edit(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
+    public String edit(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
         return edit(competitionId, model, Optional.empty());
     }
 
     @PostMapping(value = "/{competitionId}/edit")
-    public String markAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                       @Valid @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
+    public String markAsComplete(Model model,
+                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                 @Valid @ModelAttribute(FORM_ATTR_NAME) F form,
+                                 BindingResult bindingResult,
+                                 ValidationHandler validationHandler) {
         return markAsComplete(competitionId, model, form, validationHandler);
     }
 
@@ -62,6 +70,13 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     }
 
     protected String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
+        CompetitionResource competition = competitionsRestService.getCompetitionById(publicContent.getCompetitionId())
+                .getSuccessObjectOrThrowException();
+
+        if (!competition.isInitialDetailsComplete()) {
+            return "redirect:/competition/setup/" + competition.getId();
+        }
+
         model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
         if(form.isPresent()) {
             model.addAttribute("form", form.get());
@@ -72,6 +87,13 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     }
 
     protected String markAsComplete(Long competitionId, Model model, F form, ValidationHandler validationHandler) {
+        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
+                .getSuccessObjectOrThrowException();
+
+        if (!competition.isInitialDetailsComplete()) {
+            return "redirect:/competition/setup/" + competition.getId();
+        }
+
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;
         Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);

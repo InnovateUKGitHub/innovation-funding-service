@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.publiccontent.form.PublishForm;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentMenuPopulator;
@@ -33,14 +35,33 @@ public class PublicContentMenuController {
     @Autowired
     private PublicContentService publicContentService;
 
+    @Autowired
+    private CompetitionsRestService competitionsRestService;
+
     @GetMapping("/{competitionId}")
-    public String publicContentMenu(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
+    public String publicContentMenu(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
+                .getSuccessObjectOrThrowException();
+
+        if (!competition.isInitialDetailsComplete()) {
+            return "redirect:/competition/setup/" + competition.getId();
+        }
+
         return menuPage(competitionId, model, new PublishForm());
     }
 
     @PostMapping("/{competitionId}")
-    public String publish(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
-                          @Valid @ModelAttribute(FORM_ATTR_NAME)  PublishForm publishForm, BindingResult bindingResult, ValidationHandler validationHandler) {
+    public String publish(Model model,
+                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                          @Valid @ModelAttribute(FORM_ATTR_NAME) PublishForm publishForm,
+                          BindingResult bindingResult,
+                          ValidationHandler validationHandler) {
+        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
+                .getSuccessObjectOrThrowException();
+
+        if (!competition.isInitialDetailsComplete()) {
+            return "redirect:/competition/setup/" + competition.getId();
+        }
 
         Supplier<String> failureView = () -> menuPage(competitionId, model, publishForm);
         Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;
@@ -54,7 +75,4 @@ public class PublicContentMenuController {
         model.addAttribute(FORM_ATTR_NAME, publishForm);
         return TEMPLATE_FOLDER + "public-content-menu";
     }
-
-
-
 }
