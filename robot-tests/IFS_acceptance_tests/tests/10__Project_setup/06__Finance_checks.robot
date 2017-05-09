@@ -205,15 +205,15 @@ Project finance user can upload more than one file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file      name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
+    Then the user should see the element    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
 
 Project finance user can still view and delete both files
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
@@ -221,16 +221,16 @@ Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
-    Then the user should see the element   jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
-    And the user should see the element    jQuery=label[for="query"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should see the element   jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
+    And the user should see the element    jQuery=label[for="query"] .error-message:contains(This field cannot be left blank.)
 
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user enters text to a text field    id=queryTitle    an eligibility query's title
-    Then the user should not see the element    jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
-    Then the user should not see the element    jQuery=label[for="query] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="query] .error-message:contains(This field cannot be left blank.)
 
 Word count validations
     [Documentation]    INFUND-4840
@@ -376,9 +376,9 @@ Finance contact can view query
 Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) > a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    When the user clicks the button/link    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
 
 Queries show in reverse chronological order for finance contact
@@ -432,15 +432,15 @@ Finance contact can upload more than one file
     [Documentation]    INFUND-4843
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    And the user should see the element    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf} ${opens_in_new_window}")
 
 Finance contact can still view both files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
+    When the user clicks the button/link    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
 
@@ -505,9 +505,9 @@ Project finance user can view the response
 Project finance user can view the finance contact's uploaded files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=.panel li:nth-of-type(1) > a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    When the user clicks the button/link    jQuery=.panel li:nth-of-type(2) > a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
 
 Project finance user can continue the conversation
@@ -604,15 +604,15 @@ Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user should see the element    jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
 
 Project finance can still view both files in notes
     [Documentation]    INFUND-4845
     [Tags]
-    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
@@ -621,16 +621,16 @@ Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save note")
-    Then the user should see the element   jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
-    And the user should see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should see the element   jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
+    And the user should see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)
 
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user enters text to a text field    id=noteTitle    an eligibility query's title
-    Then the user should not see the element    jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
-    Then the user should not see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)
 
 Word count validations for notes
     [Documentation]    INFUND-4845
@@ -723,15 +723,15 @@ Project finance can upload more than one file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user should see the element    jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
 
 Project finance can still view both files in note comments
     [Documentation]    INFUND-7756
     [Tags]
-    When the user clicks the button/link    jQuery=form li:nth-of-type(1) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=form li:nth-of-type(1) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save comment")
@@ -740,14 +740,14 @@ Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
-    Then the user should see the element    jQuery=label[for="comment"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should see the element    jQuery=label[for="comment"] .error-message:contains(This field cannot be left blank.)
 
 Note comments client side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user enters text to a text field    css=.editor    this is some comment text
     And the user moves focus to the element    jQuery=.button:contains("Save comment")
-    Then the user should not see the element    jQuery=label[for="comment"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="comment"] .error-message:contains(This field cannot be left blank.)
 
 Word count validations for note comments
     [Documentation]    INFUND-7756
