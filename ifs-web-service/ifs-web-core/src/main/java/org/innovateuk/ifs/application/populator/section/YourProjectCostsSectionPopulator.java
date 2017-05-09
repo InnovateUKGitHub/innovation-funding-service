@@ -12,9 +12,11 @@ import org.innovateuk.ifs.application.viewmodel.section.AbstractYourProjectCosts
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.JesYourProjectCostsSectionViewModel;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +35,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    public void populate(ApplicantSectionResource section, ApplicationForm form, AbstractYourProjectCostsSectionViewModel viewModel, Model model) {
+    public void populate(ApplicantSectionResource section, ApplicationForm form, AbstractYourProjectCostsSectionViewModel viewModel, Model model, BindingResult bindingResult) {
         List<ApplicantQuestionResource> costQuestions = section.allQuestions().filter(question -> QuestionType.COST.equals(question.getQuestion().getType())).collect(Collectors.toList());
         financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType()).addOrganisationFinanceDetails(model, section.getApplication().getId(), costQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setCostQuestions(costQuestions);
@@ -51,8 +53,17 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                 costSection.setCostViews(formInputViewModelGenerator.fromSection(section, childSection, form));
                 return costSection;
             }).collect(Collectors.toList()));
+        } else if (viewModel instanceof JesYourProjectCostsSectionViewModel) {
+            section.allQuestions().forEach(applicantQuestion -> {
+                applicantQuestion.getApplicantFormInputs().forEach(applicantFormInput -> {
+                    if (applicantFormInput.getFormInput().getType().equals(FormInputType.FINANCE_UPLOAD)) {
+                        JesYourProjectCostsSectionViewModel jesModel = (JesYourProjectCostsSectionViewModel) viewModel;
+                        jesModel.setFinanceUploadFormInput(applicantFormInput.getFormInput());
+                        jesModel.setFinanceUploadQuestion(applicantQuestion.getQuestion());
+                    }
+                });
+            });
         }
-
     }
 
     @Override

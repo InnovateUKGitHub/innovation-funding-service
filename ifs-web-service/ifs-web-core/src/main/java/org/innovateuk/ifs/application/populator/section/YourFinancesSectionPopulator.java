@@ -14,6 +14,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +38,7 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     }
 
     @Override
-    public void populate(ApplicantSectionResource section, ApplicationForm form, YourFinancesSectionViewModel viewModel, Model model) {
+    public void populate(ApplicantSectionResource section, ApplicationForm form, YourFinancesSectionViewModel viewModel, Model model, BindingResult bindingResult) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getCompetition().getId(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
         ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
         ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);

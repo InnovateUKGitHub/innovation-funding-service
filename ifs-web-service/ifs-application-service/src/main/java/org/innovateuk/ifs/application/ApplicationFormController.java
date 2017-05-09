@@ -259,10 +259,9 @@ public class ApplicationFormController {
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  @ModelAttribute("loggedInUser") UserResource user) {
+
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
-        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model);
-        model.addAttribute("model", sectionViewModel);
-        model.addAttribute("form", form);
+        populateSection(model, form, bindingResult, applicantSection);
         return APPLICATION_FORM;
     }
 
@@ -270,23 +269,10 @@ public class ApplicationFormController {
                                  ApplicationForm form,
                                  BindingResult bindingResult,
                                  ApplicantSectionResource applicantSection) {
-        if (SectionType.GENERAL.equals(applicantSection.getSection().getType())
-                || SectionType.OVERVIEW_FINANCES.equals(applicantSection.getSection().getType())) {
-            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(
-                    form, model, bindingResult, applicantSection);
-            model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
-        } else {
-            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(
-                    form, model, bindingResult, applicantSection);
-
-//            if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
-//                viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(applicantSection.getSection(), applicantSection.getApplication().getId(),
-//                        asList(SectionType.ORGANISATION_FINANCES, SectionType.FUNDING_FINANCES)));
-//            }
-
-            model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
-        }
+        AbstractSectionViewModel sectionViewModel = sectionPopulators.get(applicantSection.getSection().getType()).populate(applicantSection, form, model, bindingResult);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicantSection.getApplication().getId(), model, applicantSection.getSection());
+        model.addAttribute("model", sectionViewModel);
+        model.addAttribute("form", form);
     }
 
     @ProfileExecution

@@ -24,6 +24,7 @@
 
         <h2 class="heading-medium">Finance summary</h2>
         <p>This is a breakdown of your project costs and sources of funding for this project.</p>
+
         <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary (${model})" />
 
         <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
@@ -31,7 +32,7 @@
 
 
     <!-- =========================== Your organisation =========================== -->
-    <th:block th:fragment="your_organisation">
+    <th:block th:fragment="your_organisation (model)">
         <div class="question" th:with="formInputViewModel=${model.organisationSizeFormInputViewModel}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
             <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
         </div>
@@ -166,7 +167,7 @@
 
     <th:block th:fragment="your_project_costs(model)">
         <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model})" />
-        <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:unless="${model.allReadOnly}"></div>
+        <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:unless="${model.showTerms}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
@@ -178,6 +179,24 @@
         </th:block>
         <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
+    </th:block>
+
+    <th:block th:fragment="finances_overview(model)">
+        <th:block th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}">
+            <th:block th:if="${formInput.type.displayableFinancialSummaryType}"  th:with="model=${model.openSectionViewModel}" >
+                <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
+                                                currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
+                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}),
+                                                eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId}), currentCompetition=(${model.application.currentCompetition}),
+                                                currentApplication=(${model.application.currentApplication}), hasFinanceSection=(${model.hasFinanceSection})">
+                    <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}"/>
+                </th:block>
+            </th:block>
+            <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
+                <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" ></th:block>
+            </th:block>
+        </th:block>
+        <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
     </th:block>
 
 </html>

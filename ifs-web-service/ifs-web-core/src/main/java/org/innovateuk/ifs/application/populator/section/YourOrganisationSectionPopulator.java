@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.viewmodel.section.YourOrganisationSectionV
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class YourOrganisationSectionPopulator extends AbstractSectionPopulator<Y
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    protected void populate(ApplicantSectionResource section, ApplicationForm form, YourOrganisationSectionViewModel viewModel, Model model) {
+    protected void populate(ApplicantSectionResource section, ApplicationForm form, YourOrganisationSectionViewModel viewModel, Model model, BindingResult bindingResult) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
     }

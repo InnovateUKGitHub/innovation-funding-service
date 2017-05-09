@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-<th:block th:fragment="your_finance">
+<th:block th:fragment="your_finance (model)" th:with="question=${model.applicantQuestion.question}, userOrganisation=${model.currentApplicant.organisation}, readonly=${model.allReadOnly or model.complete}">
     <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
     <p ifs:utext="${question.description}"/>
         <fieldset>
@@ -26,7 +26,7 @@
                 </label>
                 <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference"
                        th:value="${academicFinance.tsbReference?.value}"
-                       th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                       th:readonly="${readonly}"
                        required="required"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')}? 'field-error'" />
             </div>
@@ -57,7 +57,7 @@
                                th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
                                ifs:nonZeroValue="${academicFinance.incurredStaff?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                                type="text"
                                ifs:nonZeroValue="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'field-error'"/>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                                type="text"
                                ifs:nonZeroValue="${academicFinance.incurredOtherCosts?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                                th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="text"
                                ifs:nonZeroValue="${academicFinance.allocatedInvestigators?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'field-error'"/>
                     </div>
                 </div>
@@ -150,7 +150,7 @@
                                th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="text"
                                ifs:nonZeroValue="${academicFinance.allocatedEstatesCosts?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'field-error'"/>
                     </div>
                 </div>
@@ -167,7 +167,7 @@
                                th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="text"
                                ifs:nonZeroValue="${academicFinance.allocatedOtherCosts?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'field-error'"/>
                     </div>
                 </div>
@@ -202,7 +202,7 @@
                                type="text"
                                ifs:nonZeroValue="${academicFinance.indirectCosts?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
@@ -227,7 +227,7 @@
                                th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="text"
                                ifs:nonZeroValue="${academicFinance.exceptionsStaff?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
@@ -245,7 +245,7 @@
                                type="text"
                                ifs:nonZeroValue="${academicFinance.exceptionsOtherCosts?.numberValue}"
                                placeholder="0"
-                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"
+                               th:readonly="${readonly}"
                                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'field-error'" />
                     </div>
                 </div>
@@ -276,13 +276,14 @@
                 </div>
             </div>
         </fieldset>
+        <th:block th:insert="finance/academic-finance :: finance_upload (${model},${model.financeUploadQuestion},${model.financeUploadFormInput},${readonly})" />
+
 </th:block>
 
 <!-- ===========================Form: Fileupload =========================== -->
-<th:block th:fragment="finance_upload"
-     th:with="viewmode=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))) ? 'readonly' : 'edit'},
-         downloadUrl='/application/'+ ${model.application.currentApplication.id} + '/form/' + ${model.financeViewModel.applicationFinanceId} + '/finance-download',
-         filename=${filename},
+<th:block th:fragment="finance_upload (model, question, formInput, readonly)"
+     th:with="viewmode=${readonly ? 'readonly' : 'edit'},
+         downloadUrl='/application/'+ ${model.application.id} + '/form/' + ${applicationFinanceId} + '/finance-download',
          inputField='jes-upload',
          validationField='formInput[jes-upload]',
          mayRemove=true,

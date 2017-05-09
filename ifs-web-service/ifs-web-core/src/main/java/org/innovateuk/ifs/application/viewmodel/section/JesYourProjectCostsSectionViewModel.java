@@ -1,12 +1,17 @@
 package org.innovateuk.ifs.application.viewmodel.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 
 import java.util.List;
 
 public class JesYourProjectCostsSectionViewModel extends AbstractYourProjectCostsSectionViewModel {
+    private QuestionResource financeUploadQuestion;
+    private FormInputResource financeUploadFormInput;
+
 
     public JesYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
@@ -14,7 +19,23 @@ public class JesYourProjectCostsSectionViewModel extends AbstractYourProjectCost
 
     @Override
     public String getFinanceView() {
-        return null;
+        return "academic-finance";
+    }
+
+    public QuestionResource getFinanceUploadQuestion() {
+        return financeUploadQuestion;
+    }
+
+    public void setFinanceUploadQuestion(QuestionResource financeUploadQuestion) {
+        this.financeUploadQuestion = financeUploadQuestion;
+    }
+
+    public FormInputResource getFinanceUploadFormInput() {
+        return financeUploadFormInput;
+    }
+
+    public void setFinanceUploadFormInput(FormInputResource financeUploadFormInput) {
+        this.financeUploadFormInput = financeUploadFormInput;
     }
 }
 

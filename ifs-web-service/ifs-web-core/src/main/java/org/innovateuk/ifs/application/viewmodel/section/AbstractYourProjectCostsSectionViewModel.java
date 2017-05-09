@@ -13,6 +13,7 @@ public abstract class AbstractYourProjectCostsSectionViewModel extends AbstractS
     private ApplicantQuestionResource applicantQuestion;
     private boolean complete;
 
+
     public AbstractYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
     }
@@ -45,6 +46,10 @@ public abstract class AbstractYourProjectCostsSectionViewModel extends AbstractS
 
     public QuestionResource getQuestion() {
         return applicantQuestion.getQuestion();
+    }
+
+    public boolean getShowTerms() {
+        return !(getCurrentApplicant().isResearch() || isAllReadOnly());
     }
 }
 

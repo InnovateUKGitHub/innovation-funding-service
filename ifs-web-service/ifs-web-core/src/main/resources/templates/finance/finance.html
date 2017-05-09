@@ -211,16 +211,16 @@
 
         <section class="collapsible" th:each="projectCostSection : ${model.defaultProjectCostSections}">
             <h2>
-                <th:block th:text="${projectCostSection.applicantSection.section.name}" />
-                <span th:attr="data-mirror='#section-total-'+${projectCostSection.applicantSection.section.id}" />
+                <th:block th:text="${projectCostSection.applicantSection.section.name}" ></th:block>
+                <span th:attr="data-mirror='#section-total-'+${projectCostSection.applicantSection.section.id}" ></span>
             </h2>
             <div class="collapsible-content">
                 <th:block th:each="costViewModel : ${projectCostSection.costViews}">
                     <th:block th:if="${costViewModel.formInput.type.displayableFinanceType}">
-                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" />
+                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
                     </th:block>
                     <th:block th:if="${costViewModel.formInput.type.displayableQuestionType}">
-                        <th:block th:insert="question-type/types :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" />
+                        <th:block th:insert="question-type/types :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
                     </th:block>
                 </th:block>
             </div>
