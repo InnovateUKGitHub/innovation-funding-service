@@ -23,14 +23,14 @@
             <li id="section-2"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=funding&amp;status=done' : '?section=funding')}">Funding information</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
             <li id="section-3"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=eligibility&amp;status=done' : '?section=eligibility')}">Eligibility</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
             <li id="section-4"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=milestones&amp;status=done' : '?section=milestones')}">Milestones</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
-            <li id="section-6"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application applicantQuestions</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
+            <li id="section-6"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application questions</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
             <li id="section-5"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Assessors</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
             <li id="section-9"><div class="task"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/6653-public-content?compStatus=ready' : '/prototypes/6653-public-content')}">Public content</a></h3></div><span class="secondary-notification">Last published 08:55am 12 December 2016</span><div class="task-status-complete"><span>Completed</span></div></li>
             <!--<li id="section-1" th:class="${(param.section == null or param.section[0] == 'essential' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=essential&amp;status=done' : '?section=essential')}">Initial details</a></h3></li>-->
             <!--<li id="section-2" th:class="${(param.section != null and param.section[0] == 'funding' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=funding&amp;status=done' : '?section=funding')}">Funding information</a></h3></li>-->
             <!--<li id="section-3" th:class="${(param.section != null and param.section[0] == 'eligibility' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=eligibility&amp;status=done' : '?section=eligibility')}">Eligibility</a></h3></li>-->
             <!--<li id="section-4" th:class="${(param.section != null and param.section[0] == 'milestones' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=milestones&amp;status=done' : '?section=milestones')}">Milestones</a></h3></li>-->
-            <!--<li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application applicantQuestions</a></h3></li>-->
+            <!--<li id="section-6" th:class="${(param.section != null and param.section[0] == 'application' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5085-application-process')}">Application questions</a></h3></li>-->
             <!--<li id="section-7" th:class="${(param.section != null and param.section[0] == 'finance' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=finance'}">Application finances</a></h3></li>-->
             <!--<li id="section-5" th:class="${(param.section != null and param.section[0] == 'assessors' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required')}">Assessors</a></h3></li>-->
             <!--<li id="section-8" th:class="${(param.section != null and param.section[0] == 'description' ? 'selected' : '')}"><h3 class="heading-small"><a th:href="@{'?section=description'}">Description &#38; brief</a></h3></li>-->
@@ -1305,20 +1305,20 @@
 
     <div class="hgroup extra-margin-bottom">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="heading-xlarge no-margin">Application applicantQuestions</h1>
+        <h1 class="heading-xlarge no-margin">Application questions</h1>
     </div>
 
     <div class="panel">
-        These match the template for the competition type you chose - to change applicantQuestions you can change the competition type in 'Initial details'
+        These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
-    <p>Template: Programme 10 applicantQuestions</p>
+    <p>Template: Programme 10 questions</p>
 
     <h2 class="heading-large">Questions</h2>
 
     <form>
 
-        <ul class="list-overview application-applicantQuestions">
+        <ul class="list-overview application-questions">
 
             <li><h2 class="heading-medium">Application details</h2></li>
             <li><h2 class="heading-medium">Project summary</h2></li>
@@ -1380,7 +1380,7 @@
     </div>
 
     <div class="panel">
-        These match the template for the competition type you chose - to change applicantQuestions you can change the competition type in 'Initial details'
+        These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
     <form>
@@ -1395,7 +1395,7 @@
         <li class="prev">
             <a rel="prev" title="Navigate to next part" th:href="@{'?section=application'}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Application applicantQuestions</span>
+                <span class="pagination-part-title">Application questions</span>
             </a>
         </li>
         <li class="next">
@@ -1437,7 +1437,7 @@
 </div>
 
 
-<!-- =================Section: application applicantQuestions=========================== -->
+<!-- =================Section: application questions=========================== -->
 
 <div th:fragment="prototype-application-question">
 
@@ -2450,8 +2450,8 @@
             <dd>For more information on the online application form visit our general guidance for applicants.</dd>
             <dd>External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.</dd>
             <dd>All applicants will receive feedback from the experts, so they can understand their assessment.</dd>
-            <dt>Application applicantQuestions</dt>
-            <dd>Application applicantQuestions are available for reference and to assist with preparation.</dd>
+            <dt>Application questions</dt>
+            <dd>Application questions are available for reference and to assist with preparation.</dd>
             <dt>Competition contact</dt>
             <dd>If you need more information, contact the competition helpline on 0300 321 4357 or email us at support@innovateuk.gov.uk</dd>
             <dt>Rules</dt>
@@ -2558,7 +2558,7 @@
                             Heading
                         </label>
                         <input class="form-control" id="heading-three" type="text" value="" />
-                        <!--<input class="form-control" id="heading-three" type="text" value="Application applicantQuestions" />-->
+                        <!--<input class="form-control" id="heading-three" type="text" value="Application questions" />-->
                     </div>
                     <div class="form-group">
                         <label class="form-label-bold" for="content-three">
@@ -2566,7 +2566,7 @@
                         </label>
                         <textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full"></textarea>
                         <!--<textarea name="skills-areas" id="content-three" cols="30" rows="10" class="width-full">-->
-<!--Application applicantQuestions are available for reference and to assist with preparation.-->
+<!--Application questions are available for reference and to assist with preparation.-->
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">

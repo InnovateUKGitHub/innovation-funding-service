@@ -22,7 +22,7 @@
                 <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
                 <p class="form-hint" th:text="${section.guidance}" />
                 <ul class="task-list">
-                    <li th:each="question : ${section.applicantQuestions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
+                    <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
                         <div class="task">
                             <h3 class="heading-small">
                                 <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"

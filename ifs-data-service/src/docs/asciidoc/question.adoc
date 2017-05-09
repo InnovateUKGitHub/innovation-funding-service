@@ -1,4 +1,4 @@
-=== Retrieve applicantQuestions by competition
+=== Retrieve questions by competition
 ==== Request
 include::{snippets}/question/find-by-competition/http-request.adoc[]
 include::{snippets}/question/find-by-competition/path-parameters.adoc[]
@@ -10,7 +10,7 @@ include::{snippets}/question/find-by-competition/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/question/find-by-competition/curl-request.adoc[]
 
-=== Retrieve applicantQuestions that have been marked as complete
+=== Retrieve questions that have been marked as complete
 ==== Request
 include::{snippets}/question/get-marked-as-complete/http-request.adoc[]
 include::{snippets}/question/get-marked-as-complete/path-parameters.adoc[]
