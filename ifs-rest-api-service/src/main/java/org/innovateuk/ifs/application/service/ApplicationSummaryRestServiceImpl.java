@@ -45,12 +45,6 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/not-submitted";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
 	}
-	
-	@Override
-	public RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter) {
-		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/feedback-required";
-		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
-	}
 
 	@Override
 	public RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter, Optional<Boolean> informFilter) {

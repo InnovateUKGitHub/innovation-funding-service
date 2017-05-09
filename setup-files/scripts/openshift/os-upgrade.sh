@@ -54,6 +54,25 @@ function upgradeServices {
 
     oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
 
+    watchStatus
+}
+
+function forceReload {
+    oc rollout latest dc/data-service ${SVC_ACCOUNT_CLAUSE}
+    sleep 90
+
+    oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
+
+    watchStatus
+}
+
+function watchStatus {
     sleep 90
     oc rollout status dc/application-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
     oc rollout status dc/assessment-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
@@ -62,19 +81,6 @@ function upgradeServices {
     oc rollout status dc/project-setup-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
     oc rollout status dc/idp --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
     oc rollout status dc/shib --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-}
-
-function forceReload {
-    oc deploy dc/data-service --latest ${SVC_ACCOUNT_CLAUSE}
-    sleep 90
-
-    oc deploy dc/application-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/assessment-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/competition-mgt-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/project-setup-mgt-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/project-setup-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/idp --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/shib --latest ${SVC_ACCOUNT_CLAUSE}
 }
 
 . $(dirname $0)/deploy-functions.sh
