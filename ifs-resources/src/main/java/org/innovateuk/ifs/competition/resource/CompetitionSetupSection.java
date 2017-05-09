@@ -78,8 +78,7 @@ public enum CompetitionSetupSection {
 	}
 
 	public boolean isComplete(CompetitionResource competitionResource) {
-		return competitionResource.getSectionSetupStatus().containsKey(this)
-				&& competitionResource.getSectionSetupStatus().get(this);
+		return competitionResource.getSectionSetupStatus().getOrDefault(this, false);
 	}
 
 	public boolean hasDisplayableSetupFragment() {
