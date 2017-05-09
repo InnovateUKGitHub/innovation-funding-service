@@ -205,7 +205,7 @@ Project finance user can upload more than one file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file      name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
+    Then the user should see the element    jQuery=li + li a:contains("${valid_pdf} (opens in a new window)")
 
 Project finance user can still view and delete both files
     [Documentation]    INFUND-4840
@@ -437,10 +437,10 @@ Finance contact can upload more than one file
 Finance contact can still view both files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=form li a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
     And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
+    When the user clicks the button/link    jQuery=form li + li a:contains("${valid_pdf} (opens in a new window)")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
 
