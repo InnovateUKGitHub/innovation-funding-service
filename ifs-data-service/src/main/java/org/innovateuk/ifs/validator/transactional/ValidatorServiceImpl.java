@@ -17,6 +17,8 @@ import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +68,11 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public BindingResult validateFormInputResponse(Long applicationId, Long formInputId, Long markedAsCompleteById) {
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, markedAsCompleteById, formInputId);
-        return validationUtil.validateResponse(response, false);
+        BindingResult result = validationUtil.validateResponse(response, false);
+
+        validateFileUploads(result, formInputId, response).forEach(objectError -> result.addError(objectError));
+
+        return result;
     }
 
 
@@ -89,5 +95,20 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public FinanceRowHandler getProjectCostHandler(FinanceRowItem costItem) {
         return projectFinanceRowService.getCostHandler(costItem);
+    }
+
+    private List<ObjectError> validateFileUploads(BindingResult result, Long formInputId, FormInputResponse response) {
+        List<ObjectError> errors = new ArrayList<>();
+        FormInput formInput = formInputRepository.findOne(formInputId);
+
+        if(FormInputType.FINANCE_UPLOAD == formInput.getType()) {
+            if (response == null) {
+                errors.add(new FieldError("value", "formInput[jes-upload]", "validation.field.must.not.be.blank"));
+            } else {
+                errors.addAll(validationUtil.validationJesForm(response));
+            }
+        }
+
+        return errors;
     }
 }

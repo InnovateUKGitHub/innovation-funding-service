@@ -14,6 +14,7 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.validator.MinRowCountValidator;
+import org.innovateuk.ifs.validator.AcademicJesValidator;
 import org.innovateuk.ifs.validator.NotEmptyValidator;
 import org.innovateuk.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
@@ -137,6 +138,13 @@ public class ValidationUtil {
         binder.addValidators(new ApplicationMarkAsCompleteValidator());
         binder.validate();
         return binder.getBindingResult();
+    }
+
+    public List<ObjectError> validationJesForm(FormInputResponse response) {
+        DataBinder binder = new DataBinder(response);
+        binder.addValidators(new AcademicJesValidator());
+        binder.validate();
+        return binder.getBindingResult().getAllErrors();
     }
 
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
