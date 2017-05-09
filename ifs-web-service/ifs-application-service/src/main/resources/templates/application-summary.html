@@ -12,6 +12,7 @@
              message='You will not be able to access the application after this point. Are you sure you want to submit?',
              submitLink='/application/'+${currentApplication.getId()}+'/submit',
              submitText='Yes, I want to submit my application',
+             submittedText='Submitting application, please wait...',
              cancelText='Cancel')" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
@@ -34,7 +35,7 @@
             </p>
 
             <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview">
-                <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, assessorFeedbackDownloadLink=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.id})})" />
+                <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()})" />
             </form>
 
             <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">

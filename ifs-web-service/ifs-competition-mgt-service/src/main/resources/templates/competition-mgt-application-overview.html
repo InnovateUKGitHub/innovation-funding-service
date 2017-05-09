@@ -51,7 +51,7 @@
                   method="post" enctype="multipart/form-data"
                   th:object="${form}" class="form-serialize-js section-overview">
 
-                <th:block th:include="fragments/application :: application-summary (assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})})" />
+                <th:block th:include="fragments/application :: application-summary" />
             </form>
 
             <div class="extra-margin">

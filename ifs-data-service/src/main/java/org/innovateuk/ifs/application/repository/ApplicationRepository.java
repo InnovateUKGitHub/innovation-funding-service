@@ -86,8 +86,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																					  @Param("states") Collection<State> applicationStates,
 																					  @Param("filter") String filter);
 
-	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(long competitionId, Collection<State> applicationStates, Pageable pageable);
-
 	@Query(COMP_FUNDING_FILTER)
 	Page<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") long competitionId,
 																	 @Param("filter") String filter,
@@ -104,8 +102,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(long competitionId);
 
 	int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(long competitionId);
-	
-	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(long competitionId, Collection<State> applicationStates);
 
     int countByCompetitionId(long competitionId);
 

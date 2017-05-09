@@ -26,7 +26,7 @@ public interface InviteService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationInvite> findOne(Long id);
 
-    @PreAuthorize("hasPermission(#inviteOrganisationResource, 'SEND')")
+    @PreAuthorize("hasPermission(#inviteOrganisationResource, 'CREATE_APPLICATION_INVITES')")
     ServiceResult<InviteResultsResource> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource);
 
     @PreAuthorize("hasAuthority('system_registrar')")
