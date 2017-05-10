@@ -19,12 +19,14 @@ public class GrantOfferLetterSignedControllerSecurityTest extends BaseProjectSet
 
     @Test
     public void testPublicMethods() {
-        assertSecured(() -> classUnderTest.downloadGrantOfferLetterFile(123L));
-        assertSecured(() -> classUnderTest.deleteSignedGrantOfferLetterFile(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.downloadGrantOfferLetterFile(123L),
+                permissionRules -> permissionRules.leadPartnerAccess(eq(123L), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.deleteSignedGrantOfferLetterFile(123L, null, null, null, null, null),
+                permissionRules -> permissionRules.leadPartnerAccess(eq(123L), isA(UserResource.class)));
     }
 
-    @Override
+/*    @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.leadPartnerAccess(eq(123L), isA(UserResource.class));
-    }
+    }*/
 }

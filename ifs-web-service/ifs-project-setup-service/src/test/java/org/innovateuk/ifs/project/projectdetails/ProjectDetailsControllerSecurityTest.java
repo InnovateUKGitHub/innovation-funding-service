@@ -20,77 +20,91 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testViewProjectDetails() {
-        assertSecured(() -> classUnderTest.viewProjectDetails(123L, null, null));
+        assertSecured(() -> classUnderTest.viewProjectDetails(123L, null, null),
+                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testProjectDetailConfirmSubmit() {
-        assertSecured(() -> classUnderTest.projectDetailConfirmSubmit(123L, null, null));
+        assertSecured(() -> classUnderTest.projectDetailConfirmSubmit(123L, null, null),
+                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testViewFinanceContact() {
-        assertSecured(() -> classUnderTest.viewFinanceContact(123L, null, null, null, null));
+        assertSecured(() -> classUnderTest.viewFinanceContact(123L, null, null, null, null),
+                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testUpdateFinanceContact() {
 
-        assertSecured(() -> classUnderTest.updateFinanceContact(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateFinanceContact(123L, null, null, null, null, null),
+                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testViewProjectManager() {
-        assertSecured(() -> classUnderTest.viewProjectManager(123L, null, null, null));
+        assertSecured(() -> classUnderTest.viewProjectManager(123L, null, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectManagerPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testUpdateProjectManager() {
-        assertSecured(() -> classUnderTest.updateProjectManager(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateProjectManager(123L, null, null, null, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectManagerPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testViewStartDate() {
-        assertSecured(() -> classUnderTest.viewStartDate(123L, null, null, null));
+        assertSecured(() -> classUnderTest.viewStartDate(123L, null, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectStartDatePage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testUpdateStartDate() {
-        assertSecured(() -> classUnderTest.updateStartDate(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateStartDate(123L, null, null, null, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectStartDatePage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testViewAddress() {
-        assertSecured(() -> classUnderTest.viewAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.viewAddress(123L, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testSearchAddress() {
-        assertSecured(() -> classUnderTest.searchAddress(123L, null, null, null));
+        assertSecured(() -> classUnderTest.searchAddress(123L, null, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testUpdateAddress() {
-        assertSecured(() -> classUnderTest.updateAddress(123L, null, null, null, null));
+        assertSecured(() -> classUnderTest.updateAddress(123L, null, null, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testSelectAddress() {
-        assertSecured(() -> classUnderTest.selectAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.selectAddress(123L, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testManualAddress() {
-        assertSecured(() -> classUnderTest.manualAddress(123L, null, null));
+        assertSecured(() -> classUnderTest.manualAddress(123L, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testSubmitProjectDetails() {
-        assertSecured(() -> classUnderTest.submitProjectDetails(123L));
+        assertSecured(() -> classUnderTest.submitProjectDetails(123L),
+                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
     }
 
-    @Override
+/*    @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class));
-    }
+    }*/
 }

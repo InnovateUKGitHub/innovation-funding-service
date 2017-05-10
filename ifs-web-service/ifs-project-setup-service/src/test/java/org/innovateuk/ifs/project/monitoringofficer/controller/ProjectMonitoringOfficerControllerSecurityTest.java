@@ -19,11 +19,12 @@ public class ProjectMonitoringOfficerControllerSecurityTest extends BaseProjectS
 
     @Test
     public void testViewMonitoringOfficer() {
-        assertSecured(() -> classUnderTest.viewMonitoringOfficer(123L, null));
+        assertSecured(() -> classUnderTest.viewMonitoringOfficer(123L, null),
+                permissionRules -> permissionRules.partnerCanAccessMonitoringOfficerSection(eq(123L), isA(UserResource.class)));
     }
 
-    @Override
+/*    @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.partnerCanAccessMonitoringOfficerSection(eq(123L), isA(UserResource.class));
-    }
+    }*/
 }

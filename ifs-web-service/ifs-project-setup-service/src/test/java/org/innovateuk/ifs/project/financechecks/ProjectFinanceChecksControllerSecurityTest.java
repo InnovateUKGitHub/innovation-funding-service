@@ -21,11 +21,12 @@ public class ProjectFinanceChecksControllerSecurityTest extends BaseProjectSetup
 
         @Test
         public void testPublicMethods() {
-            assertSecured(() -> classUnderTest.viewFinanceChecks(null,123L, null));
+            assertSecured(() -> classUnderTest.viewFinanceChecks(null,123L, null),
+                    permissionRules -> permissionRules.partnerCanAccessFinanceChecksSection(eq(123L), isA(UserResource.class)));
         }
 
-        @Override
+/*        @Override
         protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
             return permissionRules -> permissionRules.partnerCanAccessFinanceChecksSection(eq(123L), isA(UserResource.class));
-        }
+        }*/
     }

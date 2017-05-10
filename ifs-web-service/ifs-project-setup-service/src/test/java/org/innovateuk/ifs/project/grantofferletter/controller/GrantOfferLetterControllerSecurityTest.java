@@ -19,15 +19,20 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
 
     @Test
     public void testPublicMethods() {
-        assertSecured(() -> classUnderTest.confirmation(123L, null));
-        assertSecured(() -> classUnderTest.downloadAdditionalContractFile(123L));
-        assertSecured(() -> classUnderTest.downloadGeneratedGrantOfferLetterFile(123L));
-        assertSecured(() -> classUnderTest.submit(123L, null, null, null, null, null));
-        assertSecured(() -> classUnderTest.uploadSignedGrantOfferLetterFile(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.confirmation(123L, null),
+                permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.downloadAdditionalContractFile(123L),
+                permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.downloadGeneratedGrantOfferLetterFile(123L),
+                permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.submit(123L, null, null, null, null, null),
+                permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.uploadSignedGrantOfferLetterFile(123L, null, null, null, null, null),
+                permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class)));
     }
 
-    @Override
+/*    @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class));
-    }
+    }*/
 }
