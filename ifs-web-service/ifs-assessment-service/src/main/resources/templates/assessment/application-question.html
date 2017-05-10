@@ -43,7 +43,7 @@
                         <span th:text="${model.questionName}" th:remove="tag" />
                     </h2>
 
-                    <p th:text="${model.applicantResponse}" data-md-to-html="">This is the applicant response.</p>
+                    <p th:text="${model.applicantResponse}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response.</p>
                 </div>
 
                 <div th:if="${model.appendixExists}">
