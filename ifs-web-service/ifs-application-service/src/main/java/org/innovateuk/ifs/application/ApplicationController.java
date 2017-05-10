@@ -126,5 +126,6 @@ public class ApplicationController {
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
         questionService.assignQuestion(applicationId, request, assignedBy);
+        cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 }

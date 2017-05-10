@@ -179,6 +179,7 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
         assertEquals(competitionId, application.get().getCompetition());
     }
 
+    @Rollback
     @Test
     public void markAsIneligible() throws Exception {
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
@@ -196,6 +197,7 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
         assertEquals(reason.getReason(), applicationAfter.getIneligibleOutcome().getReason());
     }
 
+    @Rollback
     @Test
     public void informIneligible() throws Exception {
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
