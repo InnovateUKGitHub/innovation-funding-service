@@ -360,6 +360,11 @@ public class CompetitionSetupController {
         if (competition.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
+
+        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+            return "redirect:/competition/setup/" + competition.getId();
+        }
+
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPath();
         Supplier<String> failureView = () -> {
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
