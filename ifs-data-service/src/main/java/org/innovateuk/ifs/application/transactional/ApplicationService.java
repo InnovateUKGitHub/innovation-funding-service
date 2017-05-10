@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.*;
@@ -81,7 +80,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
 
     @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
+    ServiceResult<Boolean> applicationReadyForSubmit(final Long id);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the applications")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

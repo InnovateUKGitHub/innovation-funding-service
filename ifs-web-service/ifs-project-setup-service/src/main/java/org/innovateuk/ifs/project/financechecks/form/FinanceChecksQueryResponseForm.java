@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
@@ -13,6 +14,7 @@ public class FinanceChecksQueryResponseForm extends BaseBindingResultTarget {
     @WordCount(max = FinanceChecksQueryConstraints.MAX_QUERY_WORDS, message = "{validation.field.max.word.count}")
     private String response;
 
+    @JsonIgnore
     private MultipartFile attachment;
 
     public String getResponse() {
