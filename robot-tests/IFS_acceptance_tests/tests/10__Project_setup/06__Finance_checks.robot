@@ -264,6 +264,11 @@ New query can be posted
     Then the user should not see the element  jQuery=.button:contains("Post Query")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
 
+The Project Finance user should be able to send a second response in a row
+    [Documentation]    INFUND-9546
+    [Tags]
+    The user should see the element   jQuery=#post-new-response
+
 Query sections are no longer editable
     [Documentation]    INFUND-4840
     [Tags]
@@ -473,6 +478,11 @@ Query response can be posted
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should not see the element   jQuery=.button:contains("Post response")
 
+The Finance contact user should be able to send a second response in a row
+    [Documentation]    INFUND-9546
+    [Tags]
+    The user should see the element   jQuery=#post-new-response
+
 Query section now becomes read-only
     [Documentation]    INFUND-4843
     [Tags]
@@ -518,6 +528,11 @@ Project finance user can continue the conversation
     And the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should not see an error in the page
     And the user should not see the element    css=.editor
+
+The Project Finance user should be able to send a second response in a row
+    [Documentation]    INFUND-9546
+    [Tags]
+    The user should see the element   jQuery=#post-new-response
 
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753
