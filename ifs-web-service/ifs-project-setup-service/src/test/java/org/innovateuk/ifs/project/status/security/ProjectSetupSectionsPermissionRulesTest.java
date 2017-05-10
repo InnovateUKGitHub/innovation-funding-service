@@ -65,6 +65,24 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
+    public void testProjectManagerPageAccess() {
+        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectManagerPage(organisation),
+                () -> rules.leadCanAccessProjectManagerPage(123L, user));
+    }
+
+    @Test
+    public void testProjectStartDatePageAccess() {
+        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectStartDatePage(organisation),
+                () -> rules.leadCanAccessProjectStartDatePage(123L, user));
+    }
+
+    @Test
+    public void testProjectAddressPageAccess() {
+        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectAddressPage(organisation),
+                () -> rules.leadCanAccessProjectAddressPage(123L, user));
+    }
+
+    @Test
     public void testMonitoringOfficerSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection, () -> rules.partnerCanAccessMonitoringOfficerSection(123L, user));
     }
