@@ -42,17 +42,14 @@ ENV JRE_HOME=${JAVA_HOME}/jre
 #
 # Apache layer
 COPY apache /apache/
-COPY certs /apache/
 RUN apt-get update --fix-missing && \
 
 # install apache \
-  apt-get -y install grep lsof net-tools curl wget openssl rsync ldap-utils apache2 && \
+  apt-get -y install grep lsof net-tools curl wget openssl rsync ldap-utils apache2 apt-transport-https bsdtar&& \
   apt-get autoclean && apt-get --purge -y autoremove && \
 
 # put certificates in place \
   mkdir /etc/apache2/certs && chown root:www-data /etc/apache2/certs && chmod 775 /etc/apache2/certs && \
-  mv "/apache/$IDP_PROXY_KEY" "/apache/$IDP_PROXY_CERTIFICATE" /etc/apache2/certs/ && \
-  mv "/apache/$IDP_PROXY_CACERTIFICATE" /etc/apache2/certs/ && \
 
 # configure apache \
   mv /apache/ssl.conf /etc/apache2/mods-available/ssl.conf && \
@@ -79,7 +76,7 @@ RUN apt-get update --fix-missing && \
 # Java layer
 RUN apt-get -y install ca-certificates gcc libc6-dev libssl-dev make --no-install-recommends openssl unzip && \
   curl --connect-timeout 30 -m 120 -L -s --retry 5 --cacert /etc/ssl/certs/GeoTrust_Global_CA.pem --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
-    http://download.oracle.com/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/server-jre-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz | tar -C /tmp -xz && \
+    http://download.oracle.com/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/server-jre-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz | bsdtar -C /tmp -xf - && \
   mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${JAVAVER}.0_${JAVAUPD} ${JAVA_HOME} && \
   curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/unlimited_jce_policy.zip "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" && \
   unzip -jo -d ${JAVA_HOME}/jre/lib/security /tmp/unlimited_jce_policy.zip && \
@@ -93,13 +90,15 @@ RUN apt-get -y install ca-certificates gcc libc6-dev libssl-dev make --no-instal
 
 # idp layer, which includes tomcat8 and idp
 # default-jre-headless-dummy_1.0_all.deb prevents openjdk being installed and saves 100Mb or so.
-COPY idp/* /idp/
-COPY certs /idp/
 COPY default-jre-headless-dummy_1.0_all.deb /tmp/
 RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f /tmp/default-jre-headless-dummy_1.0_all.deb && \
   apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java java-common ucf && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
-  mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
+  curl --connect-timeout 30 -m 120 -s -L --retry 5 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf -
+
+COPY idp/* /idp/
+COPY certs /idp/
+RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
   ln -s /etc/apache2/sites-available/idpproxy.conf /etc/apache2/sites-enabled/idpproxy.conf && \
   mkdir /etc/tomcat8/certs && chown root:tomcat8 /etc/tomcat8/certs && chmod 0710 /etc/tomcat8/certs && \
   mv /idp/server.xml /etc/tomcat8/ && chmod 644 /etc/tomcat8/server.xml && \
@@ -112,7 +111,6 @@ RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f
   chown -R root:tomcat8 /etc/tomcat8 && \
   (cd /etc/tomcat8; chmod -R o-rwx,g-w Catalina *.properties *.xml policy.d) && \
   chmod 640 /etc/tomcat8/certs/* && \
-  curl --connect-timeout 30 -m 120 -s -L --retry 5 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | tar -C /root -xz && \
   cat /idp/build.xml|tr "3.2.1" "$IDPVER" > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
   (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER && \
   chown -R .tomcat8 /opt/shibboleth-idp/conf /opt/shibboleth-idp/credentials && chmod -R g+r /opt/shibboleth-idp/conf && \
@@ -150,11 +148,6 @@ RUN dpkg -i --force-depends /tmp/default-jre-headless-dummy_1.0_all.deb && rm -f
     /var/lib/tomcat8/work && \
   rm -rf /idp /tmp/* /var/tmp/*
 #
-# Custom govuk pages
-COPY pages /ifs-custom-pages/
-RUN cp -a /ifs-custom-pages/* /opt/shibboleth-idp/ && \
-    rm -rf /ifs-custom-pages
-#
 # start and other useful scripts
 COPY scripts/* /usr/local/bin/
 RUN cd /usr/local/bin && \
@@ -162,3 +155,13 @@ RUN cd /usr/local/bin && \
   mv startup-run.sh startup.sh
 
 ENTRYPOINT [ "startup.sh" ]
+
+#
+# Custom govuk pages
+COPY pages /ifs-custom-pages/
+RUN cp -a /ifs-custom-pages/* /opt/shibboleth-idp/ && \
+    rm -rf /ifs-custom-pages
+
+COPY certs /apache/
+RUN mv "/apache/$IDP_PROXY_KEY" "/apache/$IDP_PROXY_CERTIFICATE" /etc/apache2/certs/ && \
+    mv "/apache/$IDP_PROXY_CACERTIFICATE" /etc/apache2/certs/
