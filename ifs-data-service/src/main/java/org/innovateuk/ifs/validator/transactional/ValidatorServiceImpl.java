@@ -17,7 +17,6 @@ import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 
 /**
  * Class to validate several objects
+ * TODO: INFUND-9548 adding unit tests for this class
  */
 @Service
 public class ValidatorServiceImpl extends BaseTransactionalService implements ValidatorService {
@@ -103,7 +103,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
 
         if(FormInputType.FINANCE_UPLOAD == formInput.getType()) {
             if (response == null) {
-                errors.add(new FieldError("value", "formInput[jes-upload]", "validation.field.must.not.be.blank"));
+                errors.add(new ObjectError("value", "validation.field.must.not.be.blank"));
             } else {
                 errors.addAll(validationUtil.validationJesForm(response));
             }
