@@ -91,7 +91,7 @@ public class AssessmentFeedbackController {
             @PathVariable("formInputId") Long formInputId,
             @RequestParam("value") String value) {
         try {
-            assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value).getSuccessObjectOrThrowException();
+            assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
             return createJsonObjectNode(true);
         } catch (Exception e) {
             return createJsonObjectNode(false);
