@@ -14,7 +14,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceFields;
@@ -153,27 +152,14 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void applicationReadyForSubmit() throws Exception {
         Long applicationId = 1L;
 
-        ObjectNode node = objectMapper.createObjectNode();
-        node.put(READY_FOR_SUBMIT, true);
-        node.put(PROGRESS, 10);
-        node.put(RESEARCH_PARTICIPATION, 20.5);
-        node.put(RESEARCH_PARTICIPATION_VALID, true);
-        node.put(ALL_SECTION_COMPLETE, true);
 
-        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(node));
+        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(Boolean.TRUE));
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application")
-                        ),
-                        responseFields(
-                                fieldWithPath(READY_FOR_SUBMIT).description("application is ready to be submitted"),
-                                fieldWithPath(PROGRESS).description("Progress percentage of the application"),
-                                fieldWithPath(RESEARCH_PARTICIPATION).description("Research participation percentage"),
-                                fieldWithPath(RESEARCH_PARTICIPATION_VALID).description("Research participation percentage is valid"),
-                                fieldWithPath(ALL_SECTION_COMPLETE).description("all sections have been completed")
                         )
                 ));
     }
