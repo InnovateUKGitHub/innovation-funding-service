@@ -14,11 +14,11 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
-import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceFields;
+import static org.innovateuk.ifs.documentation.ApplicationIneligibleSendResourceDocs.applicationIneligibleSendResourceBuilder;
+import static org.innovateuk.ifs.documentation.ApplicationIneligibleSendResourceDocs.applicationIneligibleSendResourceFields;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -26,6 +26,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationControllerDocumentation extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -43,6 +44,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.getApplicationById(application1Id)).thenReturn(serviceSuccess(testApplicationResource1));
 
         mockMvc.perform(get("/application/{id}", application1Id))
+                .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the application that is being requested")
@@ -58,6 +60,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.findAll()).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andDo(
                         document("application/{method-name}",
                                 responseFields(
@@ -76,6 +79,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/findByUser/{id}", userId))
+                .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the user the applications are being requested for")
@@ -95,8 +99,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(post("/application/saveApplicationDetails/{id}", applicationId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testApplicationResource1))
-        )
+                .content(objectMapper.writeValueAsString(testApplicationResource1)))
+                .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the application that needs to be saved")
@@ -114,6 +118,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.getProgressPercentageByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application/getProgressPercentageByApplicationId/{applicationId}", applicationId))
+                .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application of which the percentage is requested")
@@ -134,6 +139,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.updateApplicationState(applicationId, state)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(put("/application/updateApplicationState?applicationId={applicationId}&state={state}", applicationId, state))
+                .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         requestParameters(
                                 parameterWithName("applicationId").description("id of the application for which to update the application state"),
@@ -146,26 +152,14 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void applicationReadyForSubmit() throws Exception {
         Long applicationId = 1L;
 
-        ObjectNode node = objectMapper.createObjectNode();
-        node.put(READY_FOR_SUBMIT, true);
-        node.put(PROGRESS, 10);
-        node.put(RESEARCH_PARTICIPATION, 20.5);
-        node.put(RESEARCH_PARTICIPATION_VALID, true);
-        node.put(ALL_SECTION_COMPLETE, true);
 
-        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(node));
+        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(Boolean.TRUE));
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
+                .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application")
-                        ),
-                        responseFields(
-                                fieldWithPath(READY_FOR_SUBMIT).description("application is ready to be submitted"),
-                                fieldWithPath(PROGRESS).description("Progress percentage of the application"),
-                                fieldWithPath(RESEARCH_PARTICIPATION).description("Research participation percentage"),
-                                fieldWithPath(RESEARCH_PARTICIPATION_VALID).description("Research participation percentage is valid"),
-                                fieldWithPath(ALL_SECTION_COMPLETE).description("all sections have been completed")
                         )
                 ));
     }
@@ -181,6 +175,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         when(applicationServiceMock.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
 
         mockMvc.perform(get("/application/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}", competitionId, userId, role))
+                .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Competition Id"),
@@ -208,6 +203,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
+                .andExpect(status().isCreated())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition the new application is being created for."),
@@ -223,16 +219,19 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void informIneligible() throws Exception {
         long applicationId = 1L;
-        ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
+        ApplicationIneligibleSendResource applicationIneligibleSendResource = applicationIneligibleSendResourceBuilder.build();
 
         when(applicationServiceMock.informIneligible(applicationId, applicationIneligibleSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(applicationIneligibleSendResource)))
+                .andExpect(status().isOk())
                 .andDo(document("application/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application to inform of being ineligible")
-                        )));
+                        ),
+                        requestFields(applicationIneligibleSendResourceFields)
+                ));
     }
 }

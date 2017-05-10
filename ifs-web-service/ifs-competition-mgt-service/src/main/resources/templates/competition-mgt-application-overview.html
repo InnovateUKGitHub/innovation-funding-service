@@ -5,6 +5,7 @@
     </head>
 
     <body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+        <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -12,9 +13,9 @@
             <th:block th:include="fragments/layout :: main-content-start" />
             <th:block th:include="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" th:remove="tag"></th:block>
 
-    <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
-        <th:block th:insert="fragments/layout :: page-title " th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge '" />
-    </th:block>
+            <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <th:block th:if="${ineligibility.ineligible}">
         <h2 class="heading-small">Removed by</h2>
@@ -36,12 +37,10 @@
                     <p>Are you sure that you wish to reinstate this application?</p>
                     <p>It will be added to applications requiring assessment, and will require assessors to be assigned to it.</p>
 
-                    <hr>
+                    <hr />
 
-                    <div class="alignright-button">
-                        <button class="js-close buttonlink" type="button">Cancel</button>
-                        <button class="button" type="submit">Reinstate application</button>
-                    </div>
+                    <button class="button" type="submit">Reinstate application</button>
+                    <button class="js-close buttonlink" type="button">Cancel</button>
                 </div>
             </form>
         </div>
@@ -51,7 +50,7 @@
                   method="post" enctype="multipart/form-data"
                   th:object="${form}" class="form-serialize-js section-overview">
 
-                <th:block th:include="fragments/application :: application-summary" />
+                <th:block th:include="fragments/application :: application-summary (isApplicant = false)" />
             </form>
 
             <div class="extra-margin">
@@ -79,7 +78,7 @@
                 </th:block>
             </th:block>
 
-            <div class="collapsible collapsible-eligibility">
+            <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED}" class="extra-margin collapsible collapsible-eligibility">
                 <h2>Mark application as ineligible</h2>
                 <div>
                     <form th:action="@{/competition/{competitionId}/application/{applicationId}/markIneligible(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" th:object="${form}">

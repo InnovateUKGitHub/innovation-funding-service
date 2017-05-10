@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -23,7 +22,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,15 +35,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
-import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntry;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
@@ -64,6 +58,7 @@ public class CompetitionSetupController {
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
     public static final String COMPETITION_NAME_KEY = "competitionName";
     public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
+    public static final Long OPEN_SECTOR_ID = 0L;
 
     @Autowired
     private CompetitionService competitionService;
@@ -73,9 +68,6 @@ public class CompetitionSetupController {
 
     @Autowired
     private CategoryRestService categoryRestService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -173,19 +165,14 @@ public class CompetitionSetupController {
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.fromPath(subsectionPath);
 
-        List<String> errors = new ArrayList<>();
         try {
-            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSubsection(
+            competitionSetupService.autoSaveCompetitionSetupSubsection(
                     competition,
                     section, subsection,
                     fieldName, value,
-                    Optional.ofNullable(objectId)
-                    ).getErrors()
-            );
-
+                    Optional.ofNullable(objectId));
             return createJsonObjectNode(true);
         } catch (Exception e) {
-            errors.add(e.getMessage());
             return createJsonObjectNode(false);
         }
     }
@@ -205,32 +192,16 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
-        List<String> errors = new ArrayList<>();
         try {
-            errors = toStringList(competitionSetupService.autoSaveCompetitionSetupSection(
-                    competition,
+            competitionSetupService.autoSaveCompetitionSetupSection(competition,
                     section,
                     fieldName,
                     value,
-                    Optional.ofNullable(objectId)
-            ).getErrors());
-
+                    Optional.ofNullable(objectId));
             return createJsonObjectNode(true);
         } catch (Exception e) {
-            errors.add(e.getMessage());
             return createJsonObjectNode(false);
         }
-    }
-
-    private List<String> toStringList(List<Error> errors) {
-        return errors
-                .stream()
-                .map(this::lookupErrorMessage)
-                .collect(toList());
-    }
-
-    private String lookupErrorMessage(Error e) {
-        return lookupErrorMessageResourceBundleEntry(messageSource, e);
     }
 
     @PostMapping(value = "/{competitionId}/section/initial", params = "unrestricted")
@@ -360,7 +331,12 @@ public class CompetitionSetupController {
     @GetMapping("/getInnovationArea/{innovationSectorId}")
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
-        return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
+
+        if (OPEN_SECTOR_ID.equals(innovationSectorId)) {
+            return categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+        } else {
+            return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
+        }
     }
 
     /* AJAX Function */
@@ -384,6 +360,11 @@ public class CompetitionSetupController {
         if (competition.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
+
+        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+            return "redirect:/competition/setup/" + competition.getId();
+        }
+
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPath();
         Supplier<String> failureView = () -> {
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
@@ -418,7 +399,7 @@ public class CompetitionSetupController {
                                                   CompetitionResource competitionResource,
                                                   Model model) {
         if (section == CompetitionSetupSection.INITIAL_DETAILS &&
-                competitionResource.getSectionSetupStatus().containsKey(section)) {
+                competitionResource.isInitialDetailsComplete()) {
             model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
     }

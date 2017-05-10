@@ -13,7 +13,6 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +26,10 @@ import org.springframework.validation.Validator;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -44,6 +46,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 import static org.innovateuk.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -80,9 +84,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void setUp() {
         super.setUp();
 
-        when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Admin").build()));
+        when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(newUserResource().withFirstName("Comp").withLastName("Admin").build(1));
 
-        when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Technologist").build()));
+        when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(newUserResource().withFirstName("Comp").withLastName("Technologist").build(1));
 
         List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource()
                 .withName("A Innovation Sector")
@@ -101,7 +105,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withId(1L)
                 .withName("Comptype with stateAid")
                 .withStateAid(true)
-                .withCompetitions(asList(COMPETITION_ID))
+                .withCompetitions(singletonList(COMPETITION_ID))
                 .build(1);
         when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypeResources);
     }
@@ -229,8 +233,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 eq(value),
                 eq(Optional.of(objectId)))
         ).thenReturn(serviceFailure(fieldError(OPENINGDATE_FIELDNAME, value, errorKey)));
-
-        when(messageSource.getMessage(anyString(), anyObject(), any(Locale.class))).thenReturn("Please enter a future date");
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/saveFormElement")
                 .param("fieldName", fieldName)
@@ -548,8 +550,35 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
+    public void submitSectionDetails_redirectsIfInitialDetailsIncomplete() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        List<CompetitionSetupSection> sections = asList(
+                CompetitionSetupSection.ADDITIONAL_INFO,
+                CompetitionSetupSection.ELIGIBILITY,
+                CompetitionSetupSection.MILESTONES,
+                CompetitionSetupSection.APPLICATION_FORM,
+                CompetitionSetupSection.ASSESSORS
+        );
+
+        for (CompetitionSetupSection section : sections) {
+            mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/" + section.getPath()))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(redirectedUrl("/competition/setup/" + competition.getId()));
+        }
+    }
+
+    @Test
     public void submitSectionEligibilityWithErrors() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -565,6 +594,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -589,6 +619,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -616,6 +647,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withBudgetCode("b123")
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withFunders(CompetitionFundersFixture.getTestCoFunders())
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -689,7 +721,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void testSubmitAssessorsSectionDetailsWithErrors() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -705,6 +740,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -721,7 +757,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void testSubmitAssessorsSectionDetailsWithInvalidAssessorCount() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -737,7 +776,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -753,7 +795,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay_Bignumber() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -769,7 +814,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay_NegativeNumber() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 

@@ -143,12 +143,16 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
+
         Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+        if (!isSubmissionAllowed) {
+            return "redirect:/project/" + projectId + "/details";
+        }
 
         model.addAttribute("projectId", projectId);
         model.addAttribute("applicationId", project.getApplication());
+        model.addAttribute("projectName", project.getName());
         model.addAttribute("currentUser", loggedInUser);
-        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
         return "project/confirm-project-details";
     }
 

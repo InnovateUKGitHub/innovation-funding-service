@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetu
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,33 +49,33 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Autowired
 	public void setCompetitionSetupFormPopulators(Collection<CompetitionSetupFormPopulator> populators) {
-		formPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToFill(), Function.identity()));
+		formPopulators = populators.stream().collect(Collectors.toMap(CompetitionSetupFormPopulator::sectionToFill, Function.identity()));
 	}
 
     @Autowired
     public void setCompetitionSetupSubsectionFormPopulators(Collection<CompetitionSetupSubsectionFormPopulator> populators) {
-        subsectionFormPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToFill(), Function.identity()));
+        subsectionFormPopulators = populators.stream().collect(Collectors.toMap(CompetitionSetupSubsectionFormPopulator::sectionToFill, Function.identity()));
     }
 
 	@Autowired
     public void setCompetitionSetupSectionSavers(Collection<CompetitionSetupSectionSaver> savers) {
-        sectionSavers = savers.stream().collect(Collectors.toMap(p -> p.sectionToSave(), Function.identity()));
+        sectionSavers = savers.stream().collect(Collectors.toMap(CompetitionSetupSaver::sectionToSave, Function.identity()));
     }
 
     @Autowired
     public void setCompetitionSetupSubsectionSavers(Collection<CompetitionSetupSubsectionSaver> savers) {
-        subsectionSavers = savers.stream().collect(Collectors.toMap(p -> p.subsectionToSave(), Function.identity()));
+        subsectionSavers = savers.stream().collect(Collectors.toMap(CompetitionSetupSubsectionSaver::subsectionToSave, Function.identity()));
     }
 
 	@Autowired
 	public void setCompetitionSetupSectionModelPopulators(Collection<CompetitionSetupSectionModelPopulator> populators) {
-		modelPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToPopulateModel(), Function.identity()));
+		modelPopulators = populators.stream().collect(Collectors.toMap(CompetitionSetupSectionModelPopulator::sectionToPopulateModel, Function.identity()));
 	}
 
     @Autowired
     public void setCompetitionSetupSubsectionModelPopulators(Collection<CompetitionSetupSubsectionModelPopulator> populators) {
-        subsectionModelPopulators = populators.stream().collect(Collectors.toMap(p -> p.sectionToPopulateModel(), Function.identity()));
-    }
+        subsectionModelPopulators = populators.stream().collect(Collectors.toMap(CompetitionSetupSubsectionModelPopulator::sectionToPopulateModel, Function.identity()));
+	}
 
 	@Override
     public void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,
@@ -138,8 +139,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                                                                String value,
                                                                Optional<Long> objectId) {
         checkCompetitionInitialDetailsComplete(competitionResource, section);
+		checkIfInitialDetailsFieldIsRestricted(competitionResource, section, fieldName);
 
-        CompetitionSetupSectionSaver saver = sectionSavers.get(section);
+		CompetitionSetupSectionSaver saver = sectionSavers.get(section);
 		CompetitionSetupFormPopulator populator = formPopulators.get(section);
 		if(saver == null || populator == null) {
 			LOG.error("unable to save section " + section);
@@ -210,6 +212,15 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     private void checkCompetitionInitialDetailsComplete(CompetitionResource competitionResource, CompetitionSetupSection section) {
         if (!competitionResource.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
             throw new IllegalStateException("'Initial Details' section must be completed first");
+        }
+    }
+
+    private void checkIfInitialDetailsFieldIsRestricted(CompetitionResource competitionResource, CompetitionSetupSection competitionSetupSection, String fieldName) {
+        if (competitionResource.isInitialDetailsComplete() &&
+                competitionSetupSection == CompetitionSetupSection.INITIAL_DETAILS) {
+            if (fieldName.equals("competitionTypeId") || fieldName.equals("openingDate")) {
+                throw new IllegalStateException("Cannot update an initial details field that is disabled");
+            }
         }
     }
 
