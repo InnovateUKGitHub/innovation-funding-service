@@ -175,42 +175,6 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void searchFeedbackRequiredByCompetitionId() throws Exception {
-        long competitionId = 3L;
-        int page = 6;
-
-        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-
-        when(applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE)).thenReturn(serviceSuccess(resource));
-
-        mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/feedback-required",competitionId)
-                .param("page",Integer.toString(page)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
-
-        verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE);
-    }
-
-    @Test
-    public void searchFeedbackRequiredByCompetitionIdWithSortField() throws Exception {
-        long competitionId = 3L;
-        int page = 6;
-        String sort = "id";
-
-        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-
-        when(applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE)).thenReturn(serviceSuccess(resource));
-
-        mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/feedback-required",competitionId)
-                .param("page",Integer.toString(page))
-                .param("sort", sort))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
-
-        verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, sort, page, PAGE_SIZE);
-    }
-
-    @Test
     public void searchWithFundingDecisionByCompetitionId() throws Exception {
         long competitionId = 3L;
         int page = 6;

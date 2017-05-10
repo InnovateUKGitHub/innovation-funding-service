@@ -143,7 +143,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
     @Test
     public void getApplicationAggregateScores() throws Exception {
         long applicationId = 7;
-        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(5, 3, Collections.emptyMap(), 20L);
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(true, 5, 3, Collections.emptyMap(), 20L);
 
         when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(expected));
 

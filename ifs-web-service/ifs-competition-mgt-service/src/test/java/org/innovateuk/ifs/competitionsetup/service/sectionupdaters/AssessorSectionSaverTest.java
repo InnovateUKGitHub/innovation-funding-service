@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.form.AssessorsForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
@@ -13,11 +14,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 
+import static org.innovateuk.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AssessorSectionSaverTest {
@@ -37,11 +39,19 @@ public class AssessorSectionSaverTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
 
-		saver.saveSection(competition, competitionSetupForm);
+        List<AssessorCountOptionResource> assessorCounts = newAssessorCountOptionResource()
+                .withAssessorOptionName("1", "3", "5")
+                .withAssessorOptionValue(1, 3, 5)
+                .build(3);
+
+        when(competitionService.getAssessorOptionsForCompetitionType(competition.getCompetitionType())).thenReturn(assessorCounts);
+
+        saver.saveSection(competition, competitionSetupForm);
 
 		assertEquals(Integer.valueOf(1), competition.getAssessorCount());
 		assertEquals(BigDecimal.TEN, competition.getAssessorPay());
 
+        verify(competitionService).getAssessorOptionsForCompetitionType(competition.getCompetitionType());
 		verify(competitionService).update(competition);
 	}
 
@@ -75,9 +85,17 @@ public class AssessorSectionSaverTest {
 				.withFundersPanelDate(tomorrow)
 				.build();
 
+        List<AssessorCountOptionResource> assessorCounts = newAssessorCountOptionResource()
+                .withAssessorOptionName("1", "3", "5")
+                .withAssessorOptionValue(1, 3, 5)
+                .build(3);
+
+		when(competitionService.getAssessorOptionsForCompetitionType(competition.getCompetitionType())).thenReturn(assessorCounts);
+
 		saver.saveSection(competition, assessorsForm);
 
 		ArgumentCaptor<CompetitionResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionResource.class);
+		verify(competitionService).getAssessorOptionsForCompetitionType(competition.getCompetitionType());
 		verify(competitionService).update(argumentCaptor.capture());
 
 		assertEquals(oldAssessorPay, argumentCaptor.getValue().getAssessorPay());

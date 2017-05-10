@@ -463,26 +463,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertEquals(resource, result.getSuccessObject());
     }
 
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void findByCompetitionFeedbackRequiredApplications() throws Exception {
-
-        Page<Application> page = mock(Page.class);
-
-        ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
-        when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
-
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(eq(COMP_ID), eq(asLinkedSet(APPROVED.getBackingState(), REJECTED.getBackingState())), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
-
-        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
-
-        assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(resource, result.getSuccessObject());
-    }
-
-
     @SuppressWarnings("unchecked")
     @Test
     public void findByCompetitionWithFundingDecisionApplications() throws Exception {

@@ -177,28 +177,6 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         assertTrue(result.isSuccess());
         assertEquals(responseBody, result.getSuccessObject());
     }
-    
-    @Test
-    public void testFindFeedbackRequiredpplicationsByCompetitionWithoutSortField() {
-    	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/feedback-required?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
-
-        RestResult<ApplicationSummaryPageResource> result = service.getFeedbackRequiredApplications(123L, null, 6, 20, null);
-
-        assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
-    }
-    
-    @Test
-    public void testFindFeedbackRequiredApplicationsByCompetitionWithSortField() {
-        ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/feedback-required?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
-
-        RestResult<ApplicationSummaryPageResource> result = service.getFeedbackRequiredApplications(123L, "id", 6, 20, null);
-
-        assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
-    }
 
     @Test
     public void testgetWithFundingDecisionApplications() {

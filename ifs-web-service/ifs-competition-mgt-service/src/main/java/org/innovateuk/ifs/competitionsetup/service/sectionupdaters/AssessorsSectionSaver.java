@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
@@ -34,10 +35,16 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 		AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
 
 		if(!sectionToSave().preventEdit(competition)) {
-			setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm);
-			setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm);
+			if(competitionService.getAssessorOptionsForCompetitionType(competition.getCompetitionType()).stream().anyMatch(assessorOption -> assessorsForm.getAssessorCount().equals(assessorOption.getOptionValue()))) {
+                setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm);
+                setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm);
 
-			return competitionService.update(competition);
+                return competitionService.update(competition);
+            } else {
+			    return serviceFailure(fieldError("assessorCount",
+                        assessorsForm.getAssessorCount(),
+                        "competition.setup.invalid.assessor.count", (Object) null));
+            }
 		}
 		else {
 			return serviceFailure(singletonList(new Error("COMPETITION_NOT_EDITABLE", HttpStatus.INTERNAL_SERVER_ERROR)));

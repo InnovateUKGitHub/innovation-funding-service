@@ -134,17 +134,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
-            Long competitionId, String sortBy, int pageIndex, int pageSize) {
-        return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(
-                        competitionId, FUNDING_DECISIONS_MADE_STATUSES, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndAssessorFeedbackFileEntryIsNull(
-                        competitionId, FUNDING_DECISIONS_MADE_STATUSES));
-
-    }
-
-    @Override
     public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(
             long competitionId,
             String sortBy,
