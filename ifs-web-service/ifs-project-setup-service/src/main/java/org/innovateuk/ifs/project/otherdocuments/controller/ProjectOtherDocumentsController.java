@@ -60,7 +60,7 @@ public class ProjectOtherDocumentsController {
         return "project/other-documents";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'SUBMIT_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {

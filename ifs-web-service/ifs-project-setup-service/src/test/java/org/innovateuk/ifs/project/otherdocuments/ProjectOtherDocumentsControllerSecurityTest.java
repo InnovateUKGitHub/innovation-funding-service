@@ -58,11 +58,6 @@ public class ProjectOtherDocumentsControllerSecurityTest extends BaseProjectSetu
         assertSecured(() -> classUnderTest.uploadExploitationPlanFile(123L, null, null, null, null, null));
     }
 
-    @Test
-    public void testViewConfirmDocumentsPage() {
-        assertSecured(() -> classUnderTest.viewConfirmDocumentsPage(123L, null, null));
-    }
-
     @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.partnerCanAccessOtherDocumentsSection(eq(123L), isA(UserResource.class));
