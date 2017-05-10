@@ -3,17 +3,21 @@ package org.innovateuk.ifs.application.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
@@ -156,5 +160,25 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         // now run the method under test
         Integer actualCount = service.getAssignedQuestionsCount(applicationId, assigneeId).getSuccessObject();
         assertEquals(actualCount, Integer.valueOf(count));
+    }
+
+    @Test
+    public void markAsIneligible() {
+        long applicationId = 123L;
+        IneligibleOutcomeResource reason = new IneligibleOutcomeResource("reason");
+        String expectedUrl = applicationRestURL + "/" + applicationId + "/ineligible";
+
+        setupPostWithRestResultExpectations(expectedUrl, reason, HttpStatus.OK);
+
+        service.markAsIneligible(applicationId, reason);
+    }
+
+    @Test
+    public void informIneligible() {
+        long applicationId = 1L;
+        ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
+
+        setupPostWithRestResultExpectations(applicationRestURL + "/informIneligible/" + applicationId, Void.class, applicationIneligibleSendResource, null, OK);
+        service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccessObjectOrThrowException();
     }
 }

@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -463,7 +462,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long organisationId = 2L;
         Long costId = 3L;
 
-        when(projectFinanceRowRestService.delete(costId)).thenReturn(restSuccess());
+        when(projectFinanceRowRestService.delete(projectId, organisationId, costId)).thenReturn(restSuccess());
         mockMvc.perform(
                 get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/remove_cost/{costId}", projectId, organisationId, costId)).
                 andExpect(status().isOk());;

@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -20,6 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/application")
 public class ApplicationController {
+
+    @Autowired
+    private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
     @Autowired
     private ApplicationService applicationService;
@@ -53,7 +55,7 @@ public class ApplicationController {
 
     @PutMapping("/updateApplicationState")
     public RestResult<Void> updateApplicationState(@RequestParam("applicationId") final Long id,
-                                                    @RequestParam("state") final ApplicationState state) {
+                                                   @RequestParam("state") final ApplicationState state) {
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationState(id, state);
 
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {
@@ -63,7 +65,6 @@ public class ApplicationController {
 
         return updateStatusResult.toPutResponse();
     }
-
 
     @GetMapping("/applicationReadyForSubmit/{applicationId}")
     public RestResult<Boolean> applicationReadyForSubmit(@PathVariable("applicationId") final Long applicationId) {
@@ -88,5 +89,19 @@ public class ApplicationController {
         ServiceResult<ApplicationResource> applicationResult =
                 applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
         return applicationResult.toPostCreateResponse();
+    }
+
+    @PostMapping("/{applicationId}/ineligible")
+    public RestResult<Void> markAsIneligible(@PathVariable("applicationId") long applicationId,
+                                             @RequestBody IneligibleOutcomeResource reason) {
+        return applicationService
+                .markAsIneligible(applicationId, ineligibleOutcomeMapper.mapToDomain(reason))
+                .toPostWithBodyResponse();
+    }
+
+    @PostMapping("/informIneligible/{applicationId}")
+    public RestResult<Void> informIneligible(@PathVariable("applicationId") final long applicationId,
+                                             @RequestBody ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+        return applicationService.informIneligible(applicationId, applicationIneligibleSendResource).toPostResponse();
     }
 }

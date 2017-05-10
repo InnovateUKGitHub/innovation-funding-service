@@ -79,7 +79,7 @@ public class FinanceChecksNotesAddNoteController {
     public String viewNewNote(@PathVariable final Long projectId,
                                @PathVariable final Long organisationId,
                                Model model,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
@@ -102,7 +102,7 @@ public class FinanceChecksNotesAddNoteController {
                             @SuppressWarnings("unused") BindingResult bindingResult,
                             ValidationHandler validationHandler,
                             Model model,
-                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                             HttpServletRequest request,
                             HttpServletResponse response)
     {
@@ -152,7 +152,7 @@ public class FinanceChecksNotesAddNoteController {
                                          @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult,
                                          ValidationHandler validationHandler,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                          HttpServletRequest request,
                                          HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
@@ -185,7 +185,7 @@ public class FinanceChecksNotesAddNoteController {
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
-                                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                                          HttpServletRequest request) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         Optional<ByteArrayResource> content = Optional.empty();
@@ -213,7 +213,7 @@ public class FinanceChecksNotesAddNoteController {
                                    @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
@@ -234,7 +234,7 @@ public class FinanceChecksNotesAddNoteController {
     @GetMapping("/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);

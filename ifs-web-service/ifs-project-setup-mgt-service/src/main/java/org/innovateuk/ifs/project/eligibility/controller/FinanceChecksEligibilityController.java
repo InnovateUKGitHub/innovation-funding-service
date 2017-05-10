@@ -18,7 +18,6 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -115,10 +114,10 @@ public class FinanceChecksEligibilityController {
     @GetMapping
     public String viewEligibility(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
-                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
+                                  @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationForm form,
                                   BindingResult bindingResult,
                                   Model model,
-                                  @ModelAttribute("loggedInUser") UserResource user) {
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
@@ -175,13 +174,13 @@ public class FinanceChecksEligibilityController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")
-    public String addCostRow(@ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
+    public String addCostRow(@ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
                              @PathVariable("projectId") Long projectId,
                              @PathVariable("organisationId") Long organisationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
-                             @ModelAttribute("loggedInUser") UserResource user) {
+                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         Long organisationType = organisationService.getOrganisationById(organisationId).getOrganisationType();
 
         FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
@@ -195,8 +194,10 @@ public class FinanceChecksEligibilityController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping(value = "/remove_cost/{costId}")
     public @ResponseBody
-    String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
-        projectFinanceRowRestService.delete(costId).getSuccessObjectOrThrowException();
+    String removeCostRow(@PathVariable("projectId") Long projectId,
+                         @PathVariable("organisationId") Long organisationId,
+                         @PathVariable("costId") final Long costId) throws JsonProcessingException {
+        projectFinanceRowRestService.delete(projectId, organisationId, costId).getSuccessObjectOrThrowException();
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
@@ -210,7 +211,7 @@ public class FinanceChecksEligibilityController {
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            Model model,
-                                           @ModelAttribute("loggedInUser") UserResource user,
+                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                            HttpServletRequest request) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -274,7 +275,7 @@ public class FinanceChecksEligibilityController {
                                      @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
                                      ValidationHandler validationHandler,
                                      Model model,
-                                     @ModelAttribute("loggedInUser") UserResource user) {
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
@@ -300,7 +301,7 @@ public class FinanceChecksEligibilityController {
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
                                   Model model,
-                                  @ModelAttribute("loggedInUser") UserResource user) {
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -317,7 +318,7 @@ public class FinanceChecksEligibilityController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping("/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser){
+    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser){
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);

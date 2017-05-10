@@ -29,8 +29,8 @@ public class ProjectFinanceRowRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Void> delete(Long costId) {
-        return deleteWithRestResult(costRestURL + "/delete/" + costId);
+    public RestResult<Void> delete(Long projectId, Long organisationId, Long costId) {
+        return deleteWithRestResult(costRestURL + "/" + projectId + "/organisation/" + organisationId + "/delete/" + costId);
     }
 
     @Override

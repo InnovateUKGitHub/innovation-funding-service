@@ -2,8 +2,7 @@ package org.innovateuk.ifs.assessment.invite.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.invite.form.RejectCompetitionForm;
-import org.innovateuk.ifs.assessment.invite.controller.CompetitionInviteController;
+import org.innovateuk.ifs.assessment.invite.form.CompetitionInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.CompetitionInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.populator.RejectCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.invite.viewmodel.CompetitionInviteViewModel;
@@ -75,7 +74,11 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void acceptInvite_loggedIn() throws Exception {
-        mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
+        Boolean accept = true;
+
+        mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite-accept/competition/hash/accept"));
 
@@ -89,6 +92,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         ZonedDateTime deadlineDate = ZonedDateTime.now().plusDays(1);
         ZonedDateTime briefingDate = ZonedDateTime.now().plusDays(2);
         BigDecimal assessorPay = BigDecimal.TEN;
+        Boolean accept = true;
 
         CompetitionInviteResource inviteResource = newCompetitionInviteResource()
                 .withCompetitionName("my competition")
@@ -101,7 +105,9 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
         when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
-        mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
+        mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessor-competition-accept-user-exists-but-not-logged-in"));
@@ -115,10 +121,13 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void acceptInvite_notLoggedInAndNotExistingUser() throws Exception {
         setLoggedInUser(null);
+        Boolean accept = true;
 
         when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(FALSE));
 
-        mockMvc.perform(post(restUrl + "{inviteHash}/accept", "hash"))
+        mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/registration/hash/start"));
 
@@ -178,8 +187,48 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void noDecisionMade() throws Exception {
+        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+
+        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+
+        String comment = RandomStringUtils.random(5001);
+        Boolean accept = false;
+
+        CompetitionInviteForm expectedForm = new CompetitionInviteForm();
+
+        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "acceptInvitation"))
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("rejectionReasons", rejectionReasons))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-competition-invite")).andReturn();
+
+        CompetitionInviteViewModel model = (CompetitionInviteViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals("hash", model.getCompetitionInviteHash());
+        assertEquals("my competition", model.getCompetitionName());
+
+        CompetitionInviteForm form = (CompetitionInviteForm) result.getModelAndView().getModel().get("form");
+
+        BindingResult bindingResult = form.getBindingResult();
+
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("acceptInvitation"));
+        assertEquals("Please indicate your decision.", bindingResult.getFieldError("acceptInvitation").getDefaultMessage());
+
+        verify(competitionInviteRestService).openInvite("hash");
+        verifyNoMoreInteractions(competitionInviteRestService);
+    }
+
+    @Test
     public void rejectInvite() throws Exception {
         String comment = String.join(" ", nCopies(100, "comment"));
+        Boolean accept = false;
 
         CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .with(id(1L))
@@ -187,8 +236,9 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         when(competitionInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
 
-        mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+        mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString())
                 .param("rejectReason", "1")
                 .param("rejectComment", comment))
                 .andExpect(status().is3xxRedirection())
@@ -200,43 +250,48 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void rejectInvite_noReason() throws Exception {
+        Boolean accept = false;
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
 
-        when(competitionInviteRestService.getInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         String comment = String.join(" ", nCopies(100, "comment"));
 
-        RejectCompetitionForm expectedForm = new RejectCompetitionForm();
+        CompetitionInviteForm expectedForm = new CompetitionInviteForm();
+        expectedForm.setAcceptInvitation(accept);
         expectedForm.setRejectComment(comment);
 
-        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString())
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("rejectionReasons", rejectionReasons))
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessor-competition-reject-confirm")).andReturn();
+                .andExpect(view().name("assessor-competition-invite")).andReturn();
 
-        RejectCompetitionViewModel model = (RejectCompetitionViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionInviteViewModel model = (CompetitionInviteViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals("hash", model.getCompetitionInviteHash());
         assertEquals("my competition", model.getCompetitionName());
 
-        verify(competitionInviteRestService).getInvite("hash");
+        verify(competitionInviteRestService).openInvite("hash");
         verifyNoMoreInteractions(competitionInviteRestService);
     }
 
     @Test
     public void rejectInvite_noReasonComment() throws Exception {
+        Boolean accept = false;
         CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .with(id(1L))
                 .build(), null);
 
         when(competitionInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
 
-        mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+        mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString())
                 .param("rejectReason", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
@@ -249,16 +304,19 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void rejectInvite_exceedsCharacterSizeLimit() throws Exception {
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
 
-        when(competitionInviteRestService.getInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         String comment = RandomStringUtils.random(5001);
+        Boolean accept = false;
 
-        RejectCompetitionForm expectedForm = new RejectCompetitionForm();
+        CompetitionInviteForm expectedForm = new CompetitionInviteForm();
+        expectedForm.setAcceptInvitation(accept);
         expectedForm.setRejectReason(newRejectionReasonResource().with(id(1L)).build());
         expectedForm.setRejectComment(comment);
 
-        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString())
                 .param("rejectReason", "1")
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
@@ -267,14 +325,14 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("rejectionReasons", rejectionReasons))
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessor-competition-reject-confirm")).andReturn();
+                .andExpect(view().name("assessor-competition-invite")).andReturn();
 
-        RejectCompetitionViewModel model = (RejectCompetitionViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionInviteViewModel model = (CompetitionInviteViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals("hash", model.getCompetitionInviteHash());
         assertEquals("my competition", model.getCompetitionName());
 
-        RejectCompetitionForm form = (RejectCompetitionForm) result.getModelAndView().getModel().get("form");
+        CompetitionInviteForm form = (CompetitionInviteForm) result.getModelAndView().getModel().get("form");
 
         BindingResult bindingResult = form.getBindingResult();
 
@@ -285,7 +343,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        verify(competitionInviteRestService).getInvite("hash");
+        verify(competitionInviteRestService).openInvite("hash");
         verifyNoMoreInteractions(competitionInviteRestService);
     }
 
@@ -293,16 +351,19 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     public void rejectInvite_exceedsWordLimit() throws Exception {
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
 
-        when(competitionInviteRestService.getInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         String comment = String.join(" ", nCopies(101, "comment"));
+        Boolean accept = false;
 
-        RejectCompetitionForm expectedForm = new RejectCompetitionForm();
+        CompetitionInviteForm expectedForm = new CompetitionInviteForm();
+        expectedForm.setAcceptInvitation(accept);
         expectedForm.setRejectReason(newRejectionReasonResource().with(id(1L)).build());
         expectedForm.setRejectComment(comment);
 
-        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/reject", "hash")
+        MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString())
                 .param("rejectReason", "1")
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
@@ -311,14 +372,14 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("rejectionReasons", rejectionReasons))
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessor-competition-reject-confirm")).andReturn();
+                .andExpect(view().name("assessor-competition-invite")).andReturn();
 
-        RejectCompetitionViewModel model = (RejectCompetitionViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionInviteViewModel model = (CompetitionInviteViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals("hash", model.getCompetitionInviteHash());
         assertEquals("my competition", model.getCompetitionName());
 
-        RejectCompetitionForm form = (RejectCompetitionForm) result.getModelAndView().getModel().get("form");
+        CompetitionInviteForm form = (CompetitionInviteForm) result.getModelAndView().getModel().get("form");
 
         BindingResult bindingResult = form.getBindingResult();
 
@@ -329,30 +390,32 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        verify(competitionInviteRestService).getInvite("hash");
+        verify(competitionInviteRestService).openInvite("hash");
         verifyNoMoreInteractions(competitionInviteRestService);
     }
 
     @Test
     public void rejectInvite_hashNotExists() throws Exception {
         String comment = String.join(" ", nCopies(100, "comment"));
+        Boolean accept = false;
 
         CompetitionRejectionResource competitionRejectionResource = new CompetitionRejectionResource(newRejectionReasonResource()
                 .with(id(1L))
                 .build(), comment);
 
         when(competitionInviteRestService.rejectInvite("notExistHash", competitionRejectionResource)).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
-        when(competitionInviteRestService.getInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
+        when(competitionInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
 
-        mockMvc.perform(post(restUrl + "{inviteHash}/reject", "notExistHash")
+        mockMvc.perform(post(restUrl + "{inviteHash}/decision", "notExistHash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("acceptInvitation", accept.toString())
                 .param("rejectReason", "1")
                 .param("rejectComment", comment))
                 .andExpect(status().isNotFound());
 
         InOrder inOrder = inOrder(competitionInviteRestService);
         inOrder.verify(competitionInviteRestService).rejectInvite("notExistHash", competitionRejectionResource);
-        inOrder.verify(competitionInviteRestService).getInvite("notExistHash");
+        inOrder.verify(competitionInviteRestService).openInvite("notExistHash");
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -362,38 +425,5 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-competition-reject"))
                 .andReturn();
-    }
-
-    @Test
-    public void rejectInviteConfirm() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
-
-        when(competitionInviteRestService.getInvite("hash")).thenReturn(restSuccess(inviteResource));
-
-        RejectCompetitionForm expectedForm = new RejectCompetitionForm();
-
-        MvcResult result = mockMvc.perform(get(restUrl + "{inviteHash}/reject/confirm", "hash"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attribute("rejectionReasons", rejectionReasons))
-                .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessor-competition-reject-confirm"))
-                .andReturn();
-
-        RejectCompetitionViewModel model = (RejectCompetitionViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals("hash", model.getCompetitionInviteHash());
-        assertEquals("my competition", model.getCompetitionName());
-
-        verify(competitionInviteRestService).getInvite("hash");
-    }
-
-    @Test
-    public void rejectInviteConfirm_hashNotExists() throws Exception {
-        when(competitionInviteRestService.getInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
-        mockMvc.perform(get(restUrl + "{inviteHash}/reject/confirm", "notExistHash"))
-                .andExpect(status().isNotFound());
-
-        verify(competitionInviteRestService).getInvite("notExistHash");
     }
 }

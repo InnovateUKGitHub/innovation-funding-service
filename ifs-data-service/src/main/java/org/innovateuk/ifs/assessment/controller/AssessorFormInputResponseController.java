@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -26,12 +27,12 @@ public class AssessorFormInputResponseController {
     private FormInputRepository formInputRepository;
 
     @GetMapping("/assessment/{assessmentId}")
-    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(@PathVariable("assessmentId") Long assessmentId) {
+    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(@PathVariable("assessmentId") long assessmentId) {
         return assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId).toGetResponse();
     }
 
     @GetMapping("/assessment/{assessmentId}/question/{questionId}")
-    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(@PathVariable("assessmentId") Long assessmentId, @PathVariable("questionId") Long questionId) {
+    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(@PathVariable("assessmentId") long assessmentId, @PathVariable("questionId") long questionId) {
         return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).toGetResponse();
     }
 
@@ -51,4 +52,8 @@ public class AssessorFormInputResponseController {
         return assessorFormInputResponseService.getAssessmentAggregateFeedback(applicationId, questionId).toGetResponse();
     }
 
+    @GetMapping("/assessment/{assessmentId}/details")
+    public RestResult<AssessmentDetailsResource> getAssessmentDetails(@PathVariable("assessmentId") long assessmentId) {
+        return assessorFormInputResponseService.getAssessmentDetails(assessmentId).toGetResponse();
+    }
 }

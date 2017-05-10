@@ -9,14 +9,10 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" th:remove="tag"></div>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${model.projectName},size='heading-xlarge'" />
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
-        <h1 class="heading-xlarge">Grant offer letter</h1>
-    </div>
-
-    <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
+    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
 
         <div class="error-summary" th:if="${#fields.hasErrors('*')}">
             <h2 class="heading-medium error-summary-heading">Unable to submit grant offer letter</h2>
@@ -102,7 +98,7 @@
 
             <th:block th:if="${model.isGrantOfferLetterSent()}">
                 <a th:if="${model.isShowSubmitButton()}"
-                   th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)} + '/confirmation'}"
+                   th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
                    data-js-modal="modal-confirm-grant-offer-letter" class="button">Send to Innovate UK</a>
                 <button th:if="${model.isGrantOfferLetterSent() and model.isShowDisabledSubmitButton()}"
                         disabled="disabled" class="button">Send to Innovate UK

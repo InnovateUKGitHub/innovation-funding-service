@@ -21,31 +21,30 @@ public class ThymeleafUtilTest {
     }
 
     @Test
-    public void uriWithQueryString() throws Exception {
+    public void formPostUri() throws Exception {
         final String servletPath = "/application/1/form";
         final String queryString = "test=true,newApplication=true";
-        final String expected = servletPath + "?" + queryString;
 
         final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getServletPath()).thenReturn(servletPath);
         when(request.getQueryString()).thenReturn(queryString);
-        assertEquals(expected, thymeleafUtil.uriWithQueryString(request));
+        assertEquals(servletPath, thymeleafUtil.formPostUri(request));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void uriWithQueryString_null() throws Exception {
-        thymeleafUtil.uriWithQueryString(null);
+    public void formPostUri_null() throws Exception {
+        thymeleafUtil.formPostUri(null);
     }
 
     @Test
-    public void uriWithQueryString_noQueryString() throws Exception {
+    public void formPostUri_noQueryString() throws Exception {
         final String servletPath = "/application/1/form";
 
         final HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getServletPath()).thenReturn(servletPath);
 
 
-        assertEquals(servletPath, thymeleafUtil.uriWithQueryString(request));
+        assertEquals(servletPath, thymeleafUtil.formPostUri(request));
     }
 
     @Test

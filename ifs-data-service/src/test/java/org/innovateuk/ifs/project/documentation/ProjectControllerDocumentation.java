@@ -1,48 +1,46 @@
 package org.innovateuk.ifs.project.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectController;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectDocs.*;
 import static org.innovateuk.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -285,56 +283,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void isOtherDocumentsSubmitAllowed() throws Exception {
-        UserResource userResource = newUserResource()
-                .withId(1L)
-                .withUID("123abc")
-                .build();
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
-
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
-    }
-
-    @Test
-    public void isOtherDocumentsSubmitNotAllowedWhenDocumentsNotFullyUploaded() throws Exception {
-        UserResource userResource = newUserResource()
-                .withId(1L)
-                .withUID("123abc")
-                .build();
-        when(projectServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
-
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
-    }
-
-    @Test
-    public void setPartnerDocumentsSubmittedDate() throws Exception {
-        when(projectServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )));
-    }
-
-
-    @Test
     public void getTeamStatus() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(projectServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
@@ -356,12 +304,12 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         mockMvc.perform(post("/project/{projectId}/invite-project-manager", projectId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
-            .andExpect(status().isOk())
-            .andDo(this.document.snippets(
-                pathParameters(
-                    parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
-                )
-            ));
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
+                        )
+                ));
     }
 
     @Test
@@ -370,17 +318,17 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         InviteProjectResource invite = newInviteProjectResource().build();
         when(projectServiceMock.inviteFinanceContact(projectId, invite)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/invite-finance-contact", projectId)
-            .contentType(APPLICATION_JSON)
-            .content(toJson(invite)))
-            .andExpect(status().isOk())
-            .andDo(this.document.snippets(
-                pathParameters(
-                    parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
-                )
-            ));
+                .contentType(APPLICATION_JSON)
+                .content(toJson(invite)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
+                        )
+                ));
     }
-	
-	@Test
+
+    @Test
     public void getTeamStatusWithFilterByUserId() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
@@ -400,92 +348,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         responseFields(projectTeamStatusResourceFields)));
     }
 
-    @Test
-    public void sendGrantOfferLetter() throws Exception {
-        when(projectServiceMock.sendGrantOfferLetter(123L)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/grant-offer/send", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )));
-    }
-
-    @Test
-    public void isSendGrantOfferLetterAllowed() throws Exception {
-        when(projectServiceMock.isSendGrantOfferLetterAllowed(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/is-send-grant-offer-letter-allowed", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
-    }
-
-    @Test
-    public void isGrantOfferLetterAlreadySent() throws Exception {
-        when(projectServiceMock.isGrantOfferLetterAlreadySent(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/is-grant-offer-letter-already-sent", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
-    }
-
-    @Test
-    public void approveOrRejectSignedGrantOfferLetter() throws Exception{
-        when(projectServiceMock.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED)).thenReturn(ServiceResult.serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/signed-grant-offer-letter/approval/{approvalType}", 123L, ApprovalType.APPROVED))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the signed Grant Offer Letter is being approved/rejected."),
-                                parameterWithName("approvalType").description("Approval or rejection.")
-                        )))
-                .andReturn();
-    }
-
-    @Test
-    public void isSignedGrantOfferLetterApproved() throws Exception{
-        when(projectServiceMock.isSignedGrantOfferLetterApproved(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/signed-grant-offer-letter/approval", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which the approval status of the signed Grant Offer Letter is requested.")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
-    }
-
-    @Test
-    public void getGrantOfferLetterWorkflowState() throws Exception {
-
-        Long projectId = 123L;
-
-        when(projectServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
-
-        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(GOLState.APPROVED)))
-                .andDo(document("project/grant-offer-letter/state/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project for which Grant Offer Letter Workflow state is being retrieved.")
-                        )
-                        )
-                )
-                .andReturn();
-
-        verify(projectServiceMock).getGrantOfferLetterWorkflowState(projectId);
-    }
-
     private ProjectTeamStatusResource buildTeamStatus(){
-        ProjectLeadStatusResource projectLeadStatusResource = newProjectLeadStatusResource().build();
+        ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
 
         projectLeadStatusResource.setName("Nomensa");

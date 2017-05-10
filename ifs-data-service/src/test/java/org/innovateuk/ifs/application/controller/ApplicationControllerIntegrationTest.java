@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -21,6 +19,8 @@ import org.springframework.test.annotation.Rollback;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.*;
 
@@ -177,5 +177,39 @@ public class ApplicationControllerIntegrationTest extends ApplicationSubmissionC
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();
         assertTrue(application.isPresent());
         assertEquals(competitionId, application.get().getCompetition());
+    }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        makeApplicationSubmittable(APPLICATION_ID);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        loginCompAdmin();
+
+        IneligibleOutcomeResource reason = newIneligibleOutcomeResource()
+                .withReason("Reason")
+                .build();
+
+        controller.markAsIneligible(APPLICATION_ID, reason);
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        assertEquals(ApplicationState.INELIGIBLE, applicationAfter.getApplicationState());
+        assertEquals(reason.getReason(), applicationAfter.getIneligibleOutcome().getReason());
+    }
+
+    @Test
+    public void informIneligible() throws Exception {
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        makeApplicationSubmittable(APPLICATION_ID);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        loginCompAdmin();
+        controller.markAsIneligible(APPLICATION_ID, newIneligibleOutcomeResource().build());
+        ApplicationIneligibleSendResource applicationIneligibleSendResource =
+                newApplicationIneligibleSendResource()
+                        .withSubject("Subject")
+                        .withContent("Message")
+                        .build();
+
+        RestResult<Void> result = controller.informIneligible(APPLICATION_ID, applicationIneligibleSendResource);
+        assertTrue(result.isSuccess());
     }
 }

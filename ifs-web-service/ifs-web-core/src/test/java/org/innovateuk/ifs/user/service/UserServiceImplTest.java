@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,19 +14,18 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static junit.framework.Assert.assertEquals;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
-import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
-import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
@@ -105,5 +107,47 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals(expected, response);
 
         verify(userRestService, only()).userHasApplicationForCompetition(userId, competitionId);
+    }
+
+    @Test
+    public void existsAndHasRole() {
+        Long userId = 1L;
+        RoleResource roleResource = newRoleResource()
+                .withType(COMP_ADMIN)
+                .build();
+        UserResource userResource = newUserResource()
+                .withId(userId)
+                .withRolesGlobal(singletonList(roleResource))
+                .build();
+
+        when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
+
+        assertTrue(service.existsAndHasRole(userId, COMP_ADMIN));
+    }
+
+    @Test
+    public void existsAndHasRole_wrongRole() {
+        Long userId = 1L;
+        RoleResource roleResource = newRoleResource()
+                .withType(FINANCE_CONTACT)
+                .build();
+        UserResource userResource = newUserResource()
+                .withId(userId)
+                .withRolesGlobal(singletonList(roleResource))
+                .build();
+
+        when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
+
+        assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
+    }
+
+    @Test
+    public void existsAndHasRole_userNotFound() {
+        Long userId = 1L;
+
+        Error error = CommonErrors.notFoundError(UserResource.class, userId);
+        when(userRestService.retrieveUserById(userId)).thenReturn(restFailure(error));
+
+        assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
     }
 }

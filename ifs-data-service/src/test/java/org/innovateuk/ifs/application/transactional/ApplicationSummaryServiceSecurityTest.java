@@ -37,13 +37,6 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void test_getFeedbackRequiredApplicationSummariesByCompetitionId() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getFeedbackRequiredApplicationSummariesByCompetitionId(1L, null, 0, 20),
-                PROJECT_FINANCE, COMP_ADMIN);
-    }
-
-    @Test
     public void test_getWithFundingDecisionApplicationSummariesByCompetitionId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getWithFundingDecisionApplicationSummariesByCompetitionId(1L, null, 0, 20, empty(), empty(), empty()),
@@ -75,12 +68,6 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
         @Override
         public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
-                Long competitionId, String sortBy, int pageIndex, int pageSize) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
                 Long competitionId, String sortBy, int pageIndex, int pageSize) {
             return null;
         }
