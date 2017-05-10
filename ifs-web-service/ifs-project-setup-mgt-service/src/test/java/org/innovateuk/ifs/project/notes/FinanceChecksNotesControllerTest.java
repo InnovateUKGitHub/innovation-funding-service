@@ -80,19 +80,9 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(Arrays.asList(financeTeamRole)).build();
     UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
 
-
     NoteResource thread;
-    UserResource user1;
-    PostResource firstPost;
-    UserResource user2;
-    PostResource firstResponse;
-
     NoteResource thread2;
-    PostResource firstPost2;
-
     NoteResource thread3;
-    PostResource firstPost1 ;
-    PostResource firstResponse1;
 
     List<NoteResource> notes;
 
@@ -238,15 +228,22 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewComment() throws Exception {
 
+        Cookie formCookie;
+        FinanceChecksNotesAddCommentForm form = new FinanceChecksNotesAddCommentForm();
+        form.setComment("comment");
+        formCookie = createFormCookie(form);
+
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment"))
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
+                .cookie(formCookie))
                 .andExpect(view().name("project/financecheck/notes"))
                 .andReturn();
 
         FinanceChecksNotesViewModel responseViewModel = (FinanceChecksNotesViewModel) result.getModelAndView().getModel().get("model");
+        FinanceChecksNotesAddCommentForm modelForm = (FinanceChecksNotesAddCommentForm) result.getModelAndView().getModel().get("form");
 
         assertEquals("Org1", responseViewModel.getOrganisationName());
         assertEquals("Project1", responseViewModel.getProjectName());
@@ -258,6 +255,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(400, responseViewModel.getMaxNoteWords());
         assertTrue(responseViewModel.isLeadPartnerOrganisation());
         assertEquals(0, responseViewModel.getNewAttachmentLinks().size());
+        assertEquals("comment", modelForm.getComment());
     }
 
     @Test
@@ -265,9 +263,13 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         when(financeCheckServiceMock.saveNotePost(any(PostResource.class), eq(1L))).thenReturn(ServiceResult.serviceSuccess());
 
+        FinanceChecksNotesAddCommentForm formIn = new FinanceChecksNotesAddCommentForm();
+        Cookie formCookie = createFormCookie(formIn);
+
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("comment", "Query text"))
+                .param("comment", "Query text")
+                .cookie(formCookie))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note**"))
                 .andReturn();
 
@@ -281,6 +283,16 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         FinanceChecksNotesAddCommentForm form = (FinanceChecksNotesAddCommentForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query text", form.getComment());
         assertEquals(null, form.getAttachment());
+
+        Optional<Cookie> cookieFound = Arrays.stream(result.getResponse().getCookies())
+                .filter(cookie -> cookie.getName().equals("finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" + noteId))
+                .findAny();
+        assertEquals(true, cookieFound.get().getValue().isEmpty());
+
+        Optional<Cookie> formCookieFound = Arrays.stream(result.getResponse().getCookies())
+                .filter(cookie -> cookie.getName().equals("finance_checks_notes_new_comment_form_" + projectId + "_" + applicantOrganisationId + "_" + noteId))
+                .findAny();
+        assertEquals(true, formCookieFound.get().getValue().isEmpty());
     }
 
     @Test
@@ -307,6 +319,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("comment"));
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("comment").getDefaultMessage());
+
     }
 
     @Test
@@ -383,14 +396,20 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/1/new-comment").
                         file(uploadedFile).
                         param("uploadAttachment", ""))
-                .andExpect(cookie().exists("finance_checks_notes_new_comment_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L))
-                .andExpect(view().name("project/financecheck/notes"))
+                .andExpect(cookie().exists("finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" +1L))
+                .andExpect(cookie().exists("finance_checks_notes_new_comment_form_" + projectId + "_" + applicantOrganisationId + "_" +1L))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment**"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
         expectedAttachmentIds.add(1L);
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_comment_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L));
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" +1L));
+
+        FinanceChecksNotesAddCommentForm expectedForm= new FinanceChecksNotesAddCommentForm();
+        expectedForm.setAttachment(uploadedFile);
+        assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedForm), CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_comment_form_" + projectId + "_" + applicantOrganisationId + "_" +1L));
 
         FinanceChecksNotesAddCommentForm form = (FinanceChecksNotesAddCommentForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getAttachment());
@@ -418,17 +437,26 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         attachmentIds.add(1L);
         Cookie ck = createAttachmentsCookie(attachmentIds);
 
+        FinanceChecksNotesAddCommentForm formIn = new FinanceChecksNotesAddCommentForm();
+        Cookie formCookie = createFormCookie(formIn);
+
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment/cancel")
-                    .cookie(ck))
+                    .cookie(ck)
+                    .cookie(formCookie))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note**"))
                 .andReturn();
 
         Optional<Cookie> cookieFound = Arrays.stream(result.getResponse().getCookies())
-                .filter(cookie -> cookie.getName().equals("finance_checks_notes_new_comment_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L))
+                .filter(cookie -> cookie.getName().equals("finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" +1L))
                 .findAny();
         assertEquals(true, cookieFound.get().getValue().isEmpty());
+
+        Optional<Cookie> formCookieFound = Arrays.stream(result.getResponse().getCookies())
+                .filter(cookie -> cookie.getName().equals("finance_checks_notes_new_comment_form_" + projectId + "_" + applicantOrganisationId + "_" +1L))
+                .findAny();
+        assertEquals(true, formCookieFound.get().getValue().isEmpty());
 
         verify(financeCheckServiceMock).deleteFile(1L);
     }
@@ -448,7 +476,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         attachmentIds.add(1L);
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
-        Cookie cookie = new Cookie("finance_checks_notes_new_comment_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L, encryptedData);
+        Cookie cookie = new Cookie("finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" + 1L, encryptedData);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
                 .cookie(cookie))
                 .andExpect(status().is2xxSuccessful())
@@ -482,26 +510,30 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie cookie = createAttachmentsCookie(attachmentIds);
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment/")
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment/")
                 .param("removeAttachment", "1")
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("comment", "Query"))
-                .andExpect(view().name("project/financecheck/notes"))
+                .andExpect(cookie().exists("finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" + noteId))
+                .andExpect(cookie().exists("finance_checks_notes_new_comment_form_" + projectId + "_" + applicantOrganisationId + "_" + noteId))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment**"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_comment_attachments_"+projectId+"_"+applicantOrganisationId+"_"+ noteId));
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" + noteId));
+
+        FinanceChecksNotesAddCommentForm expectedForm = new FinanceChecksNotesAddCommentForm();
+        expectedForm.setComment("Query");
+        assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedForm), CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_comment_form_" + projectId + "_" + applicantOrganisationId + "_" + noteId));
 
         verify(financeCheckServiceMock).deleteFile(1L);
 
         FinanceChecksNotesAddCommentForm form = (FinanceChecksNotesAddCommentForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getComment());
         assertEquals(null, form.getAttachment());
-
-        FinanceChecksNotesViewModel noteViewModel = (FinanceChecksNotesViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(0, noteViewModel.getNewAttachmentLinks().size());
     }
 
     @Test
@@ -523,25 +555,27 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("comment", "Query"))
-                .andExpect(view().name("project/financecheck/notes"))
+                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment**"))
                 .andReturn();
 
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(attachmentIds), CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_comment_attachments_"+projectId+"_"+applicantOrganisationId+"_"+ noteId));
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" + noteId));
 
         FinanceChecksNotesAddCommentForm form = (FinanceChecksNotesAddCommentForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getComment());
         assertEquals(null, form.getAttachment());
-
-        FinanceChecksNotesViewModel noteViewModel = (FinanceChecksNotesViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(1, noteViewModel.getNewAttachmentLinks().size());
-        assertEquals("name", noteViewModel.getNewAttachmentLinks().get(1L));
     }
 
     private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception{
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
-        return new Cookie("finance_checks_notes_new_comment_attachments_"+projectId+"_"+applicantOrganisationId+"_"+ noteId, encryptedData);
+        return new Cookie("finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" + noteId, encryptedData);
+    }
+
+    private Cookie createFormCookie(FinanceChecksNotesAddCommentForm form) throws Exception {
+        String cookieContent = JsonUtil.getSerializedObject(form);
+        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
+        return new Cookie("finance_checks_notes_new_comment_form_" + projectId + "_" + applicantOrganisationId + "_" + noteId, encryptedData);
     }
 
     @Override
