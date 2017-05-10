@@ -104,19 +104,32 @@ public class FinanceChecksNotesController {
                                                          @PathVariable Long attachmentId,
                                                          @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        Optional<ByteArrayResource> content = Optional.empty();
+        Optional<ByteArrayResource> fileContent = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
 
-        ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
-        if (fileContent.isSuccess()) {
-            content = fileContent.getSuccessObject();
+        ServiceResult<Optional<ByteArrayResource>> downloadResult = null;
+
+        downloadResult = financeCheckService.downloadFile(attachmentId);
+
+        if (downloadResult.isSuccess()) {
+          fileContent = downloadResult.getSuccessObject();
+        }
+        else {
+          try {
+            fileContent = downloadResult.findAndThrowException(downloadResult.getFailure());
+          } catch (Exception e) {
+            if(e.getMessage().contains("GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION")) {
+              return forbiddenRedirectionDueToForbidden();
+            }
+            else throw e;
+          }
         }
         ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
         if (fileInfo.isSuccess()) {
             fileDetails = Optional.of(fileInfo.getSuccessObject());
         }
 
-        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+        return returnFileIfFoundOrThrowNotFoundException(fileContent, fileDetails);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
@@ -404,4 +417,7 @@ public class FinanceChecksNotesController {
         return attachments;
     }
 
+    private ResponseEntity<ByteArrayResource> forbiddenRedirectionDueToForbidden() {
+      return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
+    }
 }
