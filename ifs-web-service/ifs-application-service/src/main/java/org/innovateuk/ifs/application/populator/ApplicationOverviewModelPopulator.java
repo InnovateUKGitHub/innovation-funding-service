@@ -13,8 +13,6 @@ import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -69,9 +67,6 @@ public class ApplicationOverviewModelPopulator {
     private SectionService sectionService;
 
     @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
-
-    @Autowired
     private ProjectService projectService;
 
     @Autowired
@@ -91,12 +86,11 @@ public class ApplicationOverviewModelPopulator {
 
         Integer completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
 
-        FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
 
         return new ApplicationOverviewViewModel(application, projectResource, competition, userOrganisation.orElse(null),
                 completedQuestionsPercentage, yourFinancesSectionId, userViewModel, assignableViewModel, completedViewModel, sectionViewModel,
-                assessorFeedbackViewModel, researchCategories);
+                researchCategories);
     }
     
     private ApplicationOverviewSectionViewModel getSections(CompetitionResource competition) {
@@ -243,23 +237,5 @@ public class ApplicationOverviewModelPopulator {
             organisationId = userOrganisation.get().getId();
         }
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
-    }
-
-    private FileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
-
-        if (!application.hasPublishedAssessorFeedback()) {
-            return null;
-        }
-
-        RestResult<FileEntryResource> fileEntryResult = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
-
-        if (fileEntryResult.isFailure()) {
-            LOG.error("Should have been able to find FileEntry " + application.getAssessorFeedbackFileEntry() +
-                    " for Assessor Feedback for application " + application.getId() + " - returning null");
-            return null;
-        }
-
-        FileEntryResource fileEntry = fileEntryResult.getSuccessObject();
-        return new FileDetailsViewModel(fileEntry);
     }
 }

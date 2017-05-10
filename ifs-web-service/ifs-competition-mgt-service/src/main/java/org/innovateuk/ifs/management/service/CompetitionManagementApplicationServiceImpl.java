@@ -7,13 +7,10 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.AssessorFeedbackRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -34,9 +31,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -69,9 +63,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     @Autowired
     private FileEntryRestService fileEntryRestService;
 
-    @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
-
     @Override
     public String displayApplicationOverview(UserResource user, long competitionId, ApplicationForm form, String origin, MultiValueMap<String, String> queryParams, Model model, ApplicationResource application) {
         form.setAdminMode(true);
@@ -95,9 +86,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application));
-
-        OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
-        model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
         model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, queryParams));
 
@@ -165,20 +153,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                 }).
                 collect(Collectors.toList());
         model.addAttribute("appendices", appendices);
-    }
-
-    private OptionalFileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application, CompetitionResource competition) {
-
-        boolean readonly = !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competition.getCompetitionStatus());
-
-        Long assessorFeedbackFileEntry = application.getAssessorFeedbackFileEntry();
-
-        if (assessorFeedbackFileEntry != null) {
-            RestResult<FileEntryResource> fileEntry = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
-            return OptionalFileDetailsViewModel.withExistingFile(fileEntry.getSuccessObjectOrThrowException(), readonly);
-        } else {
-            return OptionalFileDetailsViewModel.withNoFile(readonly);
-        }
     }
 
     public enum ApplicationOverviewOrigin {
