@@ -30,6 +30,4 @@ public abstract class BaseProjectSetupControllerSecurityTest<ControllerType> ext
                 }
         );
     }
-
-    //protected abstract Consumer<ProjectSetupSectionsPermissionRules> getVerification();
 }
