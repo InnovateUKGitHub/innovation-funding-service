@@ -50,7 +50,7 @@
                   method="post" enctype="multipart/form-data"
                   th:object="${form}" class="form-serialize-js section-overview">
 
-                <th:block th:include="fragments/application :: application-summary (isExternalUser = false)" />
+                <th:block th:include="fragments/application :: application-summary (isApplicant = false)" />
             </form>
 
             <div class="extra-margin">

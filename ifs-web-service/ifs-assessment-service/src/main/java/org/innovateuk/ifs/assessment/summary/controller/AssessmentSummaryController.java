@@ -45,7 +45,7 @@ public class AssessmentSummaryController {
             populateFormWithExistingValues(form, assessment);
         }
         model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessment));
-        model.addAttribute("isExternalUser", false);
+        model.addAttribute("isApplicant", false);
         return "assessment/application-summary";
     }
 

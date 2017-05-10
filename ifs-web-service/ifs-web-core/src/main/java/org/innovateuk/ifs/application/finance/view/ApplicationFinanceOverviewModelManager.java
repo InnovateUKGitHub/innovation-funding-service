@@ -70,7 +70,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
-        model.addAttribute("isExternalUser", true);
+        model.addAttribute("isApplicant", true);
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
