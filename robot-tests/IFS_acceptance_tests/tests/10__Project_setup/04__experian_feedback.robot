@@ -18,7 +18,6 @@ Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
 
 *** Variables ***
 

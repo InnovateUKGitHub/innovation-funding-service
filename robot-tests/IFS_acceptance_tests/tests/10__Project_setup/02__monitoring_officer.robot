@@ -14,7 +14,6 @@ Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
@@ -42,7 +41,7 @@ Status updates correctly for internal user's table
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element   jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok       # Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action   # MO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status  # Bank details are not yet provided by any partner yet
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status          # Bank details are not yet provided by any partner yet
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action   # Finance checks-always action flag for private beta
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(5).status          # Spend Profile
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.waiting  # Other Docs

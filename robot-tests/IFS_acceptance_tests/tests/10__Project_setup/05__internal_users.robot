@@ -17,7 +17,6 @@ Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
 
 *** Variables ***
 
@@ -27,7 +26,7 @@ Resource          PS_Variables.robot
 Other internal users cannot see Bank details or Finance checks
     [Documentation]    INFUND-4903, INFUND-5720
     [Tags]    Experian    HappyPath
-    [Setup]    Log in as user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as user    &{Comp_admin1_credentials}
     # This is added to HappyPath because CompAdmin should NOT have access to Bank details
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
@@ -41,7 +40,7 @@ Other internal users cannot see Bank details or Finance checks
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049, INFUND-5144
     [Tags]
-    [Setup]    log in as a different user    lee.bowman@innovateuk.test    Passw0rd
+    [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer')]
@@ -52,7 +51,7 @@ Project Finance user can see the internal project summary page
 Comp Admin user cannot see the finance check summary page(duplicate)
     [Documentation]    INFUND-4821
     [Tags]
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 Comp Admin user can see the internal project summary page
@@ -67,11 +66,10 @@ Comp Admin user can see the internal project summary page
     Then the user should see the text in the page    All competitions
     [Teardown]    the user goes back to the previous page
 
-
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300
     [Tags]
-    [Setup]  Log in as a different user    lee.bowman@innovateuk.test    Passw0rd
+    [Setup]  Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
     Then the user should see the element    link=${PROJECT_SETUP_COMPETITION_NAME}
     When the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
@@ -94,5 +92,66 @@ Project Finance can see the status of projects in PS
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
     And the user should not see the element  jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.waiting
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
+
+
+*** Keywords ***
+
+all previous sections of the project are completed
+    lead partner selects project manager
+    partners submit their finance contacts
+    partners submit bank details
+    project finance approves bank details
+
+
+lead partner selects project manager
+    guest user log-in                  &{lead_applicant_credentials}
+    the user navigates to the page     ${project_in_setup_details_page}
+    the user clicks the button/link    link=Project details
+    the user sees that the radio button is selected    projectManager    ${STEVE_SMITH_ID}
+    the user selects the radio button    projectManager    projectManager2
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
+partners submit their finance contacts
+    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Katz_Id}
+    the user selects the radio button  financeContact    financeContact1
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    log in as a different user         ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
+    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Meembee_Id}
+    the user selects the radio button  financeContact    financeContact1
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    log in as a different user         ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
+    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Zooveo_Id}
+    the user selects the radio button  financeContact    financeContact1
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
+partners submit bank details
+    partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}
+    partner submits his bank details  ${PS_SP_APPLICATION_PARTNER_EMAIL}
+    partner submits his bank details  ${PS_SP_APPLICATION_ACADEMIC_EMAIL}
+
+partner submits his bank details
+    [Arguments]  ${email}
+    log in as a different user            ${email}    ${short_password}
+    the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
+    the user enters text to a text field  id=bank-acc-number  51406795
+    the user enters text to a text field  id=bank-sort-code  404745
+    the user selects the radio button     addressType    REGISTERED
+    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link       jQuery=.button:contains("Submit")
+
+project finance approves bank details
+    log in as a different user                   &{internal_finance_credentials}
+    proj finance approves partners bank details  ${Katz_Id}
+    proj finance approves partners bank details  ${Meembee_Id}
+    proj finance approves partners bank details  ${Zooveo_Id}
+
+proj finance approves partners bank details
+    [Arguments]  ${id}
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${id}/review-bank-details
+    the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
+    the user clicks the button/link    jQuery=.button:contains("Approve account")
+
+
+
 
 

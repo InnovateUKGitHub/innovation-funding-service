@@ -23,14 +23,12 @@ Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
 
 # Alternative Bank account pair:12345677 - 000004 #
 # Another valid B account pair: 51406795 - 404745 #
 
 # Note that the Bank details scenario where the Partner is not eligible for funding
-# and thus doesn't need to fill in his Bank details, will be tested in the File 01__project_details.robot
-# whith use of project id = 3 TODO
+# is tested in the File 01__project_details.robot
 
 *** Variables ***
 
@@ -162,7 +160,7 @@ Bank details submission
     And the user navigates to the page               ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     Then the user should see the element              jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action
 
-Bank details for Academic
+Submission of bank details for academic user
     [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018, INFUND-8688
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
@@ -175,7 +173,7 @@ Bank details for Academic
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
-    When the user submits the bank account details along with the organisation address     00000123    000004
+    When the user submits the bank account details     00000123    000004
     Then the user views the error response from the stub
     When the user enters text to a text field      name=accountNumber  51406795
     And the user enters text to a text field       name=sortCode  404745
@@ -211,8 +209,8 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.waiting  # Other Docs
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(7).status          # GOL
 
-Bank details for non-lead partner
-    [Documentation]    INFUND-3010, INFUND-6018, INFUND-8688
+User sees error response for invalid bank details for non-lead partner
+    [Documentation]   INFUND-8688
     [Tags]    HappyPath
     #TODO pending due to INFUND-6090  Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
@@ -226,8 +224,12 @@ Bank details for non-lead partner
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
-    When the user submits the bank account details along with the organisation address     00000123    000004
+    When the user submits the bank account details     00000123    000004   # Stub is configured to return error response for these values
     Then the user views the error response from the stub
+
+Non lead partner submits bank details
+    [Documentation]    INFUND-3010, INFUND-6018
+    [Tags]    HappyPath
     When the user enters text to a text field      name=accountNumber  51406795
     Then the user enters text to a text field      name=sortCode  404745
     When the user selects the radio button         addressType  ADD_NEW
@@ -322,15 +324,6 @@ the user submits the bank account details
     the user enters text to a text field    name=sortCode    ${sort_code}
     the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link    jQuery=.button:contains("Submit")
-
-the user submits the bank account details along with the organisation address
-    [Arguments]    ${account_number}    ${sort_code}
-    the user enters text to a text field    name=accountNumber    ${account_number}
-    the user enters text to a text field    name=sortCode    ${sort_code}
-    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
-    the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link     jQuery=.button:contains("Submit")
 
 the user views the error response from the stub
     the user should see the text in the page    Bank details cannot be validated. 
