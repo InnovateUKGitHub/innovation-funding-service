@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class ApplicationAssessmentAggregateResource {
 
+    private boolean scopeAssessed;
     private int totalScope;
     private int inScope;
     private Map<Long, BigDecimal> scores;
@@ -19,11 +20,16 @@ public class ApplicationAssessmentAggregateResource {
     public ApplicationAssessmentAggregateResource() {
     }
 
-    public ApplicationAssessmentAggregateResource(int totalScope, int inScope, Map<Long, BigDecimal> scores, long averagePercentage) {
+    public ApplicationAssessmentAggregateResource(boolean scopeAssessed, int totalScope, int inScope, Map<Long, BigDecimal> scores, long averagePercentage) {
+        this.scopeAssessed = scopeAssessed;
         this.totalScope = totalScope;
         this.inScope = inScope;
         this.scores = scores;
         this.averagePercentage = averagePercentage;
+    }
+
+    public boolean isScopeAssessed() {
+        return scopeAssessed;
     }
 
     public int getTotalScope() {
@@ -43,14 +49,19 @@ public class ApplicationAssessmentAggregateResource {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        ApplicationAssessmentAggregateResource that = (ApplicationAssessmentAggregateResource) o;
+        final ApplicationAssessmentAggregateResource that = (ApplicationAssessmentAggregateResource) o;
 
         return new EqualsBuilder()
+                .append(scopeAssessed, that.scopeAssessed)
                 .append(totalScope, that.totalScope)
                 .append(inScope, that.inScope)
                 .append(averagePercentage, that.averagePercentage)
@@ -61,6 +72,7 @@ public class ApplicationAssessmentAggregateResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(scopeAssessed)
                 .append(totalScope)
                 .append(inScope)
                 .append(scores)

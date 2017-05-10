@@ -494,8 +494,39 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccessObjectOrThrowException();
 
+        assertTrue(scores.isScopeAssessed());
         assertEquals(2, scores.getTotalScope());
         assertEquals(1, scores.getInScope());
+        assertEquals(2, scores.getScores().keySet().size());
+        assertTrue(scores.getScores().containsKey(1L));
+        assertTrue(new BigDecimal("2").equals(scores.getScores().get(1L)));
+        assertTrue(scores.getScores().containsKey(2L));
+        assertTrue(new BigDecimal("6").equals(scores.getScores().get(2L)));
+        assertEquals(48L, scores.getAveragePercentage());
+    }
+
+    @Test
+    public void getApplicationAggregateScores_scopeNotAssessed() {
+        long applicationId = 7;
+
+        List<FormInput> scoreFormInputs = newFormInput()
+                .withType(ASSESSOR_SCORE)
+                .withQuestion(newQuestion().withId(1L, 2L).withAssessorMaximumScore(5, 10).buildArray(2, Question.class))
+                .build(2);
+
+        List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse()
+                .withFormInput(scoreFormInputs.get(0), scoreFormInputs.get(0), scoreFormInputs.get(0),
+                        scoreFormInputs.get(1), scoreFormInputs.get(1), scoreFormInputs.get(1))
+                .withValue("1", "2", "3", "4", "6", "7")
+                .build(6);
+
+        when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetId(applicationId)).thenReturn(assessorFormInputResponses);
+
+        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccessObjectOrThrowException();
+
+        assertFalse(scores.isScopeAssessed());
+        assertEquals(0, scores.getTotalScope());
+        assertEquals(0, scores.getInScope());
         assertEquals(2, scores.getScores().keySet().size());
         assertTrue(scores.getScores().containsKey(1L));
         assertTrue(new BigDecimal("2").equals(scores.getScores().get(1L)));

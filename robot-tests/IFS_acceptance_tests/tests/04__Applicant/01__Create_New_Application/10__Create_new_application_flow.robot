@@ -8,6 +8,8 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...               INFUND-1920 As an applicant once I am accessing my dashboard and clicking on the newly created application for the first time, it will allow me to invite contributors and partners
 ...
 ...               INFUND-9243 Add marketing email option tick box to 'Your details' page in the 'Create your account' journey
+...
+...               INFUND-9336 Create Account - Do not select Business/RTO and press save leads to ISE
 Suite Setup       Delete the emails from both test mailboxes
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -24,6 +26,8 @@ Non registered users CH route
     ...    INFUND-1920
     ...
     ...    INFUND-1785
+    ...
+    ...    INFUND-9336
     [Tags]    HappyPath    SmokeTest
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
@@ -35,6 +39,8 @@ Non registered users CH route
     And the user clicks the button/link    LINK=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And The user should see an error    Please select an organisation type.
     And the user selects the radio button    organisationTypeId    radio-1
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
