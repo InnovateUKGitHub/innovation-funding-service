@@ -61,7 +61,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669  INFUND-1163
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    the guest user opens the browser
-    When Log in as user                             ${test_mailbox_one}+business@gmail.com    Passw0rd123
+    When Log in as user                             ${test_mailbox_one}+business@gmail.com    ${correct_password}
     And the user edits the competition title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
@@ -86,7 +86,6 @@ the user directed to correct dashboaard
     the user clicks the button/link               link=${Application_name}
     the user clicks the button/link               jQuery=a:contains("Begin application")
     the user should see the text in the page      Application overview
-    logout as user
 
 the new application should be visible in the dashboard page
     the user clicks the button/link              link= My dashboard
