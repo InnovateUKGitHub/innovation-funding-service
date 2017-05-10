@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProjectFinanceRowRestService {
     RestResult<ValidationMessages> add(Long projectFinanceId, Long questionId, FinanceRowItem costItem);
     RestResult<ValidationMessages> update(FinanceRowItem costItem);
-    RestResult<Void> delete(Long costId);
+    RestResult<Void> delete(Long projectId, Long organisationId, Long costId);
     RestResult<FinanceRowItem> addWithoutPersisting(Long projectFinanceId, Long questionId);
     RestResult<List<FinanceRowItem>> getCosts(Long projectFinanceId);
     RestResult<FinanceRowItem> findById(Long id);
