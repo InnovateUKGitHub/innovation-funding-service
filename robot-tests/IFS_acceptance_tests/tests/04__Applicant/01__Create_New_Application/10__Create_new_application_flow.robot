@@ -86,6 +86,7 @@ the user directed to correct dashboaard
     the user clicks the button/link               link=${Application_name}
     the user clicks the button/link               jQuery=a:contains("Begin application")
     the user should see the text in the page      Application overview
+    logout as user
 
 the new application should be visible in the dashboard page
     the user clicks the button/link              link= My dashboard
