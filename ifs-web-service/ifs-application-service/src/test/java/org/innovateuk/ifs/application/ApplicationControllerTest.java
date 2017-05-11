@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.application;
 
 import com.google.common.collect.ImmutableMap;
-import org.hamcrest.Matchers;
+import org.hamcrest.*;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.*;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.viewmodel.AssessQuestionFeedbackViewModel;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
@@ -46,8 +47,12 @@ import java.util.stream.Collectors;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResourceBuilder;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
@@ -100,6 +105,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
+    @Mock
+    private ApplicantRestService applicantRestService;
+
+    @Mock
+    private FormInputViewModelGenerator formInputViewModelGenerator;
+
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
@@ -115,6 +126,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
+        ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
+        when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
+        ApplicantSectionResourceBuilder sectionBuilder = newApplicantSectionResourceBuilder().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
+        sectionResources.forEach(sectionResource -> {
+            when(applicantRestService.getSection(anyLong(), anyLong(), eq(sectionResource.getId()))).thenReturn(sectionBuilder.withSection(sectionResource).build());
+        });
+         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
+
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }

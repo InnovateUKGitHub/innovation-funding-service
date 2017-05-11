@@ -9,11 +9,9 @@ import java.util.List;
  * ViewModel for questions in the applications
  */
 public class QuestionViewModel extends AbstractApplicantViewModel<ApplicantQuestionResource> {
-    private QuestionAssignableViewModel questionAssignableViewModel;
 
-    public QuestionViewModel(ApplicantQuestionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, QuestionAssignableViewModel questionAssignableViewModel) {
+    public QuestionViewModel(ApplicantQuestionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
-        this.questionAssignableViewModel = questionAssignableViewModel;
     }
 
 
@@ -23,14 +21,6 @@ public class QuestionViewModel extends AbstractApplicantViewModel<ApplicantQuest
 
     public NavigationViewModel getNavigationViewModel() {
         return navigationViewModel;
-    }
-
-    public QuestionAssignableViewModel getAssignable() {
-        return getQuestionAssignableViewModel();
-    }
-
-    public QuestionAssignableViewModel getQuestionAssignableViewModel() {
-        return questionAssignableViewModel;
     }
 
     public Boolean getIsSection() {

@@ -126,7 +126,6 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         results.trackResult(() -> baseUserService.getUserById(userId), resource::setCurrentUser);
         results.trackResult(() -> applicationService.getApplicationById(applicationId), resource::setApplication);
         results.trackResult(() -> competitionService.getCompetitionById(resource.getApplication().getCompetition()), resource::setCompetition);
-        results.trackResult(() -> usersRolesService.getAssignableProcessRolesByApplicationId(applicationId), resource::setAssignableProcessRoles);
     }
 
     private <R extends AbstractApplicantResource> void mapApplicants(ServiceResults results, R resource, Long applicationId, Long userId) {

@@ -37,9 +37,11 @@
             <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
         </div>
 
-        <div class="question" th:with="formInputViewModel=${model.financialEndYearFormInputViewModel}" th:if="${formInputViewModel != null}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-            <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
-        </div>
+        <th:block th:with="formInputViewModel=${model.financialEndYearFormInputViewModel}">
+            <div class="question" th:if="${formInputViewModel != null}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
+            </div>
+        </th:block>
 
         <fieldset th:unless="${model.financeOverviewRows.isEmpty()}">
             <legend class="heading-medium no-margin-bottom">Financial overview</legend>

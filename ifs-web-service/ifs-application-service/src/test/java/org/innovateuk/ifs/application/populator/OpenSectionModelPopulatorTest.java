@@ -1,13 +1,16 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -17,6 +20,8 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -33,6 +38,8 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResourceBuilder;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -43,7 +50,7 @@ import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -109,14 +116,15 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
 
 
         List<Long> questionResourceList = asList(34L, 35L);
-        SectionResource section = newSectionResource().withChildSections(Collections.emptyList()).withQuestions(questionResourceList).withCompetition(competitionId).build();
+        SectionResource section = newSectionResource().withChildSections(Collections.emptyList()).withQuestions(questionResourceList).withCompetition(competitionId).withType(SectionType.FINANCE).build();
         UserResource user = newUserResource().build();
         CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
         List<SectionResource> allSections = newSectionResource().withCompetition(competitionId).build(5);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
-
-        AbstractSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, organisationId);
+        ApplicantResource applicant = newApplicantResource().withProcessRole(newProcessRoleResource().withUser(user).withRoleName("leadapplicant").build()).withOrganisation(OrganisationResourceBuilder.newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).withId(organisationId).build()).build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenSectionViewModel.class, result.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
@@ -131,48 +139,13 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         assertEquals(user, viewModel.getLeadApplicant());
     }
 
-    @Test
-    public void testPopulateModelWithInvalidObjects() throws Exception {
-        Long organisationId = 245L;
-
-        Long competitionId = Long.MIN_VALUE, applicationId = Long.MAX_VALUE;
-
-        ApplicationResource application = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
-
-        ApplicationForm applicationForm = new ApplicationForm();
-        applicationForm.setApplication(application);
-        applicationForm.setStateAidAgreed(Boolean.TRUE);
-        applicationForm.setTermsAgreed(Boolean.TRUE);
-
-
-        List<Long> questionResourceList = asList(90L);
-        SectionResource section = newSectionResource().withChildSections(Collections.emptyList()).withQuestions(questionResourceList).withCompetition(231L).build();
-        UserResource user = newUserResource().build();
-        CompetitionResource competition = newCompetitionResource().withId(321L).build();
-        List<SectionResource> allSections = newSectionResource().withCompetition(132L).build(0);
-        List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(0);
-        setupServices(competition, application, user, formInputs);
-
-        AbstractSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, organisationId);
-
-        assertEquals(OpenSectionViewModel.class, result.getClass());
-        OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
-
-        assertEquals(null, viewModel.getApplication().getCurrentApplication());
-        assertEquals(null, viewModel.getHasFinanceSection());
-        assertEquals(null, viewModel.getTitle());
-        assertEquals(null, viewModel.getApplication().getCurrentCompetition());
-        assertEquals(null, viewModel.getCurrentSection());
-        assertEquals(null, viewModel.getCurrentSectionId());
-        assertEquals(null, viewModel.getUserIsLeadApplicant());
-        assertEquals(null, viewModel.getLeadApplicant());
-    }
 
     private void setupServices(CompetitionResource competitionResource, ApplicationResource applicationResource, UserResource userResource, List<FormInputResource> formInputs) {
 
         Long organisationId = 245L;
 
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(userService.retrieveUserById(userResource.getId())).thenReturn(userResource);
 
         InviteOrganisationResource inviteOrg1 = new InviteOrganisationResource();
         inviteOrg1.setId(234L);

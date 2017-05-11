@@ -14,7 +14,6 @@ import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -47,7 +46,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -90,6 +89,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         Long organisationId = 3L;
+        Long userId = 1L;
         List<SectionResource> allSections = newSectionResource().build(3);
         SectionResource parentSection = newSectionResource()
                 .withChildSections(simpleMap(allSections, SectionResource::getId)).build();
@@ -106,7 +106,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         allSections.forEach(loopSection -> when(sectionService.getById(loopSection.getId())).thenReturn(loopSection));
 
-        target.addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+        target.addMappedSectionsDetails(model, application, competition, section, userOrganisation, userId);
 
         verify(model).addAttribute(eq("completedSections"), anyMap());
         verify(model).addAttribute(eq("sections"), anyMap());

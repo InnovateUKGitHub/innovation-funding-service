@@ -3,7 +3,6 @@ package org.innovateuk.ifs.applicant.resource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ public abstract class AbstractApplicantResource {
     private UserResource currentUser;
 
     private List<ApplicantResource> applicants = new ArrayList<>();
-
-    private List<ProcessRoleResource> assignableProcessRoles = new ArrayList<>();
 
     public ApplicationResource getApplication() {
         return application;
@@ -69,14 +66,6 @@ public abstract class AbstractApplicantResource {
 
     public void setApplicants(List<ApplicantResource> applicants) {
         this.applicants = applicants;
-    }
-
-    public List<ProcessRoleResource> getAssignableProcessRoles() {
-        return assignableProcessRoles;
-    }
-
-    public void setAssignableProcessRoles(List<ProcessRoleResource> assignableProcessRoles) {
-        this.assignableProcessRoles = assignableProcessRoles;
     }
 
     public Stream<OrganisationResource> allOrganisations() {

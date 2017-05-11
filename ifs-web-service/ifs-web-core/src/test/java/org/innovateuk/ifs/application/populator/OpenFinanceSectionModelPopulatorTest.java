@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
@@ -13,7 +14,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -46,6 +47,7 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResourceBuilder;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
@@ -59,7 +61,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -153,7 +155,8 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
-        AbstractSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisationId());
+        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().build();
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) result;
@@ -195,7 +198,8 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
-        AbstractSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisationId());
+        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().build();
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) result;

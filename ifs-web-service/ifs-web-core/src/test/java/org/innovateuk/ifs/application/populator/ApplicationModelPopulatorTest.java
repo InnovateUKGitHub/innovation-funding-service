@@ -120,7 +120,7 @@ public class ApplicationModelPopulatorTest {
 
         //Verify other model calls
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, form);
-        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+        verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, section, userOrganisation, leadApplicantId);
         verify(applicationSectionAndQuestionModelPopulator).addAssignableDetails(model, application, organisationResource, userId, section, currentQuestionId);
         verify(applicationSectionAndQuestionModelPopulator).addCompletedDetails(model, application, userOrganisation);
         verify(applicationSectionAndQuestionModelPopulator).addSectionDetails(model, section);
