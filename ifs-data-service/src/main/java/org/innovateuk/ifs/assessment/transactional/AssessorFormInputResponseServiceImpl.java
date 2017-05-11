@@ -13,7 +13,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResourc
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
-import org.innovateuk.ifs.category.transactional.CategoryService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
@@ -62,9 +61,6 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
-
-    @Autowired
-    private CategoryService categoryService;
 
     @Autowired
     private QuestionService questionService;
@@ -129,7 +125,12 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 }
             }
         }
-        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope, avgScores, averagePercentage));
+
+        // Infer that assessment of the Scope question is required if there are Scope responses
+        boolean scopeAssessed = totalScope > 0;
+
+        return serviceSuccess(new ApplicationAssessmentAggregateResource(scopeAssessed, totalScope, totalInScope,
+                avgScores, averagePercentage));
     }
 
     private long getAveragePercentage(List<AssessorFormInputResponse> responses) {
@@ -142,7 +143,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {
         return responses.stream()
-                    .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                    .filter(response -> response.getFormInput().getType() == ASSESSOR_SCORE)
                     .collect(
                             Collectors.groupingBy(
                                     x -> x.getFormInput().getQuestion().getId(),

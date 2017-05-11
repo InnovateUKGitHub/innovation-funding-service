@@ -110,17 +110,25 @@
 
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons">
-        <th:block th:if="${model.subFinanceSection}">
+        <th:block th:if="${model.subFinanceSection}"
+                  th:with="markedAsComplete=${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}">
             <div th:unless="${readonly}" class="form-footer">
                 <div class="form-footer__actions">
-                    <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete</button>
-                    <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="buttonlink">Edit</button>
+                    <button id="mark-all-as-complete"
+                            th:unless="${markedAsComplete}"
+                            type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
+                    </button>
+                    <button th:if="${markedAsComplete}"
+                            type="submit" name="mark_section_as_incomplete" class="buttonlink"
+                            th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit
+                    </button>
                 </div>
             </div>
             <div>
-                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.currentSection.getParentSection()})}" class="button-secondary extra-margin">
-                    Return to finances
-                </a>
+                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.currentSection.getParentSection()})}"
+                   class="extra-margin"
+                   th:classappend="${markedAsComplete} ? 'button-secondary' : 'button'"
+                   th:text="${markedAsComplete} ? 'Return to finances' : 'Save and return to finances'" />
             </div>
         </th:block>
     </th:block>
