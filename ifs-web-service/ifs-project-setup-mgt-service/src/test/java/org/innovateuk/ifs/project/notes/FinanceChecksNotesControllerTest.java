@@ -633,7 +633,8 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     }
 
     private Cookie createOriginCookie() throws Exception {
-        String cookieContent = JsonUtil.getSerializedObject(Arrays.asList(projectId, organisationAddressRestService, noteId, loggedInUser.getId()));
+        List<Long> originData = Arrays.asList(projectId, applicantOrganisationId, noteId, loggedInUser.getId());
+        String cookieContent = JsonUtil.getSerializedObject(originData);
         String encryptedContent = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
         return new Cookie("finance_checks_notes_new_comment_origin", encryptedContent);
     }
