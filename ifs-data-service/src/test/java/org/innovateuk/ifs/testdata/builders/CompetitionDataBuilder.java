@@ -347,7 +347,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withApplications(List<UnaryOperator<ApplicationDataBuilder>> applicationDataBuilders) {
-        return with(data -> applicationDataBuilders.forEach(fn -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build()));
+        return with(data -> applicationDataBuilders.forEach(fn ->
+            testService.doWithinTransaction(() -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build())));
     }
 
     public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, FundingType fundingType, String projectSize, List<String> keywords) {
