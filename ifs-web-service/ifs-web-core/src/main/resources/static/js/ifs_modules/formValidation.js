@@ -27,13 +27,17 @@ IFS.core.formValidation = (function () {
           lastname: '#lastName'
         },
         messageInvalid: {
-          lowercase: 'Password must contain at least one lower case letter.',
-          uppercase: 'Password must contain at least one upper case letter.',
-          number: 'Password must contain at least one number.',
-          name: 'Password should not contain either your first or last name.',
-          organisation: 'Password should not contain your organisation name.',
           tooWeak: 'Password is too weak.'
         }
+      },
+      containsLowercase: {
+        messageInvalid: 'Password must contain at least one lower case letter.'
+      },
+      containsUppercase: {
+        messageInvalid: 'Password must contain at least one upper case letter.'
+      },
+      containsNumber: {
+        messageInvalid: 'Password must contain at least one number.'
       },
       email: {
         fields: '[type="email"]:not([readonly])',
@@ -95,19 +99,19 @@ IFS.core.formValidation = (function () {
             IFS.core.formValidation.checkEqualPasswords(true)
         }
       })
-      jQuery('body').on('change ifsValidate', s.passwordPolicy.fields.password, function () { IFS.core.formValidation.checkPasswordPolicy(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.email.fields, function () { IFS.core.formValidation.checkEmail(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.number.fields, function () { IFS.core.formValidation.checkNumber(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.min.fields, function () { IFS.core.formValidation.checkMin(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.max.fields, function () { IFS.core.formValidation.checkMax(jQuery(this), true) })
-      jQuery('body').on('blur change ifsValidate', s.required.fields, function () { IFS.core.formValidation.checkRequired(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.minlength.fields, function () { IFS.core.formValidation.checkMinLength(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.maxlength.fields, function () { IFS.core.formValidation.checkMaxLength(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.minwordslength.fields, function () { IFS.core.formValidation.checkMinWordsLength(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.maxwordslength.fields, function () { IFS.core.formValidation.checkMaxWordsLength(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.tel.fields, function () { IFS.core.formValidation.checkTel(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this), true) })
-      jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this), true) })
+      jQuery('body').on('change ifsValidate', s.passwordPolicy.fields.password, function () { IFS.core.formValidation.checkPasswordPolicy(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.email.fields, function () { IFS.core.formValidation.checkEmail(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.number.fields, function () { IFS.core.formValidation.checkNumber(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.min.fields, function () { IFS.core.formValidation.checkMin(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.max.fields, function () { IFS.core.formValidation.checkMax(jQuery(this)) })
+      jQuery('body').on('blur change ifsValidate', s.required.fields, function () { IFS.core.formValidation.checkRequired(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.minlength.fields, function () { IFS.core.formValidation.checkMinLength(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.maxlength.fields, function () { IFS.core.formValidation.checkMaxLength(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.minwordslength.fields, function () { IFS.core.formValidation.checkMinWordsLength(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.maxwordslength.fields, function () { IFS.core.formValidation.checkMaxWordsLength(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.tel.fields, function () { IFS.core.formValidation.checkTel(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this)) })
 
       jQuery('body').on('change', '[data-set-section-valid]', function () {
         var section = jQuery(this).attr('data-set-section-valid')
@@ -147,64 +151,96 @@ IFS.core.formValidation = (function () {
       }
       return false
     },
-    checkPasswordPolicy: function (field, showMessage) {
+    checkPasswordPolicy: function (field) {
       var password = field.val()
-      var confirmsToPasswordPolicy = true
 
       // we only check for the policies if there is something filled in
       if (password.length) {
-        var upperCaseErrorMessage = IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-uppercase')
-        var lowerCaseErrorMessage = IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-lowercase')
-        var numberErrorMessage = IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-number')
-        var nameErrorMessage = IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-name')
+        var hasUppercase = IFS.core.formValidation.checkFieldContainsUppercase(field)
+        var hasLowercase = IFS.core.formValidation.checkFieldContainsLowercase(field)
+        var hasNumber = IFS.core.formValidation.checkFieldContainsNumber(field)
+        var isMinlength = IFS.core.formValidation.checkMinLength(field)
 
-        var uppercase = /(?=\S*?[A-Z])/
-        if (uppercase.test(password) === false) {
-          if (showMessage) { IFS.core.formValidation.setInvalid(field, upperCaseErrorMessage) }
-          confirmsToPasswordPolicy = false
+        var confirmsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength
+        console.log('hasUppercase:', hasUppercase, 'hasLowercase', hasLowercase, 'hasNumber', hasNumber, 'isMinlength', isMinlength)
+        // onchange clear tooWeakPassword message as this is validated in the back end.
+        IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak'))
+
+        if (confirmsToPasswordPolicy) {
+          field.closest('.form-group').addClass('error')
         } else {
-          if (showMessage) { IFS.core.formValidation.setValid(field, upperCaseErrorMessage) }
+          field.closest('.form-group').removeClass('error')
         }
 
-        var lowercase = /(?=\S*?[a-z])/
-        if (lowercase.test(password) === false) {
-          if (showMessage) { IFS.core.formValidation.setInvalid(field, lowerCaseErrorMessage) }
-          confirmsToPasswordPolicy = false
-        } else {
-          if (showMessage) { IFS.core.formValidation.setValid(field, lowerCaseErrorMessage) }
-        }
-
-        var number = /(?=\S*?[0-9])/
-        if (number.test(password) === false) {
-          if (showMessage) { IFS.core.formValidation.setInvalid(field, numberErrorMessage) }
-          confirmsToPasswordPolicy = false
-        } else {
-          if (showMessage) { IFS.core.formValidation.setValid(field, numberErrorMessage) }
-        }
-
-        var firstname = jQuery(s.passwordPolicy.fields.firstname).val()
-        var lastname = jQuery(s.passwordPolicy.fields.lastname).val()
-        if (firstname.replace(' ', '').length || lastname.replace(' ', '').length) {
-          if ((password.toLowerCase().indexOf(firstname.toLowerCase()) > -1) || (password.toLowerCase().indexOf(lastname.toLowerCase()) > -1)) {
-            if (showMessage) { IFS.core.formValidation.setInvalid(field, nameErrorMessage) }
-            confirmsToPasswordPolicy = false
-          } else {
-            if (showMessage) { IFS.core.formValidation.setValid(field, nameErrorMessage) }
-          }
-        }
+        return confirmsToPasswordPolicy
       }
-
-      // onchange clear tooWeakPassword message as this is validated in the back end.
-      IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak'))
-
-      return confirmsToPasswordPolicy
     },
-    checkEmail: function (field, showMessage) {
+    checkFieldContainsUppercase: function (field) {
+      var fieldVal = field.val()
+      var uppercaseDataAttribute = 'containsUppercase'
+
+      var showMessage = !field.is('[data-' + uppercaseDataAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, uppercaseDataAttribute)
+
+      var uppercase = /(?=\S*?[A-Z])/
+      var hasUppercase = uppercase.test(fieldVal) === false
+
+      IFS.core.formValidation.setStatus(field, uppercaseDataAttribute, !hasUppercase)
+
+      if (hasUppercase === false) {
+        if (showMessage) { IFS.core.formValidation.setInvalid(field, errorMessage) }
+        return false
+      } else {
+        if (showMessage) { IFS.core.formValidation.setValid(field, errorMessage) }
+        return true
+      }
+    },
+    checkFieldContainsLowercase: function (field) {
+      var fieldVal = field.val()
+      var lowercaseDataAttribute = 'containsLowercase'
+
+      var showMessage = !field.is('[data-' + lowercaseDataAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, lowercaseDataAttribute)
+      var lowercase = /(?=\S*?[a-z])/
+      var hasLowercase = lowercase.test(fieldVal) === false
+
+      IFS.core.formValidation.setStatus(field, lowercaseDataAttribute, !hasLowercase)
+
+      if (hasLowercase === false) {
+        if (showMessage) { IFS.core.formValidation.setInvalid(field, errorMessage) }
+        return false
+      } else {
+        if (showMessage) { IFS.core.formValidation.setValid(field, errorMessage) }
+        return true
+      }
+    },
+    checkFieldContainsNumber: function (field) {
+      var fieldVal = field.val()
+      var numberDataAttribute = 'containsNumber'
+
+      var showMessage = !field.is('[data-' + numberDataAttribute + '-nomessage]')
+      var numberErrorMessage = IFS.core.formValidation.getErrorMessage(field, numberDataAttribute)
+      var number = /(?=\S*?[0-9])/
+      var hasNumber = number.test(fieldVal) === false
+
+      IFS.core.formValidation.setStatus(field, numberDataAttribute, !hasNumber)
+
+      if (hasNumber === false) {
+        if (showMessage) { IFS.core.formValidation.setInvalid(field, numberErrorMessage) }
+        return false
+      } else {
+        if (showMessage) { IFS.core.formValidation.setValid(field, numberErrorMessage) }
+        return true
+      }
+    },
+    checkEmail: function (field) {
       // checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
       var email = field.val()
+      var emailAttribute = 'email'
       // disabled escape js-standard message, we might want to solve this in the future by cleaning up the regex
       var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i // eslint-disable-line
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'email')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, emailAttribute)
+      var showMessage = !field.is('[data-' + emailAttribute + '-nomessage]')
 
       // check if email value exists to avoid invalid email message on empty fields
       if (email) {
@@ -223,7 +259,9 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
-    checkNumber: function (field, showMessage) {
+    checkNumber: function (field) {
+      var numberAttribute = 'number'
+      var showMessage = !field.is('[data-' + numberAttribute + '-nomessage]')
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'number')
       // In modern browsers the number field doesn't allow text input
       // When inserting a string like "test" the browser converts this to an empty string "" (this is the specced behaviour)
@@ -252,8 +290,10 @@ IFS.core.formValidation = (function () {
         }
       }
     },
-    checkMax: function (field, showMessage) {
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'max')
+    checkMax: function (field) {
+      var maxAttribute = 'max'
+      var showMessage = !field.is('[data-' + maxAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, maxAttribute)
       if (s.html5validationMode) {
         // html5 validation api
         var domField = field[0]
@@ -279,8 +319,11 @@ IFS.core.formValidation = (function () {
         }
       }
     },
-    checkMin: function (field, showMessage) {
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'min')
+    checkMin: function (field) {
+      var minAttribute = 'max'
+      var showMessage = !field.is('[data-' + minAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, minAttribute)
+
       if (s.html5validationMode) {
         var domField = field[0]
         if (domField.validity.rangeUnderflow === true) {
@@ -304,8 +347,10 @@ IFS.core.formValidation = (function () {
         }
       }
     },
-    checkRequired: function (field, showMessage) {
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'required')
+    checkRequired: function (field) {
+      var requiredAttribute = 'required'
+      var showMessage = !field.is('[data-' + requiredAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)
 
       if (field.val() !== null) {
         if (field.is(':checkbox,:radio')) {
@@ -339,18 +384,10 @@ IFS.core.formValidation = (function () {
         }
       }
     },
-    betterMinLengthSupport: function () {
-      // if the minlenght is not implemented in the browser we use pattern which is more widely supported
-      if ((s.html5validationMode) && (typeof (jQuery('input')[0].validity.tooShort) === 'undefined')) {
-        jQuery(s.minlength.fields).each(function () {
-          var field = jQuery(this)
-          var minlength = parseInt(field.attr('minlength'), 10)
-          field.attr('pattern', '.{' + minlength + ',}')
-        })
-      }
-    },
-    checkMinLength: function (field, showMessage) {
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'minlength')
+    checkMinLength: function (field) {
+      var minLengthAttribute = 'minlength'
+      var showMessage = !field.is('[data-' + minLengthAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, minLengthAttribute)
       var minlength = parseInt(field.attr('minlength'), 10)
       if ((field.val().length > 0) && (field.val().length < minlength)) {
         if (showMessage) { IFS.core.formValidation.setInvalid(field, errorMessage) }
@@ -360,8 +397,10 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
-    checkMaxLength: function (field, showMessage) {
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'maxlength')
+    checkMaxLength: function (field) {
+      var maxLengthAttribute = 'maxlength'
+      var showMessage = !field.is('[data-' + maxLengthAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, maxLengthAttribute)
       var maxlength = parseInt(field.attr('maxlength'), 10)
       if (field.val().length > maxlength) {
         if (showMessage) { IFS.core.formValidation.setInvalid(field, errorMessage) }
@@ -371,9 +410,11 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
-    checkMinWordsLength: function (field, showMessage) {
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'minwordslength')
-      var minWordsLength = parseInt(field.attr('data-minwordslength'), 10)
+    checkMinWordsLength: function (field) {
+      var minWordsLengthAttribute = 'minwordslength'
+      var showMessage = !field.is('[data-' + minWordsLengthAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, minWordsLengthAttribute)
+      var minWordsLength = parseInt(field.attr(minWordsLengthAttribute), 10)
       var value = field.val()
       var words = IFS.core.formValidation.countWords(value)
 
@@ -385,9 +426,11 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
-    checkMaxWordsLength: function (field, showMessage) {
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'maxwordslength')
-      var maxWordsLength = parseInt(field.attr('data-maxwordslength'), 10)
+    checkMaxWordsLength: function (field) {
+      var maxWordsLengthAttribute = 'maxwordslength'
+      var showMessage = !field.is('[data-' + maxWordsLengthAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, maxWordsLengthAttribute)
+      var maxWordsLength = parseInt(field.attr('data-' + maxWordsLengthAttribute), 10)
       var value = field.val()
       var words = IFS.core.formValidation.countWords(value)
 
@@ -399,10 +442,12 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
-    checkTel: function (field, showMessage) {
-      var tel = field.val()
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'tel')
+    checkTel: function (field) {
+      var telAttribute = 'tel'
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, telAttribute)
+      var showMessage = !field.is('[data-' + telAttribute + '-nomessage]')
       var re = /^(?=.*[0-9])[- +()0-9]+$/
+      var tel = field.val()
       var validPhone = re.test(tel)
 
       if (!validPhone) {
@@ -413,8 +458,10 @@ IFS.core.formValidation = (function () {
         return true
       }
     },
-    checkDate: function (field, showMessage) {
+    checkDate: function (field) {
       var dateGroup = field.closest('.date-group')
+      var showMessage = !field.is('[data-date-nomessage]')
+
       field.addClass('js-visited')
       var valid
 
@@ -433,9 +480,16 @@ IFS.core.formValidation = (function () {
       var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'))
       var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0))
       var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]')
-      var validNumbers = IFS.core.formValidation.checkNumber(d, false) && IFS.core.formValidation.checkNumber(m, false) &&
-        IFS.core.formValidation.checkNumber(y, false) && IFS.core.formValidation.checkMin(y, false) &&
-        IFS.core.formValidation.checkMax(y, false)
+
+      // don't show the validation messages for numbers in dates but we do check it as part of the date check
+      allFields.attr({
+        'data-number-nomessage': '',
+        'data-min-nomessage': '',
+        'data-max-nomessage': ''
+      })
+      var validNumbers = IFS.core.formValidation.checkNumber(d) && IFS.core.formValidation.checkNumber(m) &&
+        IFS.core.formValidation.checkNumber(y) && IFS.core.formValidation.checkMin(y) &&
+        IFS.core.formValidation.checkMax(y)
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-invalid')
 
       if (validNumbers && filledOut) {
@@ -535,8 +589,10 @@ IFS.core.formValidation = (function () {
         return false
       }
     },
-    checkPattern: function (field, showMessage) {
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'pattern')
+    checkPattern: function (field) {
+      var patternAttribute = 'pattern'
+      var showMessage = !field.is('[data-' + patternAttribute + '-nomessage]')
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, patternAttribute)
       if (s.html5validationMode) {
         var domField = field[0]
         if (domField.validity.patternMismatch) {
@@ -666,6 +722,12 @@ IFS.core.formValidation = (function () {
         }
       })
     },
+    setStatus: function (field, check, status) {
+      var formGroup = field.closest('.form-group.error,tr.form-group-row.error')
+      if (formGroup.find('data-' + check + '-valid').length) {
+        formGroup.find('data-' + check + '-valid').data(status)
+      }
+    },
     getIdentifier: function (el) {
       if (el.is('[data-date]')) {
         el = el.closest('.date-group').find('input[type="hidden"]')
@@ -701,6 +763,16 @@ IFS.core.formValidation = (function () {
         return jQuery.trim(val).split(' ')
       } else {
         return false
+      }
+    },
+    betterMinLengthSupport: function () {
+      // if the minlenght is not implemented in the browser we use pattern which is more widely supported
+      if ((s.html5validationMode) && (typeof (jQuery('input')[0].validity.tooShort) === 'undefined')) {
+        jQuery(s.minlength.fields).each(function () {
+          var field = jQuery(this)
+          var minlength = parseInt(field.attr('minlength'), 10)
+          field.attr('pattern', '.{' + minlength + ',}')
+        })
       }
     }
   }
