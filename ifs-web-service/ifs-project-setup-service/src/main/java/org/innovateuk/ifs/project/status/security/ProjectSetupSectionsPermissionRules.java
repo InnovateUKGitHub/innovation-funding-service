@@ -122,6 +122,13 @@ public class ProjectSetupSectionsPermissionRules {
         return returnedProjectUser.isPresent();
     }
 
+    @PermissionRule(value = "IS_NOT_FROM_OWN_ORGANISATION", description = "A lead partner cannot mark their own spend profiles as incomplete")
+    public boolean userCannotMarkOwnSpendProfileIncomplete(Long organisationId, UserResource user) {
+        OrganisationResource organisation = organisationService.getOrganisationForUser(user.getId());
+
+        return !organisation.getId().equals(organisationId);
+    }
+
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
         try {
             Long organisationId = organisationService.getOrganisationIdFromUser(projectId, user);
