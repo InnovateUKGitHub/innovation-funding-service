@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.*;
 
 @Rollback
-public class ApplicationSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationSummaryController> {
+public class ApplicationSummaryControllerIntegrationTest extends ApplicationSubmissionControllerIntegrationTest<ApplicationSummaryController> {
 
     @Autowired
     private ApplicationService applicationService;
@@ -77,6 +77,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(5, resource.getApplicationsSubmitted());
     }
 
+    @Rollback
     @Test
     public void testCompetitionSummariesAfterApplicationSubmit() throws Exception {
         RestResult<CompetitionSummaryResource> result = controller.getCompetitionSummary(COMPETITION_ID);
@@ -88,6 +89,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(0, resource.getApplicationsInProgress());
         assertEquals(1, resource.getApplicationsNotSubmitted());
         assertEquals(5, resource.getApplicationsSubmitted());
+
+        makeApplicationSubmittable(APPLICATION_ID);
 
         ApplicationResource application = applicationService.findAll().getSuccessObject().get(0);
         applicationService.updateApplicationState(application.getId(), ApplicationState.SUBMITTED);
