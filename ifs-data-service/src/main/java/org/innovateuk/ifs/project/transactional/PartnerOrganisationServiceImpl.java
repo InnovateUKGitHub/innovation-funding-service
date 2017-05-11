@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,7 +17,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
+@Transactional(readOnly = true)
 public class PartnerOrganisationServiceImpl implements PartnerOrganisationService {
+
     @Autowired
     protected PartnerOrganisationRepository partnerOrganisationRepository;
 

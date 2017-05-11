@@ -21,26 +21,23 @@ import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 
 @Service
+@Transactional(readOnly = true)
 public class FinanceCheckQueriesServiceImpl implements FinanceCheckQueriesService {
 
     private final ThreadService<QueryResource, PostResource> service;
@@ -79,6 +76,7 @@ public class FinanceCheckQueriesServiceImpl implements FinanceCheckQueriesServic
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         ServiceResult<Void> result = service.addPost(post, threadId);
         if (result.isSuccess()) {
@@ -106,6 +104,7 @@ public class FinanceCheckQueriesServiceImpl implements FinanceCheckQueriesServic
     }
 
     @Override
+    @Transactional
     public ServiceResult<Long> create(QueryResource query) {
         ServiceResult<Long> result = service.create(query);
         if (result.isSuccess()) {

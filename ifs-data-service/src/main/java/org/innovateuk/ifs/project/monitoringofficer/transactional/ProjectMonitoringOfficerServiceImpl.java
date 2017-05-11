@@ -37,6 +37,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
+@Transactional(readOnly = true)
 public class ProjectMonitoringOfficerServiceImpl extends AbstractProjectServiceImpl implements ProjectMonitoringOfficerService {
 
     @Autowired
@@ -132,6 +133,7 @@ public class ProjectMonitoringOfficerServiceImpl extends AbstractProjectServiceI
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
 
         Project project = projectRepository.findOne(monitoringOfficer.getProject());
