@@ -47,9 +47,9 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {
         List<BindingResult> results = new ArrayList<>();
-        List<FormInputResponse> response = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId);
-        if (!response.isEmpty()) {
-            results.addAll(response.stream().map(formInputResponse -> validationUtil.validateResponse(formInputResponse, false)).collect(Collectors.toList()));
+        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId);
+        if (!responses.isEmpty()) {
+            results.addAll(responses.stream().map(formInputResponse -> validationUtil.validateResponse(formInputResponse, false)).collect(Collectors.toList()));
         } else {
             FormInputResponse emptyResponse = new FormInputResponse();
             emptyResponse.setFormInput(formInputRepository.findOne(formInputId));
@@ -57,7 +57,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         }
 
         FormInput formInput = formInputRepository.findOne(formInputId);
-        if (FormInputType.APPLICATION_DETAILS == formInput.getType()) {
+        if (formInput.getType().equals(FormInputType.APPLICATION_DETAILS)) {
             Application application = applicationRepository.findOne(applicationId);
             results.add(validationUtil.validationApplicationDetails(application));
         }
@@ -70,7 +70,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, markedAsCompleteById, formInputId);
         BindingResult result = validationUtil.validateResponse(response, false);
 
-        validateFileUploads(result, formInputId, response).forEach(objectError -> result.addError(objectError));
+        validateFileUploads(formInputId, response).forEach(objectError -> result.addError(objectError));
 
         return result;
     }
@@ -97,7 +97,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         return projectFinanceRowService.getCostHandler(costItem);
     }
 
-    private List<ObjectError> validateFileUploads(BindingResult result, Long formInputId, FormInputResponse response) {
+    private List<ObjectError> validateFileUploads(Long formInputId, FormInputResponse response) {
         List<ObjectError> errors = new ArrayList<>();
         FormInput formInput = formInputRepository.findOne(formInputId);
 
@@ -105,7 +105,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
             if (response == null) {
                 errors.add(new ObjectError("value", "validation.field.must.not.be.blank"));
             } else {
-                errors.addAll(validationUtil.validationJesForm(response));
+                errors.addAll(validationUtil.validationJesForm(response).getAllErrors());
             }
         }
 
