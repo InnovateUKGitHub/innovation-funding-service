@@ -131,9 +131,8 @@
 
                 <input type="hidden" id="application_id" th:value="${model.applicationId}" />
 
-                <div class="alignleft">
-                    <button type="submit" class="button button-large" name="submit-section">Save assessment</button>
-                </div>
+                <button type="submit" class="button extra-margin" name="submit-section">Save assessment</button>
+
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

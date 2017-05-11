@@ -104,6 +104,10 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((assessorMaximumScore, object) -> setField("assessorMaximumScore", assessorMaximumScore, object), assessorMaximumScores);
     }
 
+    public QuestionBuilder withMarksAsCompleteEnabled(Boolean... markAsCompleteEnableds) {
+        return withArray((markAsCompleteEnabled, object) -> setField("markAsCompletedEnabled", markAsCompleteEnabled, object), markAsCompleteEnableds);
+    }
+
     @Override
     protected Question createInitial() {
         return new Question();
