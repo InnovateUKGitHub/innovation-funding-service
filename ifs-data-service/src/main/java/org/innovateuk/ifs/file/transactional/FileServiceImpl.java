@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -61,6 +62,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private FileEntryRepository fileEntryRepository;
 
     @Override
+    @Transactional
     public ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
 
         return createTemporaryFileForValidation(resource.getName(), inputStreamSupplier).andOnSuccess(validationFile -> {
@@ -86,6 +88,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource fileToUpdate, Supplier<InputStream> inputStreamSupplier) {
         return findFileEntry(fileToUpdate.getId()).
                 andOnSuccess(updatedFile -> doFileValidationAndUpdate(updatedFile, inputStreamSupplier));
@@ -108,6 +111,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntry> deleteFile(long fileEntryId) {
 
         return findFileEntry(fileEntryId).

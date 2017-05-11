@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.InputStream;
@@ -61,6 +62,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     private String webBaseUrl;
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
@@ -130,6 +132,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
@@ -163,6 +166,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(this::validateProjectIsInSetup).
@@ -179,6 +183,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
         return getProject(projectId).
                 andOnSuccess(this::validateProjectIsInSetup).
@@ -202,6 +207,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
@@ -235,6 +241,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(this::validateProjectIsInSetup).
@@ -243,6 +250,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
         return getProject(projectId).
         andOnSuccess(this::validateProjectIsInSetup).andOnSuccess(project ->
@@ -266,6 +274,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
         //TODO INFUND-7493
         if (approval == null) {

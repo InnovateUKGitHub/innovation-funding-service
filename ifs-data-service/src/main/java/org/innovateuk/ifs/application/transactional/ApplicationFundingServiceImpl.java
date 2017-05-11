@@ -23,6 +23,7 @@ import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -74,6 +75,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Application> allowedApplicationForCompetition = findAllowedApplicationsForCompetition(competitionId);
@@ -84,6 +86,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
 
     @Override
+    @Transactional
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource) {
 
         List<Application> applications = setApplicationState(notificationResource.getFundingDecisions());

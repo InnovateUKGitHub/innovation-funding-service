@@ -22,19 +22,18 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -83,11 +82,13 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<OrganisationResource> create(final OrganisationResource organisationToCreate) {
         return update(organisationToCreate);
     }
 
     @Override
+    @Transactional
     public ServiceResult<OrganisationResource> update(final OrganisationResource organisationResource) {
         Organisation organisation = organisationMapper.mapToDomain(organisationResource);
 
@@ -100,6 +101,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber) {
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
             String organisationNameDecoded;
@@ -116,6 +118,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
         return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);

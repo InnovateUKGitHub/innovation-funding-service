@@ -26,6 +26,7 @@ import org.innovateuk.ifs.util.AssessorScoreAverageCollector;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
@@ -89,6 +90,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
         AssessorFormInputResponseResource createdResponse = getOrCreateAssessorFormInputResponse(response.getAssessment(), response.getFormInput())
                 .getSuccessObjectOrThrowException();

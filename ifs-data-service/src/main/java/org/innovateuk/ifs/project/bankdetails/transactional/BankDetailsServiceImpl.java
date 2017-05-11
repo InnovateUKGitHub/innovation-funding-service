@@ -13,7 +13,6 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.domain.VerificationCondition;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
@@ -33,9 +32,11 @@ import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,11 +52,11 @@ import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
+@Transactional(readOnly = true)
 public class BankDetailsServiceImpl implements BankDetailsService {
 
     private final int EXPERIAN_INVALID_ACC_NO_ERROR_ID = 4;
@@ -106,20 +107,19 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> submitBankDetails(BankDetailsResource bankDetailsResource) {
         return bankDetailsDontExist(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation()).
-                andOnSuccess(() ->
-                        validateBankDetails(bankDetailsResource).
-                                andOnSuccess(
-                                        accountDetails -> saveSubmittedBankDetails(accountDetails, bankDetailsResource)).
-                                andOnSuccess(accountDetails -> {
-                                    BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
-                                    return verifyBankDetails(accountDetails, bankDetails);
-                                })
-                );
+                andOnSuccess(() -> validateBankDetails(bankDetailsResource).
+                andOnSuccess(accountDetails -> saveSubmittedBankDetails(accountDetails, bankDetailsResource)).
+                andOnSuccess(accountDetails -> {
+                    BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
+                    return verifyBankDetails(accountDetails, bankDetails);
+                }));
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateBankDetails(BankDetailsResource bankDetailsResource) {
         Address address = toExperianAddressFormat(bankDetailsResource.getOrganisationAddress().getAddress());
         AccountDetails accountDetails = new AccountDetails(bankDetailsResource.getSortCode(), bankDetailsResource.getAccountNumber(), bankDetailsResource.getCompanyName(), bankDetailsResource.getRegistrationNumber(), address);

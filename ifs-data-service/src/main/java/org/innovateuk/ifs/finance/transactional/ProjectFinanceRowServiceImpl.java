@@ -21,6 +21,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    @Transactional
     public ServiceResult<FinanceRowItem> addCost(Long projectFinanceId, Long questionId, FinanceRowItem newCostItem) {
         return find(question(questionId), projectFinance(projectFinanceId)).andOnSuccess((question, projectFinance) -> {
                     OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getId());
@@ -108,6 +110,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    @Transactional
     public ServiceResult<FinanceRowItem> updateCost(final Long id, final FinanceRowItem newCostItem) {
 
         return find(projectFinanceRowRepository.findOne(id), notFoundError(ProjectFinanceRow.class)).
@@ -130,6 +133,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> deleteCost(@P("costId") Long costId) {
         return find(projectFinanceRowRepository.findOne(costId), notFoundError(ProjectFinanceRow.class)).
                 andOnSuccess(projectFinanceRow ->{
@@ -140,6 +144,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    @Transactional
     public ServiceResult<ProjectFinanceResource> updateCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
         return getProject(projectFinance.getProject()).andOnSuccess(project ->
                 find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {

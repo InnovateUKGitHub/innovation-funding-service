@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -135,6 +136,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> closeAssessment(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.closeAssessment(ZonedDateTime.now());
@@ -142,6 +144,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> notifyAssessors(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.notifyAssessors(ZonedDateTime.now());
@@ -149,6 +152,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> releaseFeedback(long competitionId) {
         CompetitionFundedKeyStatisticsResource keyStatisticsResource =
                 competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
@@ -163,6 +167,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> manageInformState(long competitionId) {
         CompetitionFundedKeyStatisticsResource keyStatisticsResource =
                 competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)

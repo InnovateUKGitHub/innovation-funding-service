@@ -36,6 +36,7 @@ import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.InputStream;
@@ -122,6 +123,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    @Transactional
     public ServiceResult<FinanceRowItem> addCost(final Long applicationFinanceId, final Long questionId, final FinanceRowItem newCostItem) {
         return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) ->
                 getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(application -> {
@@ -150,6 +152,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    @Transactional
     public ServiceResult<FinanceRowItem> updateCost(final Long id, final FinanceRowItem newCostItem) {
         Application application = financeRowRepository.findOne(id).getTarget().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
@@ -209,6 +212,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> deleteCost(final Long costId) {
         Application application = financeRowRepository.findOne(costId).getTarget().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app -> {
@@ -254,6 +258,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationFinanceResource> addCost(final ApplicationFinanceResourceId applicationFinanceResourceId) {
         final Long applicationId = applicationFinanceResourceId.getApplicationId();
         final Long organisationId = applicationFinanceResourceId.getOrganisationId();
@@ -280,6 +285,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    @Transactional
     public ServiceResult<ApplicationFinanceResource> updateCost(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
         Application application = applicationRepository.findOne(applicationFinance.getApplication());
         return getOpenApplication(application.getId()).andOnSuccess(app ->
@@ -357,6 +363,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
@@ -366,6 +373,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
@@ -375,6 +383,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
         Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->

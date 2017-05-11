@@ -51,6 +51,7 @@ import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -138,6 +139,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private String webBaseUrl;
 
     @Override
+    @Transactional
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
         return getProject(projectId)
                 .andOnSuccess(project -> canSpendProfileCanBeGenerated(project)
@@ -275,7 +277,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return flattenLists(spendProfileCostsPerCategory);
     }
 
-    @Override
     /**
      * This method was written to recreate Spend Profile for one of the partner organisations on Production.
      *
@@ -284,6 +285,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
      * Eligibility is approved or if the Spend Profile is already generated.
      *
      */
+    @Override
+    @Transactional
     public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
         User user = userRepository.findOne(userId);
 
@@ -293,6 +296,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
         updateApprovalOfSpendProfile(projectId, approvalType);
         return grantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
@@ -432,12 +436,14 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
         return validateSpendProfileCosts(table)
                 .andOnSuccess(() -> saveSpendProfileData(projectOrganisationCompositeId, table, false)); // We have to save the data even if the totals don't match
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
         if (table.getValidationMessages().hasErrors()) { // validate before marking as complete
@@ -448,12 +454,14 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
         return saveSpendProfileData(projectOrganisationCompositeId, table, false);
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSpendProfileSubmittedDate() != null) {
@@ -475,6 +483,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
 
         return getPartnerOrganisation(projectId, organisationId)
@@ -632,6 +641,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
@@ -680,6 +690,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         Long projectId = projectOrganisationCompositeId.getProjectId();

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
@@ -19,6 +17,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,8 +30,6 @@ import static com.google.common.collect.Lists.newArrayList;
 @Service
 public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalService implements CompetitionSetupQuestionService {
     
-	private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionServiceImpl.class);
-
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -111,6 +108,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     }
 
     @Override
+    @Transactional
     public ServiceResult<CompetitionSetupQuestionResource> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);

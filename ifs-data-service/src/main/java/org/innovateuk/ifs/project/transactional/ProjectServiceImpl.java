@@ -56,6 +56,7 @@ import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -176,11 +177,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
         return createSingletonProjectFromApplicationId(applicationId);
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
                 andOnSuccess(this::validateIfProjectAlreadySubmitted).
@@ -189,6 +192,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
                 andOnSuccess(() -> getProject(projectId)).
@@ -197,6 +201,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
         return getProject(composite.getProjectId()).
                 andOnSuccess(this::validateProjectIsInSetup).
@@ -206,6 +211,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
 
         Project project = projectRepository.findOne(projectId);
@@ -233,6 +239,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
         applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createSingletonProjectFromApplicationId);
         return serviceSuccess();
@@ -251,6 +258,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
@@ -274,6 +282,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
@@ -329,11 +338,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
         return inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT);
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
         return inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER);
     }

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -33,6 +34,7 @@ public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTr
     }
 
     @Override
+    @Transactional
     public ServiceResult<String> restoreSuccessfulMethod() {
 
         User user = getUser();
