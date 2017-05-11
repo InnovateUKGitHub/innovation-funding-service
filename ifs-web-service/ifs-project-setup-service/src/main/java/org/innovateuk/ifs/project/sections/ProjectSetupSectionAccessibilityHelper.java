@@ -70,7 +70,7 @@ public class ProjectSetupSectionAccessibilityHelper {
     private boolean isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(OrganisationResource organisation) {
 
         return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
-                "Unable to access Project Manager page until Companies House details are complete for Organisation")
+                "Unable to access until Companies House details are complete for Organisation")
 
                 || projectSetupProgressChecker.isProjectDetailsSubmitted()
                 || !projectSetupProgressChecker.isLeadPartnerOrganisation(organisation);
