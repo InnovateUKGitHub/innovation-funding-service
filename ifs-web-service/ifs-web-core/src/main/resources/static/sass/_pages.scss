@@ -17,3 +17,10 @@
 @import "components/flextable";
 @import "pages/project-setup";
 @import "pages/project_finance_changes";
+
+[data-valid="true"]{
+  color:darkgreen;
+}
+[data-valid="false"]{
+  color:red;
+}
