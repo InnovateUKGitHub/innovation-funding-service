@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.notes.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
@@ -13,6 +14,7 @@ public class FinanceChecksNotesAddCommentForm extends BaseBindingResultTarget {
     @WordCount(max = FinanceChecksNotesFormConstraints.MAX_NOTE_WORDS, message = "{validation.field.max.word.count}")
     private String comment;
 
+    @JsonIgnore
     private MultipartFile attachment;
 
     public String getComment() {

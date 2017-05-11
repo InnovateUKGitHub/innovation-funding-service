@@ -118,6 +118,18 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
+    public void applicationControllerApplicationReadyToSubmit() throws Exception {
+
+        Application app = newApplication().build();
+
+        when(applicationServiceMock.applicationReadyForSubmit(app.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", app.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
+    }
+
+    @Test
     public void markAsIneligible() throws Exception {
         Long applicationId = 1L;
 
