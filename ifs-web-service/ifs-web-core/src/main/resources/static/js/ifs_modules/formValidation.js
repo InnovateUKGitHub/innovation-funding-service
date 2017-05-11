@@ -625,7 +625,7 @@ IFS.core.formValidation = (function () {
     },
     setValid: function (field, message, displayValidationMessages) {
       var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.dispaySettings) !== -1
-      if (validShowMessageValue === false || displayValidationMessages === 'none' || displayValidationMessages === 'visuallyhidden') {
+      if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
       console.log('valid', field, message, displayValidationMessages)
