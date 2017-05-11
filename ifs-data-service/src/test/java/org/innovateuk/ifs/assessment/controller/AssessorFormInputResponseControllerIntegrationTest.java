@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,53 +75,58 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
     }
 
     @Test
-    public void updateFormInputResponse() throws Exception {
+    public void updateFormInputResponses() throws Exception {
         Long assessmentId = 2L;
         Long questionId = 1L;
         Long formInputId = 169L;
-        String oldValue = "This is the feedback from Professor Plum for Business opportunity.";
-        String newValue = "Feedback";
+        String newValue = "Response";
 
         loginPaulPlum();
+
         RestResult<List<AssessorFormInputResponseResource>> allResponsesBeforeResult = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
         assertTrue(allResponsesBeforeResult.isSuccess());
-        List<AssessorFormInputResponseResource> allResponsesBefore = allResponsesBeforeResult.getSuccessObject();
-        Optional<AssessorFormInputResponseResource> toBeUpdated = allResponsesBefore.stream().filter(assessorFormInputResponse -> formInputId.equals(assessorFormInputResponse.getFormInput())).findFirst();
+
+        Optional<AssessorFormInputResponseResource> toBeUpdated = allResponsesBeforeResult.getSuccessObject().stream()
+                .filter(assessorFormInputResponse -> formInputId.equals(assessorFormInputResponse.getFormInput()))
+                .findFirst();
         assertTrue(toBeUpdated.isPresent());
+        assertEquals("This is the feedback from Professor Plum for Business opportunity.",
+                toBeUpdated.orElseThrow(() -> new IllegalStateException("Expected a response for the form input")).getValue());
 
-        assertEquals(oldValue, toBeUpdated.get().getValue());
+        AssessorFormInputResponsesResource updatedAssessorResponses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .withAssessment(assessmentId)
+                        .withFormInput(formInputId)
+                        .withValue(newValue)
+                        .build());
 
-        AssessorFormInputResponseResource updatedAssessorResponse = newAssessorFormInputResponseResource()
-                .withAssessment(assessmentId)
-                .withFormInput(formInputId)
-                .withValue(newValue)
-                .build();
-        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
+        RestResult<Void> updateResult = controller.updateFormInputResponses(updatedAssessorResponses);
         assertTrue(updateResult.isSuccess());
 
-        RestResult<List<AssessorFormInputResponseResource>> allResponsesAfterResult = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
+        RestResult<List<AssessorFormInputResponseResource>> allResponsesAfterResult = controller
+                .getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
         assertTrue(allResponsesAfterResult.isSuccess());
-        List<AssessorFormInputResponseResource> allResponsesAfter = allResponsesAfterResult.getSuccessObject();
-        Optional<AssessorFormInputResponseResource> updated = allResponsesAfter.stream().filter(assessorFormInputResponse -> formInputId.equals(assessorFormInputResponse.getFormInput())).findFirst();
+
+        Optional<AssessorFormInputResponseResource> updated = allResponsesAfterResult.getSuccessObject().stream()
+                .filter(assessorFormInputResponse -> formInputId.equals(assessorFormInputResponse.getFormInput())).findFirst();
+
         assertTrue(updated.isPresent());
 
-        assertEquals(newValue, updated.get().getValue());
+        assertEquals(newValue, updated.orElseThrow(() ->
+                new IllegalStateException("Expected a response for the form input")).getValue());
     }
 
     @Test
-    public void updateFormInputResponse_notTheFormOwner() throws Exception {
-        Long assessmentId = 1L;
-        Long formInputId = 169L;
-        String newValue = "Feedback";
-
-        AssessorFormInputResponseResource updatedAssessorResponse = newAssessorFormInputResponseResource()
-                .withAssessment(assessmentId)
-                .withFormInput(formInputId)
-                .withValue(newValue)
-                .build();
+    public void updateFormInputResponses_notTheFormOwner() throws Exception {
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .withAssessment(1L)
+                        .withFormInput(169L)
+                        .withValue("Response")
+                        .build());
 
         loginSteveSmith();
-        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
+        RestResult<Void> updateResult = controller.updateFormInputResponses(responses);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }

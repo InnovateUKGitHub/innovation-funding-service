@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.assessment.service;
 
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 
 import java.util.List;
@@ -18,6 +15,8 @@ public interface AssessorFormInputResponseRestService {
     RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId);
 
     RestResult<Void> updateFormInputResponse(long assessmentId, long formInputId, String value);
+
+    RestResult<Void> updateFormInputResponses(AssessorFormInputResponsesResource assessorFormInputResponseResources);
 
     RestResult<ApplicationAssessmentAggregateResource> getApplicationAssessmentAggregate(long applicationId);
 

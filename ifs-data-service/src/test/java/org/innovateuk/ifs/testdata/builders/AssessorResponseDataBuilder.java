@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputScope;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 /**
  * Generates Assessor Responses for Assessments
@@ -50,12 +52,11 @@ public class AssessorResponseDataBuilder extends BaseDataBuilder<Void, AssessorR
                 realValue = researchCategoryRepository.findByName(value).getId().toString();
             }
 
-            AssessorFormInputResponseResource assessorFormInputResponse = new AssessorFormInputResponseResource();
-            assessorFormInputResponse.setAssessment(assessment.getId());
-            assessorFormInputResponse.setFormInput(formInput.getId());
-            assessorFormInputResponse.setValue(realValue);
+            AssessorFormInputResponseResource assessorFormInputResponse = new AssessorFormInputResponseResource(
+                    assessment.getId(), formInput.getId(), realValue);
 
-            doAs(assessor, () -> assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponse));
+            doAs(assessor, () -> assessorFormInputResponseService.updateFormInputResponses(
+                    new AssessorFormInputResponsesResource(assessorFormInputResponse)));
         });
     }
 

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Test;
 
@@ -16,7 +17,9 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
+import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServiceImpl.assessorFormInputResponseRestUrl;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorFormInputResponseResourceListType;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -56,12 +59,33 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     public void updateFormInputResponse() throws Exception {
         long assessmentId = 1L;
         long formInputId = 2L;
-        String value = "Feedback";
+        String value = "Response";
 
-        AssessorFormInputResponseResource expectedFormInputResponse = new AssessorFormInputResponseResource(
-                assessmentId, formInputId, value);
-        setupPutWithRestResultExpectations(format("%s", assessorFormInputResponseRestUrl), expectedFormInputResponse, OK);
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(assessmentId)
+                        .withFormInput(formInputId)
+                        .withValue(value)
+                        .build());
+
+        setupPutWithRestResultExpectations(format("%s", assessorFormInputResponseRestUrl), responses, OK);
         RestResult<Void> response = service.updateFormInputResponse(assessmentId, formInputId, value);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void updateFormInputResponses() throws Exception {
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(1L)
+                        .withFormInput(2L, 3L)
+                        .withValue("Response 1", "Response 2")
+                        .build(2));
+
+        setupPutWithRestResultExpectations(format("%s", assessorFormInputResponseRestUrl), responses, OK);
+        RestResult<Void> response = service.updateFormInputResponses(responses);
         assertTrue(response.isSuccess());
     }
 

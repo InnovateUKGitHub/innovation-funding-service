@@ -15,6 +15,7 @@ import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNaviga
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -52,6 +53,7 @@ import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.new
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -524,7 +526,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Long formInputId = 2L;
 
         when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value))
-                .thenReturn(restFailure(fieldError("value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
+                .thenReturn(restFailure(fieldError("fieldName", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
 
         when(messageSource.getMessage("validation.field.too.many.characters", new Object[]{"", "5000", "0"}, Locale.UK))
                 .thenReturn("This field cannot contain more than 5000 characters");
@@ -545,7 +547,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Long formInputId = 2L;
 
         when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value))
-                .thenReturn(restFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
+                .thenReturn(restFailure(fieldError("fieldName", "Feedback", "validation.field.max.word.count", "", 100)));
 
         when(messageSource.getMessage("validation.field.max.word.count", new Object[]{"", "100"}, Locale.UK))
                 .thenReturn("Maximum word count exceeded. Please reduce your word count to 100.");
@@ -570,9 +572,15 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputScoreField = format("formInput[%s]", formInputIdScore);
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
-        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputIdScore, "10"))
-                .thenReturn(restSuccess());
-        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputIdFeedback, "Feedback"))
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(assessmentId)
+                        .withFormInput(formInputIdScore, formInputIdFeedback)
+                        .withValue("10", "Feedback")
+                        .build(2));
+
+        when(assessorFormInputResponseRestService.updateFormInputResponses(responses))
                 .thenReturn(restSuccess());
 
         mockMvc.perform(post("/{assessmentId}/question/{questionId}", assessmentId, questionId)
@@ -583,8 +591,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(redirectedUrl(format("/%s", assessmentId)))
                 .andReturn();
 
-        verify(assessorFormInputResponseRestService).updateFormInputResponse(assessmentId, formInputIdScore, "10");
-        verify(assessorFormInputResponseRestService).updateFormInputResponse(assessmentId, formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponses(responses);
     }
 
     @Test
@@ -606,10 +613,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputScoreField = format("formInput[%s]", formInputIdScore);
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
-        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentResource.getId(), formInputIdScore, "10"))
-                .thenReturn(restSuccess());
-        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentResource.getId(), formInputIdFeedback, "Feedback"))
-                .thenReturn(restFailure(fieldError("value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(assessmentResource.getId())
+                        .withFormInput(formInputIdScore, formInputIdFeedback)
+                        .withValue("10", "Feedback")
+                        .build(2));
+
+        when(assessorFormInputResponseRestService.updateFormInputResponses(responses)).thenReturn(restFailure(
+                fieldError(formInputIdFeedback.toString(), "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
@@ -626,8 +639,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
-        verify(assessorFormInputResponseRestService).updateFormInputResponse(assessmentResource.getId(), formInputIdScore, "10");
-        verify(assessorFormInputResponseRestService).updateFormInputResponse(assessmentResource.getId(), formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponses(responses);
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 
@@ -662,10 +674,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputScoreField = format("formInput[%s]", formInputIdScore);
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
-        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentResource.getId(), formInputIdScore, "10"))
-                .thenReturn(restSuccess());
-        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentResource.getId(), formInputIdFeedback, "Feedback"))
-                .thenReturn(restFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(assessmentResource.getId())
+                        .withFormInput(formInputIdScore, formInputIdFeedback)
+                        .withValue("10", "Feedback")
+                        .build(2));
+
+        when(assessorFormInputResponseRestService.updateFormInputResponses(responses))
+                .thenReturn(restFailure(fieldError(formInputIdFeedback.toString(), "Feedback", "validation.field.max.word.count", "", 100)));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
@@ -682,8 +700,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
-        verify(assessorFormInputResponseRestService).updateFormInputResponse(assessmentResource.getId(), formInputIdScore, "10");
-        verify(assessorFormInputResponseRestService).updateFormInputResponse(assessmentResource.getId(), formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponses(responses);
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 

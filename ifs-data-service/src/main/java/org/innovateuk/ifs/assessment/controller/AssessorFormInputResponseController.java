@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +30,8 @@ public class AssessorFormInputResponseController {
     }
 
     @PutMapping
-    public RestResult<Void> updateFormInputResponse(@Valid @RequestBody AssessorFormInputResponseResource response) {
-        return assessorFormInputResponseService.updateFormInputResponse(response).toPostWithBodyResponse();
+    public RestResult<Void> updateFormInputResponses(@Valid @RequestBody AssessorFormInputResponsesResource responses) {
+        return assessorFormInputResponseService.updateFormInputResponses(responses).toPostWithBodyResponse();
     }
 
     @GetMapping("/application/{applicationId}/scores")
