@@ -99,8 +99,6 @@ Initial details -Inovation sector of Open should be visible
 Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
-    #[Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    #Given The user clicks the button/link    link=Initial details
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user should not see the element    jQuery=.buttonlink:contains("+ add another innovation area")
     And The user enters valid data in the initial details
