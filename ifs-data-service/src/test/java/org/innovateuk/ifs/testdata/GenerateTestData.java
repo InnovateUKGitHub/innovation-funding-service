@@ -631,6 +631,13 @@ public class GenerateTestData extends BaseIntegrationTest {
             }
         });
 
+        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(line.status)) {
+            baseBuilder = baseBuilder.markApplicationIneligible(line.ineligibleReason);
+            if (line.status == ApplicationState.INELIGIBLE_INFORMED) {
+                baseBuilder = baseBuilder.informApplicationIneligible();
+            }
+        }
+
         return baseBuilder.withFinances(financeBuilders);
     }
 
