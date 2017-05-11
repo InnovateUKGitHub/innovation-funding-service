@@ -96,7 +96,7 @@ public class ApplicationModelPopulator {
         applicationSectionAndQuestionModelPopulator.addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
-        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, section, userOrganisation, userId);
 
         applicationSectionAndQuestionModelPopulator.addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section, currentQuestionId);
         applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);

@@ -9,6 +9,8 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
 public abstract class AbstractFormInputViewModel {
+    protected boolean summary;
+    protected boolean closed;
     protected boolean complete;
     protected boolean readonly;
     protected ApplicantSectionResource applicantSection;
@@ -45,6 +47,22 @@ public abstract class AbstractFormInputViewModel {
 
     public void setReadonly(boolean readonly) {
         this.readonly = readonly;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public boolean isSummary() {
+        return summary;
+    }
+
+    public void setSummary(boolean summary) {
+        this.summary = summary;
     }
 
     public ApplicantQuestionResource getApplicantQuestion() {

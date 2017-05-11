@@ -3,7 +3,7 @@
 
     <!-- ===========================Form: finance =========================== -->
     <th:block th:fragment="finance(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-        <th:block th:unless="${readonly}">
+        <th:block th:unless="${model.readonly}">
             <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ model.organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ model.organisationGrantClaimPercentageId +']}')}? 'error'">
                 <label class="form-label form-label-bold" for="cost-financegrantclaim">
                     <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'" />
@@ -16,7 +16,7 @@
                        min="0"
                        required="required"
                        th:max="${model.maximumGrantClaimPercentage}"
-                       th:readonly="${readonly}"
+                       th:readonly="${model.readonly}"
                        th:class="${model.maximumGrantClaimPercentage != null and model.maximumGrantClaimPercentage &lt; model.organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
                        id="cost-financegrantclaim"
                        th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
@@ -27,7 +27,7 @@
                 />%
             </div>
         </th:block>
-        <th:block th:if="${readonly}">
+        <th:block th:if="${model.readonly}">
             <dl class="readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
                 <dt th:text="${question.name}">Your Funding level</dt>
                 <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
@@ -42,7 +42,7 @@
             <p>The organisation size is used to calculate your funding level in the application.</p>
             <p>Changing this selection will reset your funding level.</p>
         </div>
-        <th:block th:unless="${readonly}">
+        <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? error">
                 <fieldset>
@@ -67,12 +67,12 @@
                 </fieldset>
             </div>
         </th:block>
-        <th:block th:if="${readonly}">
+        <th:block th:if="${model.readonly}">
             <!--/* view  */-->
             <dl class="readonly-data">
                 <dt th:text="${formInput.description}">Organisation size</dt>
 
-                <th:block th:unless="${model.finance.organisationFinanceSize == null}" th:each="size : ${organisationSizes}">
+                <th:block th:unless="${model.organisationFinanceSize == null}" th:each="size : ${model.organisationSizes}">
                     <dd th:if="${model.organisationFinanceSize == size.id}" th:text="${size.description}">Micro / small: claim up to 70%</dd>
                 </th:block>
             </dl>
@@ -81,7 +81,7 @@
 
     <!-- =========================== Form: Organisation Turnover =========================== -->
     <th:block th:fragment="organisation_turnover(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-        <th:block th:unless="${readonly}">
+        <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
                 <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
@@ -99,7 +99,7 @@
                        type="number" />
             </div>
         </th:block>
-        <th:block th:if="${readonly}">
+        <th:block th:if="${model.readonly}">
             <!--/* view  */-->
             <dl class="readonly-data">
                 <dt th:text="${formInput.description}">Turnover (&pound;)</dt>
@@ -110,7 +110,7 @@
 
     <!-- =========================== Form: Staff Count =========================== -->
     <th:block th:fragment="staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-        <th:block th:unless="${readonly}">
+        <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
                 <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
@@ -128,7 +128,7 @@
                        required="required" />
             </div>
         </th:block>
-        <th:block th:if="${readonly}">
+        <th:block th:if="${model.readonly}">
             <!--/* view */-->
             <dl class="readonly-data">
                 <dt th:text="${formInput.description}">Full time employees</dt>
@@ -155,7 +155,7 @@
                         <span>Month</span>
                     </label>
                     <input class="form-control width-extra-small"
-                           th:disabled="${readonly}"
+                           th:disabled="${model.readonly}"
                            th:id="${formInput.id}+'.MMYYYY.month'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
                            th:value="${month}"
@@ -171,7 +171,7 @@
                         <span>Year</span>
                     </label>
                     <input class="form-control width-extra-small"
-                           th:disabled="${readonly}"
+                           th:disabled="${model.readonly}"
                            th:id="${formInput.id}+'.MMYYYY.year'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
                            th:value="${year}"
@@ -193,7 +193,7 @@
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
         <input class="form-control width-medium"
-               th:disabled="${readonly}"
+               th:disabled="${model.readonly}"
                type="number"
                th:id="${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"

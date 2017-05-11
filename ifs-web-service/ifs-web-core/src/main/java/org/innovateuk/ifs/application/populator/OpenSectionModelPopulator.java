@@ -5,6 +5,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
@@ -24,6 +25,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -101,10 +103,14 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     }
 
     private void addOrganisationDetails(OpenSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
+        final Comparator<OrganisationResource> compareById =
+                Comparator.comparingLong(OrganisationResource::getId);
+        final Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
         viewModel.setAcademicOrganisations(applicantSection.allOrganisations()
                 .filter(organisation -> organisation.getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId()))
-                .collect(Collectors.toSet()));
-        viewModel.setApplicationOrganisations(applicantSection.allOrganisations().collect(Collectors.toSet()));
+                .collect(Collectors.toCollection(supplier)));
+        viewModel.setApplicationOrganisations(applicantSection.allOrganisations()
+                .collect(Collectors.toCollection(supplier)));
 
         List<String> activeApplicationOrganisationNames = applicantSection.allOrganisations().map(OrganisationResource::getName).collect(Collectors.toList());
 
@@ -137,8 +143,9 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(applicantSection.getApplication().getId());
         Set<Long> sectionsMarkedAsComplete = convertToCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 
-        Optional<ApplicantSectionResource> optionalFinanceSection = applicantSection.allSections().filter(section -> section.getSection().getType().equals(SectionType.FINANCE)).findAny();
-        Optional<Long> optionalFinanceSectionId = optionalFinanceSection.map(applicantSectionResource -> applicantSectionResource.getSection().getId());
+        List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(applicantSection.getCompetition().getId(), SectionType.FINANCE);
+        Optional<SectionResource> optionalFinanceSection = financeSections.stream().findAny();
+        Optional<Long> optionalFinanceSectionId = optionalFinanceSection.map(SectionResource::getId);
 
 
         addSectionsMarkedAsComplete(openSectionViewModel, applicantSection);

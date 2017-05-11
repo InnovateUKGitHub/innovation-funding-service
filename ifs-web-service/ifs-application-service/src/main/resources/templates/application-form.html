@@ -35,22 +35,23 @@
                 </th:block>
 
                 <!--/* Application Form for a Question. */-->
-                <div class="question" th:if="${model.isQuestion()}"
-                     th:each="formInputViewModel : ${model.formInputViewModels}"
-                     th:with="formInput=${formInputViewModel.formInput}"
-                     th:id="'form-input-'+${formInput.id}">
+                <th:block th:if="${model.isQuestion()}">
+                    <div class="question"
+                         th:each="formInputViewModel : ${model.formInputViewModels}"
+                         th:with="formInput=${formInputViewModel.formInput}"
+                         th:id="'form-input-'+${formInput.id}">
 
-                    <th:block th:if="${formInput.type.displayableQuestionType}">
-                        <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModel})" />
-                    </th:block>
-
+                        <th:block th:if="${formInput.type.displayableQuestionType}">
+                            <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModel})" />
+                        </th:block>
+                    </div>
                     <th:block th:if="${model.allReadOnly}">
                         <a th:href="${backURL}" class="button-secondary" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
                     </th:block>
                     <th:block th:unless="${model.allReadOnly}">
                         <button th:unless="${model.isSection()}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
                     </th:block>
-                </div>
+                </th:block>
 
                 <!--/* Application Form for a Section. */-->
                 <th:block th:if="${model.isSection()}">

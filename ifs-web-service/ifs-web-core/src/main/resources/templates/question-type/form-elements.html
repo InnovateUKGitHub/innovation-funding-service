@@ -181,12 +181,6 @@
 
 <th:block th:fragment="form-textarea-wrapped(model)" th:with="formInput=${model.formInput}, question=${model.question}">
 
-    <div th:unless="${model.readonly}" class="textarea-header">
-        <th:block th:if="${model.complete}">
-            <div class="success-alert assignee">This question is <strong>marked as complete</strong></div>
-        </th:block>
-    </div>
-
     <div th:class="'textarea-wrapped ' +
                    (${model.readonly} ? '' : (
                             (${model.complete} ? 'marked-as-complete' :
@@ -212,7 +206,7 @@
         <div class="form-footer">
 
             <div class="form-footer__actions">
-                <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
+                <th:block th:unless="${model.closed and !model.summary}">
 
                     <th:block th:if="${model.assignButtonsViewModel.currentUserIsLead}">
                         <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
@@ -247,20 +241,22 @@
 </th:block>
 <!-- ========================= Current Assignee =========================== -->
 <th:block th:fragment="current-assignee(model)" th:with="question=${model.question}">
-    <div class="assignee" th:if="${model.assignedByCurrentUser}"
-         th:classappend="(${model.assignedToCurrentUser} ? 'assigned-to-me')"
-         th:unless="${model.currentUserIsLead}">
-      <span th:if="${model.assignedToLead}">You have reassigned this question to</span>
-      <span th:unless="${model.assignedToLead}">You have assigned this question to</span>
-      <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}" />
-    </div>
+    <th:block th:if="${model.assigned}">
+        <div class="assignee" th:if="${model.assignedByCurrentUser}"
+             th:classappend="(${model.assignedToCurrentUser} ? 'assigned-to-me')"
+             th:unless="${model.currentUserIsLead}">
+          <span th:if="${model.assignedToLead}">You have reassigned this question to</span>
+          <span th:unless="${model.assignedToLead}">You have assigned this question to</span>
+          <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}" />
+        </div>
 
-    <div class="assignee" th:if="${!model.assignedByCurrentUser and !model.notAssigned}"
-         th:classappend="${model.assignedToCurrentUser} ? 'assigned-to-me'">
-        <th:block th:if="${model.assignedByLead}">This question is assigned to
-          <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}"/>
-        </th:block>
-    </div>
+        <div class="assignee" th:unless="${model.assignedByCurrentUser}"
+             th:classappend="${model.assignedToCurrentUser} ? 'assigned-to-me'">
+            <th:block th:if="${model.assignedByLead}">This question is assigned to
+              <span th:text="${model.assignedToCurrentUser} ? 'you' : ${model.assignee.name}"/>
+            </th:block>
+        </div>
+    </th:block>
 
 </th:block>
 <!-- ========================= Assign / reassign buttons =========================== -->
@@ -342,7 +338,7 @@
                             selected="selected"
                             disabled="disabled"/>
                 </th:block>
-                <th:block th:each="pendingAssignableUser : ${pendingAssignableUsers}">
+                <th:block th:each="pendingAssignableUser : ${model.pendingAssignableUsers}">
                     <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
                 </th:block>
             </select>
@@ -458,7 +454,7 @@
             th:unless="${appIsClosed}"
             th:value="${question.id}"
             th:attrappend="formaction='/application/'+${model.application.id}+'/form/question/edit/'+${question.id}"
-            th:text="${summary ? 'Return and edit' : 'Edit'}" />
+            th:text="${model.summary ? 'Return and edit' : 'Edit'}" />
 </th:block>
 
 <!-- ========================= word count =========================== -->

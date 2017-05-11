@@ -4,7 +4,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
     private List<Long> completedSectionIds;
     private Long applicationDetailsQuestionId;
     private Long yourOrganisationSectionId;
-    private ApplicationFinanceResource organisationFinance;
+    private BaseFinanceResource organisationFinance;
 
     public YourFinancesSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
@@ -65,11 +65,11 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
         this.yourOrganisationSectionId = yourOrganisationSectionId;
     }
 
-    public ApplicationFinanceResource getOrganisationFinance() {
+    public BaseFinanceResource getOrganisationFinance() {
         return organisationFinance;
     }
 
-    public void setOrganisationFinance(ApplicationFinanceResource organisationFinance) {
+    public void setOrganisationFinance(BaseFinanceResource organisationFinance) {
         this.organisationFinance = organisationFinance;
     }
 

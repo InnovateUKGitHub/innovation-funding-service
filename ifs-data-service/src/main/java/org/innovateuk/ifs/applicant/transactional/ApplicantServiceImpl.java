@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
@@ -70,17 +71,17 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         ApplicantSectionResource applicant = new ApplicantSectionResource();
         populateAbstractApplicantResource(applicant, applicationId, userId, results);
 
-        populateSection(results, applicant, sectionId, applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
+        populateSection(results, applicant, sectionId, applicationId, applicant.getApplicants());
 
         if (applicant.getSection().getParentSection() != null) {
             ApplicantSectionResource parent = new ApplicantSectionResource();
-            populateSection(results, parent, applicant.getSection().getParentSection(), applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
+            populateSection(results, parent, applicant.getSection().getParentSection(), applicationId, applicant.getApplicants());
             applicant.setApplicantParentSection(parent);
         }
 
         applicant.getSection().getChildSections().forEach(subSectionId -> {
             ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
-            populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getCurrentApplicant().getOrganisation().getId(), applicant.getApplicants());
+            populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
             applicant.addChildSection(applicantSectionResource);
         });
 
@@ -89,9 +90,9 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
 
     private void populateQuestion(ServiceResults results, ApplicantQuestionResource applicant, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
-        results.trackResult(questionService.getQuestionById(questionId), applicant::setQuestion);
-        results.trackResult(questionService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId), questionStatusResources -> applicant.setApplicantQuestionStatuses(mapToApplicantStatuses(questionStatusResources, applicants)));
-        results.trackResult(mapFormInputs(results, questionId, applicationId, applicants), applicant::setApplicantFormInputs);
+        results.trackResult(() -> questionService.getQuestionById(questionId), applicant::setQuestion);
+        results.trackResult(() -> questionService.getQuestionStatusByQuestionIdAndApplicationId(questionId, applicationId), questionStatusResources -> applicant.setApplicantQuestionStatuses(mapToApplicantStatuses(questionStatusResources, applicants)));
+        results.trackResult(() -> mapFormInputs(results, questionId, applicationId, applicants), applicant::setApplicantFormInputs);
     }
 
     private List<ApplicantQuestionStatusResource> mapToApplicantStatuses(List<QuestionStatusResource> questionStatusResources, List<ApplicantResource> applicants) {
@@ -109,8 +110,8 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         }).collect(Collectors.toList());
     }
 
-    private void populateSection(ServiceResults results, ApplicantSectionResource applicant, Long sectionId, Long applicationId, Long organisationId, List<ApplicantResource> applicants) {
-        results.trackResult(sectionService.getById(sectionId), applicant::setSection);
+    private void populateSection(ServiceResults results, ApplicantSectionResource applicant, Long sectionId, Long applicationId, List<ApplicantResource> applicants) {
+        results.trackResult(() -> sectionService.getById(sectionId), applicant::setSection);
 
         applicant.getSection().getQuestions().forEach(questionId -> {
             ApplicantQuestionResource applicantQuestionResource = new ApplicantQuestionResource();
@@ -122,36 +123,38 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private <R extends AbstractApplicantResource> void populateAbstractApplicantResource(R resource, Long applicationId, Long userId, ServiceResults results) {
         mapApplicants(results, resource, applicationId, userId);
 
-        results.trackResult(baseUserService.getUserById(userId), resource::setCurrentUser);
-        results.trackResult(applicationService.getApplicationById(applicationId), resource::setApplication);
-        results.trackResult(competitionService.getCompetitionById(resource.getApplication().getCompetition()), resource::setCompetition);
-        results.trackResult(usersRolesService.getAssignableProcessRolesByApplicationId(applicationId), resource::setAssignableProcessRoles);
+        results.trackResult(() -> baseUserService.getUserById(userId), resource::setCurrentUser);
+        results.trackResult(() -> applicationService.getApplicationById(applicationId), resource::setApplication);
+        results.trackResult(() -> competitionService.getCompetitionById(resource.getApplication().getCompetition()), resource::setCompetition);
+        results.trackResult(() -> usersRolesService.getAssignableProcessRolesByApplicationId(applicationId), resource::setAssignableProcessRoles);
     }
 
     private <R extends AbstractApplicantResource> void mapApplicants(ServiceResults results, R resource, Long applicationId, Long userId) {
-        results.trackResult(usersRolesService.getProcessRolesByApplicationId(applicationId), processRoles ->
+        results.trackResult(() -> usersRolesService.getProcessRolesByApplicationId(applicationId), processRoles ->
             processRoles.forEach(processRole -> {
-                if (processRole.getUser().equals(userId)) {
-                    results.trackResult(toApplicant(results, processRole), resource::setCurrentApplicant);
+                if (processRole.getOrganisationId() != null) {
+                    if (processRole.getUser().equals(userId)) {
+                        results.trackResult(() -> toApplicant(results, processRole), resource::setCurrentApplicant);
+                    }
+                    results.trackResult(() -> toApplicant(results, processRole), resource::addApplicant);
                 }
-                results.trackResult(toApplicant(results, processRole), resource::addApplicant);
             }));
     }
 
     private ServiceResult<List<ApplicantFormInputResource>> mapFormInputs(ServiceResults results, Long questionId, Long applicationId, List<ApplicantResource> applicants) {
         List<ApplicantFormInputResource> applicantFormInputResources = new ArrayList<>();
-        results.trackResult(formInputService.findByQuestionIdAndScope(questionId, FormInputScope.APPLICATION), formInputResources -> formInputResources.forEach(formInputResource -> {
+        results.trackResult(() -> formInputService.findByQuestionIdAndScope(questionId, FormInputScope.APPLICATION), formInputResources -> formInputResources.forEach(formInputResource -> {
             ApplicantFormInputResource applicantFormInputResource = new ApplicantFormInputResource();
             applicantFormInputResources.add(applicantFormInputResource);
             applicantFormInputResource.setFormInput(formInputResource);
-            results.trackResult(mapFormInputResponse(results, formInputResource, applicationId, applicants), applicantFormInputResource::setApplicantResponses);
+            results.trackResult(() -> mapFormInputResponse(results, formInputResource, applicationId, applicants), applicantFormInputResource::setApplicantResponses);
         }));
         return serviceSuccess(applicantFormInputResources);
     }
 
     private ServiceResult<List<ApplicantFormInputResponseResource>> mapFormInputResponse(ServiceResults results, FormInputResource formInputResource, Long applicationId, List<ApplicantResource> applicants) {
         List<ApplicantFormInputResponseResource> responses = new ArrayList<>();
-        results.trackResult(formInputService.findResponsesByFormInputIdAndApplicationId(formInputResource.getId(), applicationId),
+        results.trackResult(() -> formInputService.findResponsesByFormInputIdAndApplicationId(formInputResource.getId(), applicationId),
                 formInputResponseResources -> {
                     formInputResponseResources.forEach(formInputResponseResource -> {
                         ApplicantFormInputResponseResource applicantResponse = new ApplicantFormInputResponseResource();
@@ -167,7 +170,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
     private ServiceResult<ApplicantResource> toApplicant(ServiceResults results, ProcessRoleResource role) {
         ApplicantResource applicantResource = new ApplicantResource();
-        results.trackResult(organisationService.findById(role.getOrganisationId()), applicantResource::setOrganisation);
+        results.trackResult(() -> organisationService.findById(role.getOrganisationId()), applicantResource::setOrganisation);
         applicantResource.setProcessRole(role);
         return serviceSuccess(applicantResource);
     }
@@ -176,10 +179,14 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private class ServiceResults {
         private List<ServiceResult<Void>> results = new ArrayList<>();
 
-        private <ResultType> void trackResult(ServiceResult<ResultType> result, Consumer<ResultType> consumer) {
-            if (results.stream().noneMatch(ServiceResult::isFailure)) {
-                results.add(result.andOnSuccessReturnVoid(consumer));
+        private <ResultType> void trackResult(Supplier<ServiceResult<ResultType>> resultSupplier, Consumer<ResultType> consumer) {
+            if (isSuccessful()) {
+                results.add(resultSupplier.get().andOnSuccessReturnVoid(consumer));
             }
+        }
+
+        public boolean isSuccessful() {
+            return results.stream().noneMatch(ServiceResult::isFailure);
         }
 
         private ServiceResult<Void> toSingle() {

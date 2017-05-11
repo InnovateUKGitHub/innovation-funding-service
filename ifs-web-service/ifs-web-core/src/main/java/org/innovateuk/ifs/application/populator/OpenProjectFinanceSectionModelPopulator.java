@@ -15,6 +15,7 @@ import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -50,6 +51,7 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
 
     @Override
     public BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection) {
+        ProjectResource projectResource = projectService.getByApplicationId(applicantSection.getApplication().getId());
 
         OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(applicantSection.getSection(), applicantSection.getApplication().getId()),
                 applicantSection.getSection(), true, applicantSection.getSection().getId(), applicantSection.getCurrentUser(), isSubFinanceSection(applicantSection.getSection()));
@@ -63,7 +65,7 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
 
         addQuestionsDetails(openFinanceSectionViewModel, applicantSection, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, form, applicantSection);
-        addOrganisationAndUserProjectFinanceDetails(openFinanceSectionViewModel, form, applicantSection);
+        addOrganisationAndUserProjectFinanceDetails(openFinanceSectionViewModel, form, applicantSection, projectResource);
         addFundingSection(openFinanceSectionViewModel, applicantSection);
 
         form.setBindingResult(bindingResult);
@@ -79,10 +81,10 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
         return openFinanceSectionViewModel;
     }
 
-    private void addOrganisationAndUserProjectFinanceDetails(OpenFinanceSectionViewModel financeSectionViewModel, ApplicationForm form, ApplicantSectionResource applicantSection) {
+    private void addOrganisationAndUserProjectFinanceDetails(OpenFinanceSectionViewModel financeSectionViewModel, ApplicationForm form, ApplicantSectionResource applicantSection, ProjectResource projectResource) {
         List<ApplicantQuestionResource> costsQuestions = applicantSection.questionsWithType(QuestionType.COST);
 
-        financeSectionViewModel.setFinanceOverviewViewModel(projectFinanceOverviewModelManager.getFinanceDetailsViewModel(applicantSection.getCompetition().getId(), applicantSection.getApplication().getId()));
-        financeSectionViewModel.setFinanceViewModel(financeHandler.getProjectFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
+        financeSectionViewModel.setFinanceOverviewViewModel(projectFinanceOverviewModelManager.getFinanceDetailsViewModel(applicantSection.getCompetition().getId(), projectResource.getId()));
+        financeSectionViewModel.setFinanceViewModel(financeHandler.getProjectFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()).getFinanceViewModel(projectResource.getId(), costsQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), applicantSection.getCurrentApplicant().getProcessRole().getUser(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
     }
 }

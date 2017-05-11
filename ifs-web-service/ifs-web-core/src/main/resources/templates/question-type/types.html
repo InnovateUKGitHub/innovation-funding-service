@@ -32,18 +32,18 @@
     <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
         <th:block th:if="${!model.assignButtonsViewModel.currentUserIsLead}">
-            <th:block th:unless="${model.complete}">
+            <th:block th:unless="${model.complete or model.closed}">
                 <div class="assign-container" th:classappend="${model.assignButtonsViewModel.assignedToCurrentUser} ? 'assign-alert' : 'assigned-alert'">
                     <th:block th:include="question-type/form-elements :: current-assignee (${model.assignButtonsViewModel})"/>
                 </div>
             </th:block>
         </th:block>
 
-        <th:block th:if="${!model.assignButtonsViewModel.hideAssignButtons and model.assignButtonsViewModel.currentUserIsLead}">
+        <th:block th:if="${!model.closed and !model.assignButtonsViewModel.hideAssignButtons and model.assignButtonsViewModel.currentUserIsLead}">
             <th:block th:insert="question-type/form-elements :: assign-buttons-dialog (${model.assignButtonsViewModel})" th:with="fullButtonText=${TRUE}"/>
         </th:block>
 
-        <div th:unless="${model.readonly}" class="textarea-header">
+        <div th:unless="${model.closed}" class="textarea-header">
 
             <th:block th:if="${model.complete}">
                 <div class="success-alert assignee extra-margin-bottom">
@@ -54,17 +54,17 @@
         </div>
 
         <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
-            <th:block th:if="${readonly}">
+            <th:block th:if="${model.closed}">
                 <span class="heading-medium" th:if="${question.name}" th:text="${question.name}" />
             </th:block>
-            <th:block th:unless="${model.readonly}">
+            <th:block th:unless="${model.closed}">
               <span class="heading-medium" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
               <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
             </th:block>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
         </label>
 
-        <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:unless="${model.closed}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/form-elements :: form-textarea-wrapped(${model})" />
     </div>
 

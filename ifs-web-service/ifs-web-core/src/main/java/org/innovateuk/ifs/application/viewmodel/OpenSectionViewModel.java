@@ -11,8 +11,8 @@ import java.util.SortedSet;
  * View model extending the {@link BaseSectionViewModel} for open sections (not finance, but used by finances overview)
  */
 public class OpenSectionViewModel extends BaseSectionViewModel {
-    private Set<OrganisationResource> academicOrganisations;
-    private Set<OrganisationResource> applicationOrganisations;
+    private SortedSet<OrganisationResource> academicOrganisations;
+    private SortedSet<OrganisationResource> applicationOrganisations;
     private List<String> pendingOrganisationNames;
     private OrganisationResource leadOrganisation;
 
@@ -27,19 +27,19 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
         subFinanceSection = Boolean.FALSE;
     }
 
-    public Set<OrganisationResource> getAcademicOrganisations() {
+    public SortedSet<OrganisationResource> getAcademicOrganisations() {
         return academicOrganisations;
     }
 
-    public void setAcademicOrganisations(Set<OrganisationResource> academicOrganisations) {
+    public void setAcademicOrganisations(SortedSet<OrganisationResource> academicOrganisations) {
         this.academicOrganisations = academicOrganisations;
     }
 
-    public Set<OrganisationResource> getApplicationOrganisations() {
+    public SortedSet<OrganisationResource> getApplicationOrganisations() {
         return applicationOrganisations;
     }
 
-    public void setApplicationOrganisations(Set<OrganisationResource> applicationOrganisations) {
+    public void setApplicationOrganisations(SortedSet<OrganisationResource> applicationOrganisations) {
         this.applicationOrganisations = applicationOrganisations;
     }
 

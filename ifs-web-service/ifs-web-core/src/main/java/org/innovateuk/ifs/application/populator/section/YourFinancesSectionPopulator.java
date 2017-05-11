@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -8,8 +10,9 @@ import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.YourFinancesSectionViewModel;
+import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestServiceImpl;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +33,10 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     private QuestionService questionService;
 
     @Autowired
-    private ApplicationFinanceRestServiceImpl applicationFinanceRestService;
+    private FinanceService financeService;
+
+    @Autowired
+    private FileEntryRestService fileEntryRestService;
 
     @Override
     protected YourFinancesSectionViewModel createNew(ApplicantSectionResource applicantSection, ApplicationForm form) {
@@ -48,13 +54,23 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
         boolean yourFundingComplete = completedSectionIds.contains(yourFunding.getSection().getId());
         boolean applicationDetailsComplete = applicationDetailsIsComplete(viewModel, applicationDetailsQuestion);
 
-        ApplicationFinanceResource applicantFinances = applicationFinanceRestService.getFinanceDetails(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId()).getSuccessObjectOrThrowException();
-        viewModel.setNotRequestingFunding(yourFundingComplete && yourOrganisationComplete && applicantFinances.getGrantClaimPercentage() != null && applicantFinances.getGrantClaimPercentage() == 0);
+        initializeApplicantFinances(section);
+        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
+        BaseFinanceResource organisationFinances = organisationFinanceOverview.getFinancesByOrganisation().get(section.getCurrentApplicant().getOrganisation().getId());
+
+        viewModel.setNotRequestingFunding(yourFundingComplete && yourOrganisationComplete && organisationFinances.getGrantClaimPercentage() != null && organisationFinances.getGrantClaimPercentage() == 0);
         viewModel.setFundingSectionLocked(!(yourOrganisationComplete && applicationDetailsComplete));
         viewModel.setCompletedSectionIds(completedSectionIds);
         viewModel.setYourOrganisationSectionId(yourOrganisation.getSection().getId());
         viewModel.setApplicationDetailsQuestionId(applicationDetailsQuestion.getId());
-        viewModel.setOrganisationFinance(applicantFinances);
+        viewModel.setOrganisationFinance(organisationFinances);
+    }
+
+    private void initializeApplicantFinances(ApplicantSectionResource section) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(section.getCurrentUser().getId(), section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
+        if(applicationFinanceResource == null) {
+            financeService.addApplicationFinance(section.getCurrentUser().getId(), section.getApplication().getId());
+        }
     }
 
     private boolean applicationDetailsIsComplete(YourFinancesSectionViewModel viewModel, QuestionResource applicationDetailsQuestion) {

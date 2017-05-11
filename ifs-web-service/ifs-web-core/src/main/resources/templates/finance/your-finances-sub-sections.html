@@ -37,7 +37,7 @@
             <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
         </div>
 
-        <div class="question" th:with="formInputViewModel=${model.financialEndYearFormInputViewModel}" th:if="${formInputViewModel}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
+        <div class="question" th:with="formInputViewModel=${model.financialEndYearFormInputViewModel}" th:if="${formInputViewModel != null}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
             <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
         </div>
 
@@ -167,7 +167,7 @@
 
     <th:block th:fragment="your_project_costs(model)">
         <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model})" />
-        <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:unless="${model.showTerms}"></div>
+        <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:if="${model.showTerms}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
@@ -188,7 +188,8 @@
                                                 currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
                                                 completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}),
                                                 eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId}), currentCompetition=(${model.application.currentCompetition}),
-                                                currentApplication=(${model.application.currentApplication}), hasFinanceSection=(${model.hasFinanceSection})">
+                                                currentApplication=(${model.application.currentApplication}), hasFinanceSection=(${model.hasFinanceSection}),
+                                                userOrganisation=(${model.application.userOrganisation})">
                     <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}"/>
                 </th:block>
             </th:block>

@@ -20,8 +20,9 @@
                  th:with="formInputIndex=(${status.index}), summary=true, readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
                  th:id="'form-input-'+${formInput.getId()}">
 
+
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                    <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
                 </th:block>
 
             </div>
@@ -33,7 +34,7 @@
                     th:id="'form-input-'+${formInput.getId()}">
 
                    <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                       <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                       <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
                    </th:block>
 
                </div>

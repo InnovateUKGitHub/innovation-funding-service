@@ -23,7 +23,9 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
         viewModel.setApplicantResponse(applicantResponse);
         viewModel.setCurrentApplicant(applicantResource.getCurrentApplicant());
         viewModel.setComplete(isComplete(applicantQuestion, applicantResource.getCurrentApplicant()));
-        viewModel.setReadonly(viewModel.isComplete());
+        viewModel.setClosed(!applicantResource.getCompetition().isOpen() || !applicantResource.getApplication().isOpen());
+        viewModel.setReadonly(viewModel.isComplete() || viewModel.isClosed());
+
         populate(applicantResource, viewModel);
         return viewModel;
     }

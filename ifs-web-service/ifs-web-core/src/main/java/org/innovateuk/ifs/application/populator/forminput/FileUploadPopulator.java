@@ -31,17 +31,17 @@ public class FileUploadPopulator extends AbstractFormInputPopulator<FileUploadIn
 
     private boolean isReadOnlyViewMode(FileUploadInputViewModel viewModel, AbstractApplicantResource resource) {
         return viewModel.isReadonly() || viewModel.isComplete()
-                || !isAssignedToCurrentApplicant(viewModel.getApplicantQuestion(), resource.getCurrentApplicant())
-                || !leadApplicantAndUnassigned(viewModel.getApplicantQuestion(), resource.getCurrentApplicant());
+                || !isAssignedToCurrentApplicant(viewModel.getApplicantQuestion(), resource.getCurrentApplicant());
 
     }
 
     private boolean leadApplicantAndUnassigned(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant) {
-        return !applicantQuestion.getApplicantQuestionStatuses().stream().noneMatch(status -> status.getAssignee() != null) && currentApplicant.isLead();
+        return applicantQuestion.getApplicantQuestionStatuses().stream().noneMatch(status -> status.getAssignee() != null) && currentApplicant.isLead();
     }
 
     private boolean isAssignedToCurrentApplicant(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant) {
-        return applicantQuestion.allAssignedStatuses().anyMatch(status -> status.getAssignee().isSameUser(currentApplicant));
+        return applicantQuestion.allAssignedStatuses().anyMatch(status -> status.getAssignee().isSameUser(currentApplicant))
+                || leadApplicantAndUnassigned(applicantQuestion, currentApplicant);
     }
 
     @Override

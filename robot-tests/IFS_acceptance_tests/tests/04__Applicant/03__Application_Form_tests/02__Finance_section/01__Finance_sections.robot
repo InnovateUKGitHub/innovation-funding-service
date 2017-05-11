@@ -67,7 +67,7 @@ Guidance in the your project costs
     [Tags]
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link=Your project costs
-    When the user clicks the button/link    jQuery=#form-input-1085 button:contains("Labour")
+    When the user clicks the button/link    jQuery=button:contains("Labour")
     And the user clicks the button/link     css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
     And the user should see the element     jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]

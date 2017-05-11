@@ -87,7 +87,7 @@ public class AssignButtonsViewModel {
     }
 
     public boolean isAssignedTo(ApplicantResource applicant) {
-        return (isNotAssigned() && applicant.isLead()) || assignee.isSameUser(applicant);
+        return (isNotAssigned() && applicant.isLead()) || (isAssigned() && assignee.isSameUser(applicant));
     }
 
 

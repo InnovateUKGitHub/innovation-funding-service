@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.application.viewmodel.forminput;
 
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
 public class TextAreaInputViewModel extends AbstractFormInputViewModel {
 
     private AssignButtonsViewModel assignButtonsViewModel;
+    private ApplicationResource application;
 
     @Override
     protected FormInputType formInputType() {
@@ -19,6 +21,14 @@ public class TextAreaInputViewModel extends AbstractFormInputViewModel {
 
     public void setAssignButtonsViewModel(AssignButtonsViewModel assignButtonsViewModel) {
         this.assignButtonsViewModel = assignButtonsViewModel;
+    }
+
+    public ApplicationResource getApplication() {
+        return application;
+    }
+
+    public void setApplication(ApplicationResource application) {
+        this.application = application;
     }
 
     /* View logic methods. */
