@@ -65,19 +65,19 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testProjectManagerPageAccess() {
+    public void projectManagerPageAccess() {
         assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectManagerPage(organisation),
                 () -> rules.leadCanAccessProjectManagerPage(123L, user));
     }
 
     @Test
-    public void testProjectStartDatePageAccess() {
+    public void projectStartDatePageAccess() {
         assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectStartDatePage(organisation),
                 () -> rules.leadCanAccessProjectStartDatePage(123L, user));
     }
 
     @Test
-    public void testProjectAddressPageAccess() {
+    public void projectAddressPageAccess() {
         assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectAddressPage(organisation),
                 () -> rules.leadCanAccessProjectAddressPage(123L, user));
     }
