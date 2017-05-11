@@ -46,13 +46,10 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This Controller handles finance check notes activity for the finance team members
@@ -104,32 +101,20 @@ public class FinanceChecksNotesController {
                                                          @PathVariable Long attachmentId,
                                                          @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        Optional<ByteArrayResource> fileContent = Optional.empty();
-        Optional<FileEntryResource> fileDetails = Optional.empty();
 
-        ServiceResult<Optional<ByteArrayResource>> downloadResult = null;
+        ServiceResult<Optional<ByteArrayResource>> downloadResult = financeCheckService.downloadFile(attachmentId);
 
-        downloadResult = financeCheckService.downloadFile(attachmentId);
-
-        if (downloadResult.isSuccess()) {
-            fileContent = downloadResult.getSuccessObject();
-        } else {
-            try {
-                fileContent = downloadResult.findAndThrowException(downloadResult.getFailure());
-            } catch (Exception e) {
-                if (e.getMessage().contains("GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION")) {
-                    return forbiddenRedirectionDueToForbidden();
-                }
-                else
-                    throw e;
+        return downloadResult.handleSuccessOrFailure(failure -> forbiddenRedirectionDueToForbidden(), success -> {
+            Optional<ByteArrayResource> fileContent = success;
+            Optional<FileEntryResource> fileDetails = Optional.empty();
+            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
+            if (fileInfo.isSuccess()) {
+                fileDetails = Optional.of(fileInfo.getSuccessObject());
             }
-        }
-        ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-        if (fileInfo.isSuccess()) {
-            fileDetails = Optional.of(fileInfo.getSuccessObject());
-        }
 
-        return returnFileIfFoundOrThrowNotFoundException(fileContent, fileDetails);
+            return returnFileIfFoundOrThrowNotFoundException(fileContent, fileDetails);
+        });
+
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")

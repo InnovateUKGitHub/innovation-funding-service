@@ -82,17 +82,8 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
 
     NoteResource thread;
-    UserResource user1;
-    PostResource firstPost;
-    UserResource user2;
-    PostResource firstResponse;
-
     NoteResource thread2;
-    PostResource firstPost2;
-
     NoteResource thread3;
-    PostResource firstPost1 ;
-    PostResource firstResponse1;
 
     List<NoteResource> notes;
 
@@ -133,6 +124,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         notes = Arrays.asList(thread2, thread, thread3);
     }
+
     @Test
     public void testGetReadOnlyView() throws Exception {
 
