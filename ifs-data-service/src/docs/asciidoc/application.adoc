@@ -107,7 +107,8 @@ include::{snippets}/application/update-application-status/curl-request.adoc[]
 === Inform application ineligible
 ==== Request
 include::{snippets}/application/inform-ineligible/http-request.adoc[]
-include::{snippets}/application/inform-ineligible/request-parameters.adoc[]
+include::{snippets}/application/inform-ineligible/path-parameters.adoc[]
+include::{snippets}/application/inform-ineligible/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/application/inform-ineligible/http-response.adoc[]

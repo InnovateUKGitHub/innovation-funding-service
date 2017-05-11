@@ -333,6 +333,7 @@ class CsvUtils {
         String innovationArea;
         boolean resubmission;
         boolean markDetailsComplete;
+        String ineligibleReason;
 
         private ApplicationLine(List<String> line) {
             int i = 0;
@@ -350,6 +351,7 @@ class CsvUtils {
             innovationArea = nullable(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             markDetailsComplete = nullableBoolean(line.get(i++));
+            ineligibleReason = nullable(line.get(i++));
         }
     }
 
