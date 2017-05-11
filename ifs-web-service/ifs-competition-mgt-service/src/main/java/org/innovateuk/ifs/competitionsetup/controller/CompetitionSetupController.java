@@ -103,9 +103,13 @@ public class CompetitionSetupController {
         }
 
         CompetitionResource competition = competitionService.getById(competitionId);
+
         if (section.preventEdit(competition)) {
-            LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competitionId, section));
             return "redirect:/dashboard";
+        }
+
+        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+            return "redirect:/competition/setup/" + competition.getId();
         }
 
         competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section).getSuccessObjectOrThrowException();
@@ -124,7 +128,7 @@ public class CompetitionSetupController {
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
 
         if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
-            return "redirect:/dashboard";
+            return "redirect:/competition/setup/" + competition.getId();
         }
 
         if (section == null) {
