@@ -501,8 +501,7 @@ Queries raised column updates to 'view'
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should not see the element    link=Awaiting response
-    And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
+    And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
 
 Project finance user can view the response
     [Documentation]    INFUND-4843
