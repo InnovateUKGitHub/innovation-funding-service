@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionTy
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.SCOPE;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.isA;
@@ -77,7 +78,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testGetEditCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -102,11 +106,18 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testPostEditCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES))).thenReturn(ServiceResult.serviceSuccess());
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES)))
+                .thenReturn(ServiceResult.serviceSuccess());
+
         final boolean fullApplicationFinance = true;
         final boolean includeGrowthTable = false;
+
         mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fullApplicationFinance", String.valueOf(fullApplicationFinance))
@@ -119,7 +130,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testViewCompetitionFinance() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -131,7 +145,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testApplicationProcessLandingPage() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -147,7 +164,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testSetApplicationProcessAsComplete() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.validateApplicationQuestions(eq(competition), any(), any())).thenReturn(serviceSuccess());
@@ -161,13 +181,20 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationAssessedQuestionWithErrors() throws Exception {
         Long questionId = 4L;
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
         question.setType(ASSESSED_QUESTION);
+
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+
         mockMvc.perform(post(URL_PREFIX +"/question/" + questionId + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString()))
@@ -181,11 +208,14 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
         question.setType(SCOPE);
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
-
 
         mockMvc.perform(post(URL_PREFIX +"/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
@@ -202,7 +232,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
         question.setType(ASSESSED_QUESTION);
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
@@ -238,11 +272,14 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
         question.setType(SCOPE);
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
-
 
         mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.type", SCOPE.name())
@@ -271,10 +308,14 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationAssessedQuestionWithoutErrors() throws Exception {
         Long questionId = 4L;
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
         question.setQuestionId(questionId);
         question.setType(ASSESSED_QUESTION);
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
@@ -309,7 +350,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationAssessedQuestionWithCheckedOptionsShouldResultInError() throws Exception {
         Long questionId = 4L;
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
         CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
                 .withQuestionId(questionId)
                 .withType(ASSESSED_QUESTION).build();
@@ -343,7 +387,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationAssessedQuestionWithUncheckedOptionsShouldNotResultInError() throws Exception {
         Long questionId = 4L;
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
         CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
                 .withQuestionId(questionId)
                 .withType(ASSESSED_QUESTION).build();
@@ -376,10 +423,14 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationScopeQuestionWithCheckedOptionsShouldResultInError() throws Exception {
         Long questionId = 4L;
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
         CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
                 .withQuestionId(questionId)
                 .withType(ASSESSED_QUESTION).build();
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
@@ -409,7 +460,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
                 .withQuestionId(questionId)
                 .withType(ASSESSED_QUESTION).build();
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
@@ -436,7 +491,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void submitSectionApplicationScopeQuestionWithoutErrors() throws Exception {
         Long questionId = 4L;
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(PROJECT_DETAILS))).thenReturn(serviceSuccess());
 
@@ -467,7 +526,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testGetEditCompetitionApplicationDetails() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -493,7 +555,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testViewCompetitionApplicationDetails() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
         ApplicationDetailsForm form = new ApplicationDetailsForm();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -515,7 +580,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testPostCompetitionApplicationDetails() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         final boolean useResubmissionQuestion = true;
@@ -532,7 +600,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void testPostCompetitionApplicationDetailsWithError() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withSectionSetupStatus(asMap(CompetitionSetupSection.INITIAL_DETAILS, true))
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
