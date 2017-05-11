@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +90,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@Ignore
+//@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
@@ -481,8 +480,6 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitions() {
         competitionLines.forEach(line -> {
-            LOG.info("Creating competition '{}'", line.name);
-
             if ("Connected digital additive manufacturing".equals(line.name)) {
                 createCompetitionWithApplications(line, Optional.of(1L));
             } else {
@@ -529,7 +526,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName, String leadApplicant) {
+    private List<UnaryOperator<QuestionResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName, String leadApplicant) {
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
@@ -538,21 +535,21 @@ public class GenerateTestData extends BaseIntegrationTest {
 
             String answeringUser = !isBlank(line.answeredBy) ? line.answeredBy : (!isBlank(line.assignedTo) ? line.assignedTo : leadApplicant);
 
-            UnaryOperator<ResponseDataBuilder> withQuestion = builder -> builder.forQuestion(line.questionName);
+            UnaryOperator<QuestionResponseDataBuilder> withQuestion = builder -> builder.forQuestion(line.questionName);
 
-            UnaryOperator<ResponseDataBuilder> answerIfNecessary = builder ->
+            UnaryOperator<QuestionResponseDataBuilder> answerIfNecessary = builder ->
                     !isBlank(line.value) ? builder.withAssignee(answeringUser).withAnswer(line.value, answeringUser)
                             : builder;
 
-            UnaryOperator<ResponseDataBuilder> uploadFilesIfNecessary = builder ->
+            UnaryOperator<QuestionResponseDataBuilder> uploadFilesIfNecessary = builder ->
                     !line.filesUploaded.isEmpty() ?
                             builder.withAssignee(answeringUser).withFileUploads(line.filesUploaded, answeringUser) :
                             builder;
 
-            UnaryOperator<ResponseDataBuilder> assignIfNecessary = builder ->
+            UnaryOperator<QuestionResponseDataBuilder> assignIfNecessary = builder ->
                     !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
 
-            UnaryOperator<ResponseDataBuilder> markAsCompleteIfNecessary = builder ->
+            UnaryOperator<QuestionResponseDataBuilder> markAsCompleteIfNecessary = builder ->
                     line.markedAsComplete ? builder.markAsComplete() : builder;
 
             return withQuestion.

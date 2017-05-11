@@ -17,6 +17,8 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -37,6 +39,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  * Generates an Application for a Competition.  Additionally generates finances for each Organisationn on the Application
  */
 public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, ApplicationDataBuilder> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationDataBuilder.class);
 
     public ApplicationDataBuilder withCompetition(CompetitionResource competition) {
         return with(data -> data.setCompetition(competition));
@@ -189,8 +193,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 withInviteResources(applicationInvite).
                 build()).getSuccessObjectOrThrowException();
 
-        testService.flushAndClearSession();
-
         List<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
 
         InviteOrganisationResource newInvite = simpleFindFirst(invites, i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
@@ -247,19 +249,25 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     public ApplicationDataBuilder withQuestionResponses(
-            UnaryOperator<ResponseDataBuilder>... responseBuilders) {
+            UnaryOperator<QuestionResponseDataBuilder>... responseBuilders) {
 
         return withQuestionResponses(asList(responseBuilders));
     }
 
     public ApplicationDataBuilder withQuestionResponses(
-            List<UnaryOperator<ResponseDataBuilder>> responseBuilders) {
+            List<UnaryOperator<QuestionResponseDataBuilder>> responseBuilders) {
 
         return with(data -> {
-            ResponseDataBuilder baseBuilder =
-                    ResponseDataBuilder.newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
+            QuestionResponseDataBuilder baseBuilder =
+                    QuestionResponseDataBuilder.newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
 
             responseBuilders.forEach(builder -> builder.apply(baseBuilder).build());
         });
+    }
+
+    @Override
+    protected void postProcess(int index, ApplicationData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Application '{}'", instance.getApplication().getName());
     }
 }

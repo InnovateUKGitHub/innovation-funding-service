@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
@@ -15,36 +18,42 @@ import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Handles applicant responses to Questions
  */
-public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResponseData, ResponseDataBuilder> {
+public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResponseData, QuestionResponseDataBuilder> {
 
-    public ResponseDataBuilder withApplication(ApplicationResource application) {
+    private static final Logger LOG = LoggerFactory.getLogger(QuestionResponseDataBuilder.class);
+
+    private static Cache<Pair<Long, String>, List<FormInputResource>> formInputsByCompetitionIdAndQuestionName = CacheBuilder.newBuilder().build();
+
+    public QuestionResponseDataBuilder withApplication(ApplicationResource application) {
         return with(data -> data.setApplication(application));
     }
 
-    public ResponseDataBuilder forQuestion(String questionName) {
+    public QuestionResponseDataBuilder forQuestion(String questionName) {
         return with(data -> data.setQuestionName(questionName));
     }
 
-    public ResponseDataBuilder withAnswer(String value, String updatedBy) {
+    public QuestionResponseDataBuilder withAnswer(String value, String updatedBy) {
         return with(data -> {
             UserResource updateUser = retrieveUserByEmail(updatedBy);
             doAs(updateUser, () -> doAnswerQuestion(data.getQuestionName(), value, updateUser, data));
         });
     }
 
-    public ResponseDataBuilder withFileUploads(List<String> fileUploads, String uploadedBy) {
+    public QuestionResponseDataBuilder withFileUploads(List<String> fileUploads, String uploadedBy) {
         return with(data -> {
             UserResource updateUser = retrieveUserByEmail(uploadedBy);
             doAs(updateUser, () -> {
@@ -76,7 +85,7 @@ public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResp
         });
     }
 
-    public ResponseDataBuilder withAssignee(String assignee) {
+    public QuestionResponseDataBuilder withAssignee(String assignee) {
         return with(data -> {
 
             QuestionResource question = retrieveQuestionByCompetitionAndName(data.getQuestionName(), data.getApplication().getCompetition());
@@ -91,7 +100,7 @@ public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResp
         });
     }
 
-    public ResponseDataBuilder markAsComplete() {
+    public QuestionResponseDataBuilder markAsComplete() {
         return with(data -> {
             QuestionResource question = retrieveQuestionByCompetitionAndName(data.getQuestionName(), data.getApplication().getCompetition());
             ProcessRoleResource lead = retrieveLeadApplicant(data.getApplication().getId());
@@ -115,27 +124,37 @@ public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResp
     }
 
     private List<FormInputResource> getFormInputsForQuestion(String questionName, ApplicationQuestionResponseData data) {
-        QuestionResource question = retrieveQuestionByCompetitionAndName(questionName, data.getApplication().getCompetition());
-        return formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+        Long competitionId = data.getApplication().getCompetition();
+
+        return fromCache(Pair.of(competitionId, questionName), formInputsByCompetitionIdAndQuestionName, () -> {
+            QuestionResource question = retrieveQuestionByCompetitionAndName(questionName, competitionId);
+            return formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+        });
     }
 
-    public static ResponseDataBuilder newApplicationQuestionResponseData(ServiceLocator serviceLocator) {
+    public static QuestionResponseDataBuilder newApplicationQuestionResponseData(ServiceLocator serviceLocator) {
 
-        return new ResponseDataBuilder(emptyList(), serviceLocator);
+        return new QuestionResponseDataBuilder(emptyList(), serviceLocator);
     }
 
-    private ResponseDataBuilder(List<BiConsumer<Integer, ApplicationQuestionResponseData>> multiActions,
-                                ServiceLocator serviceLocator) {
+    private QuestionResponseDataBuilder(List<BiConsumer<Integer, ApplicationQuestionResponseData>> multiActions,
+                                        ServiceLocator serviceLocator) {
         super(multiActions, serviceLocator);
     }
 
     @Override
-    protected ResponseDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationQuestionResponseData>> actions) {
-        return new ResponseDataBuilder(actions, serviceLocator);
+    protected QuestionResponseDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationQuestionResponseData>> actions) {
+        return new QuestionResponseDataBuilder(actions, serviceLocator);
     }
 
     @Override
     protected ApplicationQuestionResponseData createInitial() {
         return new ApplicationQuestionResponseData();
+    }
+
+    @Override
+    protected void postProcess(int index, ApplicationQuestionResponseData instance) {
+        super.postProcess(index, instance);
+        LOG.info("Created Response to Application '{}', Question '{}'", instance.getApplication().getName(), instance.getQuestionName());
     }
 }

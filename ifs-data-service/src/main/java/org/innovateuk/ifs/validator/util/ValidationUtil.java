@@ -105,7 +105,6 @@ public class ValidationUtil {
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
         if (response == null) {
-            LOG.info("response is null");
             return binder.getBindingResult();
         }
         Set<FormValidator> validators = response.getFormInput().getFormValidators();
@@ -140,7 +139,6 @@ public class ValidationUtil {
     }
 
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
-        LOG.debug("VALIDATE SECTION " + section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         for (Question question : section.fetchAllQuestionsAndChildQuestions()) {
             if (question.getMarkAsCompletedEnabled()) {
@@ -151,7 +149,6 @@ public class ValidationUtil {
     }
 
     public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
-        LOG.debug("==validate question " + question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         List<FormInput> formInputs = simpleFilter(question.getFormInputs(), formInput -> formInput.getActive() && APPLICATION.equals(formInput.getScope()));
         if (question.hasMultipleStatuses()) {
@@ -178,7 +175,6 @@ public class ValidationUtil {
     }
 
     private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
-        LOG.debug("====validate form input " + formInput.getDescription());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (formInput.getFormValidators().isEmpty()) {
             // no validator? question is valid!
@@ -270,7 +266,6 @@ public class ValidationUtil {
             }
             return new ValidationMessages(costItem.getId(), bindingResult);
         } else {
-            LOG.debug("validated, no messages");
             return ValidationMessages.noErrors(costItem.getId());
         }
     }
