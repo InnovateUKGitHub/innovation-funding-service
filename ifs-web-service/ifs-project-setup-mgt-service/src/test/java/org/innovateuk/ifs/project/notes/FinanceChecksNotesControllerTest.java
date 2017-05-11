@@ -202,10 +202,10 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
         when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/attachment/1"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isForbidden())
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();

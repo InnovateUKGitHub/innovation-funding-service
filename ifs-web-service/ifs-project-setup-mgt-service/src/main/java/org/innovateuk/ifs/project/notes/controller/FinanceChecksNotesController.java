@@ -112,17 +112,17 @@ public class FinanceChecksNotesController {
         downloadResult = financeCheckService.downloadFile(attachmentId);
 
         if (downloadResult.isSuccess()) {
-          fileContent = downloadResult.getSuccessObject();
-        }
-        else {
-          try {
-            fileContent = downloadResult.findAndThrowException(downloadResult.getFailure());
-          } catch (Exception e) {
-            if(e.getMessage().contains("GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION")) {
-              return forbiddenRedirectionDueToForbidden();
+            fileContent = downloadResult.getSuccessObject();
+        } else {
+            try {
+                fileContent = downloadResult.findAndThrowException(downloadResult.getFailure());
+            } catch (Exception e) {
+                if (e.getMessage().contains("GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION")) {
+                    return forbiddenRedirectionDueToForbidden();
+                }
+                else
+                    throw e;
             }
-            else throw e;
-          }
         }
         ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
         if (fileInfo.isSuccess()) {
