@@ -47,7 +47,7 @@ public interface ProjectFinanceRowService {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can delete costs from project finance")
-    ServiceResult<Void> deleteCost(@P("costId") Long costId);
+    ServiceResult<Void> deleteCost(@P("projectId") Long projectId, @P("organisationId") Long organisationId, @P("costId") Long costId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Internal users can update the finance checks details")

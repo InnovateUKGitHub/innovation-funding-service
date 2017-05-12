@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.queries.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.EnumValidator;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
@@ -24,6 +25,7 @@ public class FinanceChecksQueriesAddQueryForm extends BaseBindingResultTarget {
     @EnumValidator( enumClazz=FinanceChecksSectionType.class, message="{validation.notesandqueries.query.section.enum}")
     private String section;
 
+    @JsonIgnore
     private MultipartFile attachment;
 
     public MultipartFile getAttachment() {

@@ -1,9 +1,11 @@
 package org.innovateuk.ifs;
 
 
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -17,6 +19,9 @@ import org.mockito.MockitoAnnotations;
 public abstract class BaseUnitTestMocksTest{
 
     @Mock
+    protected ApplicationService applicationServiceMock;
+
+    @Mock
     protected ProjectService projectServiceMock;
 
     @Mock
@@ -24,6 +29,9 @@ public abstract class BaseUnitTestMocksTest{
 
     @Mock
     protected OrganisationService organisationServiceMock;
+
+    @Mock
+    protected UserService userServiceMock;
 
     @Before
     public void setUp() {

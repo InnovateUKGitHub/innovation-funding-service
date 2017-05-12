@@ -143,13 +143,17 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
+
         Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+        if (!isSubmissionAllowed) {
+            return "redirect:/project/" + projectId + "/details";
+        }
 
         model.addAttribute("projectId", projectId);
         model.addAttribute("projectName", project.getName());
         model.addAttribute("applicationId", project.getApplication());
+        model.addAttribute("projectName", project.getName());
         model.addAttribute("currentUser", loggedInUser);
-        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
         return "project/confirm-project-details";
     }
 
@@ -198,7 +202,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 (project, inviteProjectResource) -> projectService.inviteFinanceContact(project, inviteProjectResource));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = INVITE_PM)
     public String inviteProjectManager(Model model,
                                        @PathVariable("projectId") final Long projectId,
@@ -256,7 +260,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
     @GetMapping("/{projectId}/details/project-manager")
     public String viewProjectManager(@PathVariable("projectId") final Long projectId, Model model,
                                      @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectManagerForm projectManagerForm,
@@ -266,7 +270,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return doViewProjectManager(model, projectId, loggedInUser, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = SAVE_PM)
     public String updateProjectManager(@PathVariable("projectId") final Long projectId, Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
@@ -283,7 +287,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_START_DATE_PAGE')")
     @GetMapping("/{projectId}/details/start-date")
     public String viewStartDate(@PathVariable("projectId") final Long projectId, Model model,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
@@ -296,7 +300,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_START_DATE_PAGE')")
     @PostMapping("/{projectId}/details/start-date")
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
@@ -314,7 +318,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @GetMapping("/{projectId}/details/project-address")
     public String viewAddress(@PathVariable("projectId") final Long projectId,
                               Model model,
@@ -332,7 +336,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/details-address";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping("/{projectId}/details/project-address")
     public String updateAddress(@PathVariable("projectId") final Long projectId,
                                 Model model,
@@ -388,7 +392,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 success -> redirectToProjectDetails(projectId));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS)
     public String searchAddress(@PathVariable("projectId") Long projectId,
                                 Model model,
@@ -404,7 +408,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS)
     public String selectAddress(@PathVariable("projectId") Long projectId,
                                 Model model,
@@ -414,7 +418,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS)
     public String manualAddress(@PathVariable("projectId") Long projectId, Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {

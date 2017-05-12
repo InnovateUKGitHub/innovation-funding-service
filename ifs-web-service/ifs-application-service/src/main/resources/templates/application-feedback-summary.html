@@ -60,10 +60,13 @@
                                         <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
                                     </div>
                                     <div class="column-third">
-                                        <p th:unless=${question.shortName.equals('Scope')} class="form-hint no-margin">No feedback provided</p>
-                                        <p th:if=${question.shortName.equals('Scope')}>
-                                            In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span> Yes
-                                        </p>
+                                        <p th:unless="${question.shortName.equals('Scope')}" class="form-hint no-margin">No feedback provided</p>
+                                        <th:block th:if="${question.shortName.equals('Scope')}">
+                                            <p th:unless="${scores.scopeAssessed}" class="form-hint no-margin">No feedback provided</p>
+                                            <p th:if="${scores.scopeAssessed}">
+                                                In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span>
+                                            </p>
+                                        </th:block>
                                     </div>
                                 </div>
                             </li>
@@ -105,7 +108,7 @@
                 <div class="collapsible">
                     <h3>Finances summary</h3>
                     <div class="question">
-                        <div th:replace="finance/finance-summary :: application_finances_summary"></div>
+                        <div th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></div>
 
                         <h2 class="heading-medium">Funding breakdown</h2>
                         <th:block th:insert="finance/finance-summary :: financial_summary_table" />
