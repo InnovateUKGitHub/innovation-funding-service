@@ -32,7 +32,6 @@ Suite Setup       all the other sections of the project are completed (except sp
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
 
 *** Test Cases ***
 
@@ -217,8 +216,7 @@ Project finance cannot access the GOL before it is sent by PM
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    # TODO Remove the below comment once acceptance branch is merged to dev
-    # Then the user should not see the text in the page  Signed grant offer letter
+    Then the user should not see the text in the page  Signed grant offer letter
 
 PM can view the generated Grant Offer Letter
     [Documentation]    INFUND-6059, INFUND-4849

@@ -65,7 +65,6 @@ Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
 
 *** Variables ***
 ${project_overview}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
@@ -501,7 +500,8 @@ Project Manager can send the project's spend profiles
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    Given the user navigates to the page     ${external_spendprofile_summary}
+    Given the user navigates to the page     ${external_spendprofile    the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
+_summary}
     When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
     And the user should see the element      jQuery=button:contains("Cancel")
@@ -631,8 +631,7 @@ Status updates to a cross for the internal user's table
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
     [Tags]
-    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    # TODO please switch out the PM login above with lead partner once INFUND-8136 is completed
+    Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners

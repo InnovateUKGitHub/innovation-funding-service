@@ -117,7 +117,7 @@ ${PS_EF_APPLICATION_PM_EMAIL}                steven.hicks@ntag.example.com
 ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
-#Old variables - to be refactored
+#Project: Magic material
 ${PROJECT_SETUP_COMPETITION}    8
 ${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
 ${PROJECT_SETUP_APPLICATION_1}    72
@@ -138,6 +138,7 @@ ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}    53532322
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    1230000
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}    4560
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}      40
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}    EGGS
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}
 ${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
@@ -150,4 +151,5 @@ ${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLI
 ${internal_spend_profile_approval}    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
 ${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 
+#Project: Elbow grease
 ${ELBOW_GREASE_PROJECT_ID}  4

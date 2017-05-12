@@ -13,7 +13,7 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...               INFUND-7109 Bank Details Status - Internal user
 ...
 ...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
-Suite Setup
+Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
@@ -96,43 +96,52 @@ Project Finance can see the status of projects in PS
 
 *** Keywords ***
 
+the project is completed if it is not already complete
+    log in as user    &{lead_applicant_credentials}
+    the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
+    ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
+    run keyword if    '${project_manager_not_set}' == 'PASS'     all previous sections of the project are completed
+
 all previous sections of the project are completed
-    lead partner selects project manager
+    lead partner selects project manager and address
     partners submit their finance contacts
     partners submit bank details
     project finance approves bank details
+    project finance fills up monitoring officer
 
-
-lead partner selects project manager
-    guest user log-in                  &{lead_applicant_credentials}
-    the user navigates to the page     ${project_in_setup_details_page}
-    the user clicks the button/link    link=Project details
-    the user sees that the radio button is selected    projectManager    ${STEVE_SMITH_ID}
+lead partner selects project manager and address
+    log in as a different user           &{lead_applicant_credentials}
+    the user navigates to the page       ${project_in_setup_details_page}
+    the user clicks the button/link      link=Project Manager
     the user selects the radio button    projectManager    projectManager2
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link      jQuery=.button:contains("Save")
+    the user clicks the button/link      link=Project address
+    the user selects the radio button    addressType    REGISTERED
+    the user clicks the button/link    jQuery=.button:contains("Save project address")
+    the user clicks the button/link      jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link      jQuery=button:contains("Submit")
 
 partners submit their finance contacts
-    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Katz_Id}
+    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}
     the user selects the radio button  financeContact    financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")
-    log in as a different user         ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Meembee_Id}
+    log in as a different user         &{collaborator1_credentials}
+    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}
     the user selects the radio button  financeContact    financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")
-    log in as a different user         ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/finance-contact?organisation=${Zooveo_Id}
+    log in as a different user         &{collaborator2_credentials}
+    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}
     the user selects the radio button  financeContact    financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 partners submit bank details
-    partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}
-    partner submits his bank details  ${PS_SP_APPLICATION_PARTNER_EMAIL}
-    partner submits his bank details  ${PS_SP_APPLICATION_ACADEMIC_EMAIL}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}
 
 partner submits his bank details
     [Arguments]  ${email}
     log in as a different user            ${email}    ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
+    the user navigates to the page        ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details
     the user enters text to a text field  id=bank-acc-number  51406795
     the user enters text to a text field  id=bank-sort-code  404745
     the user selects the radio button     addressType    REGISTERED
@@ -141,15 +150,25 @@ partner submits his bank details
 
 project finance approves bank details
     log in as a different user                   &{internal_finance_credentials}
-    proj finance approves partners bank details  ${Katz_Id}
-    proj finance approves partners bank details  ${Meembee_Id}
-    proj finance approves partners bank details  ${Zooveo_Id}
+    proj finance approves partners bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}
+    proj finance approves partners bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}
 
 proj finance approves partners bank details
     [Arguments]  ${id}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/organisation/${id}/review-bank-details
+    the user navigates to the page     ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${id}/review-bank-details
     the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     the user clicks the button/link    jQuery=.button:contains("Approve account")
+
+project finance fills up monitoring officer
+    the user navigates to the page          ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
+    the user enters text to a text field    id=firstName    Grace
+    the user enters text to a text field    id=lastName    Harper
+    The user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
+    The user enters text to a text field    id=phoneNumber    08549731414
+    the user clicks the button/link         jQuery=.button[type="submit"]:contains("Assign Monitoring Officer")
+    the user clicks the button/link         jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+
+
 
 
 
