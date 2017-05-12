@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.security;
+package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -11,7 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest<ProjectGrantOfferPermissionRules> {
+public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest<GrantOfferPermissionRules> {
 
     @Test
     public void testLeadPartnersCanCreateSignedGrantOfferLetter() {
@@ -330,7 +330,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Override
-    protected ProjectGrantOfferPermissionRules supplyPermissionRulesUnderTest() {
-        return new ProjectGrantOfferPermissionRules();
+    protected GrantOfferPermissionRules supplyPermissionRulesUnderTest() {
+        return new GrantOfferPermissionRules();
     }
 }

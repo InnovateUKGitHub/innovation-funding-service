@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.grantofferletter.service;
+package org.innovateuk.ifs.project.grantofferletter.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
@@ -73,7 +73,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterServiceImpl.GRANT_OFFER_LETTER_DATE_FORMAT;
+import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.GRANT_OFFER_LETTER_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
