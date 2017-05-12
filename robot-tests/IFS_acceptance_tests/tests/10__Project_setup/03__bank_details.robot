@@ -173,7 +173,7 @@ Submission of bank details for academic user
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
-    When the user submits the bank account details     00000123    000004
+    When the user submits the bank account details along with the organisation address  00000123    000004
     Then the user views the error response from the stub
     When the user enters text to a text field      name=accountNumber  51406795
     And the user enters text to a text field       name=sortCode  404745
@@ -224,7 +224,7 @@ User sees error response for invalid bank details for non-lead partner
     Then the user should see the element           link=Bank details
     When the user clicks the button/link           link=Bank details
     Then the user should see the text in the page  Bank account
-    When the user submits the bank account details     00000123    000004   # Stub is configured to return error response for these values
+    When the user submits the bank account details along with the organisation address      00000123    000004   # Stub is configured to return error response for these values
     Then the user views the error response from the stub
 
 Non lead partner submits bank details
@@ -324,6 +324,15 @@ the user submits the bank account details
     the user enters text to a text field    name=sortCode    ${sort_code}
     the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link    jQuery=.button:contains("Submit")
+
+the user submits the bank account details along with the organisation address
+    [Arguments]    ${account_number}    ${sort_code}
+    the user enters text to a text field    name=accountNumber    ${account_number}
+    the user enters text to a text field    name=sortCode    ${sort_code}
+    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user clicks the button/link     jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user clicks the button/link     jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link     jQuery=.button:contains("Submit")
 
 the user views the error response from the stub
     the user should see the text in the page    Bank details cannot be validated. 
