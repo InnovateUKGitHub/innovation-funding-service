@@ -77,7 +77,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         expectedViabilityResource.setViabilityApprovalUserFirstName("Lee");
         expectedViabilityResource.setViabilityApprovalUserLastName("Bowman");
 
-        when(spendProfileServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
+        when(financeCheckServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/viability", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -101,7 +101,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityRagStatus}", projectId, organisationId, viability, viabilityRagStatus)
         )
@@ -129,7 +129,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         expectedEligibilityResource.setEligibilityApprovalUserFirstName("Lee");
         expectedEligibilityResource.setEligibilityApprovalUserLastName("Bowman");
 
-        when(spendProfileServiceMock.getEligibility(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedEligibilityResource));
+        when(financeCheckServiceMock.getEligibility(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedEligibilityResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/eligibility", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -155,7 +155,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityRagStatus}", projectId, organisationId, eligibility, eligibilityRagStatus)
         )
@@ -173,7 +173,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void getCreditReport() throws Exception {
         String url = "/project/{projectId}/partner-organisation/{organisationId}/credit-report";
-        when(spendProfileServiceMock.getCreditReport(123L, 234L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeCheckServiceMock.getCreditReport(123L, 234L)).thenReturn(serviceSuccess(Boolean.TRUE));
         mockMvc.perform(get(url, 123L, 234L)).
                 andExpect(status().isOk()).
                 andExpect(content().string("true")).
@@ -188,7 +188,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
     @Test
     public void setCreditReport() throws Exception {
         String url = "/project/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}";
-        when(spendProfileServiceMock.saveCreditReport(123L, 234L, Boolean.TRUE)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.saveCreditReport(123L, 234L, Boolean.TRUE)).thenReturn(serviceSuccess());
         mockMvc.perform(post(url, 123L, 234L, Boolean.TRUE)).
                 andExpect(status().isOk()).
                 andDo(this.document.snippets(
@@ -279,7 +279,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 withOrganisationSize(1L).
                 build(2);
 
-        when(spendProfileServiceMock.getProjectFinances(projectId)).thenReturn(serviceSuccess(expectedFinances));
+        when(financeCheckServiceMock.getProjectFinances(projectId)).thenReturn(serviceSuccess(expectedFinances));
 
         mockMvc.perform(get("/project/{projectId}/project-finances", projectId))
                 .andExpect(status().isOk())
