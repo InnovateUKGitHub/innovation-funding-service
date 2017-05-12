@@ -36,7 +36,7 @@
         <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
         <AttributeResolver type="Query" subjectMatch="true"/>
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
-        <CredentialResolver type="File" key="/etc/shibboleth/sptrust.key" certificate="/etc/shibboleth/sptrust.crt"/>
+        <CredentialResolver type="File" key="/etc/shibboleth/sp_proxy_key.pem" certificate="/etc/shibboleth/sp_proxy_certificate.pem"/>
     </ApplicationDefaults>
     <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
     <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>

@@ -12,6 +12,13 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
+    <div class="error-summary" th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}">
+        <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${organisationForm.organisationTypeId}')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
     <h1 class="heading-xlarge">
         <span class="heading-secondary">Create your account</span>
         Choose your organisation type
@@ -27,7 +34,9 @@
                 <span class="heading-medium">What type of organisation are you?</span>
             </legend>
             <div th:class="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-block error' : 'form-block'">
-                <span class="error-message" th:if="${#fields.hasErrors('*{organisationTypeId}')}" th:errors="*{organisationTypeId}"></span>
+                <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}" />
+                </th:block>
                 <label class="block-label selection-button-radio" th:each="type : ${model.types}" th:for="'radio-'+ ${type.id}" th:attr="data-target=${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}">
                     <input th:id="'radio-'+ ${type.id}" type="radio"
                            th:field="*{organisationTypeId}"

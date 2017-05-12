@@ -144,8 +144,7 @@ public class CompetitionManagementFundingControllerTest {
                 .param("applicationIds", "9")
                 .param("applicationIds", "10")
                 .param("fundingDecision", ""))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-funders-panel"));
+                .andExpect(status().is4xxClientError());
 
         verifyNoMoreInteractions(applicationFundingDecisionService);
     }
@@ -174,8 +173,7 @@ public class CompetitionManagementFundingControllerTest {
                 .param("applicationIds", "8")
                 .param("applicationIds", "9")
                 .param("applicationIds", "10"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-funders-panel"));
+                .andExpect(status().is4xxClientError());
 
         verifyNoMoreInteractions(applicationFundingDecisionService);
     }

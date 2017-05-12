@@ -83,6 +83,18 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
         assertStateChangeOnWorkflowHandlerCall(ApplicationState.SUBMITTED, ApplicationState.REJECTED, application -> applicationWorkflowHandler.reject(application));
     }
 
+    @Test
+    public void notifyFromApplicationState_ineligibleToSubmitted() {
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE, ApplicationState.SUBMITTED, application ->
+                applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.SUBMITTED));
+    }
+
+    @Test
+    public void notifyFromApplicationState_ineligibleInformedToSubmitted() {
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.INELIGIBLE_INFORMED, ApplicationState.SUBMITTED, application ->
+                applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.SUBMITTED));
+    }
+
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod) {
         assertStateChangeOnWorkflowHandlerCall(initialApplicationState, expectedApplicationState, workflowHandlerMethod, null);
     }

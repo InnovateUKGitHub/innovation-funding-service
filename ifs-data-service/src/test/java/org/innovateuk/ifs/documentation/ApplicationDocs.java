@@ -26,7 +26,6 @@ public class ApplicationDocs {
             fieldWithPath("competition").description("Competition Id"),
             fieldWithPath("competitionName").description("Competition Name"),
             fieldWithPath("competitionStatus").description("Competition Status"),
-            fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application"),
             fieldWithPath("completion").description("percentage of completion of the application"),
             fieldWithPath("resubmission").description("indicator that this application is a resubmission"),
             fieldWithPath("previousApplicationNumber").description("the application number of the previous submission"),
@@ -47,7 +46,6 @@ public class ApplicationDocs {
             .withCompetition(1L)
             .withCompetitionName("competition name")
             .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
-            .withAssessorFeedbackFileEntry(123L)
             .withCompletion(new BigDecimal(30L))
             .withResearchCategory(new ResearchCategoryResource())
             .withInnovationArea(new InnovationAreaResource())

@@ -10,6 +10,7 @@ if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
 if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
 if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
 if [[ ${TARGET} == "sysint" ]]; then PROJECT="sysint"; fi
+if [[ ${TARGET} == "perf" ]]; then PROJECT="perf"; fi
 
 if [[ (${TARGET} == "local") ]]; then HOST=ifs-local; else HOST=prod.ifs-test-clusters.com; fi
 
@@ -30,6 +31,8 @@ function dbReset() {
       oc delete -f os-files-tmp/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
       sleep 10
     done
+
+    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && ls | grep -v .trashcan | xargs rm -rf'
 }
 
 function blockUntilServiceIsUp() {

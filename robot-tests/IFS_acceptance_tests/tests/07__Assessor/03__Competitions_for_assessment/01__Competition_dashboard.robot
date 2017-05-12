@@ -28,7 +28,7 @@ Resource          ../../10__Project_setup/PS_Commons.robot
 User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
-    When the user navigates to the page    ${server}/assessment/109/assignment
+    When the user navigates to the page    ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
     Then the user should see the text in the page    Invitation withdrawn
     [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
 
@@ -89,7 +89,8 @@ Accept an application for assessment
     Then the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
     When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the text in the page    Accept application
-    And The user clicks the button/link    jQuery=button:contains("Accept")
+    And the user selects the radio button  assessmentAccept  true
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
     And the user should see the element    jQuery=.in-progress li:nth-child(3):contains("Intelligent water system"):contains("Accepted")
 
@@ -105,14 +106,12 @@ Reject an application for assessment
     And the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
     When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the text in the page    Accept application
-    And The user clicks the button/link    jQuery=a:contains("Reject")
-    And the user clicks the button/link    jQuery=button:contains(Cancel)
     And the user should not see the element    id=rejectComment
-    And The user clicks the button/link    jQuery=a:contains("Reject")
-    And the user clicks the button/link    jQuery=.button:contains("Reject")
+    And the user selects the radio button  assessmentAccept  false
+    And The user clicks the button/link    jQuery=button:contains("Confirm")
     Then the user should see an error    Please enter a reason.
     And the assessor fills all fields with valid inputs
-    And the user clicks the button/link    jQuery=.button:contains("Reject")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the application for assessment should be removed
 
 Applications should not have a check-box when the status is Open
@@ -135,7 +134,7 @@ the assessor fills all fields with valid inputs
     Select From List By Index    id=rejectReason    2
     The user should not see the text in the page    Please enter a reason
     The user enters text to a text field    id=rejectComment    Hello all, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
-    the user moves focus to the element    jQuery=.button:contains("Reject")
+    the user moves focus to the element    jQuery=.button:contains("Confirm")
     The user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     The user enters text to a text field    id=rejectComment    Unable to assess the application as i'm on holiday.
 

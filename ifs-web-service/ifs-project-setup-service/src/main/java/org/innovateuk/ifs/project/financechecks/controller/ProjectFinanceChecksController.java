@@ -238,9 +238,7 @@ public class ProjectFinanceChecksController {
                                             HttpServletRequest request,
                                             HttpServletResponse response,
                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
-
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);

@@ -1,27 +1,27 @@
 package org.innovateuk.ifs.project.notes.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
-import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
-import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
+import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
+import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
+import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.threads.resource.NoteResource;
+import org.innovateuk.threads.resource.PostResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -29,14 +29,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -52,6 +51,11 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @Controller
 @RequestMapping(FinanceChecksNotesAddNoteController.FINANCE_CHECKS_NOTES_NEW_NOTE_BASE_URL)
 public class FinanceChecksNotesAddNoteController {
+    static final String FINANCE_CHECKS_NOTES_NEW_NOTE_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/note/new-note";
+    private static final String ATTACHMENT_COOKIE = "finance_checks_notes_new_note_attachments";
+    private static final String FORM_COOKIE = "finance_checks_notes_new_note_form";
+    private static final String FORM_ATTR = "form";
+    private static final String NEW_NOTE_VIEW = "project/financecheck/new-note";
 
     @Autowired
     private OrganisationService organisationService;
@@ -68,50 +72,38 @@ public class FinanceChecksNotesAddNoteController {
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    public static final String FINANCE_CHECKS_NOTES_NEW_NOTE_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/note/new-note";
-
-    private static final String ATTACHMENT_COOKIE = "finance_checks_notes_new_note_attachments";
-    private static final String FORM_ATTR = "form";
-
-
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping
     public String viewNewNote(@PathVariable final Long projectId,
-                               @PathVariable final Long organisationId,
-                               Model model,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
+                              @PathVariable final Long organisationId,
+                              Model model,
+                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                              HttpServletRequest request,
+                              HttpServletResponse response) {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-        attachments.forEach(id -> financeCheckService.deleteFile(id));
-        saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId);
-
-        FinanceChecksNotesAddNoteViewModel viewModel = populateQueriesViewModel(projectId, organisationId, attachments);
-        model.addAttribute("model", viewModel);
-        FinanceChecksNotesAddNoteForm form = new FinanceChecksNotesAddNoteForm();
-        model.addAttribute(FORM_ATTR, form);
-        return "project/financecheck/new-note";
+        model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
+        model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksNotesAddNoteForm()));
+        return NEW_NOTE_VIEW;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping
     public String saveNote(@PathVariable final Long projectId,
-                            @PathVariable final Long organisationId,
-                            @Valid @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
-                            @SuppressWarnings("unused") BindingResult bindingResult,
-                            ValidationHandler validationHandler,
-                            Model model,
-                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                            HttpServletRequest request,
-                            HttpServletResponse response)
-    {
+                           @PathVariable final Long organisationId,
+                           @Valid @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
+                           @SuppressWarnings("unused") BindingResult bindingResult,
+                           ValidationHandler validationHandler,
+                           Model model,
+                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                           HttpServletRequest request,
+                           HttpServletResponse response) {
         Supplier<String> failureView = () -> {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            FinanceChecksNotesAddNoteViewModel viewModel = populateQueriesViewModel(projectId, organisationId, attachments);
+            FinanceChecksNotesAddNoteViewModel viewModel = populateNoteViewModel(projectId, organisationId, attachments);
             model.addAttribute("model", viewModel);
             model.addAttribute(FORM_ATTR, form);
-            return "project/financecheck/new-note";
+            return NEW_NOTE_VIEW;
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -138,7 +130,7 @@ public class FinanceChecksNotesAddNoteController {
             validationHandler.addAnyErrors(result);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
-                        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
+                        deleteCookies(response, projectId, organisationId);
                         return redirectToNotePage(projectId, organisationId);
                     });
         });
@@ -147,33 +139,33 @@ public class FinanceChecksNotesAddNoteController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping(params = "uploadAttachment")
     public String saveNewNoteAttachment(Model model,
-                                         @PathVariable final Long projectId,
-                                         @PathVariable final Long organisationId,
-                                         @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
-                                         @SuppressWarnings("unused") BindingResult bindingResult,
-                                         ValidationHandler validationHandler,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                         HttpServletRequest request,
-                                         HttpServletResponse response) {
+                                        @PathVariable final Long projectId,
+                                        @PathVariable final Long organisationId,
+                                        @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
+                                        @SuppressWarnings("unused") BindingResult bindingResult,
+                                        ValidationHandler validationHandler,
+                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-        Supplier<String> view = () -> {
-            FinanceChecksNotesAddNoteViewModel viewModel = populateQueriesViewModel(projectId, organisationId, attachments);
-            model.addAttribute("model", viewModel);
+        Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId));
+        Supplier<String> onError = () -> {
+            model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
             model.addAttribute("form", form);
-            return "project/financecheck/new-note";
+            return NEW_NOTE_VIEW;
         };
-
-        return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
+        
+        return validationHandler.performActionOrBindErrorsToField("attachment", onError, onSuccess, () -> {
             MultipartFile file = form.getAttachment();
 
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             result.ifSuccessful(uploadedAttachment -> {
                 attachments.add(uploadedAttachment.id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId);
+                saveFormToCookie(response, projectId, organisationId, form);
             });
 
-            FinanceChecksNotesAddNoteViewModel viewModel = populateQueriesViewModel(projectId, organisationId, attachments);
-            model.addAttribute("model", viewModel);
+            model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
             return result;
         });
     }
@@ -206,7 +198,7 @@ public class FinanceChecksNotesAddNoteController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @PostMapping(params="removeAttachment")
+    @PostMapping(params = "removeAttachment")
     public String removeAttachment(@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
@@ -219,15 +211,13 @@ public class FinanceChecksNotesAddNoteController {
                                    Model model) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         if (attachments.contains(attachmentId)) {
-            attachments.remove(attachments.indexOf(attachmentId));
-            financeCheckService.deleteFile(attachmentId);
+            financeCheckService.deleteFile(attachmentId)
+                    .andOnSuccess(() -> attachments.remove(attachments.indexOf(attachmentId)));
         }
         saveAttachmentsToCookie(response, attachments, projectId, organisationId);
+        saveFormToCookie(response, projectId, organisationId, form);
 
-        FinanceChecksNotesAddNoteViewModel viewModel = populateQueriesViewModel(projectId, organisationId, attachments);
-        model.addAttribute("model", viewModel);
-        model.addAttribute("form", form);
-        return "project/financecheck/new-note";
+        return redirectTo(rootView(projectId, organisationId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
@@ -238,14 +228,12 @@ public class FinanceChecksNotesAddNoteController {
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-        attachments.forEach(( id -> financeCheckService.deleteFile(id)));
-
-        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
-
+        attachments.forEach(financeCheckService::deleteFile);
+        deleteCookies(response, projectId, organisationId);
         return redirectToNotePage(projectId, organisationId);
     }
 
-    private FinanceChecksNotesAddNoteViewModel populateQueriesViewModel(Long projectId, Long organisationId, List<Long> attachmentFileIds) {
+    private FinanceChecksNotesAddNoteViewModel populateNoteViewModel(Long projectId, Long organisationId, List<Long> attachmentFileIds) {
 
         ProjectResource project = projectService.getById(projectId);
 
@@ -288,25 +276,38 @@ public class FinanceChecksNotesAddNoteController {
     }
 
     private void saveAttachmentsToCookie(HttpServletResponse response, List<Long> attachmentFileIds, Long projectId, Long organisationId) {
-        String jsonState = JsonUtil.getSerializedObject(attachmentFileIds);
-        cookieUtil.saveToCookie(response, getCookieName(projectId, organisationId), jsonState);
+        cookieUtil.saveToCookie(response, getCookieName(projectId, organisationId), JsonUtil.getSerializedObject(attachmentFileIds));
     }
 
     private List<Long> loadAttachmentsFromCookie(HttpServletRequest request, Long projectId, Long organisationId) {
+        return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId), new TypeReference<List<Long>>() {
+        });
+    }
 
-        List<Long> attachments = new LinkedList<>();
-        String json = cookieUtil.getCookieValue(request, getCookieName(projectId, organisationId));
+    private void deleteCookies(HttpServletResponse response, Long projectId, Long organisationId) {
+        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
+        cookieUtil.removeCookie(response, getFormCookieName(projectId, organisationId));
+    }
 
-        if (json != null && !"".equals(json)) {
-            TypeReference<List<Long>> listType = new TypeReference<List<Long>>() {};
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                attachments = mapper.readValue(json, listType);
-                return attachments;
-            } catch (IOException e) {
-                //ignored
-            }
-        }
-        return attachments;
+    private String getFormCookieName(Long projectId, Long organisationId) {
+        return FORM_COOKIE + "_" + projectId + "_" + organisationId;
+    }
+
+    private String redirectTo(final String path) {
+        return "redirect:" + path;
+    }
+
+    private Optional<FinanceChecksNotesAddNoteForm> loadForm(HttpServletRequest request, Long projectId, Long organisationId) {
+        return cookieUtil.getCookieAs(request, getFormCookieName(projectId, organisationId),
+                new TypeReference<FinanceChecksNotesAddNoteForm>() {
+                });
+    }
+
+    private String rootView(final Long projectId, final Long organisationId) {
+        return String.format(FINANCE_CHECKS_NOTES_NEW_NOTE_BASE_URL, projectId, organisationId);
+    }
+
+    private void saveFormToCookie(HttpServletResponse response, Long projectId, Long organisationId, FinanceChecksNotesAddNoteForm form) {
+        cookieUtil.saveToCookie(response, getFormCookieName(projectId, organisationId), JsonUtil.getSerializedObject(form));
     }
 }

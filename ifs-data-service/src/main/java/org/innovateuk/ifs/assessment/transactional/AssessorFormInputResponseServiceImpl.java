@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -9,13 +11,15 @@ import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseReposit
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
-import org.innovateuk.ifs.category.transactional.CategoryService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.AssessorScoreAverageCollector;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
@@ -29,11 +33,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -56,9 +63,6 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
     private QuestionService questionService;
 
     @Autowired
@@ -67,13 +71,16 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Autowired
     private ValidationUtil validationUtil;
 
+    @Autowired
+    private FormInputService formInputService;
+
     @Override
-    public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
+    public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
     }
 
     @Override
-    public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(Long assessmentId, Long questionId) {
+    public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentIdAndFormInputQuestionId(assessmentId, questionId), assessorFormInputResponseMapper::mapToResource));
     }
 
@@ -118,7 +125,12 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 }
             }
         }
-        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope, avgScores, averagePercentage));
+
+        // Infer that assessment of the Scope question is required if there are Scope responses
+        boolean scopeAssessed = totalScope > 0;
+
+        return serviceSuccess(new ApplicationAssessmentAggregateResource(scopeAssessed, totalScope, totalInScope,
+                avgScores, averagePercentage));
     }
 
     private long getAveragePercentage(List<AssessorFormInputResponse> responses) {
@@ -131,7 +143,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {
         return responses.stream()
-                    .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                    .filter(response -> response.getFormInput().getType() == ASSESSOR_SCORE)
                     .collect(
                             Collectors.groupingBy(
                                     x -> x.getFormInput().getQuestion().getId(),
@@ -164,6 +176,28 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         formInputResponse.setUpdateDate(response.getUpdatedDate());
 
         return formInputResponse;
+    }
+
+    @Override
+    public ServiceResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
+        final Assessment assessment = assessmentRepository.findOne(assessmentId);
+        final Map<Long, List<FormInputResource>> assessmentFormInputs = getAssessmentFormInputs(assessment.getTarget().getCompetition().getId());
+        final Map<Long, List<AssessorFormInputResponseResource>> assessorFormInputResponses = getAssessorResponses(assessmentId);
+        final List<QuestionResource> questions = simpleFilter(
+                questionService.getQuestionsByAssessmentId(assessmentId).getSuccessObjectOrThrowException(),
+                question -> assessmentFormInputs.containsKey(question.getId())
+        );
+        return serviceSuccess(new AssessmentDetailsResource(questions, assessmentFormInputs, assessorFormInputResponses));
+    }
+
+    private Map<Long, List<FormInputResource>> getAssessmentFormInputs(long competitionId) {
+        List<FormInputResource> assessmentFormInputs = formInputService.findByCompetitionIdAndScope(competitionId, ASSESSMENT).getSuccessObjectOrThrowException();
+        return assessmentFormInputs.stream().collect(groupingBy(FormInputResource::getQuestion));
+    }
+
+    private Map<Long, List<AssessorFormInputResponseResource>> getAssessorResponses(long assessmentId) {
+        List<AssessorFormInputResponseResource> assessorResponses = getAllAssessorFormInputResponses(assessmentId).getSuccessObjectOrThrowException();
+        return assessorResponses.stream().collect(groupingBy(AssessorFormInputResponseResource::getQuestion));
     }
 
     private ServiceResult<AssessorFormInputResponseResource> getOrCreateAssessorFormInputResponse(Long assessmentId, Long formInputId) {

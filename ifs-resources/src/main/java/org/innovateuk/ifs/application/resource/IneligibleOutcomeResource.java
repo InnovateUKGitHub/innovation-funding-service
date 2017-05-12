@@ -14,6 +14,14 @@ public class IneligibleOutcomeResource {
     private String removedBy;
     private ZonedDateTime removedOn;
 
+    public IneligibleOutcomeResource() {
+
+    }
+
+    public IneligibleOutcomeResource(String reason) {
+        this.reason = reason;
+    }
+
     public String getReason() {
         return reason;
     }

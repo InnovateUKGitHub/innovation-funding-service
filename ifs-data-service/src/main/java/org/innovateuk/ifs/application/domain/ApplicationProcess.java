@@ -23,7 +23,7 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name="process_id")
     @OrderBy("id ASC")
     private List<IneligibleOutcome> ineligibleOutcomes = new ArrayList<>();
@@ -38,23 +38,23 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     }
 
     @Override
-    public void setParticipant(ProcessRole participant) {
-        this.participant = participant;
-    }
-
-    @Override
     public ProcessRole getParticipant() {
         return participant;
     }
 
     @Override
-    public void setTarget(Application target) {
-        this.target = target;
+    public void setParticipant(ProcessRole participant) {
+        this.participant = participant;
     }
 
     @Override
     public Application getTarget() {
         return target;
+    }
+
+    @Override
+    public void setTarget(Application target) {
+        this.target = target;
     }
 
     @Override

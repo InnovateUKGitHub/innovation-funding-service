@@ -258,19 +258,19 @@ Project Finance can see the progress of partners bank details
     Then the user should see the element            jQuery=li:nth-child(1):contains("Review required")
     And the user should see the element             jQuery=li:nth-child(2):contains("Review required")
     And the user should see the element             jQuery=li:nth-child(3):contains("Review required")
-    When the user clicks the button/link            link=${Eadel_Name}
-    Then the user should see the text in the page   ${Eadel_Name} - Account details
+    When the user clicks the button/link            link=${Vitruvius_Name}
+    Then the user should see the text in the page   ${Vitruvius_Name} - Account details
     And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_FINANCE}
     And the user should see the element             jQuery=a:contains("${PS_BD_APPLICATION_PM_EMAIL}")
     And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_TELEPHONE}
     And the user goes back to the previous page
-    When the user clicks the button/link            link=${Bluezoom_Name}
-    Then the user should see the text in the page   ${Bluezoom_Name} - Account details
+    When the user clicks the button/link            link=${A_B_Cad_Services_Name}
+    Then the user should see the text in the page   ${A_B_Cad_Services_Name} - Account details
     And the user should see the text in the page    Ryan Welch
     And the user should see the text in the page    ${PS_BD_APPLICATION_PARTNER_EMAIL}
     And the user goes back to the previous page
-    When the user clicks the button/link            link=${Npath_Name}
-    Then the user should see the text in the page   ${Npath_Name} - Account details
+    When the user clicks the button/link            link=${Armstrong_Butler_Name}
+    Then the user should see the text in the page   ${Armstrong_Butler_Name} - Account details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_FINANCE}
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
     Then the user clicks the button/link            link=Bank details
@@ -288,9 +288,9 @@ Project Finance can see Bank Details
     And the user should see the text in the page  each partner has submitted their bank details
     Then the user should see the element          jQuery=li:nth-child(1):contains("Review required")
     And the user should see the element           jQuery=li:nth-child(2):contains("Review required")
-    And the user should see the element           jQuery=li:nth-child(1) a:contains("${Eadel_Name}")
+    And the user should see the element           jQuery=li:nth-child(1) a:contains("${Vitruvius_Name}")
     And the user should see the element           jQuery=li:nth-child(3):contains("Review required")
-    When the user clicks the button/link          link=${Eadel_Name}
+    When the user clicks the button/link          link=${Vitruvius_Name}
     Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
 Other internal users do not have access to bank details export
@@ -324,9 +324,9 @@ the user submits the bank account details
 
 
 finance contacts are submitted by all users
-    user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Npath_Id}
-    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${Bluezoom_Id}
-    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Eadel_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Armstrong_Butler_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${A_B_Cad_Services_Id}
+    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Vitruvius_Id}
 
 user submits his finance contacts
     [Arguments]  ${user}  ${id}
@@ -339,20 +339,20 @@ the project finance user downloads the bank details
     the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
 
 the user opens the excel and checks the content
-    ${contents}=                read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${eadel_details}=           get from list  ${contents}  7
-    ${eadel}=                   get from list  ${eadel_details}  0
-    should be equal             ${eadel}  ${Eadel_Name}
-    ${Npath_details}=           get from list  ${contents}  8
-    ${Npath}=                   get from list  ${Npath_details}  0
-    should be equal             ${Npath}  ${Npath_Name}
-    ${application_number}=      get from list  ${eadel_details}  1
-    should be equal             ${application_number}  ${PS_BD_APPLICATION_NUMBER}
-    ${postcode}=                get from list  ${eadel_details}  8
-    should be equal             ${postcode}  CH64 3RU
-    ${bank_account_name}=       get from list  ${eadel_details}  9
-    should be equal             ${bank_account_name}  ${Eadel_Name}
-    ${bank_account_number}=     get from list  ${eadel_details}  10
-    should be equal             ${bank_account_number}  ${account_two}
-    ${bank_account_sort_code}=  get from list  ${eadel_details}  11
-    should be equal             ${bank_account_sort_code}  ${shortCode_two}
+    ${contents}=                    read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
+    ${vitruvius_details}=               get from list  ${contents}  7
+    ${vitruvius}=                       get from list  ${vitruvius_details}  0
+    should be equal                 ${vitruvius}  ${Vitruvius_Name}
+    ${Armstrong_Butler_details}=    get from list  ${contents}  8
+    ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0
+    should be equal                 ${Armstrong_Butler}  ${Armstrong_Butler_Name}
+    ${application_number}=          get from list  ${vitruvius_details}  1
+    should be equal                 ${application_number}  ${PS_BD_APPLICATION_NUMBER}
+    ${postcode}=                    get from list  ${vitruvius_details}  8
+    should be equal                 ${postcode}  CH64 3RU
+    ${bank_account_name}=           get from list  ${vitruvius_details}  9
+    should be equal                 ${bank_account_name}  ${Vitruvius_Name}
+    ${bank_account_number}=         get from list  ${vitruvius_details}  10
+    should be equal                 ${bank_account_number}  ${account_two}
+    ${bank_account_sort_code}=      get from list  ${vitruvius_details}  11
+    should be equal                 ${bank_account_sort_code}  ${shortCode_two}

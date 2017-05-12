@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -56,11 +57,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return adapt(result, n -> n.andOnSuccessReturn(jsonResponse -> jsonResponse.get("completedPercentage").asDouble()));
     }
 
-    // TODO DW - INFUND-1555 - remove usages of the ObjectNode from the data side - replace with a dto
     @Override
     public RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId) {
-        RestResult<ObjectNode> result = getWithRestResult(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, ObjectNode.class);
-        return result.andOnSuccessReturn(jsonResponse -> jsonResponse.get("readyForSubmit").asBoolean(false));
+        return getWithRestResult(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, Boolean.class);
     }
 
     @Override
@@ -88,6 +87,11 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return getWithRestResult(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
+    }
+
+    @Override
+    public RestResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason) {
+        return postWithRestResult(applicationRestURL + "/" + applicationId + "/ineligible", reason, Void.class);
     }
 
     @Override
