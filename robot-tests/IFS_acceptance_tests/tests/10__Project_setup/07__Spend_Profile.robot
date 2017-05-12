@@ -500,8 +500,7 @@ Project Manager can send the project's spend profiles
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    Given the user navigates to the page     ${external_spendprofile    the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
-_summary}
+    Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
     And the user should see the element      jQuery=button:contains("Cancel")

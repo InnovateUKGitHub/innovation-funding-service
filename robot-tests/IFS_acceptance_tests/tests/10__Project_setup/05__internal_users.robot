@@ -117,7 +117,7 @@ lead partner selects project manager and address
     the user clicks the button/link      jQuery=.button:contains("Save")
     the user clicks the button/link      link=Project address
     the user selects the radio button    addressType    REGISTERED
-    the user clicks the button/link    jQuery=.button:contains("Save project address")
+    the user clicks the button/link      jQuery=.button:contains("Save project address")
     the user clicks the button/link      jQuery=.button:contains("Mark as complete")
     the user clicks the button/link      jQuery=button:contains("Submit")
 
