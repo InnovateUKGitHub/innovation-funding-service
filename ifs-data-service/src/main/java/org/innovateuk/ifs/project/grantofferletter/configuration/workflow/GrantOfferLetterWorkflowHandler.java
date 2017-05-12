@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRAN
  *
  */
 @Component
-public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GrantOfferLetterState, GrantOfferLetterOutcomes, Project, ProjectUser> {
+public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GrantOfferLetterState, GrantOfferLetterOutcomes, Project, ProjectUser> {
 
     @Autowired
     @Qualifier("golStateMachine")

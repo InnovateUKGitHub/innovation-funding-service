@@ -26,7 +26,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -102,7 +102,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private FileTemplateRenderer fileTemplateRenderer;
 
     @Autowired
-    private GOLWorkflowHandler golWorkflowHandler;
+    private GrantOfferLetterWorkflowHandler golWorkflowHandler;
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;

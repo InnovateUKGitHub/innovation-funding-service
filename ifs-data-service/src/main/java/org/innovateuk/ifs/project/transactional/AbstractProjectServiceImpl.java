@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
@@ -81,7 +81,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
-    private GOLWorkflowHandler golWorkflowHandler;
+    private GrantOfferLetterWorkflowHandler golWorkflowHandler;
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterOutcomes;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
@@ -34,10 +34,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GOLWorkflowHandlerIntegrationTest extends
-        BaseWorkflowHandlerIntegrationTest<GOLWorkflowHandler, GrantOfferLetterProcessRepository, TestableTransitionWorkflowAction> {
+        BaseWorkflowHandlerIntegrationTest<GrantOfferLetterWorkflowHandler, GrantOfferLetterProcessRepository, TestableTransitionWorkflowAction> {
 
     @Autowired
-    private GOLWorkflowHandler golWorkflowHandler;
+    private GrantOfferLetterWorkflowHandler golWorkflowHandler;
     private ActivityStateRepository activityStateRepositoryMock;
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepositoryMock;
 
@@ -262,8 +262,8 @@ public class GOLWorkflowHandlerIntegrationTest extends
     }
 
     @Override
-    protected Class<GOLWorkflowHandler> getWorkflowHandlerType() {
-        return GOLWorkflowHandler.class;
+    protected Class<GrantOfferLetterWorkflowHandler> getWorkflowHandlerType() {
+        return GrantOfferLetterWorkflowHandler.class;
     }
 
     @Override

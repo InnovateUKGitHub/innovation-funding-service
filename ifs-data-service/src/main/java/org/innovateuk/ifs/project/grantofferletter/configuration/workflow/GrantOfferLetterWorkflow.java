@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLet
  */
 @Configuration
 @EnableStateMachine(name = "golStateMachine")
-public class GOLWorkflow extends StateMachineConfigurerAdapter<GrantOfferLetterState, GrantOfferLetterOutcomes> {
+public class GrantOfferLetterWorkflow extends StateMachineConfigurerAdapter<GrantOfferLetterState, GrantOfferLetterOutcomes> {
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<GrantOfferLetterState, GrantOfferLetterOutcomes> config) throws Exception {
