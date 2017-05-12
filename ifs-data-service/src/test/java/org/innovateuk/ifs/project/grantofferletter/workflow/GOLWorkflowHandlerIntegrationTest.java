@@ -4,8 +4,8 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterOutcomes;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
@@ -53,8 +53,8 @@ public class GOLWorkflowHandlerIntegrationTest extends
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
 
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, GOLState.PENDING.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_GRANT_OFFER_LETTER, GOLState.PENDING.getBackingState())).thenReturn(expectedActivityState);
+        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, GrantOfferLetterState.PENDING.getBackingState());
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_GRANT_OFFER_LETTER, GrantOfferLetterState.PENDING.getBackingState())).thenReturn(expectedActivityState);
 
 
         // Call the workflow here
@@ -67,7 +67,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         GOLProcess expectedGolProcess = new GOLProcess(projectUser, project, expectedActivityState);
 
         // Ensure the correct event was fired by the workflow
-        expectedGolProcess.setProcessEvent(GOLOutcomes.PROJECT_CREATED.getType());
+        expectedGolProcess.setProcessEvent(GrantOfferLetterOutcomes.PROJECT_CREATED.getType());
 
         verify(grantOfferLetterProcessRepositoryMock).save(expectedGolProcess);
 
@@ -79,15 +79,15 @@ public class GOLWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.removeGrantOfferLetter(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GOLState.PENDING, GOLState.PENDING, GOLOutcomes.GOL_REMOVED);
+                GrantOfferLetterState.PENDING, GrantOfferLetterState.PENDING, GrantOfferLetterOutcomes.GOL_REMOVED);
     }
 
     @Test
     public void testGrantOfferLetterRemovedNotAllowedInNonPendingStates() throws Exception {
 
-        asList(GOLState.values()).forEach(startingState -> {
+        asList(GrantOfferLetterState.values()).forEach(startingState -> {
 
-            if (startingState != GOLState.PENDING) {
+            if (startingState != GrantOfferLetterState.PENDING) {
                 callWorkflowAndCheckTransitionFailsInternalUser(((project, internalUser) -> golWorkflowHandler.removeGrantOfferLetter(project, internalUser)), startingState);
             }
         });
@@ -99,7 +99,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterSent(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GOLState.PENDING, GOLState.SENT, GOLOutcomes.GOL_SENT);
+                GrantOfferLetterState.PENDING, GrantOfferLetterState.SENT, GrantOfferLetterOutcomes.GOL_SENT);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> golWorkflowHandler.grantOfferLetterSigned(project, projectUser)),
 
                 // current State, destination State and expected Event to be fired
-                GOLState.SENT, GOLState.READY_TO_APPROVE, GOLOutcomes.GOL_SIGNED);
+                GrantOfferLetterState.SENT, GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterOutcomes.GOL_SIGNED);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterRejected(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GOLState.READY_TO_APPROVE, GOLState.PENDING, GOLOutcomes.GOL_REJECTED);
+                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.PENDING, GrantOfferLetterOutcomes.GOL_REJECTED);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
+                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.APPROVED, GrantOfferLetterOutcomes.GOL_APPROVED);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
+                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.APPROVED, GrantOfferLetterOutcomes.GOL_APPROVED);
     }
 
     @Test
@@ -144,10 +144,10 @@ public class GOLWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.sign(project)),
 
                 // current State, destination State and expected Event to be fired
-                GOLState.SENT, GOLState.READY_TO_APPROVE, GOLOutcomes.GOL_SIGNED);
+                GrantOfferLetterState.SENT, GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterOutcomes.GOL_SIGNED);
     }
 
-    private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
+    private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, GrantOfferLetterState currentGOLState, GrantOfferLetterState destinationGOLState, GrantOfferLetterOutcomes expectedEventToBeFired) {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
@@ -176,7 +176,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         verify(grantOfferLetterProcessRepositoryMock).save(expectedGolProcess);
     }
 
-    private void callWorkflowAndCheckTransitionAndEventFiredInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
+    private void callWorkflowAndCheckTransitionAndEventFiredInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, GrantOfferLetterState currentGOLState, GrantOfferLetterState destinationGOLState, GrantOfferLetterOutcomes expectedEventToBeFired) {
 
         Project project = newProject().build();
         User internalUser = newUser().build();
@@ -205,7 +205,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         verify(grantOfferLetterProcessRepositoryMock).save(expectedGolProcess);
     }
 
-    private void callWorkflowAndCheckTransitionFailsInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, GOLState currentGOLState) {
+    private void callWorkflowAndCheckTransitionFailsInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, GrantOfferLetterState currentGOLState) {
 
         Project project = newProject().build();
         User internalUser = newUser().build();
@@ -226,7 +226,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
         verify(grantOfferLetterProcessRepositoryMock, never()).save(isA(GOLProcess.class));
     }
 
-    private void callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser(Function<Project, Boolean> workflowMethodToCall, GOLState currentGOLState, GOLState destinationGOLState, GOLOutcomes expectedEventToBeFired) {
+    private void callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser(Function<Project, Boolean> workflowMethodToCall, GrantOfferLetterState currentGOLState, GrantOfferLetterState destinationGOLState, GrantOfferLetterOutcomes expectedEventToBeFired) {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();

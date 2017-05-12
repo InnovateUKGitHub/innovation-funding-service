@@ -25,7 +25,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -527,7 +527,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
-    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+    public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
     }
 

@@ -17,7 +17,7 @@ import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.transactional.EmailService;
@@ -972,7 +972,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
 
-        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
@@ -984,12 +984,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project projectInDB = newProject().build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
-        when(golWorkflowHandlerMock.getState(projectInDB)).thenReturn(GOLState.APPROVED);
+        when(golWorkflowHandlerMock.getState(projectInDB)).thenReturn(GrantOfferLetterState.APPROVED);
 
-        ServiceResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GOLState.APPROVED, result.getSuccessObject());
+        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
 
     }
 

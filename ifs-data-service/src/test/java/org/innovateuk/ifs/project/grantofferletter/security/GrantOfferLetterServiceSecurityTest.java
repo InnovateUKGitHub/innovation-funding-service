@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
@@ -407,7 +407,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+        public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
             return null;
         }
 

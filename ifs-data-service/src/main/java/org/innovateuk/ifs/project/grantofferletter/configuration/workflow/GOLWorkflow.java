@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterOutcomes;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
@@ -12,24 +12,24 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
-import static org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes.*;
-import static org.innovateuk.ifs.project.grantofferletter.resource.GOLState.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterOutcomes.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.*;
 
 /**
  * Describes the workflow for the GOL section for Project Setup.
  */
 @Configuration
 @EnableStateMachine(name = "golStateMachine")
-public class GOLWorkflow extends StateMachineConfigurerAdapter<GOLState, GOLOutcomes> {
+public class GOLWorkflow extends StateMachineConfigurerAdapter<GrantOfferLetterState, GrantOfferLetterOutcomes> {
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<GOLState, GOLOutcomes> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<GrantOfferLetterState, GrantOfferLetterOutcomes> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
 
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<GOLState, GOLOutcomes> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<GrantOfferLetterState, GrantOfferLetterOutcomes> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
                 .states(EnumSet.of(PENDING, SENT, READY_TO_APPROVE, APPROVED))
@@ -37,7 +37,7 @@ public class GOLWorkflow extends StateMachineConfigurerAdapter<GOLState, GOLOutc
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<GOLState, GOLOutcomes> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<GrantOfferLetterState, GrantOfferLetterOutcomes> transitions) throws Exception {
         transitions
                 .withExternal()
                     .source(PENDING)

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -83,6 +83,6 @@ public interface GrantOfferLetterService {
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
-    ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
+    ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
 
 }

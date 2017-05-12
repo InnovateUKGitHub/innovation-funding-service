@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
@@ -179,12 +179,12 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
         long projectId = 123L;
 
         String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/state";
-        setupGetWithRestResultExpectations(nonBaseUrl, GOLState.class, GOLState.APPROVED, OK);
+        setupGetWithRestResultExpectations(nonBaseUrl, GrantOfferLetterState.class, GrantOfferLetterState.APPROVED, OK);
 
-        RestResult<GOLState> result = service.getGrantOfferLetterWorkflowState(projectId);
+        RestResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GOLState.APPROVED, result.getSuccessObject());
+        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
     }
 
     @Override

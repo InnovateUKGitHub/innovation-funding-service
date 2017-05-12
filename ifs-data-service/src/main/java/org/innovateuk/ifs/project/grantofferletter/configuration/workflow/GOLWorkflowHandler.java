@@ -4,8 +4,8 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterOutcomes;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
-import static org.innovateuk.ifs.project.grantofferletter.resource.GOLOutcomes.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterOutcomes.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.
@@ -31,11 +31,11 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRAN
  *
  */
 @Component
-public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOLState, GOLOutcomes, Project, ProjectUser> {
+public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GrantOfferLetterState, GrantOfferLetterOutcomes, Project, ProjectUser> {
 
     @Autowired
     @Qualifier("golStateMachine")
-    private StateMachine<GOLState, GOLOutcomes> stateMachine;
+    private StateMachine<GrantOfferLetterState, GrantOfferLetterOutcomes> stateMachine;
 
     @Autowired
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
@@ -47,7 +47,7 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
     private ProjectUserRepository projectUserRepository;
 
     public boolean projectCreated(Project project, ProjectUser originalLeadApplicantProjectUser) {
-        return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUser), GOLState.PENDING);
+        return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUser), GrantOfferLetterState.PENDING);
     }
 
     public boolean grantOfferLetterSent(Project project, User internalUser) {
@@ -68,7 +68,7 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
 
     public boolean isSendAllowed(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GOLState.PENDING.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.PENDING.equals(process.getActivityState());
     }
 
     public boolean removeGrantOfferLetter(Project project, User internalUser) {
@@ -77,27 +77,27 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
 
     public boolean isAlreadySent(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && !GOLState.PENDING.equals(process.getActivityState());
+        return process != null && !GrantOfferLetterState.PENDING.equals(process.getActivityState());
     }
 
     public boolean isApproved(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GOLState.APPROVED.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.APPROVED.equals(process.getActivityState());
     }
 
     public boolean isReadyToApprove(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GOLState.READY_TO_APPROVE.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getActivityState());
     }
 
     public boolean isSent(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GOLState.SENT.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState());
     }
 
-    public GOLState getState(Project project) {
+    public GrantOfferLetterState getState(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null? process.getActivityState() : GOLState.PENDING;
+        return process != null? process.getActivityState() : GrantOfferLetterState.PENDING;
     }
 
     private boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
@@ -140,32 +140,32 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
     }
 
     @Override
-    protected StateMachine<GOLState, GOLOutcomes> getStateMachine() {
+    protected StateMachine<GrantOfferLetterState, GrantOfferLetterOutcomes> getStateMachine() {
         return stateMachine;
     }
 
     @Override
-    protected GOLProcess getOrCreateProcess(Message<GOLOutcomes> message) {
+    protected GOLProcess getOrCreateProcess(Message<GrantOfferLetterOutcomes> message) {
         return getOrCreateProcessCommonStrategy(message);
     }
 
-    private MessageBuilder<GOLOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
+    private MessageBuilder<GrantOfferLetterOutcomes> projectCreatedEvent(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return MessageBuilder
                 .withPayload(PROJECT_CREATED)
                 .setHeader("target", project)
                 .setHeader("participant", originalLeadApplicantProjectUser);
     }
 
-    private MessageBuilder<GOLOutcomes> externalUserEvent(Project project, ProjectUser projectUser,
-                                                          GOLOutcomes event) {
+    private MessageBuilder<GrantOfferLetterOutcomes> externalUserEvent(Project project, ProjectUser projectUser,
+                                                                       GrantOfferLetterOutcomes event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", project)
                 .setHeader("participant", projectUser);
     }
 
-    private MessageBuilder<GOLOutcomes> internalUserEvent(Project project, User internalUser,
-                                                          GOLOutcomes event) {
+    private MessageBuilder<GrantOfferLetterOutcomes> internalUserEvent(Project project, User internalUser,
+                                                          GrantOfferLetterOutcomes event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", project)
