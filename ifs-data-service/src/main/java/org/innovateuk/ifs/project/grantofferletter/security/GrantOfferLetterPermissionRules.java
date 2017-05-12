@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 
 @PermissionRules
 @Component
-public class GrantOfferPermissionRules extends BasePermissionRules {
+public class GrantOfferLetterPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "DOWNLOAD_GRANT_OFFER",

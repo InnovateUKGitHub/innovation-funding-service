@@ -32,12 +32,12 @@ import static org.mockito.Mockito.*;
 
 public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
 
-    private GrantOfferPermissionRules projectGrantOfferPermissionRules;
+    private GrantOfferLetterPermissionRules projectGrantOfferPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        projectGrantOfferPermissionRules = getMockPermissionRulesBean(GrantOfferPermissionRules.class);
+        projectGrantOfferPermissionRules = getMockPermissionRulesBean(GrantOfferLetterPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 

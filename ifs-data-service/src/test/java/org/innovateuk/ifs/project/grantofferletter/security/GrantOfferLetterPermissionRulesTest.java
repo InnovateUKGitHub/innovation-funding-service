@@ -11,7 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest<GrantOfferPermissionRules> {
+public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest<GrantOfferLetterPermissionRules> {
 
     @Test
     public void testLeadPartnersCanCreateSignedGrantOfferLetter() {
@@ -330,7 +330,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Override
-    protected GrantOfferPermissionRules supplyPermissionRulesUnderTest() {
-        return new GrantOfferPermissionRules();
+    protected GrantOfferLetterPermissionRules supplyPermissionRulesUnderTest() {
+        return new GrantOfferLetterPermissionRules();
     }
 }
