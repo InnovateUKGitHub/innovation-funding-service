@@ -27,14 +27,14 @@ public class AssessorProfileAgreementController {
 
     @GetMapping
     public String getAgreement(Model model,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         ProfileAgreementResource profileAgreementResource = profileRestService.getProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
         return doViewAgreement(model, profileAgreementResource);
     }
 
     @PostMapping
     public String submitAgreement(Model model,
-                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         profileRestService.updateProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
         return "redirect:/assessor/dashboard";
     }

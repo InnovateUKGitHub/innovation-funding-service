@@ -132,7 +132,7 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<Void> deleteCost(@P("costId") Long costId) {
+        public ServiceResult<Void> deleteCost(@P("projectId") Long projectId, @P("organisationId") Long organisationId, @P("costId") Long costId) {
             return null;
         }
 

@@ -1,42 +1,20 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
-import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectFinanceController;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -56,7 +34,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
+        when(financeCheckServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/viability", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -72,7 +50,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityRagStatus}", projectId, organisationId, viability, viabilityRagStatus))
                 .andExpect(status().isOk());
@@ -90,7 +68,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.getEligibility(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedEligibilityResource));
+        when(financeCheckServiceMock.getEligibility(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedEligibilityResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/eligibility", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -107,7 +85,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityRagStatus}", projectId, organisationId, eligibility, eligibilityRagStatus))
                 .andExpect(status().isOk());
@@ -118,13 +96,13 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(spendProfileServiceMock.getCreditReport(projectId, organisationId)).thenReturn(serviceSuccess(true));
+        when(financeCheckServiceMock.getCreditReport(projectId, organisationId)).thenReturn(serviceSuccess(true));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/credit-report", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
 
-        verify(spendProfileServiceMock).getCreditReport(projectId, organisationId);
+        verify(financeCheckServiceMock).getCreditReport(projectId, organisationId);
     }
 
     @Test
@@ -132,12 +110,12 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(spendProfileServiceMock.saveCreditReport(projectId, organisationId, true)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.saveCreditReport(projectId, organisationId, true)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/credit-report/{viability}", projectId, organisationId, Boolean.TRUE))
                 .andExpect(status().isOk());
 
-        verify(spendProfileServiceMock).saveCreditReport(projectId, organisationId, true);
+        verify(financeCheckServiceMock).saveCreditReport(projectId, organisationId, true);
     }
 
     @Test

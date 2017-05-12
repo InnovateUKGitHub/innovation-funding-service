@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.controller;
 
-import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -18,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
@@ -28,7 +25,7 @@ import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.*;
 
 @Rollback
-public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
+public class ApplicationControllerIntegrationTest extends ApplicationSubmissionControllerIntegrationTest<ApplicationController> {
 
     public static final long APPLICATION_ID = 1L;
 
@@ -53,7 +50,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
             new ProcessRole(
                 leadApplicantProcessRole,
                 null,
-                 application.getId(),
+                application.getId(),
                 null,
                 null
             )
@@ -118,8 +115,11 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(32.258064516, completedPercentage2.doubleValue(), delta); //Changed after enabling mark as complete on some more questions for INFUND-446
     }
 
+    @Rollback
     @Test
     public void testUpdateApplicationStateApproved() throws Exception {
+        makeApplicationSubmittable(APPLICATION_ID);
+
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.APPROVED);
@@ -127,7 +127,18 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
+    @Rollback
+    public void testUpdateApplicationStateSubmittedNotPossible() throws Exception {
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
+        assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
+    }
+
+    @Rollback
+    @Test
     public void testUpdateApplicationStateRejected() throws Exception {
+        makeApplicationSubmittable(APPLICATION_ID);
+
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.REJECTED);
@@ -140,10 +151,13 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
     }
 
+    @Rollback
     @Test
     public void testUpdateApplicationStateSubmitted() throws Exception {
         ApplicationResource applicationBefore = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
         assertNull(applicationBefore.getSubmittedDate());
+
+        makeApplicationSubmittable(APPLICATION_ID);
 
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
         assertEquals(ApplicationState.SUBMITTED, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
@@ -165,9 +179,11 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(competitionId, application.get().getCompetition());
     }
 
+    @Rollback
     @Test
     public void markAsIneligible() throws Exception {
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        makeApplicationSubmittable(APPLICATION_ID);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
 
@@ -181,9 +197,11 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(reason.getReason(), applicationAfter.getIneligibleOutcome().getReason());
     }
 
+    @Rollback
     @Test
     public void informIneligible() throws Exception {
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
+        makeApplicationSubmittable(APPLICATION_ID);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
         loginCompAdmin();
         controller.markAsIneligible(APPLICATION_ID, newIneligibleOutcomeResource().build());

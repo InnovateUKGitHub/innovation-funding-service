@@ -70,7 +70,7 @@
       <dd th:text="${model.organisationSizeDescription != null ? model.organisationSizeDescription : '-'}">Medium</dd>
     </dl>
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}">
 
       <h2 class="heading-medium">Credit report</h2>
       <div class="form-group">

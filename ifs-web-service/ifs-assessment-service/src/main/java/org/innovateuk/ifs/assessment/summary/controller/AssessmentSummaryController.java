@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.summary.controller;
 
+import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.summary.form.AssessmentSummaryForm;
 import org.innovateuk.ifs.assessment.summary.populator.AssessmentSummaryModelPopulator;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class AssessmentSummaryController {
 
     @GetMapping("/{assessmentId}/summary")
     public String getSummary(Model model,
-                             @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
+                             @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessmentSummaryForm form,
                              BindingResult bindingResult,
                              @PathVariable("assessmentId") long assessmentId) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
@@ -45,6 +45,7 @@ public class AssessmentSummaryController {
             populateFormWithExistingValues(form, assessment);
         }
         model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessment));
+        model.addAttribute("isApplicant", false);
         return "assessment/application-summary";
     }
 
