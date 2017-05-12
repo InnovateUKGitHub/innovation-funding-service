@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.grantofferletter.service;
+package org.innovateuk.ifs.project.grantofferletter.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,22 +18,22 @@ import java.util.function.Supplier;
 public interface GrantOfferLetterService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
-    public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId);
+    ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
-    public ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId);
+    ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
-    public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId);
+    ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
-    public ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId);
+    ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
-    public ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId);
+    ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
-    public ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId);
+    ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPLOAD_SIGNED_GRANT_OFFER')")
     ServiceResult<FileEntryResource> createSignedGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);

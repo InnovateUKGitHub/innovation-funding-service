@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.grantofferletter.service;
+package org.innovateuk.ifs.project.grantofferletter.transactional;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
