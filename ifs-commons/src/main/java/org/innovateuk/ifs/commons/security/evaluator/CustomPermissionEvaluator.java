@@ -75,7 +75,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             })));
         }
 
-        permissionMethodHandler = new AverageTimeSortingPermissionMethodHandler(rulesMap);
+        permissionMethodHandler = new DefaultPermissionMethodHandler(rulesMap);
     }
 
     @PostConstruct
