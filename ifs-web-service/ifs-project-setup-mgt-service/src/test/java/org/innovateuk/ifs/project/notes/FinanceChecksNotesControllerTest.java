@@ -226,7 +226,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note/attachment/1"))
-                .andExpect(view().name("forbidden"))
                 .andExpect(status().isForbidden())
                 .andReturn();
 
@@ -266,6 +265,8 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         FinanceChecksNotesAddCommentForm form = new FinanceChecksNotesAddCommentForm();
         form.setComment("comment");
         formCookie = createFormCookie(form);
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
@@ -357,9 +358,12 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
+        Cookie originCookie = createOriginCookie();
+
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("comment", ""))
+                .param("comment", "")
+                .cookie(originCookie))
                 .andExpect(view().name("project/financecheck/notes"))
                 .andReturn();
 
@@ -385,9 +389,12 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
+        Cookie originCookie = createOriginCookie();
+
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("comment", tooLong))
+                .param("comment", tooLong)
+                .cookie(originCookie))
                 .andExpect(view().name("project/financecheck/notes"))
                 .andReturn();
 
@@ -414,9 +421,12 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
+        Cookie originCookie = createOriginCookie();
+
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("comment", tooManyWords))
+                .param("comment", tooManyWords)
+                .cookie((originCookie)))
                 .andExpect(view().name("project/financecheck/notes"))
                 .andReturn();
 
@@ -446,10 +456,13 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
+        Cookie originCookie = createOriginCookie();
+
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/1/new-comment").
                         file(uploadedFile).
-                        param("uploadAttachment", ""))
+                        param("uploadAttachment", "")
+                        .cookie(originCookie))
                 .andExpect(cookie().exists("finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" +1L))
                 .andExpect(cookie().exists("finance_checks_notes_new_comment_form_" + projectId + "_" + applicantOrganisationId + "_" +1L))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment**"))
@@ -472,6 +485,9 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void testDownloadCommentAttachmentFailsNoContent() throws Exception {
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment/attachment/1"))
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -494,11 +510,16 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         FinanceChecksNotesAddCommentForm formIn = new FinanceChecksNotesAddCommentForm();
         Cookie formCookie = createFormCookie(formIn);
 
+        Cookie originCookie = createOriginCookie();
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment/cancel")
                     .cookie(ck)
-                    .cookie(formCookie))
+                    .cookie(formCookie)
+                    .cookie(originCookie))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note**"))
                 .andReturn();
 
@@ -512,6 +533,12 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                 .findAny();
         assertEquals(true, formCookieFound.get().getValue().isEmpty());
 
+        Optional<Cookie> originCookieFound = Arrays.stream(result.getResponse().getCookies())
+                .filter(cookie -> cookie.getName().equals("finance_checks_notes_new_comment_origin"))
+                .findAny();
+        assertEquals(true, originCookieFound.get().getValue().isEmpty());
+
+
         verify(financeCheckServiceMock).deleteFile(1L);
     }
 
@@ -519,6 +546,8 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     public void testViewNewCommentWithAttachments() throws Exception {
 
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
@@ -561,12 +590,15 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
+        Cookie originCookie = createOriginCookie();
+
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie cookie = createAttachmentsCookie(attachmentIds);
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment/")
                 .param("removeAttachment", "1")
                 .cookie(cookie)
+                .cookie(originCookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("comment", "Query"))
                 .andExpect(cookie().exists("finance_checks_notes_new_comment_attachments_" + projectId + "_" + applicantOrganisationId + "_" + noteId))
@@ -604,9 +636,11 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie cookie = createAttachmentsCookie(attachmentIds);
+        Cookie originCookie = createOriginCookie();
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
                 .param("removeAttachment", "2")
                 .cookie(cookie)
+                .cookie(originCookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("comment", "Query"))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/" + noteId + "/new-comment**"))
