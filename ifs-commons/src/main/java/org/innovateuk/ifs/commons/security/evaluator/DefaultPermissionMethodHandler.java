@@ -18,9 +18,9 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
- * Give a set of permission methods, this class will perform permission checks given an object (e.g. an ApplicationResource)
- * and a permission action (e.g. "READ", "WRITE").  In addition, this class performs sampling of the duration of different
- * permission methods for a given class and action, and will order them to prefer the quickest performing checks first.
+ * Given a set of permission methods, this class will perform permission checks given an object (e.g. an ApplicationResource)
+ * and a permission action (e.g. "READ", "WRITE").  In addition, this class caches sets of permission methods against protected
+ * object classes and permission actions.
  */
 public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
 
@@ -64,12 +64,12 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
         ListOfOwnerAndMethod cachedPermissions = securingMethodsPerClassAndPermission.get(classAndPermissionPair);
 
         if (cachedPermissions != null) {
-            return ListOfOwnerAndMethod.from(cachedPermissions);
+            return cachedPermissions;
         }
 
         ListOfOwnerAndMethod permissionMethodsForPermissionAggregate = findSecuringMethodsPerClass(permission, targetClass);
         securingMethodsPerClassAndPermission.put(classAndPermissionPair, permissionMethodsForPermissionAggregate);
-        return ListOfOwnerAndMethod.from(permissionMethodsForPermissionAggregate);
+        return permissionMethodsForPermissionAggregate;
     }
 
     private ListOfOwnerAndMethod findSecuringMethodsPerClass(Object permission, Class<?> targetClass) {

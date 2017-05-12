@@ -11,12 +11,12 @@ import java.util.Map;
 public class CustomPermissionEvaluatorTestUtil {
 
     public static PermissionedObjectClassToPermissionsToPermissionsMethods getRulesMap(CustomPermissionEvaluator permissionEvaluator) {
-        AverageTimeSortingPermissionMethodHandler permissionMethodHandler = getPermissionMethodHandler(permissionEvaluator);
+        PermissionMethodHandler permissionMethodHandler = getPermissionMethodHandler(permissionEvaluator);
         return (PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(permissionMethodHandler, "rulesMap");
     }
 
-    public static AverageTimeSortingPermissionMethodHandler getPermissionMethodHandler(CustomPermissionEvaluator permissionEvaluator) {
-        return (AverageTimeSortingPermissionMethodHandler) ReflectionTestUtils.getField(permissionEvaluator, "permissionMethodHandler");
+    public static PermissionMethodHandler getPermissionMethodHandler(CustomPermissionEvaluator permissionEvaluator) {
+        return (PermissionMethodHandler) ReflectionTestUtils.getField(permissionEvaluator, "permissionMethodHandler");
     }
 
     public static Map<Class<?>, ListOfOwnerAndMethod> getPermissionLookupStrategyMap(CustomPermissionEvaluator permissionEvaluator) {
@@ -24,13 +24,12 @@ public class CustomPermissionEvaluatorTestUtil {
     }
 
     public static void setRulesMap(CustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassToPermissionsToPermissionsMethods newValue) {
-        AverageTimeSortingPermissionMethodHandler permissionMethodHandler = getPermissionMethodHandler(permissionEvaluator);
+        PermissionMethodHandler permissionMethodHandler = getPermissionMethodHandler(permissionEvaluator);
         ReflectionTestUtils.setField(permissionMethodHandler, "rulesMap", newValue);
     }
 
     public static void cleanDownCachedPermissionRules(CustomPermissionEvaluator permissionEvaluator) {
-        AverageTimeSortingPermissionMethodHandler handler = getPermissionMethodHandler(permissionEvaluator);
+        PermissionMethodHandler handler = getPermissionMethodHandler(permissionEvaluator);
         ReflectionTestUtils.setField(handler, "securingMethodsPerClassAndPermission", new HashMap<>());
-        ReflectionTestUtils.setField(handler, "averageResponseTimesPerPermissionCheck", new HashMap<>());
     }
 }
