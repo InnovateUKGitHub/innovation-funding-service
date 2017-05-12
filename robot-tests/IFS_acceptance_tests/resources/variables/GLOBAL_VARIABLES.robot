@@ -133,10 +133,10 @@ ${text_file}      testing.txt
 ${excel_file}     testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    191
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    192
-${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    193
-${WITHDRAWN_ASSESSMENT}     208
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    236
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    237
+${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    238
+${WITHDRAWN_ASSESSMENT}     249
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}

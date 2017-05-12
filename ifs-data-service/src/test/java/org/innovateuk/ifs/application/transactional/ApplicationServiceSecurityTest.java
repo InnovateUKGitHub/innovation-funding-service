@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
@@ -423,7 +422,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
+        public ServiceResult<Boolean> applicationReadyForSubmit(Long id) {
             return null;
         }
 
