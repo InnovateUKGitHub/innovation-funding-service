@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
@@ -31,6 +32,7 @@ import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -47,6 +49,7 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResourceBuilder;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
@@ -152,10 +155,12 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
 
-        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRoleName(UserRoleType.LEADAPPLICANT.getName()).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
-        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().build();
+        when(userService.retrieveUserById(user.getId())).thenReturn(user);
+        ApplicantResource applicant = newApplicantResource().withProcessRole(processRole).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
@@ -195,10 +200,13 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(1);
         setupServices(competition, application, user, formInputs);
 
-        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRoleName(UserRoleType.LEADAPPLICANT.getName()).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
-        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().build();
+        when(userService.retrieveUserById(user.getId())).thenReturn(user);
+
+        ApplicantResource applicant = newApplicantResource().withProcessRole(processRole).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
@@ -207,7 +215,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         assertEquals(application, viewModel.getApplication().getCurrentApplication());
         assertEquals(Boolean.TRUE, viewModel.getHasFinanceSection());
         assertEquals(section.getName(), viewModel.getTitle());
-        assertEquals(null, viewModel.getApplication().getCurrentCompetition());
+        assertEquals(competition, viewModel.getApplication().getCurrentCompetition());
         assertEquals(section, viewModel.getCurrentSection());
         assertEquals(section.getId(), viewModel.getCurrentSectionId());
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
