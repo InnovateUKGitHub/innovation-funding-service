@@ -51,10 +51,6 @@ public class ApplicationController {
     @Autowired
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
 
-    public static String redirectToApplication(ApplicationResource application) {
-        return "redirect:/application/" + application.getId();
-    }
-
     @ProfileExecution
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
