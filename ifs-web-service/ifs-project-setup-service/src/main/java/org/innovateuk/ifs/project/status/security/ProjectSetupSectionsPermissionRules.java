@@ -90,8 +90,7 @@ public class ProjectSetupSectionsPermissionRules {
     @PermissionRule(value = "SUBMIT_OTHER_DOCUMENTS_SECTION", description = "A lead partner can submit uploaded Other Documents " +
             "if they have not already been submitted, they are allow to submit and haven't been rejected")
     public boolean leadPartnerCanSubmitOtherDocumentsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessOtherDocumentsSection)
-                && doSubmitOtherDocumentsCheck(projectId, user);
+        return doSubmitOtherDocumentsCheck(projectId, user);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SECTION", description = "A lead partner can access the Grant Offer Letter " +

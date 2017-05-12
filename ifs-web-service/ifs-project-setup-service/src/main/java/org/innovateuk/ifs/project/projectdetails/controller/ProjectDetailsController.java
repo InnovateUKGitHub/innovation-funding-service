@@ -146,6 +146,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         model.addAttribute("projectId", projectId);
+        model.addAttribute("projectName", project.getName());
         model.addAttribute("applicationId", project.getApplication());
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);

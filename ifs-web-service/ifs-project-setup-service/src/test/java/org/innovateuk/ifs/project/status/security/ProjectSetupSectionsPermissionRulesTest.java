@@ -4,9 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -25,6 +23,7 @@ import java.util.function.Supplier;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
@@ -82,6 +81,32 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     @Test
     public void testOtherDocumentsSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessOtherDocumentsSection, () -> rules.partnerCanAccessOtherDocumentsSection(123L, user));
+    }
+
+    @Test
+    public void testSubmitOtherDocumentsSectionSuccessfulAccessByProjectManager() {
+        long projectId = 123;
+        UserResource user = newUserResource().build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withOtherDocumentsApproved(ApprovalType.UNSET).build();
+        when(projectServiceMock.getById(projectId)).thenReturn(project);
+        when(projectServiceMock.isProjectManager(user.getId(), projectId)).thenReturn(true);
+        when(projectOtherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+        assertTrue(rules.leadPartnerCanSubmitOtherDocumentsSection(projectId, user));
+    }
+
+    @Test
+    public void testSubmitOtherDocumentsSectionUnsuccessfulAccessByNonProjectManager() {
+        long projectId = 123;
+        UserResource user = newUserResource().build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withOtherDocumentsApproved(ApprovalType.UNSET).build();
+        when(projectServiceMock.getById(projectId)).thenReturn(project);
+        when(projectServiceMock.isProjectManager(user.getId(), projectId)).thenReturn(false);
+        when(projectOtherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+        assertFalse(rules.leadPartnerCanSubmitOtherDocumentsSection(projectId, user));
     }
 
     @Test
