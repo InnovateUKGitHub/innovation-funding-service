@@ -1,6 +1,6 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.commons.security.evaluator.AverageTimeSortingPermissionMethodHandler;
+import org.innovateuk.ifs.commons.security.evaluator.DefaultPermissionMethodHandler;
 import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
@@ -79,7 +79,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected UserResource anonymousUser() {
-        return (UserResource) ReflectionTestUtils.getField(new AverageTimeSortingPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
+        return (UserResource) ReflectionTestUtils.getField(new DefaultPermissionMethodHandler(new PermissionedObjectClassToPermissionsToPermissionsMethods()), "ANONYMOUS_USER");
     }
 
     @Before
