@@ -152,7 +152,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         model.addAttribute("projectId", projectId);
         model.addAttribute("projectName", project.getName());
         model.addAttribute("applicationId", project.getApplication());
-        model.addAttribute("projectName", project.getName());
         model.addAttribute("currentUser", loggedInUser);
         return "project/confirm-project-details";
     }

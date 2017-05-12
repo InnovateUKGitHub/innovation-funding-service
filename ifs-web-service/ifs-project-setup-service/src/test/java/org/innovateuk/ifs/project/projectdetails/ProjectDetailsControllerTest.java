@@ -27,15 +27,16 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
@@ -863,7 +864,27 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(projectId, modelMap.get("projectId"));
         assertEquals(projectName, modelMap.get("projectName"));
         assertEquals(applicationId, modelMap.get("applicationId"));
-        assertEquals(isSubmissionAllowed, modelMap.get("isSubmissionAllowed"));
+    }
+
+    @Test
+    public void testConfirmProjectDetails_submissionNotAllow() throws Exception {
+        Long projectId = 20L;
+        Long applicationId = 1L;
+        String projectName = "current project";
+        Boolean isSubmissionAllowed = FALSE;
+
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationId)
+                .withName(projectName)
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(isSubmissionAllowed));
+
+        mockMvc.perform(get("/project/{id}/confirm-project-details", projectId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/project/%s/details", projectId)));
     }
 }
 
