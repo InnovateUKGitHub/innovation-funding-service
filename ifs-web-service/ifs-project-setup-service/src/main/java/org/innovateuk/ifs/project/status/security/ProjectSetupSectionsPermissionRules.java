@@ -105,9 +105,9 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessOtherDocumentsSection);
     }
 
-    @PermissionRule(value = "SUBMIT_OTHER_DOCUMENTS_SECTION", description = "A lead partner can submit uploaded Other Documents " +
-            "if they have not already been submitted, they are allow to submit and haven't been rejected")
-    public boolean leadPartnerCanSubmitOtherDocumentsSection(Long projectId, UserResource user) {
+    @PermissionRule(value = "SUBMIT_OTHER_DOCUMENTS_SECTION", description = "A project manager can submit uploaded Other Documents " +
+            "if they have not already been submitted, they are allowed to submit and haven't been rejected")
+    public boolean projectManagerCanSubmitOtherDocumentsSection(Long projectId, UserResource user) {
         return doSubmitOtherDocumentsCheck(projectId, user);
     }
 

@@ -111,7 +111,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         when(projectServiceMock.getById(projectId)).thenReturn(project);
         when(projectServiceMock.isProjectManager(user.getId(), projectId)).thenReturn(true);
         when(projectOtherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
-        assertTrue(rules.leadPartnerCanSubmitOtherDocumentsSection(projectId, user));
+        assertTrue(rules.projectManagerCanSubmitOtherDocumentsSection(projectId, user));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         when(projectServiceMock.getById(projectId)).thenReturn(project);
         when(projectServiceMock.isProjectManager(user.getId(), projectId)).thenReturn(false);
         when(projectOtherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
-        assertFalse(rules.leadPartnerCanSubmitOtherDocumentsSection(projectId, user));
+        assertFalse(rules.projectManagerCanSubmitOtherDocumentsSection(projectId, user));
     }
 
     @Test

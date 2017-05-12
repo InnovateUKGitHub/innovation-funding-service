@@ -867,7 +867,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testConfirmProjectDetails_submissionNotAllow() throws Exception {
+    public void testConfirmProjectDetails_submissionNotAllowed() throws Exception {
         Long projectId = 20L;
         Long applicationId = 1L;
         String projectName = "current project";

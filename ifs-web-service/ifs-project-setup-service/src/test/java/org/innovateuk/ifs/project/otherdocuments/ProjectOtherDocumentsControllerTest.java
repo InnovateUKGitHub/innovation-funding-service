@@ -13,7 +13,6 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
@@ -22,6 +21,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
+import static java.lang.Boolean.FALSE;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonErrors.unsupportedMediaTypeError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -141,10 +143,28 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         assertFalse(model.isShowDisabledSubmitDocumentsButton());
 
         assertTrue(readOnlyView);
-
     }
 
     @Test
+    public void testViewOtherDocumentsPageReadOnly_asProjectManager() throws Exception {
+
+        long projectId = 123L;
+
+        ProjectResource project = newProjectResource()
+                .withDocumentsSubmittedDate(ZonedDateTime.now())
+                .withOtherDocumentsApproved(ApprovalType.APPROVED)
+                .withId(projectId)
+                .build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.isProjectManager(loggedInUser.getId(), projectId)).thenReturn(TRUE);
+
+        mockMvc.perform(get(format("/project/%s/partner/documents/readonly", projectId)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/project/%s/partner/documents", projectId)));
+    }
+
+        @Test
     public void testViewOtherDocumentsPageAsPartner() throws Exception {
 
         long projectId = 123L;
@@ -513,6 +533,14 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testSubmitPartnerDocuments() throws Exception {
         when(projectOtherDocumentsService.setPartnerDocumentsSubmitted(1L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{id}/partner/documents/submit", 1L)).
+                andExpect(redirectedUrl("/project/1/partner/documents"));
+    }
+
+    @Test
+    public void testSubmitPartnerDocuments_submitNotAllowed() throws Exception {
+        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(1L)).thenReturn(FALSE);
 
         mockMvc.perform(post("/project/{id}/partner/documents/submit", 1L)).
                 andExpect(redirectedUrl("/project/1/partner/documents"));
