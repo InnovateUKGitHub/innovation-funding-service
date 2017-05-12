@@ -50,7 +50,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
-import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResourceBuilder;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
@@ -160,7 +160,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
         when(userService.retrieveUserById(user.getId())).thenReturn(user);
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRole).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build();
-        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResource().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
@@ -206,7 +206,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         when(userService.retrieveUserById(user.getId())).thenReturn(user);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRole).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build();
-        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResource().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());

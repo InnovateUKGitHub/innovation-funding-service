@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.applicant.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -37,14 +38,17 @@ public class ApplicantResource {
         return other.getOrganisation().getId().equals(organisation.getId());
     }
 
+    @JsonIgnore
     public boolean isSameUser(ApplicantResource other) {
         return other.getProcessRole().getId().equals(processRole.getId());
     }
 
+    @JsonIgnore
     public boolean isLead() {
         return getProcessRole().getRoleName().equals("leadapplicant");
     }
 
+    @JsonIgnore
     public boolean isResearch() { return getOrganisation().getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId()); }
 
 }

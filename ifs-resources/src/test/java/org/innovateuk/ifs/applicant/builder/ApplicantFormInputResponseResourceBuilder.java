@@ -34,7 +34,7 @@ public class ApplicantFormInputResponseResourceBuilder extends BaseBuilder<Appli
         return withArraySetFieldByReflection("response", response);
     }
 
-    public ApplicantFormInputResponseResourceBuilder withApplicantResponses(ApplicantResource... applicant) {
+    public ApplicantFormInputResponseResourceBuilder withApplicant(ApplicantResource... applicant) {
         return withArraySetFieldByReflection("applicant", applicant);
     }
 }

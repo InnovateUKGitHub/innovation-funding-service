@@ -39,7 +39,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
-import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResourceBuilder;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -123,7 +123,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
         ApplicantResource applicant = newApplicantResource().withProcessRole(newProcessRoleResource().withUser(user).withRoleName("leadapplicant").build()).withOrganisation(OrganisationResourceBuilder.newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).withId(organisationId).build()).build();
-        ApplicantSectionResource applicantSection = newApplicantSectionResourceBuilder().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResource().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, bindingResult, applicantSection);
 
         assertEquals(OpenSectionViewModel.class, result.getClass());

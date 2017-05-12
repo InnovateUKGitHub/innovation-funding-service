@@ -11,7 +11,7 @@ import static java.util.Collections.emptyList;
 
 public class ApplicantSectionResourceBuilder extends AbstractApplicantResourceBuilder<ApplicantSectionResource, ApplicantSectionResourceBuilder> {
 
-    public static ApplicantSectionResourceBuilder newApplicantSectionResourceBuilder() {
+    public static ApplicantSectionResourceBuilder newApplicantSectionResource() {
         return new ApplicantSectionResourceBuilder(emptyList());
     }
 

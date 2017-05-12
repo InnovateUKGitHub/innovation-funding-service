@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.applicant.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class ApplicantQuestionResource extends AbstractApplicantResource {
         return getApplicantQuestionStatuses().stream().filter(status -> status.getMarkedAsCompleteBy() != null);
     }
 
-
+    @JsonIgnore
     public boolean isCompleteByApplicant(ApplicantResource applicantResource) {
         return getApplicantQuestionStatuses().stream().filter(status ->
                 Boolean.TRUE.equals(status.getStatus().getMarkedAsComplete()) &&

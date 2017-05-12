@@ -41,7 +41,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
-import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResourceBuilder;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
@@ -144,7 +144,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         when(applicationService.getById(application.getId())).thenReturn(application);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(industrialOrganisation).build();
-        when(applicantRestService.getSection(loggedInUser.getId(), application.getId(), simpleFilter(sectionResources, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0).getId())).thenReturn(newApplicantSectionResourceBuilder().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser).build());
+        when(applicantRestService.getSection(loggedInUser.getId(), application.getId(), simpleFilter(sectionResources, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0).getId())).thenReturn(newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser).build());
         when(userService.retrieveUserById(loggedInUser.getId())).thenReturn(loggedInUser);
 
         when(projectService.getById(project.getId())).thenReturn(project);

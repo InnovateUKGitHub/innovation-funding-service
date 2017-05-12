@@ -49,7 +49,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
-import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResourceBuilder;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
@@ -128,7 +128,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.setupInvites();
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
-        ApplicantSectionResourceBuilder sectionBuilder = newApplicantSectionResourceBuilder().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
+        ApplicantSectionResourceBuilder sectionBuilder = newApplicantSectionResource().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
         sectionResources.forEach(sectionResource -> {
             when(applicantRestService.getSection(anyLong(), anyLong(), eq(sectionResource.getId()))).thenReturn(sectionBuilder.withSection(sectionResource).build());
         });

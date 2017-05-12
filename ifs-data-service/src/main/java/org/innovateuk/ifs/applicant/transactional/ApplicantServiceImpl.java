@@ -132,10 +132,12 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         results.trackResult(() -> usersRolesService.getProcessRolesByApplicationId(applicationId), processRoles ->
             processRoles.forEach(processRole -> {
                 if (processRole.getOrganisationId() != null) {
-                    if (processRole.getUser().equals(userId)) {
-                        results.trackResult(() -> toApplicant(results, processRole), resource::setCurrentApplicant);
-                    }
-                    results.trackResult(() -> toApplicant(results, processRole), resource::addApplicant);
+                    results.trackResult(() -> toApplicant(results, processRole), applicant -> {
+                        if (applicant.getProcessRole().getUser().equals(userId)) {
+                            resource.setCurrentApplicant(applicant);
+                        }
+                        resource.addApplicant(applicant);
+                    });
                 }
             }));
     }

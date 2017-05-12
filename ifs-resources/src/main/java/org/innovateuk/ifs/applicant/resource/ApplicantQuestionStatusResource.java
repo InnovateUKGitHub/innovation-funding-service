@@ -10,7 +10,6 @@ public class ApplicantQuestionStatusResource {
     private QuestionStatusResource status;
 
     private ApplicantResource markedAsCompleteBy;
-
     private ApplicantResource assignee;
     private ApplicantResource assignedBy;
 
