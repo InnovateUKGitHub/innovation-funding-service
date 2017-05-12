@@ -2,7 +2,7 @@
 
 # Container run script
 
-# Put thes in scripts as it makes this script less cluttered:
+# Put these in scripts as it makes this script less cluttered:
 /usr/local/bin/url-rewrites.sh
 
 proxy_certificate=$(sed '/^-----/d' "/etc/shibboleth/$SP_PROXY_CERTIFICATE" | sed '{:q;N;s/\n/\\n/g;t q}')
@@ -23,6 +23,9 @@ sed -i -e "s/Listen 80/Listen $HTTPPORT/" -e "s/Listen 443/Listen $HTTPSPORT/" /
 
 # Do the ldap edits with this script
 /usr/local/bin/ldap-settings.sh
+
+sed -i "s/\${GOOGLEANALYTICS_TRACKINGID}/$GOOGLEANALYTICS_TRACKINGID/" /opt/shibboleth-idp/messages/messages.properties
+
 
 [ -e /var/run/apache2/apache2.pid ] && rm -f /var/run/apache2/apache2.pid
 

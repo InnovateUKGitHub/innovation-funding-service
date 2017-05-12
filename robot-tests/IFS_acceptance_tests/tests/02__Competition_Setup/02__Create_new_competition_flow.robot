@@ -250,15 +250,15 @@ Eligibility: Contain the correct options
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
     And the user should see the text in the page    Please choose the project type.
-    Then the user should see the element    jQuery=label:contains(Single or Collaborative)
-    When the user should see the element    jQuery=label:contains(Collaborative)
-    And the user should see the element    jQuery=label:contains(Business)
-    And the user should see the element    jQuery=label:contains(Research)
+    Then the user should see the element    jQuery=label:contains("Single or Collaborative")
+    When the user should see the element    jQuery=label:contains("Collaborative")
+    And the user should see the element    jQuery=label:contains("Business")
+    And the user should see the element    jQuery=label:contains("Research and technology organisations")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
-    And the user should see the element    jQuery=label:contains(Feasibility studies)
-    And the user should see the element    jQuery=label:contains(Industrial research)
-    And the user should see the element    jQuery=label:contains(Experimental development)
+    And the user should see the element    jQuery=label:contains("Feasibility studies")
+    And the user should see the element    jQuery=label:contains("Industrial research")
+    And the user should see the element    jQuery=label:contains("Experimental development")
     And the resubmission should not have a default selection
 
 Eligibility: Mark as Done then Edit again
@@ -268,7 +268,8 @@ Eligibility: Mark as Done then Edit again
     And the user selects the checkbox    research-categories-34
     And the user selects the checkbox    research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
-    And the user selects the checkbox  lead-applicant-type-1  # business
+    And the user selects the checkbox   lead-applicant-type-1  # business
+    And the user selects the checkbox   lead-applicant-type-3  # RTOs
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
     And the user moves focus and waits for autosave
     And the user selects the radio button    resubmission    no
