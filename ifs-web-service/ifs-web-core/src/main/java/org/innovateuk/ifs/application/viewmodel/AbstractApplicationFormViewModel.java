@@ -13,14 +13,14 @@ import java.util.List;
 /**
  * Generic ViewModel for common fields in SectionViewModels
  */
-public abstract class AbstractApplicantViewModel<R extends AbstractApplicantResource> {
+public abstract class AbstractApplicationFormViewModel<R extends AbstractApplicantResource> {
 
     protected R applicantResource;
     protected NavigationViewModel navigationViewModel;
     private List<AbstractFormInputViewModel> formInputViewModels;
     private boolean allReadOnly;
 
-    public AbstractApplicantViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
+    public AbstractApplicationFormViewModel(R applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
         this.applicantResource = applicantResource;
         this.formInputViewModels = formInputViewModels;
         this.navigationViewModel = navigationViewModel;

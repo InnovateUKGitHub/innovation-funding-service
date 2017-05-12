@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * ViewModel for questions in the applications
  */
-public class QuestionViewModel extends AbstractApplicantViewModel<ApplicantQuestionResource> {
+public class QuestionViewModel extends AbstractApplicationFormViewModel<ApplicantQuestionResource> {
 
     public QuestionViewModel(ApplicantQuestionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
