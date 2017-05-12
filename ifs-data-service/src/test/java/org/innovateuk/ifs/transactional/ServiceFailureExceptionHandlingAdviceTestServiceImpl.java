@@ -15,6 +15,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * A test Service for tests in {@link ServiceFailureExceptionHandlingAdviceTest}
  */
 @Service
+@Transactional
 public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTransactionalService implements ServiceFailureExceptionHandlingAdviceTestService {
 
     @Autowired
@@ -34,7 +35,6 @@ public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTr
     }
 
     @Override
-    @Transactional
     public ServiceResult<String> restoreSuccessfulMethod() {
 
         User user = getUser();
