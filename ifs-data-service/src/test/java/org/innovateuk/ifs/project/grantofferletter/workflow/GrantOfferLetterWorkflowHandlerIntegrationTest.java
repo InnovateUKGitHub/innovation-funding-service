@@ -33,7 +33,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GOLWorkflowHandlerIntegrationTest extends
+public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         BaseWorkflowHandlerIntegrationTest<GrantOfferLetterWorkflowHandler, GrantOfferLetterProcessRepository, TestableTransitionWorkflowAction> {
 
     @Autowired
