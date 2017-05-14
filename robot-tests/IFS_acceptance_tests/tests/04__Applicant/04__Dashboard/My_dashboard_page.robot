@@ -42,8 +42,8 @@ Custom setup
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${TIME}' WHERE `competition_id`='${OPEN_COMPETITION}' and type IN ('SUBMISSION_DATE');
 
 the user should see the date for submission of application
-    the user should see the element    css=.in-progress li:nth-child(2) .day
-    the user should see the element    css=.in-progress li:nth-child(2) .month
+    the user should see the element    css=.in-progress li:nth-child(3) .day
+    the user should see the element    css=.in-progress li:nth-child(3) .month
 
 the user should see the number of days remaining
-    the user should see the element    css=.in-progress li:nth-child(2) .days-remaining
+    the user should see the element    css=.in-progress li:nth-child(3) .days-remaining

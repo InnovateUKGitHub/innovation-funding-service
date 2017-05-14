@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.transactional;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
@@ -11,16 +10,9 @@ import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
@@ -34,26 +26,25 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -66,14 +57,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.function.Supplier;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -93,8 +80,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
-    private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
-    private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -133,12 +118,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private  EmailService projectEmailService;
 
     @Autowired
-    private FileService fileService;
-
-    @Autowired
-    private FileEntryMapper fileEntryMapper;
-
-    @Autowired
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
@@ -167,9 +146,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private FinanceChecksGenerator financeChecksGenerator;
-
-    @Autowired
-    private ProjectGrantOfferService projectGrantOfferLetterService;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -224,9 +200,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
         return getProject(composite.getProjectId()).
                 andOnSuccess(this::validateProjectIsInSetup).
-                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
-                            andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                                    andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
+                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
@@ -298,167 +274,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
-
-        return getProject(projectId).andOnSuccess(project ->
-                retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                        failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
-                        success -> setDocumentsSubmittedDate(project, date)));
-    }
-
-    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, ZonedDateTime date) {
-        project.setDocumentsSubmittedDate(date);
-        return serviceSuccess();
-    }
-
-    @Override
-    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
-
-        ServiceResult<Project> project = getProject(projectId);
-        Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
-
-        return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                failure -> serviceSuccess(false),
-                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
-                        serviceSuccess(true) :
-                        serviceSuccess(false));
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
-                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
-    }
-
-    @Override
-    public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            FileEntry fileEntry = project.getCollaborationAgreement();
-
-            if (fileEntry == null) {
-                return serviceFailure(notFoundError(FileEntry.class));
-            }
-
-            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
-        });
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            FileEntry fileEntry = project.getCollaborationAgreement();
-
-            if (fileEntry == null) {
-                return serviceFailure(notFoundError(FileEntry.class));
-            }
-
-            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
-        });
-    }
-
-    @Override
-    public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
-                andOnSuccess(this::validateProjectIsInSetup).
-                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
-    }
-
-    @Override
-    public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
-        return getProject(projectId).
-                andOnSuccess(this::validateProjectIsInSetup).
-                andOnSuccess(project ->
-                getCollaborationAgreement(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                removeCollaborationAgreementFileFromProject(project))));
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> createExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
-                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
-    }
-
-    @Override
-    public ServiceResult<FileAndContents> getExploitationPlanFileContents(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            FileEntry fileEntry = project.getExploitationPlan();
-
-            if (fileEntry == null) {
-                return serviceFailure(notFoundError(FileEntry.class));
-            }
-
-            ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(fileEntry.getId());
-            return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(fileEntry), inputStream));
-        });
-    }
-
-    @Override
-    public ServiceResult<FileEntryResource> getExploitationPlanFileEntryDetails(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
-
-            FileEntry fileEntry = project.getExploitationPlan();
-
-            if (fileEntry == null) {
-                return serviceFailure(notFoundError(FileEntry.class));
-            }
-
-            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
-        });
-    }
-
-    @Override
-    public ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
-                andOnSuccess(this::validateProjectIsInSetup).
-                andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturnVoid(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
-    }
-
-    @Override
-    public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
-        return getProject(projectId).
-        andOnSuccess(this::validateProjectIsInSetup).andOnSuccess(project ->
-                getExploitationPlan(project).andOnSuccess(fileEntry ->
-                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                removeExploitationPlanFileFromProject(project))));
-    }
-
-    @Override
-    public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
-        //TODO INFUND-7493
-        if (approval == null) {
-            return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
-        }
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
-                        return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED);
-                    }
-                    project.setOtherDocumentsApproved(approval ? ApprovalType.APPROVED : ApprovalType.REJECTED);
-                    if (approval.equals(false)) {
-                        project.setDocumentsSubmittedDate(null);
-                    }
-                    return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
-                });
-    }
-
-    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
-
-        ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
-        ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
-
-        return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
-    }
-
-    @Override
     public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
         return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
                 andOnSuccess((project, organisation, user) -> {
@@ -474,55 +289,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         return serviceSuccess(pu);
                     }
                 });
-    }
-
-    private ServiceResult<FileEntry> getCollaborationAgreement(Project project) {
-        if (project.getCollaborationAgreement() == null) {
-            return serviceFailure(notFoundError(FileEntry.class));
-        } else {
-            return serviceSuccess(project.getCollaborationAgreement());
-        }
-    }
-
-    private FileEntryResource linkCollaborationAgreementFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
-        FileEntry fileEntry = fileDetails.getValue();
-        linkCollaborationAgreementFileEntryToProject(fileEntry, project);
-        return fileEntryMapper.mapToResource(fileEntry);
-    }
-
-    private void linkCollaborationAgreementFileEntryToProject(FileEntry fileEntry, Project project) {
-        project.setOtherDocumentsApproved(ApprovalType.UNSET);
-        project.setCollaborationAgreement(fileEntry);
-    }
-
-    private void removeCollaborationAgreementFileFromProject(Project project) {
-        validateProjectIsInSetup(project).
-        andOnSuccess(() -> project.setCollaborationAgreement(null));
-    }
-
-    private ServiceResult<FileEntry> getExploitationPlan(Project project) {
-        if (project.getExploitationPlan() == null) {
-            return serviceFailure(notFoundError(FileEntry.class));
-        } else {
-            return serviceSuccess(project.getExploitationPlan());
-        }
-    }
-
-    private FileEntryResource linkExploitationPlanFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
-        FileEntry fileEntry = fileDetails.getValue();
-        linkExploitationPlanFileEntryToProject(fileEntry, project);
-        return fileEntryMapper.mapToResource(fileEntry);
-    }
-
-    private void linkExploitationPlanFileEntryToProject(FileEntry fileEntry, Project project) {
-        project.setOtherDocumentsApproved(ApprovalType.UNSET);
-        project.setExploitationPlan(fileEntry);
-    }
-
-    private void removeExploitationPlanFileFromProject(Project project) {
-
-        validateProjectIsInSetup(project).
-                andOnSuccess(() -> project.setExploitationPlan(null));
     }
 
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
@@ -569,7 +335,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-        return inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER);
+
+        return getProject(projectId)
+                .andOnSuccess(this::validateIfProjectAlreadySubmitted)
+                .andOnSuccess(() -> inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER));
     }
 
     @Override
@@ -609,52 +378,31 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
 
         boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccessObject();
+        boolean isLead = partnerOrganisation.equals(leadOrganisation);
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
-        ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
-        ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
-        ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
-        ProjectActivityStates leadSpendProfileStatus = createLeadSpendProfileStatus(project, spendProfileStatus, spendProfile);
-        ProjectActivityStates otherDocumentsStatus = createOtherDocumentStatus(project);
-        ProjectActivityStates grantOfferLetterStatus = createGrantOfferLetterStatus(leadSpendProfileStatus, otherDocumentsStatus, project, partnerOrganisation.equals(leadOrganisation));
+        ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
+        ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
+        ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
+        ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
+        ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
 
-        ProjectActivityStates partnerProjectDetailsSubmittedStatus = financeContactStatus;
-
-        ProjectPartnerStatusResource projectPartnerStatusResource;
-
-        if (partnerOrganisation.equals(leadOrganisation)) {
-            projectPartnerStatusResource = new ProjectLeadStatusResource(
-                    partnerOrganisation.getId(),
-                    partnerOrganisation.getName(),
-                    organisationType,
-                    leadProjectDetailsSubmitted,
-                    monitoringOfficerStatus,
-                    bankDetailsStatus,
-                    financeChecksStatus,
-                    leadSpendProfileStatus,
-                    otherDocumentsStatus,
-                    grantOfferLetterStatus,
-                    financeContactStatus,
-                    golWorkflowHandler.isAlreadySent(project));
-        } else {
-            projectPartnerStatusResource = new ProjectPartnerStatusResource(
-                    partnerOrganisation.getId(),
-                    partnerOrganisation.getName(),
-                    organisationType,
-                    partnerProjectDetailsSubmittedStatus,
-                    NOT_REQUIRED,
-                    bankDetailsStatus,
-                    financeChecksStatus,
-                    spendProfileStatus,
-                    NOT_REQUIRED,
-                    grantOfferLetterStatus,
-                    financeContactStatus,
-                    golWorkflowHandler.isAlreadySent(project));
-        }
-
-        return projectPartnerStatusResource;
+        return new ProjectPartnerStatusResource(
+                partnerOrganisation.getId(),
+                partnerOrganisation.getName(),
+                organisationType,
+                projectDetailsStatus,
+                monitoringOfficerStatus,
+                bankDetailsStatus,
+                financeChecksStatus,
+                spendProfileStatus,
+                otherDocumentsStatus,
+                grantOfferLetterStatus,
+                financeContactStatus,
+                golWorkflowHandler.isAlreadySent(project),
+                isLead);
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
@@ -958,42 +706,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return notificationTargets;
     }
 
-    @Override
-    public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
-
-        return getProject(projectId).andOnSuccess( project -> {
-            if (project.getGrantOfferLetter() == null) {
-                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
-            }
-
-            User projectManager = getExistingProjectManager(project).get().getUser();
-            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
-
-            Map<String, Object> notificationArguments = new HashMap<>();
-            notificationArguments.put("dashboardUrl", webBaseUrl);
-
-            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER);
-
-            if (!notificationResult.isSuccess()) {
-                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
-            }
-            return sendGrantOfferLetterSuccess(project);
-        });
-    }
-
-    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-
-            if (golWorkflowHandler.grantOfferLetterSent(project, user)) {
-                return serviceSuccess();
-            } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-            }
-        });
-    }
-
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
         Project project = projectRepository.findOne(projectId);
@@ -1005,77 +717,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
-
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isSendAllowed(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
-    }
-
-    @Override
-    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if(!golWorkflowHandler.isAlreadySent(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
-    }
-
-    @Override
-    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
-
-        return getProject(projectId).andOnSuccess( project -> {
-            if(golWorkflowHandler.isReadyToApprove(project)) {
-                if(ApprovalType.APPROVED == approvalType) {
-                    return approveGOL(project)
-                        .andOnSuccess(() -> {
-
-                            if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
-                                LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
-                                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                            }
-                            notifyProjectIsLive(projectId);
-                            return serviceSuccess();
-                        }
-                    );
-                }
-            }
-            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
-        });
-    }
-
-    private ServiceResult<Void> approveGOL(Project project) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-
-            if (golWorkflowHandler.grantOfferLetterApproved(project, user)) {
-                return serviceSuccess();
-            } else {
-                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-            }
-        });
-    }
-
-    @Override
-    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
-    }
-
-    @Override
-    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
-    }
-
-    @Override
     public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
         return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
-            notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
+                notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
     }
 }

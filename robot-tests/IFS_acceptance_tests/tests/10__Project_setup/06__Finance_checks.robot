@@ -80,6 +80,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-4837 Project finance team member able to view all originally submitted details of all partners against the revisions made during the Finance Checks eligibility section to make a clear comparison
 ...
 ...               INFUND-8778 Partners do not need to see percentages in the Finance checks section of PS, only financial sub-totals and total-costs are to be seen
+...
+...               INFUND-8880 Read only Detailed finances table for external user and View finances link should be missing for academic users
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -203,15 +205,15 @@ Project finance user can upload more than one file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file      name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
+    Then the user should see the element    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
 
 Project finance user can still view and delete both files
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
@@ -219,16 +221,16 @@ Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
-    Then the user should see the element   jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
-    And the user should see the element    jQuery=label[for="query"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should see the element   jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
+    And the user should see the element    jQuery=label[for="query"] .error-message:contains(This field cannot be left blank.)
 
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user enters text to a text field    id=queryTitle    an eligibility query's title
-    Then the user should not see the element    jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
-    Then the user should not see the element    jQuery=label[for="query] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="query] .error-message:contains(This field cannot be left blank.)
 
 Word count validations
     [Documentation]    INFUND-4840
@@ -261,6 +263,11 @@ New query can be posted
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see the element  jQuery=.button:contains("Post Query")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
+
+The Project Finance user should be able to send a second response in a row
+    [Documentation]    INFUND-9546
+    [Tags]
+    The user should see the element   jQuery=#post-new-response
 
 Query sections are no longer editable
     [Documentation]    INFUND-4840
@@ -374,9 +381,9 @@ Finance contact can view query
 Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) > a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    When the user clicks the button/link    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
 
 Queries show in reverse chronological order for finance contact
@@ -430,15 +437,15 @@ Finance contact can upload more than one file
     [Documentation]    INFUND-4843
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    And the user should see the element    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf} ${opens_in_new_window}")
 
 Finance contact can still view both files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
+    When the user clicks the button/link    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
 
@@ -471,6 +478,11 @@ Query response can be posted
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should not see the element   jQuery=.button:contains("Post response")
 
+The Finance contact user should be able to send a second response in a row
+    [Documentation]    INFUND-9546
+    [Tags]
+    The user should see the element   jQuery=#post-new-response
+
 Query section now becomes read-only
     [Documentation]    INFUND-4843
     [Tags]
@@ -489,8 +501,7 @@ Queries raised column updates to 'view'
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should not see the element    link=Awaiting response
-    And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
+    And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
 
 Project finance user can view the response
     [Documentation]    INFUND-4843
@@ -503,9 +514,9 @@ Project finance user can view the response
 Project finance user can view the finance contact's uploaded files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=.panel li:nth-of-type(1) > a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf} ${opens_in_new_window}"):nth-of-type(2)
+    When the user clicks the button/link    jQuery=.panel li:nth-of-type(2) > a:contains("${valid_pdf} ${opens_in_new_window}")
     Then the user goes back to the previous tab
 
 Project finance user can continue the conversation
@@ -516,6 +527,11 @@ Project finance user can continue the conversation
     And the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should not see an error in the page
     And the user should not see the element    css=.editor
+
+The Project Finance user should be able to send a second response in a row
+    [Documentation]    INFUND-9546
+    [Tags]
+    The user should see the element   jQuery=#post-new-response
 
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753
@@ -602,15 +618,15 @@ Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user should see the element    jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
 
 Project finance can still view both files in notes
     [Documentation]    INFUND-4845
     [Tags]
-    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
@@ -619,16 +635,16 @@ Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save note")
-    Then the user should see the element   jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
-    And the user should see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should see the element   jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
+    And the user should see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)
 
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user enters text to a text field    id=noteTitle    an eligibility query's title
-    Then the user should not see the element    jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
-    Then the user should not see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)
 
 Word count validations for notes
     [Documentation]    INFUND-4845
@@ -721,15 +737,15 @@ Project finance can upload more than one file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user should see the element    jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
 
 Project finance can still view both files in note comments
     [Documentation]    INFUND-7756
     [Tags]
-    When the user clicks the button/link    jQuery=form li:nth-of-type(1) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=form li:nth-of-type(1) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the previous tab
     And the user should see the element    jQuery=button:contains("Save comment")
@@ -738,14 +754,14 @@ Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
-    Then the user should see the element    jQuery=label[for="comment"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should see the element    jQuery=label[for="comment"] .error-message:contains(This field cannot be left blank.)
 
 Note comments client side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user enters text to a text field    css=.editor    this is some comment text
     And the user moves focus to the element    jQuery=.button:contains("Save comment")
-    Then the user should not see the element    jQuery=label[for="comment"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="comment"] .error-message:contains(This field cannot be left blank.)
 
 Word count validations for note comments
     [Documentation]    INFUND-7756
@@ -775,7 +791,7 @@ Project Finance user can view academic Jes form
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    css=a.eligibility-1
     Then the user should see the text in the page    Download Je-S form
-    When the user opens the link in new window   jes-form80.pdf
+    When the user opens the link in new window   jes-form122.pdf
     Then the user goes back to the previous tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
@@ -919,32 +935,28 @@ Project finance user can review Partner's Overall cost for Changes-from-submitte
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Lead-Partner can review only the external version of Finance Checks Eligibility table
-    [Documentation]    INFUND-8778
+    [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
     Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
-    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
-    And the user should see the element     id=total-cost
-    Then the user clicks the button/link     link=Finance checks
+    Then the user should see the element    css=input[id="total-cost"][value="£ 301,355"]
+    And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
 Partner can review only the external version of Finance Checks Eligibility table
-    [Documentation]    INFUND-8778
+    [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
     Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
-    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
-    And the user should see the element     id=total-cost
+    Then the user should see the element    css=input[id="total-cost"][value="£ 200,903"]
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
@@ -1303,17 +1315,7 @@ Project finance user can see the partner's zero funding request
     Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 200,903   # Total costs
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)     £ 0         # Funding sought
-
-External user sees zero funding request in finance checks
-    [Documentation]    INFUND-9269
-    [Tags]
-    [Setup]    log in as a different user               &{collaborator1_credentials}
-    When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/finance-checks
-    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 200,903   # Total costs
-    And the user should see the text in the element     jQuery=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
-    And the user should see the text in the element     jQuery=.table-overview tr:nth-child(1) td:nth-child(4)     £ 0         # Funding sought
     [Teardown]    the user navigates to the page        ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
-
 
 Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
@@ -1861,17 +1863,15 @@ Lead-Partner can view finance checks page
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 Lead-Partner can view only the external version of Finance Checks Eligibility table
-    [Documentation]    INFUND-8778
+    [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
-    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
-    Then the user should see the element                id=total-cost
+    Then the user should see the element    css=input[id="total-cost"][value="£ 206,867"]
 
 Academic user can view Finance checks page
-    [Documentation]     INFUND-8787
+    [Documentation]     INFUND-8787, INFUND-8880
     [Tags]
     Given log in as a different user        &{collaborator2_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
@@ -1879,6 +1879,10 @@ Academic user can view Finance checks page
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     Then the user clicks the button/link    link=Finance checks
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
+    And the user should not see the text in the page    View finances
+    Then the user navigates to the page      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/40/finance-checks/eligibility
+    And the user should see the text in the page    Page not found
+    Then the user clicks the button/link    link=your dashboard
 
 Non Lead Partner can view Finance checks page
     [Documentation]     INFUND-8787
@@ -1891,14 +1895,12 @@ Non Lead Partner can view Finance checks page
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 Non Lead-Partner can view only the external version of Finance Checks Eligibility table
-    [Documentation]    INFUND-8778
+    [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-    And the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 59,778    £ 9,078     £ 2,000    £ 10,100    £ 20,000    £ 2,000     £ 11,300
-    And the user should see the text in the element     css=[for="total-cost"]        Total project costs
-    Then the user should see the element                id=total-cost
+    Then the user should see the element    css=input[id="total-cost"][value="£ 114,256"]
 
 *** Keywords ***
 
@@ -2444,14 +2446,6 @@ the revised categories are verified for specified Section
     the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${detail}
     the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
     the user should see the text in the element     jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
-
-the user verifies the percentage is not seen for external version, for the specified sections under Detailed-finances
-    the user should not see the text in the element     css=section:nth-of-type(1) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(3) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(4) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(5) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(6) h3 button   %
-    the user should not see the text in the element     css=section:nth-of-type(7) h3 button   %
 
 the user verifies the financial sub-totals for external version under the Detailed-finances
     [Arguments]  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}

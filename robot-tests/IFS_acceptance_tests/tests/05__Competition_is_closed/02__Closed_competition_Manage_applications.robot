@@ -16,11 +16,11 @@ Search for applications
     [Documentation]    INFUND-8061
     Given The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
     And the user clicks the button/Link    jQuery=a:contains("Assessor management: Assignments")
-    When The user enters text to a text field    css=#filterSearch    95
+    When The user enters text to a text field    css=#filterSearch    136
     and The user clicks the button/link    jQuery=button:contains(Filter)
-    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("95")
+    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("136")
     And The user clicks the button/link    link=Clear all filters
-    then the user should not see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("96")
+    then the user should not see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("137")
 
 Filtering the Assessors in the Allocate Applications page
     [Documentation]    INFUND-7042
@@ -29,7 +29,7 @@ Filtering the Assessors in the Allocate Applications page
     ...
     ...    INFUND-8062
     Given the user clicks the button/Link    jQuery=tr:contains(Neural Industries) .no-margin
-    And the user should see the element    jQuery=h3:contains("Innovation area") ~ span:contains("Urban living")
+    And the user should see the element    jQuery=h3:contains("Innovation area") ~ span:contains("Smart infrastructure")
     Then the user should see the element    jQuery=tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
     When the user selects the option from the drop-down menu    Materials, process and manufacturing design technologies    id=filterInnovationArea
     And the user clicks the button/link    jQuery=button:contains(Filter)

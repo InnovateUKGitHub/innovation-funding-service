@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
-import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -56,42 +55,60 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test(expected = ForbiddenActionException.class)
-    public void testCompaniesHouseSectionAccess() {
+    public void companiesHouseSectionAccess() {
         assertScenariousForSections(ProjectSetupSectionAccessibilityHelper::canAccessCompaniesHouseSection, () -> rules.partnerCanAccessCompaniesHouseSection(123L, user));
     }
 
     @Test(expected = ForbiddenActionException.class)
-    public void testProjectDetailsSectionAccess() {
+    public void projectDetailsSectionAccess() {
         assertScenariousForSections(ProjectSetupSectionAccessibilityHelper::canAccessProjectDetailsSection, () -> rules.partnerCanAccessProjectDetailsSection(123L, user));
     }
 
     @Test
-    public void testMonitoringOfficerSectionAccess() {
+    public void projectManagerPageAccess() {
+        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectManagerPage(organisation),
+                () -> rules.leadCanAccessProjectManagerPage(123L, user));
+    }
+
+    @Test
+    public void projectStartDatePageAccess() {
+        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectStartDatePage(organisation),
+                () -> rules.leadCanAccessProjectStartDatePage(123L, user));
+    }
+
+    @Test
+    public void projectAddressPageAccess() {
+        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectAddressPage(organisation),
+                () -> rules.leadCanAccessProjectAddressPage(123L, user));
+    }
+
+    @Test
+    public void monitoringOfficerSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection, () -> rules.partnerCanAccessMonitoringOfficerSection(123L, user));
     }
 
     @Test
-    public void testBankDetailsSectionAccess() {
+    public void bankDetailsSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessBankDetailsSection, () -> rules.partnerCanAccessBankDetailsSection(123L, user));
     }
 
     @Test
-    public void testSpendProfileSectionAccess() {
+    public void spendProfileSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(123L, user));
     }
 
     @Test
-    public void testOtherDocumentsSectionAccess() {
+    public void otherDocumentsSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessOtherDocumentsSection, () -> rules.partnerCanAccessOtherDocumentsSection(123L, user));
     }
 
     @Test
-    public void testGrantOfferLetterSectionAccess() {
+    public void grantOfferLetterSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection, () -> rules.partnerCanAccessGrantOfferLetterSection(123L, user));
     }
 
     @Test
-    public void testSignedGrantOfferLetterSuccessfulAccessByLead() {
+    public void signedGrantOfferLetterSuccessfulAccessByLead() {
         UserResource userRes = new UserResource();
         userRes.setId(1L);
         when(projectServiceMock.isUserLeadPartner(123L, 1L)).thenReturn(true);
@@ -99,7 +116,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testSignedGrantOfferLetterUnSuccessfulAccessByNonLead() {
+    public void signedGrantOfferLetterUnSuccessfulAccessByNonLead() {
         UserResource userRes = new UserResource();
         userRes.setId(1L);
         when(projectServiceMock.isUserLeadPartner(123L, 1L)).thenReturn(false);
@@ -107,7 +124,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testMarkSpendProfileIncompleteAccess() {
+    public void markSpendProfileIncompleteAccess() {
         ProjectUserResource leadPartnerProjectUserResource = newProjectUserResource().withUser(user.getId()).build();
 
         when(projectServiceMock.getLeadPartners(123L)).thenReturn(singletonList(leadPartnerProjectUserResource));
@@ -116,7 +133,32 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testPartnerAccess() {
+    public void userCannotMarkOwnOrganisationAsIncomplete() {
+        Long userId = 1L;
+        Long organisationId = 2L;
+        UserResource userResource = newUserResource().withId(userId).build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
+
+        when(organisationServiceMock.getOrganisationForUser(userId)).thenReturn(organisationResource);
+        assertFalse(rules.userCannotMarkOwnSpendProfileIncomplete(organisationId, userResource));
+        verify(organisationServiceMock).getOrganisationForUser(userId);
+    }
+
+    @Test
+    public void userCanMarkOtherOrganisationAsIncomplete() {
+        Long userId = 1L;
+        Long organisationId = 2L;
+        Long otherOrganisationId = 3L;
+        UserResource userResource = newUserResource().withId(userId).build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
+
+        when(organisationServiceMock.getOrganisationForUser(userId)).thenReturn(organisationResource);
+        assertTrue(rules.userCannotMarkOwnSpendProfileIncomplete(otherOrganisationId, userResource));
+        verify(organisationServiceMock).getOrganisationForUser(userId);
+    }
+
+    @Test
+    public void partnerAccess() {
         long projectId = 123L;
         long organisationId = 234L;
 
@@ -142,7 +184,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testPartnerNoAccess() {
+    public void partnerNoAccess() {
         long projectId = 123L;
         long organisationId = 234L;
 
@@ -167,7 +209,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testFinanceContactAccess() {
+    public void financeContactAccess() {
         long projectId = 123L;
         long organisationId = 234L;
 
@@ -197,9 +239,10 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
                                                    Supplier<Boolean> ruleCheck) {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withOrganisationId(456L).
                         withOrganisationType(BUSINESS).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -223,9 +266,10 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
                                                       Supplier<Boolean> ruleCheck) {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withOrganisationId(456L).
                         withOrganisationType(BUSINESS).
+                        withIsLeadPartner(true).
                         build()).
                 withPartnerStatuses(newProjectPartnerStatusResource().
                         withOrganisationId(789L).

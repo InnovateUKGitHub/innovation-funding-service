@@ -42,7 +42,7 @@ ext {
     generatedMapperSourcesDir = 'build/classes/main/org/innovateuk/ifs/mappers'
 }
 
-ext.silRestCrmBaseURL="http://data-service:8080/silstub"
+
 ext.idpRestKey=project.properties['idp.rest.key'] ?:"1234567890"
 ext.companyHouseKey=ext.get('ifs.company-house.key')
 ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
@@ -115,7 +115,7 @@ dependencies {
     compile "net.sf.opencsv:opencsv:2.3"
     compile "org.xhtmlrenderer:flying-saucer-core:9.1.1"
     compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.1"
-
+    compile "org.apache.tika:tika-parsers:1.14"
 
     testCompile project(':ifs-resources').sourceSets.test.output
     testCompile project(":ifs-commons").sourceSets.test.output

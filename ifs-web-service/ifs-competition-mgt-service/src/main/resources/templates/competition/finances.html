@@ -25,7 +25,7 @@
         Each partner is required to complete the following finance sections, selected by the template for this competition.
     </div>
     <form th:if="${editable}" data-autosave="compSetup" method="POST"
-          th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
+          th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:object="${competitionSetupForm}"
           data-th-attr="data-competition=${competitionId}"
           data-section="application"

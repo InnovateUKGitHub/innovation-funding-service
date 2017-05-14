@@ -34,7 +34,7 @@ Competition Dashboard
     And The user should see the text in the page    Inform
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
-    And The user should see the text in the page    Satellite applications
+    And The user should see the text in the page    Digital manufacturing
     And The user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     And the user should not see the element    link=View and update competition setup
 
@@ -50,14 +50,14 @@ Filtering on the Manage funding applications page
     [Documentation]    INFUND-8066
     [Tags]
     Given The user clicks the button/link    jQuery=.button:contains("Manage funding notifications")
-    And the user enters text to a text field    id=stringFilter    68
+    And the user enters text to a text field    id=stringFilter    109
     And the user selects the option from the drop-down menu    Yes    id=sendFilter
     And the user selects the option from the drop-down menu    Successful    id=fundingFilter
     When the user clicks the button/link    jQuery=button:contains("Filter")
-    Then the user should see the element    jQuery=td:nth-child(2):contains("68")
-    And the user should not see the element    jQuery=td:nth-child(2):contains("70")
+    Then the user should see the element    jQuery=td:nth-child(2):contains("109")
+    And the user should not see the element    jQuery=td:nth-child(2):contains("111")
     And the user clicks the button/link    jQuery=.button:contains("Clear all filters")
-    And the user should see the element    jQuery=td:nth-child(2):contains("70")
+    And the user should see the element    jQuery=td:nth-child(2):contains("111")
     [Teardown]    The user clicks the button/link    link=Competition
 
 Checking release feedback button state is correct
@@ -156,7 +156,7 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=button:contains("Unsuccessful")
     the user clicks the button/link    jQuery=.link-back:contains("Competition")
     the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
-    the user selects the checkbox     app-row-70
+    the user selects the checkbox     app-row-111
     the user clicks the button/link    jQuery=button:contains("Write and send email")
     the user enters text to a text field    jQuery=.editor    Text
     the user clicks the button/link    jQuery=button:contains("Send email to all applicants")

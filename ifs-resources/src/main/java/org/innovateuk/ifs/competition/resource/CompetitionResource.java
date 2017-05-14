@@ -71,7 +71,7 @@ public class CompetitionResource {
 
     private String activityCode;
 
-    private Boolean setupComplete;
+    private boolean setupComplete = false;
 
     private boolean useResubmissionQuestion;
 
@@ -111,6 +111,11 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
         return Boolean.TRUE.equals(setupComplete) && fundersPanelDate.isBefore(ZonedDateTime.now());
+    }
+
+    @JsonIgnore
+    public boolean isInitialDetailsComplete() {
+        return sectionSetupStatus.containsKey(CompetitionSetupSection.INITIAL_DETAILS) || setupComplete;
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -394,7 +399,7 @@ public class CompetitionResource {
     }
 
     public void setInnovationAreaNames(Set<String> innovationAreaNames) {
-        this.innovationAreaNames = innovationAreaNames;
+        this.innovationAreaNames = new TreeSet<>(innovationAreaNames);
     }
 
     public Set<Long> getResearchCategories() {
@@ -501,11 +506,11 @@ public class CompetitionResource {
         this.assessorPay = assessorPay;
     }
 
-    public Boolean getSetupComplete() {
+    public boolean getSetupComplete() {
         return setupComplete;
     }
 
-    public void setSetupComplete(Boolean setupComplete) {
+    public void setSetupComplete(boolean setupComplete) {
         this.setupComplete = setupComplete;
     }
 
