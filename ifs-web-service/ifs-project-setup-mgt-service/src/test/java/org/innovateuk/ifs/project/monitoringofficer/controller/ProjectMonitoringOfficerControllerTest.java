@@ -325,8 +325,13 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(8, bindingResult.getFieldErrorCount());
-        assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
-        assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
+
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
 
         List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
@@ -494,8 +499,13 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         BindingResult bindingResult = form.getBindingResult();
 
         assertEquals(7, bindingResult.getFieldErrorCount());
-        assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
-        assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
+
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
 
         List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
