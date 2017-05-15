@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
+public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
 
     private RestDocumentationResultHandler document;
 
