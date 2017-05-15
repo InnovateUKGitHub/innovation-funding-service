@@ -335,7 +335,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-        return inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER);
+
+        return getProject(projectId)
+                .andOnSuccess(this::validateIfProjectAlreadySubmitted)
+                .andOnSuccess(() -> inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER));
     }
 
     @Override

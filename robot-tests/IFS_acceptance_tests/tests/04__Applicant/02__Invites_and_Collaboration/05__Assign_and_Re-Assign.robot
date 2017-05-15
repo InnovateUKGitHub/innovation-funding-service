@@ -45,7 +45,7 @@ Lead applicant can assign question multiple times
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
-    When the user assigns the question to the collaborator    Stuart ANDERSON
+    When the user assigns the question to the collaborator    Stuart Anderson
     And the question should contain the correct status/name    css=#form-input-1040 .assign-container .action-required    you
     And the applicant assigns the question to the collaborator    css=#form-input-1040 .editor    test1233    Dennis Bergkamp
     Then the user should see the element    css=#form-input-1040 .readonly

@@ -140,7 +140,7 @@ File upload mandatory for Academic partner to mark section as complete
 Applicant chooses Calculate overheads option
     [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405 , INFUND-8355
     [Tags]      Failing
-    # TODO Failing due to timing . Will investigate once the fixes to upload and download are fixed
+    # Failing due to intermittent issue INFUND-8598
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page  ${applicationName}

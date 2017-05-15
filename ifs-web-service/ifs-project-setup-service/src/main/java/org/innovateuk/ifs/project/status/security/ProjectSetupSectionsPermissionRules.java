@@ -47,6 +47,24 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
     }
 
+    @PermissionRule(value = "ACCESS_PROJECT_MANAGER_PAGE", description = "A lead can access the Project Manager " +
+            "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
+    public boolean leadCanAccessProjectManagerPage(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
+    }
+
+    @PermissionRule(value = "ACCESS_PROJECT_START_DATE_PAGE", description = "A lead can access the Project Start Date " +
+            "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
+    public boolean leadCanAccessProjectStartDatePage(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
+    }
+
+    @PermissionRule(value = "ACCESS_PROJECT_ADDRESS_PAGE", description = "A lead can access the Project Address " +
+            "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
+    public boolean leadCanAccessProjectAddressPage(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
+    }
+
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A partner can access the Monitoring Officer " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessMonitoringOfficerSection(Long projectId, UserResource user) {
