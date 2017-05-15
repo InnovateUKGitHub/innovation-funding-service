@@ -59,17 +59,43 @@ public class CompetitionManagementFundingController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
+    @GetMapping
     public String applications(Model model,
-                               @PathVariable("competitionId") Long competitionId,
-                               @RequestParam Map<String, String> queryParams,
+                               @PathVariable("competitionId") long competitionId,
                                @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm,
-                               @ModelAttribute FundingDecisionForm fundingDecisionForm,
+                               @ModelAttribute(binding = false) FundingDecisionForm fundingDecisionForm,
+                               @RequestParam Map<String, String> queryParams,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/competition/" + competitionId + "/funding";
         }
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService
+                .getCompetitionSummary(competitionId)
+                .getSuccessObjectOrThrowException();
 
+        model.addAttribute("competitionSummary", competitionSummary);
+        String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, getFilteredParameterValues(queryParams));
+        model.addAttribute("originQuery", originQuery);
+
+        switch (competitionSummary.getCompetitionStatus()) {
+            case FUNDERS_PANEL:
+            case ASSESSOR_FEEDBACK:
+                return populateSubmittedModel(model, competitionSummary, queryForm, originQuery);
+            default:
+                return "redirect:/login";
+        }
+    }
+
+    @PostMapping
+    public String makeDecision(Model model,
+                               @PathVariable("competitionId") long competitionId,
+                               @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm,
+                               @ModelAttribute @Valid FundingDecisionForm fundingDecisionForm,
+                               @RequestParam Map<String, String> queryParams,
+                               BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/competition/" + competitionId + "/funding";
+        }
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
@@ -116,12 +142,10 @@ public class CompetitionManagementFundingController {
             }
         }
 
-        populateSubmittedModel(model, competitionSummary, queryForm, originQuery);
-
-        return "comp-mgt-funders-panel";
+        return populateSubmittedModel(model, competitionSummary, queryForm, originQuery);
     }
 
-    private void populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, String originQuery) {
+    private String populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, String originQuery) {
         String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
         ApplicationSummaryPageResource results = applicationSummaryRestService.getSubmittedApplications(
                 competitionSummary.getCompetitionId(),
@@ -136,5 +160,7 @@ public class CompetitionManagementFundingController {
         model.addAttribute("results", results);
         model.addAttribute("activeTab", "submitted");
         model.addAttribute("activeSortField", sort);
+
+        return "comp-mgt-funders-panel";
     }
 }

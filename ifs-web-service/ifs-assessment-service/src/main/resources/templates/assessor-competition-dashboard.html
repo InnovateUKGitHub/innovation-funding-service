@@ -25,12 +25,16 @@
 
             <div class="grid-row">
                 <div class="column-two-thirds competition details">
-                    <ul class="no-bullet">
-                        <li><strong>Competition:</strong> <span th:text="${model.competitionTitle}" th:remove="tag"/></li>
-                        <li><strong>Innovation Lead:</strong> <span th:text="${model.leadTechnologist}" th:remove="tag"/></li>
-                        <li><strong>Accept applications deadline:</strong> <span th:text="|${#strings.toLowerCase(#temporals.format(model.acceptDeadline, 'hh:mma'))} ${#temporals.format(model.acceptDeadline, 'EEEE d MMMM yyyy')}|" th:remove="tag"/></li>
-                        <li><strong>Submit applications deadline:</strong> <span th:text="|${#strings.toLowerCase(#temporals.format(model.submitDeadline, 'hh:mma'))} ${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}|" th:remove="tag"/></li>
-                    </ul>
+                    <dl class="font-xsmall">
+                        <dt>Competition:</dt>
+                        <dd th:text="${model.competitionTitle}"></dd>
+                        <dt>Innovation Lead:</dt>
+                        <dd th:text="${model.leadTechnologist}"></dd>
+                        <dt>Accept applications deadline:</dt>
+                        <dd th:text="|${#strings.toLowerCase(#temporals.format(model.acceptDeadline, 'hh:mma'))} ${#temporals.format(model.acceptDeadline, 'EEEE d MMMM yyyy')}|"></dd>
+                        <dt>Submit applications deadline:</dt>
+                        <dd th:text="|${#strings.toLowerCase(#temporals.format(model.submitDeadline, 'hh:mma'))} ${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}|"></dd>
+                    </dl>
                 </div>
 
                 <div class="column-one-third">
@@ -46,7 +50,7 @@
 
                 <div class="in-progress" th:unless="${#lists.isEmpty(model.outstanding)}">
 
-                    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+                    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
 
                         <div class="progress-list">
                             <h2 class="heading-medium no-margin">Applications for assessment (<span

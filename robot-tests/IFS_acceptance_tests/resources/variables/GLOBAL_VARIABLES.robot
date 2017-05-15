@@ -26,11 +26,12 @@ ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    102,452
 ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    47,000
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
-
 #Competitions and Applications Variables
-${OPEN_COMPETITION_NAME}                  Predicting market trends programme
-${OPEN_COMPETITION}                       ${competition_ids['${OPEN_COMPETITION_NAME}']}
-${OPEN_COMPETITION_NAME_2}                Home and industrial efficiency programme
+${OPEN_COMPETITION_NAME}    Predicting market trends programme
+${OPEN_COMPETITION}    ${competition_ids['${OPEN_COMPETITION_NAME}']}
+${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
+${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
+${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}      Climate science the history of Greenland\'s ice
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}  ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
@@ -85,6 +86,7 @@ ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/details/
+${COMPETITION_OVERVIEW_URL}     ${SERVER}/competition/${OPEN_COMPETITION}/overview/
 ${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/430
 ${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/436
 ${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/187
@@ -131,10 +133,10 @@ ${text_file}      testing.txt
 ${excel_file}     testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    191
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    192
-${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    193
-${WITHDRAWN_ASSESSMENT}     208
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    236
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    237
+${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    238
+${WITHDRAWN_ASSESSMENT}     249
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}

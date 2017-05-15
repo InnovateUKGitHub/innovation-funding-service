@@ -22,7 +22,6 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,12 +69,9 @@ public class AssessmentFeedbackController {
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
-    @Autowired
-    private MessageSource messageSource;
-
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) Form form,
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) Form form,
                               @PathVariable("assessmentId") Long assessmentId,
                               @PathVariable("questionId") Long questionId) {
 
@@ -95,8 +91,8 @@ public class AssessmentFeedbackController {
             @PathVariable("formInputId") Long formInputId,
             @RequestParam("value") String value) {
         try {
-          ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
-          return createJsonObjectNode(true);
+            assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value);
+            return createJsonObjectNode(true);
         } catch (Exception e) {
             return createJsonObjectNode(false);
         }

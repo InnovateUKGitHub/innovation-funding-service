@@ -79,8 +79,8 @@
                     <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications submitted</small>
                         <small th:case="CLOSED">Applications per assessor</small>
-                        <small th:case="FUNDERS_PANEL">Applications awaiting a decision</small>
-                        <small th:case="ASSESSOR_FEEDBACK">Applications awaiting a decision</small>
+                        <small th:case="FUNDERS_PANEL">Applications awaiting notification</small>
+                        <small th:case="ASSESSOR_FEEDBACK">Applications awaiting notification</small>
                     </th:block>
                 </div>
             </li>

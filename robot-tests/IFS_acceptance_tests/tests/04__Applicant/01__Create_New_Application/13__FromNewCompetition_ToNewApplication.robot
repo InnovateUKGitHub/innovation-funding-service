@@ -485,9 +485,11 @@ the user completes the new account creation
     the user clicks the button/link     jQuery=button:contains("Continue")
     the user should see the element     jQuery=span:contains("Create your account")
     the user enters text to a text field     id=organisationSearchName   innovate
-    the user clicks the button/link        jQuery=button:contains("Search")
+    the user should see the element      jQuery=a:contains("Back to choose your organisation type")
+    the user clicks the button/link      jQuery=button:contains("Search")
     wait for autosave
-    the user clicks the button/link        jQuery=a:contains("INNOVATE LTD")
+    the user clicks the button/link      jQuery=a:contains("INNOVATE LTD")
+    the user should see the element      jQuery=h3:contains("Organisation type")
     the user selects the checkbox     address-same
     wait for autosave
     the user clicks the button/link     jQuery=button:contains("Continue")

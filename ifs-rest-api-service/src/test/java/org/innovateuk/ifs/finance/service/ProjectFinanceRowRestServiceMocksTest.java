@@ -53,9 +53,9 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_delete_byCostId() {
-        setupDeleteWithRestResultExpectations(costRestURL + "/delete/123");
-        service.delete(123L);
-        setupDeleteWithRestResultVerifications(costRestURL + "/delete/123");
+        setupDeleteWithRestResultExpectations(costRestURL + "/456/organisation/789/delete/123");
+        service.delete(456L, 789L, 123L);
+        setupDeleteWithRestResultVerifications(costRestURL + "/456/organisation/789/delete/123");
     }
 
     @Test

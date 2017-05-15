@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.file.transactional;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.tika.Tika;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -10,9 +14,6 @@ import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -39,6 +40,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class FileServiceImpl extends BaseTransactionalService implements FileService {
 
+    private final Tika tika = new Tika();
     private static final Log LOG = LogFactory.getLog(FileServiceImpl.class);
 
     @Autowired
@@ -159,7 +161,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private ServiceResult<File> validateMediaType(File file, MediaType mediaType) {
         final String detectedContentType;
         try {
-            detectedContentType = Files.probeContentType(file.toPath());
+            detectedContentType = tika.detect(file.toPath());
         } catch (IOException e) {
             LOG.error("Unable to probe file for Content Type", e);
             return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE));

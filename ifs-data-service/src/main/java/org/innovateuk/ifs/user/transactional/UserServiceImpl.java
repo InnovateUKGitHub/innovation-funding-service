@@ -172,6 +172,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUserResource.setGender(updatedUserResource.getGender());
         existingUserResource.setDisability(updatedUserResource.getDisability());
         existingUserResource.setEthnicity(updatedUserResource.getEthnicity());
+        existingUserResource.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }

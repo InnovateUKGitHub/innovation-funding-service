@@ -250,6 +250,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 anyString(),
                 anyBoolean()))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class), eq(true))).thenReturn(newUserResource().build());
         mockMvc.perform(post("/profile/edit")
                 .param("title", user.getTitle().name())
                 .param("firstName", user.getFirstName())
