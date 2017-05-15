@@ -6,7 +6,7 @@ Documentation     -INFUND-885: As an applicant I want to be able to submit a use
 ...               INFUND-6387 As an Applicant creating an account I will be invited to answer questions for diversity monitoring purposes so that InnovateUK complies with BEIS ministerial requirement
 Suite Setup       Run keywords    The guest user opens the browser
 ...               AND    the user follows the flow to register their organisation     radio-1
-Suite Teardown
+Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
