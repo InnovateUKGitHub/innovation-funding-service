@@ -6,6 +6,9 @@ import org.innovateuk.ifs.application.viewmodel.finance.FinanceSummaryViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Populator for finance summary form inputs.
+ */
 @Component
 public class FinanceSummaryInputPopulator extends AbstractFormInputPopulator<FinanceSummaryViewModel> {
 

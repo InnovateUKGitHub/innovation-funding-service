@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Populator for organisation size form inputs.
+ */
 @Component
 public class OrganisationSizePopulator extends AbstractFormInputPopulator<OrganisationSizeViewModel> {
 

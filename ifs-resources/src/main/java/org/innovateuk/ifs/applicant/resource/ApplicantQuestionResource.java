@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Rich resource for an application question.
  */
 public class ApplicantQuestionResource extends AbstractApplicantResource {
 

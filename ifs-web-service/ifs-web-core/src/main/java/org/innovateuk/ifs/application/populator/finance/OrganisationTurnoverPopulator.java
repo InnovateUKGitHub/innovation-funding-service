@@ -6,6 +6,9 @@ import org.innovateuk.ifs.application.viewmodel.finance.OrganisationTurnoverView
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Populator for organisation turnover form inputs.
+ */
 @Component
 public class OrganisationTurnoverPopulator extends AbstractFormInputPopulator<OrganisationTurnoverViewModel> {
 

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Rich resource for a section of the application.
  */
 public class ApplicantSectionResource extends AbstractApplicantResource {
 

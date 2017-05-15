@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import java.util.List;
 
 /**
- * Generic ViewModel for common fields in SectionViewModels
+ * View model for your funding section.
  */
 public class YourFundingSectionViewModel extends AbstractSectionViewModel {
     private boolean complete;

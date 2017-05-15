@@ -7,7 +7,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import java.util.List;
 
 /**
- * Created by luke.harper on 08/05/2017.
+ * View model for organisation size form input.
  */
 public class OrganisationSizeViewModel extends AbstractFormInputViewModel {
 

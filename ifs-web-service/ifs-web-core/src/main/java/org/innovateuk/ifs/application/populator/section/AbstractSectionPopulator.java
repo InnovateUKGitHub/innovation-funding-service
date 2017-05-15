@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+/**
+ * Abstract populator section view models.
+ */
 public abstract class AbstractSectionPopulator<M extends AbstractSectionViewModel> extends BaseModelPopulator {
 
     @Autowired

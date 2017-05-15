@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Generic ViewModel for common fields in SectionViewModels
+ * Your organisation section view model.
  */
 public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
     private boolean complete;

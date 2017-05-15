@@ -6,6 +6,9 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Populator for other costs form inputs.
+ */
 @Component
 public class OtherCostPopulator extends AbstractCostPopulator<OtherCostViewModel> {
 

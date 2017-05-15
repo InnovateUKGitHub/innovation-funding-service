@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Service interface for retrieving rich resources for application sections and questions.
  */
 public interface ApplicantService {
 

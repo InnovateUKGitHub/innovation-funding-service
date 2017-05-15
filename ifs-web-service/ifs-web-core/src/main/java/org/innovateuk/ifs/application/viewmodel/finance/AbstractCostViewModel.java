@@ -5,7 +5,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 /**
- * Created by luke.harper on 08/05/2017.
+ * Abstract view model for all cost form inputs.
  */
 public abstract class AbstractCostViewModel extends AbstractFormInputViewModel {
 

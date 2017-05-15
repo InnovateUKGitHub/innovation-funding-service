@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import static java.util.Optional.ofNullable;
 
+/**
+ * Populator for grant claim form inputs.
+ */
 @Component
 public class GrantClaimCostPopulator extends AbstractCostPopulator<GrantClaimCostViewModel> {
 

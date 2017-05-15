@@ -6,7 +6,7 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Rich resource for an applicant in an application.
  */
 public class ApplicantResource {
 

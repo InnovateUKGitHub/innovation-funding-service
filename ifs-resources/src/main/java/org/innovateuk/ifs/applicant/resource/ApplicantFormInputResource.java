@@ -5,7 +5,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import java.util.List;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Rich resource for a form input.
  */
 public class ApplicantFormInputResource {
 

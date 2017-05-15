@@ -23,6 +23,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Your finances populator section view models.
+ */
 @Component
 public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourFinancesSectionViewModel> {
 

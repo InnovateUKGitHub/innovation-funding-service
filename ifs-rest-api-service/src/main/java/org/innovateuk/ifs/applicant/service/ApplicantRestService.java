@@ -4,7 +4,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Rest service interface for retrieving rich applicant resources.
  */
 public interface ApplicantRestService {
 

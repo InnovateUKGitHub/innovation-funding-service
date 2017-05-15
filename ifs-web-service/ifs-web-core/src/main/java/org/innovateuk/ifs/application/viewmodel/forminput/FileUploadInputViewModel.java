@@ -4,6 +4,9 @@ package org.innovateuk.ifs.application.viewmodel.forminput;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
+/**
+ * View model for file upload form input.
+ */
 public class FileUploadInputViewModel extends AbstractFormInputViewModel {
 
     private String filename;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Rest service implementation for retrieving rich applicant resources.
  */
 @Service
 public class ApplicantRestServiceImpl extends BaseRestService implements ApplicantRestService {

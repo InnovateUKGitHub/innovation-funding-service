@@ -5,6 +5,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
+/**
+ * View model for text area form input.
+ */
 public class TextAreaInputViewModel extends AbstractFormInputViewModel {
 
     private AssignButtonsViewModel assignButtonsViewModel;

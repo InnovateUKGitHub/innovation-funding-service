@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import org.innovateuk.ifs.form.resource.FormInputType;
 
 /**
- * Created by luke.harper on 08/05/2017.
+ * View model for staff count form input.
  */
 public class StaffCountViewModel extends AbstractFormInputViewModel {
     @Override

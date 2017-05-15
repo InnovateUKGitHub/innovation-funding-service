@@ -22,6 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Your project costs populator section view models.
+ */
 @Component
 public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<AbstractYourProjectCostsSectionViewModel> {
 

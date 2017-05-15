@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Service implementation for retrieving rich resources for application sections and questions.
  */
 @Service
 public class ApplicantServiceImpl extends BaseTransactionalService implements ApplicantService {

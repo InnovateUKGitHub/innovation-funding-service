@@ -3,7 +3,7 @@ package org.innovateuk.ifs.applicant.resource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Rich resource for an application question status.
  */
 public class ApplicantQuestionStatusResource {
 

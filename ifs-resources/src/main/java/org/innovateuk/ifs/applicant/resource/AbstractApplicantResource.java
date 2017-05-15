@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Abstract class for all rich applicant resources.
  */
 public abstract class AbstractApplicantResource {
 

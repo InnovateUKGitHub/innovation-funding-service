@@ -13,6 +13,9 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
+/**
+ * Your organisation populator section view models.
+ */
 @Component
 public class YourOrganisationSectionPopulator extends AbstractSectionPopulator<YourOrganisationSectionViewModel> {
 

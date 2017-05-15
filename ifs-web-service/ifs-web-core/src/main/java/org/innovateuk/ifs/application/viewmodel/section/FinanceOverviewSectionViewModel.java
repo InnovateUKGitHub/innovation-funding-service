@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import java.util.List;
 
 /**
- * Generic ViewModel for common fields in SectionViewModels
+ * View model for the finance overview page.
  */
 public class FinanceOverviewSectionViewModel extends AbstractSectionViewModel {
 

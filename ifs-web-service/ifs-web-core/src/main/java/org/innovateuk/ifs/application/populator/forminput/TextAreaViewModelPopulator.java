@@ -7,6 +7,9 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Populator for text area form inputs.
+ */
 @Component
 public class TextAreaViewModelPopulator extends AbstractFormInputPopulator<TextAreaInputViewModel> {
 

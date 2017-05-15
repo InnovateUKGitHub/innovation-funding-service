@@ -6,6 +6,9 @@ import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
+/**
+ * View model for application details form input.
+ */
 public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel {
 
     private ApplicationResource application;

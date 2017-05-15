@@ -8,6 +8,9 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 
 import java.util.List;
 
+/**
+ * Your project costs view model for jes finances.
+ */
 public class JesYourProjectCostsSectionViewModel extends AbstractYourProjectCostsSectionViewModel {
     private QuestionResource financeUploadQuestion;
     private FormInputResource financeUploadFormInput;

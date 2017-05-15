@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import org.innovateuk.ifs.form.resource.FormInputType;
 
 /**
- * Created by luke.harper on 03/05/2017.
+ * Interface for populating a form input view model.
  */
 public interface FormInputPopulator<M extends AbstractFormInputViewModel> {
 

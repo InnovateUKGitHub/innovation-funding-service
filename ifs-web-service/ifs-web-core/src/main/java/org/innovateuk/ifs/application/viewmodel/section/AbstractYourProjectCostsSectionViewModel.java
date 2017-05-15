@@ -8,6 +8,9 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 
 import java.util.List;
 
+/**
+ * Abstract view model for project costs section.
+ */
 public abstract class AbstractYourProjectCostsSectionViewModel extends AbstractSectionViewModel {
     private List<ApplicantQuestionResource> costQuestions;
     private ApplicantQuestionResource applicantQuestion;

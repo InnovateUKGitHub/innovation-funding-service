@@ -6,6 +6,9 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 
 import java.util.List;
 
+/**
+ * Default your project costs view model.
+ */
 public class DefaultYourProjectCostsSectionViewModel extends AbstractYourProjectCostsSectionViewModel {
 
     private List<DefaultProjectCostSection> defaultProjectCostSections;

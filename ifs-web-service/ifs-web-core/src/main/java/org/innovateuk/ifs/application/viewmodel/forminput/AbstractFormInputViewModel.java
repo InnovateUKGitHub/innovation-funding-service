@@ -8,6 +8,9 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
+/**
+ * Abstract class for all form input view models.
+ */
 public abstract class AbstractFormInputViewModel {
     protected boolean summary;
     protected boolean closed;

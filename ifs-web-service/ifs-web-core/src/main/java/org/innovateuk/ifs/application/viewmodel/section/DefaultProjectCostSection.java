@@ -6,6 +6,9 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 
 import java.util.List;
 
+/**
+ * View model for a section of the your project costs page.
+ */
 public class DefaultProjectCostSection {
     private ApplicantSectionResource applicantResource;
     private ApplicantSectionResource applicantSection;

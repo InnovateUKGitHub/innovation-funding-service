@@ -15,7 +15,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Created by luke.harper on 03/05/2017.
+ * Component to generate form input view models for application sections and questions.
  */
 @Component
 public class FormInputViewModelGenerator {

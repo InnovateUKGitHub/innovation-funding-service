@@ -11,6 +11,9 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Abstract populator for cost form inputs.
+ */
 public abstract class AbstractCostPopulator<M extends AbstractCostViewModel> extends AbstractFormInputPopulator<M> {
 
     @Autowired

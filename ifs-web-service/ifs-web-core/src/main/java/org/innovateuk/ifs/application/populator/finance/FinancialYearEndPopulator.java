@@ -6,6 +6,9 @@ import org.innovateuk.ifs.application.viewmodel.finance.FinancialYearEndViewMode
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.stereotype.Component;
 
+/**
+ * Populator for financial year end form inputs.
+ */
 @Component
 public class FinancialYearEndPopulator extends AbstractFormInputPopulator<FinancialYearEndViewModel> {
 

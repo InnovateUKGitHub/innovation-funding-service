@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 
 /**
- * Created by luke.harper on 03/05/2017.
+ * Abstract class for populating a form input view model.
  */
 public abstract class AbstractFormInputPopulator<M extends AbstractFormInputViewModel> implements FormInputPopulator<M> {
 

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * Populator for application details form inputs.
+ */
 @Component
 public class ApplicationDetailsPopulator extends AbstractFormInputPopulator<ApplicationDetailsInputViewModel> {
 

@@ -9,6 +9,9 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Populator for file upload form inputs.
+ */
 @Component
 public class FileUploadPopulator extends AbstractFormInputPopulator<FileUploadInputViewModel> {
 

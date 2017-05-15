@@ -3,7 +3,7 @@ package org.innovateuk.ifs.applicant.resource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 
 /**
- * Created by luke.harper on 25/04/2017.
+ * Rich resource for a form input response.
  */
 public class ApplicantFormInputResponseResource {
 
