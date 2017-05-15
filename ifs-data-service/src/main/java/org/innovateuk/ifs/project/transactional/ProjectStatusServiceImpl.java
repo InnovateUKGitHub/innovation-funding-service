@@ -12,7 +12,7 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -57,7 +57,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
-    private GOLWorkflowHandler golWorkflowHandler;
+    private GrantOfferLetterWorkflowHandler golWorkflowHandler;
 
     @Autowired
     private FinanceRowService financeRowService;

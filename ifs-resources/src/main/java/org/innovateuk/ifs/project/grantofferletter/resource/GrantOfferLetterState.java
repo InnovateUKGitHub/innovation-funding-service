@@ -10,7 +10,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Represents the states that can be transitioned during the Grant Offer Letter process.
  */
-public enum GOLState implements ProcessStates {
+public enum GrantOfferLetterState implements ProcessStates {
 
     PENDING(State.PENDING),
     SENT(State.ASSIGNED),
@@ -21,7 +21,7 @@ public enum GOLState implements ProcessStates {
     private State backingState;
 
     // creates the enum with the chosen type.
-    GOLState(State backingState) {
+    GrantOfferLetterState(State backingState) {
         this.backingState = backingState;
     }
 
@@ -36,10 +36,10 @@ public enum GOLState implements ProcessStates {
     }
 
     public static List<State> getBackingStates() {
-        return simpleMap(GOLState.values(), ProcessStates::getBackingState);
+        return simpleMap(GrantOfferLetterState.values(), ProcessStates::getBackingState);
     }
 
-    public static GOLState fromState(State state) {
-        return ProcessStates.fromState(GOLState.values(), state);
+    public static GrantOfferLetterState fromState(State state) {
+        return ProcessStates.fromState(GrantOfferLetterState.values(), state);
     }
 }
