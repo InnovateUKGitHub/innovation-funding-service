@@ -1,0 +1,86 @@
+*** Settings ***
+Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' dashboard
+...
+...               INFUND-7374 - As a member of the competitions team I can inform an applicant that their application is ineligible so that they know their application is not being sent for assessment
+...
+...               INFUND-7373 - As a member of the competitions team I can view a list of ineligible applications so that I know which applications have been marked as ineligible and which applicants have been informed
+...
+...               INFUND-9130 - Applicant dashboard: Application moved from 'Application in progress' section of dashboard to 'Previous applications' section
+...
+...               INFUND-7370 - As a member of the competitions team I can mark a submitted application as ineligible so that the application is not sent to be assessed
+Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
+Suite Teardown    the user closes the browser
+Force Tags        CompAdmin    Applicant
+Resource          ../../resources/defaultResources.robot
+
+*** Test Cases ***
+A non submitted application cannot be marked as ineligible
+    [Documentation]    INFUND-7370
+    [Tags]
+    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    link = Applications: All, submitted, ineligible
+    And the user clicks the button/link    link = All applications
+    When the user clicks the button/link    link = 16
+    Then the user should not see the element    jQuery=h2 button:contains("Mark application as ineligible")
+    [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Back")
+
+Selecting to mark an application as ineligible opens a text box
+    [Documentation]    INFUND-7370
+    [Tags]
+    Given the user clicks the button/link     link=19
+    When the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")  #There are 2 buttons with the same name so we need to be careful
+    Then the user should see the element    id=ineligibleReason
+
+Cancel marking the application as ineligible
+    [Documentation]    INFUND-7370
+    [Tags]    Pending
+    When the user clicks the button/link    jQuery=.button:contains("Cancel")
+    Then the user should not see the element    id=ineligibleReason
+
+Mark an application as ineligible
+    [Documentation]    INFUND-7370
+    [Tags]
+    #Given the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
+    And the user enters text to a text field   id=ineligibleReason    Hello there
+    When the user clicks the button/link    jQuery=.button:contains("Mark application as ineligible")
+    Then the user should not see the element    jQuery=td:contains("19")
+    [Teardown]   the user clicks the button/link    jQuery=.link-back:contains("Applications")
+
+Filter ineligible applications
+    [Documentation]    INFUND-8942
+    [Tags]
+    [Setup]    the user clicks the button/link    link=Ineligible applications
+    Given the user enters text to a text field    id=filterSearch    19
+    And the user selects the option from the drop-down menu    No    id=filterInform
+    When the user clicks the button/link    jQuery=.button:contains("Filter")
+    Then the user should see the element    jQuery=td:contains("19") ~ td .button:contains("Inform applicant")
+    And the user should not see the element    jQuery=td:contains("63") ~ td span:contains("Informed")
+    When the user clicks the button/link    jQuery=a:contains("Clear all filters")
+    Then the user should see the element       jQuery=td:contains("63") ~ td span:contains("Informed")
+
+Sort ineligible applications by lead
+    [Documentation]    INFUND-8942
+    [Tags]
+    When the application list is sorted by    Lead
+    Then the applications should be sorted by column    3
+
+Inform a user their application is ineligible
+   [Documentation]    INFUND-7374
+   [Tags]
+   Given the user clicks the button/link    jQuery=a:contains("21 to 40")
+   And the user clicks the button/link    jQuery=td:contains("19") ~ td .button:contains("Inform applicant")
+   And the user enters text to a text field    id=subject    This is ineligible
+   And the user enters text to a text field    id=message    Thank you for your application but this is ineligible
+   And the user clicks the button/link    jQuery=button:contains("Send")
+   Then the user should see the element    jQuery=td:contains("19") ~ td span:contains("Informed")
+   And the user reads his email    ${recipient}    ${subject}    ${pattern}
+
+Reinstate an application
+   [Documentation]
+   [Tags]
+   Given the user clicks the button/link     link=19
+   And the user clicks the button/link    jQuery=a:contains("Reinstate application")
+   When the user clicks the button/link    jQuery=button:contains("Reinstate application")
+
+
+
