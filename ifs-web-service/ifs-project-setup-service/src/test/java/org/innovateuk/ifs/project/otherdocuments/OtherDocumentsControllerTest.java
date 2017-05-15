@@ -54,10 +54,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
@@ -105,10 +105,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents/readonly")).
                 andExpect(view().name("project/other-documents")).
@@ -152,10 +152,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
@@ -202,10 +202,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         FileEntryResource existingExplotationPlan = newFileEntryResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.of(existingCollaborationAgreement));
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.of(existingExplotationPlan));
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.of(existingCollaborationAgreement));
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.of(existingExplotationPlan));
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
@@ -254,10 +254,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
@@ -299,10 +299,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
         ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
 
-        when(projectOtherDocumentsService.getCollaborationAgreementFile(123L)).
+        when(otherDocumentsService.getCollaborationAgreementFile(123L)).
                 thenReturn(Optional.of(fileContents));
 
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(123L)).
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents/collaboration-agreement")).
@@ -317,10 +317,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     @Test
     public void testDownloadCollaborationAgreementButFileDoesntExist() throws Exception {
 
-        when(projectOtherDocumentsService.getExploitationPlanFile(123L)).
+        when(otherDocumentsService.getExploitationPlanFile(123L)).
                 thenReturn(Optional.empty());
 
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(123L)).
+        when(otherDocumentsService.getExploitationPlanFileDetails(123L)).
                 thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
@@ -336,7 +336,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         MockMultipartFile uploadedFile = new MockMultipartFile("collaborationAgreement", "filename.txt", "text/plain", "My content!".getBytes());
 
-        when(projectOtherDocumentsService.addCollaborationAgreementDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        when(otherDocumentsService.addCollaborationAgreementDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         mockMvc.perform(
@@ -358,17 +358,17 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         MockMultipartFile uploadedFile = new MockMultipartFile("collaborationAgreement", "filename.txt", "text/plain", "My content!".getBytes());
 
-        when(projectOtherDocumentsService.addCollaborationAgreementDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        when(otherDocumentsService.addCollaborationAgreementDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceFailure(asList(
                         unsupportedMediaTypeError(singletonList(APPLICATION_ATOM_XML)),
                         unsupportedMediaTypeError(singletonList(APPLICATION_JSON)))));
 
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
-        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/123/partner/documents").
@@ -388,7 +388,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     @Test
     public void testRemoveCollaborationAgreement() throws Exception {
 
-        when(projectOtherDocumentsService.removeCollaborationAgreementDocument(123L)).thenReturn(serviceSuccess());
+        when(otherDocumentsService.removeCollaborationAgreementDocument(123L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/123/partner/documents").
@@ -397,7 +397,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(view().name("redirect:/project/123/partner/documents"));
 
-        verify(projectOtherDocumentsService).removeCollaborationAgreementDocument(123L);
+        verify(otherDocumentsService).removeCollaborationAgreementDocument(123L);
     }
 
     @Test
@@ -406,10 +406,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
         ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
 
-        when(projectOtherDocumentsService.getExploitationPlanFile(123L)).
+        when(otherDocumentsService.getExploitationPlanFile(123L)).
                 thenReturn(Optional.of(fileContents));
 
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(123L)).
+        when(otherDocumentsService.getExploitationPlanFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
@@ -424,10 +424,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     @Test
     public void testDownloadExploitationPlanButFileDoesntExist() throws Exception {
 
-        when(projectOtherDocumentsService.getExploitationPlanFile(123L)).
+        when(otherDocumentsService.getExploitationPlanFile(123L)).
                 thenReturn(Optional.empty());
 
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(123L)).
+        when(otherDocumentsService.getExploitationPlanFileDetails(123L)).
                 thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
@@ -443,7 +443,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         MockMultipartFile uploadedFile = new MockMultipartFile("exploitationPlan", "filename.txt", "text/plain", "My content!".getBytes());
 
-        when(projectOtherDocumentsService.addExploitationPlanDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+        when(otherDocumentsService.addExploitationPlanDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
 
         mockMvc.perform(
@@ -458,7 +458,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     @Test
     public void testRemoveExploitationPlan() throws Exception {
 
-        when(projectOtherDocumentsService.removeExploitationPlanDocument(123L)).thenReturn(serviceSuccess());
+        when(otherDocumentsService.removeExploitationPlanDocument(123L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/123/partner/documents").
@@ -466,7 +466,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/123/partner/documents"));
 
-        verify(projectOtherDocumentsService).removeExploitationPlanDocument(123L);
+        verify(otherDocumentsService).removeExploitationPlanDocument(123L);
     }
 
     @Test
@@ -476,10 +476,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.isProjectManager(loggedInUser.getId(), projectId)).thenReturn(true);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
-        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
 
         MvcResult result = mockMvc.perform(
                 get("/project/123/partner/documents")).
@@ -488,7 +488,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
-        verify(projectOtherDocumentsService).isOtherDocumentSubmitAllowed(123L);
+        verify(otherDocumentsService).isOtherDocumentSubmitAllowed(123L);
 
         OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
@@ -511,7 +511,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
     @Test
     public void testSubmitPartnerDocuments() throws Exception {
-        when(projectOtherDocumentsService.setPartnerDocumentsSubmitted(1L)).thenReturn(serviceSuccess());
+        when(otherDocumentsService.setPartnerDocumentsSubmitted(1L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/partner/documents/submit", 1L)).
                 andExpect(redirectedUrl("/project/1/partner/documents"));
@@ -525,10 +525,10 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         ProjectResource project = newProjectResource().withId(projectId).build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
-        when(projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
 
         mockMvc.perform(get("/project/{id}/partner/documents/confirm", projectId)).
                 andExpect(status().isOk()).

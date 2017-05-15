@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
@@ -39,7 +39,7 @@ public class OtherDocumentsController {
     OtherDocumentsViewModelPopulator populator;
 
     @Autowired
-    private ProjectOtherDocumentsService projectOtherDocumentsService;
+    private OtherDocumentsService otherDocumentsService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
@@ -87,7 +87,7 @@ public class OtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping("/submit")
     public String submitPartnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
-        projectOtherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
+        otherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToOtherDocumentsPage(projectId);
     }
 
@@ -102,8 +102,8 @@ public class OtherDocumentsController {
     ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getCollaborationAgreementFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+        final Optional<ByteArrayResource> content = otherDocumentsService.getCollaborationAgreementFile(projectId);
+        final Optional<FileEntryResource> fileDetails = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
@@ -121,7 +121,7 @@ public class OtherDocumentsController {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form, () -> {
             MultipartFile file = form.getCollaborationAgreement();
 
-            return projectOtherDocumentsService.addCollaborationAgreementDocument(projectId, file.getContentType(), file.getSize(),
+            return otherDocumentsService.addCollaborationAgreementDocument(projectId, file.getContentType(), file.getSize(),
                     file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
@@ -136,7 +136,7 @@ public class OtherDocumentsController {
                                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form,
-                () -> projectOtherDocumentsService.removeCollaborationAgreementDocument(projectId));
+                () -> otherDocumentsService.removeCollaborationAgreementDocument(projectId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
@@ -146,8 +146,8 @@ public class OtherDocumentsController {
     ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getExploitationPlanFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getExploitationPlanFileDetails(projectId);
+        final Optional<ByteArrayResource> content = otherDocumentsService.getExploitationPlanFile(projectId);
+        final Optional<FileEntryResource> fileDetails = otherDocumentsService.getExploitationPlanFileDetails(projectId);
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
@@ -173,7 +173,7 @@ public class OtherDocumentsController {
 
             MultipartFile file = form.getExploitationPlan();
 
-            return projectOtherDocumentsService.addExploitationPlanDocument(projectId, file.getContentType(), file.getSize(),
+            return otherDocumentsService.addExploitationPlanDocument(projectId, file.getContentType(), file.getSize(),
                     file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
@@ -196,6 +196,6 @@ public class OtherDocumentsController {
                                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form,
-                () -> projectOtherDocumentsService.removeExploitationPlanDocument(projectId));
+                () -> otherDocumentsService.removeExploitationPlanDocument(projectId));
     }
 }

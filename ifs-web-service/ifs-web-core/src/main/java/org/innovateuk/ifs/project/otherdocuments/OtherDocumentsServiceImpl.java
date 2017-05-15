@@ -13,7 +13,7 @@ import java.util.Optional;
  * A service for dealing with Project Other Documents via the appropriate Rest services
  */
 @Service
-public class ProjectOtherDocumentsServiceImpl implements ProjectOtherDocumentsService {
+public class OtherDocumentsServiceImpl implements OtherDocumentsService {
 
     @Autowired
     private ProjectOtherDocumentsRestService projectOtherDocumentsRestService;

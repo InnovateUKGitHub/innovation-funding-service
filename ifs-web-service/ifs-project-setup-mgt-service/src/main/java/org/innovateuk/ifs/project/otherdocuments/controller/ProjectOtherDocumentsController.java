@@ -7,7 +7,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -45,7 +45,7 @@ public class ProjectOtherDocumentsController {
     private ProjectService projectService;
 
     @Autowired
-    private ProjectOtherDocumentsService projectOtherDocumentsService;
+    private OtherDocumentsService otherDocumentsService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -69,8 +69,8 @@ public class ProjectOtherDocumentsController {
     private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
-        Optional<FileEntryResource> collaborationAgreement = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
-        Optional<FileEntryResource> exploitationPlan = projectOtherDocumentsService.getExploitationPlanFileDetails(projectId);
+        Optional<FileEntryResource> collaborationAgreement = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+        Optional<FileEntryResource> exploitationPlan = otherDocumentsService.getExploitationPlanFileDetails(projectId);
 
         OrganisationResource leadPartnerOrganisation = projectService.getLeadOrganisation(projectId);
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
@@ -110,7 +110,7 @@ public class ProjectOtherDocumentsController {
         return validationhandler.performActionOrBindErrorsToField("approved",
                 () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
                 () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
-                () -> projectOtherDocumentsService.acceptOrRejectOtherDocuments(projectId, form.isApproved()));
+                () -> otherDocumentsService.acceptOrRejectOtherDocuments(projectId, form.isApproved()));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
@@ -120,8 +120,8 @@ public class ProjectOtherDocumentsController {
     ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getCollaborationAgreementFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+        final Optional<ByteArrayResource> content = otherDocumentsService.getCollaborationAgreementFile(projectId);
+        final Optional<FileEntryResource> fileDetails = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
@@ -141,8 +141,8 @@ public class ProjectOtherDocumentsController {
     ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getExploitationPlanFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getExploitationPlanFileDetails(projectId);
+        final Optional<ByteArrayResource> content = otherDocumentsService.getExploitationPlanFile(projectId);
+        final Optional<FileEntryResource> fileDetails = otherDocumentsService.getExploitationPlanFileDetails(projectId);
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 }

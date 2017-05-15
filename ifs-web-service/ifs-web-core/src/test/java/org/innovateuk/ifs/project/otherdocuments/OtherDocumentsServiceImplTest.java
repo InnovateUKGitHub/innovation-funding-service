@@ -22,10 +22,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectOtherDocumentsServiceImplTest {
+public class OtherDocumentsServiceImplTest {
 
     @InjectMocks
-    private ProjectOtherDocumentsServiceImpl projectOtherDocumentsService;
+    private OtherDocumentsServiceImpl otherDocumentsService;
 
     @Mock
     private ProjectRestService projectRestService;
@@ -42,7 +42,7 @@ public class ProjectOtherDocumentsServiceImplTest {
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                projectOtherDocumentsService.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                otherDocumentsService.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
@@ -54,7 +54,7 @@ public class ProjectOtherDocumentsServiceImplTest {
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
         when(projectOtherDocumentsRestService.getCollaborationAgreementFile(123L)).thenReturn(restSuccess(content));
 
-        Optional<ByteArrayResource> result = projectOtherDocumentsService.getCollaborationAgreementFile(123L);
+        Optional<ByteArrayResource> result = otherDocumentsService.getCollaborationAgreementFile(123L);
         assertEquals(content, result);
     }
 
@@ -66,7 +66,7 @@ public class ProjectOtherDocumentsServiceImplTest {
         Optional<FileEntryResource> response = Optional.of(returnedFile);
         when(projectOtherDocumentsRestService.getCollaborationAgreementFileDetails(123L)).thenReturn(restSuccess(response));
 
-        Optional<FileEntryResource> result = projectOtherDocumentsService.getCollaborationAgreementFileDetails(123L);
+        Optional<FileEntryResource> result = otherDocumentsService.getCollaborationAgreementFileDetails(123L);
         assertEquals(response, result);
     }
 
@@ -75,7 +75,7 @@ public class ProjectOtherDocumentsServiceImplTest {
 
         when(projectOtherDocumentsRestService.removeCollaborationAgreementDocument(123L)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = projectOtherDocumentsService.removeCollaborationAgreementDocument(123L);
+        ServiceResult<Void> result = otherDocumentsService.removeCollaborationAgreementDocument(123L);
 
         assertTrue(result.isSuccess());
 
@@ -91,7 +91,7 @@ public class ProjectOtherDocumentsServiceImplTest {
                 thenReturn(restSuccess(createdFile));
 
         ServiceResult<FileEntryResource> result =
-                projectOtherDocumentsService.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+                otherDocumentsService.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
         assertEquals(createdFile, result.getSuccessObject());
@@ -103,7 +103,7 @@ public class ProjectOtherDocumentsServiceImplTest {
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
         when(projectOtherDocumentsRestService.getExploitationPlanFile(123L)).thenReturn(restSuccess(content));
 
-        Optional<ByteArrayResource> result = projectOtherDocumentsService.getExploitationPlanFile(123L);
+        Optional<ByteArrayResource> result = otherDocumentsService.getExploitationPlanFile(123L);
         assertEquals(content, result);
     }
 
@@ -115,7 +115,7 @@ public class ProjectOtherDocumentsServiceImplTest {
         Optional<FileEntryResource> response = Optional.of(returnedFile);
         when(projectOtherDocumentsRestService.getExploitationPlanFileDetails(123L)).thenReturn(restSuccess(response));
 
-        Optional<FileEntryResource> result = projectOtherDocumentsService.getExploitationPlanFileDetails(123L);
+        Optional<FileEntryResource> result = otherDocumentsService.getExploitationPlanFileDetails(123L);
         assertEquals(response, result);
     }
 
@@ -124,7 +124,7 @@ public class ProjectOtherDocumentsServiceImplTest {
 
         when(projectOtherDocumentsRestService.removeExploitationPlanDocument(123L)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = projectOtherDocumentsService.removeExploitationPlanDocument(123L);
+        ServiceResult<Void> result = otherDocumentsService.removeExploitationPlanDocument(123L);
 
         assertTrue(result.isSuccess());
 
@@ -136,7 +136,7 @@ public class ProjectOtherDocumentsServiceImplTest {
 
         when(projectOtherDocumentsRestService.acceptOrRejectOtherDocuments(123L, true)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = projectOtherDocumentsService.acceptOrRejectOtherDocuments(123L, true);
+        ServiceResult<Void> result = otherDocumentsService.acceptOrRejectOtherDocuments(123L, true);
 
         assertTrue(result.isSuccess());
 
@@ -148,7 +148,7 @@ public class ProjectOtherDocumentsServiceImplTest {
 
         when(projectOtherDocumentsRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restSuccess(true));
 
-        Boolean submitAllowed = projectOtherDocumentsService.isOtherDocumentSubmitAllowed(123L);
+        Boolean submitAllowed = otherDocumentsService.isOtherDocumentSubmitAllowed(123L);
 
         assertTrue(submitAllowed);
 
@@ -160,7 +160,7 @@ public class ProjectOtherDocumentsServiceImplTest {
 
         when(projectOtherDocumentsRestService.isOtherDocumentsSubmitAllowed(123L)).thenReturn(restSuccess(false));
 
-        Boolean submitAllowed = projectOtherDocumentsService.isOtherDocumentSubmitAllowed(123L);
+        Boolean submitAllowed = otherDocumentsService.isOtherDocumentSubmitAllowed(123L);
 
         assertFalse(submitAllowed);
 
@@ -171,7 +171,7 @@ public class ProjectOtherDocumentsServiceImplTest {
 
         when(projectOtherDocumentsRestService.setPartnerDocumentsSubmitted(1L)).thenReturn(restSuccess());
 
-        ServiceResult<Void> submitted = projectOtherDocumentsService.setPartnerDocumentsSubmitted(1L);
+        ServiceResult<Void> submitted = otherDocumentsService.setPartnerDocumentsSubmitted(1L);
 
         assertTrue(submitted.isSuccess());
 
