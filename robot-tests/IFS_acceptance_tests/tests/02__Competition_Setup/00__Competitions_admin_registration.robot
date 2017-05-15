@@ -39,20 +39,10 @@ User creates new account verifies email and login
     And the user selects the radio button   organisationTypeId  radio-1
     And the user clicks the button/link     jQuery=.button:contains("Save and continue")
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
+    the user enters the details and clicks the create account    Eric   Cantona   ${CREATE_ACCOUNT_EMAIL}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user reads his email from the default mailbox and clicks the link    ${CREATE_ACCOUNT_EMAIL}    Please verify your email address    Once verified you can sign into your account
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123
     the guest user clicks the log-in button
-
-the user enters the details and clicks the create account
-    [Arguments]    ${CREATE_ACCOUNT_EMAIL}
-    Input Text    id=firstName    Eric
-    Input Text    id=lastName    Cantona
-    Input Text    id=phoneNumber    0505050508
-    Input Text    id=email    ${CREATE_ACCOUNT_EMAIL}
-    Input Password    id=password    Passw0rd123
-    And the user selects the checkbox    termsAndConditions
-    Submit Form

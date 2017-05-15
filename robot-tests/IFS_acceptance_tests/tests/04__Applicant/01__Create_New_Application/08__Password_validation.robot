@@ -3,7 +3,7 @@ Documentation     INFUND-1147: Further acceptance tests for the create account p
 ...
 ...               INFUND-2497: As a new user I would like to have an indication that my password is correct straight after typing so I know that I have to fix this before submitting my form
 Suite Setup       Run keywords    The guest user opens the browser
-...               AND    The user follows the flow to register their organisation
+...               AND    The user follows the flow to register their organisation    radio-1
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot

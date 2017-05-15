@@ -643,6 +643,27 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void testInviteProjectManagerWhenProjectDetailsAlreadySubmitted() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = newInviteProjectResource()
+                .build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withId(projectId)
+                .build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
+
+        ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+    }
+
+    @Test
     public void testInviteProjectManagerWhenUnableToSendNotification() {
 
         Long projectId = 1L;
