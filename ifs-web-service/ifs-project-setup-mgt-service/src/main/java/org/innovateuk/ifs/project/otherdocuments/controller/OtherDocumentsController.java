@@ -8,7 +8,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
-import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
+import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -52,13 +52,13 @@ public class OtherDocumentsController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
-    public String viewOtherDocumentsPage(Model model, @ModelAttribute(name = FORM_ATTR, binding = false) ProjectOtherDocumentsForm form,
+    public String viewOtherDocumentsPage(Model model, @ModelAttribute(name = FORM_ATTR, binding = false) OtherDocumentsForm form,
                                          @PathVariable("projectId") Long projectId,
                                          @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
     }
 
-    private String doViewOtherDocumentsPage(Model model, ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private String doViewOtherDocumentsPage(Model model, OtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
         model.addAttribute("model", viewModel);
@@ -66,7 +66,7 @@ public class OtherDocumentsController {
         return "project/other-documents";
     }
 
-    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(ProjectOtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(OtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
         Optional<FileEntryResource> collaborationAgreement = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
@@ -101,7 +101,7 @@ public class OtherDocumentsController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping
-    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+    public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
                                                BindingResult bindingResult,
                                                ValidationHandler validationhandler,
                                                @PathVariable("projectId") Long projectId,
