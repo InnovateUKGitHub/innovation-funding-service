@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectOtherDocumentsControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<OtherDocumentsController> {
+public class OtherDocumentsControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<OtherDocumentsController> {
 
     @Override
     protected Class<? extends OtherDocumentsController> getClassUnderTest() {
