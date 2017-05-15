@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -66,7 +66,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
 
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/send")).
@@ -104,7 +104,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
@@ -119,7 +119,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.SENT));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.SENT));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
@@ -159,7 +159,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
@@ -174,7 +174,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
@@ -260,7 +260,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(golFileEntryResource);
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
@@ -300,7 +300,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.txt", "text/plain", "My content!".getBytes());
@@ -341,7 +341,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.removeGrantOfferLetter(123L)).
@@ -425,7 +425,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(annexFileEntryResource);
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
@@ -466,7 +466,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
@@ -510,7 +510,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGolFileEntryResource));
 
         when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED)).thenReturn(serviceSuccess());
@@ -525,7 +525,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.APPROVED));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGolFileEntryResource));
 
 
@@ -567,7 +567,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
@@ -582,7 +582,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GOLState.SENT));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.SENT));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
