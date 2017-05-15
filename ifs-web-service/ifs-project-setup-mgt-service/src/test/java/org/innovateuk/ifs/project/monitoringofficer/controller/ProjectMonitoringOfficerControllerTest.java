@@ -393,12 +393,12 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         ServiceResult<Void> failureResponse = serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
 
-        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First2", "Last2", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
+        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
-                param("firstName", "First2").
-                param("lastName", "Last2").
+                param("firstName", "First").
+                param("lastName", "Last").
                 param("emailAddress", "asdf2@asdf.com").
                 param("phoneNumber", "0987654321")).
                 andExpect(view().name("project/monitoring-officer")).
@@ -420,8 +420,8 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         // assert the form for the MO details have been retained from the ones that resulted in error
         ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
-        assertEquals("First2", form.getFirstName());
-        assertEquals("Last2", form.getLastName());
+        assertEquals("First", form.getFirstName());
+        assertEquals("Last", form.getLastName());
         assertEquals("asdf2@asdf.com", form.getEmailAddress());
         assertEquals("0987654321", form.getPhoneNumber());
 

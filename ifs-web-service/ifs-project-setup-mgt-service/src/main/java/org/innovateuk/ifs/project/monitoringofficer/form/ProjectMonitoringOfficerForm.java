@@ -16,9 +16,11 @@ import java.util.Optional;
 public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} -']*", message = "{validation.standard.firstname.required}")
     private String firstName;
 
     @NotEmpty(message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} -']*", message = "{validation.standard.lastname.required}")
     private String lastName;
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
