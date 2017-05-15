@@ -37,7 +37,7 @@ import static java.util.Collections.singletonList;
  */
 @Controller
 @RequestMapping("/project/{projectId}/partner/documents")
-public class ProjectOtherDocumentsController {
+public class OtherDocumentsController {
 
     private static final String FORM_ATTR = "form";
 

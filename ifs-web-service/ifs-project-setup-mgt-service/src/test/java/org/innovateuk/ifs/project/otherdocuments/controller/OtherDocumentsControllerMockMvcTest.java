@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTest<ProjectOtherDocumentsController> {
+public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
 
     long applicationId = 456L;
     long projectId = 123L;
@@ -170,7 +170,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     }
 
     @Override
-    protected ProjectOtherDocumentsController supplyControllerUnderTest() {
-        return new ProjectOtherDocumentsController();
+    protected OtherDocumentsController supplyControllerUnderTest() {
+        return new OtherDocumentsController();
     }
 }
