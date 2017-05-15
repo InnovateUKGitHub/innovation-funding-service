@@ -149,15 +149,13 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void editCompetitionSetupSection_redirectsIfInitialDetailsNotCompleted() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .build();
+        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/application"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dashboard"));
+                .andExpect(redirectedUrl("/competition/setup/" + COMPETITION_ID));
     }
 
     @Test
