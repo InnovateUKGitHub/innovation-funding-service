@@ -67,7 +67,7 @@ Lead applicant can't upload a JeS file
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the academic application finances
     When the user clicks the button/link    link=Your project costs
-    Then the user should not see the element    name=jes-upload
+    Then the user should not see the element    name=1086
 
 Academics upload
     [Documentation]    INFUND-917
@@ -183,7 +183,7 @@ the calculations should be correct and the totals rounded to the second decimal
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
-    Choose File    name=jes-upload    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    name=1086    ${UPLOAD_FOLDER}/${file_name}
 
 
 the finance table should be correct
