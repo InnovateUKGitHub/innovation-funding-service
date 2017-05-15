@@ -102,9 +102,9 @@
         .off('click', this.selector, this.clickHandler)
         .off('focus blur', this.selector, this.focusHandler);
     } else {
-      this.$elms
-        .off('click', this.clickHandler)
-        .off('focus blur', this.focusHandler);
+      $(document)
+        .off('click', this.$elms, this.clickHandler)
+        .off('focus blur', this.$elms, this.focusHandler);
     }
   };
 
