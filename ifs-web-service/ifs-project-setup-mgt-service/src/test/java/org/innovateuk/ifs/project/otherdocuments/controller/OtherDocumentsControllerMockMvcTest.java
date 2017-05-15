@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -59,7 +59,7 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
     }
 
 
-    private void assertProjectDetailsPrepopulatedOk(ProjectOtherDocumentsViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(OtherDocumentsViewModel model) {
 
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals(Long.valueOf(456), model.getApplicationId());
@@ -85,7 +85,7 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
                 andExpect(view().name("project/other-documents")).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         assertProjectDetailsPrepopulatedOk(model);
 
@@ -108,7 +108,7 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
                 andExpect(view().name("project/other-documents")).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -133,7 +133,7 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
                 .andExpect(view().name("project/other-documents"))
                 .andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         assertProjectDetailsPrepopulatedOk(model);
         assertEquals(true, model.isApproved());

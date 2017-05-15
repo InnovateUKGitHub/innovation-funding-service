@@ -9,7 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
-import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -60,13 +60,13 @@ public class OtherDocumentsController {
 
     private String doViewOtherDocumentsPage(Model model, OtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
+        OtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR, form);
         return "project/other-documents";
     }
 
-    private ProjectOtherDocumentsViewModel getOtherDocumentsViewModel(OtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private OtherDocumentsViewModel getOtherDocumentsViewModel(OtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
         Optional<FileEntryResource> collaborationAgreement = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
@@ -85,7 +85,7 @@ public class OtherDocumentsController {
                 .map(OrganisationResource::getName)
                 .collect(Collectors.toList());
 
-        return new ProjectOtherDocumentsViewModel(projectId, applicationResource.getId(), project.getName(), applicationResource.getCompetition(), leadPartnerOrganisation.getName(),
+        return new OtherDocumentsViewModel(projectId, applicationResource.getId(), project.getName(), applicationResource.getCompetition(), leadPartnerOrganisation.getName(),
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
