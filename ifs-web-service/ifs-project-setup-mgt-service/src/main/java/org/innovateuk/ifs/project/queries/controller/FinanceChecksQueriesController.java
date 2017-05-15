@@ -2,19 +2,21 @@ package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
-import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
@@ -46,6 +48,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -86,9 +89,18 @@ public class FinanceChecksQueriesController {
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
                            Model model) {
+        checkFinanceContactIsSubmitted(projectId, organisationId);
         FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
         model.addAttribute("model", viewModel);
         return QUERIES_VIEW;
+    }
+
+    private void checkFinanceContactIsSubmitted(Long projectId, Long organisationId) {
+        ProjectTeamStatusResource projectTeamStatusResource = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        boolean financeContactSubmitted = projectTeamStatusResource.getPartnerStatusForOrganisation(organisationId).map(partnerStatus -> partnerStatus.getFinanceContactStatus().equals(ProjectActivityStates.COMPLETE)).orElse(false);
+        if(!financeContactSubmitted) {
+            throw new ObjectNotFoundException(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED.getErrorKey(), Collections.emptyList());
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -98,8 +110,9 @@ public class FinanceChecksQueriesController {
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
-                                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                                         HttpServletRequest request) {
+                                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+        checkFinanceContactIsSubmitted(projectId, organisationId);
+
         Optional<ByteArrayResource> content = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
 
@@ -123,9 +136,8 @@ public class FinanceChecksQueriesController {
                                   @RequestParam(value = "query_section", required = false) String querySection,
                                   Model model,
                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                  HttpServletRequest request,
-                                  HttpServletResponse response) {
-
+                                  HttpServletRequest request) {
+        checkFinanceContactIsSubmitted(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
@@ -145,6 +157,7 @@ public class FinanceChecksQueriesController {
                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                HttpServletRequest request,
                                HttpServletResponse response) {
+        checkFinanceContactIsSubmitted(projectId, organisationId);
         Supplier<String> failureView = () -> {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
             FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
@@ -202,6 +215,7 @@ public class FinanceChecksQueriesController {
                                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
+        checkFinanceContactIsSubmitted(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Supplier<String> onSuccess = () -> redirectTo(rootView(projectId, organisationId, queryId, querySection));
         Supplier<String> onError = () -> {
@@ -236,6 +250,7 @@ public class FinanceChecksQueriesController {
                                                                  @PathVariable Long attachmentId,
                                                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                                                  HttpServletRequest request) {
+        checkFinanceContactIsSubmitted(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Optional<ByteArrayResource> content = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
@@ -267,6 +282,7 @@ public class FinanceChecksQueriesController {
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
+        checkFinanceContactIsSubmitted(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         if (attachments.contains(attachmentId)) {
             financeCheckService.deleteFile(attachmentId).andOnSuccess(() ->
@@ -288,6 +304,7 @@ public class FinanceChecksQueriesController {
                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
+        checkFinanceContactIsSubmitted(projectId, organisationId);
         loadAttachmentsFromCookie(request, projectId, organisationId, queryId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId, queryId);
         return redirectToQueryPage(projectId, organisationId, querySection);

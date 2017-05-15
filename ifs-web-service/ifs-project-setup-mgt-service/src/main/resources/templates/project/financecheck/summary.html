@@ -83,8 +83,9 @@
                       th:classappend="${'eligibility-rag-' + status.index}">Green</span>
             </td>
             <td class="aligncentre">
-                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                <a th:if="${orgDetails.isFinanceContactProvided()}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                    th:text="${orgDetails.isAwaitingResponse() ? 'Awaiting response' : 'View'}"/>
+                <th:block th:unless="${orgDetails.isFinanceContactProvided()}">Awaiting contact</th:block>
             </td>
             <td class="aligncentre">
                 <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}">View</a>

@@ -4,14 +4,11 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
@@ -22,7 +19,10 @@ import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -38,25 +38,29 @@ import org.springframework.validation.ObjectError;
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTest<FinanceChecksQueriesController> {
@@ -79,7 +83,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
 
     RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
-    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(Arrays.asList(financeTeamRole)).build();
+    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(singletonList(financeTeamRole)).build();
     UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
 
     QueryResource thread;
@@ -105,25 +109,26 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUser));
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(newProjectTeamStatusResource().withPartnerStatuses(singletonList(newProjectPartnerStatusResource().withOrganisationId(applicantOrganisationId).withFinanceContactStatus(ProjectActivityStates.COMPLETE).build())).build());
 
         UserResource user1 = new UserResource();
         user1.setId(18L);
-        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new AttachmentResource(23L, "file1.txt", "txt", 1L)), ZonedDateTime.now().plusMinutes(10L));
+        PostResource firstPost = new PostResource(null, user1, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L)), ZonedDateTime.now().plusMinutes(10L));
         UserResource user2 = new UserResource();
         user2.setId(55L);
         PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));
-        thread = new QueryResource(1L, projectFinanceId, Arrays.asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, ZonedDateTime.now());
+        thread = new QueryResource(1L, projectFinanceId, asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, ZonedDateTime.now());
 
         PostResource firstPost2 = new PostResource(null, user1, "Question2", new ArrayList<>(), ZonedDateTime.now().plusMinutes(15L));
-        thread2 = new QueryResource(3L, projectFinanceId, Arrays.asList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, ZonedDateTime.now());
+        thread2 = new QueryResource(3L, projectFinanceId, singletonList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, ZonedDateTime.now());
 
         PostResource firstPost1 = new PostResource(null, user1, "Question3", new ArrayList<>(), ZonedDateTime.now());
         PostResource firstResponse1 = new PostResource(null, user2, "Response3", new ArrayList<>(), ZonedDateTime.now().plusMinutes(10L));
 
-        thread3 = new QueryResource(5L, projectFinanceId, Arrays.asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now());
+        thread3 = new QueryResource(5L, projectFinanceId, asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now());
 
-        queries = Arrays.asList(thread2, thread, thread3);
+        queries = asList(thread2, thread, thread3);
     }
 
     @Test
@@ -198,6 +203,17 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("B Z - Org1", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(1).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).attachments.size());
+
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
+    }
+
+    @Test
+    public void testQueriesPageNotAvailableIfFinanceContactNotSet() throws Exception {
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(newProjectTeamStatusResource().withPartnerStatuses(singletonList(newProjectPartnerStatusResource().withOrganisationId(applicantOrganisationId).withFinanceContactStatus(ProjectActivityStates.PENDING).build())).build());
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -217,6 +233,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("", response.getContentAsString());
         assertEquals(null, response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -236,6 +253,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("", response.getContentAsString());
         assertEquals(null, response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -273,6 +291,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertTrue(responseViewModel.isLeadPartnerOrganisation());
         assertEquals(0, responseViewModel.getNewAttachmentLinks().size());
         assertEquals("comment", modelForm.getResponse());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -310,6 +329,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 .filter(cookie -> cookie.getName().equals("finance_checks_queries_new_response_form_" + projectId + "_" + applicantOrganisationId + "_" + queryId))
                 .findAny();
         assertEquals(true, formCookieFound.get().getValue().isEmpty());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -336,6 +356,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("response").getDefaultMessage());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -365,6 +386,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("response").getDefaultMessage());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -393,6 +415,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("response").getDefaultMessage());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -424,7 +447,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getAttachment());
-
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -439,6 +462,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("", response.getContentAsString());
         assertEquals(null, response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -470,6 +494,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(true, formCookieFound.get().getValue().isEmpty());
 
         verify(financeCheckServiceMock).deleteFile(1L);
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -511,6 +536,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertTrue(queryViewModel.isLeadPartnerOrganisation());
         assertEquals(1, queryViewModel.getNewAttachmentLinks().size());
         assertEquals("name", queryViewModel.getNewAttachmentLinks().get(1L));
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -549,6 +575,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getResponse());
         assertEquals(null, form.getAttachment());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -579,6 +606,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getResponse());
         assertEquals(null, form.getAttachment());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -598,6 +626,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         List<? extends ObjectError> errors = (List<? extends ObjectError>) result.getModelAndView().getModel().get("nonFormErrors");
         assertEquals(1, errors.size());
         assertEquals("validation.notesandqueries.query.response.save.failed", errors.get(0).getCode());
+        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception {
