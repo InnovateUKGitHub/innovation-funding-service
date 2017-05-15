@@ -43,9 +43,9 @@ Project Finance user can see the internal project summary page
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(1) td:nth-child(3) a   #Monitoring officer page link
+    And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(2) td:nth-child(3) a   #Monitoring officer page link
     And the user goes back to the previous page
-    And the user should not see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(6) a  #SP element is not seen
+    And the user should not see the element   jQuery=#table-project-status tr:nth-child(2) td:nth-child(6) a  #SP element is not seen
 
 
 Comp Admin user cannot see the finance check summary page(duplicate)
@@ -59,7 +59,7 @@ Comp Admin user can see the internal project summary page
     [Tags]
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(1) td:nth-child(3) a   #Monitoring officer page link
+    And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(2) td:nth-child(3) a   #Monitoring officer page link
     And the user should not see an error in the page
     And the user goes back to the previous page
     When the user clicks the button/link    link=Competition dashboard

@@ -149,7 +149,7 @@ ${project_in_setup_page}                ${server}/project-setup/project/${PROJEC
 ${project_in_setup_details_page}        ${project_in_setup_page}/details
 ${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
 ${project_start_date_page}              ${project_in_setup_details_page}/start-date
-${project_address_page}                 ${project_in_setup_page}/project-address
+${project_address_page}                 ${project_in_setup_details_page}/project-address
 ${internal_project_summary}             ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${internal_spend_profile_approval}      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
 
