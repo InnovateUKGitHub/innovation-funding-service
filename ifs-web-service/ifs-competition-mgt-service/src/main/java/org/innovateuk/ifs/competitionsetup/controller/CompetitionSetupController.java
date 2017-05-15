@@ -330,17 +330,27 @@ public class CompetitionSetupController {
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
 
-
     /* AJAX Function */
     @GetMapping("/getInnovationArea/{innovationSectorId}")
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
         if (OPEN_SECTOR_ID.equals(innovationSectorId)) {
-            return categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+            returningList.add(0, createAllInnovationArea());
+
+            return returningList;
         } else {
             return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
         }
+    }
+
+    private InnovationAreaResource createAllInnovationArea() {
+        InnovationAreaResource innovationArea = new InnovationAreaResource();
+        innovationArea.setId(-1L);
+        innovationArea.setName("All");
+
+        return innovationArea;
     }
 
     /* AJAX Function */

@@ -15,10 +15,23 @@ IFS.competitionManagement.initialDetails = (function () {
       })
 
       IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
+      IFS.competitionManagement.initialDetails.handleInnovationArea(true)
       jQuery('.competition-management.competition-setup').on('change', '[name^="innovationAreaCategoryIds"]', function () {
+        IFS.competitionManagement.initialDetails.handleInnovationArea(false)
         IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
         IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
       })
+    },
+    handleInnovationArea: function (pageLoad) {
+      var sector = jQuery('[name^="innovationAreaCategoryIds"]').val()
+      var multipleRowsButton = jQuery('[data-add-row="innovationArea"]')
+      var isShowingAll = sector === '-1'
+
+      multipleRowsButton.attr('aria-hidden', isShowingAll)
+      if (isShowingAll) {
+        jQuery('[id*="innovation-row"]').not('#innovation-row-0').remove()
+        IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
+      }
     },
     handleInnovationSector: function (pageLoad) {
       var sector = jQuery('[name="innovationSectorCategoryId"]').val()

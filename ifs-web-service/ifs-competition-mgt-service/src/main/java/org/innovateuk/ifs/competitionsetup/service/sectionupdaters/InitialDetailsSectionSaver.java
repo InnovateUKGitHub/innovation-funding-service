@@ -4,7 +4,6 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -33,6 +32,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.OPEN_SECTOR_ID;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -65,7 +65,9 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 		return CompetitionSetupSection.INITIAL_DETAILS;
 	}
 
-	@Override
+    private final static Long ALL_INNOVATION_AREAS = -1L;
+
+    @Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
@@ -94,22 +96,37 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
                 competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
 
-                if (competition.getInnovationSector() != null) {
-                    List<InnovationAreaResource> children = categoryRestService.getInnovationAreasBySector(competition.getInnovationSector()).getSuccessObjectOrThrowException();
-                    List<CategoryResource> matchingChildren =
-                            children.stream().filter(child -> initialDetailsForm.getInnovationAreaCategoryIds().contains(child.getId())).collect(Collectors.toList());
+                List<Long> innovationAreas = initialDetailsForm.getInnovationAreaCategoryIds();
 
-                    if (matchingChildren.isEmpty() && initialDetailsForm.isMarkAsCompleteAction()) {
-                        return serviceFailure(asList(fieldError("innovationAreaCategoryIds",
-                                initialDetailsForm.getInnovationAreaCategoryIds(),
-                                "competition.setup.innovation.area.must.be.selected",
-                                singletonList(children.stream().map(child -> child.getName()).collect(Collectors.joining(", "))))));
+                if (competition.getInnovationSector() != null) {
+                    List<Long> innovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
+                    if(OPEN_SECTOR_ID.equals(competition.getInnovationSector())) {
+                        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+                        List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas);
+
+                        if(innovationAreaIds.contains(ALL_INNOVATION_AREAS)) {
+                            innovationAreas = allInnovationAreasIds;
+                        } else {
+                            boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !allInnovationAreasIds.contains(areaId));
+
+                            if (foundNotMatchingId && initialDetailsForm.isMarkAsCompleteAction()) {
+                                return serviceFailure(buildInnovationError(innovationAreaIds, allInnovationAreas));
+                            }
+                        }
+                    } else {
+                        List<InnovationAreaResource> children = categoryRestService.getInnovationAreasBySector(competition.getInnovationSector()).getSuccessObjectOrThrowException();
+                        List<Long> childrenIds = children.stream().map(InnovationAreaResource::getId).collect(Collectors.toList());
+
+                        boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !childrenIds.contains(areaId));
+
+                        if (foundNotMatchingId && initialDetailsForm.isMarkAsCompleteAction()) {
+                            return serviceFailure(buildInnovationError(innovationAreaIds, children));
+                        }
                     }
                 }
-                competition.setInnovationAreas(initialDetailsForm.getInnovationAreaCategoryIds()
-                                                                        .stream()
-                                                                        .filter(Objects::nonNull)
-                                                                        .collect(Collectors.toSet()));
+                competition.setInnovationAreas(innovationAreas.stream()
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet()));
             }
             return competitionService.update(competition).andOnSuccess(() -> {
                 if (initialDetailsForm.isMarkAsCompleteAction() && Boolean.FALSE.equals(competition.getSetupComplete())) {
@@ -122,6 +139,17 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             return serviceFailure(new Error("Initial details section is not editable after notifications", BAD_REQUEST));
         }
    }
+
+    private List<Error> buildInnovationError(List<Long> innovationAreaCategoryIds, List<InnovationAreaResource> allInnovationAreas) {
+        return asList(fieldError("innovationAreaCategoryIds",
+                innovationAreaCategoryIds,
+                "competition.setup.innovation.area.must.be.selected",
+                singletonList(allInnovationAreas.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))))
+    }
+
+    private List<Long> getAllInnovationAreaIds(List<InnovationAreaResource> allInnovationAreas) {
+        return allInnovationAreas.stream().map(InnovationAreaResource::getId).collect(Collectors.toList());
+    }
 
     private Error saveAssignedUsers(final CompetitionResource competition, InitialDetailsForm initialDetailsForm) {
         if (userService.existsAndHasRole(initialDetailsForm.getExecutiveUserId(), COMP_ADMIN)) {
