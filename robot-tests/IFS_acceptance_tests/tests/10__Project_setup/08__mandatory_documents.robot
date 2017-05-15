@@ -25,7 +25,7 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 
@@ -599,7 +599,7 @@ the project is completed if it is not already complete
 all previous sections of the project are completed
     lead partner selects project manager and address
     partners submit their finance contacts
-    project finance fills up monitoring officer
+    project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
 
 lead partner selects project manager and address
     log in as a different user           &{lead_applicant_credentials}
@@ -614,27 +614,17 @@ lead partner selects project manager and address
     the user clicks the button/link      jQuery=button:contains("Submit")
 
 partners submit their finance contacts
-    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}
-    the user selects the radio button  financeContact    financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  financeContact1
     log in as a different user         &{collaborator1_credentials}
-    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}
-    the user selects the radio button  financeContact    financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  financeContact1
     log in as a different user         &{collaborator2_credentials}
-    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}
-    the user selects the radio button  financeContact    financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  financeContact1
 
-project finance fills up monitoring officer
-    log in as a different user              &{internal_finance_credentials}
-    the user navigates to the page          ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
-    the user enters text to a text field    id=firstName    Grace
-    the user enters text to a text field    id=lastName    Harper
-    The user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
-    The user enters text to a text field    id=phoneNumber    08549731414
-    the user clicks the button/link         jQuery=.button[type="submit"]:contains("Assign Monitoring Officer")
-    the user clicks the button/link         jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+navigate to external finance contact page, choose finance contact and save
+    [Arguments]  ${org_id}   ${financeContactSelector}
+    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${org_id}
+    the user selects the radio button  financeContact  ${financeContactSelector}
+    the user clicks the button/link    jQuery=.button:contains("Save")
 
 the user uploads to the collaboration agreement question
     [Arguments]    ${file_name}
@@ -656,8 +646,8 @@ partner submits his bank details
     [Arguments]  ${user}
     log in as a different user            ${user}  ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  51406795
-    the user enters text to a text field  id=bank-sort-code  404745
+    the user enters text to a text field  id=bank-acc-number  ${account_number}
+    the user enters text to a text field  id=bank-sort-code  ${sort_code}
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")

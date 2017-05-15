@@ -22,7 +22,7 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
+Resource          PS_Common.robot
 
 # Alternative Bank account pair:12345677 - 000004 #
 # Another valid B account pair: 51406795 - 404745 #
@@ -175,8 +175,8 @@ Submission of bank details for academic user
     And the user clicks the button/link            link=Bank details
     When the user submits the bank account details along with the organisation address  00000123    000004
     Then the user views the error response from the stub
-    When the user enters text to a text field      name=accountNumber  51406795
-    And the user enters text to a text field       name=sortCode  404745
+    When the user enters text to a text field      name=accountNumber   ${account_number}
+    And the user enters text to a text field       name=sortCode  ${sort_code}
     When the user selects the radio button         addressType  ADD_NEW
     And the user enters text to a text field       id=addressForm.postcodeInput  BS14NT
     And the user clicks the button/link            id=postcode-lookup
@@ -230,8 +230,8 @@ User sees error response for invalid bank details for non-lead partner
 Non lead partner submits bank details
     [Documentation]    INFUND-3010, INFUND-6018
     [Tags]    HappyPath
-    When the user enters text to a text field      name=accountNumber  51406795
-    Then the user enters text to a text field      name=sortCode  404745
+    When the user enters text to a text field      name=accountNumber  ${account_number}
+    Then the user enters text to a text field      name=sortCode  ${sort_code}
     When the user selects the radio button         addressType  ADD_NEW
     Then the user enters text to a text field      id=addressForm.postcodeInput  BS14NT
     And the user clicks the button/link            id=postcode-lookup

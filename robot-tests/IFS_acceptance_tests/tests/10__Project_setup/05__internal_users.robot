@@ -16,7 +16,7 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 
@@ -43,9 +43,9 @@ Project Finance user can see the internal project summary page
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer')]
+    And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(1) td:nth-child(3) a   #Monitoring officer page link
     And the user goes back to the previous page
-    And the user should not see the element    xpath=//a[contains(@href, '/project-setup-management/project/${INFORM_APPLICATION_1_PROJECT}/spend-profile/approval')]    # since the spend profile hasn't been generated yet - see INFUND-5144
+    And the user should not see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(6) a  #SP element is not seen
 
 
 Comp Admin user cannot see the finance check summary page(duplicate)
@@ -59,7 +59,7 @@ Comp Admin user can see the internal project summary page
     [Tags]
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer')]
+    And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(1) td:nth-child(3) a   #Monitoring officer page link
     And the user should not see an error in the page
     And the user goes back to the previous page
     When the user clicks the button/link    link=Competition dashboard
@@ -107,7 +107,7 @@ all previous sections of the project are completed
     partners submit their finance contacts
     partners submit bank details
     project finance approves bank details
-    project finance fills up monitoring officer
+    project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
 
 lead partner selects project manager and address
     log in as a different user           &{lead_applicant_credentials}
@@ -122,16 +122,16 @@ lead partner selects project manager and address
     the user clicks the button/link      jQuery=button:contains("Submit")
 
 partners submit their finance contacts
-    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}
-    the user selects the radio button  financeContact    financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  financeContact1
     log in as a different user         &{collaborator1_credentials}
-    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}
-    the user selects the radio button  financeContact    financeContact1
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  financeContact1
     log in as a different user         &{collaborator2_credentials}
-    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}
-    the user selects the radio button  financeContact    financeContact1
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  financeContact1
+
+navigate to external finance contact page, choose finance contact and save
+    [Arguments]  ${org_id}   ${financeContactSelector}
+    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${org_id}
+    the user selects the radio button  financeContact  ${financeContactSelector}
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 partners submit bank details
@@ -142,8 +142,8 @@ partner submits his bank details
     [Arguments]  ${email}
     log in as a different user            ${email}    ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  51406795
-    the user enters text to a text field  id=bank-sort-code  404745
+    the user enters text to a text field  id=bank-acc-number  ${account_number}
+    the user enters text to a text field  id=bank-sort-code  ${sort_code}
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")
@@ -158,15 +158,6 @@ proj finance approves partners bank details
     the user navigates to the page     ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/organisation/${id}/review-bank-details
     the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     the user clicks the button/link    jQuery=.button:contains("Approve account")
-
-project finance fills up monitoring officer
-    the user navigates to the page          ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer
-    the user enters text to a text field    id=firstName    Grace
-    the user enters text to a text field    id=lastName    Harper
-    The user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
-    The user enters text to a text field    id=phoneNumber    08549731414
-    the user clicks the button/link         jQuery=.button[type="submit"]:contains("Assign Monitoring Officer")
-    the user clicks the button/link         jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
 
 
 

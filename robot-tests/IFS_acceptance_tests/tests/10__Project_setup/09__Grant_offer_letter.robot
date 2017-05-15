@@ -31,7 +31,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
-Resource          ../../resources/defaultResources.robot
+Resource          PS_Common.robot
 
 *** Test Cases ***
 

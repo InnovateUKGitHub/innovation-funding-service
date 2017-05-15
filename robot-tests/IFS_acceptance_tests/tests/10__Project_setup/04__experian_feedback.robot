@@ -17,7 +17,7 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
-Resource          ../../resources/defaultResources.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 
@@ -54,7 +54,7 @@ Project Finance can see the account number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Bank account number / Sort code
-    And the user should see the text in the page    51406795 / 404745
+    And the user should see the text in the page    ${account_number} / ${sort_code}
     And the user should see the element             jQuery=tr:nth-child(3) td:nth-child(3):contains("No Match")
 
 Project Finance can see the address with score
@@ -235,8 +235,8 @@ the user fills in his bank details
     [Arguments]  ${user}
     log in as a different user            ${user}  ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  name=accountNumber  51406795
-    the user enters text to a text field  name=sortCode  404745
+    the user enters text to a text field  name=accountNumber  ${account_number}
+    the user enters text to a text field  name=sortCode  ${sort_code}
     the user selects the radio button     addressType  address-use-org
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")
