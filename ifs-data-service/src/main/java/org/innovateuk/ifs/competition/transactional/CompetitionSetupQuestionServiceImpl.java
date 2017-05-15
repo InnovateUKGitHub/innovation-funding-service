@@ -49,31 +49,29 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
-        Question question = questionRepository.findOne(questionId);
+        return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId))
+                .andOnSuccess(question -> {
+                    CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
 
-        CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
+                    question.getFormInputs().forEach(formInput -> {
+                        if (FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
+                            mapAssessmentFormInput(formInput, setupResource);
+                        } else {
+                            mapApplicationFormInput(formInput, setupResource);
+                        }
+                    });
 
-        if(question != null) {
-            question.getFormInputs().forEach(formInput -> {
-                if (FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
-                    mapAssessmentFormInput(formInput, setupResource);
-                } else {
-                    mapApplicationFormInput(formInput, setupResource);
-                }
-            });
+                    setupResource.setScoreTotal(question.getAssessorMaximumScore());
+                    setupResource.setNumber(question.getQuestionNumber());
+                    setupResource.setShortTitle(question.getShortName());
+                    setupResource.setTitle(question.getName());
+                    setupResource.setSubTitle(question.getDescription());
+                    setupResource.setQuestionId(question.getId());
+                    setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
+                    setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
 
-            setupResource.setScoreTotal(question.getAssessorMaximumScore());
-            setupResource.setNumber(question.getQuestionNumber());
-            setupResource.setShortTitle(question.getShortName());
-            setupResource.setTitle(question.getName());
-            setupResource.setSubTitle(question.getDescription());
-            setupResource.setQuestionId(question.getId());
-            setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
-            setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
-        }
-
-        return find(question, notFoundError(Question.class, questionId))
-            .andOnSuccess(questionResource -> ServiceResult.serviceSuccess(setupResource));
+                    return ServiceResult.serviceSuccess(setupResource);
+                });
     }
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
