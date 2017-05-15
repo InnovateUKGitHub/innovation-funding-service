@@ -627,12 +627,9 @@ Non-lead partner cannot change any project details
     And the user should see the text in the page    Project address
     And the user should see the text in the page    1, Sheffield, S1 2ED
     And the user should not see the element    link=Project address
-    And the user navigates to the page    ${project_start_date_page}
-    And the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user navigates to the page    ${project_manager_page}
-    And the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user navigates to the page    ${project_address_page}
-    And the user should be redirected to the correct page    ${project_in_setup_page}
+    When The user navigates to the page and gets a custom error message    ${project_start_date_page}    You do not have the necessary permissions for your request
+    When The user navigates to the page and gets a custom error message    ${project_manager_page}    You do not have the necessary permissions for your request
+    When The user navigates to the page and gets a custom error message    ${project_address_page}    You do not have the necessary permissions for your request
 
 Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856
@@ -717,7 +714,6 @@ the user creates the account
     the user enters text to a text field    id=lastName    ${last_name}
     the user enters text to a text field    id=phoneNumber    0987654321
     the user enters text to a text field    id=password    Passw0rd123
-    the user enters text to a text field    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")
 

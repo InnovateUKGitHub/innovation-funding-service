@@ -21,10 +21,9 @@
                 </ul>
             </div>
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <form th:if="${responseRequired}"
                   th:action="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${model.questionId})}"
@@ -44,7 +43,7 @@
                         <span th:text="${model.questionName}" th:remove="tag" />
                     </h2>
 
-                    <p th:text="${model.applicantResponse}" data-md-to-html="">This is the applicant response.</p>
+                    <p th:text="${model.applicantResponse}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response.</p>
                 </div>
 
                 <div th:if="${model.appendixExists}">

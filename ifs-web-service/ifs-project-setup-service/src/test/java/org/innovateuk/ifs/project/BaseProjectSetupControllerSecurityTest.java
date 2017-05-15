@@ -20,16 +20,14 @@ public abstract class BaseProjectSetupControllerSecurityTest<ControllerType> ext
         permissionRules = getMockPermissionRulesBean(ProjectSetupSectionsPermissionRules.class);
     }
 
-    protected void assertSecured(Runnable invokeControllerFn) {
+    protected void assertSecured(Runnable invokeControllerFn, Consumer<ProjectSetupSectionsPermissionRules> verification) {
         assertAccessDenied(
                 invokeControllerFn::run,
                 () -> {
-                    getVerification().accept(verify(permissionRules, times(1)));
+                    verification.accept(verify(permissionRules, times(1)));
                     verifyNoMoreInteractions(permissionRules);
                     Mockito.reset(permissionRules);
                 }
         );
     }
-
-    protected abstract Consumer<ProjectSetupSectionsPermissionRules> getVerification();
 }

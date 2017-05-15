@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.assessment.registration.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.validator.constraints.FieldMatch;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -18,11 +17,10 @@ import javax.validation.constraints.Size;
 /**
  * Form field model for the Assessor Registration
  */
-@FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
-    @Pattern(regexp = "[\\p{L} -']*", message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.firstname.length.min}"),
             @Size(max=70, message="{validation.standard.firstname.length.max}"),
@@ -30,7 +28,7 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     private String firstName;
 
     @NotEmpty(message = "{validation.standard.lastname.required}")
-    @Pattern(regexp = "[\\p{L} -']*", message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.lastname.length.min}"),
             @Size(max=70, message="{validation.standard.lastname.length.max}"),
@@ -39,17 +37,9 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.password.required}")
     @Size.List ({
-            @Size(min=10, message="{validation.standard.password.length.min}"),
-            @Size(max=30, message="{validation.standard.password.length.max}"),
+            @Size(min=8, message="{validation.standard.password.length.min}"),
     })
     private String password;
-
-    @NotEmpty(message = "{validation.standard.retypedpassword.required}")
-    @Size.List ({
-            @Size(min=10, message="{validation.standard.password.length.min}"),
-            @Size(max=30, message="{validation.standard.password.length.max}"),
-    })
-    private String retypedPassword;
 
     @NotNull(message = "{validation.standard.gender.selectionrequired}")
     private Gender gender = Gender.NOT_STATED;
@@ -98,14 +88,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRetypedPassword() {
-        return retypedPassword;
-    }
-
-    public void setRetypedPassword(String retypedPassword) {
-        this.retypedPassword = retypedPassword;
     }
 
     public Gender getGender() {
@@ -161,7 +143,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(password, that.password)
-                .append(retypedPassword, that.retypedPassword)
                 .append(gender, that.gender)
                 .append(ethnicity, that.ethnicity)
                 .append(disability, that.disability)
@@ -176,7 +157,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(firstName)
                 .append(lastName)
                 .append(password)
-                .append(retypedPassword)
                 .append(gender)
                 .append(ethnicity)
                 .append(disability)

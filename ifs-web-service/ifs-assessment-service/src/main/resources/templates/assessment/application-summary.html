@@ -19,10 +19,9 @@
                 </ul>
             </div>
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge" th:text="${'Assessment summary'}" />
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment summary',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">
@@ -33,7 +32,7 @@
 
             <th:block th:insert="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" />
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
+            <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <div class="question" th:id="form-input-fundingConfirmation">
@@ -132,9 +131,8 @@
 
                 <input type="hidden" id="application_id" th:value="${model.applicationId}" />
 
-                <div class="alignright">
-                    <button type="submit" class="button button-large" name="submit-section">Save assessment</button>
-                </div>
+                <button type="submit" class="button extra-margin" name="submit-section">Save assessment</button>
+
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

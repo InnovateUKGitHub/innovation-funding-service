@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.user.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.user.resource.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 
 
@@ -41,11 +41,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<Void> sendPasswordResetNotification(String email) {
-        if(StringUtils.isEmpty(email))
-            return restFailure(CommonErrors.notFoundError(UserResource.class, email));
-
-        return getWithRestResultAnonymous(userRestURL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
+    public Future<RestResult<Void>> sendPasswordResetNotification(String email) {
+        return getWithRestResultAsyncAnonymous(userRestURL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
     }
 
     @Override

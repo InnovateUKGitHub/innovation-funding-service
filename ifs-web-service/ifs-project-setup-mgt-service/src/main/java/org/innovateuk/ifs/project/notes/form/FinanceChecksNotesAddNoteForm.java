@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.notes.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
@@ -18,6 +19,7 @@ public class FinanceChecksNotesAddNoteForm extends BaseBindingResultTarget {
     @Size(max = FinanceChecksNotesFormConstraints.MAX_TITLE_CHARACTERS, message = "{validation.field.too.many.characters}")
     private String noteTitle;
 
+    @JsonIgnore
     private MultipartFile attachment;
 
     public MultipartFile getAttachment() {

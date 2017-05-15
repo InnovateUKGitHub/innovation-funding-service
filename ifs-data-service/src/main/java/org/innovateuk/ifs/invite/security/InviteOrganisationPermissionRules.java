@@ -1,5 +1,10 @@
 package org.innovateuk.ifs.invite.security;
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationProcess;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -29,9 +34,35 @@ public class InviteOrganisationPermissionRules {
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @PermissionRule(value = "SEND", description = "lead applicant can send an organisation invite for the application")
     public boolean leadApplicantCanInviteAnOrganisationToTheApplication(InviteOrganisationResource inviteOrganisation, UserResource user) {
         return isLeadApplicantForAllApplications(inviteOrganisation, user);
+    }
+
+    @PermissionRule(value = "CREATE_APPLICATION_INVITES", description = "Lead applicant can create invites if the application is still editable")
+    public boolean leadApplicantCanCreateApplicationInvitesIfApplicationEditable(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        // This would never happen, unless someone calls REST directly. The Web layer ensures that at least one invite is present.
+        if (inviteOrganisation.getInviteResources().isEmpty()) {
+            throw new ForbiddenActionException("Missing Invite Resource");
+        }
+
+        boolean isLead = isLeadApplicantForAllApplications(inviteOrganisation, user);
+        // Get the application id from the first invite, as application id is same for all invites.
+        Long applicationId = inviteOrganisation.getInviteResources().get(0).getApplication();
+        boolean isApplicationEditable = applicationIsEditableById(applicationId);
+        return  isLead && isApplicationEditable;
+    }
+
+    private boolean applicationIsEditableById(final Long applicationId) {
+        return applicationIsEditable(applicationRepository.findOne(applicationId));
+    }
+
+    private boolean applicationIsEditable(final Application application) {
+        ApplicationProcess state = application.getApplicationProcess();
+        return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPEN);
     }
 
     @PermissionRule(value = "READ", description = "a consortium member and the lead applicant can view the invites of all organisations")

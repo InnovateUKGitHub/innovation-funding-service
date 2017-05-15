@@ -82,19 +82,9 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(Arrays.asList(financeTeamRole)).build();
     UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
 
-
     QueryResource thread;
-    UserResource user1;
-    PostResource firstPost;
-    UserResource user2;
-    PostResource firstResponse;
-
     QueryResource thread2;
-    PostResource firstPost2;
-
     QueryResource thread3;
-    PostResource firstPost1 ;
-    PostResource firstResponse1;
 
     List<QueryResource> queries;
 
@@ -135,6 +125,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         queries = Arrays.asList(thread2, thread, thread3);
     }
+
     @Test
     public void testGetReadOnlyView() throws Exception {
 
@@ -254,11 +245,18 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility"))
+        Cookie formCookie;
+        FinanceChecksQueriesAddResponseForm form = new FinanceChecksQueriesAddResponseForm();
+        form.setResponse("comment");
+        formCookie = createFormCookie(form);
+
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/" + queryId + "/new-response?query_section=Eligibility")
+                .cookie(formCookie))
                 .andExpect(view().name("project/financecheck/queries"))
                 .andReturn();
 
         FinanceChecksQueriesViewModel responseViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
+        FinanceChecksQueriesAddResponseForm modelForm = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
 
         assertEquals("Eligibility", responseViewModel.getQuerySection());
         assertEquals("e@mail.com", responseViewModel.getFinanceContactEmail());
@@ -274,6 +272,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(400, responseViewModel.getMaxQueryWords());
         assertTrue(responseViewModel.isLeadPartnerOrganisation());
         assertEquals(0, responseViewModel.getNewAttachmentLinks().size());
+        assertEquals("comment", modelForm.getResponse());
     }
 
     @Test
@@ -281,10 +280,14 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(1L))).thenReturn(ServiceResult.serviceSuccess());
 
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility")
+        FinanceChecksQueriesAddResponseForm formIn = new FinanceChecksQueriesAddResponseForm();
+        Cookie formCookie = createFormCookie(formIn);
+
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+ queryId + "/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("response", "Query text"))
-                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
+                .param("response", "Query text")
+                .cookie(formCookie))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
                 .andReturn();
 
         verify(financeCheckServiceMock).saveQueryPost(savePostArgumentCaptor.capture(), eq(1L));
@@ -297,6 +300,16 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query text", form.getResponse());
         assertEquals(null, form.getAttachment());
+
+        Optional<Cookie> cookieFound = Arrays.stream(result.getResponse().getCookies())
+                .filter(cookie -> cookie.getName().equals("finance_checks_queries_new_response_attachments_" + projectId + "_" + applicantOrganisationId + "_" + queryId))
+                .findAny();
+        assertEquals(true, cookieFound.get().getValue().isEmpty());
+
+        Optional<Cookie> formCookieFound = Arrays.stream(result.getResponse().getCookies())
+                .filter(cookie -> cookie.getName().equals("finance_checks_queries_new_response_form_" + projectId + "_" + applicantOrganisationId + "_" + queryId))
+                .findAny();
+        assertEquals(true, formCookieFound.get().getValue().isEmpty());
     }
 
     @Test
@@ -306,7 +319,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility")
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+ queryId + "/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", ""))
                 .andExpect(view().name("project/financecheck/queries"))
@@ -334,7 +347,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility")
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+ queryId + "/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", tooLong))
                 .andExpect(view().name("project/financecheck/queries"))
@@ -363,7 +376,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility")
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+ queryId + "/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", tooManyWords))
                 .andExpect(view().name("project/financecheck/queries"))
@@ -401,13 +414,13 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                         file(uploadedFile).
                         param("uploadAttachment", ""))
                 .andExpect(cookie().exists("finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L))
-                .andExpect(view().name("project/financecheck/queries"))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/" + queryId + "/new-response"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
         expectedAttachmentIds.add(1L);
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L));
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_" + projectId + "_" + applicantOrganisationId + "_" + queryId));
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getAttachment());
@@ -416,7 +429,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void testDownloadResponseAttachmentFailsNoContent() throws Exception {
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response/attachment/1?query_section=Eligibility"))
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+ queryId +"/new-response/attachment/1?query_section=Eligibility"))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
@@ -435,17 +448,26 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         attachmentIds.add(1L);
         Cookie ck = createAttachmentsCookie(attachmentIds);
 
+        FinanceChecksQueriesAddResponseForm formIn = new FinanceChecksQueriesAddResponseForm();
+        Cookie formCookie = createFormCookie(formIn);
+
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response/cancel?query_section=Eligibility")
-                    .cookie(ck))
-                .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/" + queryId + "/new-response/cancel?query_section=Eligibility")
+                    .cookie(ck)
+                    .cookie(formCookie))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
                 .andReturn();
 
         Optional<Cookie> cookieFound = Arrays.stream(result.getResponse().getCookies())
-                .filter(cookie -> cookie.getName().equals("finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L))
+                .filter(cookie -> cookie.getName().equals("finance_checks_queries_new_response_attachments_" + projectId + "_" + applicantOrganisationId + "_" + queryId))
                 .findAny();
         assertEquals(true, cookieFound.get().getValue().isEmpty());
+
+        Optional<Cookie> formCookieFound = Arrays.stream(result.getResponse().getCookies())
+                .filter(cookie -> cookie.getName().equals("finance_checks_queries_new_response_form_" + projectId + "_" + applicantOrganisationId + "_" + queryId))
+                .findAny();
+        assertEquals(true, formCookieFound.get().getValue().isEmpty());
 
         verify(financeCheckServiceMock).deleteFile(1L);
     }
@@ -466,7 +488,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
         Cookie cookie = new Cookie("finance_checks_queries_new_response_attachments"+"_"+projectId+"_"+applicantOrganisationId+"_"+1L, encryptedData);
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility")
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+ queryId + "/new-response?query_section=Eligibility")
                 .cookie(cookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("project/financecheck/queries"))
@@ -503,26 +525,30 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie cookie = createAttachmentsCookie(attachmentIds);
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility")
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+ queryId + "/new-response?query_section=Eligibility")
                 .param("removeAttachment", "1")
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
-                .andExpect(view().name("project/financecheck/queries"))
+                .andExpect(cookie().exists("finance_checks_queries_new_response_attachments_" + projectId + "_" + applicantOrganisationId + "_" + queryId))
+                .andExpect(cookie().exists("finance_checks_queries_new_response_form_" + projectId + "_" + applicantOrganisationId + "_" + queryId))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/" + queryId + "/new-response?query_section=Eligibility"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+queryId));
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_" + projectId + "_" + applicantOrganisationId + "_" + queryId));
+
+        FinanceChecksQueriesAddResponseForm expectedForm = new FinanceChecksQueriesAddResponseForm();
+        expectedForm.setResponse("Query");
+        assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedForm), CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_form_" + projectId + "_" + applicantOrganisationId + "_" + queryId));
 
         verify(financeCheckServiceMock).deleteFile(1L);
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getResponse());
         assertEquals(null, form.getAttachment());
-
-        FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(0, queryViewModel.getNewAttachmentLinks().size());
     }
 
     @Test
@@ -539,24 +565,20 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie cookie = createAttachmentsCookie(attachmentIds);
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility")
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+ queryId + "/new-response?query_section=Eligibility")
                 .param("removeAttachment", "2")
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
-                .andExpect(view().name("project/financecheck/queries"))
+                .andExpect(redirectedUrl("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/" + queryId + "/new-response?query_section=Eligibility"))
                 .andReturn();
 
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(attachmentIds), CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+queryId));
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_" + projectId + "_" + applicantOrganisationId + "_" + queryId));
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getResponse());
         assertEquals(null, form.getAttachment());
-
-        FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(1, queryViewModel.getNewAttachmentLinks().size());
-        assertEquals("name", queryViewModel.getNewAttachmentLinks().get(1L));
     }
 
     @Test
@@ -578,10 +600,16 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("validation.notesandqueries.query.response.save.failed", errors.get(0).getCode());
     }
 
-    private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception{
+    private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
-        return new Cookie("finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+queryId, encryptedData);
+        return new Cookie("finance_checks_queries_new_response_attachments_" + projectId + "_" + applicantOrganisationId + "_" + queryId, encryptedData);
+    }
+
+    private Cookie createFormCookie(FinanceChecksQueriesAddResponseForm form) throws Exception {
+        String cookieContent = JsonUtil.getSerializedObject(form);
+        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
+        return new Cookie("finance_checks_queries_new_response_form_" + projectId + "_" + applicantOrganisationId + "_" + queryId, encryptedData);
     }
 
     @Override

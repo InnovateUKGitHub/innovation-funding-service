@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -48,7 +47,6 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -57,8 +55,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
@@ -67,6 +64,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
+import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
+import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -75,17 +74,11 @@ import static org.innovateuk.ifs.util.MathFunctions.percentage;
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
     enum Notifications {
         APPLICATION_SUBMITTED,
-        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED
+        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+        APPLICATION_INELIGIBLE
     }
 
     private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
-
-    // TODO DW - INFUND-1555 - put into a DTO
-    public static final String READY_FOR_SUBMIT = "readyForSubmit";
-    public static final String PROGRESS = "progress";
-    public static final String RESEARCH_PARTICIPATION = "researchParticipation";
-    public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
-    public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
 
     @Autowired
     private FileService fileService;
@@ -182,7 +175,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             }
 
             return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile ->
-                            createFormInputResponseFileUpload(successfulFile, existingResponse, processRoleId, applicationId, formInputId, formInputResponseFile)
+                    createFormInputResponseFileUpload(successfulFile, existingResponse, processRoleId, applicationId, formInputId, formInputResponseFile)
             );
         });
     }
@@ -233,29 +226,30 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(FormInputResponseFileEntryId fileEntry) {
 
-            ServiceResult<FormInputResponseFileAndContents> existingFileResult =
-                    getFormInputResponseFileUpload(fileEntry);
+        ServiceResult<FormInputResponseFileAndContents> existingFileResult =
+                getFormInputResponseFileUpload(fileEntry);
 
-            return existingFileResult.andOnSuccess(existingFile -> {
+        return existingFileResult.andOnSuccess(existingFile -> {
 
-                FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getFormInputResponseFileEntry();
-                Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
+            FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getFormInputResponseFileEntry();
+            Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
 
-                FormInput formInput = formInputRepository.findOne(formInputFileEntryResource.getCompoundId().getFormInputId());
-                if (formInput != null) {
-                    boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
-                    return fileService.deleteFile(fileEntryId).
-                            andOnSuccess(deletedFile -> {
-                                if (questionHasMultipleStatuses)
-                                    return getFormInputResponse(formInputFileEntryResource.getCompoundId());
-                                else
-                                    return getFormInputResponseForQuestionAssignee(formInputFileEntryResource.getCompoundId());
-                            }).
-                            andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
-                } else {
-                    return serviceFailure(notFoundError(FormInput.class, formInputFileEntryResource.getCompoundId().getFormInputId()));
-                }
-            });
+            FormInput formInput = formInputRepository.findOne(formInputFileEntryResource.getCompoundId().getFormInputId());
+            if (formInput != null) {
+                boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
+                return fileService.deleteFile(fileEntryId).
+                        andOnSuccess(deletedFile -> {
+                            if (questionHasMultipleStatuses) {
+                                return getFormInputResponse(formInputFileEntryResource.getCompoundId());
+                            } else {
+                                return getFormInputResponseForQuestionAssignee(formInputFileEntryResource.getCompoundId());
+                            }
+                        }).
+                        andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
+            } else {
+                return serviceFailure(notFoundError(FormInput.class, formInputFileEntryResource.getCompoundId().getFormInputId()));
+            }
+        });
     }
 
     private boolean questionHasMultipleStatuses(@NotNull FormInput formInput) {
@@ -280,10 +274,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         }
         return formInputResponse.
                 andOnSuccess(fir -> fileService.getFileByFileEntryId(fir.getFileEntry().getId()).
-                andOnSuccessReturn(inputStreamSupplier -> {
-                    FormInputResponseFileEntryResource formInputResponseFileEntry = formInputResponseFileEntryResource(fir.getFileEntry(), fileEntry);
-                    return new FormInputResponseFileAndContents(formInputResponseFileEntry, inputStreamSupplier);
-                }));
+                        andOnSuccessReturn(inputStreamSupplier -> {
+                            FormInputResponseFileEntryResource formInputResponseFileEntry = formInputResponseFileEntryResource(fir.getFileEntry(), fileEntry);
+                            return new FormInputResponseFileAndContents(formInputResponseFileEntry, inputStreamSupplier);
+                        }));
     }
 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
@@ -305,9 +299,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
         Error formInputResponseNotFoundError = notFoundError(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
         return find(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(
-                        fileEntry.getApplicationId(),
-                        fileEntry.getProcessRoleId(),
-                        fileEntry.getFormInputId()),
+                fileEntry.getApplicationId(),
+                fileEntry.getProcessRoleId(),
+                fileEntry.getFormInputId()),
                 formInputResponseNotFoundError);
     }
 
@@ -397,6 +391,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
+        if (Arrays.asList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
+                return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
+        }
         return find(application(id)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
@@ -454,31 +451,26 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    // TODO DW - INFUND-1555 - try to remove the usage of ObjectNode
     @Override
-    public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
+    public ServiceResult<Boolean>applicationReadyForSubmit(final Long id) {
+        return serviceSuccess(applicationReadyToSubmit(id));
+    }
+
+    private boolean applicationReadyToSubmit(Long id) {
         return find(application(id), () -> getProgressPercentageBigDecimalByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
-                        sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
-                            Competition competition = application.getCompetition();
-                            BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
+                sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
+                    Competition competition = application.getCompetition();
+                    BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
 
-                            boolean readyForSubmit = false;
-                            if (allSectionsComplete &&
-                                    progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                                    researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0) {
-                                readyForSubmit = true;
-                            }
-
-                            ObjectMapper mapper = new ObjectMapper();
-                            ObjectNode node = mapper.createObjectNode();
-                            node.put(READY_FOR_SUBMIT, readyForSubmit);
-                            node.put(PROGRESS, progressPercentage);
-                            node.put(RESEARCH_PARTICIPATION, researchParticipation);
-                            node.put(RESEARCH_PARTICIPATION_VALID, researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0);
-                            node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
-                            return node;
-                        })
-        );
+                    boolean readyForSubmit = false;
+                    if (allSectionsComplete &&
+                            progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
+                            researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0) {
+                        readyForSubmit = true;
+                    }
+                    return readyForSubmit;
+                })
+        ).getSuccessObject();
     }
 
     @Override
@@ -493,6 +485,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
+    @Override
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId,
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
@@ -505,6 +498,42 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 .stream()
                 .map(this::sendNotification)
                 .collect(toList()));
+    }
+
+    @Override
+    public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason) {
+        return find(application(applicationId)).andOnSuccess((application) -> {
+            if (!applicationWorkflowHandler.markIneligible(application, reason)) {
+                return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
+            }
+            applicationRepository.save(application);
+            return serviceSuccess();
+        });
+    }
+
+    @Override
+    public ServiceResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+        return getApplication(applicationId).andOnSuccess(application -> {
+
+            if (!applicationWorkflowHandler.informIneligible(application)) {
+                return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);
+            }
+
+            applicationRepository.save(application);
+            String bodyPlain = stripHtml(applicationIneligibleSendResource.getContent());
+            String bodyHtml = plainTextToHtml(bodyPlain);
+
+            NotificationTarget recipient =
+                    new ExternalUserNotificationTarget(application.getLeadApplicant().getName(), application.getLeadApplicant().getEmail());
+            Notification notification = new Notification(
+                    systemNotificationSource,
+                    singletonList(recipient),
+                    Notifications.APPLICATION_INELIGIBLE,
+                    asMap("subject", applicationIneligibleSendResource.getSubject(),
+                            "bodyPlain", bodyPlain,
+                            "bodyHtml", bodyHtml));
+            return notificationSender.sendNotification(notification);
+        }).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<List<EmailAddress>> sendNotification(ProcessRole processRole) {
@@ -520,7 +549,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
                         "competitionName", application.getCompetition().getName(),
-                        "dashboardUrl", processRole.getRole().getUrl()));
+                        "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
         EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
 
@@ -538,9 +567,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         List<ProcessRole> processRoles = application.getProcessRoles();
 
         Set<Organisation> organisations = processRoles.stream()
-                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName()) 
-					|| p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) 
-					|| p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName())
+                        || p.getRole().getName().equals(UserRoleType.APPLICANT.getName())
+                        || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
                 .map(processRole -> {
                     return organisationRepository.findOne(processRole.getOrganisationId());
                 }).collect(Collectors.toSet());

@@ -53,7 +53,9 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStatusRestService;
@@ -203,11 +205,11 @@ public class BaseUnitTest {
     @Mock
     public FinanceFormHandler financeFormHandler;
     @Mock
-    protected AssessorFeedbackRestService assessorFeedbackRestService;
-    @Mock
     public ProjectService projectService;
     @Mock
     public ProjectMonitoringOfficerService projectMonitoringOfficerService;
+    @Mock
+    public ProjectOtherDocumentsService projectOtherDocumentsService;
     @Mock
     public ProjectFinanceService projectFinanceService;
     @Mock
@@ -248,6 +250,9 @@ public class BaseUnitTest {
     protected OrganisationDetailsRestService organisationDetailsRestService;
     @Mock
     protected ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
+
+    @Mock
+    public GrantOfferLetterService grantOfferLetterService;
 
     @Spy
     @InjectMocks
@@ -785,6 +790,8 @@ public class BaseUnitTest {
         doCallRealMethod().when(cookieUtil).getCookie(any(HttpServletRequest.class), any(String.class));
         doCallRealMethod().when(cookieUtil).getCookieValue(any(HttpServletRequest.class), any(String.class));
         doCallRealMethod().when(cookieUtil).removeCookie(any(HttpServletResponse.class), any(String.class));
+        doCallRealMethod().when(cookieUtil).getCookieAs(any(HttpServletRequest.class), any(String.class), any());
+        doCallRealMethod().when(cookieUtil).getCookieAsList(any(HttpServletRequest.class), any(String.class), any());
     }
 
     public String getDecryptedCookieValue(Cookie[] cookies, String cookieName) {

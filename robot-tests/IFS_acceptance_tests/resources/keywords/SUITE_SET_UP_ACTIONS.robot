@@ -188,7 +188,7 @@ The user redirects to the page
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
-    Page Should Contain    BETA
+    Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
 
 The user navigates to the summary page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -210,7 +210,8 @@ The user navigates to the finance overview of the academic
     And the user clicks the button/link    link=Finances overview
 
 The user marks the academic application finances as incomplete
-    When The user navigates to the academic application finances
+    the user navigates to the academic application finances
+    the user clicks the button/link    link=Your project costs
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
     wait for autosave
@@ -218,25 +219,8 @@ The user marks the academic application finances as incomplete
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the guest user opens the browser
-    the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    the user clicks the button/link    jQuery=.button:contains("Create account")
-    the user clicks the button/link    jQuery=.button:contains("Create")
-    the user enters text to a text field    id=organisationSearchName    Innovate
-    the user clicks the button/link    id=org-search
-    the user clicks the button/link    LINK=INNOVATE LTD
-    the user selects the checkbox    address-same
-    the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button  organisationTypeId  radio-1
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    the user enters the details and clicks the create account    ${EMAIL_LEAD}
-    the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    Once verified you can sign into your account
-    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    the user clicks the button/link    jQuery=.button:contains("Sign in")
-    the guest user inserts user email & password    ${EMAIL_LEAD}    ${correct_password}
-    the guest user clicks the log-in button
+    the user follows the flow to register their organisation    radio-1
+    the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     the user enters text to a text field    name=organisationName    innovate
@@ -249,52 +233,49 @@ invite a registered user
     the guest user opens the browser
 
 we create a new user
-    [Arguments]    ${EMAIL_INVITED}
-    The user navigates to the page    ${COMPETITION_DETAILS_URL}
-    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Create account")
-    The user clicks the button/link    jQuery=.button:contains("Create")
-    The user enters text to a text field    id=organisationSearchName    Innovate
-    The user clicks the button/link    id=org-search
-    The user clicks the button/link    LINK=INNOVATE LTD
-    The user selects the checkbox    address-same
-    The user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button  organisationTypeId  radio-1
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    The user clicks the button/link    jQuery=.button:contains("Save and continue")
-    The user enters the details and clicks the create account    ${EMAIL_INVITED}
-    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    Once verified you can sign into your account
-    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Sign in")
-    The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
+    [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    the user follows the flow to register their organisation     radio-1
+    the user verifies email    ${first_name}   ${last_name}    ${EMAIL_INVITED}
+
+the user verifies email
+    [Arguments]    ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    The user enters the details and clicks the create account  ${first_name}  ${last_name}  ${EMAIL_INVITED}
+    The user should be redirected to the correct page          ${REGISTRATION_SUCCESS}
+    the user reads his email and clicks the link               ${EMAIL_INVITED}  Please verify your email address  Once verified you can sign into your account
+    The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
+    The user clicks the button/link                            jQuery=.button:contains("Sign in")
+    The guest user inserts user email & password               ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
-    the user closes the browser
 
 the user follows the flow to register their organisation
-    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user enters text to a text field    id=organisationSearchName    Innovate
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button  organisationTypeId  radio-1
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    [Arguments]     ${orgType}
+    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link             jQuery=a:contains("Start new application")
+    the user clicks the button/link             jQuery=.button:contains("Create account")
+    the user enters text to a text field        id=organisationSearchName    Innovate
+    the user clicks the button/link             id=org-search
+    the user clicks the button/link             link=INNOVATE LTD
+    the user selects the checkbox               address-same
+    the user should not see the element         jQuery=h3:contains("Organisation type")
+    the user clicks the button/link             jQuery=.button:contains("Continue")
+    the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    the user should see an error                Please select an organisation type.
+    # Lead applicant can be with Business or RTO as this comp is setup to have either of it
+    the user should see the element             jQuery=label[for="radio-1"]:contains("Business")
+    the user should see the element             jQuery=label[for="radio-3"]:contains("Research and technology organisations (RTOs)")
+    the user selects the radio button           organisationTypeId   ${orgType}
+    the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    the user clicks the button/link             jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
-    [Arguments]    ${REG_EMAIL}
+    [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}
     Wait Until Page Contains Element Without Screenshots    link=terms and conditions
     Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
-    Input Text    id=firstName    Stuart
-    Input Text    id=lastName    ANDERSON
+    Input Text    id=firstName      ${first_name}
+    Input Text    id=lastName       ${last_name}
     Input Text    id=phoneNumber    23232323
-    Input Text    id=email    ${REG_EMAIL}
+    Input Text    id=email          ${REG_EMAIL}
     Input Password    id=password    Passw0rd123
-    Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
     Submit Form
@@ -305,6 +286,5 @@ the user fills the create account form
     Input Text    id=lastName    ${LAST_NAME}
     Input Text    id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
-    Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")

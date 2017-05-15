@@ -140,7 +140,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         expectedForm.setEthnicity(ethnicity);
         expectedForm.setDisability(disability);
         expectedForm.setPassword(password);
-        expectedForm.setRetypedPassword(password);
 
         AddressForm addressForm = expectedForm.getAddressForm();
 
@@ -170,7 +169,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("ethnicity", ethnicity.getId().toString())
                 .param("disability", disability.name())
                 .param("password", password)
-                .param("retypedPassword", password)
                 .param("addressForm.selectedPostcode.addressLine1", addressLine1)
                 .param("addressForm.selectedPostcode.town", town)
                 .param("addressForm.selectedPostcode.postcode", postcode))
@@ -205,7 +203,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         expectedForm.setEthnicity(ethnicity);
         expectedForm.setDisability(disability);
         expectedForm.setPassword(password);
-        expectedForm.setRetypedPassword(password);
 
         AddressForm addressForm = expectedForm.getAddressForm();
 
@@ -236,7 +233,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("ethnicity", ethnicity.getId().toString())
                 .param("disability", disability.name())
                 .param("password", password)
-                .param("retypedPassword", password)
                 .param("addressForm.selectedPostcode.addressLine1", addressLine1)
                 .param("addressForm.selectedPostcode.town", town)
                 .param("addressForm.selectedPostcode.postcode", postcode))
@@ -271,8 +267,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("gender", gender.name())
                 .param("ethnicity", ethnicity.getId().toString())
                 .param("disability", disability.name())
-                .param("password", password)
-                .param("retypedPassword", password))
+                .param("password", password))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attributeExists("model"))
@@ -289,7 +284,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         assertEquals(ethnicity, form.getEthnicity());
         assertEquals(disability, form.getDisability());
         assertEquals(password, form.getPassword());
-        assertEquals(password, form.getRetypedPassword());
 
         BindingResult bindingResult = form.getBindingResult();
 

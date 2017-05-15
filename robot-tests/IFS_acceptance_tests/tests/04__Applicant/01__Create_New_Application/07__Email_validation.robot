@@ -9,13 +9,12 @@ Resource          ../../../resources/defaultResources.robot
 Invalid email plaintext
     [Documentation]    INFUND-885
     [Tags]
-    Given the user follows the flow to register their organisation
+    Given the user follows the flow to register their organisation     radio-1
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${invalid_email_plain}
     And the user enters text to a text field    id=password    Passw0rd123
-    And the user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user submits their information
     Then the user should see an error    We were unable to create your account
     And the user should see an error    Please enter a valid email address.
@@ -29,7 +28,6 @@ Invalid email disallowed symbols
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${invalid_email_symbols}
     And the user enters text to a text field    id=password    Passw0rd123
-    And the user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user submits their information
     Then the user should see an error    We were unable to create your account
     And the user should see an error    Please enter a valid email address.
@@ -43,7 +41,6 @@ Invalid email no username
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${invalid_email_no_username}
     And the user enters text to a text field    id=password    Passw0rd123
-    And the user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user submits their information
     Then the user should see an error    We were unable to create your account
     And the user should see an error    Please enter a valid email address.
@@ -57,7 +54,6 @@ Invalid email format
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${invalid_email_format}
     And the user enters text to a text field    id=password    Passw0rd123
-    And the user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user submits their information
     Then the user should see an error    We were unable to create your account
     And the user should see an error    Please enter a valid email address.
@@ -71,7 +67,6 @@ Email left blank
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${EMPTY}
     And the user enters text to a text field    id=password    ${correct_password}
-    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter your email address.
 
@@ -84,7 +79,6 @@ Invalid email no @ symbol
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${invalid_email_no_at}
     And the user enters text to a text field    id=password    Passw0rd123
-    And the user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user submits their information
     Then the user should see an error    We were unable to create your account
     And the user should see an error    Please enter a valid email address.
@@ -96,25 +90,23 @@ User can not login with the invalid email
 Valid account creation
     [Documentation]    INFUND-885
     [Tags]    HappyPath
-    Given the user follows the flow to register their organisation
+    Given the user follows the flow to register their organisation     radio-1
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
-    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
 
 Email duplication check
     [Documentation]    INFUND-886
     [Tags]    HappyPath
-    Given the user follows the flow to register their organisation
+    Given the user follows the flow to register their organisation     radio-1
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
-    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    The email address is already registered with us. Please sign into your account
 

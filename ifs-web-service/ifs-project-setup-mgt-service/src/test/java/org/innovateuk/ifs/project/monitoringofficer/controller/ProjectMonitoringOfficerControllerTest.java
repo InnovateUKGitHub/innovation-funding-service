@@ -7,10 +7,10 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.monitoringofficer.form.ProjectMonitoringOfficerForm;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
+import org.innovateuk.ifs.project.monitoringofficer.form.ProjectMonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -32,12 +32,12 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
-import static org.innovateuk.ifs.commons.rest.RestResult.*;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
-import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
+import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -163,8 +163,9 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectResource project = projectBuilder.build();
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(PENDING).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -244,8 +245,9 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectResource project = projectBuilder.build();
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(PENDING).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -322,9 +324,14 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("", form.getPhoneNumber());
 
         BindingResult bindingResult = form.getBindingResult();
-        assertEquals(6, bindingResult.getFieldErrorCount());
-        assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
-        assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
+        assertEquals(8, bindingResult.getFieldErrorCount());
+
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
 
         List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
@@ -341,8 +348,9 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectResource project = projectBuilder.build();
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(PENDING).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -362,8 +370,9 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     public void testAssignMonitoringOfficer() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -389,12 +398,12 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         ServiceResult<Void> failureResponse = serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
 
-        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First2", "Last2", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
+        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
-                param("firstName", "First2").
-                param("lastName", "Last2").
+                param("firstName", "First").
+                param("lastName", "Last").
                 param("emailAddress", "asdf2@asdf.com").
                 param("phoneNumber", "0987654321")).
                 andExpect(view().name("project/monitoring-officer")).
@@ -416,8 +425,8 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         // assert the form for the MO details have been retained from the ones that resulted in error
         ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
-        assertEquals("First2", form.getFirstName());
-        assertEquals("Last2", form.getLastName());
+        assertEquals("First", form.getFirstName());
+        assertEquals("Last", form.getLastName());
         assertEquals("asdf2@asdf.com", form.getEmailAddress());
         assertEquals("0987654321", form.getPhoneNumber());
 
@@ -432,8 +441,9 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         ProjectResource project = projectBuilder.build();
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(PENDING).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 
@@ -488,9 +498,14 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         BindingResult bindingResult = form.getBindingResult();
 
-        assertEquals(5, bindingResult.getFieldErrorCount());
-        assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
-        assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
+        assertEquals(7, bindingResult.getFieldErrorCount());
+
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
+        assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
+        assertTrue(bindingResult.getFieldErrors("lastName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotEmpty")));
+        
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
 
         List<FieldError> phoneNumberErrors = new ArrayList<>(bindingResult.getFieldErrors("phoneNumber"));
@@ -511,8 +526,9 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     private void setupViewMonitoringOfficerTestExpectations(ProjectResource project, boolean existingMonitoringOfficer) {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource().
                         withProjectDetailsStatus(COMPLETE).
+                        withIsLeadPartner(true).
                         build()).
                 build();
 

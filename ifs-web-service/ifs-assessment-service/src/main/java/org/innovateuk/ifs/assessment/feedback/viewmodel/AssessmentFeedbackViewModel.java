@@ -2,7 +2,10 @@ package org.innovateuk.ifs.assessment.feedback.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 
@@ -14,27 +17,27 @@ import static org.apache.commons.lang3.StringUtils.lowerCase;
 /**
  * Holder of model attributes for the feedback given as part of the assessment journey to a question for an application.
  */
-public class AssessmentFeedbackViewModel {
+public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel {
 
-    private long assessmentId;
-    private long daysLeft;
-    private long daysLeftPercentage;
-    private long applicationId;
-    private String applicationName;
-    private long questionId;
-    private String questionNumber;
-    private String questionShortName;
-    private String questionName;
-    private Integer maximumScore;
-    private String applicantResponse;
-    private List<FormInputResource> assessmentFormInputs;
-    private boolean scoreFormInputExists;
-    private boolean scopeFormInputExists;
-    private boolean appendixExists;
-    private FileDetailsViewModel appendixDetails;
-    private List<ResearchCategoryResource> researchCategories;
+    private final long assessmentId;
+    private final long daysLeft;
+    private final long daysLeftPercentage;
+    private final long applicationId;
+    private final String applicationName;
+    private final long questionId;
+    private final String questionNumber;
+    private final String questionShortName;
+    private final String questionName;
+    private final Integer maximumScore;
+    private final String applicantResponse;
+    private final List<FormInputResource> assessmentFormInputs;
+    private final boolean scoreFormInputExists;
+    private final boolean scopeFormInputExists;
+    private final boolean appendixExists;
+    private final FileDetailsViewModel appendixDetails;
+    private final List<ResearchCategoryResource> researchCategories;
 
-    public AssessmentFeedbackViewModel(long assessmentId,
+    private AssessmentFeedbackViewModel(long assessmentId,
                                        long daysLeft,
                                        long daysLeftPercentage,
                                        long applicationId,
@@ -68,6 +71,31 @@ public class AssessmentFeedbackViewModel {
         this.appendixExists = appendixExists;
         this.appendixDetails = appendixDetails;
         this.researchCategories = researchCategories;
+    }
+
+    public AssessmentFeedbackViewModel(AssessmentResource assessment, CompetitionResource competition, QuestionResource question, String applicantResponse,
+                                       List<FormInputResource> assessmentFormInputs,
+                                       boolean scoreFormInputExists,
+                                       boolean scopeFormInputExists,
+                                       FileDetailsViewModel appendixDetails,  List<ResearchCategoryResource> researchCategories
+                                       ) {
+            this(assessment.getId(),
+                    competition.getAssessmentDaysLeft(),
+                    competition.getAssessmentDaysLeftPercentage(),
+                    assessment.getApplication(),
+                    assessment.getApplicationName(),
+                    question.getId(),
+                    question.getQuestionNumber(),
+                    question.getShortName(),
+                    question.getName(),
+                    question.getAssessorMaximumScore(),
+                    applicantResponse,
+                    assessmentFormInputs,
+                    scoreFormInputExists,
+                    scopeFormInputExists,
+                    appendixDetails != null,
+                    appendixDetails,
+                    researchCategories);
     }
 
     public long getAssessmentId() {

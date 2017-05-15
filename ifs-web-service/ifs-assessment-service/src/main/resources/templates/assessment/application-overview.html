@@ -5,8 +5,6 @@
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-overview">
-        <th:block th:insert="fragments/modals :: modal-overlay" />
-        <th:block th:insert="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${model.assessmentId})" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -14,11 +12,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge">Assessment overview</h1>
-            </div>
-
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment overview',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <section th:each="section,iterStat : ${model.sections}">
                 <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
@@ -58,17 +54,55 @@
                 </ul>
             </th:block>
 
-            <div class="alignright-button extra-margin">
-                <a class="button large" th:href="@{/{assessmentId}/summary(assessmentId=${model.assessmentId})}">Review and complete your assessment</a>
+            <div class="extra-margin">
+                <a class="button extra-margin" th:href="@{/{assessmentId}/summary(assessmentId=${model.assessmentId})}">Review and complete your assessment</a>
             </div>
 
             <div class="extra-margin">
-                <details>
+                <details th:attrappend="open=${#fields.hasErrors('${form.*}') ? 'open' : null}">
                     <summary><span class="summary">Unable to assess this application?</span></summary>
-                    <div class="panel">
-                        <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
-                        <a th:href="@{/{assessmentId}/reject/confirm(assessmentId=${model.assessmentId})}" data-js-modal="reject-assessment-modal" class="buttonlink">Reject this application</a>
-                    </div>
+                    <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
+                    <form th:action="@{/{assessmentId}/reject(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
+                            <label class="form-label" th:for="${#ids.next('rejectReason')}">
+                                Please select a reason for rejecting the competition
+                                <th:block th:if="${#fields.hasErrors('rejectReason')}">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
+                                </th:block>
+                            </label>
+                            <select class="form-control" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+                                <option value="">Select a reason</option>
+                                <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
+                                        th:value="${reason}"
+                                        th:text="${reason.displayLabel}"
+                                        value="1">Not available</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+                            <label class="form-label" th:for="${#ids.next('rejectComment')}">
+                                Use this space to provide more information
+                                <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                                </th:block>
+                            </label>
+                            <textarea class="form-control width-full"
+                                      maxlength="5000"
+                                      data-max_words="100"
+                                      data-maxwordslength="100"
+                                      data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                      th:errorclass="field-error"
+                                      rows="4"
+                                      th:field="*{rejectComment}"></textarea>
+                            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                            </div>
+                        </div>
+                        <div>
+                            <button class="button" name="submit-app-details">Reject</button>
+                        </div>
+                    </form>
                 </details>
             </div>
 

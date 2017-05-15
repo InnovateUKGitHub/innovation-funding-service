@@ -16,7 +16,11 @@ public class CompetitionInviteResource extends InviteResource {
 
     private Long id;
 
+    private Long competitionId;
+
     private String competitionName;
+
+    private String competitionDescription;
 
     private ZonedDateTime acceptsDate;
 
@@ -34,12 +38,28 @@ public class CompetitionInviteResource extends InviteResource {
 
     private InnovationAreaResource innovationArea;
 
+    public Long getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
+    }
+
     public String getCompetitionName() {
         return competitionName;
     }
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public String getCompetitionDescription() {
+        return competitionDescription;
+    }
+
+    public void setCompetitionDescription(String competitionDescription) {
+        this.competitionDescription = competitionDescription;
     }
 
     public String getEmail() {
@@ -124,13 +144,16 @@ public class CompetitionInviteResource extends InviteResource {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
-                .append(email, that.email)
-                .append(status, that.status)
+                .append(competitionDescription, that.competitionDescription)
                 .append(acceptsDate, that.acceptsDate)
                 .append(deadlineDate, that.deadlineDate)
                 .append(briefingDate, that.briefingDate)
                 .append(assessorPay, that.assessorPay)
+                .append(email, that.email)
+                .append(hash, that.hash)
+                .append(status, that.status)
                 .append(innovationArea, that.innovationArea)
                 .isEquals();
     }
@@ -139,13 +162,16 @@ public class CompetitionInviteResource extends InviteResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
+                .append(competitionId)
                 .append(competitionName)
-                .append(email)
-                .append(status)
+                .append(competitionDescription)
                 .append(acceptsDate)
                 .append(deadlineDate)
                 .append(briefingDate)
                 .append(assessorPay)
+                .append(email)
+                .append(hash)
+                .append(status)
                 .append(innovationArea)
                 .toHashCode();
     }

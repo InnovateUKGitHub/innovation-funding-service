@@ -133,13 +133,15 @@ the user chooses Calculate overheads option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     and the user clicks the button/link     jQuery=label:contains("Calculate overheads")
     then the user should see the element     jQuery=h3:contains("Calculate overheads")
-    and the user enters text to a text field    jQuery=input[name^="overheads-customRate"]   40
+    and the user uploads the file      css=#overheadfile   ${excel_file}
     wait for autosave
-    and the total overhead costs should reflect rate entered    jQuery=input[name^="overheads-totalCosts"]   £ 28,261
+    and the user enters text to a text field    css=input[name^="overheads-total"][id^="cost-overheads"]   40
+    wait for autosave
+    and the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    the element should be disabled      jQuery=input[name^="overheads-totalCosts"]
+    the element should be disabled      css=#total-cost
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
 
 the user chooses 20% overheads option
@@ -164,8 +166,8 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
-    focus                                 jQuery=#section-total-192[readonly]
-    the user should see the element       jQuery=#section-total-192[readonly]
+    focus                                 jQuery=.section-total-summary > [data-mirror="#section-total-192"]
+    the user should see the element       jQuery=.section-total-summary > [data-mirror="#section-total-192"]
     textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
     the user clicks the button/link       jQuery=#form-input-1085 button:contains("Capital usage")
 

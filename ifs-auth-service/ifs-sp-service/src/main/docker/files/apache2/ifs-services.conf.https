@@ -13,9 +13,9 @@ ShibCompatValidUser On
   SSLProxyCheckPeerName off
 
   SSLEngine on
-  SSLCertificateFile /etc/apache2/certs/server.crt
-  SSLCertificateChainFile /etc/apache2/certs/DigiCertCA.crt
-  SSLCertificateKeyFile /etc/apache2/certs/server.key
+  SSLCertificateFile /etc/apache2/certs/${PROXY_CERTIFICATE}
+  SSLCertificateChainFile /etc/apache2/certs/${PROXY_CA_CERTIFICATE}
+  SSLCertificateKeyFile /etc/apache2/certs/${PROXY_KEY}
 
   # Enable request processing with mod_security
   SecRuleEngine On
@@ -95,7 +95,7 @@ ShibCompatValidUser On
   ErrorDocument 501 /holding/error.html
   ErrorDocument 502 /holding/error.html
   ErrorDocument 503 /holding/error.html
-  ErrorDocument 504 /holding/error.html
+  ErrorDocument 504 /holding/maintenance.html
   ErrorDocument 505 /holding/error.html
   ErrorDocument 506 /holding/error.html
   ErrorDocument 507 /holding/error.html
