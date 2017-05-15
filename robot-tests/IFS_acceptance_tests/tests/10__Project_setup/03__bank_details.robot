@@ -35,8 +35,7 @@ Resource          PS_Common.robot
 *** Test Cases ***
 Links to other sections in Project setup dependent on project details for partners
     [Documentation]    INFUND-4428
-    [Tags]
-    [Setup]   guest user log-in                   ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    [Tags]    HappyPath
     When the user navigates to the page           ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element           jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page  Successful application
@@ -44,12 +43,12 @@ Links to other sections in Project setup dependent on project details for partne
     And the user should see the element       link = Finance checks
     And the user should not see the element       link= Spend profile
     And the user should not see the element       link = Grant offer letter
-    [Teardown]  close any open browsers
+
 
 Project Finance should not be able to access bank details page
     [Documentation]    INFUND-7090, INFUND-7109
     [Tags]    HappyPath
-    [Setup]    Guest user log-in   &{internal_finance_credentials}
+    [Setup]    log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details    You do not have the necessary permissions for your request
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     Then the user should not see the element   jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.action
@@ -212,7 +211,7 @@ Status updates correctly for internal user's table
 User sees error response for invalid bank details for non-lead partner
     [Documentation]   INFUND-8688
     [Tags]    HappyPath
-    #TODO pending due to INFUND-6090  Update with new Bank account pair
+    #TODO After completion of INFUND-6090: Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
     Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
@@ -257,7 +256,7 @@ Project Finance can see the progress of partners bank details
     [Setup]  log in as a different user             &{internal_finance_credentials}
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(2) td:nth-child(4) a
-    Then the user navigates to the page             ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
+    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
     Then the user should see the element            jQuery=li:nth-child(1):contains("Review required")
     And the user should see the element             jQuery=li:nth-child(2):contains("Review required")
@@ -277,8 +276,7 @@ Project Finance can see the progress of partners bank details
     Then the user should see the text in the page   ${Armstrong_Butler_Name} - Account details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_FINANCE}
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
-    Then the user clicks the button/link            link=Bank details
-    [Teardown]  the user clicks the button/link     link=Projects in setup
+
 
 Project Finance can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903
@@ -288,7 +286,7 @@ Project Finance can see Bank Details
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
     And the user should see the element           jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3)
     When the user clicks the button/link          jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3) a
-    Then the user navigates to the page           ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
+    Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page  each partner has submitted their bank details
     Then the user should see the element          jQuery=li:nth-child(1):contains("Review required")
     And the user should see the element           jQuery=li:nth-child(2):contains("Review required")
@@ -340,18 +338,24 @@ the user views the error response from the stub
     the user should see the text in the page    please check your sort code 
 
 finance contacts are submitted by all users
+    the guest user opens the browser
+    the user navigates to the page    ${server}
     user submits his finance contacts  ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${Armstrong_Butler_Id}
-    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${A_B_Cad_Services_Id}
-    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Vitruvius_Id}
     logout as user
-    close any open browsers
+    user submits his finance contacts  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${A_B_Cad_Services_Id}
+    logout as user
+    user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Vitruvius_Id}
+
+
 
 user submits his finance contacts
     [Arguments]  ${user}  ${id}
-    guest user log-in  ${user}  ${short_password}
+    the guest user inserts user email & password    ${user}    ${short_password}
+    the guest user clicks the log-in button
     the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
     the user selects the radio button  financeContact  financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")
+
 
 the project finance user downloads the bank details
     the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
