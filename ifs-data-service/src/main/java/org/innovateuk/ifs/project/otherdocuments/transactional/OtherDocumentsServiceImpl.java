@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 /**
  * Transactional and secure service for Project Other Documents processing work
  */
-public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl implements ProjectOtherDocumentsService {
+public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implements OtherDocumentsService {
 
     @Autowired
     private FileService fileService;

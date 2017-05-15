@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
-import org.innovateuk.ifs.project.otherdocuments.transactional.ProjectOtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 public class OtherDocumentsController {
 
     @Autowired
-    private ProjectOtherDocumentsService projectOtherDocumentsService;
+    private OtherDocumentsService otherDocumentsService;
 
     @Autowired
     @Qualifier("projectSetupOtherDocumentsFileValidator")
@@ -43,7 +43,7 @@ public class OtherDocumentsController {
             HttpServletRequest request) {
 
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectOtherDocumentsService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                otherDocumentsService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
 
@@ -52,14 +52,14 @@ public class OtherDocumentsController {
     ResponseEntity<Object> getCollaborationAgreementFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return handleFileDownload(() -> projectOtherDocumentsService.getCollaborationAgreementFileContents(projectId));
+        return handleFileDownload(() -> otherDocumentsService.getCollaborationAgreementFileContents(projectId));
     }
 
     @GetMapping(value = "/{projectId}/collaboration-agreement/details", produces = "application/json")
     public RestResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectOtherDocumentsService.getCollaborationAgreementFileEntryDetails(projectId).toGetResponse();
+        return otherDocumentsService.getCollaborationAgreementFileEntryDetails(projectId).toGetResponse();
     }
 
 
@@ -72,14 +72,14 @@ public class OtherDocumentsController {
             HttpServletRequest request) {
 
         return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectOtherDocumentsService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                otherDocumentsService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @DeleteMapping(value = "/{projectId}/collaboration-agreement", produces = "application/json")
     public RestResult<Void> deleteCollaborationAgreementDocument(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectOtherDocumentsService.deleteCollaborationAgreementFile(projectId).toDeleteResponse();
+        return otherDocumentsService.deleteCollaborationAgreementFile(projectId).toDeleteResponse();
     }
 
     @PostMapping(value = "/{projectId}/exploitation-plan", produces = "application/json")
@@ -91,7 +91,7 @@ public class OtherDocumentsController {
             HttpServletRequest request) {
 
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectOtherDocumentsService.createExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                otherDocumentsService.createExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @GetMapping("/{projectId}/exploitation-plan")
@@ -99,14 +99,14 @@ public class OtherDocumentsController {
     ResponseEntity<Object> getExploitationPlanFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return handleFileDownload(() -> projectOtherDocumentsService.getExploitationPlanFileContents(projectId));
+        return handleFileDownload(() -> otherDocumentsService.getExploitationPlanFileContents(projectId));
     }
 
     @GetMapping(value = "/{projectId}/exploitation-plan/details", produces = "application/json")
     public RestResult<FileEntryResource> getExploitationPlanFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectOtherDocumentsService.getExploitationPlanFileEntryDetails(projectId).toGetResponse();
+        return otherDocumentsService.getExploitationPlanFileEntryDetails(projectId).toGetResponse();
     }
 
     @PutMapping(value = "/{projectId}/exploitation-plan", produces = "application/json")
@@ -118,20 +118,20 @@ public class OtherDocumentsController {
             HttpServletRequest request) {
 
         return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                projectOtherDocumentsService.updateExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                otherDocumentsService.updateExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @DeleteMapping(value = "/{projectId}/exploitation-plan", produces = "application/json")
     public RestResult<Void> deleteExploitationPlanDocument(
             @PathVariable("projectId") long projectId) throws IOException {
 
-        return projectOtherDocumentsService.deleteExploitationPlanFile(projectId).toDeleteResponse();
+        return otherDocumentsService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 
     @PostMapping("/{projectId}/partner/documents/approved/{approved}")
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
         //TODO INFUND-7493
-        return projectOtherDocumentsService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
+        return otherDocumentsService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
 
     }
 
@@ -140,12 +140,12 @@ public class OtherDocumentsController {
                                                             HttpServletRequest request) {
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
-        return projectOtherDocumentsService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
+        return otherDocumentsService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
 
     @PostMapping("/{projectId}/partner/documents/submit")
     public RestResult<Void>setPartnerDocumentsSubmitted(@PathVariable("projectId") final Long projectId) {
-        return projectOtherDocumentsService.saveDocumentsSubmitDateTime(projectId, ZonedDateTime.now()).toPostResponse();
+        return otherDocumentsService.saveDocumentsSubmitDateTime(projectId, ZonedDateTime.now()).toPostResponse();
     }
 }
 

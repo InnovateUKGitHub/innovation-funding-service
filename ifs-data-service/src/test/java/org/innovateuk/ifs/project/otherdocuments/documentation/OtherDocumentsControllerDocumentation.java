@@ -47,7 +47,7 @@ public class OtherDocumentsControllerDocumentation extends BaseControllerMockMVC
                 .withId(1L)
                 .withUID("123abc")
                 .build();
-        when(projectOtherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
+        when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(true));
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
@@ -66,7 +66,7 @@ public class OtherDocumentsControllerDocumentation extends BaseControllerMockMVC
                 .withId(1L)
                 .withUID("123abc")
                 .build();
-        when(projectOtherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
+        when(otherDocumentsServiceMock.isOtherDocumentsSubmitAllowed(123L, 1L)).thenReturn(serviceSuccess(false));
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(userResource);
 
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/partner/documents/ready", 123L))
@@ -81,7 +81,7 @@ public class OtherDocumentsControllerDocumentation extends BaseControllerMockMVC
 
     @Test
     public void setPartnerDocumentsSubmittedDate() throws Exception {
-        when(projectOtherDocumentsServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
+        when(otherDocumentsServiceMock.saveDocumentsSubmitDateTime(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/partner/documents/submit", 123L))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(

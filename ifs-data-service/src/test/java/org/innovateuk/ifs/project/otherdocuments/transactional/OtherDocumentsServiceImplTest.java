@@ -61,7 +61,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ProjectOtherDocumentsServiceImplTest extends BaseServiceUnitTest<ProjectOtherDocumentsService> {
+public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocumentsService> {
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -576,10 +576,10 @@ public class ProjectOtherDocumentsServiceImplTest extends BaseServiceUnitTest<Pr
     }
 
     @Override
-    protected ProjectOtherDocumentsService supplyServiceUnderTest() {
+    protected OtherDocumentsService supplyServiceUnderTest() {
 
-        ProjectOtherDocumentsService projectOtherDocumentsService =  new ProjectOtherDocumentsServiceImpl();
-        ReflectionTestUtils.setField(projectOtherDocumentsService, "webBaseUrl", webBaseUrl);
-        return projectOtherDocumentsService;
+        OtherDocumentsService otherDocumentsService =  new OtherDocumentsServiceImpl();
+        ReflectionTestUtils.setField(otherDocumentsService, "webBaseUrl", webBaseUrl);
+        return otherDocumentsService;
     }
 }

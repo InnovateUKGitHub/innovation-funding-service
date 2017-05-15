@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 /**
  * Transactional and secure service for Project Other Documents processing work
  */
-public interface ProjectOtherDocumentsService {
+public interface OtherDocumentsService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'SUBMIT_OTHER_DOCUMENTS')")
     ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date);

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.otherdocuments.transactional.ProjectOtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.junit.Before;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing how the secured methods in ProjectOtherDocumentsService interact with Spring Security
  */
-public class OtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<ProjectOtherDocumentsService> {
+public class OtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<OtherDocumentsService> {
 
     private OtherDocumentsPermissionRules projectPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -159,7 +159,7 @@ public class OtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<P
         return TestProjectService.class;
     }
 
-    public static class TestProjectService implements ProjectOtherDocumentsService {
+    public static class TestProjectService implements OtherDocumentsService {
 
         @Override
         public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
