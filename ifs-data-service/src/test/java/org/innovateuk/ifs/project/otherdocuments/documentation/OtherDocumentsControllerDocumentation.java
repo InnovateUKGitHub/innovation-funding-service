@@ -26,7 +26,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectOtherDocumentsControllerDocumentation extends BaseControllerMockMVCTest<OtherDocumentsController> {
+public class OtherDocumentsControllerDocumentation extends BaseControllerMockMVCTest<OtherDocumentsController> {
 
     private RestDocumentationResultHandler document;
 
