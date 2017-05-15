@@ -22,14 +22,14 @@ import static org.mockito.Mockito.when;
 /**
  * Testing how the secured methods in ProjectOtherDocumentsService interact with Spring Security
  */
-public class ProjectOtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<ProjectOtherDocumentsService> {
+public class OtherDocumentsServiceSecurityTest extends BaseServiceSecurityTest<ProjectOtherDocumentsService> {
 
-    private ProjectOtherDocumentsPermissionRules projectPermissionRules;
+    private OtherDocumentsPermissionRules projectPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        projectPermissionRules = getMockPermissionRulesBean(ProjectOtherDocumentsPermissionRules.class);
+        projectPermissionRules = getMockPermissionRulesBean(OtherDocumentsPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 
