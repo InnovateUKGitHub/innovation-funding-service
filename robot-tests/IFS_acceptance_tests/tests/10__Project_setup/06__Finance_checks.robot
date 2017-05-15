@@ -1281,7 +1281,7 @@ Confirming eligibility should update on the finance checks page
 Proj Finance is able to see the Finances amended
     [Documentation]  INFUND-8501
     [Tags]
-    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
+    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
     Then the user clicks the button/link  link=View changes to finances
     When the user should see the element  css=#project-finance-changes-total
     Then the user should see the element  css=#project-finance-changes-section
@@ -1844,7 +1844,7 @@ Other internal users do not have access to Finance checks
 Finance contact can access the external view of the finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
-    [Setup]    Log in as a different user   ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
+    [Setup]    Log in as a different user   ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
     Given the user clicks the button/link   link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
@@ -1857,10 +1857,9 @@ Lead-Partner can view finance checks page
     [Tags]
     Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user clicks the button/link    link=Finance checks
-    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+    Then the user should see the element    jQuery=li.complete:contains("Finance")
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the element    jQuery=.success-alert:contains("your finances approved.")
 
 Lead-Partner can view only the external version of Finance Checks Eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -1870,11 +1869,20 @@ Lead-Partner can view only the external version of Finance Checks Eligibility ta
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
     Then the user should see the element    css=input[id="total-cost"][value="£ 206,867"]
 
+Lead Partner can see the Finances amended
+    [Documentation]  INFUND-8501
+    [Tags]
+    When the user clicks the button/link  link=View changes to finances
+    Then the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Gross") td:contains("120000")
+    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Amount") td:contains("1954")
+    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Net cost") td:contains("276.00") + td:contains("5050.00")
+    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Overall") th:contains("-94,488")
+
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787, INFUND-8880
     [Tags]
     Given log in as a different user        &{collaborator2_credentials}
-    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     Then the user clicks the button/link    link=Finance checks
