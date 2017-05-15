@@ -175,7 +175,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                   .andReturn();
 
           RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
-          assertEquals(5, response.getErrors().size());
+          assertEquals(7, response.getErrors().size());
           asList(firstNameError, lastNameError, emailError, phoneNumberError, phoneNumberLengthError).forEach(e -> {
               String fieldName = e.getFieldName();
               String errorKey = e.getErrorKey();

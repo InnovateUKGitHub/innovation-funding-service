@@ -15,9 +15,19 @@ public class MonitoringOfficerResource {
     private Long id;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
+    @Size.List ({
+            @Size(min=2, message="{validation.standard.firstname.length.min}"),
+            @Size(max=70, message="{validation.standard.firstname.length.max}"),
+    })
     private String firstName;
 
     @NotEmpty(message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
+    @Size.List ({
+            @Size(min=2, message="{validation.standard.lastname.length.min}"),
+            @Size(max=70, message="{validation.standard.lastname.length.max}"),
+    })
     private String lastName;
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
