@@ -6,7 +6,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
-import org.innovateuk.ifs.project.otherdocuments.populator.ProjectOtherDocumentsViewModelPopulator;
+import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class OtherDocumentsController {
     private static final String FORM_ATTR = "form";
 
     @Autowired
-    ProjectOtherDocumentsViewModelPopulator populator;
+    OtherDocumentsViewModelPopulator populator;
 
     @Autowired
     private ProjectOtherDocumentsService projectOtherDocumentsService;

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
-import org.innovateuk.ifs.project.otherdocuments.populator.ProjectOtherDocumentsViewModelPopulator;
+import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -43,7 +43,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
     @Spy
     @InjectMocks
-    ProjectOtherDocumentsViewModelPopulator populator;
+    OtherDocumentsViewModelPopulator populator;
 
     @Test
     public void testViewOtherDocumentsPage() throws Exception {

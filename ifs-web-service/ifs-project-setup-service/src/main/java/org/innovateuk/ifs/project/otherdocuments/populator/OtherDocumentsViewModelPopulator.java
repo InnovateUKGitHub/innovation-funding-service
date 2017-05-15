@@ -19,7 +19,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
-public class ProjectOtherDocumentsViewModelPopulator {
+public class OtherDocumentsViewModelPopulator {
 
     @Autowired
     private ProjectService projectService;
