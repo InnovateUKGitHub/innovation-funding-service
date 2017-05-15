@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static java.util.Collections.singletonList;
@@ -40,6 +42,9 @@ public class OtherDocumentsController {
 
     @Autowired
     private OtherDocumentsService otherDocumentsService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
@@ -60,7 +65,7 @@ public class OtherDocumentsController {
         return "project/other-documents";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'SUBMIT_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
@@ -76,23 +81,34 @@ public class OtherDocumentsController {
     public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
                                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
-        OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
-        model.addAttribute("model", viewModel);
-        model.addAttribute("currentUser", loggedInUser);
-        model.addAttribute("readOnlyView", true);
+        if (isProjectManager(projectId, loggedInUser)) {
+            return redirectToOtherDocumentsPage(projectId);
+        } else {
+            OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
+            model.addAttribute("model", viewModel);
+            model.addAttribute("currentUser", loggedInUser);
+            model.addAttribute("readOnlyView", true);
 
-        return "project/other-documents";
+            return "project/other-documents";
+        }
+    }
+
+    private boolean isProjectManager(Long projectId, UserResource loggedInUser) {
+        return projectService.isProjectManager(loggedInUser.getId(), projectId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping("/submit")
     public String submitPartnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
-        otherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
+        if (otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)) {
+            otherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
+        }
+
         return redirectToOtherDocumentsPage(projectId);
     }
 
     private String redirectToOtherDocumentsPage(Long projectId) {
-        return "redirect:/project/" + projectId + "/partner/documents";
+        return format("redirect:/project/%s/partner/documents", projectId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
