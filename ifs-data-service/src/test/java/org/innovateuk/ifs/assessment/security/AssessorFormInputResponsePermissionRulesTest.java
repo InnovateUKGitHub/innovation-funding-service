@@ -54,7 +54,7 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
                         .withAssessment(assessment.getId())
                         .build(2));
 
-        assertTrue("the owner of all responses should able to update those responses",
+        assertTrue("the owner of all responses should be able to update those responses",
                 rules.userCanUpdateAssessorFormInputResponses(responses, assessorUser));
     }
 

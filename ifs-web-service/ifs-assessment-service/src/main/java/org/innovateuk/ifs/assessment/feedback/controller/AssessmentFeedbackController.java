@@ -32,10 +32,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingFieldErrorToField;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -114,18 +120,24 @@ public class AssessmentFeedbackController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)
                     .getSuccessObjectOrThrowException();
+
             AssessorFormInputResponsesResource responses = getFormInputResponses(form, formInputs, assessmentId);
 
             RestResult<Void> updateResult = assessorFormInputResponseRestService.updateFormInputResponses(responses);
 
-            return validationHandler.addAnyErrors(updateResult, e -> {
-                if (e.isFieldError()) {
-                    String formInputFieldName = format("formInput[%s]", e.getFieldName());
-                    return Optional.of(new FieldError("", formInputFieldName, e.getFieldRejectedValue(),
-                            true, new String[]{e.getErrorKey()}, e.getArguments().toArray(), null));
+            return validationHandler.addAnyErrors(updateResult, mappingFieldErrorToField(e -> {
+                Matcher matcher = Pattern.compile("responses\\[(\\d)\\]\\.value").matcher(e.getFieldName());
+
+                if (matcher.find()) {
+                    int errorIndex = Integer.parseInt(matcher.group(1));
+
+                    Long formInputResponseWithError = responses.getResponses().get(errorIndex).getFormInput();
+
+                    return format("formInput[%s]", formInputResponseWithError);
                 }
-                return Optional.empty();
-            }, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> redirectToAssessmentOverview(assessmentId));
+
+                return e.getFieldName();
+            }), asGlobalErrors()).failNowOrSucceedWith(failureView, () -> redirectToAssessmentOverview(assessmentId));
         });
     }
 
@@ -176,15 +188,17 @@ public class AssessmentFeedbackController {
     }
 
     private AssessorFormInputResponsesResource getFormInputResponses(Form form, List<FormInputResource> formInputs, long assessmentId) {
-        Map<Long, FormInputResource> formInputResourceMap = simpleToMap(formInputs, FormInputResource::getId);
+        Set<Long> formInputResourceIds = newHashSet(simpleMap(formInputs, FormInputResource::getId));
 
-        Map<Long, String> responseStrings = simpleMapEntry(form.getFormInput(), stringStringEntry -> Long.valueOf(stringStringEntry.getKey()), Map.Entry::getValue);
+        Map<Long, String> responseStrings = simpleMapEntry(form.getFormInput(), formInput -> Long.valueOf(formInput.getKey()), Map.Entry::getValue);
 
         // Filter the responses to include only those for which a form input exist
-        Map<Long, String> filtered = simpleFilter(responseStrings, (id, value) -> formInputResourceMap.containsKey(id));
+        Map<Long, String> filtered = simpleFilter(responseStrings, (id, value) -> formInputResourceIds.contains(id));
 
-        List<AssessorFormInputResponseResource> assessorFormInputResponses = simpleMap(filtered, (id, value) ->
-                new AssessorFormInputResponseResource(assessmentId, id, value));
+        List<AssessorFormInputResponseResource> assessorFormInputResponses = simpleMap(
+                filtered,
+                (id, value) -> new AssessorFormInputResponseResource(assessmentId, id, value)
+        );
 
         return new AssessorFormInputResponsesResource(assessorFormInputResponses);
     }

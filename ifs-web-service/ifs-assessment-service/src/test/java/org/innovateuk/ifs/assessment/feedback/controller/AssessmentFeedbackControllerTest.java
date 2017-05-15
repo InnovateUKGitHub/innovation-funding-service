@@ -622,7 +622,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                         .build(2));
 
         when(assessorFormInputResponseRestService.updateFormInputResponses(responses)).thenReturn(restFailure(
-                fieldError(formInputIdFeedback.toString(), "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
+                fieldError("responses[1].value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
@@ -683,7 +683,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                         .build(2));
 
         when(assessorFormInputResponseRestService.updateFormInputResponses(responses))
-                .thenReturn(restFailure(fieldError(formInputIdFeedback.toString(), "Feedback", "validation.field.max.word.count", "", 100)));
+                .thenReturn(restFailure(fieldError("responses[1].value", "Feedback", "validation.field.max.word.count", "", 100)));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
