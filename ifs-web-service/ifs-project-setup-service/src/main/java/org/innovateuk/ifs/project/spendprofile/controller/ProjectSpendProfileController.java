@@ -164,7 +164,7 @@ public class ProjectSpendProfileController {
 
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'MARK_SPEND_PROFILE_INCOMPLETE') && hasPermission(#organisationId, 'IS_NOT_FROM_OWN_ORGANISATION')")
     @PostMapping("/incomplete")
     public String markAsActionRequiredSpendProfile(Model model,
                                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
@@ -203,7 +203,7 @@ public class ProjectSpendProfileController {
         return "project/spend-profile-confirm";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'MARK_SPEND_PROFILE_INCOMPLETE') && hasPermission(#organisationId, 'IS_NOT_FROM_OWN_ORGANISATION')")
     @GetMapping("/incomplete")
     public String viewConfirmEditSpendProfilePage(@PathVariable("projectId") final Long projectId,
                                                   @PathVariable("organisationId") final Long organisationId,

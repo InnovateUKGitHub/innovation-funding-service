@@ -2,20 +2,13 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.List;
 
 /**
  * Service dealing with Project finance operations
@@ -58,26 +51,5 @@ public interface SpendProfileService {
 
     @PreAuthorize("hasPermission(#projectId, 'COMPLETE_SPEND_PROFILE_REVIEW')")
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
-
-    @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
-    ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
-
-    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_VIABILITY')")
-    ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
-
-    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
-    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus);
-
-    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_ELIGIBILITY')")
-    ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId);
-
-    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_ELIGIBILITY')")
-    ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus);
-
-    @PreAuthorize("hasPermission(#projectId, 'SAVE_CREDIT_REPORT')")
-    ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent);
-
-    @PreAuthorize("hasPermission(#projectId, 'VIEW_CREDIT_REPORT')")
-    ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId);
 
 }
