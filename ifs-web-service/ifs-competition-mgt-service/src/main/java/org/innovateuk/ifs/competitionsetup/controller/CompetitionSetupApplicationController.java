@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.*;
@@ -304,20 +305,23 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
-        ServiceResult<CompetitionSetupQuestionResource> questionResource = competitionSetupQuestionService.getQuestion(questionId);
+        ServiceResult<String> view = competitionSetupQuestionService.getQuestion(questionId).andOnSuccessReturn(
+                questionResource -> {
+                    CompetitionSetupQuestionType type = questionResource.getType();
+                    CompetitionSetupSubsection setupSubsection;
 
-        CompetitionSetupQuestionType type = questionResource.getSuccessObjectOrThrowException().getType();
-        CompetitionSetupSubsection setupSubsection;
+                    if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
+                        setupSubsection = CompetitionSetupSubsection.QUESTIONS;
+                    } else {
+                        setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
+                    }
 
-        if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
-            setupSubsection = CompetitionSetupSubsection.QUESTIONS;
-        } else {
-            setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
-        }
+                    setupQuestionToModel(competitionResource, Optional.of(questionId), model, setupSubsection, isEditable, form);
 
-        setupQuestionToModel(competitionResource, Optional.of(questionId), model, setupSubsection, isEditable, form);
+                    return questionView;
+                }).andOnFailure(() -> serviceSuccess("redirect:/non-ifs-competition/setup/" + questionId));
 
-        return questionView;
+        return view.getSuccessObjectOrThrowException();
     }
 
     private void setupQuestionToModel(final CompetitionResource competition, final Optional<Long> questionId, Model model, CompetitionSetupSubsection subsection, boolean isEditable, CompetitionSetupForm form) {

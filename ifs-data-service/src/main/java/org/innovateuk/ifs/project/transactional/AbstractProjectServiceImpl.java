@@ -14,8 +14,8 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
-import static org.innovateuk.ifs.project.grantofferletter.resource.GOLState.SENT;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.UNSET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -81,7 +81,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
-    private GOLWorkflowHandler golWorkflowHandler;
+    private GrantOfferLetterWorkflowHandler golWorkflowHandler;
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
@@ -180,10 +180,10 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createLeadGrantOfferLetterStatus(final Project project) {
-        GOLState state = golWorkflowHandler.getState(project);
+        GrantOfferLetterState state = golWorkflowHandler.getState(project);
         if (SENT.equals(state)) {
              return ACTION_REQUIRED;
-        } else if (GOLState.PENDING.equals(state) && project.getGrantOfferLetter() != null) {
+        } else if (GrantOfferLetterState.PENDING.equals(state) && project.getGrantOfferLetter() != null) {
              return PENDING;
         } else {
             return createGrantOfferLetterStatus(project);
@@ -191,10 +191,10 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createGrantOfferLetterStatus(final Project project) {
-        GOLState state = golWorkflowHandler.getState(project);
-        if (GOLState.APPROVED.equals(state)) {
+        GrantOfferLetterState state = golWorkflowHandler.getState(project);
+        if (GrantOfferLetterState.APPROVED.equals(state)) {
             return COMPLETE;
-        } else if (GOLState.PENDING.equals(state)){
+        } else if (GrantOfferLetterState.PENDING.equals(state)){
             return NOT_REQUIRED;
         } else {
             return PENDING;
