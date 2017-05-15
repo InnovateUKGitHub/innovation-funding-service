@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.security;
+package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 
 @PermissionRules
 @Component
-public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
+public class GrantOfferLetterPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "DOWNLOAD_GRANT_OFFER",

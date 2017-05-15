@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.grandofferletter;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterServiceImpl;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
@@ -216,12 +216,12 @@ public class GrantOfferLetterServiceImplTest {
 
         Long projectId = 123L;
 
-        when(grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(restSuccess(GOLState.APPROVED));
+        when(grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(restSuccess(GrantOfferLetterState.APPROVED));
 
-        ServiceResult<GOLState> result = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId);
+        ServiceResult<GrantOfferLetterState> result = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GOLState.APPROVED, result.getSuccessObject());
+        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
 
         verify(grantOfferLetterRestService).getGrantOfferLetterWorkflowState(projectId);
 

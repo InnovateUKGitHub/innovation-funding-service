@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.project.grantofferletter.service;
+package org.innovateuk.ifs.project.grantofferletter.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,22 +18,22 @@ import java.util.function.Supplier;
 public interface GrantOfferLetterService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
-    public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId);
+    ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
-    public ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId);
+    ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DOWNLOAD_GRANT_OFFER')")
-    public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId);
+    ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
-    public ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId);
+    ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
-    public ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId);
+    ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER')")
-    public ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId);
+    ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPLOAD_SIGNED_GRANT_OFFER')")
     ServiceResult<FileEntryResource> createSignedGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
@@ -83,6 +83,6 @@ public interface GrantOfferLetterService {
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
-    ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
+    ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
 
 }
