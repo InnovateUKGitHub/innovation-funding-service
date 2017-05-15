@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.notes.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -101,24 +103,15 @@ public class FinanceChecksNotesController {
                                                          HttpServletRequest request) {
 
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
-            ServiceResult<Optional<ByteArrayResource>> downloadResult = financeCheckService.downloadFile(attachmentId);
-
-            return downloadResult.handleSuccessOrFailure(
-                    failure -> forbiddenRedirectionDueToForbidden(),
-                    success -> {
-                        Optional<ByteArrayResource> fileContent = success;
-                        Optional<FileEntryResource> fileDetails = Optional.empty();
-                        ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-                        if (fileInfo.isSuccess()) {
-                            fileDetails = Optional.of(fileInfo.getSuccessObject());
-                        }
-
-                        return returnFileIfFoundOrThrowNotFoundException(fileContent, fileDetails);
-                    });
+            return financeCheckService.downloadFile(attachmentId).handleSuccessOrFailure(
+                    failure -> new ResponseEntity<ByteArrayResource>(null, null, failure.getErrors().get(0).getStatusCode()),
+                    content -> financeCheckService.getAttachmentInfo(attachmentId).handleSuccessOrFailure(
+                            failure2 -> new ResponseEntity<ByteArrayResource>(null, null, failure2.getErrors().get(0).getStatusCode()),
+                            fileDetails -> returnFileIfFoundOrThrowNotFoundException(content, Optional.of(fileDetails)))
+            );
         } else {
             return forbiddenRedirectionDueToForbidden();
         }
-
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
@@ -393,7 +386,7 @@ public class FinanceChecksNotesController {
         if (content.isPresent() && fileDetails.isPresent()) {
             return getFileResponseEntity(content.get(), fileDetails.get());
         } else {
-            return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
         }
     }
 

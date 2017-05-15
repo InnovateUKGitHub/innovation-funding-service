@@ -29,10 +29,7 @@ import org.springframework.validation.BindingResult;
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -79,6 +76,8 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testViewNewNote() throws Exception {
 
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
         Cookie formCookie;
         FinanceChecksNotesAddNoteForm form = new FinanceChecksNotesAddNoteForm();
         form.setNote("Note");
@@ -91,6 +90,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
         FinanceChecksNotesAddNoteViewModel noteViewModel = (FinanceChecksNotesAddNoteViewModel) result.getModelAndView().getModel().get("model");
         FinanceChecksNotesAddNoteForm modelForm = (FinanceChecksNotesAddNoteForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(Arrays.asList(projectId, applicantOrganisationId, loggedInUser.getId())), CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_note_origin"));
 
         assertEquals("Org1", noteViewModel.getOrganisationName());
         assertEquals("Project1", noteViewModel.getProjectName());
@@ -106,6 +108,16 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
+    public void testViewNewNoteInvalidOrganisation() throws Exception {
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1)+ "/note/new-note"))
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
     public void testSaveNewNote() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
@@ -114,12 +126,14 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
         FinanceChecksNotesAddNoteForm formIn = new FinanceChecksNotesAddNoteForm();
         Cookie formCookie = createFormCookie(formIn);
+        Cookie originCookie = createOriginCookie();
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", "Title")
                 .param("note", "Query text")
-                .cookie(formCookie))
+                .cookie(formCookie)
+                .cookie(originCookie))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note**"))
                 .andReturn();
 
@@ -150,12 +164,33 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
+    public void testSaveNewNoteNoOriginCookie() throws Exception {
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.saveNote(any(NoteResource.class))).thenReturn(ServiceResult.serviceSuccess(1L));
+
+        FinanceChecksNotesAddNoteForm formIn = new FinanceChecksNotesAddNoteForm();
+        Cookie formCookie = createFormCookie(formIn);
+
+        mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("noteTitle", "Title")
+                .param("note", "Query text")
+                .cookie(formCookie))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testSaveNewNoteNoFieldsSet() throws Exception {
+
+        Cookie originCookie = createOriginCookie();
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", "")
-                .param("note", ""))
+                .param("note", "")
+                .cookie(originCookie))
                 .andExpect(view().name("project/financecheck/new-note"))
                 .andReturn();
 
@@ -180,11 +215,13 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     public void testSaveNewNoteFieldsTooLong() throws Exception {
 
         String tooLong = StringUtils.leftPad("a", 4001, 'a');
+        Cookie originCookie = createOriginCookie();
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", tooLong)
-                .param("note", tooLong))
+                .param("note", tooLong)
+                .cookie(originCookie))
                 .andExpect(view().name("project/financecheck/new-note"))
                 .andReturn();
 
@@ -209,11 +246,13 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     public void testSaveNewNoteTooManyWords() throws Exception {
 
         String tooManyWords = StringUtils.leftPad("a ", 802, "a ");
+        Cookie originCookie = createOriginCookie();
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", "Title")
-                .param("note", tooManyWords))
+                .param("note", tooManyWords)
+                .cookie(originCookie))
                 .andExpect(view().name("project/financecheck/new-note"))
                 .andReturn();
 
@@ -237,13 +276,14 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        Cookie originCookie = createOriginCookie();
 
         when(financeCheckServiceMock.uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note").
-                        file(uploadedFile).param("uploadAttachment", ""))
+                        file(uploadedFile).param("uploadAttachment", "").cookie(originCookie))
                 .andExpect(cookie().exists("finance_checks_notes_new_note_attachments_" + projectId + "_" + applicantOrganisationId))
                 .andExpect(cookie().exists("finance_checks_notes_new_note_form_" + projectId + "_" + applicantOrganisationId))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note**"))
@@ -260,13 +300,29 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_note_form_" + projectId + "_" + applicantOrganisationId));
 
         verify(financeCheckServiceMock).uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes());
-
     }
 
     @Test
     public void testDownloadAttachmentFailsNoContent() throws Exception {
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note/attachment/1"))
                 .andExpect(status().isNoContent())
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        // Assert that there is no content
+        assertEquals("", response.getContentAsString());
+        assertEquals(null, response.getHeader("Content-Disposition"));
+        assertEquals(0, response.getContentLength());
+    }
+
+    @Test
+    public void testDownloadAttachmentFailsInvalidOrganisation() throws Exception {
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note/attachment/1"))
+                .andExpect(status().isForbidden())
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -287,6 +343,8 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         FinanceChecksNotesAddNoteForm formIn = new FinanceChecksNotesAddNoteForm();
         Cookie formCookie = createFormCookie(formIn);
 
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note/cancel")
@@ -305,7 +363,21 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 .findAny();
         assertEquals(true, formCookieFound.get().getValue().isEmpty());
 
+        Optional<Cookie> originCookieFound = Arrays.stream(result.getResponse().getCookies())
+                .filter(cookie -> cookie.getName().equals("finance_checks_notes_new_note_origin"))
+                .findAny();
+        assertEquals(true, originCookieFound.get().getValue().isEmpty());
+
         verify(financeCheckServiceMock).deleteFile(1L);
+    }
+
+    @Test
+    public void testCancelNewNoteInvalidOrganisation() throws Exception {
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note/cancel"))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -313,14 +385,17 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
         Cookie cookie = new Cookie("finance_checks_notes_new_note_attachments_" + projectId + "_" + applicantOrganisationId, encryptedData);
+        Cookie originCookie = createOriginCookie();
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
-                .cookie(cookie))
+                .cookie(cookie)
+                .cookie(originCookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("project/financecheck/new-note"))
                 .andReturn();
@@ -341,17 +416,28 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
+    public void testViewNewNoteWithAttachmentsInvalidOrganisation() throws Exception {
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId +1) + "/note/new-note"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testRemoveAttachment() throws Exception {
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie ck = createAttachmentsCookie(attachmentIds);
+        Cookie originCookie = createOriginCookie();
 
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .param("removeAttachment", "1")
                 .cookie(ck)
+                .cookie(originCookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", "Title")
                 .param("note", "Query"))
@@ -379,11 +465,34 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
+    public void testRemoveAttachmentInvalidOriginCookie() throws Exception {
+
+        List<Long> attachmentIds = new ArrayList<>();
+        attachmentIds.add(1L);
+        Cookie ck = createAttachmentsCookie(attachmentIds);
+        List<Long> originData = Arrays.asList(projectId, applicantOrganisationId+1, loggedInUser.getId());
+        String cookieContent = JsonUtil.getSerializedObject(originData);
+        String encryptedContent = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
+        Cookie originCookie = new Cookie("finance_checks_notes_new_note_origin", encryptedContent);
+
+        mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
+                .param("removeAttachment", "1")
+                .cookie(ck)
+                .cookie(originCookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("noteTitle", "Title")
+                .param("note", "Query"))
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
     public void testRemoveAttachmentDoesNotRemoveAttachmentNotInCookie() throws Exception {
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie ck = createAttachmentsCookie(attachmentIds);
+        Cookie originCookie = createOriginCookie();
 
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
@@ -392,6 +501,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .param("removeAttachment", "2")
                 .cookie(ck)
+                .cookie(originCookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", "Title")
                 .param("note", "Query"))
@@ -417,6 +527,13 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         String cookieContent = JsonUtil.getSerializedObject(form);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
         return new Cookie("finance_checks_notes_new_note_form_" + projectId + "_" + applicantOrganisationId, encryptedData);
+    }
+
+    private Cookie createOriginCookie() throws Exception {
+        List<Long> originData = Arrays.asList(projectId, applicantOrganisationId, loggedInUser.getId());
+        String cookieContent = JsonUtil.getSerializedObject(originData);
+        String encryptedContent = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
+        return new Cookie("finance_checks_notes_new_note_origin", encryptedContent);
     }
 
     @Override
