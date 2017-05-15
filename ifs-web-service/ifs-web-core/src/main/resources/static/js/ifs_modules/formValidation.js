@@ -617,7 +617,7 @@ IFS.core.formValidation = (function () {
       }
 
       if (jQuery('.error-summary-list [data-errorfield="' + name + '"]:contains(' + message + '),.error-summary-list li:not([data-errorfield]):contains("' + message + '")').length === 0) {
-        jQuery('.error-summary-list').append('<li data-errorfield="' + name + '" ' + (visuallyhidden ? 'class="visuallyhidden"' : '') + '>' + message + '</li>')
+        jQuery('.error-summary-list').append('<li data-errorfield="' + name + '">' + message + '</li>')
       }
 
       jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
@@ -628,7 +628,6 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
-      console.log('valid', field, message, displayValidationMessages)
       var formGroup = field.closest('.form-group.error,tr.form-group-row.error')
       var errorSummary = jQuery('.error-summary-list')
       var name = IFS.core.formValidation.getIdentifier(field)
