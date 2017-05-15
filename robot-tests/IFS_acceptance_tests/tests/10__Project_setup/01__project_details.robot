@@ -619,7 +619,6 @@ Non-lead partner cannot change any project details
     And the user should see the text in the page    1, Sheffield, S1 2ED
     And the user should not see the element    link=Project address
     When the user navigates to the page and gets a custom error message    ${project_start_date_page}    You do not have the necessary permissions for your request
-    When the user navigates to the page and gets a custom error message    ${project_manager_page}    You do not have the necessary permissions for your request
     When the user navigates to the page and gets a custom error message    ${project_address_page}    You do not have the necessary permissions for your request
 
 Internal user can see the Project details as submitted

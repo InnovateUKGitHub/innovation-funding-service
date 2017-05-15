@@ -144,16 +144,15 @@ ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credenti
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}      40
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}    EGGS
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}
-${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
-${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
-${project_in_setup_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
-${project_in_setup_details_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
+
+${project_in_setup_page}                ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+${project_in_setup_details_page}        ${project_in_setup_page}/details
 ${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
-${project_start_date_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
-${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/project-address
-${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
-${internal_spend_profile_approval}    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
-${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+${project_start_date_page}              ${project_in_setup_details_page}/start-date
+${project_address_page}                 ${project_in_setup_page}/project-address
+${internal_project_summary}             ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+${internal_spend_profile_approval}      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
+
 
 #Project: Elbow grease
 ${ELBOW_GREASE_PROJECT_ID}  4
