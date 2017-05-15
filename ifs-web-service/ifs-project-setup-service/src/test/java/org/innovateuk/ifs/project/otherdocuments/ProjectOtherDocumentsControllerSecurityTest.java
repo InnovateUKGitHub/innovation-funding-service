@@ -66,6 +66,6 @@ public class ProjectOtherDocumentsControllerSecurityTest extends BaseProjectSetu
     @Test
     public void testViewConfirmDocumentsPage() {
         assertSecured(() -> classUnderTest.viewConfirmDocumentsPage(123L, null, null),
-                permissionRules -> permissionRules.partnerCanAccessOtherDocumentsSection(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.projectManagerCanSubmitOtherDocumentsSection(eq(123L), isA(UserResource.class)));
     }
 }

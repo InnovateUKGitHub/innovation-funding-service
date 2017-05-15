@@ -260,6 +260,9 @@ the user follows the flow to register their organisation
     the user clicks the button/link             jQuery=.button:contains("Continue")
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
     the user should see an error                Please select an organisation type.
+    # Lead applicant can be with Business or RTO as this comp is setup to have either of it
+    the user should see the element             jQuery=label[for="radio-1"]:contains("Business")
+    the user should see the element             jQuery=label[for="radio-3"]:contains("Research and technology organisations (RTOs)")
     the user selects the radio button           organisationTypeId   ${orgType}
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
     the user clicks the button/link             jQuery=.button:contains("Save and continue")
