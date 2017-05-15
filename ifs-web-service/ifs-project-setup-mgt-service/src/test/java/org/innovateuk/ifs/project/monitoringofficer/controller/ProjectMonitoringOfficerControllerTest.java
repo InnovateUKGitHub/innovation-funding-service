@@ -324,7 +324,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals("", form.getPhoneNumber());
 
         BindingResult bindingResult = form.getBindingResult();
-        assertEquals(6, bindingResult.getFieldErrorCount());
+        assertEquals(8, bindingResult.getFieldErrorCount());
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
@@ -493,7 +493,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         BindingResult bindingResult = form.getBindingResult();
 
-        assertEquals(5, bindingResult.getFieldErrorCount());
+        assertEquals(7, bindingResult.getFieldErrorCount());
         assertEquals("NotEmpty", bindingResult.getFieldError("firstName").getCode());
         assertEquals("NotEmpty", bindingResult.getFieldError("lastName").getCode());
         assertEquals("Email", bindingResult.getFieldError("emailAddress").getCode());
