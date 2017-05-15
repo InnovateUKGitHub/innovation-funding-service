@@ -1,5 +1,8 @@
 *** Settings ***
 Resource    ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource    ../../resources/defaultResources.robot
+
+
 *** Variables ***
 #Project: London underground – enhancements to existing stock and logistics
 # GOL = Grant Offer Letter
@@ -154,3 +157,19 @@ ${internal_project_summary}    ${server}/project-setup-management/competition/${
 
 #Project: Elbow grease
 ${ELBOW_GREASE_PROJECT_ID}  4
+
+#Bank details
+${account_number}  51406795
+${sort_code}       404745
+
+*** Keywords ***
+project finance submits monitoring officer
+    [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}
+    log in as a different user              &{internal_finance_credentials}
+    the user navigates to the page          ${server}/project-setup-management/project/${project_id}/monitoring-officer
+    the user enters text to a text field    id=firstName    ${fname}
+    the user enters text to a text field    id=lastName    ${lname}
+    The user enters text to a text field    id=emailAddress    ${email}
+    The user enters text to a text field    id=phoneNumber    ${phone_number}
+    the user clicks the button/link         jQuery=.button[type="submit"]:contains("Assign Monitoring Officer")
+    the user clicks the button/link         jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")

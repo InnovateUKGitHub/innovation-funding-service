@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation    INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
-Resource          ../../resources/defaultResources.robot
+Resource          PS_Common.robot
 Suite Setup    the project is completed if it is not already complete
 
 *** Test Cases ***

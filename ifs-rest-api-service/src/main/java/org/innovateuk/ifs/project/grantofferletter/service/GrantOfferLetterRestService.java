@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -42,7 +42,7 @@ public interface GrantOfferLetterRestService {
 
     RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
-    RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
+    RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
 
     RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);
 
