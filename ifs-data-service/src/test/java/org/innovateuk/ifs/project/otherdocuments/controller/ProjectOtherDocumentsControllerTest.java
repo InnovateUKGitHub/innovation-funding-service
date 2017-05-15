@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTest<ProjectOtherDocumentsController> {
+public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
 
     private RestDocumentationResultHandler document;
 
@@ -42,8 +42,8 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     }
 
     @Override
-    protected ProjectOtherDocumentsController supplyControllerUnderTest() {
-        return new ProjectOtherDocumentsController();
+    protected OtherDocumentsController supplyControllerUnderTest() {
+        return new OtherDocumentsController();
     }
 
     @Test

@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
  */
 @RestController
 @RequestMapping("/project")
-public class ProjectOtherDocumentsController {
+public class OtherDocumentsController {
 
     @Autowired
     private ProjectOtherDocumentsService projectOtherDocumentsService;
