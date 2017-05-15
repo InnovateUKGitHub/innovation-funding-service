@@ -21,50 +21,15 @@ Resource          PS_Common.robot
 *** Variables ***
 
 *** Test Cases ***
-
-# Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
-Other internal users cannot see Bank details or Finance checks
-    [Documentation]    INFUND-4903, INFUND-5720
-    [Tags]    Experian    HappyPath
-    [Setup]    Log in as user    &{Comp_admin1_credentials}
-    # This is added to HappyPath because CompAdmin should NOT have access to Bank details
-    Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element          jQuery=h2:contains("Projects in setup")
-    And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
-    And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    You do not have the necessary permissions for your request
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
-
-
 Project Finance user can see the internal project summary page
     [Documentation]    INFUND-4049, INFUND-5144
     [Tags]
-    [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(2) td:nth-child(3) a   #Monitoring officer page link
     And the user goes back to the previous page
     And the user should not see the element   jQuery=#table-project-status tr:nth-child(2) td:nth-child(6) a  #SP element is not seen
 
-
-Comp Admin user cannot see the finance check summary page(duplicate)
-    [Documentation]    INFUND-4821
-    [Tags]
-    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
-    Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
-
-Comp Admin user can see the internal project summary page
-    [Documentation]    INFUND-4049, INFUND-5899
-    [Tags]
-    Given the user navigates to the page    ${internal_project_summary}
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(2) td:nth-child(3) a   #Monitoring officer page link
-    And the user should not see an error in the page
-    And the user goes back to the previous page
-    When the user clicks the button/link    link=Competition dashboard
-    Then the user should see the text in the page    All competitions
-    [Teardown]    the user goes back to the previous page
 
 Project Finance has a dashboard and can see projects in PS
     [Documentation]    INFUND-5300
@@ -84,6 +49,7 @@ Project Finance has a dashboard and can see projects in PS
     Then the user navigates to the page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/application/${PROJECT_SETUP_APPLICATION_1}
     And the user should not see an error in the page
 
+
 Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300, INFUND-7109
     [Tags]
@@ -94,6 +60,33 @@ Project Finance can see the status of projects in PS
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
 
 
+# Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
+Other internal users cannot see Bank details or Finance checks
+    [Documentation]    INFUND-4903, INFUND-5720
+    [Tags]    Experian    HappyPath
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    # This is added to HappyPath because CompAdmin should NOT have access to Bank details
+    Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
+    And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
+    Then the user should see the element          jQuery=h2:contains("Projects in setup")
+    And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
+    And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
+
+
+Comp Admin user can see the internal project summary page
+    [Documentation]    INFUND-4049, INFUND-5899
+    [Tags]
+    Given the user navigates to the page    ${internal_project_summary}
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
+    And the user clicks the button/link    jQuery=#table-project-status tr:nth-child(2) td:nth-child(3) a   #Monitoring officer page link
+    And the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=Competition dashboard
+    Then the user should see the text in the page    All competitions
+
+
 *** Keywords ***
 
 the project is completed if it is not already complete
@@ -101,6 +94,7 @@ the project is completed if it is not already complete
     the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
     ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
     run keyword if    '${project_manager_not_set}' == 'PASS'     all previous sections of the project are completed
+    run keyword if    '${project_manager_not_set}' == 'FAIL'    login as a different user    &{internal_finance_credentials}
 
 all previous sections of the project are completed
     lead partner selects project manager and address
@@ -110,8 +104,6 @@ all previous sections of the project are completed
     project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
 
 lead partner selects project manager and address
-    log in as a different user           &{lead_applicant_credentials}
-    the user navigates to the page       ${project_in_setup_details_page}
     the user clicks the button/link      link=Project Manager
     the user selects the radio button    projectManager    projectManager2
     the user clicks the button/link      jQuery=.button:contains("Save")
