@@ -144,7 +144,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         return asList(fieldError("innovationAreaCategoryIds",
                 innovationAreaCategoryIds,
                 "competition.setup.innovation.area.must.be.selected",
-                singletonList(allInnovationAreas.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))))
+                singletonList(allInnovationAreas.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
     }
 
     private List<Long> getAllInnovationAreaIds(List<InnovationAreaResource> allInnovationAreas) {
