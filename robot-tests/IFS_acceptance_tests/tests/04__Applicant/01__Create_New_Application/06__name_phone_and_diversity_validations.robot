@@ -73,7 +73,7 @@ Phone number too short
     And the user submits their information
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters.
 
-First and last name containing hyphen, space and aposthrophy should return no errors
+First and last name containing hyphen, space and aposthrophe should return no errors
     # Test coverage for first/last name validation will be expanded by INFUND-9559
     [Documentation]    -INFUND-3260
     [Tags]
