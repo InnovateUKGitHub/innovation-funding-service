@@ -136,3 +136,7 @@ ifs-web-service/ifs-assessment-service/tomcat/
 ifs-web-service/ifs-competition-mgt-service/tomcat/
 ifs-web-service/ifs-project-setup-mgt-service/tomcat/
 ifs-web-service/ifs-project-setup-service/tomcat/
+
+# ifs-auth-service secrets
+ifs-auth-service/ifs-sp-service/src/main/docker/certs/
+ifs-auth-service/ifs-idp-service/src/main/docker/certs/
