@@ -7,7 +7,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
-import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -51,7 +51,7 @@ public class OtherDocumentsController {
     }
 
     private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, OtherDocumentsForm form) {
-        ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
+        OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
@@ -64,7 +64,7 @@ public class OtherDocumentsController {
     @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
-        ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
+        OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
 
@@ -76,7 +76,7 @@ public class OtherDocumentsController {
     public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
                                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
-        ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
+        OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("readOnlyView", true);

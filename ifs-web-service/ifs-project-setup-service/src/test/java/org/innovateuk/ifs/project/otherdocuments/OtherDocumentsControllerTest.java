@@ -6,7 +6,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
-import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -64,7 +64,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test the view model
@@ -116,7 +116,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 andExpect(model().attribute("readOnlyView", true)).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         Boolean readOnlyView = (Boolean) result.getModelAndView().getModel().get("readOnlyView");
 
         // test the view model
@@ -162,7 +162,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test the view model
@@ -212,7 +212,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         FileDetailsViewModel expectedCollaborationAgreement = new FileDetailsViewModel(existingCollaborationAgreement);
@@ -264,7 +264,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test the view model
@@ -490,7 +490,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         verify(projectOtherDocumentsService).isOtherDocumentSubmitAllowed(123L);
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
         OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test flags that help to drive the page

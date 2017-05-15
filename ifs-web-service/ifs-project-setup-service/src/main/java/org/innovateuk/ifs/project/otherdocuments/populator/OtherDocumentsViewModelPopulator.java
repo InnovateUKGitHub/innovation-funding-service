@@ -4,7 +4,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
-import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -27,7 +27,7 @@ public class OtherDocumentsViewModelPopulator {
     @Autowired
     private ProjectOtherDocumentsService projectOtherDocumentsService;
 
-    public ProjectOtherDocumentsViewModel populate(Long projectId, UserResource loggedInUser) {
+    public OtherDocumentsViewModel populate(Long projectId, UserResource loggedInUser) {
 
     ProjectResource project = projectService.getById(projectId);
     Optional<FileEntryResource> collaborationAgreement = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
@@ -42,7 +42,7 @@ public class OtherDocumentsViewModelPopulator {
     boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
     ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();
 
-    return new ProjectOtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
+    return new OtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
             collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
             exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
             partnerOrganisationNames, rejectionReasons,
