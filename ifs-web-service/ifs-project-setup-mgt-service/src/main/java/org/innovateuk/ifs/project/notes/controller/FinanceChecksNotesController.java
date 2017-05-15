@@ -131,7 +131,7 @@ public class FinanceChecksNotesController {
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
 
-        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
+        if (projectService.getById(projectId) != null && projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
             saveOriginCookie(response, projectId, organisationId, noteId, loggedInUser.getId());
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
             model.addAttribute("model", populateNoteViewModel(projectId, organisationId, noteId, attachments));
@@ -393,7 +393,7 @@ public class FinanceChecksNotesController {
         if (content.isPresent() && fileDetails.isPresent()) {
             return getFileResponseEntity(content.get(), fileDetails.get());
         } else {
-            return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
         }
     }
 

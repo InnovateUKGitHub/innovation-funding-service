@@ -247,7 +247,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceSuccess(Optional.of(bytes)));
         when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/attachment/1"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isNotFound())
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -484,12 +484,12 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testDownloadCommentAttachmentFailsNoContent() throws Exception {
+    public void testDownloadCommentAttachmentFailsInvalidOrganisation() throws Exception {
 
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment/attachment/1"))
-                .andExpect(status().isNoContent())
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/attachment/1"))
+                .andExpect(status().isForbidden())
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
