@@ -5,7 +5,7 @@ import org.innovateuk.ifs.workflow.resource.OutcomeType;
 /**
  * Represents the events that can be triggered during the Grant Offer Letter process.
  */
-public enum GOLOutcomes implements OutcomeType {
+public enum GrantOfferLetterOutcomes implements OutcomeType {
 
     PROJECT_CREATED("project-created"),
     GOL_REMOVED("gol-removed"),
@@ -16,7 +16,7 @@ public enum GOLOutcomes implements OutcomeType {
 
     String event;
 
-    GOLOutcomes(String event) {
+    GrantOfferLetterOutcomes(String event) {
         this.event = event;
     }
 
