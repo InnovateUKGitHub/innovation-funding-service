@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.otherdocuments;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.otherdocuments.controller.ProjectOtherDocumentsController;
-import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
+import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
+import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.populator.ProjectOtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -13,7 +13,6 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
@@ -40,7 +39,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTest<ProjectOtherDocumentsController> {
+public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
 
     @Spy
     @InjectMocks
@@ -66,7 +65,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
-        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+        OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test the view model
         assertEquals(project.getId(), model.getProjectId());
@@ -164,7 +163,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
-        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+        OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test the view model
         assertEquals(project.getId(), model.getProjectId());
@@ -214,7 +213,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
-        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+        OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         FileDetailsViewModel expectedCollaborationAgreement = new FileDetailsViewModel(existingCollaborationAgreement);
         FileDetailsViewModel expectedExploitationPlan = new FileDetailsViewModel(existingExplotationPlan);
@@ -266,7 +265,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 andReturn();
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
-        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+        OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test the view model
         assertEquals(project.getId(), model.getProjectId());
@@ -380,7 +379,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
-        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+        OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
         assertEquals(2, form.getObjectErrors().size());
         assertEquals(form.getObjectErrors(), form.getBindingResult().getFieldErrors("collaborationAgreement"));
 
@@ -492,7 +491,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         verify(projectOtherDocumentsService).isOtherDocumentSubmitAllowed(123L);
 
         ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
-        ProjectOtherDocumentsForm form = (ProjectOtherDocumentsForm) result.getModelAndView().getModel().get("form");
+        OtherDocumentsForm form = (OtherDocumentsForm) result.getModelAndView().getModel().get("form");
 
         // test flags that help to drive the page
         assertFalse(model.isReadOnly());
@@ -539,7 +538,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     }
 
     @Override
-    protected ProjectOtherDocumentsController supplyControllerUnderTest() {
-        return new ProjectOtherDocumentsController();
+    protected OtherDocumentsController supplyControllerUnderTest() {
+        return new OtherDocumentsController();
     }
 }

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
-import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
+import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.populator.ProjectOtherDocumentsViewModelPopulator;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -31,7 +31,7 @@ import static java.util.Collections.singletonList;
  */
 @Controller
 @RequestMapping("/project/{projectId}/partner/documents")
-public class ProjectOtherDocumentsController {
+public class OtherDocumentsController {
 
     private static final String FORM_ATTR = "form";
 
@@ -46,11 +46,11 @@ public class ProjectOtherDocumentsController {
     public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                          @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
-        ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
+        OtherDocumentsForm form = new OtherDocumentsForm();
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
 
-    private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
+    private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, OtherDocumentsForm form) {
         ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
 
         model.addAttribute("model", viewModel);
@@ -112,7 +112,7 @@ public class ProjectOtherDocumentsController {
     @PostMapping(params = "uploadCollaborationAgreementClicked")
     public String uploadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
@@ -129,7 +129,7 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping(params = "removeCollaborationAgreementClicked")
     public String removeCollaborationAgreementFile(@PathVariable("projectId") final Long projectId,
-                                                   @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                                   @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
                                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                                    ValidationHandler validationHandler,
                                                    Model model,
@@ -163,7 +163,7 @@ public class ProjectOtherDocumentsController {
     @PostMapping(params = "uploadExploitationPlanClicked")
     public String uploadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
@@ -178,7 +178,7 @@ public class ProjectOtherDocumentsController {
         });
     }
 
-    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, OtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToOtherDocumentsPage(projectId);
         Supplier<String> failureView = () -> doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
@@ -189,7 +189,7 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping(params = "removeExploitationPlanClicked")
     public String removeExploitationPlanFile(@PathVariable("projectId") final Long projectId,
-                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                             @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
                                              Model model,

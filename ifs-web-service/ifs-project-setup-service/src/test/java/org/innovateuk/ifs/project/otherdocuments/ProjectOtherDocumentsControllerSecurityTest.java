@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.project.otherdocuments;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.otherdocuments.controller.ProjectOtherDocumentsController;
+import org.innovateuk.ifs.project.otherdocuments.controller.OtherDocumentsController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectOtherDocumentsControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectOtherDocumentsController> {
+public class ProjectOtherDocumentsControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<OtherDocumentsController> {
 
     @Override
-    protected Class<? extends ProjectOtherDocumentsController> getClassUnderTest() {
-        return ProjectOtherDocumentsController.class;
+    protected Class<? extends OtherDocumentsController> getClassUnderTest() {
+        return OtherDocumentsController.class;
     }
 
     @Test
