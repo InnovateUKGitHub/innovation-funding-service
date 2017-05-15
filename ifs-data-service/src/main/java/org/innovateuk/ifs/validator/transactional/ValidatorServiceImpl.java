@@ -12,7 +12,11 @@ import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +48,9 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
 
     @Autowired
     private ValidationUtil validationUtil;
+
+    @Autowired
+    private OrganisationService organisationService;
 
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {
@@ -101,7 +109,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         List<ObjectError> errors = new ArrayList<>();
         FormInput formInput = formInputRepository.findOne(formInputId);
 
-        if(FormInputType.FINANCE_UPLOAD == formInput.getType()) {
+        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
             if (response == null) {
                 errors.add(new ObjectError("value", "validation.field.must.not.be.blank"));
             } else {
@@ -110,5 +118,17 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         }
 
         return errors;
+    }
+
+    private boolean isResearchUser() {
+        Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
+        if(userResult.isPresent()) {
+            Optional<OrganisationResource> organisationResult = organisationService.getPrimaryForUser(userResult.get().getId()).getOptionalSuccessObject();
+            if(organisationResult.isPresent()) {
+                return OrganisationTypeEnum.RESEARCH.getId().equals(organisationResult.get().getOrganisationType());
+            }
+        }
+
+        return false;
     }
 }
