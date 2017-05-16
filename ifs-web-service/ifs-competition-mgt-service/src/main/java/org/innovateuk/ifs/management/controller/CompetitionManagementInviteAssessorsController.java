@@ -111,7 +111,7 @@ public class CompetitionManagementInviteAssessorsController {
     @GetMapping("/invite")
     public String invite(Model model,
                          @PathVariable("competitionId") long competitionId,
-                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                         @ModelAttribute(name = FORM_ATTR_NAME, binding = false) InviteNewAssessorsForm form,
                          @RequestParam(defaultValue = "0") int page,
                          @RequestParam MultiValueMap<String, String> queryParams) {
         if (form.getInvites().isEmpty()) {

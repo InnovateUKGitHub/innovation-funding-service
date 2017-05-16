@@ -5,15 +5,18 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.viewmodel.ApplicationOverviewViewModel;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
+import org.innovateuk.ifs.application.viewmodel.overview.ApplicationOverviewAssignableViewModel;
+import org.innovateuk.ifs.application.viewmodel.overview.ApplicationOverviewCompletedViewModel;
+import org.innovateuk.ifs.application.viewmodel.overview.ApplicationOverviewSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.overview.ApplicationOverviewUserViewModel;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -28,16 +31,15 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.application.ApplicationFormController.MODEL_ATTRIBUTE_FORM;
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+
 
 /**
  * view model for the application overview page
@@ -76,9 +78,6 @@ public class ApplicationOverviewModelPopulator {
     private SectionService sectionService;
 
     @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
-
-    @Autowired
     private ProjectService projectService;
 
     @Autowired
@@ -87,45 +86,36 @@ public class ApplicationOverviewModelPopulator {
     @Autowired
     private ApplicantRestService applicantRestService;
     
-    public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
-        ApplicationResource application = applicationService.getById(applicationId);
+    public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
-        ProjectResource projectResource = projectService.getByApplicationId(applicationId);
+        ProjectResource projectResource = projectService.getByApplicationId(application.getId());
 
-        if(form == null){
-            form = new ApplicationForm();
-        }
-        form.setApplication(application);
-        addUserDetails(model, application, userId);
+        ApplicationOverviewUserViewModel userViewModel = getUserDetails(application, userId);
+        ApplicationOverviewAssignableViewModel assignableViewModel = getAssignableDetails(application, userOrganisation.orElse(null), userId);
+        ApplicationOverviewCompletedViewModel completedViewModel = getCompletedDetails(application, userOrganisation);
+        ApplicationOverviewSectionViewModel sectionViewModel = getSections(competition, application, userId);
+        Long yourFinancesSectionId = getYourFinancesSectionId(application);
 
-        addAssignableDetails(model, application, userOrganisation.orElse(null), userId);
-        addCompletedDetails(model, application, userOrganisation);
-        addSections(model, competition, userId, applicationId);
-        addYourFinancesStatus(model, application);
+        Integer completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
 
-        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
-        model.addAttribute("currentApplication", application);
-        model.addAttribute("currentProject", projectResource);
-        model.addAttribute("currentCompetition", competition);
-        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        model.addAttribute("completedQuestionsPercentage", application.getCompletion() == null ? 0 : application.getCompletion().intValue());
+        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
 
-        FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
-        model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
-        model.addAttribute("researchCategories", categoryRestService.getResearchCategories().getSuccessObjectOrThrowException());
+        return new ApplicationOverviewViewModel(application, projectResource, competition, userOrganisation.orElse(null),
+                completedQuestionsPercentage, yourFinancesSectionId, userViewModel, assignableViewModel, completedViewModel, sectionViewModel,
+                researchCategories);
     }
     
-    private void addSections(Model model, CompetitionResource competition, Long userId, Long applicationId) {
+    private ApplicationOverviewSectionViewModel getSections(CompetitionResource competition, ApplicationResource application, Long userId) {
         final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
-        final List<ApplicantSectionResource> parentApplicantSections = parentSections.stream().map(sectionResource -> applicantRestService.getSection(userId, applicationId, sectionResource.getId())).collect(Collectors.toList());
+        final List<ApplicantSectionResource> parentApplicantSections = parentSections.stream().map(sectionResource -> applicantRestService.getSection(userId, application.getId(), sectionResource.getId())).collect(Collectors.toList());
 
         final SortedMap<Long, SectionResource> sections = CollectionFunctions.toSortedMap(parentSections, SectionResource::getId,
                 Function.identity());
 
-        final Map<Long, List<SectionResource>>   subSections = parentSections.stream()
+        final Map<Long, List<SectionResource>> subSections = parentSections.stream()
             .collect(Collectors.toMap(
                 SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
             ));
@@ -146,7 +136,7 @@ public class ApplicationOverviewModelPopulator {
         }
 
         Map<Long, AssignButtonsViewModel> assignButtonViewModels = new HashMap<>();
-
+//TODO
         parentApplicantSections.forEach(applicantSectionResource -> {
             applicantSectionResource.getApplicantQuestions().forEach(questionResource -> {
                 assignButtonViewModels.put(questionResource.getQuestion().getId(), assignButtonsPopulator.populate(applicantSectionResource, questionResource, questionResource.isCompleteByApplicant(applicantSectionResource.getCurrentApplicant())));
@@ -154,12 +144,7 @@ public class ApplicationOverviewModelPopulator {
         });
 
 
-        model.addAttribute("sections", sections);
-        model.addAttribute("subSections", subSections);
-        model.addAttribute("sectionQuestions", sectionQuestions);
-        model.addAttribute("assignButtonViewModels", assignButtonViewModels);
-        model.addAttribute("hasFinanceSection", hasFinanceSection);
-        model.addAttribute("financeSectionId", financeSectionId);
+        return new ApplicationOverviewSectionViewModel(sections, subSections, sectionQuestions, financeSections, hasFinanceSection, financeSectionId, assignButtonViewModels);
     }
 
     private List<SectionResource> getFinanceSectionIds(List<SectionResource> sections){
@@ -178,21 +163,20 @@ public class ApplicationOverviewModelPopulator {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    private void addUserDetails(Model model, ApplicationResource application, Long userId) {
+    private ApplicationOverviewUserViewModel getUserDetails(ApplicationResource application, Long userId) {
         Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
-        model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
-        model.addAttribute("leadApplicant", leadApplicant);
-        model.addAttribute("ableToSubmitApplication", userIsLeadApplicant && application.isSubmittable());
+        return new ApplicationOverviewUserViewModel(userIsLeadApplicant, leadApplicant,
+                userIsLeadApplicant && application.isSubmittable());
     }
 
-    private void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
-        Long userId) {
-
-        if (isApplicationInViewMode(model, application, userOrganisation))
-            return;
+    private ApplicationOverviewAssignableViewModel getAssignableDetails(ApplicationResource application, OrganisationResource userOrganisation,
+                                                                        Long userId) {
+        if (isApplicationInViewMode(application, userOrganisation)) {
+            return new ApplicationOverviewAssignableViewModel();
+        }
 
         Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
 
@@ -200,22 +184,13 @@ public class ApplicationOverviewModelPopulator {
         questionService.removeNotifications(notifications);
         List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
 
-        model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
-        model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
-        model.addAttribute("questionAssignees", questionAssignees);
-        model.addAttribute("notifications", notifications);
+        Future<List<ProcessRoleResource>> assignableUsers = processRoleService.findAssignableProcessRoles(application.getId());
+
+        return new ApplicationOverviewAssignableViewModel(assignableUsers, pendingAssignableUsers, questionAssignees, notifications);
     }
 
-    private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
-        if(!application.isOpen() || userOrganisation == null){
-            //Application Not open, so add empty lists
-            model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
-            model.addAttribute("pendingAssignableUsers", new ArrayList<ApplicationInviteResource>());
-            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
-            model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
-            return true;
-        }
-        return false;
+    private boolean isApplicationInViewMode(ApplicationResource application, OrganisationResource userOrganisation) {
+        return !application.isOpen() || userOrganisation == null;
     }
 
     private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {
@@ -228,20 +203,18 @@ public class ApplicationOverviewModelPopulator {
                 .collect(Collectors.toList()));
     }
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-
+    private ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 
-        model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
-        model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
-        model.addAttribute("markedAsComplete", markedAsComplete);
+        Boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
+        Boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation, completedSectionsByOrganisation);
 
-        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", completedSectionsByOrganisation.get(org.getId())));
-        Boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(model, application, userOrganisation, completedSectionsByOrganisation);
-        model.addAttribute("userFinanceSectionCompleted", userFinanceSectionCompleted);
+        ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
+        userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
 
+        return viewModel;
     }
 
     private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
@@ -254,8 +227,7 @@ public class ApplicationOverviewModelPopulator {
     }
 
 
-    private Boolean isUserFinanceSectionCompleted(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
-
+    private Boolean isUserFinanceSectionCompleted(ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, FINANCE);
 
@@ -266,15 +238,16 @@ public class ApplicationOverviewModelPopulator {
         return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
     }
 
-    private void addYourFinancesStatus(Model model, ApplicationResource application) {
+    private Long getYourFinancesSectionId(ApplicationResource application) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
-        Long financeSectionId=null;
+        Long financeSectionId = null;
         if (!financeSections.isEmpty()) {
             financeSectionId = financeSections.get(0).getId();
         }
-        model.addAttribute("financeSectionId", financeSectionId);
+
+        return financeSectionId;
     }
 
     private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
@@ -282,28 +255,10 @@ public class ApplicationOverviewModelPopulator {
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId=0L;
+        Long organisationId = 0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
         }
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
-    }
-
-    private FileDetailsViewModel getAssessorFeedbackViewModel(ApplicationResource application) {
-
-        if (!application.hasPublishedAssessorFeedback()) {
-            return null;
-        }
-
-        RestResult<FileEntryResource> fileEntryResult = assessorFeedbackRestService.getAssessorFeedbackFileDetails(application.getId());
-
-        if (fileEntryResult.isFailure()) {
-            LOG.error("Should have been able to find FileEntry " + application.getAssessorFeedbackFileEntry() +
-                    " for Assessor Feedback for application " + application.getId() + " - returning null");
-            return null;
-        }
-
-        FileEntryResource fileEntry = fileEntryResult.getSuccessObject();
-        return new FileDetailsViewModel(fileEntry);
     }
 }

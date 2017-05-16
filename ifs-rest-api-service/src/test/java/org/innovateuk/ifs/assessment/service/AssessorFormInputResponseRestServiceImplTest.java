@@ -5,18 +5,18 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateReso
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
+import static org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServiceImpl.assessorFormInputResponseRestUrl;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorFormInputResponseResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
@@ -24,18 +24,16 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServiceUnitTest<AssessorFormInputResponseRestServiceImpl> {
-    private static String assessorFormInputResponseRestUrl = "/assessment";
 
     @Override
     protected AssessorFormInputResponseRestServiceImpl registerRestServiceUnderTest() {
         AssessorFormInputResponseRestServiceImpl assessorFormInputResponseRestService = new AssessorFormInputResponseRestServiceImpl();
-        assessorFormInputResponseRestService.setAssessorFormInputResponseRestUrl(assessorFormInputResponseRestUrl);
         return assessorFormInputResponseRestService;
     }
 
     @Test
     public void testGetAllAssessorFormInputResponses() throws Exception {
-        List<AssessorFormInputResponseResource> expected = Arrays.asList(1,2,3).stream().map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
+        List<AssessorFormInputResponseResource> expected = Stream.of(1,2,3).map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
 
         Long assessmentId = 1L;
 
@@ -46,7 +44,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
 
     @Test
     public void testGetAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
-        List<AssessorFormInputResponseResource> expected = Arrays.asList(1,2,3).stream().map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
+        List<AssessorFormInputResponseResource> expected = Stream.of(1,2,3).map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
 
         Long assessmentId = 1L;
         Long questionId = 2L;
@@ -79,7 +77,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         long applicationId = 7;
         Map<Long, BigDecimal> expectedScores = new HashMap<>();
         expectedScores.put(17L, new BigDecimal(20));
-        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(13, 11, expectedScores, 17);
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(true, 13, 11, expectedScores, 17);
 
         setupGetWithRestResultExpectations(format("%s/application/%s/scores", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentAggregateResource.class, expected, OK);
         ApplicationAssessmentAggregateResource response = service.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException();

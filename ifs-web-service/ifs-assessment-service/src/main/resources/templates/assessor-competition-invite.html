@@ -5,14 +5,19 @@
     </head>
 
     <body th:with="context='assessment'" class="app-dashboard">
-        <th:block th:insert="fragments/modals :: modal-overlay" />
-        <th:block th:insert="fragments/assessment :: assessor-reject-competition-modal (inviteHash=${model.competitionInviteHash})" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='heading-xlarge'" />
+
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                </ul>
+            </div>
 
             <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
@@ -27,10 +32,10 @@
             </section>
 
             <section>
-                <!--/*h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
+                <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
                 <p th:text="${model.competitionDescription}">Description of the competition.</p>
 
-                <p><a href="#" rel="external">See competition brief</a></p/*/-->
+                <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief</a></p>
 
                 <h3 class="heading-small">You should reject this invitation if:</h3>
                 <ul class="list list-bullet">
@@ -41,17 +46,70 @@
                 </ul>
             </section>
 
-            <form th:action="@{/invite/competition/{inviteHash}/accept(inviteHash=${model.competitionInviteHash})}" method="POST">
-                <fieldset>
-                    <legend class="visuallyhidden">Are you available to assess this competition?</legend>
-                    <h2 class="heading-medium">Are you available to assess this competition?</h2>
+            <form th:action="@{/invite/competition/{inviteHash}/decision(inviteHash=${model.competitionInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="heading-medium">
+                            Select your ability to assess the competition
+                            <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                            </th:block>
+                        </legend>
 
-                    <p th:if="${!model.userLoggedIn}">If you are available you will be taken through the account creation process. As this is a new service, existing assessors with Innovate UK will also need to create an account and sign our terms and conditions.</p>
+                        <label class="block-label selection-button-radio" for="acceptCompetition">
+                            <input id="acceptCompetition" value="true" type="radio" required="required"
+                                   th:field="*{acceptInvitation}"/>
+                            Yes, I am able to assess applications to this competition
+                            <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
+                        </label>
 
-                    <button class="button large extra-margin" type="submit" th:text="${model.userLoggedIn} ? 'Yes' : 'Yes, create account'">Yes, create account</button>
+                        <label class="block-label selection-button-radio" for="rejectCompetition" data-target="reject-competition">
+                            <input id="rejectCompetition" value="false" type="radio" required="required"
+                                   th:field="*{acceptInvitation}"/>
+                            No, I am not able to assess applications to this competition
+                        </label>
 
-                    <a class="button button-warning large extra-margin" th:href="@{/invite/competition/{inviteHash}/reject/confirm(inviteHash=${model.competitionInviteHash})}" data-js-modal="reject-competition-modal">No</a>
-                </fieldset>
+                        <div class="panel js-hidden" id="reject-competition">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
+                                <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
+                                    Please select a reason for rejecting the competition
+                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
+                                    </th:block>
+                                </label>
+                                <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+                                    <option value="">Select a reason</option>
+                                    <option th:each="reason : ${rejectionReasons}"
+                                            th:value="${reason.id}"
+                                            th:text="${reason.reason}"
+                                            value="1">Not available</option>
+                                </select>
+                            </div>
+                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+                                <label class="form-label" th:for="${#ids.next('rejectComment')}">
+                                    Use this space to provide more information
+                                    <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                                    </th:block>
+                                </label>
+                                <textarea class="form-control width-full"
+                                          maxlength="5000"
+                                          data-max_words="100"
+                                          data-maxwordslength="100"
+                                          data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                          th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                          th:errorclass="field-error"
+                                          rows="4"
+                                          th:field="*{rejectComment}"></textarea>
+                                <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button class="button" type="submit">Confirm</button>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

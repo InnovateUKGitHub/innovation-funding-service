@@ -8,7 +8,7 @@ import java.time.LocalDate;
 /**
  * Holder of model attributes for the Application Detail view shown as part of the assessment journey.
  */
-public class AssessmentFeedbackApplicationDetailsViewModel {
+public class AssessmentFeedbackApplicationDetailsViewModel extends BaseAssessmentFeedbackViewModel {
 
     private long applicationId;
     private String applicationName;

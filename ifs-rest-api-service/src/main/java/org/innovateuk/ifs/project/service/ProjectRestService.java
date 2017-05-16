@@ -3,14 +3,11 @@ package org.innovateuk.ifs.project.service;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.springframework.core.io.ByteArrayResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,30 +40,6 @@ public interface ProjectRestService {
 
     RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId);
 
-    RestResult<Optional<ByteArrayResource>> getSignedGrantOfferLetterFile(Long projectId);
-
-    RestResult<Optional<FileEntryResource>> getSignedGrantOfferLetterFileDetails(Long projectId);
-
-    RestResult<FileEntryResource> addSignedGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
-    RestResult<Void> removeGrantOfferLetter(Long projectId);
-
-    RestResult<Void> removeSignedGrantOfferLetter(Long projectId);
-
-    RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);
-
-    RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId);
-
-    RestResult<Optional<ByteArrayResource>> getGrantOfferFile(Long projectId);
-
-    RestResult<Optional<FileEntryResource>> getGrantOfferFileDetails(Long projectId);
-
-    RestResult<Void> submitGrantOfferLetter(Long projectId);
-
-    RestResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
-
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 
     RestResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);
@@ -77,15 +50,4 @@ public interface ProjectRestService {
 
     RestResult<ProjectUserResource> getProjectManager(Long projectId);
 
-    RestResult<Void> sendGrantOfferLetter(Long projectId);
-
-    RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
-
-    RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
-
-    RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
-
-    RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
-
-    RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
 }

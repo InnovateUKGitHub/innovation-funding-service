@@ -17,12 +17,11 @@ import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.viewmodel.*;
+import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.AutosaveElementException;
@@ -149,9 +148,6 @@ public class ApplicationFormController {
     private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
     @Autowired
@@ -211,13 +207,13 @@ public class ApplicationFormController {
 
     @ProfileExecution
     @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
-    public String showQuestion(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
+    public String showQuestion(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                @SuppressWarnings("unused") ValidationHandler validationHandler,
                                Model model,
                                @PathVariable(APPLICATION_ID) final Long applicationId,
                                @PathVariable(QUESTION_ID) final Long questionId,
-                               @ModelAttribute("loggedInUser") UserResource user) {
+                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
 
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
@@ -234,7 +230,7 @@ public class ApplicationFormController {
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
-            @ModelAttribute("loggedInUser") UserResource user) {
+            @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
@@ -253,10 +249,10 @@ public class ApplicationFormController {
 
     @ProfileExecution
     @GetMapping(SECTION_URL + "{sectionId}")
-    public String applicationFormWithOpenSection(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form, BindingResult bindingResult, Model model,
+    public String applicationFormWithOpenSection(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
-                                                 @ModelAttribute("loggedInUser") UserResource user) {
+                                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection);
@@ -281,7 +277,7 @@ public class ApplicationFormController {
                                      Model model,
                                      @PathVariable(APPLICATION_ID) final Long applicationId,
                                      @PathVariable(QUESTION_ID) final Long questionId,
-                                     @ModelAttribute("loggedInUser") UserResource user,
+                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
 
@@ -383,12 +379,12 @@ public class ApplicationFormController {
     }
 
     @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
-    public String addCostRow(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
+    public String addCostRow(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
                              @PathVariable(APPLICATION_ID) final Long applicationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
-                             @ModelAttribute("loggedInUser") UserResource user) {
+                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
         FinanceRowItem costItem = addCost(applicationId, questionId, user);
         FinanceRowType costType = costItem.getCostType();
         Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
@@ -421,7 +417,7 @@ public class ApplicationFormController {
                                                    CompetitionResource competition,
                                                    ApplicationForm form,
                                                    Long sectionId, QuestionResource question,
-                                                   @ModelAttribute("loggedInUser") UserResource user,
+                                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response, BindingResult bindingResult, Boolean validFinanceTerms) {
 
@@ -708,7 +704,7 @@ public class ApplicationFormController {
                                         Model model,
                                         @PathVariable(APPLICATION_ID) final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
-                                        @ModelAttribute("loggedInUser") UserResource user,
+                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
 
@@ -955,7 +951,7 @@ public class ApplicationFormController {
                                     @RequestParam("value") String value,
                                     @PathVariable(APPLICATION_ID) Long applicationId,
                                     @PathVariable("competitionId") Long competitionId,
-                                    @ModelAttribute("loggedInUser") UserResource user,
+                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                     HttpServletRequest request) {
         List<String> errors = new ArrayList<>();
         Long fieldId = null;
@@ -1106,7 +1102,7 @@ public class ApplicationFormController {
     }
 
     private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
-                                @ModelAttribute("loggedInUser") UserResource user,
+                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                 HttpServletRequest request) {
 
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);

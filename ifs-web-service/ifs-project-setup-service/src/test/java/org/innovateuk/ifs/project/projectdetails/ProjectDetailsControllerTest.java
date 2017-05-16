@@ -31,9 +31,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static java.lang.String.format;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
@@ -47,7 +50,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.project.AddressLookupBaseController.FORM_ATTR_NAME;
-import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
+import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -58,9 +61,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -101,7 +102,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -153,7 +154,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -781,6 +782,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         assertTrue(model.getInvitedUsers().isEmpty());
     }
+
     @Test
     public void testViewProjectDetailsInReadOnly() throws Exception {
         Long projectId = 15L;
@@ -805,10 +807,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                         build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
                 build();
-
-
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
@@ -837,6 +837,54 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertFalse(model.isSubmitProjectDetailsAllowed());
         assertFalse(model.isAnySectionIncomplete());
         assertTrue(model.isReadOnly());
+    }
+
+    @Test
+    public void testConfirmProjectDetails() throws Exception {
+        Long projectId = 20L;
+        Long applicationId = 1L;
+        String projectName = "current project";
+        Boolean isSubmissionAllowed = TRUE;
+
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationId)
+                .withName(projectName)
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(isSubmissionAllowed));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/confirm-project-details", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/confirm-project-details"))
+                .andReturn();
+
+        Map<String, Object> modelMap =  result.getModelAndView().getModel();
+        assertEquals(projectId, modelMap.get("projectId"));
+        assertEquals(projectName, modelMap.get("projectName"));
+        assertEquals(applicationId, modelMap.get("applicationId"));
+    }
+
+    @Test
+    public void testConfirmProjectDetails_submissionNotAllowed() throws Exception {
+        Long projectId = 20L;
+        Long applicationId = 1L;
+        String projectName = "current project";
+        Boolean isSubmissionAllowed = FALSE;
+
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationId)
+                .withName(projectName)
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(isSubmissionAllowed));
+
+        mockMvc.perform(get("/project/{id}/confirm-project-details", projectId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/project/%s/details", projectId)));
     }
 }
 

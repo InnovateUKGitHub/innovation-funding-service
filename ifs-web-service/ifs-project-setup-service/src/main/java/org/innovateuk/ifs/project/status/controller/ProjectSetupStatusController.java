@@ -29,7 +29,7 @@ public class ProjectSetupStatusController {
 
     @GetMapping("/{projectId}")
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId,
-                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                          NativeWebRequest springRequest) {
 
         HttpServletRequest request = springRequest.getNativeRequest(HttpServletRequest.class);

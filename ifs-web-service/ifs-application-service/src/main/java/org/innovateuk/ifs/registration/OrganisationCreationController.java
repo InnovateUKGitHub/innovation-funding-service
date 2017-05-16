@@ -125,7 +125,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"})
-    public String createOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+    public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
@@ -157,7 +157,7 @@ public class OrganisationCreationController {
         return searchLabel;
     }
 
-    private OrganisationCreationForm getFormDataFromCookie(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
+    private OrganisationCreationForm getFormDataFromCookie(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
         BindingResult bindingResult;// Merge information from cookie into ModelAttribute.
         String organisationFormJson = cookieUtil.getCookieValue(request, ORGANISATION_FORM);
 
@@ -232,7 +232,7 @@ public class OrganisationCreationController {
         return false;
     }
 
-    private void organisationFormValidate(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
+    private void organisationFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
         if (organisationForm.isTriedToSave() && !organisationForm.isUseSearchResultAddress()) {
             if (organisationForm.getAddressForm().getSelectedPostcode() != null) {
                 validator.validate(organisationForm.getAddressForm().getSelectedPostcode(), addressBindingResult);
@@ -242,7 +242,7 @@ public class OrganisationCreationController {
         }
     }
 
-    private void searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm) {
+    private void searchOrganisation(OrganisationCreationForm organisationForm) {
         if (organisationForm.isOrganisationSearching()) {
             if (StringUtils.isNotBlank(organisationForm.getOrganisationSearchName())) {
                 String trimmedSearchString = StringUtils.normalizeSpace(organisationForm.getOrganisationSearchName());
@@ -293,7 +293,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
-    public String amendOrganisationAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+    public String amendOrganisationAddress(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                            Model model,
                                            @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                            HttpServletRequest request,
@@ -329,7 +329,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{selectedPostcodeIndex}")
-    public String amendOrganisationAddressPostCode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+    public String amendOrganisationAddressPostCode(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                                    Model model,
                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                                    HttpServletRequest request,
@@ -354,7 +354,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping("/selected-organisation/{searchOrganisationId}/search-postcode")
-    public String amendOrganisationAddressPostcode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+    public String amendOrganisationAddressPostcode(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                                    Model model,
                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                                    @RequestParam(value="searchTerm", required=false) String searchTerm,
@@ -446,8 +446,7 @@ public class OrganisationCreationController {
                                    BindingResult bindingResult,
                                    Model model,
                                    HttpServletRequest request, HttpServletResponse response,
-                                   @RequestHeader(value = REFERER, required = false) final String referer
-    ) {
+                                   @RequestHeader(value = REFERER, required = false) final String referer) {
         organisationForm.setTriedToSave(true);
         addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
@@ -456,8 +455,6 @@ public class OrganisationCreationController {
         validator.validate(organisationForm, bindingResult);
         BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
         organisationFormValidate(organisationForm, bindingResult, addressBindingResult);
-
-
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
@@ -490,14 +487,15 @@ public class OrganisationCreationController {
     }
 
     @PostMapping("/" + LEAD_ORGANISATION_TYPE)
-    public String confirmSelectOrganisationType(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+    public String confirmSelectOrganisationType(Model model,
+                                                @Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                 BindingResult bindingResult,
-                                                Model model,
                                                 HttpServletResponse response) {
 
         OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
-        if (!isValidLeadOrganisationType(selectOrgTypeViewModel, organisationForm.getOrganisationTypeId())) {
-            bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "{validation.standard.organisationtype.required}"));
+        if (organisationForm.getOrganisationTypeId() != null &&
+                !isValidLeadOrganisationType(selectOrgTypeViewModel, organisationForm.getOrganisationTypeId())) {
+            bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
         }
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
@@ -517,7 +515,6 @@ public class OrganisationCreationController {
     }
 
     private boolean isValidLeadOrganisationType(OrganisationCreationSelectTypeViewModel viewModel, Long organisationTypeId) {
-
         return viewModel.getTypes()
                 .stream()
                 .anyMatch(validOrganisationType -> organisationTypeId.equals(validOrganisationType.getId()));
@@ -528,7 +525,7 @@ public class OrganisationCreationController {
      * Confirm the company details (user input, not from company-house)
      */
     @GetMapping("/" + CONFIRM_ORGANISATION)
-    public String confirmCompany(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+    public String confirmCompany(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
                                  HttpServletRequest request) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -550,7 +547,7 @@ public class OrganisationCreationController {
     }
 
     @GetMapping("/save-organisation")
-    public String saveOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
@@ -604,7 +601,6 @@ public class OrganisationCreationController {
             );
         }
     }
-
 
     private List<AddressResource> searchPostcode(String postcodeInput) {
         RestResult<List<AddressResource>>  addressLookupRestResult =

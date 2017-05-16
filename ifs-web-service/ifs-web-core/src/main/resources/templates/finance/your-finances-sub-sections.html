@@ -94,14 +94,21 @@
     <th:block th:fragment="subsection_buttons (model)">
         <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
             <div class="form-footer__actions">
-                <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete</button>
-                <button th:if="${model.complete}" type="submit" name="mark_section_as_incomplete" class="buttonlink">Edit</button>
+                <button id="mark-all-as-complete"
+                        th:unless="${model.complete}"
+                        type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
+                </button>
+                <button th:if="${model.complete}"
+                        type="submit" name="mark_section_as_incomplete" class="buttonlink"
+                        th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
+                </button>
             </div>
         </div>
         <div>
-            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}" class="button-secondary extra-margin">
-                Return to finances
-            </a>
+            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
+               class="extra-margin"
+               th:classappend="${model.complete} ? 'button-secondary' : 'button'"
+               th:text="${model.complete} ? 'Return to finances' : 'Save and return to finances'"></a>
         </div>
     </th:block>
 

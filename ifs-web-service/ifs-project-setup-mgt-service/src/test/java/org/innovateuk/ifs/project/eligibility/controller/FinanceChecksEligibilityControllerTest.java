@@ -478,7 +478,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long organisationId = 2L;
         Long costId = 3L;
 
-        when(projectFinanceRowRestService.delete(costId)).thenReturn(restSuccess());
+        when(projectFinanceRowRestService.delete(projectId, organisationId, costId)).thenReturn(restSuccess());
         mockMvc.perform(
                 get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/remove_cost/{costId}", projectId, organisationId, costId)).
                 andExpect(status().isOk());;

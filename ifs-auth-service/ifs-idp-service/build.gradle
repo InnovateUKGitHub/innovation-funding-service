@@ -1,0 +1,95 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'docker'
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath "se.transmode.gradle:gradle-docker:1.2"
+    }
+}
+
+dependencies{
+    runtime project(path: ':ifs-auth-service:ifs-registration-service', configuration: 'war')
+}
+
+def String idpCertsVolume = 'src/main/docker/certs'
+
+def String idpProxyKeyFile = "${idpCertsVolume}/idp_proxy_key.pem"
+def String idpProxyCertificateFile = "${idpCertsVolume}/idp_proxy_certificate.pem"
+def String idpProxyCacertificateFile = "${idpCertsVolume}/idp_proxy_cacertificate.pem"
+
+def String spProxyCertificateFile = "${idpCertsVolume}/sp_proxy_certificate.pem"
+
+def String idpSigningKeyFile = "${idpCertsVolume}/idp-signing.key"
+def String idpSigningCertificateFile = "${idpCertsVolume}/idp-signing.crt"
+def String idpEncryptionKeyFile = "${idpCertsVolume}/idp-encryption.key"
+def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
+
+def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"1234567890"
+
+task prepareDockerFile(type: Copy) {
+    dependsOn ':ifs-auth-service:prepareSecrets'
+
+    doFirst {
+        assert file(idpProxyKeyFile).exists() 
+        assert file(idpProxyCertificateFile).exists() 
+        assert file(idpProxyCacertificateFile).exists() 
+
+        assert file(idpSigningKeyFile).exists() 
+        assert file(idpSigningCertificateFile).exists() 
+        assert file(idpEncryptionKeyFile).exists() 
+        assert file(idpEncryptionCertificateFile).exists() 
+    }
+
+    outputs.upToDateWhen { false }
+
+    from 'src/main/docker/'
+    into 'src/main/docker/'
+    include 'Dockerfile-template'
+    rename 'Dockerfile-template', 'Dockerfile'
+    filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
+                                   version: project.properties['version']])
+}
+
+task buildDocker(type: Docker) {
+    dependsOn ':ifs-auth-service:ifs-registration-service:build'
+    dependsOn prepareDockerFile
+
+    push = false
+    applicationName = 'idp-service'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from fileTree('src/main/docker/apache')
+            into "${stageDir}/apache"
+        }
+        copy {
+            from fileTree('src/main/docker/idp')
+            into "${stageDir}/idp"
+        }
+        copy {
+            from fileTree('src/main/docker/scripts')
+            into "${stageDir}/scripts"
+        }
+        copy {
+            from fileTree('src/main/docker/pages')
+            into "${stageDir}/pages"
+        }
+        copy {
+            from file('src/main/docker/default-jre-headless-dummy_1.0_all.deb')
+            into stageDir
+        }
+        copy {
+            from fileTree('src/main/docker/certs')
+            into "${stageDir}/certs"
+        }
+        configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts
+                .each { artifact ->
+            project.copy {
+                from artifact.file
+                into "${stageDir}/idp"
+            }
+        }
+    }
+}

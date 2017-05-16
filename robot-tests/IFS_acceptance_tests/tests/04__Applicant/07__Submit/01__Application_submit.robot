@@ -108,7 +108,7 @@ Status of the submitted application
 *** Keywords ***
 the applicant clicks Yes in the submit modal
     the user clicks the button/link    jQuery=.button:contains("Submit application")
-    the user clicks the button/link    jQuery=input[value*="Yes, I want to submit my application"]
+    the user clicks the button/link    jQuery=.button:contains("Yes, I want to submit my application")
 
 the user marks the first section as incomplete
     The user clicks the button/link    link=Project summary
