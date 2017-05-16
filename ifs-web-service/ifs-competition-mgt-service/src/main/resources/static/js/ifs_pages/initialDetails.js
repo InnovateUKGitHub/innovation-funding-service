@@ -15,23 +15,39 @@ IFS.competitionManagement.initialDetails = (function () {
       })
 
       IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
-      IFS.competitionManagement.initialDetails.handleInnovationArea(true)
+      IFS.competitionManagement.initialDetails.handleInnovationArea()
+      IFS.competitionManagement.initialDetails.rebindInnovationAreas()
+    },
+    rebindInnovationAreas: function () {
+      jQuery('.competition-management.competition-setup [name^="innovationAreaCategoryIds"]').unbind('change')
       jQuery('.competition-management.competition-setup').on('change', '[name^="innovationAreaCategoryIds"]', function () {
-        IFS.competitionManagement.initialDetails.handleInnovationArea(false)
+        IFS.competitionManagement.initialDetails.handleInnovationArea()
         IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
         IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
       })
     },
-    handleInnovationArea: function (pageLoad) {
-      var sector = jQuery('[name^="innovationAreaCategoryIds"]').val()
+    handleInnovationArea: function () {
       var multipleRowsButton = jQuery('[data-add-row="innovationArea"]')
-      var isShowingAll = sector === '-1'
+      var isShowingAll = IFS.competitionManagement.initialDetails.hasAllInnovationArea()
 
       multipleRowsButton.attr('aria-hidden', isShowingAll)
       if (isShowingAll) {
         jQuery('[id*="innovation-row"]').not('#innovation-row-0').remove()
+        IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
+        jQuery('#innovation-row-0 select').val('-1')
         IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
       }
+    },
+    hasAllInnovationArea: function () {
+      var hasAllInnovationArea = false
+      jQuery('[name^="innovationAreaCategoryIds"]').each(function (index, el) {
+        if (jQuery(el).val() === '-1') {
+          hasAllInnovationArea = true
+          return false
+        }
+      })
+
+      return hasAllInnovationArea
     },
     handleInnovationSector: function (pageLoad) {
       var sector = jQuery('[name="innovationSectorCategoryId"]').val()
