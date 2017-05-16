@@ -213,7 +213,7 @@ tr.form-group-row.error {
   background-position: 4px 50%;
 
   .error-message {
-    display: none;
+    @extend .visually-hidden
   }
 
   > *:first-child{

@@ -74,7 +74,7 @@ IFS.core.formValidation = (function () {
         fields: '[type="tel"]:not([readonly])',
         messageInvalid: 'Please enter a valid phone number.'
       },
-      typeTimeout: 1500,
+      typeTimeout: 300,
       // data-{{type}}-showmessage will define how the errors will be shown,
       // none = nothing happens and we are just running the check
       // visuallyhidden = in the dom, not visible for users but visible for screen readers
@@ -88,7 +88,18 @@ IFS.core.formValidation = (function () {
       IFS.core.formValidation.initValidation()
     },
     initValidation: function () {
-      jQuery('body').on('change keyup paste ifsValidate', s.passwordPolicy.fields.password, function (event) { IFS.core.formValidation.checkPasswordPolicy(jQuery(this), event.type) })
+      jQuery('body').on('change keyup paste ifsValidate', s.passwordPolicy.fields.password, function (e) {
+        var field = jQuery(this)
+        switch (e.type) {
+          case 'keyup':
+            clearTimeout(window.IFS.core.formValidationTimer)
+            window.IFS.core.formValidationTimer = setTimeout(function () { IFS.core.formValidation.checkPasswordPolicy(jQuery(field), false) }, s.typeTimeout)
+            break
+          default:
+            IFS.core.formValidation.checkPasswordPolicy(jQuery(field), true)
+        }
+      })
+
       jQuery('body').on('change ifsValidate', s.email.fields, function () { IFS.core.formValidation.checkEmail(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.number.fields, function () { IFS.core.formValidation.checkNumber(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.min.fields, function () { IFS.core.formValidation.checkMin(jQuery(this)) })
@@ -117,7 +128,7 @@ IFS.core.formValidation = (function () {
       })
       IFS.core.formValidation.betterMinLengthSupport()
     },
-    checkPasswordPolicy: function (field, eventType) {
+    checkPasswordPolicy: function (field, errorStyles) {
       var hasUppercase = IFS.core.formValidation.checkFieldContainsUppercase(field)
       var hasNumber = IFS.core.formValidation.checkFieldContainsNumber(field)
       var isMinlength = IFS.core.formValidation.checkMinLength(field)
@@ -125,10 +136,7 @@ IFS.core.formValidation = (function () {
       var formGroup = field.closest('.form-group')
 
       var confirmsToPasswordPolicy = hasUppercase && hasNumber && isMinlength && isFilledOut
-      console.log('hasUppercase', hasUppercase, 'hasNumber', hasNumber, 'isMinlength', isMinlength, 'isFilledOut', isFilledOut)
-      console.log(eventType)
-
-      if (eventType !== 'keyup') {
+      if (errorStyles) {
         if (confirmsToPasswordPolicy) {
           formGroup.removeClass('error')
           field.removeClass('field-error')

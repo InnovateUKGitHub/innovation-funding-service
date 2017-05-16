@@ -127,6 +127,7 @@ Reset password user enters new psw
     [Tags]    Email    HappyPath
     [Setup]    Clear the login fields
     When the user enters text to a text field    id=id_password    Passw0rdnew
+    And the user moves focus to the element    jQuery=input[value*="Save password"]
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     Then the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
