@@ -85,7 +85,7 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               INFUND-8501 As partner I want to be able to view all originally submitted application finance details against the revisions made during the Finance Checks eligibility section so that I can make a clear comparison
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom Suite Teardown
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
@@ -1906,6 +1906,10 @@ Non Lead-Partner can view only the external version of Finance Checks Eligibilit
     Then the user should see the element    css=input[id="total-cost"][value="£ 114,256"]
 
 *** Keywords ***
+Custom Suite Teardown
+    the user closes the browser
+    Delete the emails from both test mailboxes
+
 the table row has expected values
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 503,248
