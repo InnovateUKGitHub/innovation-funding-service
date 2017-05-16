@@ -8,13 +8,14 @@ IFS.core.collapsible = (function () {
   return {
     settings: {
       collapsibleEl: '.collapsible',
-      collapsibleTabs: '.tabs section'
+      collapsibleTabs: '.tabs section',
+      stateless: 'collapsible-stateless'
     },
     init: function (type) {
       s = this.settings
       s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
-      // if this has to be more dynamicly updated in the future we can add a custom event
-      jQuery(s.collapsible + ' > h2, ' + s.collapsible + ' > h3').each(function () {
+      // if this has to be more dynamically updated in the future we can add a custom event
+      jQuery(s.collapsible).each(function () {
         IFS.core.collapsible.initCollapsibleHTML(this)
       })
       jQuery('body').on('click', s.collapsible + ' > h2 > [aria-controls], ' + s.collapsible + ' > h3 > [aria-controls]', function () {
@@ -22,9 +23,12 @@ IFS.core.collapsible = (function () {
       })
     },
     initCollapsibleHTML: function (el) {
-      var inst = jQuery(el)
+      var stateless = jQuery(el).hasClass(this.settings.stateless)
+      var inst = jQuery(el).find('h2,h3')
       var id = 'collapsible-' + index   // create unique id for a11y relationship
-      var loadstate = IFS.core.collapsible.getLoadstateFromCookie(id)
+      // if don't save state if we've asked it not to
+      var loadstate = !stateless && IFS.core.collapsible.getLoadstateFromCookie(id)
+
         // wrap the content and make it focusable
       inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
 
@@ -36,7 +40,7 @@ IFS.core.collapsible = (function () {
       var inst = jQuery(el)
       var panel = jQuery('#' + inst.attr('aria-controls'))
       var state = inst.attr('aria-expanded') === 'false'
-        // toggle the current
+      // toggle the current
       inst.attr('aria-expanded', state)
       panel.attr('aria-hidden', !state)
       IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state)
@@ -65,11 +69,11 @@ IFS.core.collapsible = (function () {
       if (state === true) {
         json[pathname][index] = state
       } else if (typeof (json[pathname][index]) !== 'undefined') {
-          // removing of false and empty objects from the json object as we store this in a cookie,
-          // only == true will be opened on pageload so those are the only ones we have to store
+        // removing of false and empty objects from the json object as we store this in a cookie,
+        // only == true will be opened on pageload so those are the only ones we have to store
         delete json[pathname][index]
 
-          // options other than looping over for getting the object count break in ie8
+        // options other than looping over for getting the object count break in ie8
         var count = 0
         jQuery.each(json[pathname], function () {
           count++
