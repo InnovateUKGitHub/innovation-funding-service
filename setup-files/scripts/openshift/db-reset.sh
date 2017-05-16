@@ -53,12 +53,15 @@ fi
 
 dbReset
 
-echo Waiting for completion
-while [ "$(oc get jobs dbreset -o go-template --template '{{.status.completionTime}}' ${SVC_ACCOUNT_CLAUSE})" == '<no value>' ]
+echo Waiting for container to start
+while [ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != 'Running' ]
 do
   echo -n .
   sleep 5
 done
 
-[ "$(oc get -o template job dbreset --template={{.status.succeeded}} ${SVC_ACCOUNT_CLAUSE})" != 1 ] && exit -1
+oc logs -f dbreset
+
+if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}')" != "Succeeded" ]]; then exit -1; fi
+
 exit 0
