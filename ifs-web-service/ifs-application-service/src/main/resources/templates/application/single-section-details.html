@@ -18,9 +18,9 @@
       </div>
       <th:block th:unless="${model.completed.completedOrMarkedAsComplete(question, section)}">
         <!--/* lead */-->
-        <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons (${model.assignButtonViewModels.get(question.id)})" th:with="hideAssignedTo=${true}" />
+        <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons (${model.section.assignButtonViewModels.get(question.id)})" th:with="hideAssignedTo=${true}" />
           <!--/* collabr */-->
-        <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to (${model.assignButtonViewModels.get(question.id)})" />
+        <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to (${model.section.assignButtonViewModels.get(question.id)})" />
       </th:block>
       <div class="task-status-complete"
            th:if="${model.completed.completedOrMarkedAsComplete(question, section)}">

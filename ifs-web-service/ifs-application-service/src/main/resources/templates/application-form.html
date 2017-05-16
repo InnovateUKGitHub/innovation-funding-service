@@ -28,7 +28,7 @@
             </th:block>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
-                    th:with="appIsClosed=${model.application.applicationIsClosed}, readonly=${model.applicationIsReadOnly}" novalidate="novalidate">
+                    th:with="appIsClosed=${model.applicationIsClosed}, readonly=${model.applicationIsReadOnly}" novalidate="novalidate">
                 <!--/* To disable submission on pressing return (INFUND-6892) */-->
                 <th:block th:unless="${model.allReadOnly}">
                     <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
