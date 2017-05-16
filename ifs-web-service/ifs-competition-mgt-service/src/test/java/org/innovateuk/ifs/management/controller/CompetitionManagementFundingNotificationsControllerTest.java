@@ -6,7 +6,7 @@ import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
@@ -157,7 +157,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void sendNotificationsTest() throws Exception {
 
-        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -167,71 +167,53 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
 
-        verify(applicationFundingServiceMock).sendFundingNotifications(any(NotificationResource.class));
+        verify(applicationFundingServiceMock).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
     @Test
     public void sendNotificationsTestMultipleApplications() throws Exception {
 
-        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("subject", "a subject")
                 .param("message", "a message")
                 .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED))
                 .param("fundingDecisions[" + APPLICATION_ID_TWO + "]", String.valueOf(UNFUNDED)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
 
-        verify(applicationFundingServiceMock).sendFundingNotifications(any(NotificationResource.class));
-    }
-
-    @Test
-    public void sendNotificationsWithInvalidSubject() throws Exception {
-        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("message", "a message")
-                .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
-                .andExpect(view().name("comp-mgt-send-notifications"))
-                .andExpect(model().attributeHasFieldErrors("form", "subject"))
-                .andReturn();
-
-        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(NotificationResource.class));
+        verify(applicationFundingServiceMock).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
     @Test
     public void sendNotificationsTestWithInvalidMessage() throws Exception {
-        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("subject", "a subject")
                 .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
                 .andExpect(view().name("comp-mgt-send-notifications"))
                 .andExpect(model().attributeHasFieldErrors("form", "message"))
                 .andReturn();
 
-        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(NotificationResource.class));
+        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
 
     @Test
     public void sendNotificationsWithInvalidFundingDecisions() throws Exception {
 
-        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+        when(applicationFundingServiceMock.sendFundingNotifications(any(FundingNotificationResource.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("subject", "a subject")
                 .param("message", "a message"))
                 .andExpect(view().name("comp-mgt-send-notifications"))
                 .andExpect(model().attributeHasFieldErrors("form", "fundingDecisions"))
                 .andReturn();
 
-        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(NotificationResource.class));
+        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(FundingNotificationResource.class));
     }
 
     @Override

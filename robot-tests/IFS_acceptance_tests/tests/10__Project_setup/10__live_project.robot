@@ -1,8 +1,8 @@
 *** Settings ***
-Documentation    INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
-Resource         ../../resources/defaultResources.robot
-Resource         PS_Commons.robot
-Suite Setup    the project is completed if it is not already complete
+Documentation     INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
+Resource          PS_Common.robot
+Suite Setup       the project is completed if it is not already complete
+Suite Teardown    the user closes the browser
 
 *** Test Cases ***
 
@@ -16,12 +16,9 @@ Project dashboard shows message that the project is live
     And the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the text in the page    The project is live, you can review progress at
 
-
-
 Status indicators should not show
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7922
+    [Tags]
     When the user should not see the element    link=status of my partners
     And the user should not see the element    css.complete
     And the user should not see the element    css=.action
@@ -95,8 +92,7 @@ Project dashboard shows message that the project is live for industrial partner
 
 Status indicators should not show for industrial partner
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7922
+    [Tags]
     When the user should not see the element    link=status of my partners
     And the user should not see the element    css.complete
     And the user should not see the element    css=.action
@@ -104,8 +100,7 @@ Status indicators should not show for industrial partner
 
 Project details section is read-only for industrial partner
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7924
+    [Tags]
     When the user clicks the button/link    link=Project details
     Then the user should not see the element    link=Target start date
     And the user should not see the element    link=Project address

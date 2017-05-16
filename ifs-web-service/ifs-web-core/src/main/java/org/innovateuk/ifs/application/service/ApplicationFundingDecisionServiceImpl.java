@@ -4,7 +4,7 @@ import org.apache.catalina.util.ParameterMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	private ApplicationSummaryRestService applicationSummaryRestService;
 
 	@Override
-	public ServiceResult<Void> sendFundingNotifications(NotificationResource notificationResource) {
-		return applicationFundingDecisionRestService.sendApplicationFundingDecisions(notificationResource).toServiceResult();
+	public ServiceResult<Void> sendFundingNotifications(FundingNotificationResource fundingNotificationResource) {
+		return applicationFundingDecisionRestService.sendApplicationFundingDecisions(fundingNotificationResource).toServiceResult();
 	}
 
 	@Override

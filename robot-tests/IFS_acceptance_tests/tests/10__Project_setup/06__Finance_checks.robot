@@ -82,12 +82,12 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-8778 Partners do not need to see percentages in the Finance checks section of PS, only financial sub-totals and total-costs are to be seen
 ...
 ...               INFUND-8880 Read only Detailed finances table for external user and View finances link should be missing for academic users
-
+...
+...               INFUND-8501 As partner I want to be able to view all originally submitted application finance details against the revisions made during the Finance Checks eligibility section so that I can make a clear comparison
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom Suite Teardown
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
-Resource          PS_Commons.robot
+Resource          PS_Common.robot
 Resource          ../04__Applicant/FinanceSection_Commons.robot
 
 *** Variables ***
@@ -258,16 +258,12 @@ Query can be re-entered
     And the user uploads the file    name=attachment    ${valid_pdf}
 
 New query can be posted
-    [Documentation]    INFUND-4840
+    [Documentation]    INFUND-4840 INFUND-9546
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see the element  jQuery=.button:contains("Post Query")
-    Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
-
-The Project Finance user should be able to send a second response in a row
-    [Documentation]    INFUND-9546
-    [Tags]
-    The user should see the element   jQuery=#post-new-response
+    And the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
+    And the user should see the element  jQuery=#post-new-response
 
 Query sections are no longer editable
     [Documentation]    INFUND-4840
@@ -478,11 +474,6 @@ Query response can be posted
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should not see the element   jQuery=.button:contains("Post response")
 
-The Finance contact user should be able to send a second response in a row
-    [Documentation]    INFUND-9546
-    [Tags]
-    The user should see the element   jQuery=#post-new-response
-
 Query section now becomes read-only
     [Documentation]    INFUND-4843
     [Tags]
@@ -527,11 +518,6 @@ Project finance user can continue the conversation
     And the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should not see an error in the page
     And the user should not see the element    css=.editor
-
-The Project Finance user should be able to send a second response in a row
-    [Documentation]    INFUND-9546
-    [Tags]
-    The user should see the element   jQuery=#post-new-response
 
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753
@@ -1292,6 +1278,17 @@ Confirming eligibility should update on the finance checks page
     When the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
+Proj Finance is able to see the Finances amended
+    [Documentation]  INFUND-8501
+    [Tags]
+    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
+    Then the user clicks the button/link  link=View changes to finances
+    When the user should see the element  css=#project-finance-changes-total
+    Then the user should see the element  css=#project-finance-changes-section
+    And the user should see the element   css=#project-finance-changes-submitted
+    When the user should see the element  jQuery=h2:contains("Changes from submitted finances")
+    Then the user should see the finance values amended by internal user
+
 Project finance user can see updated finance overview after lead changes to eligibility
     [Documentation]    INFUND-5508
     [Tags]
@@ -1857,10 +1854,9 @@ Lead-Partner can view finance checks page
     [Tags]
     Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user clicks the button/link    link=Finance checks
-    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+    Then the user should see the element    jQuery=li.complete:contains("Finance")
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the element    jQuery=.success-alert:contains("your finances approved.")
 
 Lead-Partner can view only the external version of Finance Checks Eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -1869,6 +1865,12 @@ Lead-Partner can view only the external version of Finance Checks Eligibility ta
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 60,602    £ 1,954     £ 52,100    £ 10,376    £ 65,000    £ 4,985     £ 11,850
     Then the user should see the element    css=input[id="total-cost"][value="£ 206,867"]
+
+Lead Partner can see the Finances amended
+    [Documentation]  INFUND-8501
+    [Tags]
+    When the user clicks the button/link  link=View changes to finances
+    Then the user should see the finance values amended by internal user
 
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787, INFUND-8880
@@ -1903,6 +1905,9 @@ Non Lead-Partner can view only the external version of Finance Checks Eligibilit
     Then the user should see the element    css=input[id="total-cost"][value="£ 114,256"]
 
 *** Keywords ***
+Custom Suite Teardown
+    the user closes the browser
+    Delete the emails from both test mailboxes
 
 the table row has expected values
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
@@ -1935,7 +1940,6 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user selects the checkbox      ids[0]
     the user selects the checkbox      ids[1]
     the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button[1]
-    the user enters text to a text field     id=subject   testEmail
     the user enters text to a text field     css=[labelledby="message"]      testMessage
     the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
     the user should see the text in the page    Manage funding applications
@@ -1991,9 +1995,21 @@ bank details are approved for all businesses
     the project finance user has approved bank details
 
 partners submit bank details
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${shortCode_one}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${shortCode_one}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${shortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}
+
+partner submits his bank details
+    [Arguments]  ${email}
+    log in as a different user            ${email}    ${short_password}
+    the user navigates to the page        ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/bank-details
+    the user enters text to a text field  id=bank-acc-number  ${account_number}
+    the user enters text to a text field  id=bank-sort-code  ${sort_code}
+    the user selects the radio button     addressType    REGISTERED
+    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link       jQuery=.button:contains("Submit")
+    wait until element is visible         jQuery=dt:contains("Account number") + dd:contains("*****795")
+    # Added this readonly check to verify that the bank details are indeed marked as done
 
 the project finance user has approved bank details
     Guest user log-in  &{internal_finance_credentials}
@@ -2445,3 +2461,9 @@ the user verifies the financial sub-totals for external version under the Detail
     the user should see the text in the element     css=section:nth-of-type(5) h3 button span   ${sub_contracting}
     the user should see the text in the element     css=section:nth-of-type(6) h3 button span   ${travel_and_subsistence}
     the user should see the text in the element     css=section:nth-of-type(7) h3 button span   ${other_costs}
+
+the user should see the finance values amended by internal user
+    the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Gross") td:contains("120000")
+    the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Amount") td:contains("1954")
+    the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Net cost") td:contains("276.00") + td:contains("5050.00")
+    the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Overall") th:contains("-94,488")
