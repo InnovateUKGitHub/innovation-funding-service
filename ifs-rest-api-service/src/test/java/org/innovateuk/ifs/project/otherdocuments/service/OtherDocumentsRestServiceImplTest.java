@@ -19,14 +19,14 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-public class ProjectOtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<ProjectOtherDocumentsRestServiceImpl> {
+public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<OtherDocumentsRestServiceImpl> {
     private static final String projectRestURL = "/project";
 
     @Override
-    protected ProjectOtherDocumentsRestServiceImpl registerRestServiceUnderTest() {
-        ProjectOtherDocumentsRestServiceImpl projectOtherDocumentsRestService = new ProjectOtherDocumentsRestServiceImpl();
-        ReflectionTestUtils.setField(projectOtherDocumentsRestService, "projectRestURL", projectRestURL);
-        return projectOtherDocumentsRestService;
+    protected OtherDocumentsRestServiceImpl registerRestServiceUnderTest() {
+        OtherDocumentsRestServiceImpl otherDocumentsRestService = new OtherDocumentsRestServiceImpl();
+        ReflectionTestUtils.setField(otherDocumentsRestService, "projectRestURL", projectRestURL);
+        return otherDocumentsRestService;
     }
 
     @Test
