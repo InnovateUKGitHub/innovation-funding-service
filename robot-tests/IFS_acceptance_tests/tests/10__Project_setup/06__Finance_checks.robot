@@ -263,7 +263,8 @@ New query can be posted
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see the element  jQuery=.button:contains("Post Query")
-    Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
+    And the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
+    And the user should see the element  jQuery=#post-new-response
 
 Query sections are no longer editable
     [Documentation]    INFUND-4840
@@ -1287,10 +1288,7 @@ Proj Finance is able to see the Finances amended
     Then the user should see the element  css=#project-finance-changes-section
     And the user should see the element   css=#project-finance-changes-submitted
     When the user should see the element  jQuery=h2:contains("Changes from submitted finances")
-    Then the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Gross") td:contains("120000")
-    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Amount") td:contains("1954")
-    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Net cost") td:contains("276.00") + td:contains("5050.00")
-    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Overall") th:contains("-94,488")
+    Then the user user should see the finance values amended by internal user
 
 Project finance user can see updated finance overview after lead changes to eligibility
     [Documentation]    INFUND-5508
@@ -1873,10 +1871,7 @@ Lead Partner can see the Finances amended
     [Documentation]  INFUND-8501
     [Tags]
     When the user clicks the button/link  link=View changes to finances
-    Then the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Gross") td:contains("120000")
-    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Amount") td:contains("1954")
-    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Net cost") td:contains("276.00") + td:contains("5050.00")
-    And the user should see the element   jQuery=#project-finance-changes-submitted tr:contains("Overall") th:contains("-94,488")
+    Then the user user should see the finance values amended by internal user
 
 Academic user can view Finance checks page
     [Documentation]     INFUND-8787, INFUND-8880
@@ -2465,3 +2460,9 @@ the user verifies the financial sub-totals for external version under the Detail
     the user should see the text in the element     css=section:nth-of-type(5) h3 button span   ${sub_contracting}
     the user should see the text in the element     css=section:nth-of-type(6) h3 button span   ${travel_and_subsistence}
     the user should see the text in the element     css=section:nth-of-type(7) h3 button span   ${other_costs}
+
+the user user should see the finance values amended by internal user
+    the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Gross") td:contains("120000")
+    the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Amount") td:contains("1954")
+    the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Net cost") td:contains("276.00") + td:contains("5050.00")
+    the user should see the element  jQuery=#project-finance-changes-submitted tr:contains("Overall") th:contains("-94,488")
