@@ -10,7 +10,6 @@ Documentation     INFUND-885: As an applicant I want to be able to submit a user
 ...               INFUND-1147: Further acceptance tests for the create account page
 ...
 ...               INFUND-2497: As a new user I would like to have an indication that my password is correct straight after typing...
-...
 Suite Setup       Applicant goes to the registration form
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
@@ -38,8 +37,8 @@ Your details: client-side validation
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
-    When the user enters text to a text field    id=firstName    John
-    And the user enters text to a text field    id=lastName    Smith
+    When the user enters text to a text field    id=firstName    O'Brian Elliot-Murray    #First and last name containing hyphen, space and aposthrophe check
+    And the user enters text to a text field    id=lastName    O'Brian Elliot-Murray
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
