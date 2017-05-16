@@ -81,20 +81,26 @@
             <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED}" class="extra-margin collapsible collapsible-eligibility">
                 <h2>Mark application as ineligible</h2>
                 <div>
-                    <form th:action="@{/competition/{competitionId}/application/{applicationId}/markIneligible(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" th:object="${form}">
+                    <form th:action="@{/competition/{competitionId}/application/{applicationId}/markIneligible(
+                              competitionId=${currentCompetition.id},
+                              applicationId=${currentApplication.id},
+                              origin=${#httpServletRequest.getParameter('origin')}
+                          )}"
+                          th:object="${form}"
+                          method="POST">
 
-                        <div class="form-group word-count">
+                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'error'">
                             <label class="form-label" th:for="ineligibleReason">
                                 Please enter the reason for removing this application from assessment
                                 <span th:if="${#fields.hasErrors('ineligibleReason')}" th:remove="tag">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}" />
+                                    <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}" />
                                 </span>
                             </label>
                             <textarea class="form-control width-full"
                                       maxlength="5000"
                                       data-max_words="400"
                                       data-maxwordslength="400"
-                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
+                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
                                       th:errorclass="field-error"
                                       rows="10"
                                       th:field="*{ineligibleReason}"></textarea>
