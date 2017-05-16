@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -119,12 +119,16 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 application2.getId(), FundingDecision.UNFUNDED,
                 application3.getId(), FundingDecision.ON_HOLD);
 
-        NotificationResource notificationResource = new NotificationResource("Subject", "The message body.", decisions);
-        Map<String, Object> expectedGlobalNotificationArguments = asMap(
-                "subject", notificationResource.getSubject(),
-                "message", notificationResource.getMessageBody());
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
 
-        Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments);
+        Map<String, Object> expectedGlobalNotificationArguments = asMap("message", fundingNotificationResource.getMessageBody());
+
+        Map<NotificationTarget, Map<String, Object>> expectedTargetSpecificNotificationArguments = asMap(
+                application1LeadApplicantTarget, asMap("applicationName", application1.getName(), "applicationNumber", application1.getId()),
+                application2LeadApplicantTarget, asMap("applicationName", application2.getName(), "applicationNumber", application2.getId()),
+                application3LeadApplicantTarget, asMap("applicationName", application3.getName(), "applicationNumber", application3.getId()));
+
+        Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments, expectedTargetSpecificNotificationArguments);
 
         List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
         List<Application> applications = asList(application1, application2, application3);
@@ -138,7 +142,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
+        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
         verify(notificationServiceMock).sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL));
@@ -180,7 +184,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
                 application1.getId(), FundingDecision.FUNDED,
                 application2.getId(), FundingDecision.UNFUNDED);
-        NotificationResource notificationResource = new NotificationResource("Subject", "The message body.", decisions);
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
 
         Notification expectedFundingNotification =
                 new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, emptyMap());
@@ -203,7 +207,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
+        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
         verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL));
@@ -283,6 +287,17 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
             assertEquals(expectedNotification.getGlobalArguments(), notification.getGlobalArguments());
 
+            Map<NotificationTarget, Map<String, Object>> expectedTargetSpecifics = expectedNotification.getPerNotificationTargetArguments();
+            Map<NotificationTarget, Map<String, Object>> actualTargetSpecifics = notification.getPerNotificationTargetArguments();
+
+            assertEquals(expectedTargetSpecifics.size(), actualTargetSpecifics.size());
+
+            expectedTargetSpecifics.forEach((target, expectedArguments) -> {
+                Map<String, Object> actualArguments = actualTargetSpecifics.get(target);
+                assertEquals(expectedArguments, actualArguments);
+            });
+
+            assertEquals(expectedTargetSpecifics, actualTargetSpecifics);
         });
     }
 
