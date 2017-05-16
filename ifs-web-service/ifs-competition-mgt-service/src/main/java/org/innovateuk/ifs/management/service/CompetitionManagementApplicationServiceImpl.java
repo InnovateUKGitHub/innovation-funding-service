@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -62,7 +63,13 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private FileEntryRestService fileEntryRestService;
 
     @Override
-    public String displayApplicationOverview(UserResource user, long competitionId, ApplicationForm form, String origin, Model model, ApplicationResource application) {
+    public String displayApplicationOverview(UserResource user,
+                                             long competitionId,
+                                             ApplicationForm form,
+                                             String origin,
+                                             MultiValueMap<String, String> queryParams,
+                                             Model model,
+                                             ApplicationResource application) {
         form.setAdminMode(true);
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
@@ -80,7 +87,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("isCompManagementDownload", true);
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application));
 
-        model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId));
+        model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, queryParams));
 
         return "competition-mgt-application-overview";
     }
@@ -89,6 +96,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     public String markApplicationAsIneligible(long applicationId,
                                               long competitionId,
                                               String origin,
+                                              MultiValueMap<String, String> queryParams,
                                               ApplicationForm applicationForm,
                                               UserResource user,
                                               Model model) {
@@ -104,6 +112,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                     competitionId,
                     applicationForm,
                     origin,
+                    queryParams,
                     model,
                     applicationService.getById(applicationId));
         }
@@ -119,10 +128,13 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         }
     }
 
-    private String buildBackUrl(String origin, Long applicationId, Long competitionId) {
+    private String buildBackUrl(String origin, Long applicationId, Long competitionId, MultiValueMap<String, String> queryParams) {
         String baseUrl = ApplicationOverviewOrigin.valueOf(origin).getBaseOriginUrl();
 
+        queryParams.remove("origin");
+
         return UriComponentsBuilder.fromPath(baseUrl)
+                .queryParams(queryParams)
                 .buildAndExpand(asMap(
                         "competitionId", competitionId,
                         "applicationId", applicationId

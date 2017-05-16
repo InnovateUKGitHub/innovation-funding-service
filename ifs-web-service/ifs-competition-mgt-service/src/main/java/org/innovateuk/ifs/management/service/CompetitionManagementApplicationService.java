@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 
 import java.util.function.Function;
 
@@ -21,12 +22,14 @@ public interface CompetitionManagementApplicationService {
                                       long competitionId,
                                       ApplicationForm form,
                                       String origin,
+                                      MultiValueMap<String, String> queryParams,
                                       Model model,
                                       ApplicationResource application);
 
     String markApplicationAsIneligible(long applicationId,
                                        long competitionId,
                                        String origin,
+                                       MultiValueMap<String, String> queryParams,
                                        ApplicationForm applicationForm,
                                        UserResource user,
                                        Model model);

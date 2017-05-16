@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,16 +62,18 @@ public class CompetitionManagementApplicationController {
                                              @ModelAttribute(name = "form", binding = false) ApplicationForm form,
                                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                             @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model) {
         return competitionManagementApplicationService
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> competitionManagementApplicationService
-                        .displayApplicationOverview(user, competitionId, form, origin, model, application));
+                        .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application));
     }
 
     @PostMapping("/{applicationId}/markIneligible")
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                   @RequestParam MultiValueMap<String, String> queryParams,
                                    @ModelAttribute("loggedInUser") UserResource user,
                                    @ModelAttribute("form") @Valid ApplicationForm applicationForm,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
@@ -80,6 +83,7 @@ public class CompetitionManagementApplicationController {
                         applicationId,
                         competitionId,
                         origin,
+                        queryParams,
                         applicationForm,
                         user,
                         model);
