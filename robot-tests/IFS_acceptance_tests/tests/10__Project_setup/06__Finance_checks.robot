@@ -1914,7 +1914,6 @@ the table row has expected values
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(6)    29%
 
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-    Delete the emails from both test mailboxes
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     the users fill out project details
     bank details are approved for all businesses
