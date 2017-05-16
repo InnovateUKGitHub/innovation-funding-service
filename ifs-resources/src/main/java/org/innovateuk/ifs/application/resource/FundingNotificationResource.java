@@ -9,31 +9,20 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * This is used for sending the subject and content of a notification,
- * e.g. when sending an email to notify of an application funding decision.
+ * Contains the information required when sending an email to notify of an application funding decision.
  */
-public class NotificationResource {
-    private String subject;
+public class FundingNotificationResource {
     private String messageBody;
     private Map<Long, FundingDecision> fundingDecisions;
 
-    public NotificationResource(String subject, String messageBody, Map<Long, FundingDecision> fundingDecisions) {
-        this.subject = subject;
+    public FundingNotificationResource(String messageBody, Map<Long, FundingDecision> fundingDecisions) {
         this.messageBody = messageBody;
         this.fundingDecisions = fundingDecisions;
     }
 
-    public NotificationResource()
+    public FundingNotificationResource()
     {
         //default constructor
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 
     public String getMessageBody() {
@@ -62,10 +51,9 @@ public class NotificationResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        NotificationResource that = (NotificationResource) o;
+        FundingNotificationResource that = (FundingNotificationResource) o;
 
         return new EqualsBuilder()
-                .append(subject, that.subject)
                 .append(messageBody, that.messageBody)
                 .append(fundingDecisions, that.fundingDecisions)
                 .isEquals();
@@ -74,7 +62,6 @@ public class NotificationResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(subject)
                 .append(messageBody)
                 .append(fundingDecisions)
                 .toHashCode();
