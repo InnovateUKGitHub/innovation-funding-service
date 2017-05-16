@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -88,8 +88,8 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
-    public RestResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/state", GOLState.class);
+    public RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/state", GrantOfferLetterState.class);
     }
 
     @Override
