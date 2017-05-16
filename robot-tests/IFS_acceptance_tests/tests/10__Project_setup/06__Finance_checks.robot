@@ -82,6 +82,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-8778 Partners do not need to see percentages in the Finance checks section of PS, only financial sub-totals and total-costs are to be seen
 ...
 ...               INFUND-8880 Read only Detailed finances table for external user and View finances link should be missing for academic users
+...
+...               INFUND-9517 I can view and save the viability page in project setup management
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -106,6 +108,14 @@ Project Finance user can see the finance check summary page
     And the user should see the text in the page    ${funders_panel_application_1_title}
     And the table row has expected values
     And the user should see the element    link=Projects in setup
+
+
+
+Project finance user cannot view viability section if this is not applicable for the org in question
+    [Documentation]    INFUND-9517
+    [Tags]
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/40/viability    ${404_error_message}
+
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190

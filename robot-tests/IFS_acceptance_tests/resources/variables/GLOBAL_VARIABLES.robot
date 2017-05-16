@@ -105,6 +105,7 @@ ${COMP_MANAGEMENT_READY_TO_OPEN}    ${SERVER}/management/competition/setup/${REA
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
 ${403_error_message}    You do not have the necessary permissions for your request
+${404_error_message}    Please check the web address or search term you entered for any errors
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
 ${too_large_pdf_validation_error}    the size of file or request being submitted is too large
 ${REGISTRATION_SUCCESS}    ${SERVER}/registration/success
