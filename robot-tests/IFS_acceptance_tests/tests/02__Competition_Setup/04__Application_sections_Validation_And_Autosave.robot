@@ -35,7 +35,7 @@ Application questions mark as done validations
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]    HappyPath
-    Given the user leaves all the assesment questions empty
+    Given the user leaves all the assessment questions empty
     When the user clicks the button/link    jQuery=.button[value="Save and close"]
     Then the user should see the text in the page    Please enter a from score.
     And the user should see the text in the page    Please enter a to score.
@@ -64,7 +64,7 @@ Business opportunity: Autosave
     And The user clicks the button/link    link=Test Heading
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user should see the correct inputs in the Applications questions form
-    And the user should see the correct inputs in assesment questions
+    And the user should see the correct inputs in assessment questions
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
@@ -108,7 +108,7 @@ the user leaves all the question field empty
     The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
     the user moves focus and waits for autosave
 
-The user leaves all the assesment questions empty
+The user leaves all the assessment questions empty
     The user enters text to a text field    id=guidanceRow-0-scorefrom    ${EMPTY}
     the user moves focus and waits for autosave
     The user enters text to a text field    id=guidanceRow-0-scoreto    ${EMPTY}
@@ -144,7 +144,7 @@ the user should see the correct inputs in the Applications questions form
     ${input_value} =    Get Value    id=question.maxWords
     Should Be Equal    ${input_value}    150
 
-The user should see the correct inputs in assesment questions
+The user should see the correct inputs in assessment questions
     ${input_value} =    Get Value    id=guidanceRow-0-scorefrom
     Should Be Equal    ${input_value}    30
     ${input_value} =    Get Value    id=guidanceRow-0-scoreto
