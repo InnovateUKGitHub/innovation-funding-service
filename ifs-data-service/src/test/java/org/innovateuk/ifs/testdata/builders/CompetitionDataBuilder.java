@@ -3,8 +3,8 @@ package org.innovateuk.ifs.testdata.builders;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -196,8 +196,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                     getSuccessObjectOrThrowException();
-            NotificationResource notificationResource = new NotificationResource("Subject", "Body", pairsToMap(applicationIdAndDecisions));
-            applicationFundingService.notifyLeadApplicantsOfFundingDecisions(notificationResource).
+            FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Body", pairsToMap(applicationIdAndDecisions));
+            applicationFundingService.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource).
                     getSuccessObjectOrThrowException();
 
             doAs(anyProjectFinanceUser(),
