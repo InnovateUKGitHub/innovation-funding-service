@@ -10,11 +10,11 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ProjectOtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<ProjectOtherDocumentsPermissionRules> {
+public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<OtherDocumentsPermissionRules> {
 
     @Override
-    protected ProjectOtherDocumentsPermissionRules supplyPermissionRulesUnderTest() {
-        return new ProjectOtherDocumentsPermissionRules();
+    protected OtherDocumentsPermissionRules supplyPermissionRulesUnderTest() {
+        return new OtherDocumentsPermissionRules();
     }
 
     @Test
