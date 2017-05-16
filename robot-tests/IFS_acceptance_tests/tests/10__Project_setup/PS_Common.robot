@@ -1,5 +1,8 @@
 *** Settings ***
 Resource    ../../resources/variables/GLOBAL_VARIABLES.robot
+Resource    ../../resources/defaultResources.robot
+
+
 *** Variables ***
 #Project: London underground – enhancements to existing stock and logistics
 # GOL = Grant Offer Letter
@@ -117,7 +120,7 @@ ${PS_EF_APPLICATION_PM_EMAIL}                steven.hicks@ntag.example.com
 ${PS_EF_APPLICATION_PARTNER_EMAIL}           robert.perez@jetpulse.example.com
 ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 
-#Old variables - to be refactored
+#Project: Magic material
 ${PROJECT_SETUP_COMPETITION}    8
 ${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
 ${PROJECT_SETUP_APPLICATION_1}    113
@@ -138,16 +141,34 @@ ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}    53532322
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    1230000
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}    4560
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}      40
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}    EGGS
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}
-${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
-${SUCCESSFUL_FUNDERS_PANEL_PROJECT_PAGE_DETAILS}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
-${project_in_setup_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
-${project_in_setup_details_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
-${project_start_date_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
-${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/project-address
-${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
-${internal_spend_profile_approval}    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
-${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 
+${project_in_setup_page}                ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
+${project_in_setup_details_page}        ${project_in_setup_page}/details
+${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
+${project_start_date_page}              ${project_in_setup_details_page}/start-date
+${project_address_page}                 ${project_in_setup_details_page}/project-address
+${internal_project_summary}             ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+${internal_spend_profile_approval}      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
+
+
+#Project: Elbow grease
 ${ELBOW_GREASE_PROJECT_ID}  4
+
+#Bank details
+${account_number}  51406795
+${sort_code}       404745
+
+*** Keywords ***
+project finance submits monitoring officer
+    [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}
+    log in as a different user              &{internal_finance_credentials}
+    the user navigates to the page          ${server}/project-setup-management/project/${project_id}/monitoring-officer
+    the user enters text to a text field    id=firstName    ${fname}
+    the user enters text to a text field    id=lastName    ${lname}
+    The user enters text to a text field    id=emailAddress    ${email}
+    The user enters text to a text field    id=phoneNumber    ${phone_number}
+    the user clicks the button/link         jQuery=.button[type="submit"]:contains("Assign Monitoring Officer")
+    the user clicks the button/link         jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
