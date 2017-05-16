@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * View model backing the Other Documents page
  */
-public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewModel {
+public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
     private Long applicationId;
@@ -26,7 +26,7 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private boolean submitAllowed;
     private ZonedDateTime submitDate;
 
-    public ProjectOtherDocumentsViewModel(Long projectId,
+    public OtherDocumentsViewModel(Long projectId,
                                           Long applicationId, String projectName,
                                           FileDetailsViewModel collaborationAgreementFileDetails,
                                           FileDetailsViewModel exploitationPlanFileDetails,

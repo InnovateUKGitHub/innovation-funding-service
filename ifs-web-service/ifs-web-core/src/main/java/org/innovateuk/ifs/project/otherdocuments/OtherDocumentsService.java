@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * A service for dealing with Project Other Documents via the appropriate Rest services
  */
-public interface ProjectOtherDocumentsService {
+public interface OtherDocumentsService {
 
 
     Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId);

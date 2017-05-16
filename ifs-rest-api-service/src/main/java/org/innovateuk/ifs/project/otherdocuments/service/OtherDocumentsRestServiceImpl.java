@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ProjectOtherDocumentsRestServiceImpl extends BaseRestService implements ProjectOtherDocumentsRestService {
+public class OtherDocumentsRestServiceImpl extends BaseRestService implements OtherDocumentsRestService {
 
     private String projectRestURL = "/project";
 

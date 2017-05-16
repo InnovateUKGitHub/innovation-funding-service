@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTest<ProjectOtherDocumentsController> {
+public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
 
     long applicationId = 456L;
     long projectId = 123L;
@@ -50,8 +50,8 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 .build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -59,7 +59,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     }
 
 
-    private void assertProjectDetailsPrepopulatedOk(ProjectOtherDocumentsViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(OtherDocumentsViewModel model) {
 
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals(Long.valueOf(456), model.getApplicationId());
@@ -85,7 +85,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
                 andExpect(view().name("project/other-documents")).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         assertProjectDetailsPrepopulatedOk(model);
 
@@ -101,14 +101,14 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
         FileEntryResource existingCollaborationAgreement = newFileEntryResource().build();
         FileEntryResource existingExplotationPlan = newFileEntryResource().build();
 
-        when(projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.of(existingCollaborationAgreement));
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.of(existingExplotationPlan));
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.of(existingCollaborationAgreement));
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.of(existingExplotationPlan));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
                 andExpect(view().name("project/other-documents")).
                 andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -126,14 +126,14 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
 
         setupViewOtherDocumentsTestExpectations(project);
 
-        when(projectOtherDocumentsService.acceptOrRejectOtherDocuments(projectId, approved)).thenReturn(ServiceResult.serviceSuccess());
+        when(otherDocumentsService.acceptOrRejectOtherDocuments(projectId, approved)).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/project/123/partner/documents")
                 .param("approved", String.valueOf(approved)))
                 .andExpect(view().name("project/other-documents"))
                 .andReturn();
 
-        ProjectOtherDocumentsViewModel model = (ProjectOtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
 
         assertProjectDetailsPrepopulatedOk(model);
         assertEquals(true, model.isApproved());
@@ -143,10 +143,10 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     @Test
     public void testDownloadCollaborationAgreementButFileDoesntExist() throws Exception {
 
-        when(projectOtherDocumentsService.getExploitationPlanFile(123L)).
+        when(otherDocumentsService.getExploitationPlanFile(123L)).
                 thenReturn(Optional.empty());
 
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(123L)).
+        when(otherDocumentsService.getExploitationPlanFileDetails(123L)).
                 thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
@@ -158,10 +158,10 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     @Test
     public void testDownloadExploitationPlanButFileDoesntExist() throws Exception {
 
-        when(projectOtherDocumentsService.getExploitationPlanFile(123L)).
+        when(otherDocumentsService.getExploitationPlanFile(123L)).
                 thenReturn(Optional.empty());
 
-        when(projectOtherDocumentsService.getExploitationPlanFileDetails(123L)).
+        when(otherDocumentsService.getExploitationPlanFileDetails(123L)).
                 thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
@@ -170,7 +170,7 @@ public class ProjectOtherDocumentsControllerMockMvcTest extends BaseControllerMo
     }
 
     @Override
-    protected ProjectOtherDocumentsController supplyControllerUnderTest() {
-        return new ProjectOtherDocumentsController();
+    protected OtherDocumentsController supplyControllerUnderTest() {
+        return new OtherDocumentsController();
     }
 }

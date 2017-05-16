@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 /**
  * Transactional and secure service for Project Other Documents processing work
  */
-public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl implements ProjectOtherDocumentsService {
+public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implements OtherDocumentsService {
 
     @Autowired
     private FileService fileService;
@@ -55,7 +55,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private GrantOfferLetterService projectGrantOfferLetterService;
+    private GrantOfferLetterService grantOfferLetterService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -280,7 +280,7 @@ public class ProjectOtherDocumentsServiceImpl extends AbstractProjectServiceImpl
                     if (approval.equals(false)) {
                         project.setDocumentsSubmittedDate(null);
                     }
-                    return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+                    return grantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
                 });
     }
 }

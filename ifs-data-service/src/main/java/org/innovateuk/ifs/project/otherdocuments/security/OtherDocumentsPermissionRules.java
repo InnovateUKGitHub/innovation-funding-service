@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 
 @PermissionRules
 @Component
-public class ProjectOtherDocumentsPermissionRules extends BasePermissionRules {
+public class OtherDocumentsPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "UPLOAD_OTHER_DOCUMENTS",
