@@ -17,6 +17,7 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -65,69 +67,20 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 		return CompetitionSetupSection.INITIAL_DETAILS;
 	}
 
-    private final static Long ALL_INNOVATION_AREAS = -1L;
-
     @Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-
 		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {
-            Error error = saveAssignedUsers(competition, initialDetailsForm);
+            List<Error> errors = saveAssignedUsers(competition, initialDetailsForm);
 
-            if (error != null) {
-                return serviceFailure(error);
+            if (errors.isEmpty() && !competition.getSetupComplete()) {
+                errors = doSetupComplete(competition, initialDetailsForm);
             }
 
-            if (!Boolean.TRUE.equals(competition.getSetupComplete())) {
-
-                competition.setName(initialDetailsForm.getTitle());
-
-                if (shouldTryToSaveStartDate(initialDetailsForm)) {
-                    ZonedDateTime startDate = initialDetailsForm.getOpeningDate();
-                    competition.setStartDate(startDate);
-
-                    List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
-                    if (!errors.isEmpty()) {
-                        return serviceFailure(errors);
-                    }
-                }
-
-
-                competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
-                competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
-
-                List<Long> innovationAreas = initialDetailsForm.getInnovationAreaCategoryIds();
-
-                if (competition.getInnovationSector() != null) {
-                    List<Long> innovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
-                    if(OPEN_SECTOR_ID.equals(competition.getInnovationSector())) {
-                        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
-                        List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas);
-
-                        if(innovationAreaIds.contains(ALL_INNOVATION_AREAS)) {
-                            innovationAreas = allInnovationAreasIds;
-                        } else {
-                            boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !allInnovationAreasIds.contains(areaId));
-
-                            if (foundNotMatchingId && initialDetailsForm.isMarkAsCompleteAction()) {
-                                return serviceFailure(buildInnovationError(innovationAreaIds, allInnovationAreas));
-                            }
-                        }
-                    } else {
-                        List<InnovationAreaResource> children = categoryRestService.getInnovationAreasBySector(competition.getInnovationSector()).getSuccessObjectOrThrowException();
-                        List<Long> childrenIds = children.stream().map(InnovationAreaResource::getId).collect(Collectors.toList());
-
-                        boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !childrenIds.contains(areaId));
-
-                        if (foundNotMatchingId && initialDetailsForm.isMarkAsCompleteAction()) {
-                            return serviceFailure(buildInnovationError(innovationAreaIds, children));
-                        }
-                    }
-                }
-                competition.setInnovationAreas(innovationAreas.stream()
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toSet()));
+            if (!errors.isEmpty()) {
+                return serviceFailure(errors);
             }
+
             return competitionService.update(competition).andOnSuccess(() -> {
                 if (initialDetailsForm.isMarkAsCompleteAction() && Boolean.FALSE.equals(competition.getSetupComplete())) {
                     return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
@@ -140,6 +93,68 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         }
    }
 
+    private List<Error> doSetupComplete(final CompetitionResource competition, final InitialDetailsForm initialDetailsForm) {
+        List<Error> errors = new ArrayList<>();
+
+        competition.setName(initialDetailsForm.getTitle());
+
+        if (shouldTryToSaveStartDate(initialDetailsForm)) {
+            ZonedDateTime startDate = initialDetailsForm.getOpeningDate();
+            competition.setStartDate(startDate);
+
+            errors.addAll(saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction()));
+        }
+
+        competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
+        competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
+
+        List<Long> innovationAreas = initialDetailsForm.getInnovationAreaCategoryIds();
+
+        if (competition.getInnovationSector() != null) {
+            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+            List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toList());
+            List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
+
+            if(OPEN_SECTOR_ID.equals(competition.getInnovationSector()) && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
+                innovationAreas = allInnovationAreasIds;
+            }
+            errors.addAll(checkInnovationAreaData(competition, allInnovationAreas, allInnovationAreasIds,
+                    newInnovationAreaIds, initialDetailsForm.isMarkAsCompleteAction()));
+        }
+
+        competition.setInnovationAreas(innovationAreas.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet()));
+
+        return errors;
+    }
+
+    private List<Error> checkInnovationAreaData(CompetitionResource competition,
+                                                List<InnovationAreaResource> allInnovationAreas,
+                                                List<Long> allInnovationAreasIds,
+                                                List<Long> innovationAreaIds, boolean isMarkAsComplete) {
+        if(OPEN_SECTOR_ID.equals(competition.getInnovationSector())) {
+            if(!innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
+                boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !allInnovationAreasIds.contains(areaId));
+
+                if (foundNotMatchingId && isMarkAsComplete) {
+                    return buildInnovationError(innovationAreaIds, allInnovationAreas);
+                }
+            }
+        } else {
+            List<InnovationAreaResource> children = categoryRestService.getInnovationAreasBySector(competition.getInnovationSector()).getSuccessObjectOrThrowException();
+            List<Long> childrenIds = children.stream().map(InnovationAreaResource::getId).collect(Collectors.toList());
+
+            boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !childrenIds.contains(areaId));
+
+            if (foundNotMatchingId && isMarkAsComplete) {
+                return buildInnovationError(innovationAreaIds, children);
+            }
+        }
+
+        return emptyList();
+    }
+
     private List<Error> buildInnovationError(List<Long> innovationAreaCategoryIds, List<InnovationAreaResource> allInnovationAreas) {
         return asList(fieldError("innovationAreaCategoryIds",
                 innovationAreaCategoryIds,
@@ -147,28 +162,28 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 singletonList(allInnovationAreas.stream().map(child -> child.getName()).collect(Collectors.joining(", ")))));
     }
 
-    private List<Long> getAllInnovationAreaIds(List<InnovationAreaResource> allInnovationAreas) {
-        return allInnovationAreas.stream().map(InnovationAreaResource::getId).collect(Collectors.toList());
+    private Stream<Long> getAllInnovationAreaIds(List<InnovationAreaResource> allInnovationAreas) {
+        return allInnovationAreas.stream().map(InnovationAreaResource::getId);
     }
 
-    private Error saveAssignedUsers(final CompetitionResource competition, InitialDetailsForm initialDetailsForm) {
+    private List<Error> saveAssignedUsers(final CompetitionResource competition, InitialDetailsForm initialDetailsForm) {
         if (userService.existsAndHasRole(initialDetailsForm.getExecutiveUserId(), COMP_ADMIN)) {
             competition.setExecutive(initialDetailsForm.getExecutiveUserId());
         } else if (initialDetailsForm.getExecutiveUserId() != null) {
-            return fieldError("executiveUserId",
+            return asList(fieldError("executiveUserId",
                     initialDetailsForm.getExecutiveUserId(),
-                    "competition.setup.invalid.comp.exec");
+                    "competition.setup.invalid.comp.exec"));
         }
 
         if (userService.existsAndHasRole(initialDetailsForm.getLeadTechnologistUserId(), COMP_TECHNOLOGIST)) {
             competition.setLeadTechnologist(initialDetailsForm.getLeadTechnologistUserId());
         } else if (initialDetailsForm.getLeadTechnologistUserId() != null) {
-            return fieldError("leadTechnologistUserId",
+            return asList(fieldError("leadTechnologistUserId",
                     initialDetailsForm.getLeadTechnologistUserId(),
-                    "competition.setup.invalid.comp.technologist");
+                    "competition.setup.invalid.comp.technologist"));
         }
 
-        return null;
+        return emptyList();
     }
 
     private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {
@@ -249,8 +264,13 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
     private void processInnovationAreas(String inputValue, CompetitionResource competitionResource) {
         List<String> valueList = Arrays.asList(inputValue.split("\\s*,\\s*"));
         Set<Long> valueSet = valueList.stream().map(Long::parseLong).collect(Collectors.toSet());
-        competitionResource.setInnovationAreas(valueSet);
 
+        if(valueSet.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
+            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+            valueSet = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toSet());
+        }
+
+        competitionResource.setInnovationAreas(valueSet);
     }
 
 	@Override

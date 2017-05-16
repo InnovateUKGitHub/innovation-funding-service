@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.management.controller.dashboard.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.junit.Before;
 import org.junit.Test;
