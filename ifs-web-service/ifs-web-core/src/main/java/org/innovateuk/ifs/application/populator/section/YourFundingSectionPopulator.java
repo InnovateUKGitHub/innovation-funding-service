@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.section.YourOrganisationSectionViewModel;
+import org.innovateuk.ifs.application.viewmodel.section.YourFundingSectionViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ import java.util.List;
  * Your funding populator section view models.
  */
 @Component
-public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourOrganisationSectionViewModel> {
+public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFundingSectionViewModel> {
 
     @Autowired
     private SectionService sectionService;
@@ -26,15 +26,15 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourOr
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    protected void populate(ApplicantSectionResource section, ApplicationForm form, YourOrganisationSectionViewModel viewModel, Model model, BindingResult bindingResult) {
+    protected void populate(ApplicantSectionResource section, ApplicationForm form, YourFundingSectionViewModel viewModel, Model model, BindingResult bindingResult) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
     }
 
     @Override
-    protected YourOrganisationSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form) {
+    protected YourFundingSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form) {
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
-        return new YourOrganisationSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form), getNavigationViewModel(section), completedSectionIds.contains(section.getSection().getId()));
+        return new YourFundingSectionViewModel(section, formInputViewModelGenerator.fromSection(section, section, form), getNavigationViewModel(section), completedSectionIds.contains(section.getSection().getId()));
     }
 
     @Override

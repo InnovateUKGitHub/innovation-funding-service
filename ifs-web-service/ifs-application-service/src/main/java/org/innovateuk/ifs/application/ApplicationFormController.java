@@ -220,9 +220,7 @@ public class ApplicationFormController {
                                @ModelAttribute("loggedInUser") UserResource user) {
 
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-
-        QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(question);
-        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form, organisationDetailsViewModel);
+        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
@@ -328,8 +326,7 @@ public class ApplicationFormController {
 
                 // Add any validated fields back in invalid entries are displayed on re-render
                 ApplicantQuestionResource applicantQuestion = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-                QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicantQuestion);
-                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(applicantQuestion, model, form, organisationDetailsViewModel);
+                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(applicantQuestion, model, form);
 
                 model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
                 applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);

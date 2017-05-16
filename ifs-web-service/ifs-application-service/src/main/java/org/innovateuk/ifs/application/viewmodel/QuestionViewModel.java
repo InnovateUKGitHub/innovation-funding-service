@@ -23,10 +23,6 @@ public class QuestionViewModel extends AbstractApplicationFormViewModel<Applican
         return navigationViewModel;
     }
 
-    public Boolean getIsSection() {
-        return Boolean.FALSE;
-    }
-
     public Boolean isShowReturnButtons() {
         return Boolean.TRUE;
     }
