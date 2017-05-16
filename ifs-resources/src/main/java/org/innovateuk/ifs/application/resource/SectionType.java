@@ -36,4 +36,9 @@ public enum SectionType {
     public Optional<SectionType> getParent() {
         return parent;
     }
+
+
+    public String getNameLower() {
+        return this.name().toLowerCase();
+    }
 }

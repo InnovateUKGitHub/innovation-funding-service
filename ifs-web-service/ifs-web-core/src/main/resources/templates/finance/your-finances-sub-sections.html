@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
     <!-- ===========================Your finances section view =========================== -->
-    <th:block th:fragment="your_finances(model)">
+    <th:block th:fragment="finance(model)">
         <div class="your-finances">
             <h2 class="heading-medium no-margin-bottom">Finances</h2>
             <p>Please complete your project finances.</p>
@@ -32,7 +32,7 @@
 
 
     <!-- =========================== Your organisation =========================== -->
-    <th:block th:fragment="your_organisation (model)">
+    <th:block th:fragment="organisation_finances (model)">
         <div class="question" th:with="formInputViewModel=${model.organisationSizeFormInputViewModel}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
             <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
         </div>
@@ -174,13 +174,13 @@
         </div>
     </th:block>
 
-    <th:block th:fragment="your_project_costs(model)">
+    <th:block th:fragment="project_cost_finances(model)">
         <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model})" />
         <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:if="${model.showTerms}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
-    <th:block th:fragment="your_funding(model)">
+    <th:block th:fragment="funding_finances(model)">
         <th:block th:each="formInputViewModel : ${model.standardInputViewModels}">
             <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
                 <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
@@ -190,7 +190,7 @@
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
-    <th:block th:fragment="finances_overview(model)">
+    <th:block th:fragment="overview_finances(model)">
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}">
             <th:block th:if="${formInput.type.displayableFinancialSummaryType}"  th:with="model=${model.openSectionViewModel}" >
                 <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),

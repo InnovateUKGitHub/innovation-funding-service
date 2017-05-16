@@ -56,31 +56,7 @@
                 <!--/* Application Form for a Section. */-->
                 <th:block th:if="${model.isSection()}">
                     <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}" />
-
-                    <!--
-                    <th:block th:unless="${model.hasFinanceView}">
-                        <div class="warning-alert">
-                            Registration is now closed, you are no longer able to submit your application.
-                        </div>
-                    </th:block>
-                    -->
-                    <th:block th:switch="${model.section.type.name()}">
-                        <th:block th:case="'FINANCE'">
-                            <th:block th:include="finance/your-finances-sub-sections :: your_finances (${model})" />
-                        </th:block>
-                        <th:block th:case="'PROJECT_COST_FINANCES'">
-                            <th:block th:insert="finance/your-finances-sub-sections :: your_project_costs (${model})" />
-                        </th:block>
-                        <th:block th:case="'ORGANISATION_FINANCES'">
-                            <th:block th:insert="finance/your-finances-sub-sections :: your_organisation (${model})" />
-                        </th:block>
-                        <th:block th:case="'FUNDING_FINANCES'">
-                            <th:block th:insert="finance/your-finances-sub-sections :: your_funding (${model})" />
-                        </th:block>
-                        <th:block th:case="'OVERVIEW_FINANCES'">
-                            <th:block th:insert="finance/your-finances-sub-sections :: finances_overview (${model})" />
-                        </th:block>
-                    </th:block>
+                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.getNameLower} (${model})" />
                 </th:block>
 
                 <input type="hidden" id="application_id" th:value="${model.application.id}"/>
