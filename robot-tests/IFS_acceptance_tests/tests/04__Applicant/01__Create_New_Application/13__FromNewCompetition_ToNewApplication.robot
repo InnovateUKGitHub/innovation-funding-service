@@ -385,8 +385,8 @@ Lead Applicant applies to the new created competition
     [Arguments]    ${competition}
     log in as a different user    &{lead_applicant_credentials}
     ${competitionId} =    get comp id from comp title    ${competition}
-    the user navigates to the page    ${server}/competition/${competitionId}/info/eligibility
-    the user clicks the button/link    jQuery=a:contains("Apply now")
+    the user navigates to the page    ${server}/application/create/check-eligibility/${competitionId}
+    the user clicks the button/link    jQuery=a:contains("Sign in")
     the user clicks the button/link    jQuery=a:contains("Begin application")
 
 the user enters value to field
