@@ -2,8 +2,6 @@ package org.innovateuk.ifs.project.notes.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -103,14 +101,9 @@ public class FinanceChecksNotesController {
                                                          HttpServletRequest request) {
 
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
-            return financeCheckService.downloadFile(attachmentId).handleSuccessOrFailure(
-                    failure -> new ResponseEntity<ByteArrayResource>(null, null, failure.getErrors().get(0).getStatusCode()),
-                    content -> financeCheckService.getAttachmentInfo(attachmentId).handleSuccessOrFailure(
-                            failure2 -> new ResponseEntity<ByteArrayResource>(null, null, failure2.getErrors().get(0).getStatusCode()),
-                            fileDetails -> returnFileIfFoundOrThrowNotFoundException(content, Optional.of(fileDetails)))
-            );
+            return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
         } else {
-            return forbiddenRedirectionDueToForbidden();
+            throw new ForbiddenActionException();
         }
     }
 
@@ -243,22 +236,13 @@ public class FinanceChecksNotesController {
                                                                  HttpServletRequest request) {
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
-            Optional<ByteArrayResource> content = Optional.empty();
-            Optional<FileEntryResource> fileDetails = Optional.empty();
-
             if (attachments.contains(attachmentId)) {
-                ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
-                if (fileContent.isSuccess()) {
-                    content = fileContent.getSuccessObject();
-                }
-                ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-                if (fileInfo.isSuccess()) {
-                    fileDetails = Optional.of(fileInfo.getSuccessObject());
-                }
+                return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
+            } else {
+                throw new ForbiddenActionException();
             }
-            return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
         } else {
-            return forbiddenRedirectionDueToForbidden();
+            throw new ForbiddenActionException();
         }
     }
 
@@ -379,15 +363,6 @@ public class FinanceChecksNotesController {
 
     private String rootView(Long projectId, Long organisationId) {
         return String.format(FINANCE_CHECKS_NOTES_BASE_URL, projectId, organisationId);
-    }
-
-    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content,
-                                                                                        Optional<FileEntryResource> fileDetails) {
-        if (content.isPresent() && fileDetails.isPresent()) {
-            return getFileResponseEntity(content.get(), fileDetails.get());
-        } else {
-            return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
-        }
     }
 
     private String getCookieName(Long projectId, Long organisationId, Long noteId) {

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -194,16 +195,10 @@ public class FinanceChecksQueriesAddQueryController {
         Optional<FileEntryResource> fileDetails = Optional.empty();
 
         if (attachments.contains(attachmentId)) {
-            ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
-            if (fileContent.isSuccess()) {
-                content = fileContent.getSuccessObject();
-            }
-            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-            if (fileInfo.isSuccess()) {
-                fileDetails = Optional.of(fileInfo.getSuccessObject());
-            }
+            return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
+        } else {
+            throw new ForbiddenActionException();
         }
-        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -279,14 +274,6 @@ public class FinanceChecksQueriesAddQueryController {
     private Optional<ProjectUserResource> getFinanceContact(Long projectId, Long organisationId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         return simpleFindFirst(projectUsers, pr -> pr.isFinanceContact() && organisationId.equals(pr.getOrganisation()));
-    }
-
-    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
-        if (content.isPresent() && fileDetails.isPresent()) {
-            return getFileResponseEntity(content.get(), fileDetails.get());
-        } else {
-            return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
-        }
     }
 
     private String getCookieName(Long projectId, Long organisationId) {

@@ -5,10 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesController;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddCommentForm;
@@ -28,7 +26,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -206,12 +203,10 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
-
-        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceFailure(new Error(CommonFailureKeys.GENERAL_NOT_FOUND, HttpStatus.NO_CONTENT)));
-        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/attachment/1"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("forbidden"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -246,10 +241,11 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         ByteArrayResource bytes = new ByteArrayResource("File contents".getBytes());
 
-        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceSuccess(Optional.of(bytes)));
-        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(bytes);
+        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenThrow(new ForbiddenActionException());
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/attachment/1"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("forbidden"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();

@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.upload.service.AttachmentRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -73,12 +74,15 @@ public class FinanceChecksNotesAddNoteController {
     @Autowired
     private FinanceCheckService financeCheckService;
 
+    @Autowired
+    private AttachmentRestService attachmentRestService;
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping
     public String viewNewNote(@PathVariable final Long projectId,
                               @PathVariable final Long organisationId,
                               Model model,
-                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                              @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
                               HttpServletRequest request,
                               HttpServletResponse response) {
 
@@ -101,7 +105,7 @@ public class FinanceChecksNotesAddNoteController {
                            @SuppressWarnings("unused") BindingResult bindingResult,
                            ValidationHandler validationHandler,
                            Model model,
-                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                           @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
                            HttpServletRequest request,
                            HttpServletResponse response) {
         if (postParametersMatchOrigin(request, projectId, organisationId, loggedInUser.getId())) {
@@ -154,7 +158,7 @@ public class FinanceChecksNotesAddNoteController {
                                         @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler,
-                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                        @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
 
@@ -192,24 +196,17 @@ public class FinanceChecksNotesAddNoteController {
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
-                                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                         @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
                                                          HttpServletRequest request) {
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            Optional<ByteArrayResource> content = Optional.empty();
-            Optional<FileEntryResource> fileDetails = Optional.empty();
-
             if (attachments.contains(attachmentId)) {
-                ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
-                if (fileContent.isSuccess()) {
-                    content = fileContent.getSuccessObject();
-                }
-                ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-                if (fileInfo.isSuccess()) {
-                    fileDetails = Optional.of(fileInfo.getSuccessObject());
-                }
+                ByteArrayResource fileContent = financeCheckService.downloadFile(attachmentId);
+                FileEntryResource fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
+                return getFileResponseEntity(fileContent, fileInfo);
+            } else {
+                throw new ForbiddenActionException();
             }
-            return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
         } else {
             throw new ForbiddenActionException();
         }
@@ -223,7 +220,7 @@ public class FinanceChecksNotesAddNoteController {
                                    @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                   @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
@@ -246,7 +243,7 @@ public class FinanceChecksNotesAddNoteController {
     @GetMapping("/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
@@ -287,14 +284,6 @@ public class FinanceChecksNotesAddNoteController {
 
     private String redirectToNotePage(Long projectId, Long organisationId) {
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/note";
-    }
-
-    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
-        if (content.isPresent() && fileDetails.isPresent()) {
-            return getFileResponseEntity(content.get(), fileDetails.get());
-        } else {
-            return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
-        }
     }
 
     private String getCookieName(Long projectId, Long organisationId) {

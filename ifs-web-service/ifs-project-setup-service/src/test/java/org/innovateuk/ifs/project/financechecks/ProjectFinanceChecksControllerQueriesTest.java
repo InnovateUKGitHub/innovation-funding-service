@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -78,11 +79,9 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(organisationId).build();
 
-
     RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(Arrays.asList(financeTeamRole)).build();
     UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
-
 
     ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
             .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
@@ -90,22 +89,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).build();
     ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(organisationId).withId(projectFinanceId).build();
 
-
     QueryResource thread;
-    UserResource user1;
-    PostResource firstPost;
-    UserResource user2;
-    PostResource firstResponse;
-
     QueryResource thread2;
-    PostResource firstPost2;
-
     QueryResource thread3;
-    PostResource firstPost1 ;
-    PostResource firstResponse1;
 
     List<QueryResource> queries;
-
 
     @Captor
     ArgumentCaptor<PostResource> savePostArgumentCaptor;
@@ -275,12 +263,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Test
     public void testDownloadAttachmentFailsNoContent() throws Exception {
 
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
-
-        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
-        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks/attachment/1"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("forbidden"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -296,10 +282,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         ByteArrayResource bytes = new ByteArrayResource("File contents".getBytes());
 
-        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceSuccess(Optional.of(bytes)));
-        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(bytes);
+        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenThrow(new ForbiddenActionException());
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks/attachment/1"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("forbidden"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -464,7 +451,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
         when(financeCheckServiceMock.uploadFile(projectId, uploadedFile.getContentType(), uploadedFile.getSize(), uploadedFile.getOriginalFilename(), uploadedFile.getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
-        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(fileEntry);
         when(organisationService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
@@ -492,9 +479,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Test
     public void testDownloadResponseAttachmentFailsNoContent() throws Exception {
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
+        when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks/1/new-response/attachment/1"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("forbidden"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -541,7 +530,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(organisationService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
-        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntryResource));
+        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(fileEntryResource);
 
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
 
@@ -618,7 +607,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         FileEntryResource attachment = new FileEntryResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
+        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(attachment);
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);

@@ -308,7 +308,8 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note/attachment/1"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("forbidden"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
