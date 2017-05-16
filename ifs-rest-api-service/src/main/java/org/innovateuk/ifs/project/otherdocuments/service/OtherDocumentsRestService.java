@@ -6,7 +6,7 @@ import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
 
-public interface ProjectOtherDocumentsRestService {
+public interface OtherDocumentsRestService {
 
     RestResult<Optional<ByteArrayResource>> getCollaborationAgreementFile(Long projectId);
 

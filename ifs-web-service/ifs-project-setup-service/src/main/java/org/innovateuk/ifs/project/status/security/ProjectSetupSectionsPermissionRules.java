@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.sections.SectionAccess;
@@ -37,7 +37,7 @@ public class ProjectSetupSectionsPermissionRules {
     private ProjectService projectService;
 
     @Autowired
-    private ProjectOtherDocumentsService projectOtherDocumentsService;
+    private OtherDocumentsService otherDocumentsService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -133,7 +133,7 @@ public class ProjectSetupSectionsPermissionRules {
     private boolean doSubmitOtherDocumentsCheck(Long projectId, UserResource user) {
         ProjectResource project = projectService.getById(projectId);
         boolean isProjectManager = projectService.isProjectManager(user.getId(), projectId);
-        boolean isSubmitAllowed = projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId);
+        boolean isSubmitAllowed = otherDocumentsService.isOtherDocumentSubmitAllowed(projectId);
 
         boolean otherDocumentsSubmitted = project.getDocumentsSubmittedDate() != null;
         ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();

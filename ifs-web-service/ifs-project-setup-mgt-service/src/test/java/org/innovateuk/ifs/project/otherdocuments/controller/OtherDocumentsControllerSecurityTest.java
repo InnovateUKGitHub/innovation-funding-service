@@ -10,11 +10,11 @@ import java.util.function.Consumer;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectOtherDocumentsControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectOtherDocumentsController> {
+public class OtherDocumentsControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<OtherDocumentsController> {
 
     @Override
-    protected Class<? extends ProjectOtherDocumentsController> getClassUnderTest() {
-        return ProjectOtherDocumentsController.class;
+    protected Class<? extends OtherDocumentsController> getClassUnderTest() {
+        return OtherDocumentsController.class;
     }
 
     @Test

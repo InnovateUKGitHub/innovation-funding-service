@@ -110,7 +110,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
                 .withOtherDocumentsApproved(ApprovalType.UNSET).build();
         when(projectServiceMock.getById(projectId)).thenReturn(project);
         when(projectServiceMock.isProjectManager(user.getId(), projectId)).thenReturn(true);
-        when(projectOtherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+        when(otherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
         assertTrue(rules.projectManagerCanSubmitOtherDocumentsSection(projectId, user));
     }
 
@@ -123,7 +123,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
                 .withOtherDocumentsApproved(ApprovalType.UNSET).build();
         when(projectServiceMock.getById(projectId)).thenReturn(project);
         when(projectServiceMock.isProjectManager(user.getId(), projectId)).thenReturn(false);
-        when(projectOtherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+        when(otherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
         assertFalse(rules.projectManagerCanSubmitOtherDocumentsSection(projectId, user));
     }
 

@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Form backing the Other Documents page
  */
-public class ProjectOtherDocumentsForm extends BaseBindingResultTarget {
+public class OtherDocumentsForm extends BaseBindingResultTarget {
 
     private MultipartFile collaborationAgreement;
     private MultipartFile exploitationPlan;

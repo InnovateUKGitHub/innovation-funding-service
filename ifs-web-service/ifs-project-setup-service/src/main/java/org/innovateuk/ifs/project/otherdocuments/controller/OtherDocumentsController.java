@@ -5,10 +5,10 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
-import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
-import org.innovateuk.ifs.project.otherdocuments.populator.ProjectOtherDocumentsViewModelPopulator;
-import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
+import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
+import org.innovateuk.ifs.project.otherdocuments.populator.OtherDocumentsViewModelPopulator;
+import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -33,15 +33,15 @@ import static java.util.Collections.singletonList;
  */
 @Controller
 @RequestMapping("/project/{projectId}/partner/documents")
-public class ProjectOtherDocumentsController {
+public class OtherDocumentsController {
 
     private static final String FORM_ATTR = "form";
 
     @Autowired
-    ProjectOtherDocumentsViewModelPopulator populator;
+    OtherDocumentsViewModelPopulator populator;
 
     @Autowired
-    private ProjectOtherDocumentsService projectOtherDocumentsService;
+    private OtherDocumentsService otherDocumentsService;
 
     @Autowired
     private ProjectService projectService;
@@ -51,12 +51,12 @@ public class ProjectOtherDocumentsController {
     public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                          @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
-        ProjectOtherDocumentsForm form = new ProjectOtherDocumentsForm();
+        OtherDocumentsForm form = new OtherDocumentsForm();
         return doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
     }
 
-    private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, ProjectOtherDocumentsForm form) {
-        ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
+    private String doViewOtherDocumentsPage(Long projectId, Model model, UserResource loggedInUser, OtherDocumentsForm form) {
+        OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
@@ -69,7 +69,7 @@ public class ProjectOtherDocumentsController {
     @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
-        ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
+        OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
         model.addAttribute("currentUser", loggedInUser);
 
@@ -84,7 +84,7 @@ public class ProjectOtherDocumentsController {
         if (isProjectManager(projectId, loggedInUser)) {
             return redirectToOtherDocumentsPage(projectId);
         } else {
-            ProjectOtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
+            OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("currentUser", loggedInUser);
             model.addAttribute("readOnlyView", true);
@@ -100,8 +100,8 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping("/submit")
     public String submitPartnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
-        if (projectOtherDocumentsService.isOtherDocumentSubmitAllowed(projectId)) {
-            projectOtherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
+        if (otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)) {
+            otherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
         }
 
         return redirectToOtherDocumentsPage(projectId);
@@ -118,8 +118,8 @@ public class ProjectOtherDocumentsController {
     ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getCollaborationAgreementFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+        final Optional<ByteArrayResource> content = otherDocumentsService.getCollaborationAgreementFile(projectId);
+        final Optional<FileEntryResource> fileDetails = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
@@ -128,7 +128,7 @@ public class ProjectOtherDocumentsController {
     @PostMapping(params = "uploadCollaborationAgreementClicked")
     public String uploadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
@@ -137,7 +137,7 @@ public class ProjectOtherDocumentsController {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form, () -> {
             MultipartFile file = form.getCollaborationAgreement();
 
-            return projectOtherDocumentsService.addCollaborationAgreementDocument(projectId, file.getContentType(), file.getSize(),
+            return otherDocumentsService.addCollaborationAgreementDocument(projectId, file.getContentType(), file.getSize(),
                     file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
@@ -145,14 +145,14 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping(params = "removeCollaborationAgreementClicked")
     public String removeCollaborationAgreementFile(@PathVariable("projectId") final Long projectId,
-                                                   @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                                   @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
                                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                                    ValidationHandler validationHandler,
                                                    Model model,
                                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "collaborationAgreement", form,
-                () -> projectOtherDocumentsService.removeCollaborationAgreementDocument(projectId));
+                () -> otherDocumentsService.removeCollaborationAgreementDocument(projectId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
@@ -162,8 +162,8 @@ public class ProjectOtherDocumentsController {
     ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId) {
 
-        final Optional<ByteArrayResource> content = projectOtherDocumentsService.getExploitationPlanFile(projectId);
-        final Optional<FileEntryResource> fileDetails = projectOtherDocumentsService.getExploitationPlanFileDetails(projectId);
+        final Optional<ByteArrayResource> content = otherDocumentsService.getExploitationPlanFile(projectId);
+        final Optional<FileEntryResource> fileDetails = otherDocumentsService.getExploitationPlanFileDetails(projectId);
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
@@ -179,7 +179,7 @@ public class ProjectOtherDocumentsController {
     @PostMapping(params = "uploadExploitationPlanClicked")
     public String uploadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId,
-            @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+            @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
@@ -189,12 +189,12 @@ public class ProjectOtherDocumentsController {
 
             MultipartFile file = form.getExploitationPlan();
 
-            return projectOtherDocumentsService.addExploitationPlanDocument(projectId, file.getContentType(), file.getSize(),
+            return otherDocumentsService.addExploitationPlanDocument(projectId, file.getContentType(), file.getSize(),
                     file.getOriginalFilename(), getMultipartFileBytes(file));
         });
     }
 
-    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, ProjectOtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
+    private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, UserResource loggedInUser, String fieldName, OtherDocumentsForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToOtherDocumentsPage(projectId);
         Supplier<String> failureView = () -> doViewOtherDocumentsPage(projectId, model, loggedInUser, form);
@@ -205,13 +205,13 @@ public class ProjectOtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping(params = "removeExploitationPlanClicked")
     public String removeExploitationPlanFile(@PathVariable("projectId") final Long projectId,
-                                             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
+                                             @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
                                              Model model,
                                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "exploitationPlan", form,
-                () -> projectOtherDocumentsService.removeExploitationPlanDocument(projectId));
+                () -> otherDocumentsService.removeExploitationPlanDocument(projectId));
     }
 }
