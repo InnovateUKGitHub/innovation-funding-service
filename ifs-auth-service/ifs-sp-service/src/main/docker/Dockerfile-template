@@ -8,31 +8,33 @@ ENV HTTP_PORT=9080 \
     SP_DOMAIN=ifs.local-dev \
     IDP_DOMAIN=idp \
     IDP_PORT=8443 \
-    TRUSTED_IP=@auth_service_trusted_ip@ \
-    PROXY_CERTIFICATE=@auth_sp_proxy_certificate@ \
-    PROXY_KEY=@auth_sp_proxy_key@ \
-    PROXY_CA_CERTIFICATE=@auth_sp_proxy_ca_certificate@
+    TRUSTED_IP="@auth_service_trusted_ip@" \
+    PROXY_CERTIFICATE="sp_proxy_certificate.pem" \
+    PROXY_KEY="sp_proxy_key.pem" \
+    PROXY_CA_CERTIFICATE="sp_proxy_cacertificate.pem" \
+    IDP_SIGNING_CERTIFICATE="idp-signing.crt" \
+    IDP_ENCRYPTION_CERTIFICATE="idp-encryption.crt"
 
 WORKDIR /usr/local/bin
 
 COPY files /usr/local/files/
+COPY certs /usr/local/files/apache2/
 
 RUN apt-get update --fix-missing && \
 
 # install apache and shibboleth sp module \
-  apt-get -y install apache2 libapache2-modsecurity libapache2-mod-shib2 && \
+  apt-get -y install curl apache2 libapache2-modsecurity libapache2-mod-shib2 && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
 
 # put certificates in place \
   mkdir /etc/apache2/certs && \
-  echo "$PROXY_CERTIFICATE" > /etc/apache2/certs/server.crt && \
-  echo "$PROXY_KEY" > /etc/apache2/certs/server.key && \
-  echo "$PROXY_CA_CERTIFICATE" > /etc/apache2/certs/DigiCertCA.crt && \
+  mv "/usr/local/files/apache2/$PROXY_KEY" "/usr/local/files/apache2/$PROXY_CERTIFICATE" /etc/apache2/certs/ && \
+  mv "/usr/local/files/apache2/$PROXY_CA_CERTIFICATE" /etc/apache2/certs/ && \
 
 # configure apache \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod shib2 socache_shmcb slotmem_shm ssl proxy_balancer status lbmethod_byrequests proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
-  sed -i -e "s/Listen 80/Listen $HTTP_PORT/" -e "s/Listen 443/Listen $HTTPS_PORT/" /etc/apache2/ports.conf && \
+  sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
   mv /usr/local/files/apache2/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
 
 # put holding pages in place. A dedicated container is probably a better idea \
@@ -55,10 +57,11 @@ RUN apt-get update --fix-missing && \
   mv /usr/local/files/sp/* /etc/shibboleth/ && \
   mkdir /var/www/html/Logout &&  mv /usr/local/files/apache2/index.html /var/www/html/Logout/ && \
   mkdir /var/run/shibboleth && \
-  sed -i "s#\/\/ifs.local-dev#\/\/$SP_DOMAIN#g" /etc/shibboleth/* /var/www/html/Logout/index.html && \
-  sed -i "s/idp:8443/$IDP_PORT/g" /etc/shibboleth/metadata.xml && \
-  sed -i "s#\/\/idp#\/\/$IDP_DOMAIN#g" /etc/shibboleth/shibboleth2.xml /etc/shibboleth/metadata.xml /var/www/html/Logout/index.html && \
   sed -i "/^log4j\.appender/d" /etc/shibboleth/shibd.logger && cat /etc/shibboleth/appenders.shibd.logger >> /etc/shibboleth/shibd.logger &&  rm /etc/shibboleth/appenders.shibd.logger && \
+  # see also substitutions in entrypoint script
+  cp /etc/apache2/certs/* /etc/shibboleth/ && \
+  mv "/usr/local/files/apache2/$IDP_SIGNING_CERTIFICATE" /etc/shibboleth/ && \
+  mv "/usr/local/files/apache2/$IDP_ENCRYPTION_CERTIFICATE" /etc/shibboleth/ && \
 
 # run shibboleth sp as its own user (same as apache)
   mkdir -p /var/run/shibboleth && \
@@ -68,6 +71,3 @@ RUN apt-get update --fix-missing && \
   rm -Rf /usr/local/files/
 
 ENTRYPOINT [ "run-shibboleth-sp.sh" ]
-
-HEALTHCHECK --interval=15s --timeout=8s \
-  CMD curl --connect-timeout 5 -m 5 -k -f https://localhost:$HTTPS_PORT/Shibboleth.sso/Metadata || exit 1

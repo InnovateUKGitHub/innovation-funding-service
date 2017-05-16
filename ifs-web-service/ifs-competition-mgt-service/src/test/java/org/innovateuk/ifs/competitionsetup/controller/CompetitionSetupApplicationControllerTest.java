@@ -627,6 +627,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/question"));
 
+        verify(competitionSetupQuestionService, atLeastOnce()).getQuestion(QUESTION_ID);
         verify(competitionService, never()).update(competition);
         verify(competitionService).setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
     }
@@ -639,6 +640,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
 
+        verify(competitionSetupQuestionService, never()).getQuestion(QUESTION_ID);
         verify(competitionService, never()).update(UNEDITABLE_COMPETITION);
     }
 }

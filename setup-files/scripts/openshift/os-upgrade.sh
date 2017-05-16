@@ -35,7 +35,7 @@ function upgradeServices {
     # data-service
     oc apply -f os-files-tmp/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     sleep 90
-    oc rollout status dc/data-service --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
+    oc rollout status dc/data-service --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
 
     # services
     oc apply -f os-files-tmp/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
@@ -74,13 +74,13 @@ function forceReload {
 
 function watchStatus {
     sleep 90
-    oc rollout status dc/application-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/assessment-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/competition-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/project-setup-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/project-setup-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/idp --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/shib --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
+    oc rollout status dc/application-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/assessment-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/competition-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/project-setup-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/project-setup-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/idp --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/shib --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
 }
 
 . $(dirname $0)/deploy-functions.sh

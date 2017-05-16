@@ -9,7 +9,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -23,7 +22,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
