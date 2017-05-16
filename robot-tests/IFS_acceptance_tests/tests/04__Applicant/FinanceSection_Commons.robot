@@ -105,7 +105,6 @@ the user fills in the project costs
     the user selects the checkbox    agree-state-aid-page
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
-    the user should see the element       jQuery=button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user has read only view once section is marked complete
