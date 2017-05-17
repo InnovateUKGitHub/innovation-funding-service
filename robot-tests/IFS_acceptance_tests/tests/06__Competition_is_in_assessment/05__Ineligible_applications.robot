@@ -8,6 +8,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               INFUND-9130 - Applicant dashboard: Application moved from 'Application in progress' section of dashboard to 'Previous applications' section
 ...
 ...               INFUND-7370 - As a member of the competitions team I can mark a submitted application as ineligible so that the application is not sent to be assessed
+...
+...               INFUND-8941 - As a member of the competitions team I can reinstate an application that as been marked as Ineligible
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin    Applicant
@@ -72,14 +74,14 @@ Inform a user their application is ineligible
    And the user clicks the button/link    jQuery=button:contains("Send")
    Then the user should see the element    jQuery=td:contains("28") ~ td span:contains("Informed")
    Then the application is in the right section    Previous applications
-   And the user reads his email    nancy.peterson@gmail.com    This is ineligible    Thank you for your application but this is ineligible
-   [Teardown]    Log in as a different user    &{Comp_admin1_credentials}
+   And the user reads his email    ${Ineligible_user["email"]}    This is ineligible    Thank you for your application but this is ineligible
 
 Reinstate an application
-   [Documentation]
+   [Documentation]    INFUND-8941
    [Tags]
-   [Setup]    the user navigates to ineligible applications
-   Given the user clicks the button/link     link=28
+   [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+   Given the user navigates to ineligible applications
+   And the user clicks the button/link     link=28
    And the user clicks the button/link    jQuery=a:contains("Reinstate application")
    When the user clicks the button/link    jQuery=button:contains("Reinstate application")
    Then the application is in the right section    Applications in progress
