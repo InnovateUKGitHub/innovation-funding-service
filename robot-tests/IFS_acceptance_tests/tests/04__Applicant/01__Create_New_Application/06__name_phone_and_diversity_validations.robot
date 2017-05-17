@@ -72,3 +72,16 @@ Phone number too short
     And the user enters text to a text field    id=password    ${correct_password}
     And the user submits their information
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters.
+
+First and last name containing hyphen, space and aposthrophe should return no errors
+    # Test coverage for first/last name validation will be expanded by INFUND-9559
+    [Documentation]    -INFUND-3260
+    [Tags]
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    O'Brian Elliot-Murray
+    And the user enters text to a text field    id=lastName    O'Brian Elliot-Murray
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    obrianelliot@murray.com
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user submits their information
+    Then the user should see the text in the page    Please verify your email address
