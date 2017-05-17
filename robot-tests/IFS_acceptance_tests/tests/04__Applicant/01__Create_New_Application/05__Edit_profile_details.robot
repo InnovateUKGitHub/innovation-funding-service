@@ -96,7 +96,6 @@ Display errors for invalid inputs of the Phone field
     And the user fills in the Phone field    12
     And the user should see an error    Input for your phone number has a minimum length of 8 characters.
 
-
 *** Keywords ***
 the user enters profile details
     The user enters text to a text field    id=firstName    Chris
@@ -104,7 +103,6 @@ the user enters profile details
     The user enters text to a text field    id=phoneNumber    +-0123456789
     the user selects the checkbox    allowMarketingEmails
     the user clicks the button/link    css=[name="create-account"]
-
 
 the user fills in the first name
     [Arguments]    ${first name}
@@ -133,7 +131,6 @@ the user can change their details back again
     The user enters text to a text field    id=phoneNumber    +-0123456789
     the user unselects the checkbox    allowMarketingEmails
     the user clicks the button/link    css=[name="create-account"]
-
 
 other contributors should see the applicant's updated name for the assignation options
     Logout as user
