@@ -108,7 +108,7 @@ public class AssessorRegistrationController {
     }
 
     @GetMapping(value = "/{inviteHash}/register/account-created")
-    public String accountCreated(Model model, @PathVariable("inviteHash") String inviteHash, @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+    public String accountCreated(Model model, @PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;
 
         // the user is already logged in, take them back to the invite

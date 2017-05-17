@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 
 import java.util.List;
@@ -16,5 +16,5 @@ public interface ApplicationFundingDecisionService {
 
 	Optional<FundingDecision> getFundingDecisionForString(String fundingDecisionName);
 
-	ServiceResult<Void> sendFundingNotifications(NotificationResource notificationResource);
+	ServiceResult<Void> sendFundingNotifications(FundingNotificationResource fundingNotificationResource);
 }

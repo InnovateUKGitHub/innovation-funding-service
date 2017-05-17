@@ -3,11 +3,11 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 </head>
-<body th:with="context='comp-management'" class="competition-management application-funders-panel">
+<body th:with="context='comp-management'" class="competition-management application-funders-panel extra-width">
 
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" th:with="fullwidth=true"/>
-<main tabindex="-1" id="content" class="full-width">
+<th:block th:insert="fragments/layout :: global-header" />
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${competitionSummary.competitionId})}" />
 
@@ -54,7 +54,9 @@
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
     <div class="grid-row sorting">
-        <h3><span class="heading-xlarge no-margin" th:text="${results.totalElements}" /> applications</h3>
+        <div class="column-half">
+            <h3><span class="heading-xlarge no-margin" th:text="${results.totalElements}" /> applications</h3>
+        </div>
     </div>
     <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <div class="grid-row sorting">

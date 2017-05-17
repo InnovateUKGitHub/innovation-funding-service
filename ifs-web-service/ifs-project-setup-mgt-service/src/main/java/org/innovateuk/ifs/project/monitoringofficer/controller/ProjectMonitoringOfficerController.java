@@ -67,7 +67,7 @@ public class ProjectMonitoringOfficerController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
     public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
@@ -79,7 +79,7 @@ public class ProjectMonitoringOfficerController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping("/edit")
     public String editMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
-                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                        UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
@@ -94,7 +94,7 @@ public class ProjectMonitoringOfficerController {
                                                   @PathVariable("projectId") final Long projectId,
                                                   @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
                                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                                  UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
@@ -112,7 +112,7 @@ public class ProjectMonitoringOfficerController {
                                                  @PathVariable("projectId") final Long projectId,
                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                                 UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
