@@ -45,6 +45,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
@@ -203,17 +204,30 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("B Z - Org1", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(1).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).attachments.size());
-
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
-    public void testQueriesPageNotAvailableIfFinanceContactNotSet() throws Exception {
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(newProjectTeamStatusResource().withPartnerStatuses(singletonList(newProjectPartnerStatusResource().withOrganisationId(applicantOrganisationId).withFinanceContactStatus(ProjectActivityStates.PENDING).build())).build());
-        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
-                .andExpect(status().isNotFound())
+    public void testQueriesFinanceContactAvailableIsSetCorrectlyForTemplate() throws Exception {
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
+
+        // FC Exists
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
+                .andExpect(status().isOk())
                 .andReturn();
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
+        FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(queryViewModel.isFinanceContactProvided());
+
+        // FC Doesn't exist
+        ProjectUserResource projectUsersSansFC = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.PROJECT_MANAGER).build();
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUsersSansFC));
+        result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
+                .andExpect(status().isOk())
+                .andReturn();
+        queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
+        assertFalse(queryViewModel.isFinanceContactProvided());
     }
 
     @Test

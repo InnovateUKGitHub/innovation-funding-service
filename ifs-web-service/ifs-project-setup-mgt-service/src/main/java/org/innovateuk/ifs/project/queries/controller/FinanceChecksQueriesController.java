@@ -89,18 +89,9 @@ public class FinanceChecksQueriesController {
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
                            Model model) {
-        checkFinanceContactIsSubmitted(projectId, organisationId);
         FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
         model.addAttribute("model", viewModel);
         return QUERIES_VIEW;
-    }
-
-    private void checkFinanceContactIsSubmitted(Long projectId, Long organisationId) {
-        ProjectTeamStatusResource projectTeamStatusResource = projectService.getProjectTeamStatus(projectId, Optional.empty());
-        boolean financeContactSubmitted = projectTeamStatusResource.getPartnerStatusForOrganisation(organisationId).map(partnerStatus -> partnerStatus.getFinanceContactStatus().equals(ProjectActivityStates.COMPLETE)).orElse(false);
-        if(!financeContactSubmitted) {
-            throw new ObjectNotFoundException(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED.getErrorKey(), Collections.emptyList());
-        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -126,6 +117,14 @@ public class FinanceChecksQueriesController {
         }
 
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+    }
+
+    private void checkFinanceContactIsSubmitted(Long projectId, Long organisationId) {
+        ProjectTeamStatusResource projectTeamStatusResource = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        boolean financeContactSubmitted = projectTeamStatusResource.getPartnerStatusForOrganisation(organisationId).map(partnerStatus -> partnerStatus.getFinanceContactStatus().equals(ProjectActivityStates.COMPLETE)).orElse(false);
+        if(!financeContactSubmitted) {
+            throw new ObjectNotFoundException(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED.getErrorKey(), Collections.emptyList());
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -364,6 +363,7 @@ public class FinanceChecksQueriesController {
         return new FinanceChecksQueriesViewModel(
                 organisation.getName(),
                 leadPartnerOrganisation,
+                financeContact.isPresent(),
                 financeContact.isPresent() ? financeContact.get().getUserName() : UNKNOWN_FIELD,
                 financeContact.isPresent() ? financeContact.get().getEmail() : UNKNOWN_FIELD,
                 financeContact.isPresent() ? financeContact.get().getPhoneNumber() : UNKNOWN_FIELD,

@@ -11,6 +11,7 @@ import java.util.Map;
 public class FinanceChecksQueriesViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
+    private boolean financeContactProvided;
     private String financeContactName;
     private String financeContactEmail;
     private String financeContactPhoneNumber;
@@ -27,6 +28,7 @@ public class FinanceChecksQueriesViewModel {
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
+                                         boolean financeContactProvided,
                                          String financeContactName,
                                          String financeContactEmail,
                                          String financeContactPhoneNumber,
@@ -42,6 +44,7 @@ public class FinanceChecksQueriesViewModel {
                                          Long queryId) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
+        this.financeContactProvided = financeContactProvided;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
         this.financeContactPhoneNumber = financeContactPhoneNumber;
@@ -177,4 +180,11 @@ public class FinanceChecksQueriesViewModel {
         this.newAttachmentLinks = newAttachmentLinks;
     }
 
+    public boolean isFinanceContactProvided() {
+        return financeContactProvided;
+    }
+
+    public void setFinanceContactProvided(boolean financeContactProvided) {
+        this.financeContactProvided = financeContactProvided;
+    }
 }

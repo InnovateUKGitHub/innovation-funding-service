@@ -3,6 +3,7 @@ package org.innovateuk.ifs.thread.service;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -31,6 +32,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
@@ -40,11 +44,13 @@ import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newP
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -123,7 +129,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Organisation o2 = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_FINANCE_CONTACT).withUser(u, u2).withOrganisation(o, o2).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
@@ -164,6 +170,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Organisation o = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
+
         User u2 = newUser().
                 withEmailAddress("Z@Y.com").
                 withFirstName("Z").
@@ -172,17 +179,18 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Organisation o2 = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(2);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
 
-        Long result = service.create(queryToCreate).getSuccessObjectOrThrowException();
+        ServiceResult<Long> result = service.create(queryToCreate);
 
-        assertEquals(result, Long.valueOf(1L));
+        assertTrue(result.isFailure());
 
+        assertTrue(result.getFailure().is(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED)));
     }
 
     @Test
@@ -245,17 +253,18 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(null);
 
-        Long result = service.create(queryToCreate).getSuccessObjectOrThrowException();
+        ServiceResult<Long> result = service.create(queryToCreate);
 
-        assertEquals(result, Long.valueOf(1L));
+        assertTrue(result.isFailure());
 
+        assertTrue(result.getFailure().is(notFoundError(ProjectFinance.class, 22L)));
     }
 
     @Test
     public void test_addPost() throws Exception {
         Long queryId = 1L;
 
-        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
@@ -283,7 +292,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Organisation o2 = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(2);
         Application app = newApplication().withName("App1").build();
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
 
@@ -308,17 +317,26 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNotFinanceTeam() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.COMP_ADMIN).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(newRole(UserRoleType.COMP_ADMIN).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        User u = newUser().withEmailAddress("a@b.com").withFirstName("A").withLastName("B").build();
+        User u2 = newUser().withEmailAddress("Z@Y.com").withFirstName("Z").withLastName("Y").build();
+        Organisation o = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o).build(1);
+        Application app = newApplication().withName("App1").build();
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
 
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
 
         when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
 
         assertTrue(service.addPost(post, queryId).isSuccess());
 
@@ -383,13 +401,17 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
 
-        assertTrue(service.addPost(post, queryId).isSuccess());
+        ServiceResult<Void> result = service.addPost(post, queryId);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED)));
     }
 
     @Test
     public void test_addPostNotificationNotSent() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
