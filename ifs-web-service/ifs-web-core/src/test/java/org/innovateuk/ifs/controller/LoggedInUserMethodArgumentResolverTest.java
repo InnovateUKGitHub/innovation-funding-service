@@ -11,7 +11,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.MethodParameter;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,15 +39,13 @@ public class LoggedInUserMethodArgumentResolverTest {
     private UserAuthenticationService userAuthenticationService;
 
     @InjectMocks
-    private LoggedInUserMethodArgumentResolver loggedInUserMethodArgumentResolver;
+    private LoggedInUserMethodArgumentResolver loggedInUserMethodArgumentResolver = new LoggedInUserMethodArgumentResolver();
 
     private Method testMethod;
 
     @Before
     public void setUp() throws Exception {
         testMethod = TestController.class.getMethod("test", UserResource.class, NotAUserResource.class, UserResource.class);
-        loggedInUserMethodArgumentResolver = new LoggedInUserMethodArgumentResolver();
-        ReflectionTestUtils.setField(loggedInUserMethodArgumentResolver, "userAuthenticationService", userAuthenticationService);
     }
 
     @Test
