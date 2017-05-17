@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
@@ -33,8 +33,8 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
-        ProjectMonitoringOfficerViewModel viewModel =
-                (ProjectMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
+        MonitoringOfficerViewModel viewModel =
+                (MonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
         assertEquals(Long.valueOf(345), viewModel.getApplicationId());
@@ -57,8 +57,8 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
-        ProjectMonitoringOfficerViewModel viewModel =
-                (ProjectMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
+        MonitoringOfficerViewModel viewModel =
+                (MonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
         assertEquals(Long.valueOf(345), viewModel.getApplicationId());

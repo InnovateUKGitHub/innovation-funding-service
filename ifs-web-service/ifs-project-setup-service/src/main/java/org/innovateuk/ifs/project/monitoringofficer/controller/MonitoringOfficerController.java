@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class MonitoringOfficerController {
     @GetMapping
     public String viewMonitoringOfficer(@PathVariable("projectId") Long projectId, Model model) {
 
-        ProjectMonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);
+        MonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);
         model.addAttribute("model", viewModel);
         return "project/monitoring-officer";
     }
@@ -41,16 +41,16 @@ public class MonitoringOfficerController {
     @GetMapping("/readonly")
     public String viewMonitoringOfficerInReadOnly(@PathVariable("projectId") Long projectId, Model model) {
 
-        ProjectMonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);
+        MonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);
         model.addAttribute("model", viewModel);
         model.addAttribute("readOnlyView", true);
         return "project/monitoring-officer";
     }
 
 
-    private ProjectMonitoringOfficerViewModel getMonitoringOfficerViewModel(Long projectId) {
+    private MonitoringOfficerViewModel getMonitoringOfficerViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         Optional<MonitoringOfficerResource> monitoringOfficer = projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId);
-        return new ProjectMonitoringOfficerViewModel(project, monitoringOfficer);
+        return new MonitoringOfficerViewModel(project, monitoringOfficer);
     }
 }
