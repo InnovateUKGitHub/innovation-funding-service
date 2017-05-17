@@ -181,7 +181,7 @@
     </th:block>
 
     <th:block th:fragment="funding_finances(model)">
-        <th:block th:each="formInputViewModel : ${model.standardInputViewModels}">
+        <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
             <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
                 <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
             </div>

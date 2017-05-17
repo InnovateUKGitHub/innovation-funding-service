@@ -113,11 +113,13 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
     private void populateSection(ServiceResults results, ApplicantSectionResource applicant, Long sectionId, Long applicationId, List<ApplicantResource> applicants) {
         results.trackResult(() -> sectionService.getById(sectionId), applicant::setSection);
 
-        applicant.getSection().getQuestions().forEach(questionId -> {
-            ApplicantQuestionResource applicantQuestionResource = new ApplicantQuestionResource();
-            populateQuestion(results, applicantQuestionResource, questionId, applicationId, applicants);
-            applicant.addQuestion(applicantQuestionResource);
-        });
+        if (results.isSuccessful()) {
+            applicant.getSection().getQuestions().forEach(questionId -> {
+                ApplicantQuestionResource applicantQuestionResource = new ApplicantQuestionResource();
+                populateQuestion(results, applicantQuestionResource, questionId, applicationId, applicants);
+                applicant.addQuestion(applicantQuestionResource);
+            });
+        }
     }
 
     private <R extends AbstractApplicantResource> void populateAbstractApplicantResource(R resource, Long applicationId, Long userId, ServiceResults results) {
