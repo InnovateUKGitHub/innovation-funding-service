@@ -173,20 +173,6 @@ the user should see the correct finances change
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
 
-the applications should be sorted in reverse order by column
-    [Arguments]    ${column_number}
-    ${row_count}=    get matching xpath count    //*[td]
-    ${column_contents}=    Create List
-    ${also_column_contents}=    Create List
-    : FOR    ${row}    IN RANGE    2    ${row_count}
-    \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    ${cell_contents_number}=    convert to number    ${cell_contents}
-    \    append to list    ${column_contents}    ${cell_contents_number}
-    \    append to list    ${also_column_contents}    ${cell_contents_number}
-    Sort List    ${column_contents}
-    Reverse List    ${also_column_contents}
-    Lists Should Be Equal    ${column_contents}    ${also_column_contents}
-
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}
     ${pagination}=    Run Keyword And Ignore Error Without Screenshots    the user clicks the button/link    name=page
