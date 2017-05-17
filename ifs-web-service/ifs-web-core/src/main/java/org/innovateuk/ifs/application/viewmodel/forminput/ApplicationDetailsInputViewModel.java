@@ -82,4 +82,8 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
         return application.getNoInnovationAreaApplicable() || selectedInnovationAreaName != null;
     }
 
+    public boolean isNoInnovationAreaApplicable() {
+        return application.getNoInnovationAreaApplicable();
+    }
+
 }

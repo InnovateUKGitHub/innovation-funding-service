@@ -187,21 +187,30 @@
 
     <!-- =========================== Form: Financial Staff Count =========================== -->
     <div th:fragment="financial_staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
-        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
-            <span th:text="${formInput.description}"/>
-            <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-        </label>
-        <input class="form-control width-medium"
-               th:disabled="${model.readonly}"
-               type="number"
-               th:id="${formInput.id}"
-               th:name="'formInput['+${formInput.id}+']'"
-               th:min="0"
-               th:max="2147483647"
-               th:value="*{formInput[__${formInput.id}__]}"
-               th:required="required"
-        />
+        <th:block th:unless="${model.readonly}">
+            <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+                <span th:text="${formInput.description}"/>
+                <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+            </label>
+            <input class="form-control width-medium"
+                   th:disabled="${model.readonly}"
+                   type="number"
+                   th:id="${formInput.id}"
+                   th:name="'formInput['+${formInput.id}+']'"
+                   th:min="0"
+                   th:max="2147483647"
+                   th:value="*{formInput[__${formInput.id}__]}"
+                   th:required="required"
+            />
+        </th:block>
+        <th:block th:if="${model.readonly}">
+            <!--/* view */-->
+            <dl class="readonly-data">
+                <dt th:text="${formInput.description}">Full time employees</dt>
+                <dd th:text="*{formInput[__${formInput.id}__]}">440</dd>
+            </dl>
+        </th:block>
     </div>
 
     <th:block th:fragment="your_finance(model)">
