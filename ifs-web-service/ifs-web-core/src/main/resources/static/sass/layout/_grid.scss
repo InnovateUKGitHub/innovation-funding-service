@@ -32,6 +32,18 @@
     width: 95%;
   }
 }
+.extra-width {
+  #content,
+  .grid-container,
+  #global-header .header-wrapper {
+    width:1150px;
+    max-width: 1150px;
+    @include media-down(mobile){
+      width: 95%;
+      max-width: 95%;
+    }
+  }
+}
 #content.no-grid {
   max-width:100%;
 }

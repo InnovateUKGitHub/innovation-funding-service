@@ -100,9 +100,6 @@ ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}    ${SERVER}/management/competition/setup/$
 ${COMP_MANAGEMENT_READY_TO_OPEN}    ${SERVER}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
-${403_error_message}    You do not have the necessary permissions for your request
-${wrong_filetype_validation_error}    Please upload a file in .pdf format only
-${too_large_pdf_validation_error}    the size of file or request being submitted is too large
 ${REGISTRATION_SUCCESS}    ${SERVER}/registration/success
 ${REGISTRATION_VERIFIED}    ${SERVER}/registration/verified
 ${VIRTUAL_DISPLAY}    ${EMPTY}
@@ -112,7 +109,7 @@ ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 
-${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
+
 ${application_name}    Submit test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
@@ -122,7 +119,6 @@ ${LARGE_ORGANISATION_SIZE}     3
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
-${empty_field_warning_message}    This field cannot be left blank.
 ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
@@ -140,6 +136,15 @@ ${assessment_declaration_url}    ${server}/assessment/profile/declaration
 ${assessment_skills_url}    ${server}/assessment/profile/skills
 ${assessment_details_url}    ${server}/assessment/profile/details
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
+
+
+#General error messages
+${403_error_message}    You do not have the necessary permissions for your request
+${404_error_message}    Please check the web address or search term you entered for any errors
+${wrong_filetype_validation_error}    Please upload a file in .pdf format only
+${too_large_pdf_validation_error}    the size of file or request being submitted is too large
+${empty_field_warning_message}    This field cannot be left blank.
+${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 
 # Database variables
 ${database_name}    ifs
