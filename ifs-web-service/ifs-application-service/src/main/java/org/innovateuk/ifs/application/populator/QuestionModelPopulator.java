@@ -46,8 +46,10 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         }
 
         QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(questionResource.getQuestion().getId(), questionResource.getApplication().getId(), questionResource.getCurrentApplicant().getOrganisation().getId());
-        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(asList(questionStatusResource), questionResource.getCurrentUser().getId());
-        questionService.removeNotifications(notifications);
+        if (questionStatusResource != null) {
+            List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(asList(questionStatusResource), questionResource.getCurrentUser().getId());
+            questionService.removeNotifications(notifications);
+        }
     }
 
 }

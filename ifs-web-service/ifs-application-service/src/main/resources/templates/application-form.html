@@ -56,7 +56,7 @@
                 <!--/* Application Form for a Section. */-->
                 <th:block th:if="${model.isSection()}">
                     <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}" />
-                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.getNameLower} (${model})" />
+                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (${model})" />
                 </th:block>
 
                 <input type="hidden" id="application_id" th:value="${model.application.id}"/>
