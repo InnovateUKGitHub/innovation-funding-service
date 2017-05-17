@@ -88,12 +88,14 @@ def capture_page_screenshot_on_failure():
 
 
 def capture_large_screenshot():
+  currentWindow = s2l.get_window_size()
 
-  page_height = s2l._current_browser().execute_script("return typeof(jQuery) !== 'undefined' ? jQuery(document).height() : 1080;")
+  page_height = s2l._current_browser().execute_script("return document.body.clientHeight > 0 ? document.body.clientHeight : 1080;")
 
-  original_height = s2l.get_window_size()[1]
+  page_width = currentWindow[0]
+  original_height = currentWindow[1]
 
-  s2l.set_window_size(1920, page_height)
+  s2l.set_window_size(page_width, page_height)
   warn("Capturing a screenshot at URL " + s2l.get_location())
   s2l.capture_page_screenshot()
-  s2l.set_window_size(1920, original_height)
+  s2l.set_window_size(page_width, original_height)

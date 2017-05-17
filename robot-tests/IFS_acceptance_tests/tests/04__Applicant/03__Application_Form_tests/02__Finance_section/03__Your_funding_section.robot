@@ -91,7 +91,7 @@ Adding more funding rows
     [Documentation]    INFUND-6895, INFUND-8044
     [Tags]
     # TODO INFUND-8706
-    When remove previous rows  jQuery=tr:first-of-type button:contains("Remove")
+    When remove previous rows  css=tr:first-of-type .js-remove-row:not([value=""])
     Then the user adds more rows in other funding
 
 Mark other funding as complete
@@ -125,17 +125,17 @@ the user adds more rows in other funding
     the user moves focus to the element   jQuery=button:contains("Mark as complete")
     wait for autosave
     the user clicks the button/link       jQuery=button:contains("Add another source of funding")
-    Wait Until Element Is Not Visible     jQuery=tr:last-of-type button:contains("Remove")
-    the user enters text to a text field  css=tr:last-of-type input[name*=fundingSource]  wealthy uncle
-    the user enters text to a text field  css=tr:last-of-type input[name*=securedDate]  02-${nextyear}
-    the user enters text to a text field  css=tr:last-of-type input[name*=fundingAmount]  15000
+    Wait Until Element Is Visible         css=tr:nth-of-type(2) input[name*=fundingSource]
+    the user enters text to a text field  css=tr:nth-of-type(2) input[name*=fundingSource]  wealthy uncle
+    the user enters text to a text field  css=tr:nth-of-type(2) input[name*=securedDate]  02-${nextyear}
+    the user enters text to a text field  css=tr:nth-of-type(2) input[name*=fundingAmount]  15000
     the user moves focus to the element   jQuery=button:contains("Mark as complete")
     wait for autosave
     the user clicks the button/link       jQuery=button:contains("Add another source of funding")
-    Wait Until Element Is Not Visible     jQuery=tr:last-of-type button:contains("Remove")
-    the user enters text to a text field  css=tr:last-of-type input[name*=fundingSource]  wealthy grandma
-    the user enters text to a text field  css=tr:last-of-type input[name*=securedDate]  11-${nextyear}
-    the user enters text to a text field  css=tr:last-of-type input[name*=fundingAmount]  200000
+    Wait Until Element Is Visible         css=tr:nth-of-type(3) input[name*=fundingSource]
+    the user enters text to a text field  css=tr:nth-of-type(3) input[name*=fundingSource]  wealthy grandma
+    the user enters text to a text field  css=tr:nth-of-type(3) input[name*=securedDate]  11-${nextyear}
+    the user enters text to a text field  css=tr:nth-of-type(3) input[name*=fundingAmount]  200000
     the user moves focus to the element   jQuery=button:contains("Mark as complete")
     wait for autosave
     Textfield Value Should Be             jQuery=label:contains("Total other funding") + input    £ 235,000
