@@ -1,15 +1,21 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.resource.comparators.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,19 +27,15 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -96,6 +98,11 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     @Autowired
     private ApplicationSummaryPageMapper applicationSummaryPageMapper;
 
+    @Autowired
+    private OrganisationAddressMapper organisationAddressMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(
@@ -171,6 +178,75 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                         competitionId, states, filterStr, null, pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                         competitionId, states, filterStr, null));
+    }
+
+    @Override
+    public ServiceResult<ApplicationTeamResource> getApplicationTeamByApplicationId(long applicationId) {
+
+        ApplicationTeamResource result = new ApplicationTeamResource();
+        List<ApplicationTeamOrganisationResource> partnerOrganisations = new LinkedList<>();
+
+        Application application = applicationRepository.findOne(applicationId);
+        if (application != null) {
+
+            // Order organisations by lead, followed by other partners in alphabetic order
+            application.getProcessRoles()
+                    .stream()
+                    .sorted((pr1, pr2) -> {
+                        if (pr1.isLeadApplicant()) {
+                            return -1;
+                        } else {
+                            return organisationRepository.findOne(pr1.getOrganisationId()).getName().compareTo(organisationRepository.findOne(pr2.getOrganisationId()).getName());
+                        }
+                    })
+                    .forEach(pr -> {
+                        ApplicationTeamOrganisationResource teamOrg = getTeamOrganisation(pr);
+                        if (pr.isLeadApplicant()) {
+                            result.setLeadOrganisation(teamOrg);
+                        } else {
+                            partnerOrganisations.add(teamOrg);
+                        }
+                    });
+            result.setPartnerOrganisations(partnerOrganisations);
+        }
+        return ServiceResult.serviceSuccess(result);
+    }
+
+    private ApplicationTeamOrganisationResource getTeamOrganisation(ProcessRole processRole) {
+        ApplicationTeamOrganisationResource teamOrg = new ApplicationTeamOrganisationResource();
+        Organisation organisation = organisationRepository.findOne(processRole.getOrganisationId());
+
+        teamOrg.setOrganisationName(organisation.getName());
+
+        teamOrg.setRegisteredAddress(getAddressByType(organisation, OrganisationAddressType.REGISTERED));
+
+        teamOrg.setOperatingAddress(getAddressByType(organisation, OrganisationAddressType.OPERATING));
+        List<UserResource> users = new LinkedList<>();
+        // Order users by lead, followed by other users in alphabetic order
+        organisation.getUsers()
+                .stream()
+                .sorted((u1, u2) -> {
+                    if (u1.hasRole(UserRoleType.LEADAPPLICANT)) {
+                        return -1;
+                    } else if (u2.hasRole(UserRoleType.LEADAPPLICANT)) {
+                        return 1;
+                    } else {
+                        return u1.getName().compareTo(u2.getName());
+                    }
+                })
+                .forEach(u -> users.add(userMapper.mapToResource(u)));
+        teamOrg.setUsers(users);
+        return teamOrg;
+    }
+
+    private OrganisationAddressResource getAddressByType(Organisation organisation, OrganisationAddressType addressType) {
+        return organisationAddressMapper.mapToResource(
+                organisation.getAddresses()
+                        .stream()
+                        .filter(a -> a.getAddressType().getName().equals(addressType.name()))
+                        .findFirst()
+                        .orElse(null)
+        );
     }
 
     private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(

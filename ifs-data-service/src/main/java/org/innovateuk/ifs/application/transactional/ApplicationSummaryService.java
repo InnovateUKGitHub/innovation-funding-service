@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -53,4 +54,9 @@ public interface ApplicationSummaryService {
 																								   int pageSize,
 																								   Optional<String> filter,
 																								   Optional<Boolean> informFilter);
+
+	// TODO IFS-43 add CSS permission when available
+	@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+	@SecuredBySpring(value = "READ", description = "Internal users can access application team contacts", securedType = ApplicationTeamResource.class)
+	ServiceResult<ApplicationTeamResource> getApplicationTeamByApplicationId(long applicationId);
 }
