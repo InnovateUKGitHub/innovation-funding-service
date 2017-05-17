@@ -159,7 +159,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected static ApplicationInnovationAreaService applicationInnovationAreaService;
     protected static AssessorFormInputResponseService assessorFormInputResponseService;
 
-    private static Cache<Pair<Long, String>, QuestionResource> questionsByCompetitionIdAndQuestionName = CacheBuilder.newBuilder().build();
+    private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
     private static Cache<String, UserResource> usersByEmailAddress = CacheBuilder.newBuilder().build();
 
@@ -295,10 +295,12 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, Long competitionId) {
-        return fromCache(Pair.of(competitionId, questionName), questionsByCompetitionIdAndQuestionName, () -> {
-            List<QuestionResource> questions = questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException();
-            return simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
-        });
+        return simpleFindFirst(retrieveQuestionsByCompetitionId(competitionId), q -> questionName.equals(q.getName())).get();
+    }
+
+    private List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
+        return fromCache(competitionId, questionsByCompetitionId, () ->
+                questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
     }
 
     protected OrganisationResource retrieveOrganisationResourceByName(String organisationName) {
