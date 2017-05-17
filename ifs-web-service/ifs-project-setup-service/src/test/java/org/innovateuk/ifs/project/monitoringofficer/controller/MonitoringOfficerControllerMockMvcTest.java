@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     @Test
     public void testViewMonitoringOfficer() throws Exception {
@@ -70,7 +70,7 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
     }
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController();
+    protected MonitoringOfficerController supplyControllerUnderTest() {
+        return new MonitoringOfficerController();
     }
 }

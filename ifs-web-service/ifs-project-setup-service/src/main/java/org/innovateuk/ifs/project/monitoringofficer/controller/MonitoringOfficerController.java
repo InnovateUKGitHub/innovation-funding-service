@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 @Controller
 @RequestMapping("/project/{projectId}/monitoring-officer")
-public class ProjectMonitoringOfficerController {
+public class MonitoringOfficerController {
 
     @Autowired
     private ProjectService projectService;
