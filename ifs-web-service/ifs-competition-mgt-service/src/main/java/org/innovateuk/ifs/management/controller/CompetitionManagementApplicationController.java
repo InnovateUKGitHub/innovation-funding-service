@@ -22,11 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -36,6 +34,7 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.util.HttpUtils.getQueryStringParameters;
 
 /**
  * Handles the Competition Management Application overview page (and associated actions).
@@ -76,20 +75,15 @@ public class CompetitionManagementApplicationController {
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
-                                   UserResource user,
                                    @ModelAttribute("form") @Valid ApplicationForm applicationForm,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    HttpServletRequest request,
+                                   UserResource user,
                                    Model model) {
         // This is nasty, but we have to map the query parameters manually as Spring
         // will try to automatically map the POST request body to MultiValueMap
         // (causing issues with back links).
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(
-                UriComponentsBuilder.newInstance()
-                        .query(request.getQueryString())
-                        .build()
-                        .getQueryParams()
-        );
+        MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
 
         return competitionManagementApplicationService
                 .markApplicationAsIneligible(
