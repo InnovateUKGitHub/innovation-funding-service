@@ -21,12 +21,12 @@ import static org.mockito.Mockito.when;
  */
 public class ProjectMonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<ProjectMonitoringOfficerService> {
 
-    private ProjectMonitoringOfficerPermissionRules permissionRules;
+    private MonitoringOfficerPermissionRules permissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        permissionRules = getMockPermissionRulesBean(ProjectMonitoringOfficerPermissionRules.class);
+        permissionRules = getMockPermissionRulesBean(MonitoringOfficerPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 

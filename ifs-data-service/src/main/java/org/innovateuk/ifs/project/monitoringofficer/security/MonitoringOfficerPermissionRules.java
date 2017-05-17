@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 
 @PermissionRules
 @Component
-public class ProjectMonitoringOfficerPermissionRules extends BasePermissionRules {
+public class MonitoringOfficerPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_MONITORING_OFFICER",
