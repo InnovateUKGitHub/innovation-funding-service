@@ -180,13 +180,13 @@ Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user  ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 
 *** Keywords ***
