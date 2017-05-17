@@ -149,7 +149,6 @@ public class OrganisationCreationController {
         model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 
-
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
@@ -174,18 +173,15 @@ public class OrganisationCreationController {
     private Optional<OrganisationCreationForm> processedOrganisationCreationFormFromCookie(Model model, HttpServletRequest request) {
         Optional<OrganisationCreationForm> organisationCreationFormFromCookie = organisationCreationFormFromCookie(request);
         organisationCreationFormFromCookie.ifPresent(organisationCreationForm -> {
-            // Populate
-            searchOrganisation(organisationCreationForm);
-            addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
-            // Validate
+
+            populateOrganisationCreationForm(request, organisationCreationForm);
+
             BindingResult bindingResult = new BeanPropertyBindingResult(organisationCreationForm, ORGANISATION_FORM);
-            if (organisationCreationForm.getAddressForm().isTriedToSearch() && isBlank(organisationCreationForm.getAddressForm().getPostcodeInput())) {
-                ValidationMessages.rejectValue(bindingResult, "addressForm.postcodeInput", "EMPTY_POSTCODE_SEARCH");
-            }
-            validator.validate(organisationCreationForm, bindingResult);
+            organisationFormValidate(organisationCreationForm, bindingResult);
             model.addAttribute(BINDING_RESULT_ORGANISATION_FORM, bindingResult);
+
             BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationCreationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
-            organisationFormValidate(organisationCreationForm, bindingResult, addressBindingResult);
+            organisationFormAddressFormValidate(organisationCreationForm, bindingResult, addressBindingResult);
         });
         return organisationCreationFormFromCookie;
     }
@@ -199,11 +195,16 @@ public class OrganisationCreationController {
         }
     }
 
+    private void populateOrganisationCreationForm(HttpServletRequest request, OrganisationCreationForm organisationCreationForm) {
+        searchOrganisation(organisationCreationForm);
+        addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
+    }
+
     /**
      * Get the list of postcode options, with the entered postcode. Add those results to the form.
      */
     private void addAddressOptions(AddressForm addressForm) {
-        if (StringUtils.isNotBlank(addressForm.getPostcodeInput())) {
+        if (isNotBlank(addressForm.getPostcodeInput())) {
             addressForm.setPostcodeOptions(searchPostcode(addressForm.getPostcodeInput()));
         }
     }
@@ -235,7 +236,7 @@ public class OrganisationCreationController {
 
     private boolean checkOrganisationIsLead(HttpServletRequest request) {
         String organisationTypeJson = cookieUtil.getCookieValue(request, ORGANISATION_TYPE);
-        if(StringUtils.isNotBlank(organisationTypeJson)){
+        if(isNotBlank(organisationTypeJson)){
             OrganisationTypeForm organisationTypeForm = JsonUtil.getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class);
             return organisationTypeForm.isLeadApplicant();
 
@@ -243,11 +244,19 @@ public class OrganisationCreationController {
         return false;
     }
 
-    private void organisationFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
+    private void organisationFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult) {
+        if (organisationForm.getAddressForm().isTriedToSearch() && isBlank(organisationForm.getAddressForm().getPostcodeInput())) {
+            ValidationMessages.rejectValue(bindingResult, "addressForm.postcodeInput", "EMPTY_POSTCODE_SEARCH");
+        }
+        validator.validate(organisationForm, bindingResult);
+    }
+
+    private void organisationFormAddressFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
         if (organisationForm.isTriedToSave() && !organisationForm.isUseSearchResultAddress()) {
-            if (organisationForm.getAddressForm().getSelectedPostcode() != null) {
-                validator.validate(organisationForm.getAddressForm().getSelectedPostcode(), addressBindingResult);
-            } else if (!organisationForm.getAddressForm().isManualAddress()) {
+            AddressForm addressForm = organisationForm.getAddressForm();
+            if (addressForm.getSelectedPostcode() != null) {
+                validator.validate(addressForm.getSelectedPostcode(), addressBindingResult);
+            } else if (!addressForm.isManualAddress()) {
                 bindingResult.rejectValue(USE_SEARCH_RESULT_ADDRESS, "NotEmpty", "You should either fill in your address, or use the registered address as your operating address.");
             }
         }
@@ -378,8 +387,7 @@ public class OrganisationCreationController {
 
         addSelectedOrganisation(organisationForm, model);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
-        AddressForm addressForm = organisationForm.getAddressForm();
-        addAddressOptions(addressForm);
+        addAddressOptions(organisationForm.getAddressForm());
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -415,21 +423,22 @@ public class OrganisationCreationController {
             redirectPart = SELECTED_ORGANISATION;
         }
 
+        AddressForm addressForm = organisationForm.getAddressForm();
         if (!referer.contains(FIND_ORGANISATION)) {
-            if (isNotBlank(organisationForm.getSearchOrganisationId()) && organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
-            } else if (isNotBlank(organisationForm.getSearchOrganisationId()) && isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/search-postcode?searchTerm=%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
+            if (isNotBlank(organisationForm.getSearchOrganisationId()) && addressForm.getSelectedPostcodeIndex() != null && isNotBlank(addressForm.getPostcodeInput())) {
+                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), addressForm.getSelectedPostcodeIndex());
+            } else if (isNotBlank(organisationForm.getSearchOrganisationId()) && isNotBlank(addressForm.getPostcodeInput())) {
+                return String.format("redirect:%s/%s/%s/search-postcode?searchTerm=%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(addressForm.getPostcodeInput()));
             } else if (isNotBlank(organisationForm.getSearchOrganisationId())) {
                 return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId());
             } else {
                 return String.format("redirect:%s/%s", BASE_URL, redirectPart);
             }
         } else {
-            if (organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()), organisationForm.getAddressForm().getSelectedPostcodeIndex());
-            } else if (isNotBlank(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s?searchTerm=%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
+            if (addressForm.getSelectedPostcodeIndex() != null && isNotBlank(addressForm.getPostcodeInput())) {
+                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, escapePathVariable(addressForm.getPostcodeInput()), addressForm.getSelectedPostcodeIndex());
+            } else if (isNotBlank(addressForm.getPostcodeInput())) {
+                return String.format("redirect:%s/%s?searchTerm=%s", BASE_URL, redirectPart, escapePathVariable(addressForm.getPostcodeInput()));
             } else {
                 return String.format("redirect:%s/%s", BASE_URL, redirectPart);
             }
@@ -468,7 +477,7 @@ public class OrganisationCreationController {
         bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
         validator.validate(organisationForm, bindingResult);
         BindingResult addressBindingResult = new BeanPropertyBindingResult(organisationForm.getAddressForm().getSelectedPostcode(), SELECTED_POSTCODE);
-        organisationFormValidate(organisationForm, bindingResult, addressBindingResult);
+        organisationFormAddressFormValidate(organisationForm, bindingResult, addressBindingResult);
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(USE_SEARCH_RESULT_ADDRESS) && !addressBindingResult.hasErrors()) {
             cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
@@ -507,14 +516,15 @@ public class OrganisationCreationController {
                                                 HttpServletResponse response) {
 
         OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
-        if (organisationForm.getOrganisationTypeId() != null &&
-                !isValidLeadOrganisationType(selectOrgTypeViewModel, organisationForm.getOrganisationTypeId())) {
+        Long organisationTypeId = organisationForm.getOrganisationTypeId();
+        if (organisationTypeId != null &&
+                !isValidLeadOrganisationType(selectOrgTypeViewModel, organisationTypeId)) {
             bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
         }
 
         if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID)) {
             OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
-            organisationTypeForm.setOrganisationType(OrganisationTypeEnum.getFromId(organisationForm.getOrganisationTypeId()).getId());
+            organisationTypeForm.setOrganisationType(OrganisationTypeEnum.getFromId(organisationTypeId).getId());
             organisationTypeForm.setLeadApplicant(true);
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
 
@@ -533,7 +543,6 @@ public class OrganisationCreationController {
                 .stream()
                 .anyMatch(validOrganisationType -> organisationTypeId.equals(validOrganisationType.getId()));
     }
-
 
     /**
      * Confirm the company details (user input, not from company-house)
