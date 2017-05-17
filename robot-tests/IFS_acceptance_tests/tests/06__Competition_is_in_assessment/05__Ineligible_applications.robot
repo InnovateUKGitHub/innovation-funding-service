@@ -27,13 +27,14 @@ A non submitted application cannot be marked as ineligible
 Selecting to mark an application as ineligible opens a text box
     [Documentation]    INFUND-7370
     [Tags]
-    Given the user clicks the button/link     link=19
+    Given the user clicks the button/link     link=28
     When the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")  #There are 2 buttons with the same name so we need to be careful
     Then the user should see the element    id=ineligibleReason
 
 Cancel marking the application as ineligible
     [Documentation]    INFUND-7370
     [Tags]    Pending
+    #TODO INFUND-7370
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
     Then the user should not see the element    id=ineligibleReason
 
@@ -43,17 +44,15 @@ Mark an application as ineligible
     #Given the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
     And the user enters text to a text field   id=ineligibleReason    Hello there
     When the user clicks the button/link    jQuery=.button:contains("Mark application as ineligible")
-    Then the user should not see the element    jQuery=td:contains("19")
-    [Teardown]   the user clicks the button/link    jQuery=.link-back:contains("Applications")
+    Then the user should see the element    jQuery=td:contains("28")
 
 Filter ineligible applications
     [Documentation]    INFUND-8942
     [Tags]
-    [Setup]    the user clicks the button/link    link=Ineligible applications
-    Given the user enters text to a text field    id=filterSearch    19
+    Given the user enters text to a text field    id=filterSearch    28
     And the user selects the option from the drop-down menu    No    id=filterInform
     When the user clicks the button/link    jQuery=.button:contains("Filter")
-    Then the user should see the element    jQuery=td:contains("19") ~ td .button:contains("Inform applicant")
+    Then the user should see the element    jQuery=td:contains("28") ~ td .button:contains("Inform applicant")
     And the user should not see the element    jQuery=td:contains("63") ~ td span:contains("Informed")
     When the user clicks the button/link    jQuery=a:contains("Clear all filters")
     Then the user should see the element       jQuery=td:contains("63") ~ td span:contains("Informed")
@@ -67,20 +66,31 @@ Sort ineligible applications by lead
 Inform a user their application is ineligible
    [Documentation]    INFUND-7374
    [Tags]
-   Given the user clicks the button/link    jQuery=a:contains("21 to 40")
-   And the user clicks the button/link    jQuery=td:contains("19") ~ td .button:contains("Inform applicant")
+   Given the user clicks the button/link    jQuery=td:contains("28") ~ td .button:contains("Inform applicant")
    And the user enters text to a text field    id=subject    This is ineligible
    And the user enters text to a text field    id=message    Thank you for your application but this is ineligible
    And the user clicks the button/link    jQuery=button:contains("Send")
-   Then the user should see the element    jQuery=td:contains("19") ~ td span:contains("Informed")
-   And the user reads his email    ${recipient}    ${subject}    ${pattern}
+   Then the user should see the element    jQuery=td:contains("28") ~ td span:contains("Informed")
+   Then the application is in the right section    Previous applications
+   And the user reads his email    nancy.peterson@gmail.com    This is ineligible    Thank you for your application but this is ineligible
+   [Teardown]    Log in as a different user    &{Comp_admin1_credentials}
 
 Reinstate an application
    [Documentation]
    [Tags]
-   Given the user clicks the button/link     link=19
+   [Setup]    the user navigates to ineligible applications
+   Given the user clicks the button/link     link=28
    And the user clicks the button/link    jQuery=a:contains("Reinstate application")
    When the user clicks the button/link    jQuery=button:contains("Reinstate application")
+   Then the application is in the right section    Applications in progress
 
+*** Keywords ***
+the application is in the right section
+    [Arguments]    ${section}
+    Log in as a different user    &{Ineligible_user}
+    the user should see the element    jQuery=h2:contains(${section}) ~ ul a:contains("Living with Virtual Reality")
 
-
+the user navigates to ineligible applications
+    the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    the user clicks the button/link    link = Applications: All, submitted, ineligible
+    the user clicks the button/link    link = Ineligible applications
