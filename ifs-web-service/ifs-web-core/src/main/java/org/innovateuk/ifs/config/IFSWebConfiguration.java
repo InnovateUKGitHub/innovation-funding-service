@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.config;
 
+import org.innovateuk.ifs.controller.LoggedInUserMethodArgumentResolver;
 import org.innovateuk.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import org.innovateuk.ifs.interceptors.AlertMessageHandlerInterceptor;
 import org.innovateuk.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
@@ -71,6 +72,7 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         super.addArgumentResolvers(argumentResolvers);
         argumentResolvers.add(new ValidationHandlerMethodArgumentResolver());
+        argumentResolvers.add(getLoggedInUserMethodArgumentResolver());
     }
 
     @Override
@@ -110,6 +112,11 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public HandlerInterceptor getGoogleAnalyticsHandlerInterceptor() {
         return new GoogleAnalyticsHandlerInterceptor();
+    }
+
+    @Bean
+    public LoggedInUserMethodArgumentResolver getLoggedInUserMethodArgumentResolver() {
+        return new LoggedInUserMethodArgumentResolver();
     }
 
     @Bean

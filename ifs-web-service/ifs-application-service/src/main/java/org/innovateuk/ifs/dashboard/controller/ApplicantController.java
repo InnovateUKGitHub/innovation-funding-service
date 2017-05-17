@@ -27,7 +27,7 @@ public class ApplicantController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model,
-                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                            UserResource user) {
 
         model.addAttribute("model", applicantDashboardPopulator.populate(user));
 

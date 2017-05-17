@@ -9,9 +9,9 @@ import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
-import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
@@ -67,7 +67,7 @@ public class MonitoringOfficerController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
     public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
-                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
@@ -79,7 +79,7 @@ public class MonitoringOfficerController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping("/edit")
     public String editMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
-                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                        UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
@@ -94,7 +94,7 @@ public class MonitoringOfficerController {
                                                   @PathVariable("projectId") final Long projectId,
                                                   @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerForm form,
                                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                                  UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
@@ -112,7 +112,7 @@ public class MonitoringOfficerController {
                                                  @PathVariable("projectId") final Long projectId,
                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerForm form,
                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                                 UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
