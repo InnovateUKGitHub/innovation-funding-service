@@ -133,7 +133,7 @@ Queries section is linked from eligibility and this selects eligibility on the q
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
     When the user clicks the button/link    jQuery=.button:contains("Queries")
-    Then the user should see the text in the page    If you have a query with the finances, use this section
+    Then the user should see the text in the page    Raise finance queries to the organisation in this section
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     Then the user should see the dropdown option selected    Eligibility    section
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
@@ -143,7 +143,7 @@ Queries section is linked from viability and this selects viability on the query
     [Tags]
     Given the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    # Clicking the viability link for lead partner
     When the user clicks the button/link    jQuery=.button:contains("Queries")
-    Then the user should see the text in the page    If you have a query with the finances, use this section
+    Then the user should see the text in the page    Raise finance queries to the organisation in this section
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability    section
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
@@ -152,7 +152,7 @@ Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
-    Then the user should see the text in the page    If you have a query with the finances, use this section
+    Then the user should see the text in the page    Raise finance queries to the organisation in this section
 
 Queries section contains finance contact name, email and telephone
     [Documentation]    INFUND-4840
