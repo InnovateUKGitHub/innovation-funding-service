@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerRe
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProjectMonitoringOfficerRestServiceImpl extends BaseRestService implements ProjectMonitoringOfficerRestService {
+public class MonitoringOfficerRestServiceImpl extends BaseRestService implements MonitoringOfficerRestService {
 
     private String projectRestURL = "/project";
 
