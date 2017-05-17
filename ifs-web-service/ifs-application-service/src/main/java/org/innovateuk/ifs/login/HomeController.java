@@ -81,7 +81,7 @@ public class HomeController {
 
     @PostMapping("/roleSelection")
     public String processRole(Model model,
-                              @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                              UserResource user,
                               @Valid @ModelAttribute("form") RoleSelectionForm form,
                               BindingResult bindingResult,
                               ValidationHandler validationHandler,

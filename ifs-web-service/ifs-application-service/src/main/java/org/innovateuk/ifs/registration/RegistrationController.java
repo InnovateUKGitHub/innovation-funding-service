@@ -109,7 +109,7 @@ public class RegistrationController {
 
     @GetMapping("/register")
     public String registerForm(Model model,
-                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                               UserResource user,
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
@@ -191,7 +191,7 @@ public class RegistrationController {
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                     UserResource user,
                                      HttpServletRequest request,
                                      Model model) {
 

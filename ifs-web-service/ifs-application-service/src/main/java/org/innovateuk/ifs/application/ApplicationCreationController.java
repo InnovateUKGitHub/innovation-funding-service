@@ -116,7 +116,7 @@ public class ApplicationCreationController {
     public String applicationCreate(Model model,
                                     @PathVariable("competitionId") long competitionId,
                                     @RequestParam(value = "application_name", required = true) String applicationName,
-                                    @ModelAttribute("loggedInUser") UserResource user) {
+                                    UserResource user) {
         Long userId = user.getId();
 
         String applicationNameWithoutWhiteSpace = applicationName.replaceAll("\\s", "");
