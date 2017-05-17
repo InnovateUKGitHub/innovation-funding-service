@@ -85,7 +85,6 @@ Marketing emails information should have updated on the profile
     [Tags]    HappyPath
     When the user navigates to the page    ${edit_profile_url}
     Then the user should see that the checkbox is selected    allowMarketingEmails
-    [Teardown]    #the user closes the browser
 
 Logged in user can choose to continue with an existing application
     [Documentation]    INFUND-1040
