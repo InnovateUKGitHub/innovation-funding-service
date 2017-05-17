@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -107,7 +107,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -138,7 +138,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -191,7 +191,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -222,7 +222,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -275,7 +275,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -303,7 +303,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -410,7 +410,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -476,7 +476,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -548,7 +548,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
     }
 
-    private void assertProjectDetailsPrepopulatedOk(ProjectMonitoringOfficerViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(MonitoringOfficerViewModel model) {
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectTitle());
         assertEquals(competitionSummary, model.getCompetitionSummary());
