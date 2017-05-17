@@ -131,8 +131,17 @@ public class CompetitionManagementInviteAssessorsController {
                                              @PathVariable("competitionId") long competitionId,
                                              @RequestParam(name = "remove") String email,
                                              @RequestParam(defaultValue = "0") int page,
-                                             @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        deleteInvite(email, competitionId);
+                                             @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+        return redirectToInvite(competitionId, page);
+    }
+
+    @PostMapping(value = "/invite", params = {"removeAll"})
+    public String removeAllInvitesFromInviteView(Model model,
+                                                 @PathVariable("competitionId") long competitionId,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        deleteAllInvites(competitionId).getSuccessObjectOrThrowException();
         return redirectToInvite(competitionId, page);
     }
 
@@ -221,6 +230,10 @@ public class CompetitionManagementInviteAssessorsController {
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
         return competitionInviteRestService.deleteInvite(email, competitionId).toServiceResult();
+    }
+
+    private ServiceResult<Void> deleteAllInvites(long competitionId) {
+        return competitionInviteRestService.deleteAllInvites(competitionId).toServiceResult();
     }
 
     private NewUserStagedInviteListResource newInviteFormToResource(InviteNewAssessorsForm form, long competitionId) {

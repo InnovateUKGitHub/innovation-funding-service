@@ -193,7 +193,11 @@
                         <th scope="col">Email address</th>
                         <th scope="col">Innovation area</th>
                         <th scope="col">Contract and DOI</th>
-                        <th scope="col"><span class="hidden">Actions</span></th>
+                        <td scope="col" class="alignright">
+                            <button name="removeAll" class="buttonlink" th:if="${!#lists.isEmpty(model.assessors)}">
+                                Remove all from list
+                            </button>
+                        </td>
                     </tr>
                     </thead>
                     <tbody>
@@ -213,7 +217,9 @@
                             <td class="alignright">
                                 <a class="button no-margin-right" th:href="@{/competition/assessors/invite/{inviteId}(inviteId=${assessor.inviteId})}">Invite individual</a>
                                 <br />
-                                <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}"><span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove from list</button>
+                                <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}">
+                                    <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
+                                </button>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">

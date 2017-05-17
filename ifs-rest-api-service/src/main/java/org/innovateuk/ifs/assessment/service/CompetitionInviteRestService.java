@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.*;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,6 +39,8 @@ public interface CompetitionInviteRestService {
     RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competitionId);
 
     RestResult<Void> deleteInvite(String email, long competitionId);
+
+    RestResult<Void> deleteAllInvites(long competitionId);
 
     RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 }

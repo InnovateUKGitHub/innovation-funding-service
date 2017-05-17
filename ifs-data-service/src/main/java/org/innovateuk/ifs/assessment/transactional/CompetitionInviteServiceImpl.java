@@ -461,6 +461,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return getByEmailAndCompetition(email, competitionId).andOnSuccess(this::deleteInvite);
     }
 
+    @Override
+    public ServiceResult<Void> deleteAllInvites(long competitionId) {
+        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccessReturnVoid(competition ->
+                        competitionInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
+    }
+
     private ServiceResult<CompetitionInvite> getByHash(String inviteHash) {
         return find(competitionInviteRepository.getByHash(inviteHash), notFoundError(CompetitionInvite.class, inviteHash));
     }

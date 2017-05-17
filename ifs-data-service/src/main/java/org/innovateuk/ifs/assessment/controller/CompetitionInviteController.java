@@ -106,8 +106,13 @@ public class CompetitionInviteController {
     }
 
     @DeleteMapping("/deleteInvite")
-    public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam Long competitionId) {
+    public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam long competitionId) {
         return competitionInviteService.deleteInvite(email, competitionId).toDeleteResponse();
+    }
+
+    @DeleteMapping("/deleteAllInvites")
+    public RestResult<Void> deleteAllInvites(@RequestParam long competitionId) {
+        return competitionInviteService.deleteAllInvites(competitionId).toDeleteResponse();
     }
 
     @PostMapping("/sendInvite/{inviteId}")

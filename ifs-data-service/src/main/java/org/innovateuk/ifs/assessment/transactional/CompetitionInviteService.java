@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailContent;
@@ -103,4 +104,9 @@ public interface CompetitionInviteService {
             description = "The Competition Admin user, or the Competition Executive user can delete a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> deleteInvite(String email, long competitionId);
+
+    @SecuredBySpring(value = "DELETE_ALL_INVITES",
+            description = "The Competition Admin user, or the Competition Executive user can delete all the competition invites")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> deleteAllInvites(long competitionId);
 }
