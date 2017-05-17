@@ -95,7 +95,7 @@ public class FinanceChecksNotesController {
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
-                                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                         UserResource loggedInUser,
                                                          HttpServletRequest request) {
 
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
@@ -111,7 +111,7 @@ public class FinanceChecksNotesController {
                                  @PathVariable Long organisationId,
                                  @PathVariable Long noteId,
                                  Model model,
-                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                 UserResource loggedInUser,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
 
@@ -135,7 +135,7 @@ public class FinanceChecksNotesController {
                               @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksNotesAddCommentForm form,
                               @SuppressWarnings("unused") BindingResult bindingResult,
                               ValidationHandler validationHandler,
-                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                              UserResource loggedInUser,
                               HttpServletRequest request,
                               HttpServletResponse response) {
         if (postParametersMatchOrigin(request, projectId, organisationId, noteId, loggedInUser.getId())) {
@@ -188,7 +188,7 @@ public class FinanceChecksNotesController {
                                            @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddCommentForm form,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                           UserResource loggedInUser,
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         if (postParametersMatchOrigin(request, projectId, organisationId, noteId, loggedInUser.getId())) {
@@ -225,7 +225,7 @@ public class FinanceChecksNotesController {
                                                                  @PathVariable Long organisationId,
                                                                  @PathVariable Long noteId,
                                                                  @PathVariable Long attachmentId,
-                                                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                                 UserResource loggedInUser,
                                                                  HttpServletRequest request) {
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
@@ -248,7 +248,7 @@ public class FinanceChecksNotesController {
                                    @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddCommentForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                   UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
@@ -273,7 +273,7 @@ public class FinanceChecksNotesController {
                                 @PathVariable Long organisationId,
                                 @PathVariable Long noteId,
                                 Model model,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {

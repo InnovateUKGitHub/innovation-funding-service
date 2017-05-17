@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.registration.AbstractAcceptInviteController;
 import org.innovateuk.ifs.registration.AcceptInviteController;
+import org.innovateuk.ifs.registration.OrganisationCreationController;
 import org.innovateuk.ifs.registration.RegistrationController;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationService;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_ID;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -104,7 +106,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(get(String.format("/accept-invite/confirm-invited-organisation")))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(cookie().exists(RegistrationController.ORGANISATION_ID_PARAMETER_NAME))
+                .andExpect(cookie().exists(ORGANISATION_ID))
                 .andExpect(view().name("registration/confirm-invited-organisation"))
                 .andReturn();
 

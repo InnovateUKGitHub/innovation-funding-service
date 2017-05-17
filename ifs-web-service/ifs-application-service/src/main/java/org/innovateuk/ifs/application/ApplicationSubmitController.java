@@ -94,7 +94,7 @@ public class ApplicationSubmitController {
     @ProfileExecution
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute("loggedInUser") UserResource user) {
+                                     UserResource user) {
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
@@ -124,7 +124,7 @@ public class ApplicationSubmitController {
     @ProfileExecution
     @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
-                                           @ModelAttribute("loggedInUser") UserResource user,
+                                           UserResource user,
                                            HttpServletRequest request) {
 
         Map<String, String[]> params = request.getParameterMap();
@@ -150,7 +150,7 @@ public class ApplicationSubmitController {
     @ProfileExecution
     @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                           @ModelAttribute("loggedInUser") UserResource user) {
+                                           UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
@@ -159,7 +159,7 @@ public class ApplicationSubmitController {
 
     @PostMapping("/{applicationId}/submit")
     public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                    @ModelAttribute("loggedInUser") UserResource user,
+                                    UserResource user,
                                     HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
 
@@ -178,7 +178,7 @@ public class ApplicationSubmitController {
     @ProfileExecution
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                   @ModelAttribute("loggedInUser") UserResource user) {
+                                   UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);

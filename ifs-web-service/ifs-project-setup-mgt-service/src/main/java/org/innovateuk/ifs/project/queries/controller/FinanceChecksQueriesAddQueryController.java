@@ -78,7 +78,7 @@ public class FinanceChecksQueriesAddQueryController {
                           @PathVariable final Long organisationId,
                           @RequestParam(value = "query_section", required = false) final String querySection,
                           Model model,
-                          @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                          UserResource loggedInUser,
                           HttpServletRequest request,
                           HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
@@ -97,7 +97,7 @@ public class FinanceChecksQueriesAddQueryController {
                             @SuppressWarnings("unused") BindingResult bindingResult,
                             ValidationHandler validationHandler,
                             Model model,
-                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                            UserResource loggedInUser,
                             HttpServletRequest request,
                             HttpServletResponse response) {
         Supplier<String> failureView = () -> {
@@ -147,7 +147,7 @@ public class FinanceChecksQueriesAddQueryController {
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddQueryForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                   UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
@@ -181,7 +181,7 @@ public class FinanceChecksQueriesAddQueryController {
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
-                                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                         UserResource loggedInUser,
                                                          HttpServletRequest request) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
@@ -201,7 +201,7 @@ public class FinanceChecksQueriesAddQueryController {
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddQueryForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                   UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
@@ -221,7 +221,7 @@ public class FinanceChecksQueriesAddQueryController {
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @RequestParam(value = "query_section", required = false) String querySection,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);

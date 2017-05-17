@@ -81,7 +81,7 @@ public class FinanceChecksNotesAddNoteController {
     public String viewNewNote(@PathVariable final Long projectId,
                               @PathVariable final Long organisationId,
                               Model model,
-                              @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
+                              UserResource loggedInUser,
                               HttpServletRequest request,
                               HttpServletResponse response) {
 
@@ -104,7 +104,7 @@ public class FinanceChecksNotesAddNoteController {
                            @SuppressWarnings("unused") BindingResult bindingResult,
                            ValidationHandler validationHandler,
                            Model model,
-                           @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
+                           UserResource loggedInUser,
                            HttpServletRequest request,
                            HttpServletResponse response) {
         if (postParametersMatchOrigin(request, projectId, organisationId, loggedInUser.getId())) {
@@ -152,7 +152,7 @@ public class FinanceChecksNotesAddNoteController {
                                         @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler,
-                                        @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
+                                        UserResource loggedInUser,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
 
@@ -190,7 +190,7 @@ public class FinanceChecksNotesAddNoteController {
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
-                                                         @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
+                                                         UserResource loggedInUser,
                                                          HttpServletRequest request) {
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
@@ -214,7 +214,7 @@ public class FinanceChecksNotesAddNoteController {
                                    @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
+                                   UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
@@ -237,7 +237,7 @@ public class FinanceChecksNotesAddNoteController {
     @GetMapping("/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
-                                @ModelAttribute(name="loggedInUser", binding = false) UserResource loggedInUser,
+                                UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
