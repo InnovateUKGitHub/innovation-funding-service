@@ -59,14 +59,12 @@ Proj Finance user can send Fund Decision notification
     Then the user should see the element     jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
     And the user should not see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
     When the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
-    Then the user should see the element     jQuery=.send-to-all-applicants-modal h2:contains("Send email to all applicants")
     When the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     Then the server side validation should be triggered
     When the user cancels the process needs to re-select the reciepients
     Then the user enters text to a text field  css=#subject  ${onHoldSubject}
     And the user enters text to a text field   css=.editor  ${onHoldMessage}
     And the user clicks the button/link        jQuery=button:contains("Send email to all applicants")
-    Then the user should see the element       jQuery=.send-to-all-applicants-modal h2:contains("Send email to all applicants")
     When the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
 
@@ -188,7 +186,6 @@ the internal user sends an email notification
     the user enters text to a text field  css=#subject  ${subject}
     the user enters text to a text field  css=.editor  ${message}
     the user clicks the button/link       jQuery=button:contains("Send email to all applicants")
-    the user should see the element       jQuery=.send-to-all-applicants-modal h2:contains("Send email to all applicants")
     the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user should see the element       jQuery=td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
