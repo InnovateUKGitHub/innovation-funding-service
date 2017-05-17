@@ -81,11 +81,7 @@
             <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED}" class="extra-margin collapsible collapsible-eligibility">
                 <h2>Mark application as ineligible</h2>
                 <div>
-                    <form th:action="@{/competition/{competitionId}/application/{applicationId}/markIneligible(
-                              competitionId=${currentCompetition.id},
-                              applicationId=${currentApplication.id},
-                              origin=${#httpServletRequest.getParameter('origin')}
-                          )}"
+                    <form th:action="@{~__${#httpServletRequest.requestURI} + '?' + ${#httpServletRequest.queryString}__}"
                           th:object="${form}"
                           method="POST">
 

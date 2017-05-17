@@ -22,10 +22,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
@@ -69,15 +72,25 @@ public class CompetitionManagementApplicationController {
                         .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application));
     }
 
-    @PostMapping("/{applicationId}/markIneligible")
+    @PostMapping("/{applicationId}")
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
-                                   @RequestParam MultiValueMap<String, String> queryParams,
                                    @ModelAttribute("loggedInUser") UserResource user,
                                    @ModelAttribute("form") @Valid ApplicationForm applicationForm,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
+                                   HttpServletRequest request,
                                    Model model) {
+        // This is nasty, but we have to map the query parameters manually as Spring
+        // will try to automatically map the POST request body to MultiValueMap
+        // (causing issues with back links).
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(
+                UriComponentsBuilder.newInstance()
+                        .query(request.getQueryString())
+                        .build()
+                        .getQueryParams()
+        );
+
         return competitionManagementApplicationService
                 .markApplicationAsIneligible(
                         applicationId,
