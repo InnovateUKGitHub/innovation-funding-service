@@ -18,7 +18,7 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 A non submitted application cannot be marked as ineligible
     [Documentation]    INFUND-7370
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    link = Applications: All, submitted, ineligible
     And the user clicks the button/link    link = All applications
@@ -28,7 +28,7 @@ A non submitted application cannot be marked as ineligible
 
 Selecting to mark an application as ineligible opens a text box
     [Documentation]    INFUND-7370
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link     link=28
     When the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")  #There are 2 buttons with the same name so we need to be careful
     Then the user should see the element    id=ineligibleReason
@@ -42,7 +42,7 @@ Cancel marking the application as ineligible
 
 Mark an application as ineligible
     [Documentation]    INFUND-7370
-    [Tags]
+    [Tags]    HappyPath
     #Given the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
     And the user enters text to a text field   id=ineligibleReason    Hello there
     When the user clicks the button/link    jQuery=.button:contains("Mark application as ineligible")
@@ -67,7 +67,7 @@ Sort ineligible applications by lead
 
 Inform a user their application is ineligible
    [Documentation]    INFUND-7374
-   [Tags]
+   [Tags]    HappyPath
    Given the user clicks the button/link    jQuery=td:contains("28") ~ td .button:contains("Inform applicant")
    And the user enters text to a text field    id=subject    This is ineligible
    And the user enters text to a text field    id=message    Thank you for your application but this is ineligible
@@ -78,7 +78,7 @@ Inform a user their application is ineligible
 
 Reinstate an application
    [Documentation]    INFUND-8941
-   [Tags]
+   [Tags]    HappyPath
    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
    Given the user navigates to ineligible applications
    And the user clicks the button/link     link=28
