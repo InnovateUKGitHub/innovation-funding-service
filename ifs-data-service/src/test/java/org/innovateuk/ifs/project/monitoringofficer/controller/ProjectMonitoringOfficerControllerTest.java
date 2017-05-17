@@ -32,7 +32,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-  public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+  public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
       private MonitoringOfficerResource monitoringOfficerResource;
 
@@ -50,8 +50,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
       }
 
       @Override
-      protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-          return new ProjectMonitoringOfficerController();
+      protected MonitoringOfficerController supplyControllerUnderTest() {
+          return new MonitoringOfficerController();
       }
 
       @Test

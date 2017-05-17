@@ -19,7 +19,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/project")
-public class ProjectMonitoringOfficerController {
+public class MonitoringOfficerController {
 
     @Autowired
     private ProjectMonitoringOfficerService projectMonitoringOfficerService;
