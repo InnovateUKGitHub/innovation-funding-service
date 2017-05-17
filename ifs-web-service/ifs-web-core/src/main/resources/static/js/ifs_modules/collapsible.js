@@ -9,14 +9,14 @@ IFS.core.collapsible = (function () {
     settings: {
       collapsibleEl: '.collapsible',
       collapsibleTabs: '.tabs section',
-      statelessEl: 'collapsible-stateless'
+      statelessClass: 'collapsible-stateless'
     },
     init: function (type) {
       s = this.settings
       s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
       // if this has to be more dynamically updated in the future we can add a custom event
       jQuery(s.collapsible).each(function () {
-        var stateless = jQuery(this).hasClass(s.statelessEl)
+        var stateless = jQuery(this).hasClass(s.statelessClass)
         IFS.core.collapsible.initCollapsibleHTML(this, stateless)
         jQuery(this).on('click', 'h2 > [aria-controls], h3 > [aria-controls]', function () {
           IFS.core.collapsible.toggleCollapsible(this, stateless)
