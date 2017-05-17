@@ -19,9 +19,7 @@ Resource          ../../resources/defaultResources.robot
 A non submitted application cannot be marked as ineligible
     [Documentation]    INFUND-7370
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    link = Applications: All, submitted, ineligible
-    And the user clicks the button/link    link = All applications
+    Given the user navigates to the page    ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/all
     When the user clicks the button/link    link = 16
     Then the user should not see the element    jQuery=h2 button:contains("Mark application as ineligible")
     [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Back")
