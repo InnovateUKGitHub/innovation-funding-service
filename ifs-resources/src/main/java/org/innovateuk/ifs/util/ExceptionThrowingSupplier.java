@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.commons.service;
+package org.innovateuk.ifs.util;
 
 /**
  * A functional interface that represents a Supplier that can throw Exceptions

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.util;
 
 
-import org.innovateuk.ifs.commons.service.ExceptionThrowingSupplier;
-
 public class ExceptionFunctions {
 
     public static <T> T getOrRethrow(ExceptionThrowingSupplier<T> supplier) {
