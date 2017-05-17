@@ -12,7 +12,7 @@ Not in Companies House: Enter details manually link
     [Documentation]    INFUND-888
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
-    Then the user should see the element     jQuery=button:contains("Find UK address")
+    Then the user should see the element    jQuery=button:contains("Find UK address")
 
 Companies House: Valid company name
     [Documentation]    INFUND-887
@@ -72,14 +72,7 @@ Enter address manually: Postcode Validations
 Enter Valid Postcode and see the results in the dropdown
     [Documentation]    INFUND-890
     [Tags]    HappyPath
-    #Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    #When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    #And the user clicks the button/link    jQuery=.button:contains("Create account")
-    #And the user clicks the button/link    jQuery=.button:contains("Create")
-    #And the user enters text to a text field    id=organisationSearchName    Innovate
-    #And the user clicks the button/link    id=org-search
-    #And the user clicks the button/link    link=INNOVATE LTD
-    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
+    When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    css=#select-address-block
     And the user clicks the button/link    css=#select-address-block > button
