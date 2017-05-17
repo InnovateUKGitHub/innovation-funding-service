@@ -395,7 +395,6 @@ public class FinanceChecksQueriesController {
                 new TypeReference<List<Long>>() {});
     }
 
-
     private String getFormCookieName(Long projectId, Long organisationId, Long queryId) {
         return FORM_COOKIE + "_" + projectId + "_" + organisationId + "_" + queryId;
     }

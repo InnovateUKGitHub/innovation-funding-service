@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
@@ -48,9 +47,7 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -60,7 +57,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -111,7 +109,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUser));
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(newProjectTeamStatusResource().withPartnerStatuses(singletonList(newProjectPartnerStatusResource().withOrganisationId(applicantOrganisationId).withFinanceContactStatus(ProjectActivityStates.COMPLETE).build())).build());
 
         UserResource user1 = new UserResource();
         user1.setId(18L);
@@ -247,7 +244,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("", response.getContentAsString());
         assertEquals(null, response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -267,7 +263,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("", response.getContentAsString());
         assertEquals(null, response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -305,7 +300,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertTrue(responseViewModel.isLeadPartnerOrganisation());
         assertEquals(0, responseViewModel.getNewAttachmentLinks().size());
         assertEquals("comment", modelForm.getResponse());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -343,7 +337,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 .filter(cookie -> cookie.getName().equals("finance_checks_queries_new_response_form_" + projectId + "_" + applicantOrganisationId + "_" + queryId))
                 .findAny();
         assertEquals(true, formCookieFound.get().getValue().isEmpty());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -370,7 +363,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("response").getDefaultMessage());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -400,7 +392,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("response").getDefaultMessage());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -429,7 +420,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("response").getDefaultMessage());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -461,7 +451,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getAttachment());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
+
     }
 
     @Test
@@ -476,7 +466,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("", response.getContentAsString());
         assertEquals(null, response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -508,7 +497,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(true, formCookieFound.get().getValue().isEmpty());
 
         verify(financeCheckServiceMock).deleteFile(1L);
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -550,7 +538,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertTrue(queryViewModel.isLeadPartnerOrganisation());
         assertEquals(1, queryViewModel.getNewAttachmentLinks().size());
         assertEquals("name", queryViewModel.getNewAttachmentLinks().get(1L));
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -589,7 +576,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getResponse());
         assertEquals(null, form.getAttachment());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -620,7 +606,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getResponse());
         assertEquals(null, form.getAttachment());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     @Test
@@ -640,7 +625,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         List<? extends ObjectError> errors = (List<? extends ObjectError>) result.getModelAndView().getModel().get("nonFormErrors");
         assertEquals(1, errors.size());
         assertEquals("validation.notesandqueries.query.response.save.failed", errors.get(0).getCode());
-        verify(projectService, times(1)).getProjectTeamStatus(projectId, Optional.empty());
     }
 
     private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception {
