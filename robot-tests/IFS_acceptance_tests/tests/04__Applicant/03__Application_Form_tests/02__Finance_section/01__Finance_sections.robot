@@ -143,15 +143,15 @@ Applicant chooses Calculate overheads option
     [Setup]  log in as a different user                     &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page           ${applicationName}
-    then the user fills in the project costs                ${applicationName}
-    wait until element is not visible without screenshots   css=.task-list li:nth-of-type(1) .task-status-incomplete
+    Then the user fills in the project costs                ${applicationName}
+    And wait until element is not visible without screenshots   css=.task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                    link=Your project costs
-    then the user should see the text in the page           ${excel_file}
-    and the user clicks the button/link                     jQuery=button:contains("Edit your project costs")
-    and the user clicks the button/link                     jQuery=button[name="overheadfiledelete"]
-    When the user selects the checkbox                      jQuery=label[for="agree-state-aid-page"]
-    and the user clicks the button/link                     jQuery=button:contains("Mark as complete")
-    then the user should see an error                       You cannot mark as complete.
+    Then the user should see the text in the page           ${excel_file}
+    And the user clicks the button/link                     jQuery=button:contains("Edit your project costs")
+    And the user clicks the button/link                     css=button[name="overheadfiledelete"]
+    When the user selects the checkbox                      agree-state-aid-page
+    And the user clicks the button/link                     jQuery=button:contains("Mark as complete")
+    Then the user should see a summary error                You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup
