@@ -10,22 +10,11 @@ import java.util.Map;
 
 public class NotificationEmailsForm {
 
-    @NotEmpty (message="{validation.manage.funding.notifications.title.required}")
-    private String subject;
-
     @NotEmpty(message="{validation.manage.funding.notifications.message.required}")
     private String message;
 
     @NotEmpty(message="{validation.manage.funding.applications.no.application.selected}")
     private Map<Long, FundingDecision> fundingDecisions;
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
 
     public String getMessage() {
         return message;
