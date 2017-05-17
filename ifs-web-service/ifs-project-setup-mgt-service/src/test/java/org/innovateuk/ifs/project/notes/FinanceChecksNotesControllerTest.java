@@ -194,8 +194,8 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note"))
-                .andExpect(view().name("forbidden"))
-                .andExpect(status().isForbidden());
+                .andExpect(view().name("404"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -223,7 +223,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note/attachment/1"))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isNotFound())
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -306,7 +306,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment")
                 .cookie(formCookie))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
 
     }
 
@@ -361,7 +361,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("comment", "Query text")
                 .cookie(formCookie))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
 
     }
 
@@ -512,7 +512,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                         file(uploadedFile).
                         param("uploadAttachment", "")
                         .cookie(originCookie))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
 
     }
 
@@ -522,7 +522,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/attachment/1"))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isNotFound())
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -582,7 +582,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/cancel"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
 
     }
 
@@ -631,7 +631,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
 
     }
 
@@ -712,7 +712,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     public void testRemoveAttachmentDoesNotRemoveAttachmentNoOriginCookie() throws Exception {
 
         mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
 
     }
 

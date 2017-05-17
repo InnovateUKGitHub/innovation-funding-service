@@ -2,11 +2,10 @@ package org.innovateuk.ifs.project.notes.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
@@ -28,7 +27,6 @@ import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -86,7 +84,7 @@ public class FinanceChecksNotesController {
             model.addAttribute("model", viewModel);
             return NOTES_VIEW;
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -103,7 +101,7 @@ public class FinanceChecksNotesController {
         if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
             return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -124,7 +122,7 @@ public class FinanceChecksNotesController {
             model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, noteId).orElse(new FinanceChecksNotesAddCommentForm()));
             return NOTES_VIEW;
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -165,12 +163,7 @@ public class FinanceChecksNotesController {
 
                             List<AttachmentResource> attachmentResources = new ArrayList<>();
                             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
-                            attachments.forEach(attachment -> {
-                                ServiceResult<AttachmentResource> fileEntry = financeCheckService.getAttachment(attachment);
-                                if (fileEntry.isSuccess()) {
-                                    attachmentResources.add(fileEntry.getSuccessObject());
-                                }
-                            });
+                            attachments.forEach(attachment -> financeCheckService.getAttachment(attachment).ifSuccessful(fileEntry -> attachmentResources.add(fileEntry)));
                             PostResource post = new PostResource(null, loggedInUser, form.getComment(), attachmentResources, ZonedDateTime.now());
 
                             ServiceResult<Void> saveResult = financeCheckService.saveNotePost(post, noteId);
@@ -182,7 +175,7 @@ public class FinanceChecksNotesController {
                         });
             });
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -221,7 +214,7 @@ public class FinanceChecksNotesController {
                 return result;
             });
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -239,10 +232,10 @@ public class FinanceChecksNotesController {
             if (attachments.contains(attachmentId)) {
                 return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
             } else {
-                throw new ForbiddenActionException();
+                throw new ObjectNotFoundException();
             }
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -270,7 +263,7 @@ public class FinanceChecksNotesController {
 
             return redirectTo(formView(projectId, organisationId, noteId));
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -289,7 +282,7 @@ public class FinanceChecksNotesController {
             deleteCookies(response, projectId, organisationId, noteId);
             return redirectTo(rootView(projectId, organisationId));
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -298,10 +291,9 @@ public class FinanceChecksNotesController {
         List<ThreadViewModel> noteModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<NoteResource>> notes = financeCheckService.loadNotes(projectFinance.getId());
-        if (notes.isSuccess()) {
+        financeCheckService.loadNotes(projectFinance.getId()).ifSuccessful(notes -> {
             // order notes by most recent comment
-            List<NoteResource> sortedQueries = notes.getSuccessObject().stream().
+            List<NoteResource> sortedQueries = notes.stream().
                     flatMap(t -> t.posts.stream()
                             .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
                     .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
@@ -327,7 +319,7 @@ public class FinanceChecksNotesController {
                 detail.setOrganisationId(organisationId);
                 noteModel.add(detail);
             }
-        }
+        });
         return noteModel;
     }
 
@@ -341,9 +333,7 @@ public class FinanceChecksNotesController {
 
         Map<Long, String> attachmentLinks = new HashMap<>();
         if (attachments != null) {
-            attachments.forEach(id -> {
-                financeCheckService.getAttachment(id).ifSuccessful(foundAttachment -> attachmentLinks.put(id, foundAttachment.name));
-            });
+            attachments.forEach(id -> financeCheckService.getAttachment(id).ifSuccessful(foundAttachment -> attachmentLinks.put(id, foundAttachment.name)));
         }
 
         return new FinanceChecksNotesViewModel(
@@ -408,10 +398,6 @@ public class FinanceChecksNotesController {
         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, noteId));
         cookieUtil.removeCookie(response, getFormCookieName(projectId, organisationId, noteId));
         cookieUtil.removeCookie(response, ORIGIN_GET_COOKIE);
-    }
-
-    private ResponseEntity<ByteArrayResource> forbiddenRedirectionDueToForbidden() {
-      return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
     }
 
     private String redirectTo(final String path) {

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.notes.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -25,7 +25,6 @@ import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -93,7 +92,7 @@ public class FinanceChecksNotesAddNoteController {
             model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksNotesAddNoteForm()));
             return NEW_NOTE_VIEW;
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -125,12 +124,7 @@ public class FinanceChecksNotesAddNoteController {
 
                 List<AttachmentResource> attachmentResources = new ArrayList<>();
                 List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-                attachments.forEach(attachment -> {
-                    ServiceResult<AttachmentResource> fileEntry = financeCheckService.getAttachment(attachment);
-                    if (fileEntry.isSuccess()) {
-                        attachmentResources.add(fileEntry.getSuccessObject());
-                    }
-                });
+                attachments.forEach(attachment -> financeCheckService.getAttachment(attachment).ifSuccessful(fileEntry -> attachmentResources.add(fileEntry)));
 
                 PostResource post = new PostResource(null, loggedInUser, form.getNote(), attachmentResources, ZonedDateTime.now());
 
@@ -146,7 +140,7 @@ public class FinanceChecksNotesAddNoteController {
                         });
             });
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -185,7 +179,7 @@ public class FinanceChecksNotesAddNoteController {
                 return result;
             });
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -205,10 +199,10 @@ public class FinanceChecksNotesAddNoteController {
                 FileEntryResource fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
                 return getFileResponseEntity(fileContent, fileInfo);
             } else {
-                throw new ForbiddenActionException();
+                throw new ObjectNotFoundException();
             }
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -235,7 +229,7 @@ public class FinanceChecksNotesAddNoteController {
 
             return redirectTo(rootView(projectId, organisationId));
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -252,7 +246,7 @@ public class FinanceChecksNotesAddNoteController {
             deleteCookies(response, projectId, organisationId);
             return redirectToNotePage(projectId, organisationId);
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -333,8 +327,7 @@ public class FinanceChecksNotesAddNoteController {
     }
 
     private boolean postParametersMatchOrigin(HttpServletRequest request, Long projectId, Long organisationId, Long userId){
-        List<Long> getParams = cookieUtil.getCookieAsList(request, ORIGIN_GET_COOKIE, new TypeReference<List<Long>>() {
-        });
+        List<Long> getParams = cookieUtil.getCookieAsList(request, ORIGIN_GET_COOKIE, new TypeReference<List<Long>>() {});
         return getParams.size() == 3 && getParams.get(0) == projectId && getParams.get(1) == organisationId && getParams.get(2) == userId;
     }
 }

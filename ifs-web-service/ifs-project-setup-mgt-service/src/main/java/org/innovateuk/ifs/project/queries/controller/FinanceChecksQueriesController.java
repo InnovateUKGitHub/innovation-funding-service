@@ -6,14 +6,12 @@ import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
-import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -30,7 +28,6 @@ import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -279,10 +276,9 @@ public class FinanceChecksQueriesController {
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<QueryResource>> queries = financeCheckService.getQueries(projectFinance.getId());
-        if (queries.isSuccess()) {
+        financeCheckService.getQueries(projectFinance.getId()).ifSuccessful( queries -> {
             // order queries by most recent post
-            List<QueryResource> sortedQueries = queries.getSuccessObject().stream().
+            List<QueryResource> sortedQueries = queries.stream().
                     flatMap(t -> t.posts.stream()
                             .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
                     .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
@@ -310,7 +306,7 @@ public class FinanceChecksQueriesController {
                 detail.setOrganisationId(organisationId);
                 queryModel.add(detail);
             }
-        }
+        });
         return queryModel;
     }
 

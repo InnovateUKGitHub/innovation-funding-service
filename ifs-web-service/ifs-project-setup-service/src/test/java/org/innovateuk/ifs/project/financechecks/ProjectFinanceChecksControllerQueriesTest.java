@@ -482,8 +482,8 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks/1/new-response/attachment/1"))
-                .andExpect(status().isForbidden())
-                .andExpect(view().name("forbidden"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();

@@ -15,7 +15,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -203,22 +203,16 @@ public class ProjectFinanceChecksController {
 
                         List<AttachmentResource> attachmentResources = new ArrayList<>();
                         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-                        attachments.forEach(attachment -> {
-                            ServiceResult<AttachmentResource> fileEntry = financeCheckService.getAttachment(attachment);
-                            if (fileEntry.isSuccess()) {
-                                attachmentResources.add(fileEntry.getSuccessObject());
-                            }
-                        });
+                        attachments.forEach(attachment -> financeCheckService.getAttachment(attachment).ifSuccessful(fileEntry -> attachmentResources.add(fileEntry)));
                         PostResource post = new PostResource(null, loggedInUser, form.getResponse(), attachmentResources, ZonedDateTime.now());
 
                         ValidationMessages errors = new ValidationMessages();
-                        ServiceResult<Void> saveResult = financeCheckService.saveQueryPost(post, queryId);
-                        if (saveResult.isFailure()) {
+                        financeCheckService.saveQueryPost(post, queryId).andOnFailure(saveResult -> {
                             errors.addError(fieldError("saveError", null, "validation.notesandqueries.query.response.save.failed"));
                             validationHandler.addAnyErrors(errors);
                             attachments.forEach(attachment -> financeCheckService.deleteFile(attachment));
                             cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
-                        }
+                        });
                         return validationHandler.failNowOrSucceedWith(saveFailureView, () -> {
                             cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
                             return redirectToQueries(projectId);
@@ -278,7 +272,7 @@ public class ProjectFinanceChecksController {
         if (attachments.contains(attachmentId)) {
             return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -396,10 +390,9 @@ public class ProjectFinanceChecksController {
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<QueryResource>> queries = financeCheckService.getQueries(projectFinance.getId());
-        if (queries.isSuccess()) {
+        financeCheckService.getQueries(projectFinance.getId()).ifSuccessful( queries -> {
             // order queries by most recent post
-            List<QueryResource> sortedQueries = queries.getSuccessObject().stream().
+            List<QueryResource> sortedQueries = queries.stream().
                     flatMap(t -> t.posts.stream()
                             .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
                     .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
@@ -432,7 +425,7 @@ public class ProjectFinanceChecksController {
                 detail.setOrganisationId(organisationId);
                 queryModel.add(detail);
             }
-        }
+        });
         return queryModel;
     }
 

@@ -113,7 +113,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1)+ "/note/new-note"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
 
     }
 
@@ -178,7 +178,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 .param("noteTitle", "Title")
                 .param("note", "Query text")
                 .cookie(formCookie))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -308,8 +308,8 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note/attachment/1"))
-                .andExpect(status().isForbidden())
-                .andExpect(view().name("forbidden"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -323,7 +323,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testDownloadAttachmentFailsInvalidOrganisation() throws Exception {
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note/attachment/1"))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isNotFound())
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();
@@ -378,7 +378,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note/cancel"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -422,7 +422,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId +1) + "/note/new-note"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -483,7 +483,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("noteTitle", "Title")
                 .param("note", "Query"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
 
     }
 
