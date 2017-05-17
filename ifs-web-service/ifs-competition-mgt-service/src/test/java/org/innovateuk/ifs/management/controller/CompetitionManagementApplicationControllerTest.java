@@ -326,7 +326,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
+                .param("markAsIneligible", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/applications/ineligible"));
 
@@ -352,7 +353,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
 
-        mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + ""))
+        mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "")
+                .param("markAsIneligible", ""))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition-mgt-application-overview"));
 
@@ -381,6 +383,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
 
         mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "?origin=SUBMITTED_APPLICATIONS&page=2&sort=name")
+                .param("markAsIneligible", "")
                 .param("ineligibleReason", reason))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition-mgt-application-overview"))

@@ -72,7 +72,7 @@ public class CompetitionManagementApplicationController {
                         .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application));
     }
 
-    @PostMapping("/{applicationId}")
+    @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,

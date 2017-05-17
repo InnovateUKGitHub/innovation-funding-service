@@ -107,7 +107,7 @@
 
                         <div class="alignright">
                             <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button button-clear">Cancel</a>
-                            <button type="submit" class="button no-margin">Mark application as ineligible</button>
+                            <button type="submit" name="markAsIneligible" class="button no-margin">Mark application as ineligible</button>
                         </div>
                     </form>
                 </div>
