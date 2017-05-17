@@ -12,7 +12,7 @@ import java.util.Optional;
  * A service for dealing with Monitoring Officer ProjectResources via the appropriate Rest services
  */
 @Service
-public class ProjectMonitoringOfficerServiceImpl implements ProjectMonitoringOfficerService {
+public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
 
     @Autowired
     private ProjectMonitoringOfficerRestService projectMonitoringOfficerRestService;

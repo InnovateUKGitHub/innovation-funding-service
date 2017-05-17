@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * A service for dealing with Monitoring Officer ProjectResources via the appropriate Rest services
  */
-public interface ProjectMonitoringOfficerService {
+public interface MonitoringOfficerService {
 
     Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
 

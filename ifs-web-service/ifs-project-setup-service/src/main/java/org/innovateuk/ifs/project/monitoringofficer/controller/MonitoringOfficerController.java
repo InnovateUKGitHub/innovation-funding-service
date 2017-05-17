@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -26,7 +26,7 @@ public class MonitoringOfficerController {
     private ProjectService projectService;
 
     @Autowired
-    private ProjectMonitoringOfficerService projectMonitoringOfficerService;
+    private MonitoringOfficerService monitoringOfficerService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
@@ -50,7 +50,7 @@ public class MonitoringOfficerController {
 
     private MonitoringOfficerViewModel getMonitoringOfficerViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
-        Optional<MonitoringOfficerResource> monitoringOfficer = projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId);
+        Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
         return new MonitoringOfficerViewModel(project, monitoringOfficer);
     }
 }

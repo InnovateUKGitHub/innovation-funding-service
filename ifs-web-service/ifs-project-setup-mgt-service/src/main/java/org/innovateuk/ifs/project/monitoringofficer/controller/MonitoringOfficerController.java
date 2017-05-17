@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
-import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
@@ -53,7 +53,7 @@ public class MonitoringOfficerController {
     private ProjectService projectService;
 
     @Autowired
-    private ProjectMonitoringOfficerService projectMonitoringOfficerService;
+    private MonitoringOfficerService monitoringOfficerService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -71,7 +71,7 @@ public class MonitoringOfficerController {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId);
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
         MonitoringOfficerForm form = new MonitoringOfficerForm(existingMonitoringOfficer);
         return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent());
     }
@@ -83,7 +83,7 @@ public class MonitoringOfficerController {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
-        Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId);
+        Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
         MonitoringOfficerForm form = new MonitoringOfficerForm(existingMonitoringOfficer);
         return editMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent());
     }
@@ -120,7 +120,7 @@ public class MonitoringOfficerController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = projectMonitoringOfficerService.updateMonitoringOfficer(projectId, form.getFirstName(),
+            ServiceResult<Void> updateResult = monitoringOfficerService.updateMonitoringOfficer(projectId, form.getFirstName(),
                     form.getLastName(), form.getEmailAddress(), form.getPhoneNumber());
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).

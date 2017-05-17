@@ -27,7 +27,7 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
         when(projectService.getById(123L)).thenReturn(project);
-        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.of(monitoringOfficer));
+        when(monitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.of(monitoringOfficer));
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("project/monitoring-officer")).
@@ -51,7 +51,7 @@ public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMV
         ProjectResource project = newProjectResource().withId(123L).withApplication(345L).build();
 
         when(projectService.getById(123L)).thenReturn(project);
-        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.empty());
+        when(monitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("project/monitoring-officer")).
