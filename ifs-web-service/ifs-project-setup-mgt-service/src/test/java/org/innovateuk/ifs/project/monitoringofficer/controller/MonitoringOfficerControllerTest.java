@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.form.ProjectMonitoringOfficerForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -317,7 +317,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones in error
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
@@ -424,7 +424,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones that resulted in error
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertEquals("First", form.getFirstName());
         assertEquals("Last", form.getLastName());
         assertEquals("asdf2@asdf.com", form.getEmailAddress());
@@ -490,7 +490,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones in error
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
@@ -516,7 +516,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertEquals("First", form.getFirstName());
         assertEquals("Last", form.getLastName());
         assertEquals("asdf@asdf.com", form.getEmailAddress());
@@ -560,7 +560,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     }
 
     private void assertMonitoringOfficerFormNotPrepopulated(Map<String, Object> modelMap) {
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertNull(form.getFirstName());
         assertNull(form.getLastName());
         assertNull(form.getEmailAddress());

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.project.monitoringofficer.form.ProjectMonitoringOfficerForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -72,7 +72,7 @@ public class MonitoringOfficerController {
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
         Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId);
-        ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm(existingMonitoringOfficer);
+        MonitoringOfficerForm form = new MonitoringOfficerForm(existingMonitoringOfficer);
         return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent());
     }
 
@@ -84,7 +84,7 @@ public class MonitoringOfficerController {
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
 
         Optional<MonitoringOfficerResource> existingMonitoringOfficer = projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId);
-        ProjectMonitoringOfficerForm form = new ProjectMonitoringOfficerForm(existingMonitoringOfficer);
+        MonitoringOfficerForm form = new MonitoringOfficerForm(existingMonitoringOfficer);
         return editMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent());
     }
 
@@ -92,7 +92,7 @@ public class MonitoringOfficerController {
     @PostMapping("/confirm")
     public String confirmMonitoringOfficerDetails(Model model,
                                                   @PathVariable("projectId") final Long projectId,
-                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
+                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerForm form,
                                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
@@ -110,7 +110,7 @@ public class MonitoringOfficerController {
     @PostMapping("/assign")
     public String updateMonitoringOfficerDetails(Model model,
                                                  @PathVariable("projectId") final Long projectId,
-                                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectMonitoringOfficerForm form,
+                                                 @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerForm form,
                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
 
@@ -136,15 +136,15 @@ public class MonitoringOfficerController {
         }
     }
 
-    private String viewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned) {
+    private String viewMonitoringOfficer(Model model, Long projectId, MonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned) {
         return doViewMonitoringOfficer(model, projectId, form, false, existingMonitoringOfficerAssigned);
     }
 
-    private String editMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned) {
+    private String editMonitoringOfficer(Model model, Long projectId, MonitoringOfficerForm form, boolean existingMonitoringOfficerAssigned) {
         return doViewMonitoringOfficer(model, projectId, form, true, existingMonitoringOfficerAssigned);
     }
 
-    private String doViewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean currentlyEditing, boolean existingMonitoringOfficer) {
+    private String doViewMonitoringOfficer(Model model, Long projectId, MonitoringOfficerForm form, boolean currentlyEditing, boolean existingMonitoringOfficer) {
         boolean editMode = currentlyEditing || !existingMonitoringOfficer;
 
         ProjectMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(projectId, editMode, existingMonitoringOfficer);
