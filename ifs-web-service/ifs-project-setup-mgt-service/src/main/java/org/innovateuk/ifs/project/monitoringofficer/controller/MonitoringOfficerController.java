@@ -45,7 +45,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 @Controller
 @RequestMapping("/project/{projectId}/monitoring-officer")
-public class ProjectMonitoringOfficerController {
+public class MonitoringOfficerController {
 
     private static final String FORM_ATTR_NAME = "form";
 

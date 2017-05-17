@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     private long projectId = 123L;
     private long applicationId = 456L;
@@ -568,7 +568,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController();
+    protected MonitoringOfficerController supplyControllerUnderTest() {
+        return new MonitoringOfficerController();
     }
 }
