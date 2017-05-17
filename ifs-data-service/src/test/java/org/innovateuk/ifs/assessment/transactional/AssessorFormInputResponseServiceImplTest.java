@@ -29,6 +29,7 @@ import java.util.List;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
@@ -123,17 +124,17 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
-        Assessment assessment = newAssessment().build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .build();
         BindingResult bindingResult = new DataBinder(formInput).getBindingResult();
-
-        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
-        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
         when(validationUtilMock.validateResponse(any(FormInputResponse.class), anyBoolean())).thenReturn(bindingResult);
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
         when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
+        when(assessmentWorkflowHandlerMock.feedback(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(updatedAssessorFormInputResponseResource);
         assertTrue(result.isSuccess());
@@ -142,17 +143,15 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
         inOrder.verify(assessorFormInputResponseMapperMock).mapToResource(same(existingAssessorFormInputResponse));
         inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(same(existingAssessorFormInputResponseResource));
-        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
-        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(createLambdaMatcher((AssessorFormInputResponse saved) -> {
+            assertEquals(existingAssessorFormInputResponseResource.getId(), saved.getId());
+            assertEquals(existingAssessorFormInputResponseResource.getAssessment(), saved.getAssessment().getId());
+            assertEquals(existingAssessorFormInputResponseResource.getFormInput(), saved.getFormInput().getId());
+            assertEquals(value, saved.getValue());
+            assertTrue(saved.getUpdatedDate().isAfter(oldUpdatedDate));
+        }));
         inOrder.verifyNoMoreInteractions();
-
-        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
-        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
-        assertEquals(existingAssessorFormInputResponseResource.getId(), saved.getId());
-        assertEquals(existingAssessorFormInputResponseResource.getAssessment(), saved.getAssessment().getId());
-        assertEquals(existingAssessorFormInputResponseResource.getFormInput(), saved.getFormInput().getId());
-        assertEquals(value, saved.getValue());
-        assertTrue(saved.getUpdatedDate().isAfter(oldUpdatedDate));
     }
 
     @Test
@@ -170,15 +169,17 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
-        Assessment assessment = newAssessment().build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .build();
         BindingResult bindingResult = new DataBinder(assessorFormInputResponseResource).getBindingResult();
 
         ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
-        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
         when(validationUtilMock.validateResponse(any(FormInputResponse.class), anyBoolean())).thenReturn(bindingResult);
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+        when(assessmentWorkflowHandlerMock.feedback(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
@@ -186,17 +187,15 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
         inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
-        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
         inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(createLambdaMatcher((AssessorFormInputResponse saved) -> {
+            assertNull(saved.getId());
+            assertEquals(assessmentId, saved.getAssessment().getId());
+            assertEquals(formInputId, saved.getFormInput().getId());
+            assertEquals(value, saved.getValue());
+            assertNotNull(saved.getUpdatedDate());
+        }));
         inOrder.verifyNoMoreInteractions();
-
-        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
-        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
-        assertNull(saved.getId());
-        assertEquals(assessmentId, saved.getAssessment().getId());
-        assertEquals(formInputId, saved.getFormInput().getId());
-        assertEquals(value, saved.getValue());
-        assertNotNull(saved.getUpdatedDate());
     }
 
     @Test
@@ -214,15 +213,15 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
-        Assessment assessment = newAssessment().build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .build();
         BindingResult bindingResult = new DataBinder(assessorFormInputResponseResource).getBindingResult();
-
-        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
-        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
         when(validationUtilMock.validateResponse(any(FormInputResponse.class), anyBoolean())).thenReturn(bindingResult);
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+        when(assessmentWorkflowHandlerMock.feedback(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
@@ -230,17 +229,9 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
         inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
-        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
-        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(matchesWithNullValue(assessmentId, formInputId));
         inOrder.verifyNoMoreInteractions();
-
-        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
-        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
-        assertNull(saved.getId());
-        assertEquals(assessmentId, saved.getAssessment().getId());
-        assertEquals(formInputId, saved.getFormInput().getId());
-        assertNull(saved.getValue());
-        assertNotNull(saved.getUpdatedDate());
     }
 
     @Test
@@ -258,15 +249,15 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
-        Assessment assessment = newAssessment().build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .build();
         BindingResult bindingResult = new DataBinder(assessorFormInputResponseResource).getBindingResult();
-
-        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
-        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
         when(validationUtilMock.validateResponse(any(FormInputResponse.class), anyBoolean())).thenReturn(bindingResult);
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+        when(assessmentWorkflowHandlerMock.feedback(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
@@ -274,18 +265,20 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
         inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(isA(AssessorFormInputResponseResource.class));
-        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
-        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(matchesWithNullValue(assessmentId, formInputId));
         inOrder.verifyNoMoreInteractions();
+    }
 
-        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
-        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
-        assertNull(saved.getId());
-        assertEquals(assessmentId, saved.getAssessment().getId());
-        assertEquals(formInputId, saved.getFormInput().getId());
-        // Make sure that the empty string value is reduced to null
-        assertNull(saved.getValue());
-        assertNotNull(saved.getUpdatedDate());
+    private AssessorFormInputResponse matchesWithNullValue(Long assessmentId, Long formInputId) {
+        return createLambdaMatcher((AssessorFormInputResponse saved) -> {
+            assertNull(saved.getId());
+            assertEquals(assessmentId, saved.getAssessment().getId());
+            assertEquals(formInputId, saved.getFormInput().getId());
+            // Make sure that the empty string value is reduced to null
+            assertNull(saved.getValue());
+            assertNotNull(saved.getUpdatedDate());
+        });
     }
 
     @Test
@@ -303,7 +296,9 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(100)
                 .build();
-        Assessment assessment = newAssessment().build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .build();
         BindingResult bindingResult = new DataBinder(assessorFormInputResponseResource).getBindingResult();
         bindingResult.addError(new FieldError(
                 "value",
@@ -317,6 +312,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         when(validationUtilMock.validateResponse(any(), anyBoolean())).thenReturn(bindingResult);
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+        when(assessmentWorkflowHandlerMock.feedback(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isFailure());
@@ -337,12 +333,15 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         FormInputResource formInput = newFormInputResource()
                 .withId(formInputId)
                 .build();
-        Assessment assessment = newAssessment().build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .build();
         BindingResult bindingResult = new DataBinder(assessorFormInputResponseResource).getBindingResult();
 
         when(validationUtilMock.validateResponse(any(FormInputResponse.class), anyBoolean())).thenReturn(bindingResult);
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+        when(assessmentWorkflowHandlerMock.feedback(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
@@ -372,11 +371,10 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withId(formInputId)
                 .withWordCount(10)
                 .build();
-        Assessment assessment = newAssessment().build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .build();
         BindingResult bindingResult = new DataBinder(assessorFormInputResponseResource).getBindingResult();
-
-        ArgumentCaptor<Assessment> assessmentWorkflowHandlerFeedbackArgument = ArgumentCaptor.forClass(Assessment.class);
-        ArgumentCaptor<AssessorFormInputResponse> formInputResponseSaveArgument = ArgumentCaptor.forClass(AssessorFormInputResponse.class);
 
         when(validationUtilMock.validateResponse(any(FormInputResponse.class), anyBoolean())).thenReturn(bindingResult);
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
@@ -384,6 +382,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
         when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
+        when(assessmentWorkflowHandlerMock.feedback(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(assessorFormInputResponseResource);
         assertTrue(result.isSuccess());
@@ -392,19 +391,18 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
         inOrder.verify(assessorFormInputResponseMapperMock).mapToResource(same(existingAssessorFormInputResponse));
         inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(same(existingAssessorFormInputResponseResource));
-        inOrder.verify(assessorFormInputResponseRepositoryMock).save(formInputResponseSaveArgument.capture());
-        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessmentWorkflowHandlerFeedbackArgument.capture());
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).save(createLambdaMatcher((AssessorFormInputResponse saved) -> {
+            assertEquals(existingAssessorFormInputResponseResource.getId(), saved.getId());
+            assertEquals(existingAssessorFormInputResponseResource.getAssessment(), saved.getAssessment().getId());
+            assertEquals(existingAssessorFormInputResponseResource.getFormInput(), saved.getFormInput().getId());
+            assertEquals(value, saved.getValue());
+
+            // The updated date should not have been touched since the value was the same
+            assertEquals(oldUpdatedDate, saved.getUpdatedDate());
+
+        }));
         inOrder.verifyNoMoreInteractions();
-
-        assertEquals(assessmentId, assessmentWorkflowHandlerFeedbackArgument.getValue().getId());
-        AssessorFormInputResponse saved = formInputResponseSaveArgument.getValue();
-        assertEquals(existingAssessorFormInputResponseResource.getId(), saved.getId());
-        assertEquals(existingAssessorFormInputResponseResource.getAssessment(), saved.getAssessment().getId());
-        assertEquals(existingAssessorFormInputResponseResource.getFormInput(), saved.getFormInput().getId());
-        assertEquals(value, saved.getValue());
-
-        // The updated date should not have been touched since the value was the same
-        assertEquals(oldUpdatedDate, saved.getUpdatedDate());
     }
 
     @Test
@@ -460,6 +458,52 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         assertTrue(result.getFailure().is(fieldError("value", value, "validation.assessor.category.invalidCategory")));
     }
 
+    @Test
+    public void updateFormInputResponse_transitionNotAccepted() throws Exception {
+        Long assessmentId = 1L;
+        Long formInputId = 2L;
+        String value = "New feedback";
+        String oldValue = "Old feedback";
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
+        AssessorFormInputResponse existingAssessorFormInputResponse = newAssessorFormInputResponse().build();
+        AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withId(3L)
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(oldValue)
+                .withUpdatedDate(oldUpdatedDate)
+                .build();
+        AssessorFormInputResponseResource updatedAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
+                .withAssessment(assessmentId)
+                .withFormInput(formInputId)
+                .withValue(value)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withId(formInputId)
+                .withWordCount(10)
+                .build();
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .build();
+        BindingResult bindingResult = new DataBinder(formInput).getBindingResult();
+
+        when(validationUtilMock.validateResponse(any(FormInputResponse.class), anyBoolean())).thenReturn(bindingResult);
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
+        when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
+        when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
+        when(assessmentWorkflowHandlerMock.feedback(assessment)).thenReturn(false);
+
+        ServiceResult<Void> result = assessorFormInputResponseService.updateFormInputResponse(updatedAssessorFormInputResponseResource);
+        assertTrue(result.isFailure());
+
+        InOrder inOrder = inOrder(assessorFormInputResponseRepositoryMock, assessorFormInputResponseMapperMock, assessmentWorkflowHandlerMock);
+        inOrder.verify(assessorFormInputResponseRepositoryMock).findByAssessmentIdAndFormInputId(assessmentId, formInputId);
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToResource(same(existingAssessorFormInputResponse));
+        inOrder.verify(assessorFormInputResponseMapperMock).mapToDomain(same(existingAssessorFormInputResponseResource));
+        inOrder.verify(assessmentWorkflowHandlerMock).feedback(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
 
     @Test
     public void getApplicationAggregateScores() {

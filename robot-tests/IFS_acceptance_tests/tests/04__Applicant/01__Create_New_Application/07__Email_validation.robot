@@ -9,7 +9,7 @@ Resource          ../../../resources/defaultResources.robot
 Invalid email plaintext
     [Documentation]    INFUND-885
     [Tags]
-    Given the user follows the flow to register their organisation
+    Given the user follows the flow to register their organisation     radio-1
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -90,7 +90,7 @@ User can not login with the invalid email
 Valid account creation
     [Documentation]    INFUND-885
     [Tags]    HappyPath
-    Given the user follows the flow to register their organisation
+    Given the user follows the flow to register their organisation     radio-1
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -101,7 +101,7 @@ Valid account creation
 Email duplication check
     [Documentation]    INFUND-886
     [Tags]    HappyPath
-    Given the user follows the flow to register their organisation
+    Given the user follows the flow to register their organisation     radio-1
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567

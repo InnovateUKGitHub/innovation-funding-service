@@ -26,5 +26,9 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
                 permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class)));
         assertSecured(() -> classUnderTest.uploadSignedGrantOfferLetterFile(123L, null, null, null, null, null),
                 permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.downloadGrantOfferLetterFile(123L),
+                permissionRules -> permissionRules.leadPartnerAccess(eq(123L), isA(UserResource.class)));
+        assertSecured(() -> classUnderTest.deleteSignedGrantOfferLetterFile(123L, null, null, null, null, null),
+                permissionRules -> permissionRules.leadPartnerAccess(eq(123L), isA(UserResource.class)));
     }
 }
