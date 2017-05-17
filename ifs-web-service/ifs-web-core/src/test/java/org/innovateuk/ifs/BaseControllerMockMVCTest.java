@@ -89,9 +89,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     private static LoggedInUserMethodArgumentResolver getLoggedInUserMethodArgumentResolver(Supplier<UserResource> loggedInUserSupplier) {
 
-        LoggedInUserMethodArgumentResolver modelAttributeAdvice = new LoggedInUserMethodArgumentResolver();
+        LoggedInUserMethodArgumentResolver argumentResolver = new LoggedInUserMethodArgumentResolver();
 
-        ReflectionTestUtils.setField(modelAttributeAdvice, "userAuthenticationService", new UserAuthenticationService() {
+        ReflectionTestUtils.setField(argumentResolver, "userAuthenticationService", new UserAuthenticationService() {
 
             @Override
             public Authentication getAuthentication(HttpServletRequest request) {
@@ -114,7 +114,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             }
         });
 
-        return modelAttributeAdvice;
+        return argumentResolver;
     }
 
     public static ExceptionHandlerExceptionResolver createExceptionResolver(Environment env, MessageSource messageSource) {

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,7 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Resolves method argument by retrieving the {@UserResource} for the currently logged in user.
+ * Resolves method argument by retrieving the {@link UserResource} for the currently logged in user.
  */
 @Component
 public class LoggedInUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
@@ -23,6 +24,10 @@ public class LoggedInUserMethodArgumentResolver implements HandlerMethodArgument
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
+        if(parameter.hasParameterAnnotation(ModelAttribute.class)) {
+            return false;
+        }
+
         Class<?> paramType = parameter.getParameterType();
         return UserResource.class.isAssignableFrom(paramType);
     }
