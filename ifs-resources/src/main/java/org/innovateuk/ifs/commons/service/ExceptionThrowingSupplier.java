@@ -6,5 +6,5 @@ package org.innovateuk.ifs.commons.service;
 @FunctionalInterface
 public interface ExceptionThrowingSupplier<R> {
 
-    R get() throws Throwable;
+    R get() throws Exception;
 }

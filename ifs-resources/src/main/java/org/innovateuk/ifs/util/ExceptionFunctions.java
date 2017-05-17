@@ -5,14 +5,14 @@ import org.innovateuk.ifs.commons.service.ExceptionThrowingSupplier;
 
 public class ExceptionFunctions {
 
-    public static <T> T getOrRethrow(ExceptionThrowingSupplier<T> supplier){
+    public static <T> T getOrRethrow(ExceptionThrowingSupplier<T> supplier) {
         try {
             return supplier.get();
         }
-        catch (RuntimeException e){
+        catch (RuntimeException e) {
             throw e;
         }
-        catch (Throwable e){
+        catch (Exception e){
             throw new RuntimeException(e);
         }
     }
