@@ -49,8 +49,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 ${project_details_submitted_message}    The project details have been submitted to Innovate UK
@@ -101,7 +100,7 @@ Non-lead partner can see the project setup page
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{collaborator1_credentials}
     When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
-    Then the user navigates to the page    ${project_in_setup_page}
+    Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
@@ -120,7 +119,7 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Grant offer letter
     And the user should see the text in the page    status of my partners
     When the user clicks the button/link    link=status of my partners
-    Then the user navigates to the page    ${project_in_setup_page}/team-status
+    Then the user should be redirected to the correct page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
@@ -144,7 +143,6 @@ Non-lead partner can click the Dashboard link
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
     And the user should see the text in the page    Set up your project
-    [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see the application overview
     [Documentation]    INFUND-2612
@@ -153,9 +151,7 @@ Non-lead partner can see the application overview
     And the user should see the text in the page    Other documents
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
-    # And the user should see the text in the page    Application details
-    # Pending due to INFUND-7861
-    And the user should not see an error in the page
+    And the user should see the text in the page    Application details
 
 Lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-5827, INFUND-5805
@@ -176,7 +172,7 @@ Lead partner can see the project setup page
     And the user should see the text in the page    Grant offer letter
     And the user should see the text in the page    status of my partners
     When the user clicks the button/link    link=status of my partners
-    Then the user navigates to the page    ${project_in_setup_page}/team-status
+    Then the user should be redirected to the correct page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
 
@@ -185,9 +181,7 @@ Lead partner can click the Dashboard link
     [Tags]
     [Setup]    the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Dashboard
-    Then the user should not see an error in the page
-    And the user should see the text in the page    Set up your project
-    [Teardown]    the user goes back to the previous page
+    Then the user should see the text in the page    Set up your project
 
 Lead partner can see the application overview
     [Documentation]    INFUND-2612
@@ -195,16 +189,13 @@ Lead partner can see the application overview
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the element    jQuery=.success-alert h2:contains("Congratulations, your application has been successful")
-    # And the user should see the element     jQuery=h2:contains("Application details")
-    # Pending due to INFUND-7861
-    And the user should not see an error in the page
+    And the user should see the element     jQuery=h2:contains("Application details")
 
 Lead partner is able to see finances without an error
     [Documentation]  INFUND-7634
     [Tags]
     Given the user clicks the button/link  jQuery=button:contains("Finances summary")
     When the user clicks the button/link   link=Detailed Organisation Finances
-    Then the user should not see an error in the page
     And the user should see the element    jQuery=h2:contains("Finance summary")
     Then the user clicks the button/link   link=Application summary
 
@@ -408,7 +399,7 @@ Non lead partner not eligible for funding
     When The user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details    You do not have the necessary permissions for your request
     When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user clicks the button/link    link=status of my partners
-    Then the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
+    Then the user should be redirected to the correct page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
     And the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
 
 Other partners can see who needs to provide Bank Details
@@ -627,12 +618,8 @@ Non-lead partner cannot change any project details
     And the user should see the text in the page    Project address
     And the user should see the text in the page    1, Sheffield, S1 2ED
     And the user should not see the element    link=Project address
-    And the user navigates to the page    ${project_start_date_page}
-    And the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user navigates to the page    ${project_manager_page}
-    And the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user navigates to the page    ${project_address_page}
-    And the user should be redirected to the correct page    ${project_in_setup_page}
+    When the user navigates to the page and gets a custom error message    ${project_start_date_page}    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message    ${project_address_page}    You do not have the necessary permissions for your request
 
 Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856

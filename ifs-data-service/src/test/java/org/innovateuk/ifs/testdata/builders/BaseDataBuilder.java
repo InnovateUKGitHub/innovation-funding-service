@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
@@ -149,6 +150,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected AffiliationService affiliationService;
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
     protected AssessorFormInputResponseService assessorFormInputResponseService;
+    protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -218,6 +220,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
         this.assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
         this.applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
+        this.ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
     }
 
     @Override

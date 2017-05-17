@@ -199,8 +199,10 @@ public class FinanceChecksEligibilityController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping(value = "/remove_cost/{costId}")
     public @ResponseBody
-    String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
-        projectFinanceRowRestService.delete(costId).getSuccessObjectOrThrowException();
+    String removeCostRow(@PathVariable("projectId") Long projectId,
+                         @PathVariable("organisationId") Long organisationId,
+                         @PathVariable("costId") final Long costId) throws JsonProcessingException {
+        projectFinanceRowRestService.delete(projectId, organisationId, costId).getSuccessObjectOrThrowException();
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);

@@ -13,7 +13,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResourc
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
-import org.innovateuk.ifs.category.transactional.CategoryService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
@@ -64,9 +64,6 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
     private QuestionService questionService;
 
     @Autowired
@@ -105,11 +102,9 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
         if (result.hasErrors()) {
             return serviceFailure(new ValidationMessages(result).getErrors());
-        } else {
-            saveAndNotifyWorkflowHandler(createdResponse);
         }
 
-        return serviceSuccess();
+        return saveAndNotifyWorkflowHandler(createdResponse);
     }
 
     @Override
@@ -129,7 +124,12 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 }
             }
         }
-        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope, avgScores, averagePercentage));
+
+        // Infer that assessment of the Scope question is required if there are Scope responses
+        boolean scopeAssessed = totalScope > 0;
+
+        return serviceSuccess(new ApplicationAssessmentAggregateResource(scopeAssessed, totalScope, totalInScope,
+                avgScores, averagePercentage));
     }
 
     private long getAveragePercentage(List<AssessorFormInputResponse> responses) {
@@ -142,7 +142,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {
         return responses.stream()
-                    .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                    .filter(response -> response.getFormInput().getType() == ASSESSOR_SCORE)
                     .collect(
                             Collectors.groupingBy(
                                     x -> x.getFormInput().getQuestion().getId(),
@@ -210,9 +210,15 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         );
     }
 
-    private void saveAndNotifyWorkflowHandler(AssessorFormInputResponseResource response) {
+    private ServiceResult<Void> saveAndNotifyWorkflowHandler(AssessorFormInputResponseResource response) {
         AssessorFormInputResponse assessorFormInputResponse = assessorFormInputResponseMapper.mapToDomain(response);
-        assessorFormInputResponseRepository.save(assessorFormInputResponse);
-        assessmentWorkflowHandler.feedback(assessorFormInputResponse.getAssessment());
+
+        if (assessmentWorkflowHandler.feedback(assessorFormInputResponse.getAssessment())) {
+            assessorFormInputResponseRepository.save(assessorFormInputResponse);
+
+            return serviceSuccess();
+        }
+
+        return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
     }
 }

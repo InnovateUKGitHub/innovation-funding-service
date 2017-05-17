@@ -140,7 +140,7 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewFinanceChecks(Model model, @PathVariable("projectId") final Long projectId,
-                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
@@ -156,7 +156,7 @@ public class ProjectFinanceChecksController {
                                   Model model,
                                   HttpServletRequest request,
                                   HttpServletResponse response,
-                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
@@ -177,7 +177,7 @@ public class ProjectFinanceChecksController {
                                @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksQueryResponseForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                ValidationHandler validationHandler,
-                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
@@ -242,10 +242,8 @@ public class ProjectFinanceChecksController {
                                             ValidationHandler validationHandler,
                                             HttpServletRequest request,
                                             HttpServletResponse response,
-                                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
-
+                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
-
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -277,7 +275,7 @@ public class ProjectFinanceChecksController {
     ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
-                                                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                                  HttpServletRequest request) {
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -325,7 +323,7 @@ public class ProjectFinanceChecksController {
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueryResponseForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
-                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
@@ -352,7 +350,7 @@ public class ProjectFinanceChecksController {
                                 @PathVariable Long queryId,
                                 HttpServletRequest request,
                                 HttpServletResponse response,
-                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -365,7 +363,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility")
-    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
@@ -381,7 +379,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, Model model, @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
