@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing how the secured methods in ProjectMonitoringOfficerService interact with Spring Security
  */
-public class ProjectMonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<ProjectMonitoringOfficerService> {
+public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTest<MonitoringOfficerService> {
 
     private MonitoringOfficerPermissionRules permissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -73,7 +73,7 @@ public class ProjectMonitoringOfficerServiceSecurityTest extends BaseServiceSecu
         return TestProjectService.class;
     }
 
-    public static class TestProjectService implements ProjectMonitoringOfficerService {
+    public static class TestProjectService implements MonitoringOfficerService {
 
         @Override
         public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
