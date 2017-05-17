@@ -16,16 +16,16 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-5806 As a partner (non-lead) I want the status indicator of the Other Documents section to show as pending before the lead has uploaded documents so that I am aware there is no action required by me
 ...
 ...               INFUND-6139 Other Docs Team Status table should update
+...
 ...               INFUND-7342 As a lead partner I want to be able to submit a document in the "Other Documents" section of Project Setup if an earlier document has been rejected so that I can provide an alternative document for review and approval
 ...
 ...               INFUND-7345 As an internal user I want to be able to view resubmitted documents in the "Other Documents" section of Project Setup so that they can be reviewed again for approval
 ...
 ...               INFUND-5490 document upload non-user
-Suite Setup       Log in as user  &{collaborator1_credentials}
+Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 
@@ -33,7 +33,8 @@ Resource          PS_Variables.robot
 Non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-5490
     [Tags]
-    Given the user navigates to the page    ${project_in_setup_page}
+    Given Log in as a different user   &{collaborator1_credentials}
+    When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
@@ -588,6 +589,43 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
 
 *** Keywords ***
+
+the project is completed if it is not already complete
+    log in as user    &{lead_applicant_credentials}
+    the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
+    ${project_manager_not_set}    ${value}=    run keyword and ignore error without screenshots    The user should not see the element    jQuery=#project-manager-status.yes
+    run keyword if    '${project_manager_not_set}' == 'PASS'     all previous sections of the project are completed
+
+all previous sections of the project are completed
+    lead partner selects project manager and address
+    partners submit their finance contacts
+    project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
+
+lead partner selects project manager and address
+    log in as a different user           &{lead_applicant_credentials}
+    the user navigates to the page       ${project_in_setup_details_page}
+    the user clicks the button/link      link=Project Manager
+    the user selects the radio button    projectManager    projectManager2
+    the user clicks the button/link      jQuery=.button:contains("Save")
+    the user clicks the button/link      link=Project address
+    the user selects the radio button    addressType    REGISTERED
+    the user clicks the button/link    jQuery=.button:contains("Save project address")
+    the user clicks the button/link      jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link      jQuery=button:contains("Submit")
+
+partners submit their finance contacts
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  financeContact1
+    log in as a different user         &{collaborator1_credentials}
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  financeContact1
+    log in as a different user         &{collaborator2_credentials}
+    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  financeContact1
+
+navigate to external finance contact page, choose finance contact and save
+    [Arguments]  ${org_id}   ${financeContactSelector}
+    the user navigates to the page     ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${org_id}
+    the user selects the radio button  financeContact  ${financeContactSelector}
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
 the user uploads to the collaboration agreement question
     [Arguments]    ${file_name}
     choose file    name=collaborationAgreement    ${upload_folder}/${file_name}
@@ -608,8 +646,8 @@ partner submits his bank details
     [Arguments]  ${user}
     log in as a different user            ${user}  ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  51406795
-    the user enters text to a text field  id=bank-sort-code  404745
+    the user enters text to a text field  id=bank-acc-number  ${account_number}
+    the user enters text to a text field  id=bank-sort-code  ${sort_code}
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")
