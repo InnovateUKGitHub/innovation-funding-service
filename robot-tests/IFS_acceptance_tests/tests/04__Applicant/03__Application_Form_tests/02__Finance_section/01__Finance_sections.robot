@@ -147,11 +147,11 @@ Applicant chooses Calculate overheads option
     wait until element is not visible without screenshots   css=.task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                    link=Your project costs
     then the user should see the text in the page           ${excel_file}
-    and the user clicks the button/link                     link=Edit your project costs
-    and the user clicks the button/link                     css=button[name="overheadfiledelete"]
-    When the user selects the checkbox                      jQuery=label[for="agree-terms-page"]
+    and the user clicks the button/link                     jQuery=button:contains("Edit your project costs")
+    and the user clicks the button/link                     jQuery=button[name="overheadfiledelete"]
+    When the user selects the checkbox                      jQuery=label[for="agree-state-aid-page"]
     and the user clicks the button/link                     jQuery=button:contains("Mark as complete")
-    then the user should see an error
+    then the user should see an error                       You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup
