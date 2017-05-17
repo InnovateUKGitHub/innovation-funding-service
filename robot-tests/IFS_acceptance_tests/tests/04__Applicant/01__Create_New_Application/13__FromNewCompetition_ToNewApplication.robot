@@ -155,7 +155,7 @@ Organisation server side validation when no
     Then the user should see the element    jQuery=.error-summary li:contains("This field should be 0 or higher.")
     And the user should see the element    jQuery=.error-summary li:contains("This field can only accept whole numbers.")
     And the user should not see the element    jQuery=h1:contains("Your finances")
-    # Checking that by marking as complete, the user doens't get redirected to the main finances page
+    # Checking that by marking as complete, the user doesn't get redirected to the main finances page
 
 Organisation client side validation when no
     [Documentation]    INFUND-6393
@@ -457,9 +457,10 @@ the lead applicant invites an existing user
     the user logs out if they are logged in
 
 the user navigates to the growth table finances
-    the user navigates to the page  ${DASHBOARD_URL}
+    the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    jQuery=a:contains('Untitled application'):last
-    the user clicks the button/link  link=Your finances
+    run keyword and ignore error    The user clicks the button/link    jQuery=button:contains("Begin application")
+    the user clicks the button/link    link=Your finances
 
 Invite a non-existing collaborator in Application with Growth table
     the user clicks the button/link      jQuery=a:contains("Application overview")

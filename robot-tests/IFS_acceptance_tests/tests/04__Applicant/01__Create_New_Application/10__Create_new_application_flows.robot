@@ -197,6 +197,6 @@ Applicant goes to the registration form
     And the user clicks the button/link    jQuery=a:contains("Save and continue")
 
 The user selects to create a new application
-    #We have useed the run keyword and ignore error because if the user does not have an application this step is not needed
+    #We have used the run keyword and ignore error because if the user does not have an application this step is not needed
     Run Keyword And Ignore Error    And the user selects the radio button    create-application    true
     Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=.button:contains("Continue")

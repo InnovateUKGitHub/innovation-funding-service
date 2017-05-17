@@ -63,7 +63,7 @@ Email duplication check
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=email    steve.smith@empire.com
     And the user enters text to a text field    id=password    ${correct_password}
     And the user submits their information
     Then the user should see an error    The email address is already registered with us. Please sign into your account
