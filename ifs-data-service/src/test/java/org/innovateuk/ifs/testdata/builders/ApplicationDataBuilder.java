@@ -227,10 +227,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return with(data -> doAs(data.getLeadApplicant(), () -> action.accept(data)));
     }
 
-    private ApplicationDataBuilder asCompAdmin(Consumer<ApplicationData> action) {
-        return with(data -> {doAs(compAdmin(), () -> action.accept(data));});
-    }
-
     private void doApplicationDetailsUpdate(ApplicationData data, Consumer<ApplicationResource> updateFn) {
 
         ApplicationResource application =
