@@ -11,7 +11,7 @@ Click the back button while on the create account page
     [Documentation]    INFUND-1423
     [Tags]
     Given the user navigates to the page    ${LOGIN_URL}
-    When the user follows the flow to register their organisation
+    When the user follows the flow to register their organisation     radio-1
     And the user goes back to the previous page
     Then the user should be redirected to the correct page    ${confirm_organisation_url}
 

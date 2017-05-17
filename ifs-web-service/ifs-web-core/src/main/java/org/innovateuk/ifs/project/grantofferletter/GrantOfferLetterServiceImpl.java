@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +91,7 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     }
 
     @Override
-    public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
+    public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
         return grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId).toServiceResult();
     }
 

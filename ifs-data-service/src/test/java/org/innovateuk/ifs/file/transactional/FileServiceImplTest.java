@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.file.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.builder.FileEntryBuilder;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -20,10 +20,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.nio.charset.Charset.defaultCharset;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
-import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonErrors.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -32,9 +31,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
 import static org.innovateuk.ifs.util.FileFunctions.pathElementsToPathString;
-import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.Assert.*;
-import static org.junit.Assume.assumeTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -407,9 +404,6 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void testUpdateFileWithIncorrectContentType() throws IOException {
 
-        assumeNotWindows();
-        assumeNotOsx();
-
         FileEntryResource fileResource = newFileEntryResource().
                 with(id(456L)).
                 withFilesizeBytes(17).
@@ -678,9 +672,6 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void testCreateFileWithIncorrectContentType() throws IOException {
 
-        assumeNotWindows();
-        assumeNotOsx();
-
         FileEntryResource fileResource = newFileEntryResource().
                 with(id(null)).
                 withFilesizeBytes(17).
@@ -699,22 +690,6 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     private Supplier<InputStream> fakeInputStreamSupplier(String content) {
         ByteArrayInputStream fakeInputStream = new ByteArrayInputStream(content.getBytes(defaultCharset()));
         return () -> fakeInputStream;
-    }
-
-    private boolean isNotOsx() {
-        return !System.getProperty("os.name").toLowerCase().contains("mac");
-    }
-
-    private boolean isNotWindows() {
-        return !System.getProperty("os.name").toLowerCase().contains("windows");
-    }
-
-    private void assumeNotWindows() {
-        assumeTrue(isNotWindows());
-    }
-
-    private void assumeNotOsx() {
-        assumeTrue(isNotOsx());
     }
 
     private void verifyNoMoreFileServiceInteractions() {
