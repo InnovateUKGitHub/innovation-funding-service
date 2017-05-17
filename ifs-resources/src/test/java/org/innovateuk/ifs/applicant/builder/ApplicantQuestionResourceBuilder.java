@@ -33,9 +33,11 @@ public class ApplicantQuestionResourceBuilder extends AbstractApplicantResourceB
     public ApplicantQuestionResourceBuilder withQuestion(QuestionResource... question) {
         return withArraySetFieldByReflection("question", question);
     }
+
     public ApplicantQuestionResourceBuilder withApplicantFormInputs(List<ApplicantFormInputResource>... applicantFormInputs) {
         return withArraySetFieldByReflection("applicantFormInputs", applicantFormInputs);
     }
+
     public ApplicantQuestionResourceBuilder withApplicantQuestionStatuses(List<ApplicantQuestionStatusResource>... applicantQuestionStatuses) {
         return withArraySetFieldByReflection("applicantQuestionStatuses", applicantQuestionStatuses);
     }

@@ -38,11 +38,9 @@ public class ApplicantQuestionStatusResourceBuilder extends BaseBuilder<Applican
         return withArraySetFieldByReflection("markedAsCompleteBy", markedAsCompleteBy);
     }
 
-
     public ApplicantQuestionStatusResourceBuilder withAssignee(ApplicantResource... assignee) {
         return withArraySetFieldByReflection("assignee", assignee);
     }
-
 
     public ApplicantQuestionStatusResourceBuilder withAssignedBy(ApplicantResource... assignedBy) {
         return withArraySetFieldByReflection("assignedBy", assignedBy);

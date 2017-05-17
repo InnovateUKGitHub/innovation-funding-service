@@ -13,7 +13,6 @@ public class ApplicantQuestionStatusResource {
     private ApplicantResource assignee;
     private ApplicantResource assignedBy;
 
-
     public QuestionStatusResource getStatus() {
         return status;
     }

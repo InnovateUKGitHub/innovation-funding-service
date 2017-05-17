@@ -37,5 +37,4 @@ public class ApplicantResourceBuilder extends BaseBuilder<ApplicantResource, App
     public ApplicantResourceBuilder withOrganisation(OrganisationResource... organisation) {
         return withArraySetFieldByReflection("organisation", organisation);
     }
-
 }

@@ -44,5 +44,4 @@ public class ApplicantSectionResourceBuilder extends AbstractApplicantResourceBu
     public ApplicantSectionResourceBuilder withApplicantChildrenSections(List<ApplicantSectionResource>... applicantChildrenSections) {
         return withArraySetFieldByReflection("applicantChildrenSections", applicantChildrenSections);
     }
-
 }

@@ -25,7 +25,6 @@ public enum SectionType {
         this.parent = parent;
     }
 
-
     public static List<SectionType> sectionsNotRequiredForOrganisationType(Long organisationTypeId) {
         if (OrganisationTypeEnum.getFromId(organisationTypeId).equals(OrganisationTypeEnum.RESEARCH)) {
             return asList(ORGANISATION_FINANCES, FUNDING_FINANCES);
@@ -36,7 +35,6 @@ public enum SectionType {
     public Optional<SectionType> getParent() {
         return parent;
     }
-
 
     public String getNameLower() {
         return this.name().toLowerCase();

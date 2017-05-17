@@ -18,10 +18,7 @@ import org.innovateuk.ifs.publiccontent.repository.KeywordRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -171,7 +168,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             pageNumberUsing = pageNumber.get();
         }
 
-        return new PageRequest(pageNumberUsing, pageSize);
+        return new PageRequest(pageNumberUsing, pageSize, Sort.Direction.ASC, "name");
     }
 
     private PublicContentItemResource mapPublicContentToPublicContentItemResource(PublicContent publicContent, Competition competition) {

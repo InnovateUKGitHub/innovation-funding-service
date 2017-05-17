@@ -73,18 +73,20 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
 
         populateSection(results, applicant, sectionId, applicationId, applicant.getApplicants());
 
-        if (applicant.getSection().getParentSection() != null) {
-            ApplicantSectionResource parent = new ApplicantSectionResource();
-            populateSection(results, parent, applicant.getSection().getParentSection(), applicationId, applicant.getApplicants());
-            applicant.setApplicantParentSection(parent);
+
+        if (results.isSuccessful()) {
+            if (applicant.getSection().getParentSection() != null) {
+                ApplicantSectionResource parent = new ApplicantSectionResource();
+                populateSection(results, parent, applicant.getSection().getParentSection(), applicationId, applicant.getApplicants());
+                applicant.setApplicantParentSection(parent);
+            }
+
+            applicant.getSection().getChildSections().forEach(subSectionId -> {
+                ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
+                populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
+                applicant.addChildSection(applicantSectionResource);
+            });
         }
-
-        applicant.getSection().getChildSections().forEach(subSectionId -> {
-            ApplicantSectionResource applicantSectionResource = new ApplicantSectionResource();
-            populateSection(results, applicantSectionResource, subSectionId, applicationId, applicant.getApplicants());
-            applicant.addChildSection(applicantSectionResource);
-        });
-
         return results.toSingle().andOnSuccessReturn(() -> applicant);
     }
 
