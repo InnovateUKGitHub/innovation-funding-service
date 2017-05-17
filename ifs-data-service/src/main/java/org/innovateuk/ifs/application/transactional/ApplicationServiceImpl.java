@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,6 +10,7 @@ import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -81,13 +80,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
-
-    // TODO DW - INFUND-1555 - put into a DTO
-    public static final String READY_FOR_SUBMIT = "readyForSubmit";
-    public static final String PROGRESS = "progress";
-    public static final String RESEARCH_PARTICIPATION = "researchParticipation";
-    public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
-    public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
 
     @Autowired
     private FileService fileService;
@@ -408,6 +400,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
+        if (Arrays.asList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
+                return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
+        }
         return find(application(id)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
@@ -465,9 +460,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    // TODO DW - INFUND-1555 - try to remove the usage of ObjectNode
     @Override
-    public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
+    public ServiceResult<Boolean>applicationReadyForSubmit(final Long id) {
+        return serviceSuccess(applicationReadyToSubmit(id));
+    }
+
+    private boolean applicationReadyToSubmit(Long id) {
         return find(application(id), () -> getProgressPercentageBigDecimalByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
                 sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
                     Competition competition = application.getCompetition();
@@ -479,17 +477,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                             researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0) {
                         readyForSubmit = true;
                     }
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    ObjectNode node = mapper.createObjectNode();
-                    node.put(READY_FOR_SUBMIT, readyForSubmit);
-                    node.put(PROGRESS, progressPercentage);
-                    node.put(RESEARCH_PARTICIPATION, researchParticipation);
-                    node.put(RESEARCH_PARTICIPATION_VALID, researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0);
-                    node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
-                    return node;
+                    return readyForSubmit;
                 })
-        );
+        ).getSuccessObject();
     }
 
     @Override

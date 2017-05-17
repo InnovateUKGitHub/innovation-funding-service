@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
@@ -76,7 +77,8 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -158,6 +160,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected static AffiliationService affiliationService;
     protected static ApplicationInnovationAreaService applicationInnovationAreaService;
     protected static AssessorFormInputResponseService assessorFormInputResponseService;
+    protected static IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -249,6 +252,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             contentGroupService = serviceLocator.getBean(ContentGroupService.class);
             assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
             applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
+            ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
         }
     }
 

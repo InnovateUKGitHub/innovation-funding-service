@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
  * The process of submitting and approving Grant Offer Letter for Projects
  */
 @Entity
-public class GOLProcess extends Process<ProjectUser, Project, GOLState> {
+public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterState> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="participant_id", referencedColumnName = "id")
@@ -65,8 +65,8 @@ public class GOLProcess extends Process<ProjectUser, Project, GOLState> {
     }
 
     @Override
-    public GOLState getActivityState() {
-        return GOLState.fromState(activityState.getState());
+    public GrantOfferLetterState getActivityState() {
+        return GrantOfferLetterState.fromState(activityState.getState());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.viability.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -29,6 +30,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.math.RoundingMode.HALF_EVEN;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.VIABILITY_CHECKS_NOT_APPLICABLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -127,9 +130,14 @@ public class FinanceChecksViabilityController {
     private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId, Model model) {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
+        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+
+        if(viability.getViability().isNotApplicable()){
+            throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));
+        }
+
         boolean viabilityConfirmed = viability.getViability() == Viability.APPROVED;
 
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
         ProjectFinanceResource financesForOrganisation = simpleFindFirst(projectFinances,

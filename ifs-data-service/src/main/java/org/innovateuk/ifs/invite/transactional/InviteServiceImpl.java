@@ -162,7 +162,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private String getCompetitionDetailsUrl(String baseUrl, ApplicationInvite invite) {
-        return baseUrl + "/competition/" + invite.getTarget().getCompetition().getId() + "/details";
+        return baseUrl + "/competition/" + invite.getTarget().getCompetition().getId() + "/overview";
     }
 
     @Override

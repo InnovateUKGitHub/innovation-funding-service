@@ -32,7 +32,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GOLWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
@@ -132,7 +132,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Autowired
-    private GOLWorkflowHandler golWorkflowHandler;
+    private GrantOfferLetterWorkflowHandler golWorkflowHandler;
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
@@ -347,7 +347,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-        return inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER);
+
+        return getProject(projectId)
+                .andOnSuccess(this::validateIfProjectAlreadySubmitted)
+                .andOnSuccess(() -> inviteContact(projectId, inviteResource, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER));
     }
 
     @Override

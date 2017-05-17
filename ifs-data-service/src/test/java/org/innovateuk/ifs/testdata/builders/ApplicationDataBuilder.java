@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
@@ -170,6 +167,20 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
+    public ApplicationDataBuilder markApplicationIneligible(String ineligibleReason) {
+        return asCompAdmin(data ->  {
+            IneligibleOutcomeResource reason = new IneligibleOutcomeResource(ineligibleReason);
+            applicationService.markAsIneligible(data.getApplication().getId(), ineligibleOutcomeMapper.mapToDomain(reason));
+        });
+    }
+
+    public ApplicationDataBuilder informApplicationIneligible() {
+        return asCompAdmin(data -> {
+            ApplicationIneligibleSendResource resource = new ApplicationIneligibleSendResource("subject", "content");
+            applicationService.informIneligible(data.getApplication().getId(), resource);
+        });
+    }
+
     private ApplicationInviteResource doInviteCollaborator(ApplicationData data, String organisationName, Optional<Long> userId, String email, String name, Optional<String> hash) {
 
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
@@ -214,6 +225,10 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
     private ApplicationDataBuilder asLeadApplicant(Consumer<ApplicationData> action) {
         return with(data -> doAs(data.getLeadApplicant(), () -> action.accept(data)));
+    }
+
+    private ApplicationDataBuilder asCompAdmin(Consumer<ApplicationData> action) {
+        return with(data -> {doAs(compAdmin(), () -> action.accept(data));});
     }
 
     private void doApplicationDetailsUpdate(ApplicationData data, Consumer<ApplicationResource> updateFn) {

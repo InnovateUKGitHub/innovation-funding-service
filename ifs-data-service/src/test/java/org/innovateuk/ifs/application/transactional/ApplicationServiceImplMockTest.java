@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
+import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -23,10 +25,9 @@ import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -34,15 +35,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -53,6 +53,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
+import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.Notifications.APPLICATION_SUBMITTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
@@ -70,6 +72,7 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -95,6 +98,15 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private static final String WEB_BASE_URL = "www.baseUrl.com" ;
 
     private Application openApplication;
+
+    @Override
+    protected ApplicationService supplyServiceUnderTest() {
+        return new ApplicationServiceImpl();
+    }
+
+    @Mock
+    private ApplicationFinanceHandler applicationFinanceHandlerMock;
+
     private FormInput formInput;
     private FormInputType formInputType;
     private Question question;
@@ -106,10 +118,18 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private FormInputResponse unlinkedFormInputFileEntry;
     private Long organisationId = 456L;
 
-    @Override
-    protected ApplicationService supplyServiceUnderTest() {
-        return new ApplicationServiceImpl();
-    }
+    private Question multiAnswerQuestion;
+    private Question leadAnswerQuestion;
+
+    private OrganisationType orgType;
+    private Organisation org1;
+    private Organisation org2;
+    private Organisation org3;
+
+    private ProcessRole[] roles;
+    private Section section;
+    private Competition comp;
+    private Application app;
 
     @Before
     public void setUp() throws Exception {
@@ -134,6 +154,23 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
 
+        multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
+        leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
+
+        orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        org1 = newOrganisation().withOrganisationType(orgType).withId(234L).build();
+        org2 = newOrganisation().withId(345L).build();
+        org3 = newOrganisation().withId(456L).build();
+
+        roles = newProcessRole().withRole(UserRoleType.LEADAPPLICANT, UserRoleType.APPLICANT, UserRoleType.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
+        section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
+        comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
+        app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
+
+        when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
+        when(organisationRepositoryMock.findOne(234L)).thenReturn(org1);
+        when(organisationRepositoryMock.findOne(345L)).thenReturn(org2);
+        when(organisationRepositoryMock.findOne(456L)).thenReturn(org3);
         ReflectionTestUtils.setField(service, "webBaseUrl", WEB_BASE_URL);
     }
 
@@ -1159,6 +1196,68 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
+    public void getApplicationReadyToSubmit() throws Exception {
+
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        when(questionServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(applicationFinanceHandlerMock.getResearchParticipationPercentage(app.getId())).thenReturn(new BigDecimal("29"));
+
+        ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject() == Boolean.TRUE);
+    }
+
+    @Test
+    public void applicationNotReadyToSubmitResearchParticipationTooHigh() throws Exception {
+
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        when(questionServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(applicationFinanceHandlerMock.getResearchParticipationPercentage(app.getId())).thenReturn(new BigDecimal("31"));
+
+        ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void applicationNotReadyToSubmitProgressNotComplete() throws Exception {
+
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+
+        when(questionServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void applicationNotReadyToSubmitChildSectionsNotComplete() throws Exception {
+
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        when(questionServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.FALSE));
+
+        ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
     public void markAsIneligible() throws Exception {
         long applicationId = 1L;
         String reason = "reason";
@@ -1242,7 +1341,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 .withProcessRoles(processRoles)
                 .build();
 
-        Map<String, Object> expetedNotificationArguments = asMap(
+        Map<String, Object> expectedNotificationArguments = asMap(
                 "subject", subject,
                 "bodyPlain", content,
                 "bodyHtml", content
@@ -1250,7 +1349,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         SystemNotificationSource from = systemNotificationSourceMock;
         NotificationTarget to = new ExternalUserNotificationTarget(fullName, email);
-        Notification notification = new Notification(from, singletonList(to), ApplicationServiceImpl.Notifications.APPLICATION_INELIGIBLE, expetedNotificationArguments);
+        Notification notification = new Notification(from, singletonList(to), ApplicationServiceImpl.Notifications.APPLICATION_INELIGIBLE, expectedNotificationArguments);
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(true);
