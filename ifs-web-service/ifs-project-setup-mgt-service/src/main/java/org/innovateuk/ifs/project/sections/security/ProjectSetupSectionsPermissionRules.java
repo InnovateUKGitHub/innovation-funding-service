@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.sections.security;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -11,6 +9,8 @@ import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -81,17 +81,22 @@ public class ProjectSetupSectionsPermissionRules {
 
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
+        ProjectStatusResource projectStatusResource;
+
         if (!isInternal(user)) {
             return false;
         }
+
         try {
-            ProjectStatusResource projectStatusResource = projectService.getProjectStatus(projectId);
-            ProjectSetupSectionInternalUser sectionAccessor = new ProjectSetupSectionInternalUser(projectStatusResource);
-            return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
+            projectStatusResource = projectService.getProjectStatus(projectId);
         } catch (ForbiddenActionException e) {
             LOG.error("Internal user is not allowed to access this project " + projectId);
             return false;
         }
+
+        ProjectSetupSectionInternalUser sectionAccessor = new ProjectSetupSectionInternalUser(projectStatusResource);
+
+        return sectionCheckFn.apply(sectionAccessor, user) == ACCESSIBLE;
     }
 
 

@@ -182,7 +182,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     @Test
     public void testRemoveAttachment() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.removeAttachment(1L, 2L, 3L, "", 4L, null, null, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.removeAttachment(1L, 2L, 3L, "", 4L, null, null, null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -192,7 +192,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.removeAttachment(1L, 2L, 3L, "", 4L, null, null, null, null, null, null, null);
+                classUnderTest.removeAttachment(1L, 2L, 3L, "", 4L, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to remove attachments from the create response form without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
