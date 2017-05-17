@@ -9,24 +9,24 @@ IFS.core.collapsible = (function () {
     settings: {
       collapsibleEl: '.collapsible',
       collapsibleTabs: '.tabs section',
-      stateless: 'collapsible-stateless'
+      statelessEl: 'collapsible-stateless'
     },
     init: function (type) {
       s = this.settings
       s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
       // if this has to be more dynamically updated in the future we can add a custom event
       jQuery(s.collapsible).each(function () {
-        IFS.core.collapsible.initCollapsibleHTML(this)
-      })
-      jQuery('body').on('click', s.collapsible + ' > h2 > [aria-controls], ' + s.collapsible + ' > h3 > [aria-controls]', function () {
-        IFS.core.collapsible.toggleCollapsible(this)
+        var stateless = jQuery(this).hasClass(s.statelessEl)
+        IFS.core.collapsible.initCollapsibleHTML(this, stateless)
+        jQuery(this).on('click', 'h2 > [aria-controls], h3 > [aria-controls]', function () {
+          IFS.core.collapsible.toggleCollapsible(this, stateless)
+        })
       })
     },
-    initCollapsibleHTML: function (el) {
-      var stateless = jQuery(el).hasClass(this.settings.stateless)
+    initCollapsibleHTML: function (el, stateless) {
       var inst = jQuery(el).find('h2,h3')
       var id = 'collapsible-' + index   // create unique id for a11y relationship
-      // if don't save state if we've asked it not to
+       // don't save state if we've asked it not to
       var loadstate = !stateless && IFS.core.collapsible.getLoadstateFromCookie(id)
 
         // wrap the content and make it focusable
@@ -36,14 +36,16 @@ IFS.core.collapsible = (function () {
       inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
       index++
     },
-    toggleCollapsible: function (el) {
+    toggleCollapsible: function (el, stateless) {
       var inst = jQuery(el)
       var panel = jQuery('#' + inst.attr('aria-controls'))
       var state = inst.attr('aria-expanded') === 'false'
       // toggle the current
       inst.attr('aria-expanded', state)
       panel.attr('aria-hidden', !state)
-      IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state)
+      if (!stateless) {
+        IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state)
+      }
     },
     getLoadstateFromCookie: function (index) {
       if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
