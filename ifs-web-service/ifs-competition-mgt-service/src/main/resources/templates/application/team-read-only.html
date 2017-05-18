@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+        <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+        <head>
+            <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team'"/>
+        </head>
+
+<body th:with="context='applicant'">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
+
+
+    <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application team',subTitle=${applicationName},size='heading-xlarge'" />
+    </th:block>
+
+    <p>View the participants in the application within the lead organisation and collaborating organisations.</p>
+
+    <th:block th:insert="fragments/application-team :: organisation(${model.leadOrganisation}, true)"/>
+
+    <th:block th:each="organisation : ${model.partnerOrganisations}">
+        <th:block th:insert="fragments/application-team :: organisation(${organisation}, false)"/>
+    </th:block>
+
+
+    <th:block th:insert="fragments/layout :: main-content-end"/>
+</main>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+</body>
+</html>
+

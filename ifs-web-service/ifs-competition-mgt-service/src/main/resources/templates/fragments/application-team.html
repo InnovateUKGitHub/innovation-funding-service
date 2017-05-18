@@ -1,0 +1,36 @@
+
+<th:block th:fragment="organisation(organisation, isLead)" xmlns:th="http://www.w3.org/1999/html">
+    <h2 class="heading-medium">
+        <th:block th:text="${organisation.organisationName}">Organisation name</th:block>
+        <th:block th:if="${isLead}"> (Lead)</th:block>
+    </h2>
+    <table>
+        <thead>
+        <tr>
+            <th th:if="organisation.registeredAddress" class="width-30-percent">Registered Address</th>
+            <th th:if="organisation.operatingAddress" class="width-30-percent">Operating Address</th>
+        </tr>
+        <tr>
+
+        </tr><th th:if="organisation.registeredAddress" class="width-30-percent" th:text="${#strings.join(organisation.registeredAddress.getNonEmptyLines(), '&lt;br /&gt;')}"></th>
+        </tr><th th:if="organisation.operatingAddress" class="width-30-percent" th:text="${#strings.join(organisation.operatingAddress.getNonEmptyLines(), '&lt;br /&gt;')}"></th>
+        </thead>
+    </table>
+
+    <table class="table-overflow">
+        <thead>
+        <tr>
+            <th class="width-30-percent" scope="col">Full name</th>
+            <th class="width-30-percent" scope="col">Email</th>
+            <th class="width-30-percent" scope="col">Telephone</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${organisation.users}">
+            <td th:text="${user.roles.hasRole(T(org.innovateuk.ifs.user.resource.UserRoleType).LEADAPPLICANT)} ? ${user.name} + ' (Lead)' : user.roles.hasRole(T(org.innovateuk.ifs.user.resource.UserRoleType).FINANCE_CONTACT) ? ${user.name} + ' (Finance contact)' : ${user.name}">Steve Smith</td>
+            <td th:text="${user.email}">steve.smith@empire.com</td>
+            <td th:text="${user.phoneNumber} ">0800</td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
