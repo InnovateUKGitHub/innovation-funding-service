@@ -167,3 +167,16 @@ project finance submits monitoring officer
     The user enters text to a text field    id=phoneNumber    ${phone_number}
     the user clicks the button/link         jQuery=.button[type="submit"]:contains("Assign Monitoring Officer")
     the user clicks the button/link         jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
+
+partner submits his bank details
+    [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
+    log in as a different user                       ${email}    ${short_password}
+    the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
+    the user enters text to a text field             id=bank-acc-number  ${account_number}
+    the user enters text to a text field             id=bank-sort-code  ${sort_code}
+    the user clicks the button twice                 jQuery=div:nth-child(2) label.selection-button-radio[for="address-use-org"]
+    the user should see the element                  jQuery=#registeredAddress h3:contains("Confirm billing address")
+    wait until keyword succeeds without screenshots  30  200ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
+    wait until keyword succeeds without screenshots  30  500ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
+    wait until element is visible                    jQuery=dt:contains("Account number") + dd:contains("*****")
+    # Added this readonly check to verify that the bank details are indeed marked as done
