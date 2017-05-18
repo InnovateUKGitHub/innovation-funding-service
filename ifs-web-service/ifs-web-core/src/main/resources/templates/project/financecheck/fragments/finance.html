@@ -787,13 +787,13 @@
                            />
                 </div>
                 <th:block th:if="${viewmode == 'edit'}">
-                    <button type="submit"
+                    <button th:unless="${cost.id == null}" type="submit"
                             name="remove_cost"
                             class="buttonlink js-remove-row"
                             th:value="${cost.id}"
                             th:attrappend="formaction='&#35;question-'+${question.id}">Remove
                     </button>
-                    <span class="buttonplaceholder"></span>
+                    <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
                 </th:block>
             </div>
         </th:block>
