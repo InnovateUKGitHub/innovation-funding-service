@@ -312,10 +312,7 @@ public class FinanceChecksQueriesController {
         return new FinanceChecksQueriesViewModel(
                 organisation.getName(),
                 leadPartnerOrganisation,
-                financeContact.isPresent(),
-                financeContact.get().getUserName(),
-                financeContact.get().getEmail(),
-                financeContact.get().getPhoneNumber(),
+                financeContact,
                 querySection == null ? UNKNOWN_FIELD : querySection,
                 project.getId(),
                 project.getName(),

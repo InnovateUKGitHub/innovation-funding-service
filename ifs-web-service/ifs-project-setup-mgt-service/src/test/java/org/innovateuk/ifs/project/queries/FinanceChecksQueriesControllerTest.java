@@ -72,27 +72,27 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private Long projectFinanceId = 45L;
     private Long queryId = 1L;
 
-    ApplicationResource applicationResource = newApplicationResource().build();
-    ProjectResource projectResource = newProjectResource().withId(projectId).withName("Project1").withApplication(applicationResource).build();
+    private ApplicationResource applicationResource = newApplicationResource().build();
+    private ProjectResource projectResource = newProjectResource().withId(projectId).withName("Project1").withApplication(applicationResource).build();
 
-    OrganisationResource innovateOrganisationResource = newOrganisationResource().withName("Innovate").withId(innovateOrganisationId).build();
+    private OrganisationResource innovateOrganisationResource = newOrganisationResource().withName("Innovate").withId(innovateOrganisationId).build();
 
-    OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
+    private OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
-    ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
+    private ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
 
-    RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
-    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(singletonList(financeTeamRole)).build();
-    UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
+    private RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
+    private UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(singletonList(financeTeamRole)).build();
+    private UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
 
-    QueryResource thread;
-    QueryResource thread2;
-    QueryResource thread3;
+    private QueryResource thread;
+    private QueryResource thread2;
+    private QueryResource thread3;
 
-    List<QueryResource> queries;
+    private List<QueryResource> queries;
 
     @Captor
-    ArgumentCaptor<PostResource> savePostArgumentCaptor;
+    private ArgumentCaptor<PostResource> savePostArgumentCaptor;
 
     @Before
     public void setup() {
@@ -143,9 +143,10 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals("Eligibility", queryViewModel.getQuerySection());
-        assertEquals("e@mail.com", queryViewModel.getFinanceContactEmail());
-        assertEquals("User1", queryViewModel.getFinanceContactName());
-        assertEquals("0117", queryViewModel.getFinanceContactPhoneNumber());
+        assertTrue(queryViewModel.getFinanceContact().isPresent());
+        assertEquals("e@mail.com", queryViewModel.getFinanceContact().get().getEmail());
+        assertEquals("User1", queryViewModel.getFinanceContact().get().getUserName());
+        assertEquals("0117", queryViewModel.getFinanceContact().get().getPhoneNumber());
         assertEquals("Org1", queryViewModel.getOrganisationName());
         assertEquals("Project1", queryViewModel.getProjectName());
         assertEquals(applicantOrganisationId, queryViewModel.getOrganisationId());
@@ -204,27 +205,29 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void testQueriesFinanceContactAvailableIsSetCorrectlyForTemplate() throws Exception {
-
+    public void testQueriesPageWhenFCIsProvided() throws Exception {
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
-
-        // FC Exists
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
                 .andExpect(status().isOk())
                 .andReturn();
         FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
-        assertTrue(queryViewModel.isFinanceContactProvided());
+        assertTrue(queryViewModel.getFinanceContact().isPresent());
+    }
 
-        // FC Doesn't exist
-        ProjectUserResource projectUsersSansFC = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.PROJECT_MANAGER).build();
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUsersSansFC));
-        result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
+    @Test
+    public void testQueriesPageWhenFCIsNotProvided() throws Exception {
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
+        ProjectUserResource projectUsersWithoutFC = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.PROJECT_MANAGER).build();
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUsersWithoutFC));
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
                 .andExpect(status().isOk())
                 .andReturn();
-        queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
-        assertFalse(queryViewModel.isFinanceContactProvided());
+        FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
+        assertFalse(queryViewModel.getFinanceContact().isPresent());
     }
 
     @Test
@@ -285,9 +288,10 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FinanceChecksQueriesAddResponseForm modelForm = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
 
         assertEquals("Eligibility", responseViewModel.getQuerySection());
-        assertEquals("e@mail.com", responseViewModel.getFinanceContactEmail());
-        assertEquals("User1", responseViewModel.getFinanceContactName());
-        assertEquals("0117", responseViewModel.getFinanceContactPhoneNumber());
+        assertTrue(responseViewModel.getFinanceContact().isPresent());
+        assertEquals("e@mail.com", responseViewModel.getFinanceContact().get().getEmail());
+        assertEquals("User1", responseViewModel.getFinanceContact().get().getUserName());
+        assertEquals("0117", responseViewModel.getFinanceContact().get().getPhoneNumber());
         assertEquals("Org1", responseViewModel.getOrganisationName());
         assertEquals("Project1", responseViewModel.getProjectName());
         assertEquals(applicantOrganisationId, responseViewModel.getOrganisationId());
@@ -524,9 +528,10 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals("Eligibility", queryViewModel.getQuerySection());
-        assertEquals("e@mail.com", queryViewModel.getFinanceContactEmail());
-        assertEquals("User1", queryViewModel.getFinanceContactName());
-        assertEquals("0117", queryViewModel.getFinanceContactPhoneNumber());
+        assertTrue(queryViewModel.getFinanceContact().isPresent());
+        assertEquals("e@mail.com", queryViewModel.getFinanceContact().get().getEmail());
+        assertEquals("User1", queryViewModel.getFinanceContact().get().getUserName());
+        assertEquals("0117", queryViewModel.getFinanceContact().get().getPhoneNumber());
         assertEquals("Org1", queryViewModel.getOrganisationName());
         assertEquals("Project1", queryViewModel.getProjectName());
         assertEquals(applicantOrganisationId, queryViewModel.getOrganisationId());
