@@ -88,7 +88,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -116,7 +116,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/readonly")
     public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -140,15 +140,19 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/confirm-project-details")
     public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
+
         Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+        if (!isSubmissionAllowed) {
+            return "redirect:/project/" + projectId + "/details";
+        }
 
         model.addAttribute("projectId", projectId);
+        model.addAttribute("projectName", project.getName());
         model.addAttribute("applicationId", project.getApplication());
         model.addAttribute("currentUser", loggedInUser);
-        model.addAttribute("isSubmissionAllowed", isSubmissionAllowed);
         return "project/confirm-project-details";
     }
 
@@ -157,8 +161,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String viewFinanceContact(@PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
                                      Model model,
-                                     @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) FinanceContactForm financeContactForm,
+                                     UserResource loggedInUser) {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
     }
 
@@ -168,7 +172,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                       UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, financeContactForm.getOrganisation(), loggedInUser, financeContactForm, false, false);
 
@@ -186,7 +190,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @RequestParam(value="organisation") Long organisation,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser
+                                       UserResource loggedInUser
                                        ) {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false, true);
@@ -197,13 +201,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 (project, inviteProjectResource) -> projectService.inviteFinanceContact(project, inviteProjectResource));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = INVITE_PM)
     public String inviteProjectManager(Model model,
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                       UserResource loggedInUser) {
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
 
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
@@ -255,22 +259,22 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
     @GetMapping("/{projectId}/details/project-manager")
     public String viewProjectManager(@PathVariable("projectId") final Long projectId, Model model,
-                                     @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                     @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectManagerForm projectManagerForm,
+                                     UserResource loggedInUser) {
 
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
         return doViewProjectManager(model, projectId, loggedInUser, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = SAVE_PM)
     public String updateProjectManager(@PathVariable("projectId") final Long projectId, Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                       UserResource loggedInUser) {
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, false);
         
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -282,11 +286,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_START_DATE_PAGE')")
     @GetMapping("/{projectId}/details/start-date")
     public String viewStartDate(@PathVariable("projectId") final Long projectId, Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
-                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
+                                UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
@@ -295,13 +299,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_START_DATE_PAGE')")
     @PostMapping("/{projectId}/details/start-date")
     public String updateStartDate(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                   Model model,
-                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                  UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -313,11 +317,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @GetMapping("/{projectId}/details/project-address")
     public String viewAddress(@PathVariable("projectId") final Long projectId,
                               Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsAddressForm form) {
 
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
@@ -331,7 +335,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/details-address";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping("/{projectId}/details/project-address")
     public String updateAddress(@PathVariable("projectId") final Long projectId,
                                 Model model,
@@ -387,7 +391,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 success -> redirectToProjectDetails(projectId));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS)
     public String searchAddress(@PathVariable("projectId") Long projectId,
                                 Model model,
@@ -403,7 +407,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS)
     public String selectAddress(@PathVariable("projectId") Long projectId,
                                 Model model,
@@ -413,7 +417,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS)
     public String manualAddress(@PathVariable("projectId") Long projectId, Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {

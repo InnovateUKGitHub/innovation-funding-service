@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -24,11 +24,8 @@ import java.util.function.Supplier;
  */
 public interface ApplicationService {
 
-    @PreAuthorize("hasAuthority('applicant') || hasAnyAuthority('applicant', 'system_registrar')")
-    @SecuredBySpring(value = "CREATE",
-            description = "Any logged in user with Global roles or user with system registrar role can create and application",
-            securedType = ApplicationResource.class)
-    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'CREATE')")
+    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(final String applicationName, @P("competitionId") final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
     ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
@@ -68,7 +65,7 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@P("applicationId") final Long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE_APPLICATION_STATE')")
     ServiceResult<ApplicationResource> updateApplicationState(@P("applicationId") final Long id, final ApplicationState state);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'APPLICATION_SUBMITTED_NOTIFICATION')")
@@ -83,7 +80,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
 
     @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
+    ServiceResult<Boolean> applicationReadyForSubmit(final Long id);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the applications")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
@@ -96,6 +93,11 @@ public interface ApplicationService {
             description = "Comp admins and project finance users can notify applicants that their feedback is released")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId);
+
+    @SecuredBySpring(value = "MARK_AS_INELIGIBLE",
+            description = "Comp admins and project finance users can mark applications as ineligible")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason);
 
     @SecuredBySpring(value = "INFORM_APPLICATION_IS_INELIGIBLE",
         description = "Comp admins and project finance users can inform applicants that their application is ineligible")

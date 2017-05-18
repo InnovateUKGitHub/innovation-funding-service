@@ -53,7 +53,7 @@ public class FinanceCheckController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
-                                          @ModelAttribute FinanceCheckSummaryForm form) {
+                                          @ModelAttribute(binding = false) FinanceCheckSummaryForm form) {
         return doViewFinanceCheckSummary(projectId, model);
     }
 
@@ -72,7 +72,7 @@ public class FinanceCheckController {
         );
     }
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping("/organisation/{organisationId}/jes-file")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@PathVariable("projectId") final Long projectId,
                                                                            @PathVariable("organisationId") Long organisationId) {

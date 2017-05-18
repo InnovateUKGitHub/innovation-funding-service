@@ -12,13 +12,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
-import javax.servlet.http.Cookie;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -116,24 +115,5 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
         mockMvc.perform(get("/application/create/check-eligibility/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/search"));
-    }
-
-
-    @Test
-    public void testInitializeApplication() throws Exception {
-        mockMvc.perform(get("/application/create/initialize-application")
-                .cookie(new Cookie(ApplicationCreationController.COMPETITION_ID, encryptor.encrypt("1")))
-                .cookie(new Cookie(ApplicationCreationController.USER_ID, encryptor.encrypt("1")))
-        )
-                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/application/" + applicationResource.getId()+"/contributors/invite?newApplication"));
-                // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place
-                .andExpect(view().name("redirect:/"));
-    }
-
-    @Test
-    public void testYourDetails() throws Exception {
-        mockMvc.perform(get("/application/create/your-details"))
-                .andExpect(view().name("create-application/your-details"));
     }
 }

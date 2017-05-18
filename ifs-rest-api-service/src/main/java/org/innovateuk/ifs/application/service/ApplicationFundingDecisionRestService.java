@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 
 import java.util.Map;
@@ -12,5 +12,5 @@ import java.util.Map;
 public interface ApplicationFundingDecisionRestService {
 
 	RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
-	RestResult<Void> sendApplicationFundingDecisions(NotificationResource notificationResource);
+	RestResult<Void> sendApplicationFundingDecisions(FundingNotificationResource fundingNotificationResource);
 }

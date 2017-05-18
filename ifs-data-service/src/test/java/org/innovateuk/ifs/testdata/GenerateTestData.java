@@ -81,7 +81,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -246,6 +246,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         when(idpServiceMock.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
+        when(idpServiceMock.activateUser(isA(String.class))).thenAnswer(uuid -> serviceSuccess(uuid));
 
         when(emailServiceMock.sendEmail(isA(EmailAddress.class), isA(List.class), isA(String.class), isA(String.class), isA(String.class))).
                 thenReturn(serviceSuccess(emptyList()));
@@ -630,6 +631,13 @@ public class GenerateTestData extends BaseIntegrationTest {
             }
         });
 
+        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(line.status)) {
+            baseBuilder = baseBuilder.markApplicationIneligible(line.ineligibleReason);
+            if (line.status == ApplicationState.INELIGIBLE_INFORMED) {
+                baseBuilder = baseBuilder.informApplicationIneligible();
+            }
+        }
+
         return baseBuilder.withFinances(financeBuilders);
     }
 
@@ -763,10 +771,10 @@ public class GenerateTestData extends BaseIntegrationTest {
     private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CsvUtils.CompetitionLine line) {
         return competitionDataBuilder
                 .createNonIfsCompetition()
-                .withBasicData(line.name, null, null, line.innovationArea,
+                .withBasicData(line.name, null, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null,
-                        null, null, null, line.nonIfsUrl)
+                        null, emptyList(), null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
@@ -777,10 +785,10 @@ public class GenerateTestData extends BaseIntegrationTest {
     private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
         return existingCompetitionId.map(id -> competitionDataBuilder.
                 withExistingCompetition(1L).
-                withBasicData(line.name, line.description, line.type, line.innovationArea,
+                withBasicData(line.name, line.description, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                        line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
+                        line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
@@ -789,10 +797,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         ).orElse(competitionDataBuilder.
                 createCompetition().
-                withBasicData(line.name, line.description, line.type, line.innovationArea,
+                withBasicData(line.name, line.description, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                        line.multiStream, line.collaborationLevel, line.researchRatio, line.resubmission, null).
+                        line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
                 withNewMilestones()).
                 withOpenDate(line.openDate).

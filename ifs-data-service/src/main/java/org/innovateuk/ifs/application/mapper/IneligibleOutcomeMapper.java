@@ -21,11 +21,14 @@ import java.util.List;
 )
 public abstract class IneligibleOutcomeMapper {
 
-    public IneligibleOutcomeResource mapFirstInList(List<IneligibleOutcome> object) {
+    public IneligibleOutcomeResource mapLastInList(List<IneligibleOutcome> object) {
         if (object == null) {
             return null;
         }
-        return object.stream().findFirst().map(this::mapToResource).orElse(null);
+
+        return object.stream()
+                .reduce((ineligibleOutcome, ineligibleOutcome2) -> ineligibleOutcome2)
+                .map(this::mapToResource).orElse(null);
     }
 
     @Mappings({

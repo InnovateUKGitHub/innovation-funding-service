@@ -59,7 +59,7 @@ public class AcceptProjectInviteController {
             @PathVariable("hash") final String hash,
             HttpServletResponse response,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            UserResource loggedInUser) {
         return find(inviteByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, userExists) -> {
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
@@ -135,13 +135,13 @@ public class AcceptProjectInviteController {
     //==================================
 
     @GetMapping(ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING)
-    public String acceptInviteUserDoesNotYetExistShowProject(HttpServletRequest request, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String acceptInviteUserDoesNotYetExistShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
         model.addAttribute("userExists", false);
         return acceptInviteShowProject(request, model, loggedInUser);
     }
 
     @GetMapping(ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING)
-    public String acceptInviteUserDoesExistShowProject(HttpServletRequest request, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String acceptInviteUserDoesExistShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
         model.addAttribute("userExists", true);
         return acceptInviteShowProject(request, model, loggedInUser);
     }
@@ -173,7 +173,7 @@ public class AcceptProjectInviteController {
 
     @GetMapping(ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING)
     public String acceptInviteUserDoesExistConfirm(HttpServletRequest request,
-                                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                   UserResource loggedInUser,
                                                    Model model) {
         String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), userByHash(hash)).andOnSuccess((invite, userExists) -> {

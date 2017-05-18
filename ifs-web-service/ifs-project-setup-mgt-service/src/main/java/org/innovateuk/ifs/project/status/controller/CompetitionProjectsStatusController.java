@@ -38,7 +38,7 @@ public class CompetitionProjectsStatusController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-    public String viewCompetitionStatus(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser,
+    public String viewCompetitionStatus(Model model, UserResource loggedInUser,
                                         @PathVariable Long competitionId) {
         model.addAttribute("model",
                 new PopulatedCompetitionProjectsStatusViewModel(projectStatusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(), loggedInUser).get());
@@ -48,7 +48,7 @@ public class CompetitionProjectsStatusController {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "EXPORT_BANK_DETAILS", description = "Project finance users should be able export bank details")
     @GetMapping("/bank-details/export")
-    public void exportBankDetails(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser,
+    public void exportBankDetails(Model model, UserResource loggedInUser,
                                   @PathVariable Long competitionId, HttpServletResponse response) throws IOException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");

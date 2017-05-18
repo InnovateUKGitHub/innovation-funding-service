@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -48,11 +48,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ServiceResult<Void> updateState(Long applicationId, ApplicationState state) {
-        return applicationRestService.updateApplicationState(applicationId, state).toServiceResult();
-    }
-
-    @Override
     public ServiceResult<Void> save(ApplicationResource application) {
         return applicationRestService.saveApplication(application).toServiceResult();
     }
@@ -67,5 +62,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ServiceResult<Void> removeCollaborator(Long applicationInviteId) {
         return inviteRestService.removeApplicationInvite(applicationInviteId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason) {
+        return applicationRestService.markAsIneligible(applicationId, reason).toServiceResult();
     }
 }

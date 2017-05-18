@@ -73,10 +73,6 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((competitionName, application) -> setField("competitionName", competitionName, application), competitionNames);
     }
 
-    public ApplicationResourceBuilder withAssessorFeedbackFileEntry(Long... assessorFeedbackFileEntryId) {
-        return withArray((fileEntryId, application) -> application.setAssessorFeedbackFileEntry(fileEntryId), assessorFeedbackFileEntryId);
-    }
-
     public ApplicationResourceBuilder withCompletion(final BigDecimal... bigDecimals) {
         return withArray((completion, application) -> setField("completion", completion, application), bigDecimals);
     }

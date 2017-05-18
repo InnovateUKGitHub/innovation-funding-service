@@ -31,7 +31,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
-${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3_NUMBER}/contributors/invite?newApplication
+
 
 *** Test Cases ***
 Application team page
@@ -145,8 +145,8 @@ Valid invitation submit
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
     [Tags]
-    When the user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}
     Then the user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
+
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
@@ -191,11 +191,11 @@ Partner should be able to log-in and see the new company name
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Innovate UK applicant questionnaire    diversity survey
+    [Teardown]    the user navigates to the page    ${DASHBOARD_URL}
 
 Parner can see the Application team
     [Documentation]    INFUND-7976
-    When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Invite robot test application
+    Given the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=view team members and add collaborators
     Then the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")

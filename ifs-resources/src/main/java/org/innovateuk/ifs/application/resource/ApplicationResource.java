@@ -52,7 +52,6 @@ public class ApplicationResource {
     private ApplicationState applicationState;
     private Long competition;
     private String competitionName;
-    private Long assessorFeedbackFileEntry;
     private CompetitionStatus competitionStatus;
     private BigDecimal completion;
     private Boolean stateAidAgreed;
@@ -142,18 +141,6 @@ public class ApplicationResource {
         return applicationState == ApplicationState.OPEN || applicationState == ApplicationState.CREATED;
     }
 
-    @JsonIgnore
-    public void enableViewMode(){
-        setApplicationState(ApplicationState.SUBMITTED);
-    }
-    public Long getAssessorFeedbackFileEntry() {
-        return assessorFeedbackFileEntry;
-    }
-
-    public void setAssessorFeedbackFileEntry(Long assessorFeedbackFileEntry) {
-        this.assessorFeedbackFileEntry = assessorFeedbackFileEntry;
-    }
-
     public IneligibleOutcomeResource getIneligibleOutcome() {
         return ineligibleOutcome;
     }
@@ -178,7 +165,6 @@ public class ApplicationResource {
                 .append(applicationState, that.applicationState)
                 .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(competition, that.competition)
-                .append(assessorFeedbackFileEntry, that.assessorFeedbackFileEntry)
                 .isEquals();
     }
 
@@ -192,7 +178,6 @@ public class ApplicationResource {
                 .append(applicationState)
                 .append(ineligibleOutcome)
                 .append(competition)
-                .append(assessorFeedbackFileEntry)
                 .toHashCode();
     }
 
@@ -218,10 +203,6 @@ public class ApplicationResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
-    }
-
-    public boolean hasPublishedAssessorFeedback() {
-        return isInPublishedAssessorFeedbackCompetitionState() && getAssessorFeedbackFileEntry() != null;
     }
 
     @JsonIgnore

@@ -1,0 +1,59 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'docker'
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath "se.transmode.gradle:gradle-docker:1.2"
+    }
+}
+
+def String spCertsVolume = 'src/main/docker/certs'
+
+def String spProxyKeyFile = "${spCertsVolume}/sp_proxy_key.pem"
+def String spProxyCertificateFile = "${spCertsVolume}/sp_proxy_certificate.pem"
+def String spProxyCacertificateFile = "${spCertsVolume}/sp_proxy_cacertificate.pem"
+
+def String idpSigningCertificateFile = "${spCertsVolume}/idp-signing.crt"
+def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
+
+
+task prepareDockerFile(type: Copy) {
+    dependsOn ':ifs-auth-service:prepareSecrets'
+
+    doFirst {
+        assert file(spProxyKeyFile).exists() 
+        assert file(spProxyCertificateFile).exists() 
+        assert file(spProxyCacertificateFile).exists() 
+
+        assert file(idpSigningCertificateFile).exists() 
+        assert file(idpEncryptionCertificateFile).exists() 
+    }
+
+    outputs.upToDateWhen { false }
+
+    from 'src/main/docker/'
+    into 'src/main/docker/'
+    include 'Dockerfile-template'
+    rename 'Dockerfile-template', 'Dockerfile'
+    filter(ReplaceTokens, tokens: [auth_service_trusted_ip: '-R \'127.0.0.1\''])
+}
+
+task buildDocker(type: Docker) {
+    dependsOn prepareDockerFile
+
+    push = false
+    applicationName = 'sp-service'
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from fileTree('src/main/docker/files')
+            into "${stageDir}/files"
+        }
+        copy {
+            from fileTree('src/main/docker/certs')
+            into "${stageDir}/certs"
+        }
+    }
+}

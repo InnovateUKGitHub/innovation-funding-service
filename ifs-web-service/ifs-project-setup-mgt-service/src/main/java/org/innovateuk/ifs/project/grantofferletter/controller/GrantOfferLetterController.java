@@ -9,7 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.CaseInsensitiveConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
-import org.innovateuk.ifs.project.grantofferletter.resource.GOLState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
@@ -62,7 +62,7 @@ public class GrantOfferLetterController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/send")
-    public String viewGrantOfferLetterSend(@PathVariable Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String viewGrantOfferLetterSend(@PathVariable Long projectId, Model model, UserResource loggedInUser) {
         GrantOfferLetterLetterForm form = new GrantOfferLetterLetterForm();
         return doViewGrantOfferLetterSend(projectId, model, form);
     }
@@ -192,7 +192,7 @@ public class GrantOfferLetterController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            UserResource loggedInUser) {
 
         return performActionOrBindErrorsToField(projectId, validationHandler, model, "annex", form, () -> {
 
@@ -214,19 +214,19 @@ public class GrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
 
-        GOLState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
+        GrantOfferLetterState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
 
         return new GrantOfferLetterModel(competitionSummary,
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
                 additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                !GOLState.PENDING.equals(golState),
+                !GrantOfferLetterState.PENDING.equals(golState),
                 projectId,
                 project.getName(),
                 application.getId(),
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
                 additionalContractFile.isPresent() ? additionalContractFile.isPresent() : Boolean.FALSE,
-                GOLState.APPROVED.equals(golState),
-                GOLState.READY_TO_APPROVE.equals(golState) || GOLState.APPROVED.equals(golState),
+                GrantOfferLetterState.APPROVED.equals(golState),
+                GrantOfferLetterState.READY_TO_APPROVE.equals(golState) || GrantOfferLetterState.APPROVED.equals(golState),
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
         );
     }

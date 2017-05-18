@@ -29,7 +29,7 @@ public class ContentGroupPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "DOWNLOAD_CONTENT_GROUP_FILE", description = "External users can only see published content group files")
     public boolean externalUsersCanViewPublishedContentGroupFiles(Long contentGroupId, UserResource user) {
         ContentGroup contentGroup = contentGroupRepository.findOne(contentGroupId);
-        if (contentGroup !=null) {
+        if (contentGroup != null) {
             return isSystemRegistrationUser(user) && isPublished(contentGroup);
         }
         return false;

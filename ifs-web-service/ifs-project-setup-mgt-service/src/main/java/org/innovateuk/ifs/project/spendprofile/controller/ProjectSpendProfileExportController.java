@@ -33,7 +33,7 @@ public class ProjectSpendProfileExportController {
     @GetMapping("/csv")
     public void exportProjectPartnerSpendProfileAsCSV(@PathVariable("projectId") final Long projectId,
                                                       @PathVariable("organisationId") final Long organisationId,
-                                                      @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                      UserResource loggedInUser,
                                                       HttpServletResponse response) throws IOException {
         SpendProfileCSVResource spendProfileCSVResource = spendProfileService.getSpendProfileCSV(projectId, organisationId);
         response.setContentType(CONTENT_TYPE);

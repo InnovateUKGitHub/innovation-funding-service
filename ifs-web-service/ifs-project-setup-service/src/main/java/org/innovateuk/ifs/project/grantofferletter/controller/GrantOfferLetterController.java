@@ -45,7 +45,7 @@ public class GrantOfferLetterController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
     public String viewGrantOfferLetterPage(@PathVariable("projectId") Long projectId, Model model,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                                           UserResource loggedInUser) {
         GrantOfferLetterForm form = new GrantOfferLetterForm();
 
         return createGrantOfferLetterPage(projectId, model, loggedInUser, form);
@@ -65,7 +65,7 @@ public class GrantOfferLetterController {
                          @SuppressWarnings("unused") BindingResult bindingResult,
                          ValidationHandler validationHandler,
                          Model model,
-                         @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                         UserResource loggedInUser) {
 
         return validationHandler.performActionOrBindErrorsToField("",
                 () -> createGrantOfferLetterPage(projectId, model, loggedInUser, form),
@@ -81,7 +81,7 @@ public class GrantOfferLetterController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            UserResource loggedInUser) {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
 
             MultipartFile signedGrantOfferLetter = form.getSignedGrantOfferLetter();
@@ -99,7 +99,7 @@ public class GrantOfferLetterController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            UserResource loggedInUser) {
         return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
             return grantOfferLetterService.removeSignedGrantOfferLetter(projectId);
         });

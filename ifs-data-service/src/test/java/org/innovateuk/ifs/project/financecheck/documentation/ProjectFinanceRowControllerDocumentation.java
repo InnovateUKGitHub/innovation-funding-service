@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -87,9 +86,9 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     @Test
     public void deleteCostItem() throws Exception {
 
-        when(projectFinanceRowServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
+        when(projectFinanceRowServiceMock.deleteCost(456L, 789L, 123L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/cost/project/delete/{id}", "123")
+        mockMvc.perform(delete("/cost/project/456/organisation/789/delete/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent()).
                 andDo(document("project/finance/{method-name}",
