@@ -16,9 +16,9 @@
 
     <h2 class="heading-medium">Finance Contact</h2>
     <p th:if="${model.financeContact.isPresent()}">
-        <th:block th:text="${model.financeContact.userName}">Finance Contact</th:block> <br />
-        <th:block th:text="${model.financeContact.email}">example@example.com</th:block> <br />
-        <th:block th:text="${model.financeContact.phoneNumber}">0</th:block>
+        <th:block th:text="${model.financeContact.get().userName}">Finance Contact</th:block> <br />
+        <th:block th:text="${model.financeContact.get().email}">example@example.com</th:block> <br />
+        <th:block th:text="${model.financeContact.get().phoneNumber}">0</th:block>
     </p>
 
     <p th:unless="${model.financeContact.isPresent()}">
