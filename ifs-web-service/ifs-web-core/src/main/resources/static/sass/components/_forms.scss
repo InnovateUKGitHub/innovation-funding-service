@@ -25,10 +25,11 @@ div.readonly,
   color: $black;
   background: $grey-4;
   border-color: $border-colour;
+  cursor: default;
 }
 
-input[readonly],
-input[disabled] {
+input[readonly]:not(.readonly-boxed),
+input[disabled]:not(.readonly-boxed) {
   border: none;
   background: none;
 
