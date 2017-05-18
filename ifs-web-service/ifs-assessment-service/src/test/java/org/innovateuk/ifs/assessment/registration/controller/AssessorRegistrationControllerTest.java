@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.registration.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.assessment.registration.controller.AssessorRegistrationController;
 import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationBecomeAnAssessorModelPopulator;
 import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationModelPopulator;
@@ -35,7 +34,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
@@ -156,7 +155,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
         when(assessorService.createAssessorByInviteHash(inviteHash, expectedForm)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
@@ -219,9 +218,9 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
         when(assessorService.createAssessorByInviteHash(inviteHash, expectedForm)).thenReturn(
-                serviceFailure(asList(fieldError("password", HttpStatus.CONFLICT.getReasonPhrase(), "INVALID_PASSWORD", HttpStatus.CONFLICT))));
+                serviceFailure(singletonList(fieldError("password", HttpStatus.CONFLICT.getReasonPhrase(), "INVALID_PASSWORD", HttpStatus.CONFLICT))));
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -258,7 +257,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
 
         MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -299,13 +298,70 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
+    public void submitYourDetails_InvalidNames() throws Exception {
+        Title title = Title.Mr;
+        String phoneNumber = "12345678";
+        Gender gender = Gender.MALE;
+        EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
+        Disability disability = Disability.NO;
+        String password = "P@ssword1234";
+        String firstName = "abc^%$921";
+        String lastName = "xyz*(&123";
+        String inviteHash = "hash";
+        CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
+
+        when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
+
+        MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("title", title.name())
+                .param("phoneNumber", phoneNumber)
+                .param("gender", gender.name())
+                .param("ethnicity", ethnicity.getId().toString())
+                .param("disability", disability.name())
+                .param("password", password)
+                .param("firstName", firstName)
+                .param("lastName", lastName))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().hasErrors())
+
+                .andExpect(model().attributeHasFieldErrors("form", "firstName"))
+                .andExpect(model().attributeHasFieldErrors("form", "lastName"))
+                .andExpect(view().name("registration/register"))
+                .andReturn();
+
+        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+
+        assertEquals(phoneNumber, form.getPhoneNumber());
+        assertEquals(gender, form.getGender());
+        assertEquals(ethnicity, form.getEthnicity());
+        assertEquals(disability, form.getDisability());
+        assertEquals(password, form.getPassword());
+
+        BindingResult bindingResult = form.getBindingResult();
+
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(3, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("firstName"));
+        assertTrue(bindingResult.hasFieldErrors("lastName"));
+        assertTrue(bindingResult.hasFieldErrors("addressForm.postcodeInput"));
+        assertEquals("Invalid first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
+        assertEquals("Invalid last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
+        assertEquals("validation.standard.postcodesearch.required", bindingResult.getFieldError("addressForm.postcodeInput").getCode());
+    }
+
+    @Test
     public void manualAddress_showsNoErrorsAndSetsAddressFormToManual() throws Exception {
         String inviteHash = "hash";
 
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
 
         MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
@@ -333,7 +389,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(addressRestService.doLookup(postcodeInput)).thenReturn(RestResult.restSuccess(addressResourceList));
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
 
         MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
@@ -362,7 +418,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
 
         MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
@@ -395,7 +451,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
 
         when(addressRestService.doLookup(postcodeInput)).thenReturn(RestResult.restSuccess(addressResourceList));
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
 
 
@@ -427,7 +483,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite(inviteHash)).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(singletonList(ethnicity)));
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)

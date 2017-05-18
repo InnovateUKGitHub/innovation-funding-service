@@ -2,10 +2,10 @@ package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
@@ -28,7 +28,6 @@ import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -96,21 +95,8 @@ public class FinanceChecksQueriesController {
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
-                                                         @PathVariable Long attachmentId,
-                                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
-        Optional<ByteArrayResource> content = Optional.empty();
-        Optional<FileEntryResource> fileDetails = Optional.empty();
-
-        ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
-        if (fileContent.isSuccess()) {
-            content = fileContent.getSuccessObject();
-        }
-        ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-        if (fileInfo.isSuccess()) {
-            fileDetails = Optional.of(fileInfo.getSuccessObject());
-        }
-
-        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+                                                         @PathVariable Long attachmentId) {
+        return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -195,7 +181,6 @@ public class FinanceChecksQueriesController {
                                             @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddResponseForm form,
                                             @SuppressWarnings("unused") BindingResult bindingResult,
                                             ValidationHandler validationHandler,
-                                            UserResource loggedInUser,
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -230,23 +215,14 @@ public class FinanceChecksQueriesController {
                                                                  @PathVariable Long organisationId,
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
-                                                                 UserResource loggedInUser,
                                                                  HttpServletRequest request) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        Optional<ByteArrayResource> content = Optional.empty();
-        Optional<FileEntryResource> fileDetails = Optional.empty();
 
         if (attachments.contains(attachmentId)) {
-            ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
-            if (fileContent.isSuccess()) {
-                content = fileContent.getSuccessObject();
-            }
-            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-            if (fileInfo.isSuccess()) {
-                fileDetails = Optional.of(fileInfo.getSuccessObject());
-            }
+            return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
+        } else {
+            throw new ForbiddenActionException();
         }
-        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -257,9 +233,6 @@ public class FinanceChecksQueriesController {
                                    @RequestParam(value = "query_section", required = false) final String querySection,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddResponseForm form,
-                                   @SuppressWarnings("unused") BindingResult bindingResult,
-                                   ValidationHandler validationHandler,
-                                   UserResource loggedInUser,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -279,8 +252,6 @@ public class FinanceChecksQueriesController {
                                 @PathVariable Long organisationId,
                                 @PathVariable Long queryId,
                                 @RequestParam(value = "query_section", required = false) String querySection,
-                                Model model,
-                                UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         loadAttachmentsFromCookie(request, projectId, organisationId, queryId).forEach(financeCheckService::deleteFile);
@@ -293,10 +264,9 @@ public class FinanceChecksQueriesController {
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<QueryResource>> queries = financeCheckService.getQueries(projectFinance.getId());
-        if (queries.isSuccess()) {
+        financeCheckService.getQueries(projectFinance.getId()).ifSuccessful( queries -> {
             // order queries by most recent post
-            List<QueryResource> sortedQueries = queries.getSuccessObject().stream().
+            List<QueryResource> sortedQueries = queries.stream().
                     flatMap(t -> t.posts.stream()
                             .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
                     .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
@@ -324,7 +294,7 @@ public class FinanceChecksQueriesController {
                 detail.setOrganisationId(organisationId);
                 queryModel.add(detail);
             }
-        }
+        });
         return queryModel;
     }
 
@@ -343,9 +313,9 @@ public class FinanceChecksQueriesController {
                 organisation.getName(),
                 leadPartnerOrganisation,
                 financeContact.isPresent(),
-                financeContact.isPresent() ? financeContact.get().getUserName() : UNKNOWN_FIELD,
-                financeContact.isPresent() ? financeContact.get().getEmail() : UNKNOWN_FIELD,
-                financeContact.isPresent() ? financeContact.get().getPhoneNumber() : UNKNOWN_FIELD,
+                financeContact.get().getUserName(),
+                financeContact.get().getEmail(),
+                financeContact.get().getPhoneNumber(),
                 querySection == null ? UNKNOWN_FIELD : querySection,
                 project.getId(),
                 project.getName(),
@@ -370,14 +340,6 @@ public class FinanceChecksQueriesController {
 
     private String addQuerySection(String url, String querySection) {
         return url + (querySection != null ? "?query_section=" + querySection : "");
-    }
-
-    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
-        if (content.isPresent() && fileDetails.isPresent()) {
-            return getFileResponseEntity(content.get(), fileDetails.get());
-        } else {
-            return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
-        }
     }
 
     private String getCookieName(Long projectId, Long organisationId, Long queryId) {

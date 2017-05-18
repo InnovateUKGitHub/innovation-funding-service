@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * Form to capture the posted details of the Monitoring Officer
  */
-public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
+public class MonitoringOfficerForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
@@ -45,10 +45,10 @@ public class ProjectMonitoringOfficerForm extends BaseBindingResultTarget {
     private String phoneNumber;
 
     // for spring form binding
-    public ProjectMonitoringOfficerForm() {
+    public MonitoringOfficerForm() {
     }
 
-    public ProjectMonitoringOfficerForm(Optional<MonitoringOfficerResource> existingMonitoringOfficer) {
+    public MonitoringOfficerForm(Optional<MonitoringOfficerResource> existingMonitoringOfficer) {
         existingMonitoringOfficer.ifPresent(mo -> {
             setFirstName(mo.getFirstName());
             setLastName(mo.getLastName());

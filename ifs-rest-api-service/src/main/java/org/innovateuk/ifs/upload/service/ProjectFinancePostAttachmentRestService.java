@@ -33,7 +33,7 @@ public class ProjectFinancePostAttachmentRestService extends BaseRestService imp
     }
 
     @Override
-    public RestResult<Optional<ByteArrayResource>> download(Long fileId) {
-        return getWithRestResult(baseURL+"/download/" + fileId, ByteArrayResource.class).toOptionalIfNotFound();
+    public RestResult<ByteArrayResource> download(Long fileId) {
+        return getWithRestResult(baseURL+"/download/" + fileId, ByteArrayResource.class);
     }
 }
