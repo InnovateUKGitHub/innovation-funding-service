@@ -87,6 +87,16 @@ public class CompetitionManagementInviteAssessorsController {
         return redirectToFind(competitionId, page, innovationArea);
     }
 
+    @PostMapping(value = "/find/addSelected")
+    public String addSelectedToInviteList(Model model,
+                                        @PathVariable("competitionId") long competitionId,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam Optional<Long> innovationArea) {
+       // inviteUser(email, competitionId).getSuccessObjectOrThrowException();
+
+        return redirectToFind(competitionId, page, innovationArea);
+    }
+
     @PostMapping(value = "/find", params = {"remove"})
     public String removeInviteFromFindView(Model model,
                                            @PathVariable("competitionId") long competitionId,
