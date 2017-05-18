@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerControllerMockMvcTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     @Test
     public void testViewMonitoringOfficer() throws Exception {
@@ -27,14 +27,14 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
         when(projectService.getById(123L)).thenReturn(project);
-        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.of(monitoringOfficer));
+        when(monitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.of(monitoringOfficer));
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
-        ProjectMonitoringOfficerViewModel viewModel =
-                (ProjectMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
+        MonitoringOfficerViewModel viewModel =
+                (MonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
         assertEquals(Long.valueOf(345), viewModel.getApplicationId());
@@ -51,14 +51,14 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
         ProjectResource project = newProjectResource().withId(123L).withApplication(345L).build();
 
         when(projectService.getById(123L)).thenReturn(project);
-        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.empty());
+        when(monitoringOfficerService.getMonitoringOfficerForProject(123L)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
-        ProjectMonitoringOfficerViewModel viewModel =
-                (ProjectMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
+        MonitoringOfficerViewModel viewModel =
+                (MonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
         assertEquals(Long.valueOf(345), viewModel.getApplicationId());
@@ -70,7 +70,7 @@ public class ProjectMonitoringOfficerControllerMockMvcTest extends BaseControlle
     }
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController();
+    protected MonitoringOfficerController supplyControllerUnderTest() {
+        return new MonitoringOfficerController();
     }
 }

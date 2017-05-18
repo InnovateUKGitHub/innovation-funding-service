@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.monitoringofficer.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.monitoringofficer.service.ProjectMonitoringOfficerRestServiceImpl;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,14 +11,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
-public class ProjectMonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTest<ProjectMonitoringOfficerRestServiceImpl> {
+public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTest<MonitoringOfficerRestServiceImpl> {
     private static final String projectRestURL = "/project";
 
     @Override
-    protected ProjectMonitoringOfficerRestServiceImpl registerRestServiceUnderTest() {
-        ProjectMonitoringOfficerRestServiceImpl projectMonitoringOfficerRestService = new ProjectMonitoringOfficerRestServiceImpl();
-        ReflectionTestUtils.setField(projectMonitoringOfficerRestService, "projectRestURL", projectRestURL);
-        return projectMonitoringOfficerRestService;
+    protected MonitoringOfficerRestServiceImpl registerRestServiceUnderTest() {
+        MonitoringOfficerRestServiceImpl monitoringOfficerRestService = new MonitoringOfficerRestServiceImpl();
+        ReflectionTestUtils.setField(monitoringOfficerRestService, "projectRestURL", projectRestURL);
+        return monitoringOfficerRestService;
     }
 
     @Test

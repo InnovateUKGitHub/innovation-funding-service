@@ -16,11 +16,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class ProjectMonitoringOfficerPermissionRulesTest extends BasePermissionRulesTest<ProjectMonitoringOfficerPermissionRules> {
+public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTest<MonitoringOfficerPermissionRules> {
 
     @Override
-    protected ProjectMonitoringOfficerPermissionRules supplyPermissionRulesUnderTest() {
-        return new ProjectMonitoringOfficerPermissionRules();
+    protected MonitoringOfficerPermissionRules supplyPermissionRulesUnderTest() {
+        return new MonitoringOfficerPermissionRules();
     }
 
     @Test

@@ -21,7 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest<ProjectMonitoringOfficerService> {
+public class MonitoringOfficerServiceImplTest extends BaseServiceUnitTest<MonitoringOfficerService> {
 
     private MonitoringOfficerResource monitoringOfficerResource;
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
@@ -182,10 +182,10 @@ public class ProjectMonitoringOfficerServiceImplTest extends BaseServiceUnitTest
     }
 
     @Override
-    protected ProjectMonitoringOfficerService supplyServiceUnderTest() {
+    protected MonitoringOfficerService supplyServiceUnderTest() {
 
-        ProjectMonitoringOfficerService projectMonitoringOfficerService =  new ProjectMonitoringOfficerServiceImpl();
-        ReflectionTestUtils.setField(projectMonitoringOfficerService, "webBaseUrl", webBaseUrl);
-        return projectMonitoringOfficerService;
+        MonitoringOfficerService monitoringOfficerService =  new MonitoringOfficerServiceImpl();
+        ReflectionTestUtils.setField(monitoringOfficerService, "webBaseUrl", webBaseUrl);
+        return monitoringOfficerService;
     }
 }

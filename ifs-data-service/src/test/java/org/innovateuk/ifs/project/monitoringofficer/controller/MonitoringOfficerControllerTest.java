@@ -32,7 +32,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-  public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+  public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
       private MonitoringOfficerResource monitoringOfficerResource;
 
@@ -50,8 +50,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
       }
 
       @Override
-      protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-          return new ProjectMonitoringOfficerController();
+      protected MonitoringOfficerController supplyControllerUnderTest() {
+          return new MonitoringOfficerController();
       }
 
       @Test
@@ -59,7 +59,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
           MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
-          when(projectMonitoringOfficerServiceMock.getMonitoringOfficer(123L)).thenReturn(serviceSuccess(monitoringOfficer));
+          when(monitoringOfficerServiceMock.getMonitoringOfficer(123L)).thenReturn(serviceSuccess(monitoringOfficer));
 
           mockMvc.perform(get("/project/{projectId}/monitoring-officer", 123L)).
                   andExpect(status().isOk()).
@@ -71,7 +71,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
           Long projectId = 1L;
 
-          when(projectMonitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+          when(monitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
                   thenReturn(serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED)));
 
 
@@ -80,10 +80,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                   .content(toJson(monitoringOfficerResource)))
                   .andExpect(status().isBadRequest());
 
-          verify(projectMonitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
           // Ensure that notification is not sent when there is error whilst saving
-          verify(projectMonitoringOfficerServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
       }
 
@@ -93,8 +93,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
           Long projectId = 1L;
 
           SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
-          when(projectMonitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
-          when(projectMonitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
+          when(monitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
+          when(monitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                   thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
           mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -102,8 +102,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                   .content(toJson(monitoringOfficerResource)))
                   .andExpect(status().isInternalServerError());
 
-          verify(projectMonitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-          verify(projectMonitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
       }
 
@@ -113,8 +113,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
           Long projectId = 1L;
 
           SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
-          when(projectMonitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
-          when(projectMonitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
+          when(monitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
+          when(monitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                   thenReturn(serviceSuccess());
 
           mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -122,8 +122,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                   .content(toJson(monitoringOfficerResource)))
                   .andExpect(status().isOk());
 
-          verify(projectMonitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-          verify(projectMonitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
       }
 
@@ -134,8 +134,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
           SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
           successResult.setMonitoringOfficerSaved(false);
-          when(projectMonitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
-          when(projectMonitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
+          when(monitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
+          when(monitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                   thenReturn(serviceSuccess());
 
           mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -143,8 +143,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                   .content(toJson(monitoringOfficerResource)))
                   .andExpect(status().isOk());
 
-          verify(projectMonitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-          verify(projectMonitoringOfficerServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
       }
 
@@ -185,6 +185,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
               assertEquals(1, matchingErrors.size());
           });
 
-          verify(projectMonitoringOfficerServiceMock, never()).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+          verify(monitoringOfficerServiceMock, never()).saveMonitoringOfficer(projectId, monitoringOfficerResource);
       }
   }

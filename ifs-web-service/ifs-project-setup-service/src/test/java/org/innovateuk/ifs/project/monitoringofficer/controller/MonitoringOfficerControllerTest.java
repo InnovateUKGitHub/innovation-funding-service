@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
@@ -45,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  *
  **/
-public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     private long projectId = 123L;
     private long applicationId = 456L;
@@ -100,7 +99,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -123,7 +122,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
         Boolean readOnlyView = (Boolean) modelMap.get("readOnlyView");
 
         // assert the project details are correct
@@ -133,7 +132,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertTrue(readOnlyView);
     }
 
-    private void assertProjectDetailsPrepopulatedOk(ProjectMonitoringOfficerViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(MonitoringOfficerViewModel model) {
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectName());
         assertEquals(competition.getInnovationAreaNames(), CollectionFunctions.asLinkedSet("Some Area", "Some other area"));
@@ -150,7 +149,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 build();
 
         Optional<MonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
-        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
+        when(monitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);
@@ -166,7 +165,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController();
+    protected MonitoringOfficerController supplyControllerUnderTest() {
+        return new MonitoringOfficerController();
     }
 }

@@ -8,9 +8,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.form.ProjectMonitoringOfficerForm;
+import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     private long projectId = 123L;
     private long applicationId = 456L;
@@ -107,7 +107,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -138,7 +138,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -191,7 +191,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -222,7 +222,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -275,7 +275,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -291,7 +291,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         ProjectResource project = projectBuilder.build();
 
-        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/confirm").
@@ -303,7 +303,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -317,7 +317,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones in error
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
@@ -379,7 +379,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         when(projectService.getById(123L)).thenReturn(projectBuilder.build());
         when(projectService.getProjectTeamStatus(123L, Optional.empty())).thenReturn(teamStatus);
 
-        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/123/monitoring-officer/assign").
                 param("firstName", "First").
@@ -388,7 +388,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 param("phoneNumber", "1234567890")).
                 andExpect(view().name("redirect:/project/123/monitoring-officer"));
 
-        verify(projectMonitoringOfficerService).updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890");
+        verify(monitoringOfficerService).updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890");
     }
 
     @Test
@@ -398,7 +398,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         ServiceResult<Void> failureResponse = serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED));
 
-        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
+        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
@@ -410,7 +410,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -424,7 +424,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones that resulted in error
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertEquals("First", form.getFirstName());
         assertEquals("Last", form.getLastName());
         assertEquals("asdf2@asdf.com", form.getEmailAddress());
@@ -464,7 +464,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
 
         ProjectResource project = projectBuilder.build();
 
-        when(projectMonitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
+        when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
         setupViewMonitoringOfficerTestExpectations(project, false);
 
         MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
@@ -476,7 +476,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        ProjectMonitoringOfficerViewModel model = (ProjectMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -490,7 +490,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones in error
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertEquals("", form.getFirstName());
         assertEquals("", form.getLastName());
         assertEquals("asdf", form.getEmailAddress());
@@ -516,7 +516,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertEquals("First", form.getFirstName());
         assertEquals("Last", form.getLastName());
         assertEquals("asdf@asdf.com", form.getEmailAddress());
@@ -533,7 +533,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
                 build();
 
         Optional<MonitoringOfficerResource> monitoringOfficerToUse = existingMonitoringOfficer ? Optional.of(mo) : Optional.empty();
-        when(projectMonitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
+        when(monitoringOfficerService.getMonitoringOfficerForProject(projectId)).thenReturn(monitoringOfficerToUse);
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);
@@ -548,7 +548,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
     }
 
-    private void assertProjectDetailsPrepopulatedOk(ProjectMonitoringOfficerViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(MonitoringOfficerViewModel model) {
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectTitle());
         assertEquals(competitionSummary, model.getCompetitionSummary());
@@ -560,7 +560,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     private void assertMonitoringOfficerFormNotPrepopulated(Map<String, Object> modelMap) {
-        ProjectMonitoringOfficerForm form = (ProjectMonitoringOfficerForm) modelMap.get("form");
+        MonitoringOfficerForm form = (MonitoringOfficerForm) modelMap.get("form");
         assertNull(form.getFirstName());
         assertNull(form.getLastName());
         assertNull(form.getEmailAddress());
@@ -568,7 +568,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
     }
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController();
+    protected MonitoringOfficerController supplyControllerUnderTest() {
+        return new MonitoringOfficerController();
     }
 }
