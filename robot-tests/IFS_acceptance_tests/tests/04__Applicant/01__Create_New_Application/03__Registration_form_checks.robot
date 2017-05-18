@@ -19,19 +19,33 @@ Resource          ../../../resources/defaultResources.robot
 Your details: Server-side validations
     [Documentation]    -INFUND-885
     [Tags]    HappyPath
-    When the user enters text to a text field    id=firstName    ${EMPTY}
+    When the user enters text to a text field   id=firstName    ${EMPTY}
     And the user enters text to a text field    id=lastName    ${EMPTY}
     And the user enters text to a text field    id=phoneNumber    ${EMPTY}
     And the user enters text to a text field    id=email    ${invalid_email_no_at}
     And the user enters text to a text field    id=password    ${EMPTY}
-    And the user submits their information
-    Then the user should see an error    Please enter a first name.
-    And the user should see an error    We were unable to create your account
-    And the user should see an error    Please enter a last name.
-    And the user should see an error    Please enter a phone number.
-    And the user should see an error    Please enter a valid email address.
-    And the user should see an error    Please enter your password.
-    And the user should see an error    In order to register an account you have to agree to the Terms and Conditions.
+    And browser validations have been disabled
+    and the user clicks the button/link         css=[name="create-account"]
+    Then the user should see an error           Please enter a first name.
+    And the user should see an error            We were unable to create your account
+    And the user should see an error            Please enter a last name.
+    And the user should see an error            Please enter a phone number.
+    And the user should see an error            Please enter a valid email address.
+    And the user should see an error            Please enter your password.
+
+Your details: client-side password hint validation
+    [Documentation]    -INFUND-9293
+    [Tags]
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=password    ${lower_case_password}
+    And the user moves focus to the element      css=[name="create-account"]
+    Then the user should see the element         css=.list.status [data-minlength-validationstatus][data-valid="true"]
+    And the user should see the element          css=.list.status [data-containsuppercase-validationstatus][data-valid="false"]
+    And the user should see the element          css=.list.status [data-containsnumber-validationstatus][data-valid="true"]
+    When the user enters text to a text field    id=password    ${EMPTY}
+    Then the user should see the element         css=.list.status [data-minlength-validationstatus][data-valid="false"]
+    And the user should see the element          css=.list.status [data-containsnumber-validationstatus][data-valid="false"]
+
 
 Your details: client-side validation
     [Documentation]    -INFUND-885
