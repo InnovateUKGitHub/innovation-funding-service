@@ -893,7 +893,6 @@ Partner can review only the external version of Finance Checks eligibility table
     And the user clicks the button/link     link=Finance checks
     [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
-
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095, INFUND-8778
     [Tags]
@@ -1872,7 +1871,9 @@ project finance approves Viability for
     [Arguments]  ${partner}
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(${partner}) td:nth-child(2) a:contains("Review")
+    Then the user should see the element    jQuery=h2:contains("Credit report")
     And the user selects the checkbox       costs-reviewed
+    When the user should see the element    jQuery=h2:contains("Approve viability")
     Then the user selects the checkbox      project-viable
     And the user moves focus to the element  link=Contact us
     When the user selects the option from the drop-down menu  Green  id=rag-rating
