@@ -97,6 +97,17 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         List<Error> errors = new ArrayList<>();
 
         competition.setName(initialDetailsForm.getTitle());
+        competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
+        competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
+
+        errors.addAll(attemptOpeningMilestoneSave(initialDetailsForm, competition));
+        errors.addAll(attemptAddingInnovationAreasToCompetition(initialDetailsForm, competition));
+
+        return errors;
+    }
+
+    private List<Error> attemptOpeningMilestoneSave(InitialDetailsForm initialDetailsForm, CompetitionResource competition) {
+        List<Error> errors = new ArrayList<>();
 
         if (shouldTryToSaveStartDate(initialDetailsForm)) {
             ZonedDateTime startDate = initialDetailsForm.getOpeningDate();
@@ -105,8 +116,11 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             errors.addAll(saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction()));
         }
 
-        competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
-        competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
+        return errors;
+    }
+
+    private List<Error> attemptAddingInnovationAreasToCompetition(InitialDetailsForm initialDetailsForm, CompetitionResource competition) {
+        List<Error> errors = new ArrayList<>();
 
         List<Long> innovationAreas = initialDetailsForm.getInnovationAreaCategoryIds();
 
@@ -115,9 +129,11 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toList());
             List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
 
-            if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector()) && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
+            if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())
+                    && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 innovationAreas = allInnovationAreasIds;
             }
+
             errors.addAll(checkInnovationAreaData(competition, allInnovationAreas, allInnovationAreasIds,
                     newInnovationAreaIds, initialDetailsForm.isMarkAsCompleteAction()));
         }
@@ -214,7 +230,6 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 		}
 
 	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, openingDate);
-
 
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
         if(milestones.isEmpty()) {

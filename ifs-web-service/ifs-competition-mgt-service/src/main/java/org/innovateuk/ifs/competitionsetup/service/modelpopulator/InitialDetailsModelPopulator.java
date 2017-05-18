@@ -39,12 +39,12 @@ public class InitialDetailsModelPopulator implements CompetitionSetupSectionMode
 	public void populateModel(Model model, CompetitionResource competitionResource) {
 		model.addAttribute("competitionExecutiveUsers", userService.findUserByType(UserRoleType.COMP_ADMIN));
 		model.addAttribute("innovationSectors", categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException());
-		model.addAttribute("innovationAreas", addAllInnovationAreas(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()));
+		model.addAttribute("innovationAreas", addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()));
 		model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
 		model.addAttribute("competitionLeadTechUsers", userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST));
 	}
 
-	private List<InnovationAreaResource> addAllInnovationAreas(List<InnovationAreaResource> innovationAreas) {
+	private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {
         List<InnovationAreaResource> returnList = new ArrayList<>(innovationAreas);
 
 		InnovationAreaResource innovationAreaResource = new InnovationAreaResource();
