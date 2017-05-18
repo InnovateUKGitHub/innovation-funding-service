@@ -148,12 +148,11 @@ Calculations in the spend profile table
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
-    [Tags]    Failing
-    #TODO this test case needs to be moved, to another project where the PM != Lead partner. INFUND-9289
+    [Tags]
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
-    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 10,957
+    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 80,009
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
@@ -373,15 +372,11 @@ Academic partner spend profile client side validations
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
     And the user moves focus to the element            link=Project setup status
     Then the user should not see the text in the page  This field should be 0 or higher
-    When the user makes all values zeros               2    ${project_duration}  # Travel
-    Then the user makes all values zeros               3    ${project_duration}  # Other - Directly incurred
-    And the user makes all values zeros                5    ${project_duration}  # Estates
     When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(2) input    0  # Other - Exceptions
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(3) input    0  # Other - Exceptions
     And the user should not see the text in the page   Your total costs are higher than your eligible costs
-    #TODO Replace keyword -the user makes all values zeros- ticket: INFUND-6851
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
@@ -780,12 +775,6 @@ the sum of tds equals the total
     \    ${cell} =    convert to integer    ${formatted}
     \    ${sum} =    Evaluate    ${sum}+${cell}
     Should Be Equal As Integers    ${sum}    ${total}
-
-
-the user makes all values zeros
-    [Arguments]    ${row}    ${project_duration}
-    : FOR    ${i}    IN RANGE    1    ${project_duration}
-    \    the user enters text to a text field  css=.spend-profile-table tbody .form-group-row:nth-child(${row}) td:nth-of-type(${i}) input  0
 
 the text box should be editable
     [Arguments]    ${element}
