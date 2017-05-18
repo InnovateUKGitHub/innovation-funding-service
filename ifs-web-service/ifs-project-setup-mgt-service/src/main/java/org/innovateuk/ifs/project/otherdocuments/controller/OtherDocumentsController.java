@@ -54,7 +54,7 @@ public class OtherDocumentsController {
     @GetMapping
     public String viewOtherDocumentsPage(Model model, @ModelAttribute(name = FORM_ATTR, binding = false) OtherDocumentsForm form,
                                          @PathVariable("projectId") Long projectId,
-                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                         UserResource loggedInUser) {
         return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
     }
 
@@ -105,7 +105,7 @@ public class OtherDocumentsController {
                                                BindingResult bindingResult,
                                                ValidationHandler validationhandler,
                                                @PathVariable("projectId") Long projectId,
-                                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                               UserResource loggedInUser) {
 
         return validationhandler.performActionOrBindErrorsToField("approved",
                 () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
