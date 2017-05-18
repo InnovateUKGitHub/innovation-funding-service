@@ -440,9 +440,9 @@ Partners are not able to see the spend profile summary page
     [Documentation]    INFUND-3766
     [Tags]
     Given log in as a different user               ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    ${403_error_message}
     Given log in as a different user               ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    ${403_error_message}
 
 Project Manager can view combined spend profile
     [Documentation]    INFUND-3767
@@ -757,7 +757,7 @@ Project Finance still has a link to the spend profile after approval
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
     [Tags]
-    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    ${403_error_message}
 
 
 *** Keywords ***

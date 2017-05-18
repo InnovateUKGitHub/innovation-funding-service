@@ -396,7 +396,7 @@ Non lead partner not eligible for funding
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
-    When The user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details    You do not have the necessary permissions for your request
+    When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
     When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user clicks the button/link    link=status of my partners
     Then the user should be redirected to the correct page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
@@ -618,8 +618,8 @@ Non-lead partner cannot change any project details
     And the user should see the text in the page    Project address
     And the user should see the text in the page    1, Sheffield, S1 2ED
     And the user should not see the element    link=Project address
-    When the user navigates to the page and gets a custom error message    ${project_start_date_page}    You do not have the necessary permissions for your request
-    When the user navigates to the page and gets a custom error message    ${project_address_page}    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message    ${project_start_date_page}    ${403_error_message}
+    When the user navigates to the page and gets a custom error message    ${project_address_page}    ${403_error_message}
 
 Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856

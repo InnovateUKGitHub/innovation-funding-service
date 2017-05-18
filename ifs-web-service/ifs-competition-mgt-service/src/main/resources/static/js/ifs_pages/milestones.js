@@ -26,7 +26,7 @@ IFS.competitionManagement.milestones = (function () {
       jQuery(s.milestonesForm + ' .day input').each(function (index, value) {
         var field = jQuery(value)
         if (index === 0) {
-          IFS.core.formValidation.checkDate(field, true)
+          IFS.core.formValidation.checkDate(field)
         }
         IFS.competitionManagement.milestones.milestonesSetFutureDate(field)
       })
@@ -46,7 +46,7 @@ IFS.competitionManagement.milestones = (function () {
           nextRow.attr({'data-future-date': date + (time !== undefined ? '-' + time : '')})
           if (jQuery.trim(date.length) !== 0) {
             var input = nextRow.find('.day input')
-            IFS.core.formValidation.checkDate(input, true)
+            IFS.core.formValidation.checkDate(input)
           }
         }
       }, 0)

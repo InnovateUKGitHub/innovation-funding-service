@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * View model to back the Partners' Assigned Monitoring Officer page
  */
-public class ProjectMonitoringOfficerViewModel {
+public class MonitoringOfficerViewModel {
 
     private Long projectId;
     private Long applicationId;
@@ -19,7 +19,7 @@ public class ProjectMonitoringOfficerViewModel {
     private String monitoringOfficerEmailAddress;
     private String monitoringOfficerPhoneNumber;
 
-    public ProjectMonitoringOfficerViewModel(ProjectResource project, Optional<MonitoringOfficerResource> monitoringOfficer) {
+    public MonitoringOfficerViewModel(ProjectResource project, Optional<MonitoringOfficerResource> monitoringOfficer) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
