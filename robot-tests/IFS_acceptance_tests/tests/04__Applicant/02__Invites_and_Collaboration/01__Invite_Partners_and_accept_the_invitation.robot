@@ -31,7 +31,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
-${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3_NUMBER}/contributors/invite?newApplication
+
 
 *** Test Cases ***
 Application team page
@@ -145,8 +145,8 @@ Valid invitation submit
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
     [Tags]
-    When the user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}
     Then the user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
+
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
