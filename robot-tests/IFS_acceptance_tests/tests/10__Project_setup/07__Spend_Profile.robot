@@ -151,7 +151,7 @@ Lead Partner can see Spend profile summary
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
-    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 80,009
+    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
@@ -383,7 +383,7 @@ Academic partner edits spend profile and this updates on the table
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
-    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    0
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    1
 
 Academic partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852

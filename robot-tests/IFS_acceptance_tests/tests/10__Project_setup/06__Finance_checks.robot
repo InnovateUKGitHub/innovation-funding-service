@@ -1122,7 +1122,7 @@ Project finance user can amend all sections of eligibility for lead
 Project Finance user can edit and save Lead Partner's 20% of labour costs option
     [Documentation]     INFUND-7577
     [Tags]
-    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs”)
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     Then the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 12,120")
@@ -1273,7 +1273,7 @@ Project finance user can amend all sections of eligibility for partner
 Project Finance user can edit and save partner's 20% of labour costs option
     [Documentation]     INFUND-7577
     [Tags]
-    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs”)
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     Then the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 11,956")
@@ -1550,6 +1550,9 @@ Project finance user can view Lead partner's changes for Labour
 Project finance user can view Partner's changes to finances
     [Documentation]    INFUND-4837
     [Tags]
+    Given the user clicks the button/link       link=Finance checks
+    When the user clicks the button/link        css=a.eligibility-2
+    And the user clicks the button/link        link=View changes to finances
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     When the categories are verified for Project finances section       1   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
