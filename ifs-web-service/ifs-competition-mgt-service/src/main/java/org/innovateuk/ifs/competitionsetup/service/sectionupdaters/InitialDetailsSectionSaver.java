@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
+import org.innovateuk.ifs.competitionsetup.utils.FilteredNonIfsSectors;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.OPEN_SECTOR_ID;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -115,7 +115,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toList());
             List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
 
-            if(OPEN_SECTOR_ID.equals(competition.getInnovationSector()) && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
+            if(FilteredNonIfsSectors.OPEN_SECTOR.getId().equals(competition.getInnovationSector()) && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 innovationAreas = allInnovationAreasIds;
             }
             errors.addAll(checkInnovationAreaData(competition, allInnovationAreas, allInnovationAreasIds,
@@ -133,7 +133,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                                                 List<InnovationAreaResource> allInnovationAreas,
                                                 List<Long> allInnovationAreasIds,
                                                 List<Long> innovationAreaIds, boolean isMarkAsComplete) {
-        if(OPEN_SECTOR_ID.equals(competition.getInnovationSector())) {
+        if(FilteredNonIfsSectors.OPEN_SECTOR.getId().equals(competition.getInnovationSector())) {
             if(!innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !allInnovationAreasIds.contains(areaId));
 
