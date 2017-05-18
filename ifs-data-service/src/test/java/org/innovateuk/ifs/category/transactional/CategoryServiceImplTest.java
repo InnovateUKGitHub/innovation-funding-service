@@ -106,4 +106,32 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(innovationAreaMapperMock).mapToResource(innovationAreas);
         inOrder.verifyNoMoreInteractions();
     }
+
+    @Test
+    public void getInnovationAreasByOpenSector() {
+        List<InnovationArea> innovationAreas = newInnovationArea().build(2);
+        InnovationSector innovationSector = newInnovationSector()
+                .withChildren(innovationAreas)
+                .withName("Open")
+                .build();
+
+        long sectorId = 1L;
+
+        List<InnovationAreaResource> expectedInnovationAreaResources = newInnovationAreaResource().build(2);
+
+        when(innovationSectorRepositoryMock.findOne(sectorId)).thenReturn(innovationSector);
+        when(innovationAreaRepositoryMock.findAllByOrderByPriorityAsc()).thenReturn(innovationAreas);
+        when(innovationAreaMapperMock.mapToResource(refEq(innovationAreas))).thenReturn(expectedInnovationAreaResources);
+
+        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreasBySector(sectorId).getSuccessObject();
+
+        assertEquals(expectedInnovationAreaResources, actualInnovationAreaResources);
+
+        verify(innovationSectorRepositoryMock, times(1)).findOne(sectorId);
+
+        InOrder inOrder = inOrder(innovationAreaRepositoryMock, innovationAreaMapperMock);
+        inOrder.verify(innovationAreaRepositoryMock).findAllByOrderByPriorityAsc();
+        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationAreas);
+        inOrder.verifyNoMoreInteractions();
+    }
 }
