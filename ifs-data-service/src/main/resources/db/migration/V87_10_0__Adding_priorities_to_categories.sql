@@ -8,7 +8,7 @@ UPDATE category SET priority = 2 WHERE NAME='Emerging and enabling technologies'
 UPDATE category SET priority = 3 WHERE NAME='Infrastructure systems';
 
 -- RESEARCH CATEGORIES
-UPDATE category SET priority = 0 WHERE NAME='Technical feasibility';
+UPDATE category SET priority = 0 WHERE NAME='Feasibility studies';
 UPDATE category SET priority = 1 WHERE NAME='Industrial research';
 UPDATE category SET priority = 2 WHERE NAME='Experimental development';
 
