@@ -86,6 +86,7 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         List<InnovationArea> innovationAreas = newInnovationArea().build(2);
         InnovationSector innovationSector = newInnovationSector()
                 .withChildren(innovationAreas)
+                .withName("Sector name")
                 .build();
 
         long sectorId = 1L;
