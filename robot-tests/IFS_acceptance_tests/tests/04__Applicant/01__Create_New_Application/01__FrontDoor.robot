@@ -5,7 +5,7 @@ Documentation     INFUND-6923 Create new public Competition listings page for Ap
 Suite Setup       The guest user opens the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource       ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 Guest user navigates to Front Door
