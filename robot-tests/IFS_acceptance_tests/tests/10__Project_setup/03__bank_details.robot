@@ -142,7 +142,7 @@ Bank details submission
     Given the user submits the bank account details   00000123    000004 
     Then the user should see the element              jQuery=.error-summary-list:contains("Bank details cannot be validated.")
     When the user enters text to a text field         name=accountNumber  ${account_two}
-    And the user enters text to a text field          name=sortCode  ${shortCode_two}
+    And the user enters text to a text field          name=sortCode  ${sortCode_two}
     When the user clicks the button/link              jQuery=.button:contains("Submit bank account details")
     And the user clicks the button/link               jquery=button:contains("Cancel")
     And the user should not see the text in the page  The bank account details below are being reviewed
@@ -164,16 +164,16 @@ Submission of bank details for academic user
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
-    When the user clicks the button/link           link=${PS_BD_APPLICATION_TITLE}
+    When the user clicks the button/link           jQuery=.projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
     Then the user should see the element           jQuery=li.require-action:contains("Bank details")
     When the user clicks the button/link           link=status of my partners
-    Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
-    And the user should see the text in the page   Project team status
+    Then the user should be redirected to the correct page  ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
+    And the user should see the element            jQuery=h1:contains("Project team status")
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
-    When the user submits the bank account details along with the organisation address  00000123    000004
-    Then the user views the error response from the stub
+    When partner submits his bank details          ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
+    Then the user should see the element           jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
     When the user enters text to a text field      name=accountNumber   ${account_one}
     And the user enters text to a text field       name=sortCode  ${sortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
@@ -213,18 +213,11 @@ User sees error response for invalid bank details for non-lead partner
     [Tags]    HappyPath
     #TODO After completion of INFUND-6090: Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    When the user clicks the button/link           link=${PS_BD_APPLICATION_TITLE}
-    Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
-    And the user clicks the button/link            link=status of my partners
-    Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
-    And the user should see the text in the page   Project team status
-    And the user should see the element            jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3)
-    And the user clicks the button/link            link=Project setup status
-    Then the user should see the element           link=Bank details
-    When the user clicks the button/link           link=Bank details
-    Then the user should see the text in the page  Bank account
-    When the user submits the bank account details along with the organisation address      00000123    000004   # Stub is configured to return error response for these values
-    Then the user views the error response from the stub
+    When the user clicks the button/link           jQuery=.projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
+    Then the user clicks the button/link           link=Bank details
+    When partner submits his bank details  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
+    # Stub is configured to return error response for these values
+    Then the user should see the element           jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
 
 Non lead partner submits bank details
     [Documentation]    INFUND-3010, INFUND-6018
@@ -332,8 +325,6 @@ finance contacts are submitted by all users
     logout as user
     user submits his finance contacts  ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${Vitruvius_Id}
 
-
-
 user submits his finance contacts
     [Arguments]  ${user}  ${id}
     the guest user inserts user email & password    ${user}    ${short_password}
@@ -344,12 +335,12 @@ user submits his finance contacts
 
 
 the project finance user downloads the bank details
-    the user downloads the file    ${internal_finance_credentials["email"]}    ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export    ${DOWNLOAD_FOLDER}/bank_details.csv
+    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export  ${DOWNLOAD_FOLDER}/bank_details.csv
 
 the user opens the excel and checks the content
     ${contents}=                    read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${vitruvius_details}=               get from list  ${contents}  7
-    ${vitruvius}=                       get from list  ${vitruvius_details}  0
+    ${vitruvius_details}=           get from list  ${contents}  7
+    ${vitruvius}=                   get from list  ${vitruvius_details}  0
     should be equal                 ${vitruvius}  ${Vitruvius_Name}
     ${Armstrong_Butler_details}=    get from list  ${contents}  8
     ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0
@@ -363,4 +354,4 @@ the user opens the excel and checks the content
     ${bank_account_number}=         get from list  ${vitruvius_details}  10
     should be equal                 ${bank_account_number}  ${account_two}
     ${bank_account_sort_code}=      get from list  ${vitruvius_details}  11
-    should be equal                 ${bank_account_sort_code}  ${shortCode_two}
+    should be equal                 ${bank_account_sort_code}  ${sortCode_two}
