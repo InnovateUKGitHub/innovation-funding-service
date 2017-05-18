@@ -99,7 +99,7 @@ Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{collaborator1_credentials}
-    When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
@@ -313,7 +313,7 @@ Invited project manager registration flow
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
     [Tags]  Email
-    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project Manager
     Then the user should see the text in the page    Bob Jones
@@ -484,7 +484,7 @@ Invited finance contact registration flow
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]  Email
-    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Empire Ltd
     Then the user should see the text in the page    John Smith

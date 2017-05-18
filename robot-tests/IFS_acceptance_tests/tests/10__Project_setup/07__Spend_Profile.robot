@@ -104,7 +104,7 @@ Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    Given the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
@@ -252,7 +252,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Documentation]    INFUND-4428
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     And the user should see the element             jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     Then the user should see the element            link = Monitoring Officer
@@ -266,7 +266,7 @@ Non-lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
@@ -313,7 +313,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     [Documentation]    INFUND-3767, INFUND-6138
     [Tags]
     [Setup]    log in as a different user       ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    Given the user clicks the button/link       link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link       link=${PS_SP_APPLICATION_TITLE}
     And the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
@@ -327,7 +327,7 @@ Academic partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link            link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
@@ -417,7 +417,7 @@ Project Manager can view partners' spend profiles
     [Documentation]    INFUND-3767, INFUND-3766, INFUND-5609
     [Tags]    HappyPath
     [Setup]    log in as a different user           ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
+    Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link            link=Spend profile
     Then the user should not see an error in the page
     Then the user clicks the button/link            link=${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}
@@ -524,16 +524,16 @@ Partners can see the Spend Profile section completed
     [Documentation]    INFUND-3767,INFUND-3766
     [Tags]
     Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
-    And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.waiting:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
     Given Log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    And the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
@@ -631,7 +631,7 @@ Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
     [Tags]
     Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
@@ -641,12 +641,12 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
     [Documentation]    INFUND-7422
     [Tags]
     Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
     Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
@@ -654,7 +654,7 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
 Lead partner no longer has the 'submitted' view of the spend profiles
     [Documentation]    INFUND-6977, INFUND-7422
     Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     And the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
@@ -677,7 +677,7 @@ Lead partner can edit own spend profile and mark as complete
 Industrial partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
@@ -694,7 +694,7 @@ Industrial partner receives edit rights and can submit their spend profile
 Academic partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
@@ -832,8 +832,8 @@ partner submits his bank details
     [Arguments]  ${email}
     log in as a different user            ${email}    ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  ${account_number}
-    the user enters text to a text field  id=bank-sort-code  ${sort_code}
+    the user enters text to a text field  id=bank-acc-number  ${account_one}
+    the user enters text to a text field  id=bank-sort-code  ${sortCode_one}
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")

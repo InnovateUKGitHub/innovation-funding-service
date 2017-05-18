@@ -59,7 +59,7 @@ Bank details page
     [Documentation]    INFUND-3010, INFUND-6018, INFUND-7173
     [Tags]    HappyPath
     Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
-    When the user clicks the button/link    link=${PS_BD_APPLICATION_HEADER}
+    When the user clicks the button/link    link=${PS_BD_APPLICATION_TITLE}
     Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
     When the user clicks the button/link    link=status of my partners
     Then the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
@@ -164,7 +164,7 @@ Submission of bank details for academic user
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
-    When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
+    When the user clicks the button/link           link=${PS_BD_APPLICATION_TITLE}
     Then the user should see the element           jQuery=li.require-action:contains("Bank details")
     When the user clicks the button/link           link=status of my partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
@@ -174,8 +174,8 @@ Submission of bank details for academic user
     And the user clicks the button/link            link=Bank details
     When the user submits the bank account details along with the organisation address  00000123    000004
     Then the user views the error response from the stub
-    When the user enters text to a text field      name=accountNumber   ${account_number}
-    And the user enters text to a text field       name=sortCode  ${sort_code}
+    When the user enters text to a text field      name=accountNumber   ${account_one}
+    And the user enters text to a text field       name=sortCode  ${sortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
     And the user enters text to a text field       id=addressForm.postcodeInput  BS14NT
     And the user clicks the button/link            id=postcode-lookup
@@ -213,7 +213,7 @@ User sees error response for invalid bank details for non-lead partner
     [Tags]    HappyPath
     #TODO After completion of INFUND-6090: Update with new Bank account pair
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
+    When the user clicks the button/link           link=${PS_BD_APPLICATION_TITLE}
     Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
     And the user clicks the button/link            link=status of my partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
@@ -229,8 +229,8 @@ User sees error response for invalid bank details for non-lead partner
 Non lead partner submits bank details
     [Documentation]    INFUND-3010, INFUND-6018
     [Tags]    HappyPath
-    When the user enters text to a text field      name=accountNumber  ${account_number}
-    Then the user enters text to a text field      name=sortCode  ${sort_code}
+    When the user enters text to a text field      name=accountNumber  ${account_one}
+    Then the user enters text to a text field      name=sortCode  ${sortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
     Then the user enters text to a text field      id=addressForm.postcodeInput  BS14NT
     And the user clicks the button/link            id=postcode-lookup
@@ -323,8 +323,6 @@ the user submits the bank account details
     the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link    jQuery=.button:contains("Submit")
 
-
-
 finance contacts are submitted by all users
     the guest user opens the browser
     the user navigates to the page    ${server}
@@ -357,7 +355,7 @@ the user opens the excel and checks the content
     ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0
     should be equal                 ${Armstrong_Butler}  ${Armstrong_Butler_Name}
     ${application_number}=          get from list  ${vitruvius_details}  1
-    should be equal                 ${application_number}  ${PS_BD_APPLICATION_NUMBER}
+    should be equal                 ${application_number}  ${PS_BD_APPLICATION_NO}
     ${postcode}=                    get from list  ${vitruvius_details}  8
     should be equal                 ${postcode}  CH64 3RU
     ${bank_account_name}=           get from list  ${vitruvius_details}  9

@@ -59,9 +59,7 @@ ${Zooveo_Name}     Zooveo
 ${PS_SP_Competition_Id}         10
 ${PS_SP_Competition_Name}       Rolling stock future developments
 ${PS_SP_APPLICATION_NO}         78
-${PS_SP_APPLICATION_NUMBER}     78
 ${PS_SP_APPLICATION_TITLE}      Point control and automated monitoring
-${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_TITLE}
 ${PS_SP_APPLICATION_PROJECT}    9
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_ID}    ${Katz_Id}
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}  ${Katz_Name}
@@ -81,9 +79,7 @@ ${Armstrong_Butler_Name}     Armstrong & Butler Ltd
 ${PS_BD_Competition_Id}         10
 ${PS_BD_Competition_Name}       Rolling stock future developments
 ${PS_BD_APPLICATION_NO}         118
-${PS_BD_APPLICATION_NUMBER}     118
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
-${PS_BD_APPLICATION_HEADER}     ${PS_BD_APPLICATION_TITLE}
 ${PS_BD_APPLICATION_PROJECT}    8
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_ID}    ${Vitruvius_Id}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Vitruvius_Name}
@@ -109,9 +105,7 @@ ${Wikivu_Name}    Wikivu
 ${PS_EF_Competition_Id}         10
 ${PS_EF_Competition_Name}       Rolling stock future developments
 ${PS_EF_APPLICATION_NO}         117
-${PS_EF_APPLICATION_NUMBER}     117
 ${PS_EF_APPLICATION_TITLE}      New materials for lighter stock
-${PS_EF_APPLICATION_HEADER}     ${PS_EF_APPLICATION_TITLE}
 ${PS_EF_APPLICATION_PROJECT}    7
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_ID}    ${Ntag_Id}
 ${PS_EF_APPLICATION_LEAD_ORGANISATION_NAME}  ${Ntag_Name}
@@ -126,7 +120,6 @@ ${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
 ${PROJECT_SETUP_APPLICATION_1}    113
 ${PROJECT_SETUP_APPLICATION_1_NUMBER}    113
 ${PROJECT_SETUP_APPLICATION_1_TITLE}    Magic material
-${PROJECT_SETUP_APPLICATION_1_HEADER}    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 ${PROJECT_SETUP_APPLICATION_1_PROJECT}    5
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    ${EMPIRE_LTD_ID}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
@@ -158,8 +151,10 @@ ${internal_spend_profile_approval}      ${server}/project-setup-management/proje
 ${ELBOW_GREASE_PROJECT_ID}  4
 
 #Bank details
-${account_number}  51406795
-${sort_code}       404745
+${account_one}   51406795
+${sortCode_one}   404745
+${account_two}   12345677
+${sortCode_two}  000004
 
 *** Keywords ***
 project finance submits monitoring officer
