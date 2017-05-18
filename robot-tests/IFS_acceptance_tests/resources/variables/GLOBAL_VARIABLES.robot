@@ -141,10 +141,12 @@ ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATIO
 #General error messages
 ${403_error_message}    You do not have the necessary permissions for your request
 ${404_error_message}    Please check the web address or search term you entered for any errors
+${500_error_message}    something went wrong
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
 ${too_large_pdf_validation_error}    the size of file or request being submitted is too large
-${empty_field_warning_message}    This field cannot be left blank.
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
+${empty_field_warning_message}    This field cannot be left blank.
+
 
 # Database variables
 ${database_name}    ifs
