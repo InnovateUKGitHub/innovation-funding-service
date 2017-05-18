@@ -15,10 +15,7 @@ Guest user log-in
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
     Wait Until Page Contains Without Screenshots    dashboard
-    Page should not contain    Error
-    Page Should Not Contain    ${500_error_message}
-    Page Should Not Contain    ${404_error_message}
-    Page Should Not Contain    ${403_error_message}
+    the user should not see an error in the page
 
 Log in as a different user
     [Arguments]    ${email}    ${password}
@@ -35,10 +32,7 @@ Invited guest user log in
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
     Wait Until Page Contains Without Screenshots    dashboard
-    Page should not contain    Error
-    Page Should Not Contain    ${500_error_message}
-    Page Should Not Contain    ${404_error_message}
-    Page Should Not Contain    ${403_error_message}
+    the user should not see an error in the page
 
 The guest user inserts user email & password
     [Arguments]    ${USERNAME}    ${PSW}

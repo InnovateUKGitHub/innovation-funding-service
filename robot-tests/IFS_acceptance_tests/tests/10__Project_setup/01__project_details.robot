@@ -396,7 +396,7 @@ Non lead partner not eligible for funding
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
-    When The user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details    ${403_error_message}
+    When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
     When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user clicks the button/link    link=status of my partners
     Then the user should be redirected to the correct page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
