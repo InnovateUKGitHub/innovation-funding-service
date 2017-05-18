@@ -6,8 +6,6 @@ import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 
-import java.util.Optional;
-
 import static org.junit.Assert.assertSame;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -59,8 +57,8 @@ public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnit
         final Long fileId = 912L;
         ByteArrayResource expected = new ByteArrayResource("1u6536748".getBytes());
         setupGetWithRestResultExpectations(baseURL + "/download/" + fileId, ByteArrayResource.class, expected, OK);
-        final Optional<ByteArrayResource> response = service.download(fileId).getSuccessObject();
-        assertSame(expected, response.get());
+        final ByteArrayResource response = service.download(fileId).getSuccessObject();
+        assertSame(expected, response);
     }
 
 }

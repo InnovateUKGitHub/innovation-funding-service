@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 /**
  * Transactional and secure service for Project processing work
  */
-public interface ProjectMonitoringOfficerService {
+public interface MonitoringOfficerService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId);
