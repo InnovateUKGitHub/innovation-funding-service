@@ -90,7 +90,6 @@ Funding level can be re-entered, and this saves correctly
 Adding more funding rows
     [Documentation]    INFUND-6895, INFUND-8044
     [Tags]
-    # TODO INFUND-8706
     When remove previous rows  jQuery=tr:first-of-type button:contains("Remove")
     Then the user adds more rows in other funding
 
@@ -105,7 +104,6 @@ Mark other funding as complete
 Read only view of the other funding
     [Documentation]    INFUND-6895, INFUND-8044
     [Tags]
-    # TODO INFUND-8706
     Given the user clicks the button/link  link=Your funding
     Then the user should see the element   jQuery=dt:contains("Funding level") + dd:contains("43")
     And the user clicks the button/link    jQuery=th:contains("uncle") ~ td:contains("£ 15,000")
