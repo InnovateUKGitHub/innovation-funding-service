@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.monitoringofficer.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
-import org.innovateuk.ifs.project.monitoringofficer.controller.ProjectMonitoringOfficerController;
+import org.innovateuk.ifs.project.monitoringofficer.controller.MonitoringOfficerController;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.SaveMonitoringOfficerResult;
 import org.junit.Before;
@@ -29,7 +29,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectMonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<ProjectMonitoringOfficerController> {
+public class MonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<MonitoringOfficerController> {
 
     private RestDocumentationResultHandler document;
 
@@ -49,8 +49,8 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
     }
 
     @Override
-    protected ProjectMonitoringOfficerController supplyControllerUnderTest() {
-        return new ProjectMonitoringOfficerController();
+    protected MonitoringOfficerController supplyControllerUnderTest() {
+        return new MonitoringOfficerController();
     }
 
     @Before
@@ -73,7 +73,7 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
                 .withPhoneNumber("078323455")
                 .build();
 
-        when(projectMonitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+        when(monitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE)));
 
 
@@ -88,10 +88,10 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
                         requestFields(monitoringOfficerResourceFields)
                 ));
 
-        verify(projectMonitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
         // Ensure that notification is not sent when there is error whilst saving
-        verify(projectMonitoringOfficerServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+        verify(monitoringOfficerServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -100,7 +100,7 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
 
         Long projectId = 1L;
 
-        when(projectMonitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
+        when(monitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED)));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -114,10 +114,10 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
                         requestFields(monitoringOfficerResourceFields)
                 ));
 
-        verify(projectMonitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
 
         // Ensure that notification is not sent when there is error whilst saving
-        verify(projectMonitoringOfficerServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+        verify(monitoringOfficerServiceMock, never()).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -127,8 +127,8 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
         Long projectId = 1L;
 
         SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
-        when(projectMonitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
-        when(projectMonitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
+        when(monitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
+        when(monitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
@@ -142,8 +142,8 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
                         requestFields(monitoringOfficerResourceFields)
                 ));
 
-        verify(projectMonitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectMonitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+        verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(monitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 
@@ -153,8 +153,8 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
         Long projectId = 1L;
 
         SaveMonitoringOfficerResult successResult = new SaveMonitoringOfficerResult();
-        when(projectMonitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
-        when(projectMonitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
+        when(monitoringOfficerServiceMock.saveMonitoringOfficer(projectId, monitoringOfficerResource)).thenReturn(serviceSuccess(successResult));
+        when(monitoringOfficerServiceMock.notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource)).
                 thenReturn(serviceSuccess());
 
 
@@ -169,8 +169,8 @@ public class ProjectMonitoringOfficerControllerDocumentation extends BaseControl
                         requestFields(monitoringOfficerResourceFields)
                 ));
 
-        verify(projectMonitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
-        verify(projectMonitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
+        verify(monitoringOfficerServiceMock).saveMonitoringOfficer(projectId, monitoringOfficerResource);
+        verify(monitoringOfficerServiceMock).notifyStakeholdersOfMonitoringOfficerChange(monitoringOfficerResource);
 
     }
 }

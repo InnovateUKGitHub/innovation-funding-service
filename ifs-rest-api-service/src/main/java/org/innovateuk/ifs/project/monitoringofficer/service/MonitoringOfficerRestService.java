@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.monitoringofficer.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 
-public interface ProjectMonitoringOfficerRestService {
+public interface MonitoringOfficerRestService {
 
     RestResult<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId);
 

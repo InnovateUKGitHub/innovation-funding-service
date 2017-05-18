@@ -77,7 +77,6 @@ include::{snippets}/application/application-ready-for-submit/path-parameters.ado
 
 ==== Response
 include::{snippets}/application/application-ready-for-submit/http-response.adoc[]
-include::{snippets}/application/application-ready-for-submit/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/application-ready-for-submit/curl-request.adoc[]

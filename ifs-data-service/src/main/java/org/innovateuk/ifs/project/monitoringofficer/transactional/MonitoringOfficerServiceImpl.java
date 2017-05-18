@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class ProjectMonitoringOfficerServiceImpl extends AbstractProjectServiceImpl implements ProjectMonitoringOfficerService {
+public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl implements MonitoringOfficerService {
 
     @Autowired
     private MonitoringOfficerMapper monitoringOfficerMapper;
@@ -140,10 +140,10 @@ public class ProjectMonitoringOfficerServiceImpl extends AbstractProjectServiceI
 
         ServiceResult<Void> moAssignedEmailSendResult = projectEmailService.sendEmail(singletonList(moTarget),
                 createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager),
-                ProjectMonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED);
+                MonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED);
         ServiceResult<Void> pmAssignedEmailSendResult = projectEmailService.sendEmail(singletonList(pmTarget),
                 createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager),
-                ProjectMonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER);
+                MonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER);
 
         return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult, pmAssignedEmailSendResult));
     }
