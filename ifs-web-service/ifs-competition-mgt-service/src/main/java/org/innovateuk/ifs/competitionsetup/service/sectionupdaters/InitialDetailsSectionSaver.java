@@ -236,15 +236,11 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
         if("openingDate".equals(fieldName)) {
             try {
-                String[] dateParts = value.split("-");
-                ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(
-                        Integer.parseInt(dateParts[2]),
-                        Integer.parseInt(dateParts[1]),
-                        Integer.parseInt(dateParts[0]));
+                ZonedDateTime startDate = parseDate(value);
+
                 competitionResource.setStartDate(startDate);
-
-
                 List<Error> errors = saveOpeningDateAsMilestone(startDate, competitionResource.getId(), false);
+
                 if(!errors.isEmpty()) {
                     return serviceFailure(errors);
                 } else {
@@ -254,23 +250,45 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 LOG.error(e.getMessage());
                 return serviceFailure(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save"));
             }
-        } else if( fieldName.equals("autosaveInnovationAreaIds")) {
+        } else if(fieldName.equals("autosaveInnovationAreaIds")) {
             processInnovationAreas(value, competitionResource);
             return competitionService.update(competitionResource);
         }
         return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
     }
 
-    private void processInnovationAreas(String inputValue, CompetitionResource competitionResource) {
-        List<String> valueList = Arrays.asList(inputValue.split("\\s*,\\s*"));
+    private ZonedDateTime parseDate(String value) {
+        String[] dateParts = value.split("-");
+        ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(
+                Integer.parseInt(dateParts[2]),
+                Integer.parseInt(dateParts[1]),
+                Integer.parseInt(dateParts[0]));
+
+        return startDate;
+    }
+
+    private Set<Long> parseInnovationAreaIds(String commaSeparatedIds) {
+        List<String> valueList = Arrays.asList(commaSeparatedIds.split("\\s*,\\s*"));
         Set<Long> valueSet = valueList.stream().map(Long::parseLong).collect(Collectors.toSet());
 
-        if(valueSet.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
-            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
-            valueSet = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toSet());
+        return valueSet;
+    }
+
+    private Set<Long> getAllInnovationAreaIds() {
+        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+        return getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toSet());
+    }
+
+    private void processInnovationAreas(String commaSeparatedIds, CompetitionResource competitionResource) {
+        Set<Long> innovationAreaIds = parseInnovationAreaIds(commaSeparatedIds);
+
+        boolean allInnovationAreaIsSelected = innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS);
+
+        if(allInnovationAreaIsSelected) {
+            innovationAreaIds = getAllInnovationAreaIds();
         }
 
-        competitionResource.setInnovationAreas(valueSet);
+        competitionResource.setInnovationAreas(innovationAreaIds);
     }
 
 	@Override

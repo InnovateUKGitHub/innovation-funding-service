@@ -23,7 +23,7 @@
                 <th:block
                     th:include="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
-                    cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
+                    innovationAreas=competition.innovationAreaNames,
                     cell4=${competition.numberOfApplications + ' applicants'}">
                 </th:block>
             </li>
@@ -38,7 +38,7 @@
                 <th:block
                         th:include="competition/dashboard :: dashboard-row"
                         th:with="competition=${competition},
-                    cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
+                    innovationAreas=competition.innovationAreaNames,
                     cell4=${competition.numberOfApplications + ' applicants'}">
                 </th:block>
             </li>
@@ -53,7 +53,7 @@
                 <th:block
                         th:include="competition/dashboard :: dashboard-row"
                         th:with="competition=${competition},
-                    cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
+                    innovationAreas=competition.innovationAreaNames,
                     cell4=${competition.numberOfApplications + ' applicants'}">
                 </th:block>
             </li>
@@ -69,7 +69,7 @@
                 <th:block
                         th:include="competition/dashboard :: dashboard-row"
                         th:with="competition=${competition},
-                    cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
+                    innovationAreas=competition.innovationAreaNames,
                     cell4=${competition.numberOfApplications + ' applicants'}">
                 </th:block>
             </li>
@@ -85,7 +85,7 @@
                 <th:block
                         th:include="competition/dashboard :: dashboard-row"
                         th:with="competition=${competition},
-                    cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
+                    innovationAreas=competition.innovationAreaNames,
                     cell4=${competition.numberOfApplications + ' applicants'}">
                 </th:block>
             </li>
