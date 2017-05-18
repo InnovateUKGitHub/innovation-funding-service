@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +90,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@Ignore
+//@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
@@ -504,9 +503,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(competitionLine.name));
 
         List<UnaryOperator<ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
-                applicationLine -> builder ->
-                        createApplicationFromCsv(builder, applicationLine).
-                                withQuestionResponses(questionResponsesFromCsv(competitionLine.name, applicationLine.title, applicationLine.leadApplicant)));
+                applicationLine -> builder -> createApplicationFromCsv(builder, applicationLine, competitionLine));
 
         if (applicationBuilders.isEmpty()) {
             basicCompetitionInformation.build();
@@ -529,30 +526,27 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private List<UnaryOperator<ResponseDataBuilder>> questionResponsesFromCsv(String competitionName, String applicationName, String leadApplicant) {
-
-        List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
-                simpleFilter(questionResponseLines, r -> r.competitionName.equals(competitionName) && r.applicationName.equals(applicationName));
+    private List<UnaryOperator<QuestionResponseDataBuilder>> questionResponsesFromCsv(String leadApplicant, List<ApplicationQuestionResponseLine> responsesForApplication) {
 
         return simpleMap(responsesForApplication, line -> baseBuilder -> {
 
             String answeringUser = !isBlank(line.answeredBy) ? line.answeredBy : (!isBlank(line.assignedTo) ? line.assignedTo : leadApplicant);
 
-            UnaryOperator<ResponseDataBuilder> withQuestion = builder -> builder.forQuestion(line.questionName);
+            UnaryOperator<QuestionResponseDataBuilder> withQuestion = builder -> builder.forQuestion(line.questionName);
 
-            UnaryOperator<ResponseDataBuilder> answerIfNecessary = builder ->
+            UnaryOperator<QuestionResponseDataBuilder> answerIfNecessary = builder ->
                     !isBlank(line.value) ? builder.withAssignee(answeringUser).withAnswer(line.value, answeringUser)
                             : builder;
 
-            UnaryOperator<ResponseDataBuilder> uploadFilesIfNecessary = builder ->
+            UnaryOperator<QuestionResponseDataBuilder> uploadFilesIfNecessary = builder ->
                     !line.filesUploaded.isEmpty() ?
                             builder.withAssignee(answeringUser).withFileUploads(line.filesUploaded, answeringUser) :
                             builder;
 
-            UnaryOperator<ResponseDataBuilder> assignIfNecessary = builder ->
+            UnaryOperator<QuestionResponseDataBuilder> assignIfNecessary = builder ->
                     !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
 
-            UnaryOperator<ResponseDataBuilder> markAsCompleteIfNecessary = builder ->
+            UnaryOperator<QuestionResponseDataBuilder> markAsCompleteIfNecessary = builder ->
                     line.markedAsComplete ? builder.markAsComplete() : builder;
 
             return withQuestion.
@@ -564,39 +558,33 @@ public class GenerateTestData extends BaseIntegrationTest {
         });
     }
 
-    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine line) {
+    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine applicationLine, CompetitionLine competitionLine) {
 
-        UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
+        UserResource leadApplicant = retrieveUserByEmail(applicationLine.leadApplicant);
 
         ApplicationDataBuilder baseBuilder = builder.
-                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission).
-                withInnovationArea(line.innovationArea).
-                withStartDate(line.startDate).
-                withDurationInMonths(line.durationInMonths);
+                withBasicDetails(leadApplicant, applicationLine.title, applicationLine.researchCategory, applicationLine.resubmission).
+                withInnovationArea(applicationLine.innovationArea).
+                withStartDate(applicationLine.startDate).
+                withDurationInMonths(applicationLine.durationInMonths);
 
-        for (String collaborator : line.collaborators) {
+        for (String collaborator : applicationLine.collaborators) {
             baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator));
         }
 
         List<InviteLine> pendingInvites = simpleFilter(GenerateTestData.inviteLines,
-                invite -> "APPLICATION".equals(invite.type) && line.title.equals(invite.targetName));
+                invite -> "APPLICATION".equals(invite.type) && applicationLine.title.equals(invite.targetName));
 
         for (InviteLine invite : pendingInvites) {
             baseBuilder = baseBuilder.inviteCollaboratorNotYetRegistered(invite.email, invite.hash, invite.name,
                     invite.status, invite.ownerName);
         }
 
-        if (line.status != ApplicationState.CREATED) {
+        if (applicationLine.status != ApplicationState.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
 
-        baseBuilder = baseBuilder.markApplicationDetailsComplete(line.markDetailsComplete);
-
-        if (line.submittedDate != null) {
-            baseBuilder = baseBuilder.submitApplication();
-        }
-
-        List<String> applicants = combineLists(line.leadApplicant, line.collaborators);
+        List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 
         List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
             UserResource user = retrieveUserByEmail(email);
@@ -611,34 +599,51 @@ public class GenerateTestData extends BaseIntegrationTest {
             OrganisationTypeEnum organisationType = orgDetails.getRight();
 
             Optional<ApplicationOrganisationFinanceBlock> organisationFinances = simpleFindFirst(applicationFinanceLines, finances ->
-                    finances.competitionName.equals(line.competitionName) &&
-                            finances.applicationName.equals(line.title) &&
+                    finances.competitionName.equals(applicationLine.competitionName) &&
+                            finances.applicationName.equals(applicationLine.title) &&
                             finances.organisationName.equals(organisationName));
 
             if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
 
                 if (organisationFinances.isPresent()) {
-                    return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
+                    return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), applicationLine.markFinancesComplete);
                 } else {
-                    return generateAcademicFinances(user, organisationName, line.markFinancesComplete);
+                    return generateAcademicFinances(user, organisationName, applicationLine.markFinancesComplete);
                 }
             } else {
                 if (organisationFinances.isPresent()) {
-                    return generateIndustrialCostsFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
+                    return generateIndustrialCostsFromSuppliedData(user, organisationName, organisationFinances.get(), applicationLine.markFinancesComplete);
                 } else {
-                    return generateIndustrialCosts(user, organisationName, line.markFinancesComplete);
+                    return generateIndustrialCosts(user, organisationName, applicationLine.markFinancesComplete);
                 }
             }
         });
 
-        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(line.status)) {
-            baseBuilder = baseBuilder.markApplicationIneligible(line.ineligibleReason);
-            if (line.status == ApplicationState.INELIGIBLE_INFORMED) {
+        List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
+                simpleFilter(questionResponseLines, r -> r.competitionName.equals(competitionLine.name) && r.applicationName.equals(applicationLine.title));
+
+        if (!responsesForApplication.isEmpty()) {
+            baseBuilder = baseBuilder.withQuestionResponses(questionResponsesFromCsv(applicationLine.leadApplicant, responsesForApplication));
+        } else {
+            baseBuilder = baseBuilder.withDefaultQuestionResponses(applicationLine.submittedDate != null);
+        }
+
+        baseBuilder = baseBuilder.withFinances(financeBuilders);
+
+        baseBuilder = baseBuilder.markApplicationDetailsComplete(applicationLine.markDetailsComplete);
+
+        if (applicationLine.submittedDate != null) {
+            baseBuilder = baseBuilder.submitApplication();
+        }
+
+        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(applicationLine.status)) {
+            baseBuilder = baseBuilder.markApplicationIneligible(applicationLine.ineligibleReason);
+            if (applicationLine.status == ApplicationState.INELIGIBLE_INFORMED) {
                 baseBuilder = baseBuilder.informApplicationIneligible();
             }
         }
 
-        return baseBuilder.withFinances(financeBuilders);
+        return baseBuilder;
     }
 
     private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCostsFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock organisationFinances, boolean markAsComplete) {

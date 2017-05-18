@@ -269,10 +269,11 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected QuestionResource retrieveQuestionByCompetitionAndName(String questionName, Long competitionId) {
-        return doAs(compAdmin(), () -> {
-            List<QuestionResource> questions = questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException();
-            return simpleFindFirst(questions, q -> questionName.equals(q.getName())).get();
-        });
+        return simpleFindFirst(retrieveQuestionsByCompetitionId(competitionId), q -> questionName.equals(q.getName())).get();
+    }
+
+    protected List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
+        return doAs(compAdmin(), () -> questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
     }
 
     protected QuestionResource retrieveQuestionByCompetitionSectionAndName(String questionName, String sectionName, CompetitionResource competition) {

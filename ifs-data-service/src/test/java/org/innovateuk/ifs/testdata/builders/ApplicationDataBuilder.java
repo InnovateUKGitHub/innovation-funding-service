@@ -27,7 +27,10 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 
 /**
@@ -155,6 +158,9 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data -> {
+
+            testService.flushAndClearSession();
+
             applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.SUBMITTED).
                     getSuccessObjectOrThrowException();
 
@@ -262,19 +268,44 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     }
 
     public ApplicationDataBuilder withQuestionResponses(
-            UnaryOperator<ResponseDataBuilder>... responseBuilders) {
+            UnaryOperator<QuestionResponseDataBuilder>... responseBuilders) {
 
         return withQuestionResponses(asList(responseBuilders));
     }
 
     public ApplicationDataBuilder withQuestionResponses(
-            List<UnaryOperator<ResponseDataBuilder>> responseBuilders) {
+            List<UnaryOperator<QuestionResponseDataBuilder>> responseBuilders) {
 
         return with(data -> {
-            ResponseDataBuilder baseBuilder =
-                    ResponseDataBuilder.newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
+            QuestionResponseDataBuilder baseBuilder =
+                    newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
 
             responseBuilders.forEach(builder -> builder.apply(baseBuilder).build());
+        });
+    }
+
+    public ApplicationDataBuilder withDefaultQuestionResponses(boolean applicationSubmitted) {
+
+        return with(data -> {
+
+            if (applicationSubmitted) {
+
+                QuestionResponseDataBuilder baseBuilder =
+                        newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
+
+                List<QuestionResource> competitionQuestions = retrieveQuestionsByCompetitionId(data.getCompetition().getId());
+
+                List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
+                        q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
+
+                List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, q -> baseBuilder.
+                        forQuestion(q.getName()).
+                        withAssignee(data.getLeadApplicant().getEmail()).
+                        withAnswer("This is the applicant response for " + q.getName().toLowerCase(), data.getLeadApplicant().getEmail()).
+                        markAsComplete());
+
+                responseBuilders.forEach(QuestionResponseDataBuilder::build);
+            }
         });
     }
 }
