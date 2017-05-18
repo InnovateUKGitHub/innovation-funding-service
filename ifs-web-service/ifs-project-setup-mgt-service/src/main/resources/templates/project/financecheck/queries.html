@@ -21,7 +21,7 @@
         <th:block th:text="${model.financeContact.phoneNumber}">0</th:block>
     </p>
 
-    <p th:unless="${model.isFinanceContactProvided()}">
+    <p th:unless="${model.financeContact.isPresent()}">
         No assigned contact
     </p>
 
