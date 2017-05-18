@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_FORM;
-import static org.innovateuk.ifs.registration.RegistrationController.ORGANISATION_ID_PARAMETER_NAME;
+import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_ID;
 
 
 public class AbstractAcceptInviteController {
@@ -45,7 +45,7 @@ public class AbstractAcceptInviteController {
     protected final void clearDownInviteFlowCookies(HttpServletResponse response) {
         cookieUtil.removeCookie(response, ORGANISATION_FORM);
         cookieUtil.removeCookie(response, INVITE_HASH);
-        cookieUtil.removeCookie(response, ORGANISATION_ID_PARAMETER_NAME);
+        cookieUtil.removeCookie(response, ORGANISATION_ID);
     }
 
     protected final void putInviteHashCookie(HttpServletResponse response, String hash) {

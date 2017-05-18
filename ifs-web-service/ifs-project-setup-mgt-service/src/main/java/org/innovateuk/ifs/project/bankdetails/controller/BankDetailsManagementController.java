@@ -60,7 +60,7 @@ public class BankDetailsManagementController {
     public String viewPartnerBankDetails(
             Model model,
             @PathVariable("projectId") Long projectId,
-            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+            UserResource loggedInUser) {
         model.addAttribute("isCompAdminUser", loggedInUser.hasRole(UserRoleType.COMP_ADMIN));
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
                 .getSuccessObjectOrThrowException();
@@ -73,7 +73,7 @@ public class BankDetailsManagementController {
             Model model,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+            UserResource loggedInUser) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
@@ -89,7 +89,7 @@ public class BankDetailsManagementController {
             ValidationHandler validationHandler,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+            UserResource loggedInUser) {
 
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
@@ -121,7 +121,7 @@ public class BankDetailsManagementController {
             Model model,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+            UserResource loggedInUser,
             @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ChangeBankDetailsForm form) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
@@ -137,7 +137,7 @@ public class BankDetailsManagementController {
             Model model,
             @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
-            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+            UserResource loggedInUser,
             @Valid @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler) {
