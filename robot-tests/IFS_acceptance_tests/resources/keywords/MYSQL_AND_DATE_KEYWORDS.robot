@@ -81,8 +81,8 @@ get today
 
 get tomorrow
     ${today} =    Get Time
-    ${yesterday} =     Add time To Date    ${today}    1 day
-    [Return]    ${yesterday}
+    ${tomorrow} =     Add time To Date    ${today}    1 day
+    [Return]    ${tomorrow}
 
 get tomorrow full
     ${today}=    get time
