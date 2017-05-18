@@ -89,8 +89,7 @@ def capture_page_screenshot_on_failure():
 
 def capture_large_screenshot():
   currentWindow = s2l.get_window_size()
-
-  page_height = s2l._current_browser().execute_script("return document.body.clientHeight > 0 ? document.body.clientHeight : 1080;")
+  page_height = s2l._current_browser().execute_script("return jQuery ? jQuery(document).height() : 1080;")
 
   page_width = currentWindow[0]
   original_height = currentWindow[1]
