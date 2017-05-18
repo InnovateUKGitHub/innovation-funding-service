@@ -223,15 +223,13 @@ tr.form-group-row.error {
     margin: auto;
     color:#000;
     white-space: nowrap;
+    border-left: 5px solid $red;
+    border-bottom: 1px solid $border-colour;
   }
 
   td,
   th {
     background: $highlight-colour;
-  }
-
-  td:first-child {
-    border-left: 5px solid $red;
   }
 }
 

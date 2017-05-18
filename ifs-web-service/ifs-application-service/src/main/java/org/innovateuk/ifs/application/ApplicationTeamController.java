@@ -34,7 +34,7 @@ public class ApplicationTeamController {
     @GetMapping("/team")
     @PreAuthorize("hasPermission(#applicationId, 'VIEW_APPLICATION_TEAM_PAGE')")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                     UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
         return "application-team/team";
     }
@@ -42,7 +42,7 @@ public class ApplicationTeamController {
     @GetMapping("/begin")
     @PreAuthorize("hasPermission(#applicationId, 'BEGIN_APPLICATION')")
     public String beginApplication(@PathVariable("applicationId") long applicationId,
-                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                   UserResource loggedInUser) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
         changeApplicationStatusToOpen(applicationResource);
         return format("redirect:/application/%s", applicationResource.getId());

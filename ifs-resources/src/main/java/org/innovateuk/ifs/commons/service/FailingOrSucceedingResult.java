@@ -37,4 +37,8 @@ public interface FailingOrSucceedingResult<SuccessType, FailureType> extends Err
     <R> R handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends R> failureHandler, ExceptionThrowingFunction<? super SuccessType, ? extends R> successHandler);
 
     Optional<SuccessType> getOptionalSuccessObject();
+
+    SuccessType getOrElse(ExceptionThrowingFunction<FailureType, SuccessType> failureHandler);
+
+    SuccessType getOrElse(SuccessType orElse);
 }

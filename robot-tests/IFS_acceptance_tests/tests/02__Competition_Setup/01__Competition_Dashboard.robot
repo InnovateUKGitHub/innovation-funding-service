@@ -14,6 +14,7 @@ Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          ../10__Project_setup/PS_Common.robot
 Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***

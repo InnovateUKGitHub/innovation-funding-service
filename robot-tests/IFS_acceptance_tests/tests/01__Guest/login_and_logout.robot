@@ -103,9 +103,7 @@ Valid login as Project Finance role
 
 Page not found
     [Documentation]    INFUND-8712
-    Given the user navigates to the page    ${SERVER}/ibble/dibble
-    Then the user should see the text in the page    Page not found
-    And the user should see the text in the page    Please check the web address or search term you entered for any errors. You can return to your dashboard or go back to the Innovate UK homepage.
+    When the user navigates to the page and gets a custom error message    ${SERVER}/ibble/dibble    ${404_error_message}
     [Teardown]    the user closes the browser
 
 Reset password
