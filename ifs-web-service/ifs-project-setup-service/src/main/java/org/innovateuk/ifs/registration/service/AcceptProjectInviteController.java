@@ -53,6 +53,7 @@ public class AcceptProjectInviteController {
     //===================================
     // Initial landing of the invite link
     //===================================
+
     @GetMapping(ACCEPT_INVITE_MAPPING + "{hash}")
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
