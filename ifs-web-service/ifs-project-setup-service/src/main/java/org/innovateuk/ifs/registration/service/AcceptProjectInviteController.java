@@ -58,7 +58,7 @@ public class AcceptProjectInviteController {
             @PathVariable("hash") final String hash,
             HttpServletResponse response,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            UserResource loggedInUser) {
 
         RestResult<String> result = find(inviteByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, userExists) -> {
             ValidationMessages errors = errorMessages(loggedInUser, invite);
