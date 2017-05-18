@@ -108,8 +108,8 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page    1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
-    And the user should see the text in the page    Emerging and enabling
-    And the user should see the text in the page    Satellite applications
+    And the user should see the text in the page    Open
+    And the user should see the text in the page    Biosciences
     And the user should see the text in the page    Sector
     And the user should see the text in the page    Yes
     And the user should see the element             jQuery=.button:contains("Edit")
@@ -148,9 +148,9 @@ Initial details - Comp Type and Date should not be editable
     Then the user should see the text in the page   1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
-    And the user should see the text in the page    Emerging and enabling
+    And the user should see the text in the page    Open
+    And the user should see the text in the page    Biosciences
     And the user should see the text in the page    Creative industries
-    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Yes
 
 
