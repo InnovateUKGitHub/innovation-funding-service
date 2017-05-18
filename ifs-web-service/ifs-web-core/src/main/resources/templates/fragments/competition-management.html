@@ -112,7 +112,7 @@
                        <span class="invisible">Select application</span>
                    </label>
                    <th:block th:unless="${result.applicationFundingDecisionIsChangeable()}">
-                       -
+                       <span class="empty-table-cell-select">-</span>
                    </th:block>
                </td>
                <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${result.id}"/></td>

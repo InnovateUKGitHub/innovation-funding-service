@@ -31,7 +31,7 @@ public class ApplicationPrintController {
     @GetMapping(value = "/{applicationId}/print")
     public String printApplication(@PathVariable("applicationId") long applicationId,
                                    Model model,
-                                   @ModelAttribute("loggedInUser") UserResource user) {
+                                   UserResource user) {
         return applicationPrintPopulator.print(applicationId, model, user);
     }
 }

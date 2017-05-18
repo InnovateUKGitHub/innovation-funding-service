@@ -64,8 +64,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 ${project_overview}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
@@ -626,8 +625,7 @@ Status updates to a cross for the internal user's table
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
     [Tags]
-    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    # TODO please switch out the PM login above with lead partner once INFUND-8136 is completed
+    Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
@@ -823,8 +821,8 @@ partner submits his bank details
     [Arguments]  ${email}
     log in as a different user            ${email}    ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  51406795
-    the user enters text to a text field  id=bank-sort-code  404745
+    the user enters text to a text field  id=bank-acc-number  ${account_number}
+    the user enters text to a text field  id=bank-sort-code  ${sort_code}
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")
