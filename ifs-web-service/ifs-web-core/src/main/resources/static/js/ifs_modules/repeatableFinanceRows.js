@@ -18,8 +18,8 @@ IFS.core.repeatableFinanceRows = (function () {
       jQuery('body').on('persistUnsavedRow', function (event, name, newFieldId) {
         IFS.core.repeatableFinanceRows.persistUnsavedRow(name, newFieldId)
       })
-
-      jQuery('[data-repeatable-row] .buttonplaceholder').replaceWith('<button class="buttonlink js-remove-row" value="">Remove</button>')
+      var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="">Remove</button>'
+      jQuery('[data-repeatable-row] .buttonplaceholder').replaceWith(buttonHtml)
       jQuery('body').trigger('updateSerializedFormState')
     },
     getAjaxUrl: function (el) {
@@ -126,7 +126,7 @@ IFS.core.repeatableFinanceRows = (function () {
       })
       // add the button
       var row = jQuery('[data-repeatable-row="' + unsavedCostId + '"]')
-      var button = row.find('[name="remove_cost"]')
+      var button = row.find('.js-remove-row')
       if (button.length) {
         button.val(newFieldId)
         // set the repeatable row id for referencing the removal, leave the original id as that is used for the promise
