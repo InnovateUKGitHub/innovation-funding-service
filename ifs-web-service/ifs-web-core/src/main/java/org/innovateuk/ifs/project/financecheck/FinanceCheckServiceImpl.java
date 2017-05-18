@@ -21,7 +21,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service for handling finance checks functionality
@@ -73,8 +72,8 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<Optional<ByteArrayResource>> downloadFile(Long fileId) {
-        return attachmentRestService.download(fileId).toServiceResult();
+    public ByteArrayResource downloadFile(Long fileId) {
+        return attachmentRestService.download(fileId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -83,9 +82,9 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<FileEntryResource> getAttachmentInfo(Long attachmentId) {
-        return attachmentRestService.find(attachmentId).toServiceResult()
-                .andOnSuccessReturn(a -> new FileEntryResource(a.name, a.mediaType, a.sizeInBytes));
+    public FileEntryResource getAttachmentInfo(Long attachmentId) {
+        AttachmentResource attachmentResource = attachmentRestService.find(attachmentId).getSuccessObjectOrThrowException();
+        return new FileEntryResource(attachmentResource.name, attachmentResource.mediaType, attachmentResource.sizeInBytes);
     }
 
     @Override
