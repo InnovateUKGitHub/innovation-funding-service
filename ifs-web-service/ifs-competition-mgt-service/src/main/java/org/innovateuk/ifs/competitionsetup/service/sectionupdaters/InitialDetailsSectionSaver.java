@@ -18,7 +18,7 @@ import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
-import org.innovateuk.ifs.competitionsetup.utils.FilteredNonIfsSectors;
+import org.innovateuk.ifs.competitionsetup.utils.CompetitionSpecialSectors;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +115,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toList());
             List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
 
-            if(FilteredNonIfsSectors.OPEN_SECTOR.getId().equals(competition.getInnovationSector()) && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
+            if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector()) && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 innovationAreas = allInnovationAreasIds;
             }
             errors.addAll(checkInnovationAreaData(competition, allInnovationAreas, allInnovationAreasIds,
@@ -133,7 +133,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                                                 List<InnovationAreaResource> allInnovationAreas,
                                                 List<Long> allInnovationAreasIds,
                                                 List<Long> innovationAreaIds, boolean isMarkAsComplete) {
-        if(FilteredNonIfsSectors.OPEN_SECTOR.getId().equals(competition.getInnovationSector())) {
+        if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())) {
             if(!innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !allInnovationAreasIds.contains(areaId));
 

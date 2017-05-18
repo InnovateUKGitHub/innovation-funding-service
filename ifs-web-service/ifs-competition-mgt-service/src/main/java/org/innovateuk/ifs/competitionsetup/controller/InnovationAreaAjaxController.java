@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.competitionsetup.utils.FilteredNonIfsSectors;
+import org.innovateuk.ifs.competitionsetup.utils.CompetitionSpecialSectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class InnovationAreaAjaxController {
     @ResponseBody
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
-        if (FilteredNonIfsSectors.OPEN_SECTOR.getId().equals(innovationSectorId)) {
+        if (CompetitionSpecialSectors.isOpenSector().test(innovationSectorId)) {
             List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
             returningList.add(0, createAllInnovationArea());
 
