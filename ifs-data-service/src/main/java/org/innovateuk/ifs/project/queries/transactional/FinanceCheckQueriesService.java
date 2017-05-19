@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.queries.service;
+package org.innovateuk.ifs.project.queries.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.service.ThreadService;
