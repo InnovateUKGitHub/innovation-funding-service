@@ -182,9 +182,7 @@
 <th:block th:fragment="form-textarea-wrapped(model)" th:with="formInput=${model.formInput}, question=${model.question}">
 
     <div class="textarea-wrapped"
-         th:classappend="${model.complete ? 'marked-as-complete'} + ' ' +
-                         ${model.assignedToCurrentUser ? 'assigned-to-me'} + ' ' +
-                         ${formInput.getWordCount() == 0 ? '' : 'word-count'}"
+         th:classappend="${model.complete ? 'marked-as-complete' : ''} + ' ' + ${model.assignButtonsViewModel.  assignedToCurrentUser ? 'assigned-to-me' : ''} + ' ' + ${formInput.getWordCount() == 0 ? '' : 'word-count'}"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
         <textarea th:id="'form-textarea-'+${formInput.id}"
