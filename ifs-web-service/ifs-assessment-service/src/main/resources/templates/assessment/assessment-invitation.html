@@ -59,18 +59,18 @@
                             </th:block>
                         </legend>
 
-                        <label class="block-label selection-button-radio" data-target="accept-application" for="acceptAssessment">
+                        <div class="multiple-choice" data-target="accept-application">
                             <input id="acceptAssessment" value="true" th:field="*{assessmentAccept}" type="radio" required="required">
-                            Accept, I am able to assess this application
-                        </label>
+                            <label for="acceptAssessment">Accept, I am able to assess this application</label>
+                        </div>
 
                         <div class="panel js-hidden" id="accept-application">
                             <p>You will still have the option to reject after accepting and viewing the full application</p>
                         </div>
 
-                        <label class="block-label selection-button-radio" data-target="reject-application" for="rejectAssessment">
+                        <label class="multiple-choice" data-target="reject-application">
                             <input id="rejectAssessment" value="false" th:field="*{assessmentAccept}" type="radio" required="required">
-                            Reject, I am not able to assess this application
+                            <label for="rejectAssessment">Reject, I am not able to assess this application</label>
                         </label>
 
                         <div class="panel js-hidden" id="reject-application">

@@ -25,15 +25,15 @@
                             </div>
                         </legend>
                         <p class="form-hint">Who will be the Project Manager for your project?</p>
-                        <div class="multiple-choice">
-                            <label data-set-section-valid="#project-manager-section" data-clear-inputs="#name-project-manager,#email-project-manager" th:each="user : ${model.organisationUsers}" th:for="${#ids.next('projectManager')}">
-                                <th:block th:text="${user.name}" />
-                            </label>
+                        <div class="multiple-choice" th:each="user : ${model.organisationUsers}" >
+                            <input type="radio" th:field="*{projectManager}" th:value="${user.id}" required="required" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
+                            <label th:for="${#ids.next('projectManager')}" th:text="${user.name}" data-set-section-valid="#project-manager-section" data-clear-inputs="#name-project-manager,#email-project-manager"></label>
                         </div>
 
-                        <label th:each="user : ${model.invitedUsers}" th:for="${#ids.next('projectManager')}" class="block-label">
-                            <span th:text="${user.name}" th:remove="tag"></span>
-                        </label>
+                        <div class="multiple-choice" th:each="user : ${model.invitedUsers}" th:for="${#ids.next('projectManager')}">
+                            <input th:field="*{projectManager}" type="radio" disabled="disabled" />
+                            <label th:for="${#ids.next('projectManager')}" th:text="${user.name}"></label>
+                        </div>
 
                         <div class="multiple-choice" data-target="project-manager-table">
                             <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required"  type="radio" value="-1" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
