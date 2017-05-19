@@ -44,8 +44,6 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
     @Autowired
     private ResearchCategoryMapper researchCategoryMapper;
 
-    private static final String OPEN = "Open";
-
     @Override
     public ServiceResult<List<InnovationAreaResource>> getInnovationAreas() {
         return find(innovationAreaRepository.findAllByOrderByPriorityAsc(), notFoundError(InnovationArea.class))
@@ -71,12 +69,14 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
     }
 
     private ServiceResult<List<InnovationAreaResource>> getInnovationAreasFromParent(InnovationSector parent) {
-        ServiceResult<List<InnovationAreaResource>> children;
-        if (parent.getName().equals(OPEN)) {
-            children = getInnovationAreas();
+        List<InnovationAreaResource> childrenList = innovationAreaMapper.mapToResource(parent.getChildren());
+
+        ServiceResult<List<InnovationAreaResource>> innovationAreas;
+        if (childrenList.isEmpty()) {
+            innovationAreas = getInnovationAreas();
         } else {
-            children = serviceSuccess(innovationAreaMapper.mapToResource(parent.getChildren()));
+            innovationAreas = serviceSuccess(childrenList);
         }
-        return children;
+        return innovationAreas;
     }
 }

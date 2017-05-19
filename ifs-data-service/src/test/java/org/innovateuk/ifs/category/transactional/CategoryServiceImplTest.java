@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 
 import java.util.List;
 
+import static java.util.Collections.EMPTY_LIST;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
@@ -86,7 +87,6 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         List<InnovationArea> innovationAreas = newInnovationArea().build(2);
         InnovationSector innovationSector = newInnovationSector()
                 .withChildren(innovationAreas)
-                .withName("Sector name")
                 .build();
 
         long sectorId = 1L;
@@ -110,19 +110,20 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getInnovationAreasByOpenSector() {
-        List<InnovationArea> innovationAreas = newInnovationArea().build(2);
+        List<InnovationArea> innovationAreas = EMPTY_LIST;
         InnovationSector innovationSector = newInnovationSector()
                 .withChildren(innovationAreas)
-                .withName("Open")
                 .build();
 
         long sectorId = 1L;
 
+        List<InnovationArea> allInnovationAreas = newInnovationArea().build(2);
         List<InnovationAreaResource> expectedInnovationAreaResources = newInnovationAreaResource().build(2);
 
         when(innovationSectorRepositoryMock.findOne(sectorId)).thenReturn(innovationSector);
-        when(innovationAreaRepositoryMock.findAllByOrderByPriorityAsc()).thenReturn(innovationAreas);
-        when(innovationAreaMapperMock.mapToResource(refEq(innovationAreas))).thenReturn(expectedInnovationAreaResources);
+        when(innovationAreaMapperMock.mapToResource(refEq(innovationAreas))).thenReturn(EMPTY_LIST);
+        when(innovationAreaRepositoryMock.findAllByOrderByPriorityAsc()).thenReturn(allInnovationAreas);
+        when(innovationAreaMapperMock.mapToResource(refEq(allInnovationAreas))).thenReturn(expectedInnovationAreaResources);
 
         List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreasBySector(sectorId).getSuccessObject();
 
@@ -131,8 +132,9 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         verify(innovationSectorRepositoryMock, times(1)).findOne(sectorId);
 
         InOrder inOrder = inOrder(innovationAreaRepositoryMock, innovationAreaMapperMock);
-        inOrder.verify(innovationAreaRepositoryMock).findAllByOrderByPriorityAsc();
         inOrder.verify(innovationAreaMapperMock).mapToResource(innovationAreas);
+        inOrder.verify(innovationAreaRepositoryMock).findAllByOrderByPriorityAsc();
+        inOrder.verify(innovationAreaMapperMock).mapToResource(allInnovationAreas);
         inOrder.verifyNoMoreInteractions();
     }
 }
