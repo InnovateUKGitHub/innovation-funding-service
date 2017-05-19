@@ -75,7 +75,7 @@ public class AssessmentOverviewController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
-            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+            UserResource loggedInUser) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
 
         final ByteArrayResource resource = formInputResponseRestService

@@ -17,8 +17,7 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
-Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 
@@ -26,21 +25,21 @@ Resource          PS_Variables.robot
 Project Finance can see Bank details requiring action
     [Documentation]    INFUND-3763, INFUND-4903
     [Tags]    HappyPath
-    [Setup]  guest user log-in            &{internal_finance_credentials}
+    [Setup]  log in as a different user            &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
     When the user clicks the button/link  link=${PS_EF_Competition_Name}
-    Then the user should see the element  jQuery=#table-project-status tr:nth-child(2) td:nth-child(2).status.ok
-    And the user should see the element   jQuery=#table-project-status tr:nth-child(2) td:nth-child(3).status.action
-    And the user should see the element   jQuery=#table-project-status tr:nth-child(2) td:nth-child(4).status.action
-    Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(2) td:nth-child(4).status.action a
-    And the user navigates to the page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
+    Then the user should see the element  jQuery=#table-project-status tr:nth-child(1) td:nth-child(2).status.ok
+    And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(3).status.action
+    And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action
+    Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action a
+    And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
 
 Project Finance can see the company name with score
     [Documentation]  INFUND-3763
     [Tags]
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
     And the user clicks the button/link           link=${Ntag_Name}
-    Then the user navigates to the page           ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
+    Then the user should be redirected to the correct page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     And the user should see the text in the page  ${Ntag_Name}
     And the user should see the element           jQuery=tr:nth-child(1) td:nth-child(3):contains("3 / 9")
 
@@ -55,7 +54,7 @@ Project Finance can see the account number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Bank account number / Sort code
-    And the user should see the text in the page    51406795 / 404745
+    And the user should see the text in the page    ${account_number} / ${sort_code}
     And the user should see the element             jQuery=tr:nth-child(3) td:nth-child(3):contains("No Match")
 
 Project Finance can see the address with score
@@ -181,13 +180,13 @@ Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user  ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 
 *** Keywords ***
@@ -200,23 +199,26 @@ all preliminary steps are completed
     finance contacts are submitted by all users
     project lead submits project details
     eligible partners submit their bank details
-    logout as user
-    close any open browsers
+
 
 finance contacts are submitted by all users
+    the guest user opens the browser
+    the user navigates to the page    ${server}
     user submits his finance contacts  ${PS_EF_APPLICATION_ACADEMIC_EMAIL}  ${Wikivu_Id}
+    logout as user
     user submits his finance contacts  ${PS_EF_APPLICATION_PARTNER_EMAIL}  ${Jetpulse_Id}
+    logout as user
     user submits his finance contacts  ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}  ${Ntag_Id}
 
 user submits his finance contacts
     [Arguments]  ${user}  ${id}
-    guest user log-in  ${user}  ${short_password}
+    the guest user inserts user email & password    ${user}    ${short_password}
+    the guest user clicks the log-in button
     the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/finance-contact?organisation=${id}
     the user selects the radio button  financeContact  financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 project lead submits project details
-    log in as a different user         ${PS_EF_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/details/project-address
     the user selects the radio button  addressType  address-use-org
     the user clicks the button/link    jQuery=.button:contains("Save")
@@ -236,8 +238,8 @@ the user fills in his bank details
     [Arguments]  ${user}
     log in as a different user            ${user}  ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  name=accountNumber  51406795
-    the user enters text to a text field  name=sortCode  404745
+    the user enters text to a text field  name=accountNumber  ${account_number}
+    the user enters text to a text field  name=sortCode  ${sort_code}
     the user selects the radio button     addressType  address-use-org
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")

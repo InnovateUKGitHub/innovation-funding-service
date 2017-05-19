@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.project.otherdocuments.ProjectOtherDocumentsService;
+import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -25,7 +25,7 @@ public abstract class BaseUnitTestMocksTest{
     protected ProjectService projectServiceMock;
 
     @Mock
-    protected ProjectOtherDocumentsService projectOtherDocumentsServiceMock;
+    protected OtherDocumentsService otherDocumentsServiceMock;
 
     @Mock
     protected OrganisationService organisationServiceMock;
