@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.invite;
 
 import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import javax.servlet.http.Cookie;
 
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
@@ -45,6 +47,17 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = setupMockMvc(acceptProjectInviteController, () -> loggedInUser, env, messageSource);
         setupCookieUtil();
+    }
+
+    @Test
+    public void testInviteEntryPageWhenHashIsInvalid() throws Exception {
+        String hash = "invalid-hash";
+        when(projectInviteRestServiceMock.getInviteByHash(hash)).thenReturn(restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+
+        mockMvc.perform(get(ACCEPT_INVITE_MAPPING + hash))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(cookie().doesNotExist(AcceptProjectInviteController.INVITE_HASH))
+                .andExpect(view().name(AcceptProjectInviteController.ACCEPT_INVITE_FAILURE));
     }
 
     @Test
