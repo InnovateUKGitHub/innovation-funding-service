@@ -5,8 +5,8 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
+import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,39 +20,39 @@ import java.util.List;
 public class ProjectDetailsServiceImpl implements ProjectDetailsService {
 
     @Autowired
-    private ProjectRestService projectRestService;
+    private ProjectDetailsRestService projectDetailsRestService;
 
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
 
     @Override
     public ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId) {
-        return projectRestService.updateProjectManager(projectId, projectManagerUserId).toServiceResult();
+        return projectDetailsRestService.updateProjectManager(projectId, projectManagerUserId).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
-        return projectRestService.updateFinanceContact(composite, financeContactUserId).toServiceResult();
+        return projectDetailsRestService.updateFinanceContact(composite, financeContactUserId).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-        return projectRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
+        return projectDetailsRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address) {
-        return projectRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
+        return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId) {
-        return projectRestService.setApplicationDetailsSubmitted(projectId).toServiceResult();
+        return projectDetailsRestService.setApplicationDetailsSubmitted(projectId).toServiceResult();
     }
 
     @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return projectRestService.isSubmitAllowed(projectId).toServiceResult();
+        return projectDetailsRestService.isSubmitAllowed(projectId).toServiceResult();
     }
 
     @Override
@@ -62,11 +62,11 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
 
     @Override
     public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource) {
-        return projectRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
+        return projectDetailsRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
     }
 
     @Override public ServiceResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteProjectResource) {
-        return projectRestService.inviteProjectManager (projectId, inviteProjectResource).toServiceResult();
+        return projectDetailsRestService.inviteProjectManager (projectId, inviteProjectResource).toServiceResult();
     }
 
     @Override

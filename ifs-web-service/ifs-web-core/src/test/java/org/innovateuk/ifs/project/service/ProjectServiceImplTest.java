@@ -40,9 +40,6 @@ public class ProjectServiceImplTest {
     private ProjectRestService projectRestService;
 
     @Mock
-    private ProjectInviteRestService projectInviteRestService;
-
-    @Mock
     private ApplicationService applicationService;
 
     @Test

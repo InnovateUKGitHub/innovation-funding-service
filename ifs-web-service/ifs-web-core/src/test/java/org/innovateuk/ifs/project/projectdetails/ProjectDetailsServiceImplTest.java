@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.project.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
+import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,13 +31,10 @@ public class ProjectDetailsServiceImplTest {
     private ProjectDetailsServiceImpl service;
 
     @Mock
-    private ProjectRestService projectRestService;
+    private ProjectDetailsRestService projectDetailsRestService;
 
     @Mock
     private ProjectInviteRestService projectInviteRestService;
-
-    @Mock
-    private ApplicationService applicationService;
 
     @Test
     public void testUpdateFinanceContact() {
@@ -46,32 +42,32 @@ public class ProjectDetailsServiceImplTest {
         Long organisationId = 2L;
         Long financeContactId = 3L;
 
-        when(projectRestService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactId)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactId)).thenReturn(restSuccess());
 
         service.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactId);
 
-        verify(projectRestService).updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactId);
+        verify(projectDetailsRestService).updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), financeContactId);
     }
 
     @Test
     public void testUpdateProjectManager() {
-        when(projectRestService.updateProjectManager(1L, 2L)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updateProjectManager(1L, 2L)).thenReturn(restSuccess());
 
         service.updateProjectManager(1L, 2L);
 
-        verify(projectRestService).updateProjectManager(1L, 2L);
+        verify(projectDetailsRestService).updateProjectManager(1L, 2L);
     }
 
     public void testUpdateProjectStartDate() {
         LocalDate date = LocalDate.now();
 
-        when(projectRestService.updateProjectStartDate(1L, date)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updateProjectStartDate(1L, date)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.updateProjectStartDate(1L, date);
 
         assertTrue(result.isSuccess());
 
-        verify(projectRestService).updateProjectStartDate(1L, date).toServiceResult();
+        verify(projectDetailsRestService).updateProjectStartDate(1L, date).toServiceResult();
     }
 
     @Test
@@ -80,35 +76,35 @@ public class ProjectDetailsServiceImplTest {
         Long projectId = 2L;
         AddressResource addressResource = newAddressResource().build();
 
-        when(projectRestService.updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.updateAddress(leadOrgId, projectId, REGISTERED, addressResource);
 
         assertTrue(result.isSuccess());
 
-        verify(projectRestService).updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource);
+        verify(projectDetailsRestService).updateProjectAddress(leadOrgId, projectId, REGISTERED, addressResource);
     }
 
     @Test
     public void testSetApplicationDetailsSubmitted() {
-        when(projectRestService.setApplicationDetailsSubmitted(1L)).thenReturn(restSuccess());
+        when(projectDetailsRestService.setApplicationDetailsSubmitted(1L)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.setApplicationDetailsSubmitted(1L);
 
         assertTrue(result.isSuccess());
 
-        verify(projectRestService).setApplicationDetailsSubmitted(1L);
+        verify(projectDetailsRestService).setApplicationDetailsSubmitted(1L);
     }
 
     @Test
     public void testIsSubmitAllowed() {
-        when(projectRestService.isSubmitAllowed(1L)).thenReturn(restSuccess(false));
+        when(projectDetailsRestService.isSubmitAllowed(1L)).thenReturn(restSuccess(false));
 
         ServiceResult<Boolean> result = service.isSubmitAllowed(1L);
 
         assertTrue(result.isSuccess());
 
-        verify(projectRestService).isSubmitAllowed(1L);
+        verify(projectDetailsRestService).isSubmitAllowed(1L);
     }
 
     @Test
@@ -116,13 +112,13 @@ public class ProjectDetailsServiceImplTest {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
 
-        when(projectRestService.inviteFinanceContact(anyLong(), any())).thenReturn(restSuccess());
+        when(projectDetailsRestService.inviteFinanceContact(anyLong(), any())).thenReturn(restSuccess());
 
         ServiceResult<Void> submitted = service.inviteFinanceContact(1L, invite);
 
         assertTrue(submitted.isSuccess());
 
-        verify(projectRestService).inviteFinanceContact(1L, invite);
+        verify(projectDetailsRestService).inviteFinanceContact(1L, invite);
     }
 
     @Test
@@ -130,13 +126,13 @@ public class ProjectDetailsServiceImplTest {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
 
-        when(projectRestService.inviteProjectManager(anyLong(), any())).thenReturn(restSuccess());
+        when(projectDetailsRestService.inviteProjectManager(anyLong(), any())).thenReturn(restSuccess());
 
         ServiceResult<Void> submitted = service.inviteProjectManager(1L, invite);
 
         assertTrue(submitted.isSuccess());
 
-        verify(projectRestService).inviteProjectManager(1L, invite);
+        verify(projectDetailsRestService).inviteProjectManager(1L, invite);
     }
 
     @Test
