@@ -33,9 +33,9 @@
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="firstName">
                         <span class="form-label-bold">First name</span>
-                        <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
+                        <th:block th:if="${#fields.hasErrors('firstName')}">
                               <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
-                        </span>
+                        </th:block>
                     </label>
                     <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-group-error' : 'form-control'}"
                            class="form-control"
@@ -52,9 +52,9 @@
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="lastName">
                         <span class="form-label-bold">Last name</span>
-                        <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
+                        <th:block th:if="${#fields.hasErrors('lastName')}">
                               <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
-                        </span>
+                        </th:block>
                     </label>
                     <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-group-error' : 'form-control'}"
                            id="lastName"
@@ -71,9 +71,9 @@
                     <label class="form-label" for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application</span>
-                        <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
+                        <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                               <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
-                        </span>
+                        </th:block>
                      </label>
                     <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-group-error' : 'form-control'}"
                            type="tel"
@@ -92,14 +92,14 @@
                         <span th:if="${invitee}">
                             <span class="form-hint">You will need this to sign into your account, the provided email is:
                                 <br/>
-                            <strong><span th:remove="tag" th:text="${registrationForm.email}"></span></strong>
+                            <strong th:text="${registrationForm.email}"></strong>
                             </span>
                         </span>
                         <span th:unless="${invitee}">
                             <span class="form-hint">You will need this to sign into your account</span>
-                            <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
+                            <th:block th:if="${#fields.hasErrors('email')}">
                                   <span class="error-message" th:each="err : ${#fields.errors('email')}" th:text="${err}" />
-                            </span>
+                            </th:block>
                         </span>
                     </label>
 

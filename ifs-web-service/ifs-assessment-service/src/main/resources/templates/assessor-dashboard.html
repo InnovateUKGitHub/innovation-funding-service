@@ -63,7 +63,7 @@
             </div>
 
             <div class="my-applications">
-                <div th:unless="${#lists.isEmpty(model.activeCompetitions)}" th:remove="tag">
+                <th:block th:unless="${#lists.isEmpty(model.activeCompetitions)}">
 
                     <div class="progress-list">
                         <h2 class="heading-medium no-margin-top">Competitions for assessment (<span
@@ -116,7 +116,7 @@
                         </ul>
                     </div>
 
-                </div>
+                </th:block>
             </div>
 
             <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">

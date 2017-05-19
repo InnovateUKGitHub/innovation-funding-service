@@ -139,7 +139,7 @@
                                                aria-labelledby="invite-label-assessor-name"
                                                class="form-control width-full"
                                                required="required"
-                                               th:errorclass="field-error"
+                                               th:errorclass="form-control-error"
                                                th:attr="data-required-errormessage=#{validation.standard.name.required}"
                                                th:field="*{invites[__${iterStat.index}__].name}"
                                         />
@@ -157,7 +157,7 @@
                                                class="form-control width-full"
                                                required="required"
                                                th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
-                                               th:errorclass="field-error"
+                                               th:errorclass="form-control-error"
                                                th:field="*{invites[__${iterStat.index}__].email}"
                                         />
                                     </td>

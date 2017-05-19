@@ -141,7 +141,7 @@
                                     </th>
                                     <td th:each="cost, status : ${row.value}">
                                         <input
-                                            th:classappend="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]')} ? 'field-error'"
+                                            th:classappend="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]')} ? 'form-control-error'"
                                             th:class="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+' form-control'}"
                                             th:attr="aria-labelledby=${#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')+' month'+status.index}"
                                             th:name="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"

@@ -70,7 +70,7 @@
                                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                                 </th:block>
                             </label>
-                            <select class="form-control" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+                            <select class="form-control" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
                                 <option value="">Select a reason</option>
                                 <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
                                         th:value="${reason}"
@@ -92,7 +92,7 @@
                                       data-maxwordslength="100"
                                       data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                       th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                      th:errorclass="field-error"
+                                      th:errorclass="form-control-error"
                                       rows="4"
                                       th:field="*{rejectComment}"></textarea>
                             <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">

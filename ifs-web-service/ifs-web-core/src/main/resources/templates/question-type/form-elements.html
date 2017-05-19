@@ -86,7 +86,7 @@
            type="number"
            th:id="${id}"
            th:field="*{__${field}__}"
-           th:errorclass="field-error"
+           th:errorclass="form-control-error"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
            th:min="${min}"
            th:max="${max}"
@@ -172,7 +172,7 @@
                 rows="4"
                 th:readonly="${readonly}"
                 th:required="${required}"
-                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'field-error' : ''">
+                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'form-control-error'">
                 >
 		</textarea>
 </th:block>

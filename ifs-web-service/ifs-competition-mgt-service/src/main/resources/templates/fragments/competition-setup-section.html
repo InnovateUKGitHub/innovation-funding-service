@@ -21,12 +21,13 @@
             <div th:class="${#fields.hasErrors('title')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
-                    <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('title')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <input id="title"
-                       th:class="${#fields.hasErrors('title') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
+                       class="form-control width-x-large"
+                       th:errorclass="form-control-error"
                        type="text"
                        th:field="${competitionSetupForm.title}"
                        required="required"
@@ -37,9 +38,9 @@
             <div th:class="${#fields.hasErrors('competitionTypeId')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="competitionTypeId">
                     <span class="form-label-bold">Competition type</span>
-                    <span th:if="${#fields.hasErrors('competitionTypeId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('competitionTypeId')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <select class="form-control width-x-large"
                         th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or isSetupAndLive}"
@@ -57,9 +58,9 @@
             <div th:class="${#fields.hasErrors('innovationSectorCategoryId')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="innovationSectorCategoryId">
                     <span class="form-label-bold">Innovation sector</span>
-                    <span th:if="${#fields.hasErrors('innovationSectorCategoryId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
 
                 <select th:disabled="${isSetupAndLive}"
@@ -80,9 +81,9 @@
                 <div th:class="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}? 'form-group form-group-error':'form-group'" th:id="innovation-row-__${status.index}__">
                     <label class="form-label" th:for="innovationAreaCategoryId-__${status.index}__">
                         <span class="form-label-bold" th:classappend="${status.index > 0} ? 'visuallyhidden': ''">Innovation area</span>
-                        <span th:if="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
                     <select th:disabled="${isSetupAndLive}"
                             class="form-control width-x-large"
@@ -102,9 +103,9 @@
                 <div th:class="${#fields.hasErrors('innovationAreaCategoryIds')}? 'form-group form-group-error':'form-group'" th:id="innovation-row-0">
                     <label class="form-label" th:for="innovationAreaCategoryId-0">
                         <span class="form-label-bold">Innovation area</span>
-                        <span th:if="${#fields.hasErrors('innovationAreaCategoryIds')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
                     <select th:disabled="${isSetupAndLive}"
                             class="form-control width-x-large"
@@ -129,7 +130,7 @@
                     <legend>
                       <span class="heading-small">Opening date</span>
                       <th:block th:if="${#fields.hasErrors('openingDate*')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}" />
+                            <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}"></span>
                       </th:block>
                     </legend>
                     <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
@@ -140,7 +141,8 @@
                                 <span>Day</span>
                             </label>
                             <input th:readonly="${isSetupAndLive}"
-                                 th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                                 class="form-control width-extra-small"
+                                 th:errorclass="form-control-error width-extra-small"
                                  type="number"
                                  placeholder="DD"
                                  min="1"
@@ -156,7 +158,9 @@
                             <label class="form-label" for="openingDateMonth">
                                 <span>Month</span>
                             </label>
-                            <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                            <input th:readonly="${isSetupAndLive}"
+                                 class="form-control width-extra-small"
+                                 th:errorclass="form-control-error"
                                  type="number"
                                  placeholder="MM"
                                  required="required"
@@ -172,7 +176,9 @@
                             <label class="form-label" for="openingDateYear">
                                 <span>Year</span>
                             </label>
-                            <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                            <input th:readonly="${isSetupAndLive}"
+                                 class="form-control width-extra-small"
+                                 th:errorclass="form-control-error"
                                  type="number"
                                  placeholder="YYYY"
                                  required="required"
@@ -188,9 +194,9 @@
             <div th:class="${#fields.hasErrors('leadTechnologistUserId')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="leadTechnologistUserId">
                     <span class="form-label-bold">Competition Innovation Lead</span>
-                    <span th:if="${#fields.hasErrors('leadTechnologistUserId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('leadTechnologistUserId')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('leadTechnologistUserId')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('leadTechnologistUserId')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <select class="form-control width-x-large"
                         name="leadTechnologistUserId"
@@ -205,9 +211,9 @@
             <div th:class="${#fields.hasErrors('executiveUserId')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="executiveUserId">
                     <span class="form-label-bold">Competition Executive</span>
-                    <span th:if="${#fields.hasErrors('executiveUserId')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('executiveUserId')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}"></span>
+                    </th:block
                 </label>
                 <select class="form-control width-medium"
                         name="executiveUserId"
@@ -222,10 +228,10 @@
             <div class="form-group" th:attr="aria-hidden=${competitionSetupForm.competitionTypeId == null ? 'true' : 'false'}" id="stateAid">
                 <h3 class="heading-small">State aid</h3>
                 <p>
-                  <span th:each="(competitionType : ${competitionTypes})" th:remove="tag">
+                  <th:block th:each="(competitionType : ${competitionTypes})">
                       <span class="yes" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == true}">Yes</span>
                       <span class="no" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == false}">No</span>
-                  </span>
+                  </th:block>
                 </p>
             </div>
 
@@ -262,10 +268,10 @@
 
                <dt>State aid</dt>
                 <dd>
-                    <span th:each="(competitionType : ${competitionTypes})" th:remove="tag">
+                    <th:block th:each="(competitionType : ${competitionTypes})">
                         <span class="yes" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == true}">Yes</span>
                         <span class="no" th:if="${competitionSetupForm.competitionTypeId == competitionType.id and competitionType.stateAid == false}">No</span>
-                    </span>
+                    </th:block>
                 </dd>
                </dl>
 
@@ -320,11 +326,11 @@
                     <div th:class="${#fields.hasErrors('funders[__${iteration.index}__].funder')}? 'form-group form-group-error':'form-group'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funder">
                             <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}" />
+                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <input required="required" class="form-control width-x-large"
-                               th:class="${#fields.hasErrors('funders[__${iteration.index}__].funder') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
+                               th:errorclass="form-control-error"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
                                th:attr="data-required-errormessage=#{validation.additionalinfoform.fundername.required},
                                         data-maxlength-errormessage=#{validation.additionalinfoform.funder.size(null,null,'255')}" />
@@ -335,11 +341,12 @@
                     <div th:class="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}? 'form-group form-group-error':'form-group'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funderBudget">
                             <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}" />
+                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <input required="required" type="number" min="0"
-                               th:class="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
+                               class="form-control width-x-large"
+                               th:errorclass="form-control-error"
                                th:id="${iteration.index}+'-funderBudget'"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}"
                                value=""
@@ -378,11 +385,12 @@
                 <div th:class="${#fields.hasErrors('pafNumber')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="pafNumber">
                         <span class="form-label-bold">PAF number</span>
-                    <span th:if="${#fields.hasErrors('pafNumber')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}" />
-                    </span>
+                    <th:block th:if="${#fields.hasErrors('pafNumber')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}"></span>
+                    </th:block>
                     </label>
-                    <input th:class="${#fields.hasErrors('pafNumber') ? 'form-control field-group-error width-large' : 'form-control width-large'}"
+                    <input class="form-control width-large"
+                           th:errorclass="form-control-error"
                            type="text"
                            th:field="${competitionSetupForm.pafNumber}" />
                 </div>
@@ -390,11 +398,12 @@
                 <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="budgetCode">
                         <span class="form-label-bold">Budget code</span>
-                    <span th:if="${#fields.hasErrors('budgetCode')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}" />
-                    </span>
+                        <th:block th:if="${#fields.hasErrors('budgetCode')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
-                    <input th:class="${#fields.hasErrors('budgetCode') ? 'form-control field-group-error width-large' : 'form-control width-large'}"
+                    <input class="form-control width-large"
+                           th:errorclass="form-control-error"
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}" />
                 </div>
@@ -403,27 +412,29 @@
                 <div th:class="${#fields.hasErrors('activityCode')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="competitionSetupForm.activityCode">
                         <span class="form-label-bold">Activity code</span>
-                        <span th:if="${#fields.hasErrors('activityCode')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('activityCode')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
-                    <input  th:class="${#fields.hasErrors('activityCode') ? 'form-control field-group-error width-large' : 'form-control width-large'}"
-                            type="text"
-                            th:field="${competitionSetupForm.activityCode}"
-                            maxlength="255"
-                            th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size}" />
+                    <input class="form-control width-large"
+                           th:errorclass="form-control-error"
+                           type="text"
+                           th:field="${competitionSetupForm.activityCode}"
+                           maxlength="255"
+                           th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size}" />
 
                 </div>
 
                 <div th:class="${#fields.hasErrors('competitionCode')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="competitionCode">
                         <span class="form-label-bold">Competition code</span>
-                    <span th:if="${#fields.hasErrors('competitionCode')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}" />
-                    </span>
+                        <th:block th:if="${#fields.hasErrors('competitionCode')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
                     <input readonly="readonly"
-                           th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large readonly-boxed' : 'form-control width-large readonly-boxed'}"
+                           class="form-control width-large readonly-boxed"
+                           th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-control-error'"
                            type="text"
                            name="competitionCode"
                            th:value="${competitionSetupForm.competitionCode}"
@@ -516,9 +527,9 @@
                         <legend>
                             <!--<span class="form-label-bold">Stream</span>-->
                             <span class="form-label-bold">Does the competition have multiple streams?</span>
-                            <span th:if="${#fields.hasErrors('multipleStream')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}" />
-                            </span>
+                            <th:block th:if="${#fields.hasErrors('multipleStream')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('multipleStream')}" th:text="${err}"></span>
+                            </th:block>
                         </legend>
                         <div class="multiple-choice" data-target="competition-stream-name-fields">
                             <input id="comp-stream-yes"
@@ -546,13 +557,13 @@
                         <legend>
                             <label class="form-label" for="streamName">
                                 <span class="form-label-bold">Stream name</span>
-                                <span th:if="${#fields.hasErrors('streamName')}" th:remove="tag">
-                                      <span class="error-message"  th:each="err : ${#fields.errors('streamName')}" th:text="${err}" />
-                                </span>
+                                <th:block th:if="${#fields.hasErrors('streamName')}">
+                                      <span class="error-message"  th:each="err : ${#fields.errors('streamName')}" th:text="${err}"></span>
+                                </th:block>
                             </label>
                         </legend>
-
-                        <input th:class="${#fields.hasErrors('streamName') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
+                        <input class="form-control width-x-large"
+                               th:errorclass="form-control-error"
                                type="text"
                                th:field="*{streamName}"
                                maxlength="255"
@@ -567,9 +578,9 @@
                 <fieldset class="inline">
                     <legend>
                         <span class="form-label-bold">Please choose the project type.</span>
-                        <span th:if="${#fields.hasErrors('singleOrCollaborative')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('singleOrCollaborative')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}"></span>
+                        </th:block>
                     </legend>
                     <div class="multiple-choice" th:each="collaborationLevel : ${collaborationLevels}">
                         <input th:id="${'single-or-collaborative-' + collaborationLevel.code}"
@@ -591,9 +602,9 @@
                 <fieldset class="inline">
                     <legend>
                         <span class="form-label-bold">Please choose the research categories.</span>
-                        <span th:if="${#fields.hasErrors('researchCategoryId')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('researchCategoryId')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"></span>
+                        </th:block>
                     </legend>
 
                     <div class="multiple-choice">
@@ -612,14 +623,14 @@
             </div>
 
 
-            <div th:class="${#fields.hasErrors('leadApplicantTypes')}? 'form-group error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('leadApplicantTypes')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend>
                        <span class="form-label-bold">Lead applicant</span>
                        <span class="hint">Select the lead applicant type required.</span>
-                       <span th:if="${#fields.hasErrors('leadApplicantTypes')}" th:remove="tag">
-                         <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantTypes')}" th:text="${err}" />
-                       </span>
+                       <th:block th:if="${#fields.hasErrors('leadApplicantTypes')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantTypes')}" th:text="${err}"></span>
+                       </th:block>
                     </legend>
 
                      <div class="multiple-choice" th:each="leadApplicantType : ${leadApplicantTypes}">
@@ -640,9 +651,9 @@
                     <legend>
                         <span class="form-label-bold">Research participation</span>
                         <span class="hint">This indicates the maximum level of research participation allowed.</span>
-                        <span th:if="${#fields.hasErrors('researchParticipationAmountId')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('researchParticipationAmountId')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
+                        </th:block>
                     </legend>
                     <select class="form-control width-large"
                             name="researchParticipationAmountId"
@@ -659,9 +670,9 @@
                     <legend>
                         <span class="form-label-bold">Are resubmissions allowed?</span>
                         <span class="hint">Are applicants able to resubmit an application?</span>
-                        <span th:if="${#fields.hasErrors('resubmission')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('resubmission')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}"></span>
+                        </th:block>
                     </legend>
                     <div class="multiple-choice">
                         <input id="comp-resubmissions-yes"
@@ -699,10 +710,10 @@
                     <dt>Multiple Stream</dt>
                     <dd th:text="${#strings.capitalize(competitionSetupForm.multipleStream)}"></dd>
 
-                    <div th:if="${'yes' == competitionSetupForm.multipleStream}" th:remove="tag">
+                    <th:block th:if="${'yes' == competitionSetupForm.multipleStream}">
                         <dt>Stream name</dt>
                         <dd th:text="${competitionSetupForm.streamName}"></dd>
-                    </div>
+                    </th:block>
                 </div>
 
                 <dt>Project type</dt>
@@ -982,9 +993,9 @@
                 <fieldset class="inline">
                     <legend class="heading-small">
                         How many assessors are required for each application?
-                        <span th:if="${#fields.hasErrors('assessorCount')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('assessorCount')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}"></span>
+                        </th:block>
                     </legend>
                     <div class="multiple-choice" th:each="assessorOption : ${assessorOptions}">
                         <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
@@ -1000,16 +1011,16 @@
                 <label class="form-label" for="assessorPay">
                     <span class="form-label-bold">How much do assessors receive per application?</span>
                     <span class="form-hint">This information will be available in the assessor invites.</span>
-                     <span th:if="${#fields.hasErrors('assessorPay')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}" />
-                    </span>
+                     <th:block th:if="${#fields.hasErrors('assessorPay')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
                         th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
                        data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
-                       th:errorclass="field-error"
+                       th:errorclass="form-control-error"
                        th:readonly="${isSetupAndLive}"/>
             </div>
 

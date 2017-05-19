@@ -20,9 +20,9 @@
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Project address</span>
-                            <span th:if="${#fields.hasErrors('*{addressType}')}" th:remove="tag">
-                                <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}" />
-                            </span>
+                            <th:block th:if="${#fields.hasErrors('*{addressType}')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+                            </th:block>
                         </legend>
                         <p class="form-hint">Please select the address where the majority of work will be carried out.</p>
 
@@ -36,9 +36,9 @@
 
                             <div id="registeredAddress" class="panel" th:if="${model.registeredAddress}">
                                 <p>
-                                  <span th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}" th:remove="tag">
-                                      <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-                                  </span>
+                                  <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
+                                      <th:block th:text="${addressLine}">An address line</th:block><br />
+                                  </th:block>
                                 </p>
                             </div>
                         </th:block>
@@ -53,9 +53,9 @@
 
                             <div id="operatingAddress" class="panel" th:if="${model.operatingAddress}">
                                 <p>
-                                  <span th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}" th:remove="tag">
-                                      <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-                                  </span>
+                                  <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
+                                      <th:block th:text="${addressLine}">An address line</th:block><br />
+                                  </th:block>
                                 </p>
                             </div>
                         </th:block>
@@ -70,9 +70,9 @@
 
                             <div id="projectAddress" class="panel" th:if="${model.projectAddress}">
                                 <p>
-                                  <span th:each="addressLine : ${model.projectAddress.getNonEmptyLines()}" th:remove="tag">
-                                      <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-                                  </span>
+                                  <th:block th:each="addressLine : ${model.projectAddress.getNonEmptyLines()}">
+                                      <th:block th:text="${addressLine}">An address line</th:block><br />
+                                  </th:block>
                                 </p>
                             </div>
                         </th:block>

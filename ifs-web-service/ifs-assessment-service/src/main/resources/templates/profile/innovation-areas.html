@@ -26,9 +26,9 @@
                 <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')}? error">
                     <label class="form-label" th:for="skillAreas">
                         <span class="heading-large">Skill areas</span>
-                        <span th:if="${#fields.hasErrors('skillAreas')}" th:remove="tag">
+                        <th:block th:if="${#fields.hasErrors('skillAreas')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}" />
-                        </span>
+                        </th:block>
                     </label>
                     <p class="form-hint">
                         Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
@@ -53,9 +53,9 @@
                     <fieldset class="inline">
                         <legend>
                             <span class="heading-large">Assessor type</span>
-                            <span th:if="${#fields.hasErrors('assessorType')}" th:remove="tag">
+                            <th:block th:if="${#fields.hasErrors('assessorType')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
-                            </span>
+                            </th:block>
                         </legend>
                         <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
                         <div class="multiple-choice" th:each="type : ${T(com.worth.ifs.user.resource.BusinessType).values()}">

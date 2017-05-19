@@ -20,9 +20,9 @@
                     <div class="form-group" id="project-manager-section" th:classappend="${#fields.hasErrors('*') ? 'form-group-error' : ''}">
                         <legend>
                             <span class="heading-medium">Project Manager</span>
-                            <div th:if="${#fields.hasErrors('*')}" th:remove="tag">
-                                <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}" />
-                            </div>
+                            <th:block th:if="${#fields.hasErrors('*')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
+                            </th:block>
                         </legend>
                         <p class="form-hint">Who will be the Project Manager for your project?</p>
                         <div class="multiple-choice" th:each="user : ${model.organisationUsers}" >
@@ -60,11 +60,11 @@
                                         <label for="name-project-manager">
                                           <span class="visuallyhidden">name</span>
                                         </label>
-                                        <input type="text" class="form-control width-full" th:value="*{name}" th:classappend="${#fields.hasErrors('name') ? 'field-error' : ''}" name="name" id="name-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.name.required}"/>
+                                        <input type="text" class="form-control width-full" th:value="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'form-control-error'" name="name" id="name-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.name.required}"/>
                                     </td>
                                     <td>
                                         <label for="email-project-manager" class="visuallyhidden">email</label>
-                                        <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail') ? 'field-error' : ''}" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
+                                        <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                     </td>
                                     <td class="alignright">
                                         <button class="buttonlink no-margin-bottom" id="invite-project-manager" name="invite_pm">Invite to project</button>

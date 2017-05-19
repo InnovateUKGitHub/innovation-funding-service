@@ -139,12 +139,12 @@ IFS.core.formValidation = (function () {
       if (errorStyles) {
         if (confirmsToPasswordPolicy) {
           formGroup.removeClass('error')
-          field.removeClass('field-error')
+          field.removeClass('form-control-error')
           //  clear tooWeakPassword message as this is validated in the back end.
           IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak'))
         } else {
           formGroup.addClass('error')
-          field.addClass('field-error')
+          field.addClass('form-control-error')
         }
       }
       return confirmsToPasswordPolicy
@@ -618,7 +618,7 @@ IFS.core.formValidation = (function () {
         // if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
         var errorEl = formGroup.find('[data-errorfield="' + name + '"]:contains("' + message + '"),.error-message:not([data-errorfield]):contains("' + message + '")')
         if (errorEl.length === 0) {
-          if (visuallyhidden === false) { field.addClass('field-error') }
+          if (visuallyhidden === false) { field.addClass('form-control-error') }
           var html = '<span data-errorfield="' + name + '" class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>'
           formGroup.find('legend,label,[scope="row"]').first().append(html)
         }
@@ -651,7 +651,7 @@ IFS.core.formValidation = (function () {
           formGroup.removeClass('error')
         }
         if (formGroup.find('[data-errorfield="' + name + '"]').length === 0) {
-          field.removeClass('field-error')
+          field.removeClass('form-control-error')
           if (s.html5validationMode) {
             jQuery('[name="' + name + '"]').each(function () {
               this.setCustomValidity('')
@@ -674,7 +674,7 @@ IFS.core.formValidation = (function () {
     setSectionValid: function (section) {
       section = jQuery(section)
       section.removeClass('error')
-      var inputs = section.find('.field-error')
+      var inputs = section.find('.form-control-error')
 
       //  remove error messages from section + error summary
       section.find('.error-message').each(function () {
@@ -685,7 +685,7 @@ IFS.core.formValidation = (function () {
       })
 
       jQuery.each(inputs, function () {
-        jQuery(this).removeClass('field-error').val('')
+        jQuery(this).removeClass('form-control-error').val('')
         if (s.html5validationMode) {
           this.setCustomValidity('')
         }

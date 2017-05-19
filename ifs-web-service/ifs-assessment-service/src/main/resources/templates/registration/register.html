@@ -26,9 +26,9 @@
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" th:for="firstName">
                         <span class="form-label-bold">First name</span>
-                        <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('firstName')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
                     <input class="form-control"
                            th:errorclass="field-error"
@@ -46,11 +46,12 @@
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="lastName">
                         <span class="form-label-bold">Last name</span>
-                        <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('lastName')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
-                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-group-error' : 'form-control'}"
+                    <input class="form-control"
+                           th:errorclass="form-control-error"
                            id="lastName"
                            type="text"
                            th:field="*{lastName}"
@@ -70,9 +71,9 @@
                     <label class="form-label" th:for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application.</span>
-                        <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
                     <input class="form-control"
                            th:errorclass="field-error"

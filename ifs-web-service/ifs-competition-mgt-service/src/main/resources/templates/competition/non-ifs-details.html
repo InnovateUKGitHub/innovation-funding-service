@@ -31,7 +31,8 @@
                     </span>
                 </label>
                 <input id="title"
-                       th:class="${#fields.hasErrors('title') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
+                       class="form-control width-xlarge"
+                       th:errorclass="form-control-error"
                        type="text"
                        th:field="${form.title}"
                        required="required"
@@ -91,7 +92,8 @@
                                 <div>Day</div>
                             </label>
                             <input id="openDate-day"
-                                   th:class="${#fields.hasErrors('openDate.day') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                                   th:errorclass="form-control-error"
+                                   class="form-control"
                                    type="number"
                                    placeholder="DD"
                                    required="required"
@@ -104,7 +106,8 @@
                             <label class="form-label" for="openDate-month">
                                 <span>Month</span>
                             </label>
-                            <input th:class="${#fields.hasErrors('openDate.month') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                            <input th:errorclass="form-control-error"
+                                   class="form-control width-extra-small"
                                    type="number"
                                    placeholder="MM"
                                    required="required"
@@ -118,7 +121,8 @@
                             <label class="form-label" for="openDate-year">
                                 <span>Year</span>
                             </label>
-                            <input th:class="${#fields.hasErrors('openDate.year') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                            <input th:class="form-control  width-extra-small"
+                                   th:errorclass="form-control-error"
                                    id="openDate-year"
                                    type="number"
                                    placeholder="YYYY"
@@ -133,7 +137,7 @@
             </fieldset>
 
             <fieldset>
-                <div id="closeDate" th:class="${#fields.hasErrors('closeDate*')}? 'form-group form-group-error':'form-group'">
+                <div id="closeDate" class="form-group" th:classappend="${#fields.hasErrors('closeDate*')} ? 'form-group-error'">
                     <h3 class="heading-small no-margin">Competition close date / submission deadline</h3>
                     <legend>
                         <span class="visuallyhidden">Competition close date / submission deadline</span>
@@ -150,7 +154,8 @@
                                 <div>Day</div>
                             </label>
                             <input id="closeDate-day"
-                                   th:class="${#fields.hasErrors('closeDate.day') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                                   th:errorclass="form-control-error"
+                                   class="form-control width-extra-small"
                                    type="number"
                                    placeholder="DD"
                                    required="required"
@@ -163,7 +168,8 @@
                             <label class="form-label" for="closeDate-month">
                                 <span>Month</span>
                             </label>
-                            <input th:class="${#fields.hasErrors('closeDate.month') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                            <input class="form-control width-extra-small"
+                                   th:errorclass="form-control-error"
                                    type="number"
                                    placeholder="MM"
                                    required="required"
@@ -177,7 +183,8 @@
                             <label class="form-label" for="closeDate-year">
                                 <span>Year</span>
                             </label>
-                            <input th:class="${#fields.hasErrors('closeDate.year') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                            <input class="form-control width-extra-small"
+                                   th:errorclass="form-control-error"
                                    id="closeDate-year"
                                    type="number"
                                    placeholder="YYYY"
@@ -191,7 +198,7 @@
                             <label class="form-label" for="closeDate-time">
                                 <span>Time</span>
                             </label>
-                            <select th:class="${#fields.hasErrors('closeDate.time') ? 'form-control field-group-error' : 'form-control'}"
+                            <select th:errorclass="form-control-error" class="form-control"
                                     id="closeDate-time"
                                     required="required"
                                     th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
@@ -222,7 +229,8 @@
                                 <div>Day</div>
                             </label>
                             <input id="applicantNotifiedDate-day"
-                                   th:class="${#fields.hasErrors('applicantNotifiedDate.day') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                                   class="form-control width-extra-small"
+                                   th:errorclass="form-control-error"
                                    type="number"
                                    placeholder="DD"
                                    required="required"
@@ -235,7 +243,8 @@
                             <label class="form-label" for="applicantNotifiedDate-month">
                                 <span>Month</span>
                             </label>
-                            <input th:class="${#fields.hasErrors('applicantNotifiedDate.month') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                            <input th:errorclass="form-control-error"
+                                   class="form-control width-extra-small"
                                    type="number"
                                    placeholder="MM"
                                    required="required"
@@ -249,7 +258,8 @@
                             <label class="form-label" for="openDate-year">
                                 <span>Year</span>
                             </label>
-                            <input th:class="${#fields.hasErrors('applicantNotifiedDate.year') ? 'form-control field-group-error width-extra-small' : 'form-control width-extra-small'}"
+                            <input th:errorclass="form-control-error"
+                                   class="form-control width-extra-small"
                                    id="applicantNotifiedDate-year"
                                    type="number"
                                    placeholder="YYYY"
@@ -262,7 +272,7 @@
                     </div>
                 </div>
             </fieldset>
-            <div th:class="${#fields.hasErrors('url')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('url')} ? 'form-group-error'">
                 <label class="form-label" for="url">
                     <span class="form-label-bold">Competition URL</span>
                     <span class="form-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
@@ -271,7 +281,8 @@
                     </span>
                 </label>
                 <input id="url"
-                       th:class="${#fields.hasErrors('url') ? 'form-control field-group-error width-x-large' : 'form-control width-x-large'}"
+                       class="form-control width-x-large"
+                       th:errorclass="form-control-error"
                        type="text"
                        th:field="${form.url}"
                        required="required"

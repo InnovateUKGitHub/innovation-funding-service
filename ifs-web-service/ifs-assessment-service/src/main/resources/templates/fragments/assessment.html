@@ -43,7 +43,7 @@
 
 
 <!-- =================== Application details ============================== -->
-<div th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)" th:remove="tag">
+<th:block th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)">
     <div class="grid-row">
         <div class="column-half">
             <h3 class="heading-small">Project title</h3>
@@ -64,12 +64,12 @@
         <div class="column-half">
             <h3 class="heading-small">Project timescales</h3>
             <p>Project start date:<br/>
-            <span th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" th:remove="tag" />
+            <th:block th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" />
             </p>
-            <p>Duration:<br/><span th:remove="tag" th:text="${applicationDurationInMonths}" /> months</p>
+            <p>Duration:<br/><th:block th:text="${applicationDurationInMonths}" /> months</p>
         </div>
     </div>
-</div>
+</th:block>
 
 
 <!-- ======== Assessment - assessor summary section ======= -->
@@ -81,8 +81,8 @@
 
         <div class="section-score" th:if="${question.scoreFormInputExists}">
             Score
-            <span th:text="|${question.scoreGiven}/${question.scorePossible}|" th:if="${question.scoreGiven}" th:remove="tag" />
-            <span th:unless="${question.scoreGiven}" th:remove="tag">N/A</span>
+            <th:block th:if="${question.scoreGiven}" th:text="|${question.scoreGiven}/${question.scorePossible}|" />
+            <th:block th:unless="${question.scoreGiven}">N/A</th:block>
         </div>
     </h2>
     <div class="question">
@@ -101,10 +101,10 @@
 <div th:fragment="assessment-summary-total-score(totalGiven, totalPossible, totalPercentage)">
     <div class="extra-margin alignright">
         <p class="no-margin">
-            <strong>Total: <span th:text="${totalGiven}" th:remove="tag">0</span>/<span th:text="${totalPossible}" th:remove="tag">100</span></strong>
+            <strong>Total: <th:block th:text="${totalGiven}">0</th:block>/<th:block th:text="${totalPossible}">100</th:block></strong>
         </p>
         <p>
-            <strong><span th:text="${totalPercentage}+'%'" th:remove="tag">0%</span></strong>
+            <strong th:text="${totalPercentage}+'%'">0%</strong>
         </p>
     </div>
 </div>
@@ -134,13 +134,13 @@
         <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
             <label class="form-label" th:for="rejectReason">
                 Please select a reason for rejecting the application
-                <span th:if="${#fields.hasErrors('rejectReason')}" th:remove="tag">
-                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
-                </span>
+                <th:block th:if="${#fields.hasErrors('rejectReason')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}"></span>
+                </th:block>
             </label>
             <select class="form-control"
                     th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
-                    th:errorclass="field-error"
+                    th:errorclass="form-control-error"
                     required="required"
                     th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
@@ -152,9 +152,9 @@
         <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
             <label class="form-label" th:for="rejectComment">
                 Use this space to provide more information
-                <span th:if="${#fields.hasErrors('rejectComment')}" th:remove="tag">
-                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
-                </span>
+                <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}"></span>
+                </th:block>
             </label>
             <textarea
                 class="form-control width-full"
@@ -163,7 +163,7 @@
                 data-maxwordslength="100"
                 data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                 th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                th:errorclass="field-error"
+                th:errorclass="form-control-error"
                 rows="4"
                 th:field="*{rejectComment}"></textarea>
             <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">

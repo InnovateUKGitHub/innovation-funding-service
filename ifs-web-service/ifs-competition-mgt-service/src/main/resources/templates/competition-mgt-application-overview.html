@@ -95,7 +95,7 @@
                                       data-max_words="400"
                                       data-maxwordslength="400"
                                       th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
-                                      th:errorclass="field-error"
+                                      th:errorclass="form-control-error"
                                       rows="10"
                                       th:field="*{ineligibleReason}"></textarea>
                             <div class="textarea-footer" th:with="content=*{ineligibleReason}">

@@ -65,7 +65,7 @@
                                 <input type="text"
                                        th:field="*{applicants[__${applicantStat.index}__].name}"
                                        class="form-control width-full"
-                                       th:errorclass="field-error"
+                                       th:errorclass="form-control-error"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
@@ -82,7 +82,7 @@
                                 <input type="email"
                                        th:field="*{applicants[__${applicantStat.index}__].email}"
                                        class="form-control width-full"
-                                       th:errorclass="field-error"
+                                       th:errorclass="form-control-error"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.invite.email.required},
                                                 data-email-errormessage=#{validation.standard.email.format}" />

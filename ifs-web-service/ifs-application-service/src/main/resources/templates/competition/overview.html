@@ -70,7 +70,7 @@
             </th:block>
         </div>
 
-        <div th:insert="fragments/layout :: main-content-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 
     <th:block th:insert="fragments/layout :: footer" />

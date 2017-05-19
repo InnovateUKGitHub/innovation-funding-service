@@ -168,7 +168,7 @@ IFS.competitionManagement.repeater = (function () {
                     '<label class="form-label" for="dates-' + idCount + '-content">' +
                         '<span class="form-label-bold">Content</span>' +
                     '</label>' +
-                    '<textarea cols="30" rows="5" id="dates-' + idCount + '-content" name="dates[' + count + '].content" data-editor="html" class="width-full field-error" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
+                    '<textarea cols="30" rows="5" id="dates-' + idCount + '-content" name="dates[' + count + '].content" data-editor="html" class="width-full form-control-error" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
                 '</div>' +
                 '<div class="form-group"><button class="buttonlink" type="button" data-remove-row="dateContentGroup">Remove event</button></div>' +
             '</div>'

@@ -31,15 +31,15 @@
             </p>
         </div>
 
-        <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
             <label class="form-label" for="firstName">
                 <span class="form-label-bold">First name</span>
-                <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
-                            </span>
+                <th:block th:if="${#fields.hasErrors('firstName')}">
+                      <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                </th:block>
             </label>
-            <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}"
-                   class="form-control"
+            <input class="form-control"
+                   th:classappend="${#fields.hasErrors('firstName')} ? 'form-control-error'"
                    type="text"
                    th:field="*{firstName}"
                    required="required"
@@ -50,14 +50,15 @@
                                         data-required-errormessage=#{validation.standard.firstname.required}" />
         </div>
 
-        <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
             <label class="form-label" for="lastName">
                 <span class="form-label-bold">Last name</span>
-                <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
-                            </span>
+                <th:block th:if="${#fields.hasErrors('lastName')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                </th:block>
             </label>
-            <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
+            <input class="form-control"
+                   th:classapend="${#fields.hasErrors('lastName')} ? 'form-control-error'"
                    id="lastName"
                    type="text"
                    th:field="*{lastName}"
@@ -68,15 +69,15 @@
                                         data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                         data-required-errormessage=#{validation.standard.lastname.required}" />
         </div>
-        <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
             <label class="form-label" for="phoneNumber">
                 <span class="form-label-bold">Phone number</span>
                 <span class="form-hint">We may use this to contact you about the application.</span>
-                <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
-                            </span>
+                <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                </th:block>
             </label>
-            <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"
+            <input th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-control-error'"
                    type="tel"
                    th:field="*{phoneNumber}"
                    minlength="8"
@@ -86,26 +87,27 @@
                                         data-maxlength-errormessage=#{validation.standard.phonenumber.length.max},
                                         data-required-errormessage=#{validation.standard.phonenumber.required}" />
         </div>
-        <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group error':'form-group'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('email') and invitee == null} ? 'form-group-error'">
             <label class="form-label" for="email">
                 <span class="form-label-bold">Email</span>
 
                 <th:block th:if="${invitee}">
-                                <span class="form-hint">You will need this to sign into your account, the provided email is:
-                                    <br/>
-                                <strong><span th:remove="tag" th:text="${registrationForm.email}"></span></strong>
-                                </span>
+                    <span class="form-hint">You will need this to sign into your account, the provided email is:
+                        <br/>
+                    <strong th:text="${registrationForm.email}"></strong>
+                    </span>
                 </th:block>
                 <th:block th:unless="${invitee}">
                     <span class="form-hint">You will need this to sign into your account.</span>
-                    <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
-                                      <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
-                                </span>
+                    <th:block th:if="${#fields.hasErrors('email')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                    </th:block>
                 </th:block>
             </label>
 
             <th:block th:unless="${invitee}">
-                <input th:class="${#fields.hasErrors('email') ? 'form-control field-error' : 'form-control'}"
+                <input class="form-control"
+                       th:classappend="${#fields.hasErrors('email')} ? 'form-control-error'"
                        type="email"
                        th:field="*{email}"
                        maxlength="256"

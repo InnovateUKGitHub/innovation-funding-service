@@ -32,7 +32,7 @@
                            type="text"
                            class="form-control width-full"
                            required="required"
-                           th:errorclass="field-group-error"
+                           th:errorclass="form-control-error"
                            th:field="*{noteTitle}"
                            th:attr="maxlength=${model.maxTitleCharacters},
                                     data-required-errormessage=#{validation.field.must.not.be.blank},
@@ -50,7 +50,7 @@
                                   required = "required"
                                   th:field="*{note}"
                                   class="form-control"
-                                  th:errorclass="field-group-error"
+                                  th:errorclass="form-control-error"
                                   id="note"
                                   name="note"
                                   th:attr="maxlength=${model.maxNoteCharacters},

@@ -25,7 +25,7 @@
                     </th:block>
                 </label>
                 <input class="form-control form-control-3-4"
-                       th:classappend="${#fields.hasErrors('email') ? 'field-error': ''}"
+                       th:errorclass="form-control-error"
                        type="email"
                        th:field="*{email}"
                        id="id_email"

@@ -57,7 +57,7 @@
                     <th:block th:with="rejectedValue=${form.getRejectedValue('cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays')}">
                     <input type="number"
                            class="form-control"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'field-error' : ''"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'form-control-error'"
                            th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}"
                            th:name="${'labour-labourDaysYearly-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : costCategory.workingDaysPerYear}"
@@ -122,7 +122,7 @@
                 </label>
                 <input type="text"
                        class="form-control width-full"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? field-error : ''"
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'form-control-error'"
                        th:name="${'labour-role-' + question.id + '-' + costIdentifier}"
                        th:id="${'cost-labour-'+costIdentifier+'-role'}"
                        th:value="${rejectedValue != null ? rejectedValue : cost.getRole()}"
@@ -137,7 +137,7 @@
                 </label>
                 <input type="number"
                        class="form-control width-full"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossAnnualSalary]}')} ? field-error : ''"
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossAnnualSalary]}')} ? 'form-control-error'"
                        th:name="${'labour-grossAnnualSalary-' + question.id + '-' + costIdentifier}"
                        th:id="${'cost-labour-'+costIdentifier+'-labourGrossSalary'}"
                        th:readonly="${viewmode == 'readonly'}"
@@ -170,7 +170,7 @@
                 </label>
                 <input type="number"
                        class="form-control width-full"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')} ? field-error : ''"
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')} ? 'form-control-error'"
                        th:readonly="${viewmode == 'readonly'}"
                        th:id="${'cost-labour-'+costIdentifier+'-labourDays'}"
                        th:name="${'labour-labourDays-' + question.id + '-' + costIdentifier}"
@@ -381,7 +381,7 @@
                                max="100"
                                required="required"
                                class="form-control form-control-1-4 alignright"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'field-error' : ''"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'form-control-error'"
                                placeholder="0"
                                ifs:nonZeroValue="${overheadCosts?.getRate()!=null and overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? ${overheadCosts?.getRate()} : 0" />
                     </div>
@@ -535,7 +535,7 @@
                            th:id="${'cost-materials-'+costIdentifier+'-item'}"
                            th:value="${rejectedValue != null ? rejectedValue : cost.getItem()}"
                            th:readonly="${viewmode == 'readonly'}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'field-error' : ''"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'form-control-error'"
                            required="required"
                            maxlength="255" />
                 </td>
@@ -551,7 +551,7 @@
                            placeholder="0"
                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : cost.getQuantity()}"
                            th:readonly="${viewmode == 'readonly'}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'form-control-error'"
                            min="1"
                            max="999999999"
                            required="required"
@@ -569,7 +569,7 @@
                            th:id="${'cost-materials-'+costIdentifier+'-cost'}"
                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0')}"
                            th:readonly="${viewmode == 'readonly'}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-control-error'"
                            placeholder="0"
                            min="1"
                            max="9999999999999999999"
@@ -726,7 +726,7 @@
                             max="999999999"
                             required="required"
                             th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
-                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'field-error' : ''"
+                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'form-control-error'"
                              />
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-npv')}">
@@ -746,7 +746,7 @@
                             max="9999999999999999999"
                             required="required"
                             th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
-                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'field-error' : ''" />
+                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'form-control-error'" />
 
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-residualValue')}">
@@ -766,7 +766,7 @@
                             max="9999999999999999999"
                             required="required"
                             th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
-                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'field-error' : ''"/>
+                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'form-control-error'"/>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-utilisation')}">
@@ -784,7 +784,7 @@
                            min="0"
                            max="100"
                            required="required"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'field-error' : ''"/>
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'form-control-error'"/>
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'form-group-error' : ''">
@@ -888,7 +888,7 @@
                        th:readonly="${viewmode == 'readonly'}"
                        maxlength="255"
                        required="required"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'field-error' : ''" />
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'form-control-error'" />
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-country')}">
                 <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-country'}">
@@ -903,7 +903,7 @@
                        th:readonly="${viewmode == 'readonly'}"
                        maxlength="255"
                        required="required"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'field-error' : ''" />
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'form-control-error'" />
             </div>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'form-group-error' : ''">
@@ -931,7 +931,7 @@
                        max="9999999999999999999"
                        required="required"
                        th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-control-error'"
                        />
             </div>
             <th:block th:if="${(viewmode == 'edit')}">
@@ -1037,7 +1037,7 @@
                        th:readonly="${viewmode == 'readonly'}"
                        required="required"
                        maxlength="255"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'field-error' : ''"/>
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'form-control-error'"/>
             </td>
             <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-quantity')}">
                 <label th:for="${'cost-travel-'+costIdentifier+'-quantity'}">
@@ -1055,7 +1055,7 @@
                        max="999999999"
                        required="required"
                        th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''" />
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'form-control-error'" />
             </td>
             <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-cost')}">
                 <label th:for="${'cost-travel-'+costIdentifier+'-cost'}">
@@ -1073,7 +1073,7 @@
                        max="9999999999999999999"
                        required="required"
                        th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''" />
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-control-error'" />
             </td>
             <td class="numeric">
                 <label th:for="${'cost-travel-'+costIdentifier+'-travelCostTotal'}">
@@ -1192,7 +1192,7 @@
                        max="9999999999999999999"
                        required="required"
                        th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''" />
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-control-error'" />
             </td>
             <td th:if="${viewmode == 'edit'}">
                 <button th:unless="${cost.id == null}"
@@ -1307,7 +1307,7 @@
                            class="form-control width-full"
                            th:id="${'cost-other_funding-'+costIdentifier+'-source'}"
                            th:value="${rejectedValue != null ? rejectedValue : cost.fundingSource}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'field-error' : ''"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'form-control-error'"
                            required="required"
                            maxlength="255"
                            th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
@@ -1327,7 +1327,7 @@
                            th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
                            maxlength="7"
                            th:value="${rejectedValue != null ? rejectedValue : cost.securedDate}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'field-error' : ''"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'form-control-error'"
                            required="required" />
                 </td>
 
@@ -1342,7 +1342,7 @@
                            th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"
                            th:id="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}"
                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0')}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'field-error' : ''"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'form-control-error'"
                            required="required"
                            placeholder="0"
                            min="1"

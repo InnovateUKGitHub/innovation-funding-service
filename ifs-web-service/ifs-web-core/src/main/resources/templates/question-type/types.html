@@ -178,7 +178,7 @@
                          th:field="*{__application.name__}"
                          th:attr="data-required-errormessage=#{validation.project.name.must.not.be.empty}"
                          required="required"
-                         th:errorclass="field-error" />
+                         th:errorclass="form-control-error" />
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'form-group-error'">
                     <fieldset>
@@ -197,7 +197,7 @@
                     <input class="form-control width-extra-small"
                            id="application_details-duration"
                            th:field="*{__application.durationInMonths__}"
-                           th:errorclass="field-error"
+                           th:errorclass="form-control-error"
                            type="text"
                            pattern="^([1-9]|0[1-9]|[1-2][0-9]|3[0-6])$"
                            required="required"
@@ -280,7 +280,7 @@
                                            id="application_details-previousapplicationnumber"
                                            th:field="*{__application.previousApplicationNumber__}"
                                            required="required"
-                                           th:errorclass="field-error"
+                                           th:errorclass="form-control-error"
                                            th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
                             </div>
                             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'form-group-error'">
@@ -293,7 +293,7 @@
                                        id="application_details-previousapplicationtitle"
                                        th:field="*{__application.previousApplicationTitle__}"
                                        required="required"
-                                       th:errorclass="field-error"
+                                       th:errorclass="form-control-error"
                                        th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
                             </div>
                         </div>

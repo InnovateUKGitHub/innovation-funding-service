@@ -26,9 +26,9 @@
                     <fieldset class="inline">
                         <legend class="heading-medium">
                             <span class="heading-small">Please choose the role you are signing in as today</span>
-                            <span th:if="${#fields.hasErrors('selectedRole')}" th:remove="tag">
+                            <th:block th:if="${#fields.hasErrors('selectedRole')}">
                                 <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
-                            </span>
+                            </th:block>
                         </legend>
                         <div class="multiple-choice">
                             <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />

@@ -4,12 +4,12 @@
 
 <div th:fragment="select-address">
     <fieldset>
-      <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}') ? 'form-group-error' : ''}">
+      <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}')} ? 'form-group-error'">
         <legend>
             <span class="visuallyhidden">Operating address</span>
-            <span th:if="${#fields.hasErrors('*{addressType}')}" th:remove="tag">
-                <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}" />
-            </span>
+            <th:block th:if="${#fields.hasErrors('*{addressType}')}">
+                <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+            </th:block>
         </legend>
 
         <div class="form-block" th:if="${model.registeredAddress}">
@@ -44,25 +44,25 @@
     <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
         <h3 class="heading-medium no-margin-top">Confirm billing address</h3>
         <p>
-          <span th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}" th:remove="tag">
-              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-          </span>
+          <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
+              <th:block th:text="${addressLine}">An address line</th:block><br />
+          </th:block>
         </p>
     </div>
     <div id="operatingAddress" class="boxed extra-margin" th:if="${model.operatingAddress}">
         <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm billing address')}">LOCATION TITLE</h3>
         <p>
-          <span th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}" th:remove="tag">
-              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-          </span>
+          <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
+              <th:block th:text="${addressLine}">An address line</th:block><br />
+          </th:block>
         </p>
     </div>
     <div id="bankAddress" class="boxed extra-margin" th:if="${model.bankAddress}">
         <h3 class="heading-medium no-margin-top">Confirm banking address</h3>
         <p>
-          <span th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}" th:remove="tag">
-              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-          </span>
+          <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
+              <th:block th:text="${addressLine}">An address line</th:block><br />
+          </th:block>
         </p>
     </div>
 

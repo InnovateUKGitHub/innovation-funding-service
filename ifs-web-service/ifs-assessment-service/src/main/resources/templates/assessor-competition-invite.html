@@ -22,10 +22,10 @@
             <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
             <section class="boxed">
-                <h2 class="heading-medium no-margin">
-                    <span th:text="|${#temporals.format(model.acceptsDate, 'dd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'dd MMMM yyyy')}: Assessment period|" th:remove="tag">21 March 2017 to 28 March 2017: Assessment period</span>
+                <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.acceptsDate, 'dd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'dd MMMM yyyy')}: Assessment period|">
+                    21 March 2017 to 28 March 2017: Assessment period
                 </h2>
-                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;<span th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}" th:remove="tag">100</span> per application.</p>
+                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}">100</th:block> per application.</p>
 
                 <p th:if="${model.briefingDate}" th:text="|The assessor webinar briefing will last one hour,
                     taking place at ${#strings.toLowerCase(#temporals.format(model.briefingDate, 'hh:mma'))} on ${#temporals.format(model.briefingDate, 'dd MMMM')}.|"></p>
@@ -74,14 +74,14 @@
                         </div>
 
                         <div class="panel js-hidden" id="reject-competition">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
                                 <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
                                     Please select a reason for rejecting the competition
                                     <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
                                         <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
                                 </label>
-                                <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+                                <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
                                     <option value="">Select a reason</option>
                                     <option th:each="reason : ${rejectionReasons}"
                                             th:value="${reason.id}"
@@ -89,7 +89,7 @@
                                             value="1">Not available</option>
                                 </select>
                             </div>
-                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
                                 <label class="form-label" th:for="${#ids.next('rejectComment')}">
                                     Use this space to provide more information
                                     <th:block th:if="${#fields.hasErrors('rejectComment')}">
@@ -102,7 +102,7 @@
                                           data-maxwordslength="100"
                                           data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                           th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                          th:errorclass="field-error"
+                                          th:errorclass="form-control-error"
                                           rows="4"
                                           th:field="*{rejectComment}"></textarea>
                                 <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">

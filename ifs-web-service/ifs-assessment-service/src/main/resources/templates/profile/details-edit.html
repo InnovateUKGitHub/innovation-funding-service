@@ -23,15 +23,15 @@
 
             <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
                 <h2 class="heading-medium">Your details</h2>
-                <div th:class="${#fields.hasErrors('firstName')}? 'form-group form-group-error':'form-group'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'form-group-error'">
                     <label class="form-label" th:for="firstName">
                         <span class="form-label-bold">First name</span>
                         <th:block th:if="${#fields.hasErrors('firstName')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
+                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                         </th:block>
                     </label>
                     <input class="form-control"
-                           th:errorclass="field-error"
+                           th:errorclass="form-control-error"
                            type="text"
                            th:field="*{firstName}"
                            required="required"
@@ -46,11 +46,12 @@
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group form-group-error':'form-group'">
                     <label class="form-label" for="lastName">
                         <span class="form-label-bold">Last name</span>
-                        <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('lastName')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                        </th:block>
                     </label>
-                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-group-error' : 'form-control'}"
+                    <input class="form-control"
+                           th:errorclass="form-control-error"
                            id="lastName"
                            type="text"
                            th:field="*{lastName}"
@@ -70,7 +71,7 @@
                         <label class="form-label" for="addressForm.addressLine1">
                             <span class="form-label-bold">Street</span>
                             <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine1}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine1')}" th:text="${err}" />
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine1')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <input class="form-control" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" required="required" th:field="*{addressForm.addressLine1}" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'field-error' : ''" type="text" />
@@ -79,7 +80,7 @@
                         <label class="form-label visuallyhidden" for="addressForm.addressLine2">
                             <span class="form-label-bold">Street line 2</span>
                             <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine2}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine2')}" th:text="${err}" />
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine2')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <input class="form-control" th:field="*{addressForm.addressLine2}" th:classappend="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'field-error' : ''"   type="text" />
@@ -88,7 +89,7 @@
                         <label class="form-label" for="addressForm.addressLine3">
                             <span class="form-label-bold visuallyhidden">Street line 3</span>
                             <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine3}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine3')}" th:text="${err}" />
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine3')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <input class="form-control" th:field="*{addressForm.addressLine3}"  th:classappend="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'field-error' : ''" type="text" />
@@ -97,7 +98,7 @@
                         <label class="form-label" for="addressForm.town">
                             <span class="form-label-bold">Town</span>
                             <th:block th:if="${#fields.hasErrors('*{addressForm.town}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.town')}" th:text="${err}" />
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.town')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.town.required}" th:field="*{addressForm.town}"  th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'field-error' : ''" type="text" />
@@ -106,7 +107,7 @@
                         <label class="form-label" for="addressForm.county">
                             <span class="form-label-bold">County</span>
                             <th:block th:if="${#fields.hasErrors('*{addressForm.county}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.county')}" th:text="${err}" />
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.county')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <input class="form-control" th:field="*{addressForm.county}" th:classappend="${#fields.hasErrors('*{addressForm.county}')} ? 'field-error' : ''"  type="text" />
@@ -115,7 +116,7 @@
                         <label class="form-label" for="addressForm.postcode" >
                             <span class="form-label-bold">Postcode</span>
                             <th:block th:if="${#fields.hasErrors('*{addressForm.postcode}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcode')}" th:text="${err}" />
+                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcode')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}" th:field="*{addressForm.postcode}" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'field-error' : ''" type="text" />
@@ -127,7 +128,7 @@
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application.</span>
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
+                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                         </th:block>
                     </label>
                     <input class="form-control"

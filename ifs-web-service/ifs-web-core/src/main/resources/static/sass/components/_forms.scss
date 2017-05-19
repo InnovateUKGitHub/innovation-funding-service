@@ -70,7 +70,7 @@ tr.form-group {
   }
 }
 
-.field-error {
+.form-control-error {
   @include box-shadow(none);
   border: 4px solid $error-colour;
 }
@@ -158,8 +158,8 @@ select.form-control + button.button {
   }
 }
 
-input.form-control.field-error + button.button,
-select.form-control.field-error + button.button {
+input.form-control.form-control-error + button.button,
+select.form-control.form-control-error + button.button {
   line-height:1.35;
 }
 
