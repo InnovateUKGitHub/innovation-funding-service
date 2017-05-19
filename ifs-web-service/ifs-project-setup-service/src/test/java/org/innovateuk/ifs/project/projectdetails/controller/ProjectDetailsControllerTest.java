@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectdetails;
+package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectdetails;
+package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
