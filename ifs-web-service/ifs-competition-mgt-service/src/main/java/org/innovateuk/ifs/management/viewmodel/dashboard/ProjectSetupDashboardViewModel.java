@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * View model for showing the Live competitions
+ * View model for showing the competitions in project setup
  */
 public class ProjectSetupDashboardViewModel extends DashboardViewModel {
     private List<String> formattedInnovationAreas;

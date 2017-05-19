@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * View model for showing the Live competitions
+ * View model for showing the Complete competitions
  */
 public class CompleteDashboardViewModel extends DashboardViewModel {
     public CompleteDashboardViewModel(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions,

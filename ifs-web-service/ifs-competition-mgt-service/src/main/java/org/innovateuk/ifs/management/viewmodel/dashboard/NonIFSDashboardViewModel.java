@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import java.util.List;
 
 /**
- * View model for showing the Live competitions
+ * View model for showing the non-IFS competitions
  */
 public class NonIFSDashboardViewModel {
     private List<CompetitionSearchResultItem> competitions;
