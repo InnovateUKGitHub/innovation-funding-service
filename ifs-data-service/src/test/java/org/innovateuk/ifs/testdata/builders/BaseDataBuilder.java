@@ -45,7 +45,7 @@ import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
@@ -116,7 +116,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationRepository applicationRepository;
     protected ApplicationFundingService applicationFundingService;
     protected ProjectService projectService;
-    protected ProjectMonitoringOfficerService projectMonitoringOfficerService;
+    protected MonitoringOfficerService monitoringOfficerService;
     protected FinanceRowService financeRowService;
     protected SectionService sectionService;
     protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
@@ -177,7 +177,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
         this.applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
         this.projectService = serviceLocator.getBean(ProjectService.class);
-        this.projectMonitoringOfficerService = serviceLocator.getBean(ProjectMonitoringOfficerService.class);
+        this.monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
         this.financeRowService = serviceLocator.getBean(FinanceRowService.class);
         this.sectionService = serviceLocator.getBean(SectionService.class);
         this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);

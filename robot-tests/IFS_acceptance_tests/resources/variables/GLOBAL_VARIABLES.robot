@@ -56,7 +56,6 @@ ${FUNDERS_PANEL_COMPETITION_NAME}         Internet of Things
 ${FUNDERS_PANEL_COMPETITION_NUMBER}       ${competition_ids['${FUNDERS_PANEL_COMPETITION_NAME}']}
 ${FUNDERS_PANEL_APPLICATION_1_TITLE}      Sensing & Control network using the lighting infrastructure
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_1_TITLE}']}
-${FUNDERS_PANEL_APPLICATION_1_HEADER}     ${FUNDERS_PANEL_APPLICATION_1_TITLE}
 ${FUNDERS_PANEL_APPLICATION_2_TITLE}      Matter - Planning for Web
 ${FUNDERS_PANEL_APPLICATION_2_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_2_TITLE}']}
 ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    12
@@ -64,11 +63,8 @@ ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    Empire Ltd
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
-${IN_ASSESSMENT_APPLICATION_1}            ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_1_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
-${IN_ASSESSMENT_APPLICATION_1_HEADER}     ${IN_ASSESSMENT_APPLICATION_1_TITLE}
 ${IN_ASSESSMENT_APPLICATION_3_TITLE}      Intelligent Building
-${IN_ASSESSMENT_APPLICATION_3}            ${application_ids['${IN_ASSESSMENT_APPLICATION_3_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_3_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_3_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_3_LEAD_PARTNER_EMAIL}    shawn.ward@example.com
 ${IN_ASSESSMENT_APPLICATION_4_TITLE}      Park living
@@ -104,9 +100,6 @@ ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}    ${SERVER}/management/competition/setup/$
 ${COMP_MANAGEMENT_READY_TO_OPEN}    ${SERVER}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
 ${COMP_MANAGEMENT_PROJECT_SETUP}    ${SERVER}/management/dashboard/project-setup
 ${CONFIRM_ORGANISATION_URL}    ${SERVER}/organisation/create/confirm-organisation
-${403_error_message}    You do not have the necessary permissions for your request
-${wrong_filetype_validation_error}    Please upload a file in .pdf format only
-${too_large_pdf_validation_error}    the size of file or request being submitted is too large
 ${REGISTRATION_SUCCESS}    ${SERVER}/registration/success
 ${REGISTRATION_VERIFIED}    ${SERVER}/registration/verified
 ${VIRTUAL_DISPLAY}    ${EMPTY}
@@ -116,7 +109,7 @@ ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 
-${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
+
 ${application_name}    Submit test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
@@ -126,7 +119,6 @@ ${LARGE_ORGANISATION_SIZE}     3
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
-${empty_field_warning_message}    This field cannot be left blank.
 ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
@@ -144,6 +136,17 @@ ${assessment_declaration_url}    ${server}/assessment/profile/declaration
 ${assessment_skills_url}    ${server}/assessment/profile/skills
 ${assessment_details_url}    ${server}/assessment/profile/details
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
+
+
+#General error messages
+${403_error_message}    You do not have the necessary permissions for your request
+${404_error_message}    Please check the web address or search term you entered for any errors
+${500_error_message}    something went wrong
+${wrong_filetype_validation_error}    Please upload a file in .pdf format only
+${too_large_pdf_validation_error}    the size of file or request being submitted is too large
+${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
+${empty_field_warning_message}    This field cannot be left blank.
+
 
 # Database variables
 ${database_name}    ifs

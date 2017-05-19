@@ -45,13 +45,13 @@ public class AssessorProfileDetailsController {
 
     @GetMapping
     public String getDetails(Model model,
-                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                             UserResource loggedInUser) {
         return doViewYourDetails(loggedInUser, model);
     }
 
     @GetMapping("/edit")
     public String getDetailsEdit(Model model,
-                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                 UserResource loggedInUser,
                                  @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorProfileEditDetailsForm form,
                                  BindingResult bindingResult) {
         return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
@@ -59,7 +59,7 @@ public class AssessorProfileDetailsController {
 
     @PostMapping("/edit")
     public String submitDetails(Model model,
-                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                UserResource loggedInUser,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
                                 BindingResult bindingResult,
                                 ValidationHandler validationHandler) {

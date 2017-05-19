@@ -138,15 +138,20 @@ File upload mandatory for Academic partner to mark section as complete
     then the user should see a field error     css=a.uploaded-file
 
 Applicant chooses Calculate overheads option
-    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405 , INFUND-8355
-    [Tags]      Failing
-    # Failing due to intermittent issue INFUND-8598
-    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    [Documentation]     INFUND-6788  INFUND-8191  INFUND-7405  INFUND-8355
+    [Tags]
+    [Setup]  log in as a different user                     &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
-    When the user navigates to Your-finances page  ${applicationName}
-    then the user fills in the project costs       ${applicationName}
-    When the user clicks the button/link      link=Your project costs
-    then the user should see the text in the page     ${excel_file}
+    When the user navigates to Your-finances page           ${applicationName}
+    Then the user fills in the project costs                ${applicationName}
+    And wait until element is not visible without screenshots   css=.task-list li:nth-of-type(1) .task-status-incomplete
+    When the user clicks the button/link                    link=Your project costs
+    Then the user should see the text in the page           ${excel_file}
+    And the user clicks the button/link                     jQuery=button:contains("Edit your project costs")
+    And the user clicks the button/link                     css=button[name="overheadfiledelete"]
+    When the user selects the checkbox                      agree-state-aid-page
+    And the user clicks the button/link                     jQuery=button:contains("Mark as complete")
+    Then the user should see a summary error                You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup
