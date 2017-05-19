@@ -159,7 +159,7 @@ Queries section contains finance contact name, email and telephone
     [Tags]
     When the user should see the text in the page    Sarah Peacock
     And the user should see the text in the page    74373688727
-    And the user should see the text in the page    &{successful_applicant_credentials}
+    And the user should see the text in the page    ${successful_applicant_credentials["email"]}
 
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840
@@ -290,7 +290,7 @@ Queries raised column updates to 'awaiting response'
 Finance contact receives an email when new query is posted
     [Documentation]    INFUND-4841
     [Tags]    Email
-    Then the user reads his email    &{successful_applicant_credentials["email”]}    Query regarding your finances    We have raised a query around your project finances.
+    Then the user reads his email    ${successful_applicant_credentials["email"]}    Query regarding your finances    We have raised a query around your project finances.
 
 Project finance user can add another query
     [Documentation]    INFUND-4840
@@ -504,7 +504,7 @@ Project finance user can continue the conversation
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753
     [Tags]    Email
-    Then the user reads his email    &{successful_applicant_credentials["email”]}    You have a reply to your query    We have replied to a query regarding your finances
+    Then the user reads his email    ${successful_applicant_credentials["email"]}    You have a reply to your query    We have replied to a query regarding your finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752
@@ -1138,7 +1138,8 @@ Project Finance user can Edit and Save Lead Partner's no overhead costs option
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%") + span:contains("£ 0")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("£ 0")
 
 Project Finance user can edit and save Lead Partner's calculate overheads option
     [Documentation]     INFUND-7577
@@ -1146,7 +1147,8 @@ Project Finance user can edit and save Lead Partner's calculate overheads option
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%") + span:contains("£ 0")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
     And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1286,7 +1288,8 @@ Project Finance user can edit and save Partner's no overhead costs option
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%") + span:contains("£ 0")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("£ 0")
 
 Project Finance user can edit and save in Partner's calculate overheads option
     [Documentation]     INFUND-7577
@@ -1294,7 +1297,8 @@ Project Finance user can edit and save in Partner's calculate overheads option
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%") + span:contains("£ 0")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
     And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
