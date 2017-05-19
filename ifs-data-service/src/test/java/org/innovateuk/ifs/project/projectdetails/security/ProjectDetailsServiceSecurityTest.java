@@ -1,0 +1,140 @@
+package org.innovateuk.ifs.project.projectdetails.security;
+
+import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.security.ProjectPermissionRules;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+/**
+ * Testing how the secured methods in ProjectService interact with Spring Security
+ */
+public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<ProjectDetailsService> {
+
+    private ProjectPermissionRules projectPermissionRules;
+    private ProjectLookupStrategy projectLookupStrategy;
+
+    @Before
+    public void lookupPermissionRules() {
+        projectPermissionRules = getMockPermissionRulesBean(ProjectPermissionRules.class);
+        projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
+    }
+
+    @Test
+    public void testUpdateProjectStartDate() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.updateProjectStartDate(123L, LocalDate.now()), () -> {
+            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testUpdateProjectAddress() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
+            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testUpdateFinanceContact() {
+
+        ProjectResource project = newProjectResource().build();
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.updateFinanceContact(composite, 789L), () -> {
+            verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Test
+    public void testSetProjectManager() {
+
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.setProjectManager(123L, 456L), () -> {
+            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectPermissionRules);
+        });
+    }
+
+    @Override
+    protected Class<TestProjectService> getClassUnderTest() {
+        return TestProjectService.class;
+    }
+
+    public static class TestProjectService implements ProjectDetailsService {
+
+        @Override
+        public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource projectAddress) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> submitProjectDetails(Long id, ZonedDateTime date) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
+            return null;
+        }
+    }
+}
+
