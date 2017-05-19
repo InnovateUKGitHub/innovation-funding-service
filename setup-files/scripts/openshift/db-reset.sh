@@ -54,14 +54,17 @@ fi
 dbReset
 
 echo Waiting for container to start
-until [ "$(oc get po dbreset &> /dev/null; echo $?)" == 0 ] && [ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' ]
+until [ "$(oc get po dbreset ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ] && [ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' ]
 do
   echo -n .
   sleep 5
 done
 
-oc logs -f dbreset
+oc logs -f dbreset ${SVC_ACCOUNT_CLAUSE}
 
-if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}')" != "Succeeded" ]]; then exit -1; fi
+echo Waiting for container to terminate before checking its status
+sleep 5
+
+if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
 
 exit 0
