@@ -33,15 +33,14 @@ Selecting to mark an application as ineligible opens a text box
 
 Cancel marking the application as ineligible
     [Documentation]    INFUND-7370
-    [Tags]    Pending
-    #TODO INFUND-7370
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
     Then the user should not see the element    id=ineligibleReason
 
 Mark an application as ineligible
     [Documentation]    INFUND-7370
     [Tags]    HappyPath
-    #Given the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
+    Given the user clicks the button/link    jQuery=h2 button:contains("Mark application as ineligible")
     And the user enters text to a text field   id=ineligibleReason    Hello there
     When the user clicks the button/link    jQuery=.button:contains("Mark application as ineligible")
     Then the user should see the element    jQuery=td:contains("28")
