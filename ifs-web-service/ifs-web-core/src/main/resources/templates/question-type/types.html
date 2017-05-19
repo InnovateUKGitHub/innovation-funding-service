@@ -1,4 +1,4 @@
-§<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
     <!-- ===========================Form: Add row button =========================== -->
     <div th:fragment="add_row(text, question, rowcontainer)">
@@ -233,8 +233,10 @@
                     <th:block th:unless="${model.noInnovationAreaApplicable}" th:text="${model.selectedInnovationAreaName}"/>
                     <th:block th:if="${model.noInnovationAreaApplicable}" th:text="#{ifs.application.no_innovation_area}"/>
                 </div>
-                <button id="researchArea" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">
-                    <span th:text="${model.innovationAreaText}">Choose your innovation area</span>
+                <button id="researchArea" class="buttonlink" name="submit-section-redirect"
+                        th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit"
+                        th:text="${model.innovationAreaText}">
+                    Choose your innovation area
                 </button>
             </div>
             <!--/* Input is used here to easily check if a Innovation Area has been selected for mark as complete validation */-->

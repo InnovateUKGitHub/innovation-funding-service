@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.populator.finance;
 
-import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.application.populator.forminput.AbstractFormInputPopulator;
 import org.innovateuk.ifs.application.viewmodel.finance.FinancialOverviewRowViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -15,11 +14,6 @@ public class FinancialOverviewRowPopulator extends AbstractFormInputPopulator<Fi
     @Override
     public FormInputType type() {
         return FormInputType.FINANCIAL_OVERVIEW_ROW;
-    }
-
-    @Override
-    protected void populate(AbstractApplicantResource resource, FinancialOverviewRowViewModel viewModel) {
-
     }
 
     @Override

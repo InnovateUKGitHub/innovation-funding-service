@@ -36,6 +36,8 @@ public abstract class AbstractCostPopulator<M extends AbstractCostViewModel> ext
         populateCost(resource, viewModel, organisationFinances);
     }
 
-    protected abstract void populateCost(AbstractApplicantResource resource, M viewModel, ApplicationFinanceResource organisationFinances);
+    protected void populateCost(AbstractApplicantResource resource, M viewModel, ApplicationFinanceResource organisationFinances) {
+        //Can be overridden by subclass.
+    }
 
 }

@@ -42,7 +42,9 @@ public abstract class AbstractFormInputPopulator<M extends AbstractFormInputView
         return applicantQuestion.isCompleteByApplicant(currentApplicant);
     }
 
-    protected abstract void populate(AbstractApplicantResource resource, M viewModel);
+    protected void populate(AbstractApplicantResource resource, M viewModel) {
+        //Can be overridden by subclass.
+    }
 
     protected abstract M createNew();
 }

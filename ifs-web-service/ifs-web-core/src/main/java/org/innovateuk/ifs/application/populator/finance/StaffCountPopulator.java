@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.populator.finance;
 
-import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.application.populator.forminput.AbstractFormInputPopulator;
 import org.innovateuk.ifs.application.viewmodel.finance.StaffCountViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -12,11 +11,6 @@ public class StaffCountPopulator extends AbstractFormInputPopulator<StaffCountVi
     @Override
     public FormInputType type() {
         return FormInputType.STAFF_COUNT;
-    }
-
-    @Override
-    protected void populate(AbstractApplicantResource resource, StaffCountViewModel viewModel) {
-
     }
 
     @Override
