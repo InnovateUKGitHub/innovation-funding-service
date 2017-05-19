@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectdetails.controller;
+package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
