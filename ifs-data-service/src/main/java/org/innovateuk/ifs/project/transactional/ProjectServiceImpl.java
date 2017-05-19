@@ -1,29 +1,10 @@
 package org.innovateuk.ifs.project.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.address.domain.AddressType;
-import org.innovateuk.ifs.address.mapper.AddressMapper;
-import org.innovateuk.ifs.address.repository.AddressRepository;
-import org.innovateuk.ifs.address.repository.AddressTypeRepository;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
-import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -45,7 +26,6 @@ import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -54,15 +34,10 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -72,14 +47,10 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
-    private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
-
-    public static final String WEB_CONTEXT = "/project-setup";
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -94,28 +65,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ProjectMapper projectMapper;
 
     @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private AddressMapper addressMapper;
-
-    @Autowired
     private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private OrganisationAddressRepository organisationAddressRepository;
-
-    @Autowired
-    private AddressTypeRepository addressTypeRepository;
 
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Autowired
     private OrganisationMapper organisationMapper;
-
-    @Autowired
-    private  EmailService projectEmailService;
 
     @Autowired
     private SpendProfileRepository spendProfileRepository;
@@ -139,26 +95,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
     @Autowired
-    private InviteProjectRepository inviteProjectRepository;
-
-    @Autowired
-    private InviteProjectMapper inviteProjectMapper;
-
-    @Autowired
     private FinanceChecksGenerator financeChecksGenerator;
-
-    @Autowired
-    private LoggedInUserSupplier loggedInUserSupplier;
-
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
-
-    enum Notifications {
-        INVITE_FINANCE_CONTACT,
-        INVITE_PROJECT_MANAGER,
-        GRANT_OFFER_LETTER_PROJECT_MANAGER,
-        PROJECT_LIVE
-    }
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {

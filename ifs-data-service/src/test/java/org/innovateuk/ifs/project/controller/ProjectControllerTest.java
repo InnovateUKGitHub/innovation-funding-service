@@ -4,9 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
@@ -20,23 +18,12 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
-
-    private RestDocumentationResultHandler document;
-
-    @Before
-    public void setUpDocumentation() throws Exception {
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
-    }
 
     @Override
     protected ProjectController supplyControllerUnderTest() {

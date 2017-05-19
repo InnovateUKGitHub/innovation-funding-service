@@ -4,9 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.time.ZonedDateTime;
 
@@ -16,22 +14,11 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
-
-    private RestDocumentationResultHandler document;
-
-    @Before
-    public void setUpDocumentation() throws Exception {
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
-    }
 
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {

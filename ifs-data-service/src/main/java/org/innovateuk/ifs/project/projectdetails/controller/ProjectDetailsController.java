@@ -6,13 +6,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.transactional.ProjectStatusService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.List;
-
-import static java.util.Optional.ofNullable;
 
 /**
- * ProjectController exposes Project data and operations through a REST API.
+ * ProjectController exposes Project Details data and operations through a REST API.
  */
 @RestController
 @RequestMapping("/project")
@@ -39,9 +29,6 @@ public class ProjectDetailsController {
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
-
-    @Autowired
-    private ProjectStatusService projectStatusService;
 
     @PostMapping(value="/{id}/project-manager/{projectManagerId}")
     public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {

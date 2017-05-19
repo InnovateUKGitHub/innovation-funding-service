@@ -99,18 +99,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Mock
     private FinanceChecksGenerator financeChecksGeneratorMock;
 
-    @Mock
-    private EmailService projectEmailService;
-
     private Long projectId = 123L;
     private Long applicationId = 456L;
     private Long userId = 7L;
-    private Long otherUserId = 8L;
 
     private Application application;
     private Organisation organisation;
     private Role leadApplicantRole;
-    private Role projectManagerRole;
     private Role partnerRole;
     private User user;
     private User u;
@@ -125,8 +120,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private BankDetails bankDetails;
     private SpendProfile spendProfile;
 
-    private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
-
     @Before
     public void setUp() {
 
@@ -135,7 +128,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 build();
 
         leadApplicantRole = newRole(LEADAPPLICANT).build();
-        projectManagerRole = newRole(UserRoleType.PROJECT_MANAGER).build();
 
         user = newUser().
                 withId(userId).
@@ -914,9 +906,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Override
     protected ProjectService supplyServiceUnderTest() {
-
-        ProjectServiceImpl projectService =  new ProjectServiceImpl();
-        ReflectionTestUtils.setField(projectService, "webBaseUrl", webBaseUrl);
-        return projectService;
+        return new ProjectServiceImpl();
     }
 }
