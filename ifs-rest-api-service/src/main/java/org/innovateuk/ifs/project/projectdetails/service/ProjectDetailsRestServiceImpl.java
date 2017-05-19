@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
+/**
+ * REST service for Project Details related operations
+ */
 @Service
 public class ProjectDetailsRestServiceImpl extends BaseRestService implements ProjectDetailsRestService {
 
