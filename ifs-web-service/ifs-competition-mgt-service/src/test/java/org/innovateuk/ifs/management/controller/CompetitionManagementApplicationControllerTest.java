@@ -375,7 +375,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/markIneligible", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/applications/submitted"));
+                .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/applications/ineligible"));
 
         verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
     }

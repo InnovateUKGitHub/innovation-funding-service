@@ -213,7 +213,7 @@ public class ApplicationFormController {
                                Model model,
                                @PathVariable(APPLICATION_ID) final Long applicationId,
                                @PathVariable(QUESTION_ID) final Long questionId,
-                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                               UserResource user) {
 
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
@@ -230,7 +230,7 @@ public class ApplicationFormController {
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
-            @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+            UserResource user) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
@@ -252,7 +252,7 @@ public class ApplicationFormController {
     public String applicationFormWithOpenSection(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
-                                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                                                 UserResource user) {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection);
@@ -277,7 +277,7 @@ public class ApplicationFormController {
                                      Model model,
                                      @PathVariable(APPLICATION_ID) final Long applicationId,
                                      @PathVariable(QUESTION_ID) final Long questionId,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                     UserResource user,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
 
@@ -384,7 +384,7 @@ public class ApplicationFormController {
                              Model model,
                              @PathVariable(APPLICATION_ID) final Long applicationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
-                             @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                             UserResource user) {
         FinanceRowItem costItem = addCost(applicationId, questionId, user);
         FinanceRowType costType = costItem.getCostType();
         Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
@@ -417,7 +417,7 @@ public class ApplicationFormController {
                                                    CompetitionResource competition,
                                                    ApplicationForm form,
                                                    Long sectionId, QuestionResource question,
-                                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                                   UserResource user,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response, BindingResult bindingResult, Boolean validFinanceTerms) {
 
@@ -704,7 +704,7 @@ public class ApplicationFormController {
                                         Model model,
                                         @PathVariable(APPLICATION_ID) final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
-                                        @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                        UserResource user,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
 
@@ -951,7 +951,7 @@ public class ApplicationFormController {
                                     @RequestParam("value") String value,
                                     @PathVariable(APPLICATION_ID) Long applicationId,
                                     @PathVariable("competitionId") Long competitionId,
-                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                    UserResource user,
                                     HttpServletRequest request) {
         List<String> errors = new ArrayList<>();
         Long fieldId = null;
@@ -1102,7 +1102,7 @@ public class ApplicationFormController {
     }
 
     private void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
-                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                UserResource user,
                                 HttpServletRequest request) {
 
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
