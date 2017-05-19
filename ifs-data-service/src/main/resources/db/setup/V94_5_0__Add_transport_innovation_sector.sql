@@ -2,12 +2,13 @@
 INSERT INTO `category` (`name`, `type`, `priority`) VALUES ('Transport', 'INNOVATION_SECTOR', 5);
 SET @parent_id = LAST_INSERT_ID();
 -- ADD TRANSPORT INNOVATION_AREAs
-INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('Energy and automotive', 'INNOVATION_AREA', @parent_id);
-INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('Low carbon vehicles', 'INNOVATION_AREA', @parent_id);
-INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('Marine transport', 'INNOVATION_AREA', @parent_id);
-INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('Other transport', 'INNOVATION_AREA', @parent_id);
-INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('Rail transport', 'INNOVATION_AREA', @parent_id);
-INSERT INTO `category` (`name`, `type`, `parent_id`) VALUES ('Connected and autonomous vehicles', 'INNOVATION_AREA', @parent_id);
+INSERT INTO `category` (`name`, `type`, `description`, `parent_id`) VALUES
+('Energy and automotive', 'INNOVATION_AREA', 'Including vehicle to grid, bi-directional chargers, business models', @parent_id),
+('Low carbon vehicles', 'INNOVATION_AREA', 'Low carbon vehicles', @parent_id),
+('Marine transport', 'INNOVATION_AREA', 'Marine technologies', @parent_id),
+('Other transport', 'INNOVATION_AREA', 'Innovation in other transport', @parent_id),
+('Rail transport', 'INNOVATION_AREA', 'Innovation in rail', @parent_id),
+('Connected and autonomous vehicles', 'INNOVATION_AREA', 'Connected and autonomous vehicles technology', @parent_id);
 
 --Fix priorities
 UPDATE category to_update,
