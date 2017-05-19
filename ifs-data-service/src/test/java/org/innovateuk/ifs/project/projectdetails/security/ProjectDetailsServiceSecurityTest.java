@@ -9,7 +9,6 @@ import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsSer
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.security.ProjectPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,12 +26,12 @@ import static org.mockito.Mockito.when;
  */
 public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<ProjectDetailsService> {
 
-    private ProjectPermissionRules projectPermissionRules;
+    private ProjectDetailsPermissionRules projectDetailsPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        projectPermissionRules = getMockPermissionRulesBean(ProjectPermissionRules.class);
+        projectDetailsPermissionRules = getMockPermissionRulesBean(ProjectDetailsPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 
@@ -44,8 +43,8 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.updateProjectStartDate(123L, LocalDate.now()), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
+            verify(projectDetailsPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectDetailsPermissionRules);
         });
     }
 
@@ -57,8 +56,8 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
+            verify(projectDetailsPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectDetailsPermissionRules);
         });
     }
 
@@ -71,8 +70,8 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.updateFinanceContact(composite, 789L), () -> {
-            verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
+            verify(projectDetailsPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, getLoggedInUser());
+            verifyNoMoreInteractions(projectDetailsPermissionRules);
         });
     }
 
@@ -84,8 +83,8 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.setProjectManager(123L, 456L), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
+            verify(projectDetailsPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectDetailsPermissionRules);
         });
     }
 
