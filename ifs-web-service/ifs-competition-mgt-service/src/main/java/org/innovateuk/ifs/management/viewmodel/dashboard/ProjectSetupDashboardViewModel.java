@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.viewmodel.dashboard;
 
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -16,12 +15,10 @@ public class ProjectSetupDashboardViewModel extends DashboardViewModel {
 
     public ProjectSetupDashboardViewModel(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions,
                                           CompetitionCountResource counts,
-                                          List<String> formattedInnovationAreas,
-                                          List<InnovationAreaResource> innovateAreas) {
+                                          List<String> formattedInnovationAreas) {
         this.competitions = competitions;
         this.counts = counts;
         this.formattedInnovationAreas = formattedInnovationAreas;
-        this.innovateAreas = innovateAreas;
     }
 
     public List<String> getFormattedInnovationAreas() {

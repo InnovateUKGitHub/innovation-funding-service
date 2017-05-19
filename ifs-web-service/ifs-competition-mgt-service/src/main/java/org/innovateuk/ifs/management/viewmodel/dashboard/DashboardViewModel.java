@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.viewmodel.dashboard;
 
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -14,7 +13,6 @@ import java.util.Map;
 public abstract class DashboardViewModel {
     protected Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions;
     protected CompetitionCountResource counts;
-    protected List<InnovationAreaResource> innovateAreas;
 
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getCompetitions() {
         return competitions;
@@ -22,9 +20,5 @@ public abstract class DashboardViewModel {
 
     public CompetitionCountResource getCounts() {
         return counts;
-    }
-
-    public List<InnovationAreaResource> getInnovateAreas() {
-        return innovateAreas;
     }
 }

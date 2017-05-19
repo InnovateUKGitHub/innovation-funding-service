@@ -9,6 +9,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.controller.dashboard.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
+import org.innovateuk.ifs.management.viewmodel.dashboard.LiveDashboardViewModel;
+import org.innovateuk.ifs.management.viewmodel.dashboard.NonIFSDashboardViewModel;
+import org.innovateuk.ifs.management.viewmodel.dashboard.ProjectSetupDashboardViewModel;
+import org.innovateuk.ifs.management.viewmodel.dashboard.UpcomingDashboardViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,15 +21,19 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -73,11 +81,17 @@ public class CompetitionManagementDashboardControllerTest {
         Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
         Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/live"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/live"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/live"))
-                .andExpect(MockMvcResultMatchers.model().attribute("competitions", is(competitions)))
-                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)));
+                .andReturn();
+
+        Object model = result.getModelAndView().getModelMap().get("model");
+        assertTrue(model.getClass().equals(LiveDashboardViewModel.class));
+
+        LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
+        assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(counts, viewModel.getCounts());
     }
 
     @Test
@@ -90,17 +104,23 @@ public class CompetitionManagementDashboardControllerTest {
         Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
         Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/projectSetup"))
-                .andExpect(MockMvcResultMatchers.model().attribute("competitions", is(competitions)))
-                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)))
-                .andExpect(MockMvcResultMatchers.model().attribute("formattedInnovationAreas", is(Arrays.asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO))));
+                .andReturn();
+
+        Object model = result.getModelAndView().getModelMap().get("model");
+        assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
+
+        ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
+        assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(counts, viewModel.getCounts());
+        assertEquals(asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO), viewModel.getFormattedInnovationAreas());
     }
 
     private void addInnovationAreaNamesToCompetitions(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions ) {
-        CompetitionSearchResultItem openItem = newCompetitionSearchResultItem().withInnovationAreaNames(new HashSet<>(Arrays.asList(INNOVATION_AREA_NAME_ONE, INNOVATION_AREA_NAME_TWO))).build();
-        competitions.put(CompetitionStatus.OPEN, Arrays.asList(openItem));
+        CompetitionSearchResultItem openItem = newCompetitionSearchResultItem().withInnovationAreaNames(new HashSet<>(asList(INNOVATION_AREA_NAME_ONE, INNOVATION_AREA_NAME_TWO))).build();
+        competitions.put(CompetitionStatus.OPEN, asList(openItem));
     }
 
     @Test
@@ -113,14 +133,19 @@ public class CompetitionManagementDashboardControllerTest {
         Mockito.when(competitionDashboardSearchService.getUpcomingCompetitions()).thenReturn(competitions);
         Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/upcoming"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/upcoming"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/upcoming"))
-                .andExpect(MockMvcResultMatchers.model().attribute("competitions", is(competitions)))
-                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)))
-                .andExpect(MockMvcResultMatchers.model().attribute("formattedInnovationAreas", is(Arrays.asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO))));
-    }
+                .andReturn();
 
+        Object model = result.getModelAndView().getModelMap().get("model");
+        assertTrue(model.getClass().equals(UpcomingDashboardViewModel.class));
+
+        UpcomingDashboardViewModel viewModel = (UpcomingDashboardViewModel) model;
+        assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(counts, viewModel.getCounts());
+        assertEquals(asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO), viewModel.getFormattedInnovationAreas());
+    }
 
     @Test
     public void nonIfsDashboard() throws Exception {
@@ -131,13 +156,18 @@ public class CompetitionManagementDashboardControllerTest {
         Mockito.when(competitionDashboardSearchService.getNonIfsCompetitions()).thenReturn(competitions);
         Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/non-ifs"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/non-ifs"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/non-ifs"))
-                .andExpect(MockMvcResultMatchers.model().attribute("competitions", is(competitions)))
-                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)));
-    }
+                .andReturn();
 
+        Object model = result.getModelAndView().getModelMap().get("model");
+        assertTrue(model.getClass().equals(NonIFSDashboardViewModel.class));
+
+        NonIFSDashboardViewModel viewModel = (NonIFSDashboardViewModel) model;
+        assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(counts, viewModel.getCounts());
+    }
 
     @Test
     public void searchDashboard() throws Exception {

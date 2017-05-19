@@ -23,8 +23,6 @@ public class InnovationAreaAjaxController {
     @Autowired
     private CategoryRestService categoryRestService;
 
-
-
     /* AJAX Function */
     @GetMapping("/getInnovationArea/{innovationSectorId}")
     @ResponseBody

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -34,9 +33,6 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private CompetitionService competitionService;
 
-    @Autowired
-    private CategoryRestService categoryRestService;
-
     @GetMapping("/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
@@ -45,8 +41,7 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/live")
     public String live(Model model) {
         model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(competitionDashboardSearchService.getLiveCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts(),
-                categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()));
+                competitionDashboardSearchService.getCompetitionCounts()));
 
         return TEMPLATE_PATH + "live";
     }
@@ -57,8 +52,7 @@ public class CompetitionManagementDashboardController {
 
         model.addAttribute(MODEL_ATTR, new ProjectSetupDashboardViewModel(projectSetupCompetitions,
                 competitionDashboardSearchService.getCompetitionCounts(),
-                formatInnovationAreaNames(projectSetupCompetitions),
-                categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()));
+                formatInnovationAreaNames(projectSetupCompetitions)));
 
         return TEMPLATE_PATH + "projectSetup";
     }
@@ -69,8 +63,7 @@ public class CompetitionManagementDashboardController {
 
         model.addAttribute(MODEL_ATTR, new UpcomingDashboardViewModel(upcomingCompetitions,
                 competitionDashboardSearchService.getCompetitionCounts(),
-                formatInnovationAreaNames(upcomingCompetitions),
-                categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()));
+                formatInnovationAreaNames(upcomingCompetitions)));
 
         return TEMPLATE_PATH + "upcoming";
     }
@@ -80,8 +73,7 @@ public class CompetitionManagementDashboardController {
 
         //TODO INFUND-3833
         model.addAttribute(MODEL_ATTR, new CompleteDashboardViewModel(Collections.emptyMap(),
-                competitionDashboardSearchService.getCompetitionCounts(),
-                categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()));
+                competitionDashboardSearchService.getCompetitionCounts()));
 
         return TEMPLATE_PATH + "complete";
     }
@@ -90,8 +82,7 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/non-ifs")
     public String nonIfs(Model model) {
         model.addAttribute(MODEL_ATTR, new NonIFSDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts(),
-                categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()));
+                competitionDashboardSearchService.getCompetitionCounts()));
 
         return TEMPLATE_PATH + "non-ifs";
     }
