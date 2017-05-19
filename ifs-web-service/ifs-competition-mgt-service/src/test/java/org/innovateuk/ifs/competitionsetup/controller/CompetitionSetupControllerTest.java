@@ -37,7 +37,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -167,24 +166,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/edit"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
-    }
-
-    @Test
-    public void getInnovationAreas() throws Exception {
-        Long innovationSectorId = 1L;
-        InnovationAreaResource category = newInnovationAreaResource()
-                .withId(1L)
-                .withName("Innovation Area 1")
-                .build();
-
-        when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(category)));
-
-        mockMvc.perform(get(URL_PREFIX + "/getInnovationArea/" + innovationSectorId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("[0]id", is(1)))
-                .andExpect(jsonPath("[0]name", is("Innovation Area 1")))
-                .andExpect(jsonPath("[0]type", is(INNOVATION_AREA.toString())));
-
     }
 
     @Test
