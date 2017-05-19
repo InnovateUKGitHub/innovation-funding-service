@@ -22,11 +22,10 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${inPrepComps}">
                 <th:block
-                        th:include="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                    innovationAreas=competition.innovationAreaNames,
-                    cell4=${competition.startDateDisplay}">
-                </th:block>
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.startDateDisplay}"/>
             </li>
         </ul>
     </section>
@@ -37,11 +36,10 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
                 <th:block
-                        th:include="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                    innovationAreas=competition.innovationAreaNames,
-                    cell4=${competition.startDateDisplay}">
-                </th:block>
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.startDateDisplay}"/>
             </li>
         </ul>
     </section>
