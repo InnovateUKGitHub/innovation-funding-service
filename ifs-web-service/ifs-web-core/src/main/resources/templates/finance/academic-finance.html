@@ -284,8 +284,8 @@
 <th:block th:fragment="finance_upload (model, question, formInput, readonly)"
      th:with="viewmode=${readonly ? 'readonly' : 'edit'},
          downloadUrl='/application/'+ ${model.application.id} + '/form/' + ${applicationFinanceId} + '/finance-download',
-         inputField='jes-upload',
-         validationField='formInput[jes-upload]',
+         inputField=${formInput.id},
+         validationField=${'formInput[' + formInput.id + ']'},
          mayRemove=true,
          removeName='remove_finance_document',
          saveName='upload_file'">
