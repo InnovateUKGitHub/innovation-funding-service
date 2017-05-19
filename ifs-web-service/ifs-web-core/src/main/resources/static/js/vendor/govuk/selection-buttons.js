@@ -67,12 +67,12 @@
   };
   SelectionButtons.prototype.addElementLevelEvents = function () {
     this.clickHandler = this.getClickHandler();
-    this.focusHandler = this.getFocusHandler({ 'level' : 'element' });
+    this.focusHandler = this.getFocusHandler({ 'level' : 'document' });
 
     // Changed the event handler so we can add form fields after page load
     $(document)
       .on('click', this.$elms, this.clickHandler)
-      .on('focus blur', this.$elms, this.focusHandler);
+      .on('focusin focusout', this.$elms, this.focusHandler);
   };
   SelectionButtons.prototype.addDocumentLevelEvents = function () {
     this.clickHandler = this.getClickHandler();
@@ -80,7 +80,7 @@
 
     $(document)
       .on('click', this.selector, this.clickHandler)
-      .on('focus blur', this.selector, this.focusHandler);
+      .on('focusin focusout', this.selector, this.focusHandler);
   };
   SelectionButtons.prototype.getClickHandler = function () {
     return function (e) {
@@ -100,11 +100,11 @@
     if (typeof this.selector !== 'undefined') {
       $(document)
         .off('click', this.selector, this.clickHandler)
-        .off('focus blur', this.selector, this.focusHandler);
+        .off('focusin focusout', this.selector, this.focusHandler);
     } else {
       $(document)
         .off('click', this.$elms, this.clickHandler)
-        .off('focus blur', this.$elms, this.focusHandler);
+        .off('focusin focusout', this.$elms, this.focusHandler);
     }
   };
 

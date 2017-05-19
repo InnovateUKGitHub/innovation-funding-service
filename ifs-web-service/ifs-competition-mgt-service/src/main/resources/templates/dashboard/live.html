@@ -23,9 +23,8 @@
                 <th:block
                     th:include="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
-                    innovationAreas=competition.innovationAreaNames,
-                    cell4=${competition.numberOfApplications + ' applicants'}">
-                </th:block>
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.numberOfApplications + ' applicants'}"/>
             </li>
         </ul>
     </section>
@@ -36,11 +35,10 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${closedComps}">
                 <th:block
-                        th:include="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                    innovationAreas=competition.innovationAreaNames,
-                    cell4=${competition.numberOfApplications + ' applicants'}">
-                </th:block>
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.numberOfApplications + ' applicants'}"/>
             </li>
         </ul>
     </section>
@@ -51,11 +49,10 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${inAssesmentComps}">
                 <th:block
-                        th:include="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                    innovationAreas=competition.innovationAreaNames,
-                    cell4=${competition.numberOfApplications + ' applicants'}">
-                </th:block>
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.numberOfApplications + ' applicants'}"/>
             </li>
         </ul>
     </section>
@@ -67,11 +64,10 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${panelComps}">
                 <th:block
-                        th:include="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                    innovationAreas=competition.innovationAreaNames,
-                    cell4=${competition.numberOfApplications + ' applicants'}">
-                </th:block>
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.numberOfApplications + ' applicants'}"/>
             </li>
         </ul>
     </section>
@@ -83,11 +79,10 @@
         <ul class="list-overview">
             <li class="grid-row section" th:each="competition : ${informComps}">
                 <th:block
-                        th:include="competition/dashboard :: dashboard-row"
-                        th:with="competition=${competition},
-                    innovationAreas=competition.innovationAreaNames,
-                    cell4=${competition.numberOfApplications + ' applicants'}">
-                </th:block>
+                    th:include="competition/dashboard :: dashboard-row"
+                    th:with="competition=${competition},
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.numberOfApplications + ' applicants'}"/>
             </li>
         </ul>
     </section>
