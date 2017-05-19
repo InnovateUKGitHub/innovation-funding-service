@@ -68,6 +68,11 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
+    public ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId) {
+        return projectRestService.setApplicationDetailsSubmitted(projectId).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
         return projectRestService.isSubmitAllowed(projectId).toServiceResult();
     }

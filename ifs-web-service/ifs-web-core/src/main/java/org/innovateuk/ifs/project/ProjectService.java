@@ -27,8 +27,6 @@ public interface ProjectService {
 
     ServiceResult<List<ProjectResource>> findByUser(Long userId);
 
-    ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId);
-
     OrganisationResource getLeadOrganisation(Long projectId);
 
     OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
