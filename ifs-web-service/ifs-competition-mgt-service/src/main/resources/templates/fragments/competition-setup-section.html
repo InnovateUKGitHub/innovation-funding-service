@@ -423,7 +423,7 @@
                     </span>
                     </label>
                     <input readonly="readonly"
-                           th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
+                           th:class="${#fields.hasErrors('competitionCode') ? 'form-control field-error width-large readonly-boxed' : 'form-control width-large readonly-boxed'}"
                            type="text"
                            name="competitionCode"
                            th:value="${competitionSetupForm.competitionCode}"

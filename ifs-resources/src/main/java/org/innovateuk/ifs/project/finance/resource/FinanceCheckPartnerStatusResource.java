@@ -13,13 +13,15 @@ public class FinanceCheckPartnerStatusResource {
     private Eligibility eligibility;
     private EligibilityRagStatus eligibilityRagStatus;
     private boolean awaitingResponse;
+    private boolean financeContactProvided;
 
     public FinanceCheckPartnerStatusResource() {
     }
 
     public FinanceCheckPartnerStatusResource(Long id, String name, boolean isLead, Viability viability,
                                              ViabilityRagStatus viabilityRagStatus, Eligibility eligibility,
-                                             EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse) {
+                                             EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse,
+                                             boolean financeContactProvided) {
         this.id = id;
         this.name = name;
         this.isLead = isLead;
@@ -28,6 +30,7 @@ public class FinanceCheckPartnerStatusResource {
         this.eligibility = eligibility;
         this.eligibilityRagStatus = eligibilityRagStatus;
         this.awaitingResponse = awaitingResponse;
+        this.financeContactProvided = financeContactProvided;
     }
 
     public Long getId() {
@@ -90,5 +93,13 @@ public class FinanceCheckPartnerStatusResource {
 
     public void setAwaitingResponse(boolean awaitingResponse) {
         this.awaitingResponse = awaitingResponse;
+    }
+
+    public boolean isFinanceContactProvided() {
+        return financeContactProvided;
+    }
+
+    public void setFinanceContactProvided(boolean financeContactProvided) {
+        this.financeContactProvided = financeContactProvided;
     }
 }
