@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.controller;
+package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
@@ -14,7 +14,13 @@ import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -28,7 +34,7 @@ import static java.util.Optional.ofNullable;
  */
 @RestController
 @RequestMapping("/project")
-public class ProjectController {
+public class ProjectDetailsController {
 
     @Autowired
     private ProjectService projectService;
@@ -36,7 +42,7 @@ public class ProjectController {
     @Autowired
     private ProjectStatusService projectStatusService;
 
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
         return projectService.getProjectById(id).toGetResponse();
     }
@@ -49,9 +55,9 @@ public class ProjectController {
     @GetMapping("/")
     public RestResult<List<ProjectResource>> findAll() {
         return projectService.findAll().toGetResponse();
-    }
+    }*/
 
-   /* @PostMapping(value="/{id}/project-manager/{projectManagerId}")
+    @PostMapping(value="/{id}/project-manager/{projectManagerId}")
     public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
         return projectService.setProjectManager(id, projectManagerId).toPostResponse();
     }
@@ -68,14 +74,14 @@ public class ProjectController {
                                                  @RequestParam("addressType") final String addressType,
                                                  @RequestBody AddressResource addressResource) {
         return projectService.updateProjectAddress(leadOrganisationId, projectId, OrganisationAddressType.valueOf(addressType), addressResource).toPostResponse();
-    }*/
-
-    @GetMapping(value = "/user/{userId}")
-    public RestResult<List<ProjectResource>> findByUserId(@PathVariable("userId") final Long userId) {
-        return projectService.findByUserId(userId).toGetResponse();
     }
 
-    /*@PostMapping("/{projectId}/organisation/{organisation}/finance-contact")
+/*    @GetMapping(value = "/user/{userId}")
+    public RestResult<List<ProjectResource>> findByUserId(@PathVariable("userId") final Long userId) {
+        return projectService.findByUserId(userId).toGetResponse();
+    }*/
+
+    @PostMapping("/{projectId}/organisation/{organisation}/finance-contact")
     public RestResult<Void> updateFinanceContact(@PathVariable("projectId") final Long projectId,
                                                  @PathVariable("organisation") final Long organisationId,
                                                  @RequestParam("financeContact") Long financeContactUserId) {
@@ -93,9 +99,9 @@ public class ProjectController {
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
                                                  @RequestBody @Valid final InviteProjectResource inviteResource) {
         return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
-    }*/
+    }
 
-    @GetMapping("/{projectId}/project-users")
+    /*@GetMapping("/{projectId}/project-users")
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
     }
@@ -104,13 +110,13 @@ public class ProjectController {
     public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
         return projectService.submitProjectDetails(projectId, ZonedDateTime.now()).toPostResponse();
     }
-
-    /*@GetMapping("/{projectId}/isSubmitAllowed")
+*/
+    @GetMapping("/{projectId}/isSubmitAllowed")
     public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
         return projectService.isSubmitAllowed(projectId).toGetResponse();
     }
-*/
-    @GetMapping("/{projectId}/getOrganisationByUser/{userId}")
+
+    /*@GetMapping("/{projectId}/getOrganisationByUser/{userId}")
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
                                                                             @PathVariable("userId") final Long userId){
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
@@ -127,9 +133,9 @@ public class ProjectController {
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
                                                                @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
-    }
+    }*/
 
-    @GetMapping("/{projectId}/project-manager")
+   /* @GetMapping("/{projectId}/project-manager")
     public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
         return projectService.getProjectManager(projectId).toGetResponse();
     }
@@ -137,5 +143,5 @@ public class ProjectController {
     @GetMapping("/{projectId}/status")
     public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
-    }
+    }*/
 }
