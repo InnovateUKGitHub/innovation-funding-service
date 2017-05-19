@@ -8,16 +8,16 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentFinancesSummaryViewModel;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
@@ -55,7 +56,7 @@ public class AssessmentFinancesSummaryModelPopulator {
     private QuestionService questionService;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
@@ -120,7 +121,7 @@ public class AssessmentFinancesSummaryModelPopulator {
         ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
 
         return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(o.getOrganisationType()))
+                .filter(o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()))
                 .collect(Collectors.toCollection(supplier));
     }
 
@@ -161,7 +162,8 @@ public class AssessmentFinancesSummaryModelPopulator {
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputService.findApplicationInputsByCompetition(competitionId);
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION)
+                .getSuccessObjectOrThrowException();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())

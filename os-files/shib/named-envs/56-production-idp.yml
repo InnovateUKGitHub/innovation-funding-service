@@ -21,7 +21,7 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-idp:0.5.5
+        - image: innovateuk/ifs-shib-idp:0.6.2
           name: idp
           imagePullPolicy: IfNotPresent
           env:
@@ -69,6 +69,8 @@ items:
             value: "mail,uid"
           - name: LDAPAUTHENTICATOR
             value: "bindSearchAuthenticator"
+          - name: GOOGLEANALYTICS_TRACKINGID
+            value: "UA-3837161-32"
           ports:
           - containerPort: 9443
           - containerPort: 9080

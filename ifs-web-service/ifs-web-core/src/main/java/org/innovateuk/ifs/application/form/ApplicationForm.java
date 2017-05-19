@@ -15,8 +15,6 @@ public class ApplicationForm extends Form {
     @Valid
     private ApplicationResource application;
 
-    private MultipartFile assessorFeedback;
-
     private boolean adminMode = false;
 
     private boolean termsAgreed;
@@ -24,6 +22,8 @@ public class ApplicationForm extends Form {
     private boolean stateAidAgreed;
 
     private Long impersonateOrganisationId;
+
+    private String ineligibleReason;
 
     public ApplicationForm() {
         super();
@@ -35,6 +35,15 @@ public class ApplicationForm extends Form {
 
     public void setApplication(ApplicationResource application) {
         this.application = application;
+    }
+
+    /** Placeholder function for mapping errors to field in Thymeleaf */
+    public String getOrganisationSize() {
+        return "";
+    }
+
+    /** Placeholder function for mapping errors to field in Thymeleaf */
+    public void setOrganisationSize(String organisationSize) {
     }
 
     public boolean isAdminMode() {
@@ -51,14 +60,6 @@ public class ApplicationForm extends Form {
 
     public void setImpersonateOrganisationId(Long impersonateOrganisationId) {
         this.impersonateOrganisationId = impersonateOrganisationId;
-    }
-
-    public MultipartFile getAssessorFeedback() {
-        return assessorFeedback;
-    }
-
-    public void setAssessorFeedback(MultipartFile assessorFeedback) {
-        this.assessorFeedback = assessorFeedback;
     }
 
     public boolean isTermsAgreed() {
@@ -81,5 +82,13 @@ public class ApplicationForm extends Form {
         FieldError fieldError = getBindingResult().getFieldError("formInput[" + fieldId + "]");
         Object rejectedValue = fieldError != null ? fieldError.getRejectedValue() : null;
         return rejectedValue != null ? rejectedValue.toString() : null;
+    }
+
+    public String getIneligibleReason() {
+        return ineligibleReason;
+    }
+
+    public void setIneligibleReason(String ineligibleReason) {
+        this.ineligibleReason = ineligibleReason;
     }
 }

@@ -36,9 +36,9 @@ public class AssessorCompetitionDashboardController {
 
     @GetMapping("/dashboard/competition/{competitionId}")
     public String competitionDashboard(final Model model,
-                                       @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                       UserResource loggedInUser,
                                        @PathVariable("competitionId") final Long competitionId,
-                                       @ModelAttribute(FORM_ATTR_NAME) AssessorCompetitionDashboardAssessmentForm form) {
+                                       @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorCompetitionDashboardAssessmentForm form) {
 
         model.addAttribute("model", assessorCompetitionDashboardModelPopulator.populateModel(competitionId, loggedInUser.getId()));
         return "assessor-competition-dashboard";
@@ -47,7 +47,7 @@ public class AssessorCompetitionDashboardController {
     @PostMapping("/dashboard/competition/{competitionId}")
     public String submitAssessments(Model model,
                                     @PathVariable("competitionId") Long competitionId,
-                                    @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                    UserResource loggedInUser,
                                     @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
@@ -68,7 +68,7 @@ public class AssessorCompetitionDashboardController {
     @PostMapping("/dashboard/confirm-competition/{competitionId}")
     public String confirmSubmitAssessments(Model model,
                                            @PathVariable("competitionId") final Long competitionId,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                           UserResource loggedInUser,
                                            @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler) {

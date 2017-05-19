@@ -19,9 +19,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
-import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
@@ -51,6 +53,7 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -68,9 +71,6 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     private OpenApplicationFinanceSectionModelPopulator populator;
 
     @Mock
-    private FormInputResponseService formInputResponseService;
-
-    @Mock
     private QuestionService questionService;
 
     @Mock
@@ -86,7 +86,13 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private FormInputService formInputService;
+    private FormInputRestService formInputRestService;
+
+    @Mock
+    private FormInputResponseService formInputResponseService;
+
+    @Mock
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
     private CompetitionService competitionService;
@@ -147,7 +153,6 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
-
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisationId());
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
@@ -190,7 +195,6 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
-
         BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisationId());
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
@@ -226,19 +230,23 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(leadApplicantProcessRole);
         when(userService.findById(leadApplicantProcessRole.getUser())).thenReturn(userResource);
 
-        when(formInputService.findApplicationInputsByCompetition(competitionResource.getId())).thenReturn(formInputs);
+        when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn(restSuccess(formInputs));
 
-        when(organisationService.getOrganisationType(userResource.getId(), applicationResource.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        when(organisationService.getOrganisationType(userResource.getId(), applicationResource.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(Optional.of(newOrganisationResource().build()));
 
         DefaultFinanceModelManager financeManager = mock(DefaultFinanceModelManager.class);
-        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(financeManager);
+        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(financeManager);
 
         QuestionResource question = newQuestionResource().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), eq(FormInputType.APPLICATION_DETAILS))).thenReturn(ServiceResult.serviceSuccess(question));
         Map<Long, QuestionStatusResource> statuses = new HashMap<>();
         statuses.put(question.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build());
         when(questionService.getQuestionStatusesForApplicationAndOrganisation(eq(applicationResource.getId()), anyLong())).thenReturn(statuses);
+
+        List<FormInputResponseResource> formInputResponseResources = new ArrayList<>();
+        when(formInputResponseRestService.getResponsesByApplicationId(applicationResource.getId())).thenReturn(restSuccess(formInputResponseResources));
+        when(formInputRestService.getByCompetitionIdAndScope(applicationResource.getCompetition(), APPLICATION)).thenReturn(restSuccess(new ArrayList<>()));
 
         ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
         when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), applicationResource.getId())).thenReturn(financeOverviewViewModel);

@@ -52,9 +52,6 @@ public class AssessorRegistrationController {
     private AssessorService assessorService;
 
     @Autowired
-    private EthnicityRestService ethnicityRestService;
-
-    @Autowired
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Autowired
@@ -78,7 +75,7 @@ public class AssessorRegistrationController {
     @GetMapping("/{inviteHash}/register")
     public String yourDetails(Model model,
                               @PathVariable("inviteHash") String inviteHash,
-                              @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm form) {
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorRegistrationForm form) {
         return doViewYourDetails(model, inviteHash);
     }
 
@@ -111,7 +108,7 @@ public class AssessorRegistrationController {
     }
 
     @GetMapping(value = "/{inviteHash}/register/account-created")
-    public String accountCreated(Model model, @PathVariable("inviteHash") String inviteHash, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String accountCreated(Model model, @PathVariable("inviteHash") String inviteHash, UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;
 
         // the user is already logged in, take them back to the invite
@@ -230,11 +227,6 @@ public class AssessorRegistrationController {
 
     private String doViewYourDetails(Model model, String inviteHash) {
         model.addAttribute("model", yourDetailsModelPopulator.populateModel(inviteHash));
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "registration/register";
-    }
-
-    private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
     }
 }

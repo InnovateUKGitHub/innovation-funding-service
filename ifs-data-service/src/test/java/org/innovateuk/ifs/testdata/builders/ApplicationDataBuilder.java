@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
-import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
@@ -71,7 +68,8 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     applicationInnovationAreaService.setNoInnovationAreaApplies(data.getApplication().getId());
                 } else if (!innovationAreaName.isEmpty()) {
                     InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
-                    applicationInnovationAreaService.setInnovationArea(data.getApplication().getId(), innovationArea.getId());
+                    applicationInnovationAreaService.setInnovationArea(data.getApplication().getId(), innovationArea.getId())
+                            .getSuccessObjectOrThrowException();
                 }
             });
     }
@@ -150,18 +148,32 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder beginApplication() {
 
         return asLeadApplicant(data ->
-                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.OPEN).
+                applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.OPEN).
                         getSuccessObjectOrThrowException());
     }
 
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data -> {
-            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.SUBMITTED).
+            applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.SUBMITTED).
                     getSuccessObjectOrThrowException();
 
             applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), ZonedDateTime.now()).getSuccessObjectOrThrowException();
             applicationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccessObjectOrThrowException();
+        });
+    }
+
+    public ApplicationDataBuilder markApplicationIneligible(String ineligibleReason) {
+        return asCompAdmin(data ->  {
+            IneligibleOutcomeResource reason = new IneligibleOutcomeResource(ineligibleReason);
+            applicationService.markAsIneligible(data.getApplication().getId(), ineligibleOutcomeMapper.mapToDomain(reason));
+        });
+    }
+
+    public ApplicationDataBuilder informApplicationIneligible() {
+        return asCompAdmin(data -> {
+            ApplicationIneligibleSendResource resource = new ApplicationIneligibleSendResource("subject", "content");
+            applicationService.informIneligible(data.getApplication().getId(), resource);
         });
     }
 
@@ -209,6 +221,10 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
     private ApplicationDataBuilder asLeadApplicant(Consumer<ApplicationData> action) {
         return with(data -> doAs(data.getLeadApplicant(), () -> action.accept(data)));
+    }
+
+    private ApplicationDataBuilder asCompAdmin(Consumer<ApplicationData> action) {
+        return with(data -> {doAs(compAdmin(), () -> action.accept(data));});
     }
 
     private void doApplicationDetailsUpdate(ApplicationData data, Consumer<ApplicationResource> updateFn) {

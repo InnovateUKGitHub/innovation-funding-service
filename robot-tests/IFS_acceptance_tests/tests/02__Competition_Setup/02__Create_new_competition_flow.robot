@@ -51,6 +51,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-6773 As a Competitions team member I want to see Finances form defaulted to Full application finances
 ...
 ...               INFUND-6922 Update 'Competition setup' menu page to include a link to new 'Public content' page
+...
+...               INFUND-9225 Update 'Eligibility' > 'Lead applicant' to enable single or multi-selection
+...
+...               INFUND-9152 Add an 'Innovation sector' of 'Open' where 'Competition type' is 'Sector'
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -73,25 +77,34 @@ User can create a new competition
     And The user should not see the element    link=Application
     And The user should not see the element    link=Assessors
     And The user should not see the element    link=Public content
-    And The user should see the element        link=Initial details
+    And The user should see the element    link=Initial details
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
-    Given The user clicks the button/link  link=All competitions
-    And the user navigates to the page     ${CA_UpcomingComp}
+    Given The user clicks the button/link    link=All competitions
+    And the user navigates to the page    ${CA_UpcomingComp}
     Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
+
+Initial details -Inovation sector of Open should be visible
+    [Documentation]    INFUND-9152
+    [Tags]    HappyPath
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user clicks the button/link    link=Initial details
+    And the user selects the option from the drop-down menu    Sector    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Open    id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu    Biosciences    id=innovationAreaCategoryId-0
+    And the user clicks the button/link    jQuery=button:contains("+ add another innovation area")
+    The user should not see the selected option again
 
 Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page       ${COMP_MANAGEMENT_COMP_SETUP}
-    Given The user clicks the button/link           link=Initial details
-    When the user selects the option from the drop-down menu  Programme  id=competitionTypeId
-    And the user should not see the element         jQuery=.buttonlink:contains("+ add another innovation area")
+    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    And the user should not see the element    jQuery=.buttonlink:contains("+ add another innovation area")
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
-    When the user clicks the button/link            jQuery=.button:contains("Done")
-    Then the user should see the text in the page   John Doe
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see the text in the page    John Doe
     And the user should see the text in the page    1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
@@ -232,37 +245,31 @@ Funding information: should have a green check
     And the user should not see the element    jQuery=.button:contains("Save")
 
 Eligibility: Contain the correct options
-    [Documentation]    INFUND-2989
-    ...
-    ...    INFUND-2990
+    [Documentation]    INFUND-2989 INFUND-2990 INFUND-9225
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
     And the user should see the text in the page    Please choose the project type.
-    Then the user should see the element    jQuery=label:contains(Single or Collaborative)
-    When the user should see the element    jQuery=label:contains(Collaborative)
-    And the user should see the element    jQuery=label:contains(Business)
-    And the user should see the element    jQuery=label:contains(Research)
-    And the user should see the element    jQuery=label:contains(Either)
+    Then the user should see the element    jQuery=label:contains("Single or Collaborative")
+    When the user should see the element    jQuery=label:contains("Collaborative")
+    And the user should see the element    jQuery=label:contains("Business")
+    And the user should see the element    jQuery=label:contains("Research and technology organisations")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
-    And the user should see the element    jQuery=label:contains(Feasibility studies)
-    And the user should see the element    jQuery=label:contains(Industrial research)
-    And the user should see the element    jQuery=label:contains(Experimental development)
+    And the user should see the element    jQuery=label:contains("Feasibility studies")
+    And the user should see the element    jQuery=label:contains("Industrial research")
+    And the user should see the element    jQuery=label:contains("Experimental development")
     And the resubmission should not have a default selection
 
 Eligibility: Mark as Done then Edit again
-    [Documentation]    INFUND-3051
-    ...
-    ...    INFUND-3872
-    ...
-    ...    INFUND-3002
+    [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225
     [Tags]    HappyPath
     Given the user selects the checkbox    research-categories-33
     And the user selects the checkbox    research-categories-34
     And the user selects the checkbox    research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
-    And the user selects the radio button    leadApplicantType    business
+    And the user selects the checkbox   lead-applicant-type-1  # business
+    And the user selects the checkbox   lead-applicant-type-3  # RTOs
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
     And the user moves focus and waits for autosave
     And the user selects the radio button    resubmission    no
@@ -665,3 +672,6 @@ the user enters multiple innovation areas
     the user selects the option from the drop-down menu    Space technology    id=innovationAreaCategoryId-1
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
     the user selects the option from the drop-down menu    Creative industries    id=innovationAreaCategoryId-2
+
+The user should not see the selected option again
+    List Should not Contain Value    id=innovationAreaCategoryId-1    Biosciences

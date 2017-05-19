@@ -9,13 +9,8 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:insert="fragments/layout :: header-sub"
-         th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner/documents/(projectId=${model.projectId})}"
-         th:remove="tag"/>
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
-        <h1 class="heading-xlarge">Submit other documents</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: header-sub"  th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner/documents/(projectId=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit other documents',subTitle=${model.projectName},size='heading-xlarge'" />
     <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
     <hr/>
     <form th:action="@{/project/{projectId}/partner/documents/submit(projectId=${model.projectId})}" th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}" method="post">

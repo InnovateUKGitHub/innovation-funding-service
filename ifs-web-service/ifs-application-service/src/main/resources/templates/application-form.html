@@ -23,12 +23,11 @@
 
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" />
 
-          	<div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.currentApplication.id},applicationName=${model.application.currentApplication.name})" />
-                <h1 class="heading-xlarge" th:text="${model.title}" />
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.application.currentApplication.name)} ? #{ifs.application.no_title} : ${model.application.currentApplication.name}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
-            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
                     th:with="appIsClosed=${model.application.applicationIsClosed}, readonly=${model.application.applicationIsReadOnly}" novalidate="novalidate">
                 <!--/* To disable submission on pressing return (INFUND-6892) */-->
                 <th:block th:unless="${model.application.allReadOnly}">
@@ -40,7 +39,7 @@
                      questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                      currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
                      pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}">
+                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}, summary=false">
 
                     <th:block th:if="${formInput.type.displayableQuestionType}">
                         <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
@@ -113,7 +112,7 @@
 
                 <th:block th:if="${model.showReturnButtons}">
                     <th:block th:if="${model.application.allReadOnly}">
-                        <a th:href="${backURL}" class="button-secondary" name="submit-section" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
+                        <a th:href="${backURL}" class="button-secondary" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
                     </th:block>
                     <th:block th:unless="${model.application.allReadOnly}">
                         <button th:unless="${model.isSection}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>

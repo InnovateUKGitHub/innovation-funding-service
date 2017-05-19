@@ -30,6 +30,8 @@ IFS.core.loadOrder = {
       IFS.core.finance.init()
       IFS.core.progressiveGroupSelect.init()
       IFS.core.singleSubmit.init()
+      IFS.core.submitNotification.init()
+      IFS.core.passwordToggle.init()
     },
     finalize: function () {
       IFS.core.modal.init()

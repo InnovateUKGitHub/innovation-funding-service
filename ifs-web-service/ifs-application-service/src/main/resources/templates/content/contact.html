@@ -10,10 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <div class="page-title">
-        <h1 class="heading-xlarge no-margin" >Contact us</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Contact us',size='heading-xlarge'" />
 
     <p>We can provide you with information and advice on Innovate UK competitions. We also provide help and technical support on using the Innovation Funding Service.</p>
 

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.registration.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -20,6 +20,9 @@ public class OrganisationCreationForm implements Serializable {
     @Valid
     private AddressForm addressForm = new AddressForm();
     private boolean triedToSave = false;
+
+    @NotNull(message = "{validation.standard.organisationtype.required}")
+    private Long organisationTypeId;
 
     @NotNull(message = "{validation.standard.organisationtyperesource.required}")
     private OrganisationTypeResource organisationType;
@@ -37,7 +40,6 @@ public class OrganisationCreationForm implements Serializable {
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
-
     }
 
     public OrganisationCreationForm(List<OrganisationSearchResult> companyHouseList) {
@@ -50,6 +52,14 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setManualEntry(boolean manualEntry) {
         this.manualEntry = manualEntry;
+    }
+
+    public Long getOrganisationTypeId() {
+        return organisationTypeId;
+    }
+
+    public void setOrganisationTypeId(Long organisationTypeId) {
+        this.organisationTypeId = organisationTypeId;
     }
 
     public OrganisationTypeResource getOrganisationType() {

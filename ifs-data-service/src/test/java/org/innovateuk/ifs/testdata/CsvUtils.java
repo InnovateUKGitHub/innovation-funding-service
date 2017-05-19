@@ -6,16 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.io.File;
@@ -330,12 +327,13 @@ class CsvUtils {
         String leadApplicant;
         List<String> collaborators;
         ZonedDateTime submittedDate;
-        ApplicationStatus status;
+        ApplicationState status;
         boolean markFinancesComplete;
         String researchCategory;
         String innovationArea;
         boolean resubmission;
         boolean markDetailsComplete;
+        String ineligibleReason;
 
         private ApplicationLine(List<String> line) {
             int i = 0;
@@ -347,12 +345,13 @@ class CsvUtils {
             String collaboratorString = nullable(line.get(i++));
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
-            status = ApplicationStatus.valueOf(line.get(i++).toUpperCase());
+            status = ApplicationState.valueOf(line.get(i++).toUpperCase());
             markFinancesComplete = nullableBoolean(line.get(i++));
             researchCategory = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             markDetailsComplete = nullableBoolean(line.get(i++));
+            ineligibleReason = nullable(line.get(i++));
         }
     }
 
@@ -406,11 +405,11 @@ class CsvUtils {
         String name;
         String description;
         String type;
-        String innovationArea;
+        List<String> innovationAreas;
         String innovationSector;
         String researchCategory;
         String collaborationLevel;
-        String leadApplicantType;
+        List<OrganisationTypeEnum> leadApplicantTypes;
         Integer researchRatio;
         Boolean resubmission;
         Boolean multiStream;
@@ -457,11 +456,11 @@ class CsvUtils {
             name = nullable(line.get(i++));
             description = nullable(line.get(i++));
             type = nullable(line.get(i++));
-            innovationArea = nullable(line.get(i++));
+            innovationAreas = nullableSplitOnNewLines(line.get(i++));
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
             collaborationLevel = nullable(line.get(i++));
-            leadApplicantType = nullable(line.get(i++));
+            leadApplicantTypes = simpleMap(nullableSplitOnNewLines(line.get(i++)), OrganisationTypeEnum::valueOf);
             researchRatio = nullableInteger(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             multiStream = nullableBoolean(line.get(i++));
@@ -786,13 +785,14 @@ class CsvUtils {
         String value = nullable(s);
 
         if (value == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         return Splitter.on("!").trimResults().omitEmptyStrings().splitToList(s)
                 .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
     }
 
+    private static List<String> nullableSplitOnNewLines(String s) {
+        return nullable(s) != null ? simpleMap(s.split("\n"), String::trim) : emptyList();
+    }
 }
-
-

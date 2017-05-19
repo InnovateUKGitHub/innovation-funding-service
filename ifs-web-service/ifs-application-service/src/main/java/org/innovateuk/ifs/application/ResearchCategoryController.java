@@ -39,9 +39,6 @@ public class ResearchCategoryController {
     private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
 
     @Autowired
@@ -57,7 +54,7 @@ public class ResearchCategoryController {
 
         checkIfAllowed(questionId, applicationResource);
 
-        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+        if (!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
             throw new ForbiddenActionException();
         }
 

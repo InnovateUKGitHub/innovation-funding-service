@@ -5,16 +5,18 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
-import org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.spendprofile.controller.OrganisationReviewDetails;
 import org.innovateuk.ifs.project.spendprofile.controller.ProjectSpendProfileController;
-import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
+import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
+import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
+import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -33,9 +35,11 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
@@ -54,10 +58,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest<ProjectSpendProfileController> {
     @Mock
     public SpendProfileCostValidator spendProfileCostValidator;
+
     @Spy
     public SpendProfileTableCalculator spendProfileTableCalculator;
 
@@ -80,7 +84,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isNotFound())
                 .andExpect(model().attributeDoesNotExist("model"));
 
-        verify(projectFinanceService, never()).getSpendProfileTable(projectResource.getId(), organisationId);
+        verify(spendProfileService, never()).getSpendProfileTable(projectResource.getId(), organisationId);
     }
 
     @Test
@@ -93,7 +97,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).
                 thenReturn(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).
                 thenThrow(new ObjectNotFoundException("SpendProfile not found", null));
 
 
@@ -120,7 +124,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
@@ -150,7 +154,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
@@ -181,17 +185,17 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .build(1);
 
         OrganisationResource organisation = newOrganisationResource().withId(organisationId)
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .withOrganisationTypeName("BUSINESS")
                 .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
+        when(spendProfileService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
         List<Error> incorrectCosts = new ArrayList<>();
         incorrectCosts.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, asList("Labour", 1), HttpStatus.BAD_REQUEST));
 
-        when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
+        when(spendProfileService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
@@ -221,7 +225,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         assertEquals(1, form.getObjectErrors().size());
 
         verify(projectService).getById(projectId);
-        verify(projectFinanceService, times(2)).getSpendProfileTable(projectId, organisationId);
+        verify(spendProfileService, times(2)).getSpendProfileTable(projectId, organisationId);
         verify(organisationService).getOrganisationById(organisationId);
         verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
     }
@@ -234,9 +238,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
-        when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
+        when(spendProfileService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
 
-        when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceSuccess());
+        when(spendProfileService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -254,9 +258,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileTableResource table = new SpendProfileTableResource();
 
-        when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
+        when(spendProfileService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
 
-        when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceSuccess());
+        when(spendProfileService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceSuccess());
 
         when(projectService.isUserLeadPartner(eq(projectId),any())).thenReturn(true);
 
@@ -270,7 +274,6 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void markAsCompleteSpendProfileWhenSpendHigherThanEligible() throws Exception {
-
         Long organisationId = 1L;
         Long projectId = 2L;
 
@@ -290,41 +293,38 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
 
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
-        when(projectFinanceService.markSpendProfileComplete(projectResource.getId(), organisationId)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
+        when(spendProfileService.markSpendProfileComplete(projectResource.getId(), organisationId)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
         expectedViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectResource.getId(), organisationId)
-        )
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile"));
 
-        verify(projectFinanceService).markSpendProfileComplete(2L, 1L);
+        verify(spendProfileService).markSpendProfileComplete(2L, 1L);
 
     }
 
     @Test
     public void markAsCompleteSpendProfileSuccess() throws Exception {
+        final Long projectId = 1L;
+        final Long organisationId = 2L;
 
-        Long projectId = 1L;
-        Long organisationId = 2L;
+        when(spendProfileService.markSpendProfileComplete(projectId, organisationId)).thenReturn(serviceSuccess());
 
-        when(projectFinanceService.markSpendProfileComplete(projectId, organisationId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
-        )
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
 
-        verify(projectFinanceService).markSpendProfileComplete(1L, 2L);
+        verify(spendProfileService).markSpendProfileComplete(1L, 2L);
     }
 
     @Test
@@ -333,14 +333,14 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceSuccess());
+        when(spendProfileService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile"));
 
-        verify(projectFinanceService).markSpendProfileIncomplete(1L, 2L);
+        verify(spendProfileService).markSpendProfileIncomplete(1L, 2L);
     }
 
     @Test
@@ -362,11 +362,11 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
         partnerOrganisationResource.setOrganisation(organisationId);
         partnerOrganisationResource.setLeadOrganisation(false);
-        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(Collections.singletonList(partnerOrganisationResource)));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(Collections.singletonList(partnerOrganisationResource)));
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
@@ -388,8 +388,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     private ProjectTeamStatusResource buildProjectTeamStatusResource() {
 
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(2);
-        ProjectPartnerStatusResource leadProjectPartnerStatusResource = ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource()
+        ProjectPartnerStatusResource leadProjectPartnerStatusResource = newProjectPartnerStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.ACTION_REQUIRED)
+                .withIsLeadPartner(true)
                 .build();
         partnerStatuses.add(leadProjectPartnerStatusResource);
 
@@ -416,7 +417,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
 
         PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
@@ -424,7 +425,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         partnerOrganisationResource.setLeadOrganisation(false);
 
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
-        when(projectFinanceService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
+        when(spendProfileService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
 
         SpendProfileForm expectedForm = new SpendProfileForm();
         expectedForm.setTable(table);
@@ -435,7 +436,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("redirect:/project/1/partner-organisation/2/spend-profile"));
 
-        verify(projectFinanceService).markSpendProfileIncomplete(1L, 2L);
+        verify(spendProfileService).markSpendProfileIncomplete(1L, 2L);
     }
 
     @Test
@@ -457,17 +458,17 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .build(1);
 
         OrganisationResource organisation = newOrganisationResource().withId(organisationId)
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .withOrganisationTypeName("BUSINESS")
                 .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
+        when(spendProfileService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
         List<Error> incorrectCosts = new ArrayList<>();
         incorrectCosts.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, asList("Labour", 1), HttpStatus.BAD_REQUEST));
 
-        when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
+        when(spendProfileService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
@@ -497,7 +498,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         assertEquals(1, form.getObjectErrors().size());
 
         verify(projectService).getById(projectId);
-        verify(projectFinanceService).getSpendProfileTable(projectId, organisationId);
+        verify(spendProfileService).getSpendProfileTable(projectId, organisationId);
         verify(organisationService).getOrganisationById(organisationId);
         verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
 
@@ -545,14 +546,15 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         loggedInUser.setRoles(roleResources);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+        when(projectService.getLeadOrganisation(organisationId)).thenReturn(partnerOrganisations.get(0));
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
         when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(partnerOrganisations);
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
 
-        when(projectFinanceService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
+        when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
 
-        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true);
+        ProjectSpendProfileProjectSummaryViewModel expectedViewModel = buildExpectedProjectSpendProfileProjectManagerViewModel(projectResource, partnerOrganisations, partnerOrganisations.get(0).getName(), true, false, true);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -586,7 +588,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
-        when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
         when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
@@ -633,18 +635,14 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         return expectedTable;
     }
 
-    private ProjectSpendProfileProjectSummaryViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(ProjectResource projectResource, List<OrganisationResource> partnerOrganisations, String partner, Boolean editable) {
+    private ProjectSpendProfileProjectSummaryViewModel buildExpectedProjectSpendProfileProjectManagerViewModel(ProjectResource projectResource, List<OrganisationResource> partnerOrganisations, String partner, Boolean editable, Boolean markedComplete, Boolean userPartOfThisOrganisation) {
 
-        Map<String, Boolean> partnersSpendProfileProgress = new HashMap<>();
-        partnersSpendProfileProgress.put(partner, false);
-
-        Map<String, Boolean> editablePartners = new HashMap<>();
+        Map<Long, OrganisationReviewDetails> editablePartners = new HashMap<>();
         final OrganisationResource leadOrganisation = partnerOrganisations.get(0);
-        editablePartners.put(partner, editable);
+        editablePartners.put(1L, new OrganisationReviewDetails(leadOrganisation.getName(), markedComplete, userPartOfThisOrganisation, editable));
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectResource.getId(),
                 projectResource.getApplication(), projectResource.getName(),
-                partnersSpendProfileProgress,
                 partnerOrganisations,
                 leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,

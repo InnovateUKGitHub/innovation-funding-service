@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.project.viability.controller;
 
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.OrganisationSizeService;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -31,6 +30,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.math.RoundingMode.HALF_EVEN;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.VIABILITY_CHECKS_NOT_APPLICABLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -53,9 +54,6 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private ProjectFinanceService financeService;
-
-    @Autowired
-    private OrganisationSizeService organisationSizeService;
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -132,9 +130,14 @@ public class FinanceChecksViabilityController {
     private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId, Model model) {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
+        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+
+        if(viability.getViability().isNotApplicable()){
+            throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));
+        }
+
         boolean viabilityConfirmed = viability.getViability() == Viability.APPROVED;
 
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
         ProjectFinanceResource financesForOrganisation = simpleFindFirst(projectFinances,
@@ -165,7 +168,7 @@ public class FinanceChecksViabilityController {
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
 
-        List<OrganisationSizeResource> sizes = organisationSizeService.getOrganisationSizes();
+        List<OrganisationSizeResource> sizes = organisationDetailsService.getOrganisationSizes().getSuccessObjectOrThrowException();
         Optional<OrganisationSizeResource> organisationSizeResource = sizes.stream().filter(size -> size.getId().equals(financesForOrganisation.getOrganisationSize())).findAny();
         String organisationSizeDescription = organisationSizeResource.map(OrganisationSizeResource::getDescription).orElse(null);
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,

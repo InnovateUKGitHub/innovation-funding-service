@@ -4,12 +4,13 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.comparators.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,9 +22,19 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -31,18 +42,33 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
-    public static final Collection<ApplicationStatus> SUBMITTED_STATUSES = asList(
-            ApplicationStatus.APPROVED,
-            ApplicationStatus.REJECTED,
-            ApplicationStatus.SUBMITTED);
+    public static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = asLinkedSet(
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.SUBMITTED);
 
-    public static final Collection<ApplicationStatus> CREATED_AND_OPEN_STATUSES = asList(
-            ApplicationStatus.CREATED,
-            ApplicationStatus.OPEN);
+    public static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
+            .stream().map(ApplicationState::getBackingState).collect(toSet());
 
-    public static final Collection<ApplicationStatus> FUNDING_DECISIONS_MADE_STATUSES = asList(
-            ApplicationStatus.APPROVED,
-            ApplicationStatus.REJECTED);
+    public static final Set<State> NOT_SUBMITTED_STATES = simpleMapSet(asLinkedSet(
+            ApplicationState.CREATED,
+            ApplicationState.OPEN), ApplicationState::getBackingState);
+
+    public static final Set<State> INELIGIBLE_STATES = simpleMapSet(asLinkedSet(
+            ApplicationState.INELIGIBLE,
+            INELIGIBLE_INFORMED), ApplicationState::getBackingState);
+
+    public static final Set<State> CREATED_AND_OPEN_STATUSES = simpleMapSet(asLinkedSet(
+            ApplicationState.CREATED,
+            ApplicationState.OPEN), ApplicationState::getBackingState);
+
+    public static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED), ApplicationState::getBackingState);
+
+    public static final Set<State> SUBMITTED_AND_INELIGIBLE_STATES = Stream.concat(
+            SUBMITTED_STATES.stream(),
+            INELIGIBLE_STATES.stream()).collect(toSet());
 
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
         put("name", new Sort(ASC, new String[]{"name", "id"}));
@@ -76,8 +102,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr, pageable),
-                () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, INELIGIBLE_STATES, filterStr, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(competitionId, INELIGIBLE_STATES, filterStr));
     }
 
     @Override
@@ -90,10 +116,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndIdLike(
-                        competitionId, SUBMITTED_STATUSES, filterStr, fundingFilter.orElse(null), pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndIdLike(
-                        competitionId, SUBMITTED_STATUSES, filterStr, fundingFilter.orElse(null)));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, SUBMITTED_STATES, filterStr, fundingFilter.orElse(null), pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, SUBMITTED_STATES, filterStr, fundingFilter.orElse(null)));
     }
 
     @Override
@@ -101,21 +127,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Long competitionId, String sortBy, int pageIndex, int pageSize) {
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusNotIn(
-                        competitionId, SUBMITTED_STATUSES, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusNotIn(
-                        competitionId, SUBMITTED_STATUSES));
-    }
-
-    @Override
-    public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
-            Long competitionId, String sortBy, int pageIndex, int pageSize) {
-        return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(
-                        competitionId, FUNDING_DECISIONS_MADE_STATUSES, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(
-                        competitionId, FUNDING_DECISIONS_MADE_STATUSES));
-
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, NOT_SUBMITTED_STATES, "", null, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, NOT_SUBMITTED_STATES, "", null));
     }
 
     @Override
@@ -141,6 +156,22 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                         fundingFilter.orElse(null)));
     }
 
+    @Override
+    public ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(
+            long competitionId,
+            String sortBy,
+            int pageIndex,
+            int pageSize,
+            Optional<String> filter,
+            Optional<Boolean> informFilter) {
+        String filterStr = filter.map(String::trim).orElse("");
+        Set<State> states = informFilter.map(i -> i ? singleton(INELIGIBLE_INFORMED.getBackingState()) : singleton(INELIGIBLE.getBackingState())).orElse(INELIGIBLE_STATES);
+        return applicationSummaries(sortBy, pageIndex, pageSize,
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, states, filterStr, null, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
+                        competitionId, states, filterStr, null));
+    }
 
     private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(
             String sortBy,
@@ -181,7 +212,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                 })
                 .skip(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private boolean canUseSpringDataPaginationForSummaryResults(String sortBy) {

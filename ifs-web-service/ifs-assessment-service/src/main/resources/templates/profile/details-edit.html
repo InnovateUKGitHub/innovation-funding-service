@@ -19,10 +19,7 @@
                     <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
                 </ul>
             </div>
-
-            <div class="hgroup">
-                <h1 class="heading-xlarge">Edit your details</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your details',size='heading-xlarge'" />
 
             <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
                 <h2 class="heading-medium">Your details</h2>
@@ -42,7 +39,8 @@
                            maxlength="70"
                            th:attr="data-required-errormessage=#{validation.standard.firstname.required},
                                     data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
-                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max}" />
+                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                    data-invalid-errormessage=#{validation.standard.firstname.invalid}" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group form-group-error':'form-group'">
@@ -61,7 +59,8 @@
                            maxlength="70"
                            th:attr="data-required-errormessage=#{validation.standard.lastname.required},
                                     data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
-                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max}" />
+                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                    data-invalid-errormessage=#{validation.standard.lastname.invalid}" />
                 </div>
 
 

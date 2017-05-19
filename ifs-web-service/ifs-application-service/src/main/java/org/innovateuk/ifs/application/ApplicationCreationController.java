@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -18,11 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.ZonedDateTime;
 
-import static java.lang.String.format;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
@@ -69,38 +66,6 @@ public class ApplicationCreationController {
         cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
 
         return "create-application/check-eligibility";
-    }
-
-    @GetMapping("/your-details")
-    public String checkEligibility() {
-        return "create-application/your-details";
-    }
-
-    @GetMapping("/initialize-application")
-    public String initializeApplication(HttpServletRequest request,
-                                        HttpServletResponse response) {
-        log.info("get competition id");
-
-        Long competitionId = Long.valueOf(cookieUtil.getCookieValue(request, COMPETITION_ID));
-        log.info("get user id");
-        Long userId = Long.valueOf(cookieUtil.getCookieValue(request, USER_ID));
-
-        ApplicationResource application = applicationService.createApplication(competitionId, userId, "");
-        if (application == null || application.getId() == null) {
-            log.error("Application not created with competitionID: " + competitionId);
-            log.error("Application not created with userId: " + userId);
-        } else {
-            cookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
-
-            // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place below
-            if (userAuthenticationService.getAuthentication(request) == null) {
-                return "redirect:/";
-            }
-            // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place above
-            return format("redirect:/application/%s/team", application.getId());
-
-        }
-        return null;
     }
 
     private boolean isCompetitionReady(PublicContentItemResource publicContentItem) {

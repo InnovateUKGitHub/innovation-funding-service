@@ -3,7 +3,7 @@ package org.innovateuk.ifs.thread.attachment.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.financecheck.security.AttachmentPermissionsRules;
+import org.innovateuk.ifs.project.financechecks.security.AttachmentPermissionsRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.threads.attachments.security.AttachmentLookupStrategy;
@@ -115,6 +115,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
         public ServiceResult<Void> delete(Long attachmentId) {
             return ServiceResult.serviceSuccess();
         }
+
     }
 
 

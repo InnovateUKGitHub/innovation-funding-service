@@ -34,7 +34,7 @@
                 <div th:if="${academicFileEntries.containsKey(organisation.id)}" th:with="applicationFinanceResource = ${academicFileEntries.get(organisation.id).left}, fileEntry = ${academicFileEntries.get(organisation.id).right}">
                     <div class="upload-section">
                         <h3 class="heading-small no-margin">Download Je-S form:</h3>
-                        <div class="uploaded-file"><a th:href="'/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceResource.id} + '/finance-download'" th:text="${fileEntry.name}"></a></div>
+                        <div class="uploaded-file"><a th:href="'/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceResource.id} + '/finance-download'" th:text="${fileEntry.name} + ' (opens in a new window)'"></a></div>
                     </div>
                 </div>
                 <div th:unless="${academicFileEntries.containsKey(organisation.id)}">
@@ -162,10 +162,18 @@
                             </a>
 
                             <th:block th:if="${currentApplication.isOpen()}">
-                              <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
-                                   th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has marked the Finances as complete"/>
-                              <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/warning-icon.png')}"
-                                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has not yet marked the Finances as complete" />
+                                <th:block th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
+                                    <img class="table-tick" width="20" height="17"
+                                        th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
+                                        alt="has marked the Finances as complete"/>
+                                    <span class="visuallyhidden">Complete</span>
+                                </th:block>
+                                <th:block th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
+                                    <img class="table-tick" width="20" height="20"
+                                        th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/icons/icon-messages/alert-icon.png')}"
+                                        alt="has not yet marked the Finances as complete" />
+                                    <span class="visuallyhidden">Incomplete</span>
+                                </th:block>
                             </th:block>
                         </div>
                     </th>
@@ -224,7 +232,7 @@
     <!-- ===========================Form: finances incomplete =========================== -->
 
     <th:block th:fragment="application_finances_incomplete_warning">
-        <div th:if="${hasFinanceSection and currentApplication.isOpen()
+        <div th:if="${isApplicant and hasFinanceSection and currentApplication.isOpen()
         and !sectionsMarkedAsComplete.contains(financeSectionId)}" class="warning-alert">
             <h2 class="heading-small no-margin">The following organisations have not marked their finances as complete:</h2>
             <ul class="list list-bullet">

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.attachment.security;
 
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.project.financecheck.security.AttachmentPermissionsRules;
+import org.innovateuk.ifs.project.financechecks.security.AttachmentPermissionsRules;
 
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -75,12 +75,20 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     }
 
     @Test
-    public void testThatProjectFinanceUsersCanFetchAnyAttachment() throws Exception {
+    public void testThatProjectFinanceUsersCanFetchOrphanAttachmentTheyHaveUploaded() throws Exception {
+        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
     }
 
     @Test
-    public void testThatFinanceContactUsersCanAlwaysFetchTheAttachmentsTheyHaveUploaded() throws Exception {
+    public void testThatProjectFinanceUsersCanFetchAnySavedAttachment() throws Exception {
+        final Query query = query();
+        when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query));
+        assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
+    }
+
+    @Test
+    public void testThatFinanceContactUsersCanAlwaysFetchTheOrphanAttachmentsTheyHaveUploaded() throws Exception {
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectPartnerUser.getId()));
         assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, projectPartnerUser));
     }

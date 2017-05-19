@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
@@ -30,7 +29,7 @@ import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
  */
 @Controller
 @PreAuthorize("permitAll")
-public class AcceptProjectInviteController extends BaseController {
+public class AcceptProjectInviteController {
 
     public static final String INVITE_HASH = "project_invite_hash";
 
@@ -60,7 +59,7 @@ public class AcceptProjectInviteController extends BaseController {
             @PathVariable("hash") final String hash,
             HttpServletResponse response,
             Model model,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            UserResource loggedInUser) {
         return find(inviteByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, userExists) -> {
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
@@ -82,13 +81,13 @@ public class AcceptProjectInviteController extends BaseController {
     //==================================
 
     @GetMapping(ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING)
-    public String acceptInviteUserDoesNotYetExistShowProject(HttpServletRequest request, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String acceptInviteUserDoesNotYetExistShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
         model.addAttribute("userExists", false);
         return acceptInviteShowProject(request, model, loggedInUser);
     }
 
     @GetMapping(ACCEPT_INVITE_USER_EXIST_SHOW_PROJECT_MAPPING)
-    public String acceptInviteUserDoesExistShowProject(HttpServletRequest request, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String acceptInviteUserDoesExistShowProject(HttpServletRequest request, Model model, UserResource loggedInUser) {
         model.addAttribute("userExists", true);
         return acceptInviteShowProject(request, model, loggedInUser);
     }
@@ -120,7 +119,7 @@ public class AcceptProjectInviteController extends BaseController {
 
     @GetMapping(ACCEPT_INVITE_USER_EXIST_CONFIRM_MAPPING)
     public String acceptInviteUserDoesExistConfirm(HttpServletRequest request,
-                                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                   UserResource loggedInUser,
                                                    Model model) {
         String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return find(inviteByHash(hash), userByHash(hash)).andOnSuccess((invite, userExists) -> {

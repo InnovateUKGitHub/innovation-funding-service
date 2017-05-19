@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
@@ -38,9 +40,12 @@ import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
-import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
@@ -111,6 +116,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationRepository applicationRepository;
     protected ApplicationFundingService applicationFundingService;
     protected ProjectService projectService;
+    protected MonitoringOfficerService monitoringOfficerService;
     protected FinanceRowService financeRowService;
     protected SectionService sectionService;
     protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
@@ -140,9 +146,11 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected SpendProfileService spendProfileService;
     protected FinanceCheckService financeCheckService;
     protected RejectionReasonService rejectionReasonService;
-    protected UserProfileService userProfileService;
+    protected ProfileService profileService;
+    protected AffiliationService affiliationService;
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
     protected AssessorFormInputResponseService assessorFormInputResponseService;
+    protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -169,6 +177,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
         this.applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
         this.projectService = serviceLocator.getBean(ProjectService.class);
+        this.monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
         this.financeRowService = serviceLocator.getBean(FinanceRowService.class);
         this.sectionService = serviceLocator.getBean(SectionService.class);
         this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
@@ -201,7 +210,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.innovationSectorRepository = serviceLocator.getBean(InnovationSectorRepository.class);
         this.researchCategoryRepository = serviceLocator.getBean(ResearchCategoryRepository.class);
         this.rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
-        this.userProfileService = serviceLocator.getBean(UserProfileService.class);
+        this.profileService = serviceLocator.getBean(ProfileService.class);
+        this.affiliationService = serviceLocator.getBean(AffiliationService.class);
         this.baseUserService = serviceLocator.getBean(BaseUserService.class);
         this.profileRepository = serviceLocator.getBean(ProfileRepository.class);
         this.publicContentService = serviceLocator.getBean(PublicContentService.class);
@@ -210,6 +220,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
         this.assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
         this.applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
+        this.ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
     }
 
     @Override

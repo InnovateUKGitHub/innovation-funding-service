@@ -19,8 +19,6 @@ public interface ApplicationSummaryRestService {
 
     RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter);
 
-    RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter);
-    
     RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId);
 
     RestResult<ByteArrayResource> downloadByCompetition(long competitionId);
@@ -32,4 +30,6 @@ public interface ApplicationSummaryRestService {
                                                                                   String filter,
                                                                                   Optional<Boolean> sendFilter,
                                                                                   Optional<FundingDecision> fundingFilter);
+
+    RestResult<ApplicationSummaryPageResource> getIneligibleApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter, Optional<Boolean> informFilter);
 }

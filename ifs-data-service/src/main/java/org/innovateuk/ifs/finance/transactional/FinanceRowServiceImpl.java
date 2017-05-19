@@ -19,6 +19,7 @@ import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
+import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceRowMapper;
@@ -87,6 +88,9 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
+
+    @Autowired
+    private ProjectFinanceHandler projectFinanceHandler;
 
     @Autowired
     private FileService fileService;
@@ -246,7 +250,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     private ServiceResult<BigDecimal> getResearchPercentageFromProject(Long projectId) {
-        return find(applicationFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
+        return find(projectFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
     }
 
     private ServiceResult<BigDecimal> getResearchPercentage(Long applicationId) {
@@ -342,7 +346,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     private boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(type.getId());
+        return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
     }
 
     private void setFinanceDetails(OrganisationType organisationType, ApplicationFinanceResource applicationFinanceResource) {

@@ -121,7 +121,7 @@
     <div class="grid-container phase-banner" th:classappend="${fullwidth != null} ? 'full-width'">
       <p>
         <strong class="phase-tag">BETA</strong>
-        <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+        <span>This is a new service – your <a target="_blank" href="https://www.surveymonkey.co.uk/r/innovationfundingservicefeedback">feedback</a> will help us to improve it.</span>
       </p>
     </div>
 </th:block>
@@ -162,6 +162,15 @@
       </div>
     </footer>
 </th:block>
+<!-- =========================== Element : page-title =========================== -->
+<th:block th:fragment="page-title">
+    <h1 th:class="${#strings.isEmpty(size)} ? 'heading-large' : ${size}">
+        <span class="heading-secondary" th:unless="${#strings.isEmpty(subTitle)}" th:text="${subTitle}"></span>
+        <th:block th:text="${pageTitle}" />
+        <small th:unless="${#strings.isEmpty(smallText)}" th:text="${smallText}"></small>
+    </h1>
+</th:block>
+
 
 
 <!-- =========================== Element : subheader =========================== -->
@@ -173,7 +182,7 @@
                th:href="${linkUrl}"
                th:text="${linkTitle}" />
         </nav>
-        <div class="deadline" th:if="${currentCompetition != null && currentCompetition.open}">Days left to submit <span th:text="${currentCompetition.getDaysLeft()}"></span></div>
+        <div class="deadline" th:if="${currentCompetition != null && currentCompetition.open}"><th:block th:text="${currentCompetition.getDaysLeft()}" /> days left to submit</div>
     </div>
 </th:block>
 

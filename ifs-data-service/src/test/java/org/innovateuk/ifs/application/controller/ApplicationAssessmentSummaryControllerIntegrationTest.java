@@ -8,6 +8,9 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
@@ -27,6 +30,9 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     @Override
@@ -61,12 +67,16 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
                 .withName("Connected digital additive manufacturing")
                 .build());
 
-        Application application = applicationRepository.save(newApplication()
+        Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
                 .withName("Progressive machines")
-                .withApplicationStatus(CREATED)
-                .build());
+                .withApplicationState(CREATED)
+                .build();
+        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED));
+
+        applicationRepository.save(application);
+
 
         flushAndClearSession();
 

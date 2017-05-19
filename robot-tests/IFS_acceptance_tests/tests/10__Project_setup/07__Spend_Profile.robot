@@ -64,8 +64,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          ../../resources/defaultResources.robot
-Resource          PS_Variables.robot
+Resource          PS_Common.robot
 
 *** Variables ***
 ${project_overview}    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
@@ -117,8 +116,7 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Katz_Name} - Spend profile
-    # And the user clicks the button/link    link=Spend profile overview    # TODO please enable this line and delete the following one when working on INFUND-8132
-    And the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
+    And the user clicks the button/link    link=Spend profile overview
     And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
     [Teardown]    the user goes back to the previous page
 
@@ -150,7 +148,7 @@ Calculations in the spend profile table
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
     [Tags]    Failing
-    #TODO this test case needs to be moved, to another project where the PM != Lead partner.
+    #TODO this test case needs to be moved, to another project where the PM != Lead partner. INFUND-9289
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
@@ -159,9 +157,6 @@ Lead Partner can see Spend profile summary
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
     [Tags]
-    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    And the user navigates to the page            ${external_spendprofile_summary}/review
-    # TODO please delete the above two lines when INFUND-8138 is completed
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
     And the text box should be editable               css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour-June17
@@ -236,7 +231,7 @@ Project Manager can see Spend Profile in Progress
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     Then the user should see the element     link=${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}
-    And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("In progress")
+    And the user should see the element      jQuery=.task-list li:nth-child(1):contains("In progress")
 
 Lead partner marks spend profile as complete
     [Documentation]    INFUND-3765, INFUND-6138
@@ -445,9 +440,9 @@ Partners are not able to see the spend profile summary page
     [Documentation]    INFUND-3766
     [Tags]
     Given log in as a different user               ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    ${403_error_message}
     Given log in as a different user               ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    ${403_error_message}
 
 Project Manager can view combined spend profile
     [Documentation]    INFUND-3767
@@ -468,8 +463,8 @@ Project Manager can see the button Allow edits
     [Documentation]    INFUND-6350
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
-    Then the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
-    And the user should see the element     jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
+    Then the user should see the element    jQuery=.task-list li:nth-child(1):contains("Complete")
+    And the user should see the element     jQuery=.task-list li:nth-child(2):contains("Complete")
     Then the user clicks the button/link    link=${Meembee_Name}
     And the user should see the element     jQuery=.button:contains("Allow edits")
 
@@ -488,7 +483,7 @@ PM can return edit rights to partners
     When the user clicks the button/link     jQuery=.button:contains("Allow edits")
     And the user clicks the button/link      jQuery=.button:contains("Allow partner to edit")
     Then the user navigates to the page      ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
-    And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("In progress")
+    And the user should see the element      jQuery=.task-list li:nth-child(2):contains("In progress")
 
 Partner can receive edit rights to his SP
     [Documentation]    INFUND-6350
@@ -554,9 +549,9 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page    Peter Freeman
     When the user should see the text in the page    Project spend profile
-    Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv
-    And the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv
-    And the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
+    Then the user opens the link in new window       ${Katz_Name}-spend-profile.csv
+    And the user opens the link in new window        ${Meembee_Name}-spend-profile.csv
+    And the user opens the link in new window        ${Zooveo_Name}-spend-profile.csv
     When the user should see the text in the page    Approved by Innovate UK
     Then the element should be disabled    jQuery=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
@@ -589,14 +584,14 @@ Comp Admin can download the Spend Profile csv
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element     jQuery=h2:contains("Spend profile")
-    Then the user should see the element    link=${Katz_Name}-spend-profile.csv
-    And the user should see the element     link=${Meembee_Name}-spend-profile.csv
-    And the user should see the element     link=${Zooveo_Name}-spend-profile.csv
-    When the user clicks the button/link    link=${Katz_Name}-spend-profile.csv
+    Then the user should see the element    link=${Katz_Name}-spend-profile.csv (opens in a new window)
+    And the user should see the element     link=${Meembee_Name}-spend-profile.csv (opens in a new window)
+    And the user should see the element     link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
+    When the user clicks the button/link    link=${Katz_Name}-spend-profile.csv (opens in a new window)
     Then the user should not see an error in the page
-    When the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv
+    When the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv (opens in a new window)
     Then the user should not see an error in the page
-    When the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
+    When the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv (opens in a new window)
     Then the user should not see an error in the page
 
 Status updates correctly for internal user's table
@@ -635,8 +630,7 @@ Status updates to a cross for the internal user's table
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
     [Tags]
-    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    # TODO please switch out the PM login above with lead partner once INFUND-8136 is completed
+    Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=status of my partners
@@ -751,24 +745,19 @@ Status updates correctly for internal user's table after approval
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
 
 Project Finance still has a link to the spend profile after approval
-    [Documentation]    INFUND-6046, INFUND-7540
+    [Documentation]    INFUND-6046
     [Tags]
     When the user clicks the button/link           jQuery=td:nth-child(6) a
     Then the user should see the text in the page  Project spend profile
-    When the user clicks the button/link            link=${Katz_Name}-spend-profile.csv
-    Then the user should not see an error in the page
-    And the user should see the text in the page   The spend profile has been approved
-    When the user clicks the button/link            link=${Meembee_Name}-spend-profile.csv
-    Then the user should not see an error in the page
-    And the user should see the text in the page   The spend profile has been approved
-    When the user clicks the button/link            link=${Zooveo_Name}-spend-profile.csv
-    Then the user should not see an error in the page
+    And the user opens the link in new window      ${Katz_Name}-spend-profile.csv
+    And the user opens the link in new window      ${Meembee_Name}-spend-profile.csv
+    And the user opens the link in new window      ${Zooveo_Name}-spend-profile.csv
     And the user should see the text in the page   The spend profile has been approved
 
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
     [Tags]
-    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    ${403_error_message}
 
 
 *** Keywords ***
@@ -808,9 +797,9 @@ the field has value
     should be equal as strings    ${var}    ${value}
 
 the user should see all spend profiles as complete
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("Complete")
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("Complete")
-    the user should see the element    jQuery=.extra-margin-bottom tr:nth-child(3) td:nth-child(2):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(1):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(2):contains("Complete")
+    the user should see the element    jQuery=.task-list li:nth-child(3):contains("Complete")
 
 all previous sections of the project are completed
     partners submit their finance contacts
@@ -843,8 +832,8 @@ partner submits his bank details
     [Arguments]  ${email}
     log in as a different user            ${email}    ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  51406795
-    the user enters text to a text field  id=bank-sort-code  404745
+    the user enters text to a text field  id=bank-acc-number  ${account_number}
+    the user enters text to a text field  id=bank-sort-code  ${sort_code}
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")

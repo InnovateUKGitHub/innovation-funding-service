@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.nonifs.modelpopulator;
 
-import org.innovateuk.ifs.application.service.CategoryService;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.nonifs.viewmodel.NonIfsDetailsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 public class NonIfsDetailsViewModelPopulator {
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRestService categoryRestService;
 
     public NonIfsDetailsViewModel populate() {
         NonIfsDetailsViewModel viewModel = new NonIfsDetailsViewModel();
-        viewModel.setInnovationSectors(categoryService.getInnovationSectors());
-        viewModel.setInnovationAreas(categoryService.getInnovationAreas());
+        viewModel.setInnovationSectors(categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException());
+        viewModel.setInnovationAreas(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException());
         return viewModel;
     }
 }

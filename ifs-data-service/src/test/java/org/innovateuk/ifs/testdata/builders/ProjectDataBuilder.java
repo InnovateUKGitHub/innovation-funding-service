@@ -2,12 +2,9 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.resource.CostResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.testdata.builders.data.ProjectData;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -16,14 +13,11 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.stream.IntStream;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Collections.emptyList;
 
 /**
@@ -90,7 +84,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
             MonitoringOfficerResource mo = new MonitoringOfficerResource(firstName, lastName, email, phoneNumber, data.getProject().getId());
-            projectService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccessObjectOrThrowException();
+            monitoringOfficerService.saveMonitoringOfficer(data.getProject().getId(), mo).getSuccessObjectOrThrowException();
         }));
     }
 

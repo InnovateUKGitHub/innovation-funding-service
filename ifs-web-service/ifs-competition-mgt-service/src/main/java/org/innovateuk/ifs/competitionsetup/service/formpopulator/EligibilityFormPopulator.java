@@ -4,11 +4,12 @@ import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmoun
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.LeadApplicantType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Form populator for the eligibility competition setup section.
@@ -38,10 +39,10 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 		if(level != null) {
 			competitionSetupForm.setSingleOrCollaborative(level.getCode());
 		}
-		
-		LeadApplicantType type = competitionResource.getLeadApplicantType();
-		if(type != null) {
-			competitionSetupForm.setLeadApplicantType(type.getCode());
+
+		List<Long> organisationTypes = competitionResource.getLeadApplicantTypes();
+        if(organisationTypes != null) {
+			competitionSetupForm.setLeadApplicantTypes(organisationTypes);
 		}
 
         competitionSetupForm.setResubmission(CompetitionUtils.booleanToText(competitionResource.getResubmission()));

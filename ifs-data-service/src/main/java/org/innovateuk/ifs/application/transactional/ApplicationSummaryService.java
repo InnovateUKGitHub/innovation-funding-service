@@ -36,13 +36,6 @@ public interface ApplicationSummaryService {
 																									 int pageSize);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    @SecuredBySpring(value = "READ", description = "Comp Admins can see all Application Summaries requiring feedback across the whole system", securedType = ApplicationSummaryPageResource.class)
-	ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(Long competitionId,
-																										 String sortBy,
-																										 int pageIndex,
-																										 int pageSize);
-
-	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	@SecuredBySpring(value = "READ", description = "Comp Admins can see all Application Summaries with funding decisions across the whole system", securedType = ApplicationSummaryPageResource.class)
 	ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId,
 																											String sortBy,
@@ -51,4 +44,13 @@ public interface ApplicationSummaryService {
 																											Optional<String> filter,
 																											Optional<Boolean> sendFilter,
 																											Optional<FundingDecisionStatus> fundingFilter);
+
+	@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+	@SecuredBySpring(value = "READ", description = "Comp Admins can see all Ineligable Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
+	ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(long competitionId,
+																								   String sortBy,
+																								   int pageIndex,
+																								   int pageSize,
+																								   Optional<String> filter,
+																								   Optional<Boolean> informFilter);
 }

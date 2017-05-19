@@ -23,7 +23,7 @@ public class AssessorDashboardController {
 
     @PreAuthorize("hasAuthority('assessor')")
     @GetMapping("/dashboard")
-    public String dashboard(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String dashboard(Model model, UserResource loggedInUser) {
 
         model.addAttribute("model", assessorDashboardModelPopulator.populateModel(loggedInUser.getId()));
         return "assessor-dashboard";

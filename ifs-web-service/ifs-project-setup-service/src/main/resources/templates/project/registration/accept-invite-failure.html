@@ -3,15 +3,14 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept Invite'" />
 </head>
-<body th:with="context='applicant'" class="create-application-eligibility">
+<body th:with="context='project'" class="create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <h1 class="heading-large" th:text="#{registration.INVITE_FAILURE}"></h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=#{registration.INVITE_FAILURE},size='heading-large'" />
     <div th:each="failureMessageKey:${failureMessageKeys}">
         <p th:text="#{${failureMessageKey.errorKey}}"></p>
     </div>

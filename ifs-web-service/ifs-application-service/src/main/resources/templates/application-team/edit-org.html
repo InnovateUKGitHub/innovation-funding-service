@@ -20,10 +20,9 @@
                 </ul>
             </div>
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge" th:text="|Update ${model.organisationName}|">Update Empire Ltd</h1>
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Update ${model.organisationName}|,subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <p th:if="${model.userLeadApplicant}">You are able to invite and remove contributors. Only the lead organisation and lead applicant cannot be removed.</p>
             <p th:unless="${model.userLeadApplicant}">You are able to invite contributors from your own organisation.</p>

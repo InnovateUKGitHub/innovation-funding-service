@@ -45,9 +45,8 @@ Back button takes you to the previous page
 Assessor agreement
     [Documentation]    INFUND-1481
     [Tags]
-    When the user clicks the button/link    link=Download assessor agreement
-    Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/New%20simple%20assessor%20agreement.pdf
-    And The user goes back to the previous page
+    When The user opens the link in new window  Download assessor agreement
+    And the user goes back to the previous tab
 
 Client-side validations and Submit
     [Documentation]    INFUND-1481

@@ -153,7 +153,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionResource> getQuestionsByAssessment(Long assessmentId) {
+    public List<QuestionResource> getQuestionsByAssessment(long assessmentId) {
         return questionRestService.getQuestionsByAssessment(assessmentId).getSuccessObjectOrThrowException();
     }
 
@@ -191,5 +191,4 @@ public class QuestionServiceImpl implements QuestionService {
 
         return questionId;
     }
-
 }

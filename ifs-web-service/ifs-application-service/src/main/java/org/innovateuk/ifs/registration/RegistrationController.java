@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -44,6 +43,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
+import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_ID;
 
 @Controller
 @RequestMapping("/registration")
@@ -72,14 +72,10 @@ public class RegistrationController {
     private EthnicityRestService ethnicityRestService;
 
     @Autowired
-    protected UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
 
     private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
-    public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
     public final static String EMAIL_FIELD_NAME = "email";
 
     @GetMapping("/success")
@@ -112,9 +108,11 @@ public class RegistrationController {
     }
 
     @GetMapping("/register")
-    public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String registerForm(Model model,
+                               UserResource user,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
@@ -131,7 +129,7 @@ public class RegistrationController {
             return "redirect:/login";
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         if (!processOrganisation(request, model)) {
             destination = "redirect:/";
@@ -193,6 +191,7 @@ public class RegistrationController {
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
+                                     UserResource user,
                                      HttpServletRequest request,
                                      Model model) {
 
@@ -212,12 +211,11 @@ public class RegistrationController {
             validator.validate(registrationForm, bindingResult);
         }
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
 
-        String destination = "registration-register";
+        String destination = "registration/register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
         model.addAttribute("ethnicityOptions", getEthnicityOptions());
@@ -229,7 +227,7 @@ public class RegistrationController {
             if (createUserResult.isSuccess()) {
                 removeCompetitionIdCookie(response);
                 acceptInvite(response, request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
-                cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
+                cookieUtil.removeCookie(response, ORGANISATION_ID);
                 destination = "redirect:/registration/success";
             } else {
                 if (!processOrganisation(request, model)) {
@@ -323,7 +321,8 @@ public class RegistrationController {
                 Long.parseLong(registrationForm.getEthnicity()),
                 registrationForm.getDisability(),
                 organisationId,
-                competitionId);
+                competitionId,
+                registrationForm.getAllowMarketingEmails());
     }
 
     private void addOrganisationNameToModel(Model model, OrganisationResource organisation) {
@@ -331,7 +330,7 @@ public class RegistrationController {
     }
 
     private Long getOrganisationId(HttpServletRequest request) {
-        String organisationParameter = cookieUtil.getCookieValue(request, ORGANISATION_ID_PARAMETER_NAME);
+        String organisationParameter = cookieUtil.getCookieValue(request, ORGANISATION_ID);
         Long organisationId = null;
 
         try {
@@ -348,7 +347,7 @@ public class RegistrationController {
     private void setOrganisationIdCookie(RegistrationForm registrationForm, HttpServletRequest request, HttpServletResponse response) {
         Long organisationId = getOrganisationId(request);
         if(organisationId != null) {
-            cookieUtil.saveToCookie(response, ORGANISATION_ID_PARAMETER_NAME, Long.toString(organisationId));
+            cookieUtil.saveToCookie(response, ORGANISATION_ID, Long.toString(organisationId));
         }
     }
 

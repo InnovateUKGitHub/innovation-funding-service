@@ -6,15 +6,14 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept Invite'" />
 </head>
-<body th:with="context='applicant'" class="create-application-eligibility">
+<body th:with="context='project'" class="create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <h1 class="heading-large">Your organisation</h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='heading-large'" />
 
     <h2 class="heading-medium">Business organisation</h2>
 

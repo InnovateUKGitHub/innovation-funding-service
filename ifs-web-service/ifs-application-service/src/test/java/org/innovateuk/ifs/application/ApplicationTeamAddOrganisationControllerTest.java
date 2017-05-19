@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamAddOrganisationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamAddOrganisationViewModel;
+import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamAddOrganisationViewModel;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -71,24 +71,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
                 .andExpect(view().name("application-team/add-organisation"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void getAddOrganisation_userIsNotLeadApplicant() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-        mockMvc.perform(get("/application/{applicationId}/team/addOrganisation", applicationResource.getId()))
-                .andExpect(status().isForbidden())
-                .andReturn();
-
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -118,28 +102,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
 
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        InOrder inOrder = inOrder(inviteRestService);
         inOrder.verify(inviteRestService).createInvitesByInviteOrganisation("Ludlow", expectedInvites);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void submitAddOrganisation_userIsNotLeadApplicant() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -178,9 +142,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("applicants"));
         assertEquals("Please add at least one person to invite.", bindingResult.getFieldError("applicants").getDefaultMessage());
 
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService, times(2)).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -226,9 +189,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("applicants[1].email"));
         assertEquals("Please enter an email address.", bindingResult.getFieldError("applicants[1].email").getDefaultMessage());
 
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService, times(2)).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -271,9 +233,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("applicants[1].email"));
         assertEquals("Please enter a valid email address.", bindingResult.getFieldError("applicants[1].email").getDefaultMessage());
 
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService, times(2)).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -316,9 +277,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertTrue(bindingResult.hasFieldErrors("applicants[1].email"));
         assertEquals("validation.applicationteamaddorganisationform.email.notUnique", bindingResult.getFieldError("applicants[1].email").getCode());
 
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService, times(2)).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -351,28 +311,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertEquals("Ludlow", form.getOrganisationName());
         assertEquals("The applicant rows should contain the existing applicant as well as a blank one", asList(new ApplicantInviteForm("Jessica Doe", "jessica.doe@ludlow.co.uk"), new ApplicantInviteForm()), form.getApplicants());
 
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void addApplicant_userIsNotLeadApplicant() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .param("addApplicant", "")
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -406,29 +346,8 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         assertEquals("Ludlow", form.getOrganisationName());
         assertTrue("The list of applicants should be empty", form.getApplicants().isEmpty());
 
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void removeApplicant_userIsNotLeadApplicant() throws Exception {
-        ApplicationResource applicationResource = setupApplicationResource();
-        setupLeadApplicant(applicationResource);
-
-        mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
-                .contentType(APPLICATION_FORM_URLENCODED)
-                // Remove the row at index 0
-                .param("removeApplicant", "0")
-                .param("organisationName", "Ludlow")
-                .param("applicants[0].name", "Jessica Doe")
-                .param("applicants[0].email", "jessica.doe@ludlow.co.uk"))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationService, userService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verifyNoMoreInteractions();
     }
 

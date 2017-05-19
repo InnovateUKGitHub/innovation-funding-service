@@ -108,8 +108,10 @@
     <fieldset>
         <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
-            <h3 class="heading-small">Organisation type</h3>
-            <p th:text="${organisationForm.organisationType.name}">Businesss</p>
+            <th:block th:if="${showOrgType}">
+                <h3 class="heading-small">Organisation type</h3>
+                <p th:text="${organisationForm.organisationType.name}">Businesss</p>
+            </th:block>
 
             <h3 class="heading-small">Registered name</h3>
             <p th:text="${organisationForm.organisationName}"></p>

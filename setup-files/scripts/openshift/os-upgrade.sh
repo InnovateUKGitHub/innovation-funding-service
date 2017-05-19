@@ -6,19 +6,23 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
+if [[ (${TARGET} == "local") ]]; then
+  HOST=ifs-local
+  ROUTE_DOMAIN=apps.$HOST
+elif [[ ${TARGET} == "production" ]]; then
+  HOST=apply-for-innovation-funding.service.gov.uk
+  ROUTE_DOMAIN=$HOST
+  PROJECT="production"
+else
+  HOST=prod.ifs-test-clusters.com
+  ROUTE_DOMAIN=apps.$HOST
+fi
+
 if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
 if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
 if [[ ${TARGET} == "sysint" ]]; then PROJECT="sysint"; fi
+if [[ ${TARGET} == "perf" ]]; then PROJECT="perf"; fi
 
-if [[ (${TARGET} == "local") ]]
-then
-    HOST=ifs-local
-else
-    HOST=prod.ifs-test-clusters.com
-fi
-
-ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
@@ -31,7 +35,7 @@ function upgradeServices {
     # data-service
     oc apply -f os-files-tmp/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     sleep 90
-    oc rollout status dc/data-service --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
+    oc rollout status dc/data-service --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
 
     # services
     oc apply -f os-files-tmp/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
@@ -41,7 +45,7 @@ function upgradeServices {
     oc apply -f os-files-tmp/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
 
     # shib & idp
-    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" ]]
+    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
     then
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml
     else
@@ -50,27 +54,33 @@ function upgradeServices {
 
     oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
 
-    sleep 90
-    oc rollout status dc/application-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/assessment-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/competition-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/project-setup-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/project-setup-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/idp --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
-    oc rollout status dc/shib --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE} || true
+    watchStatus
 }
 
 function forceReload {
-    oc deploy dc/data-service --latest ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/data-service ${SVC_ACCOUNT_CLAUSE}
     sleep 90
 
-    oc deploy dc/application-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/assessment-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/competition-mgt-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/project-setup-mgt-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/project-setup-svc --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/idp --latest ${SVC_ACCOUNT_CLAUSE}
-    oc deploy dc/shib --latest ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
+
+    watchStatus
+}
+
+function watchStatus {
+    sleep 90
+    oc rollout status dc/application-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/assessment-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/competition-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/project-setup-mgt-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/project-setup-svc --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/idp --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/shib --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
 }
 
 . $(dirname $0)/deploy-functions.sh
@@ -81,6 +91,7 @@ cloneConfig
 tailorAppInstance
 
 useContainerRegistry
+pushApplicationImages
 upgradeServices
 
 if [[ ${bamboo_openshift_force_reload} == "true" ]]

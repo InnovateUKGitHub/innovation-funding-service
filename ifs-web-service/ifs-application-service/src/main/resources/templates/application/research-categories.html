@@ -11,12 +11,9 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
-    <div class="page-title">
-        <p class="subtitle" th:text="${model.currentCompetitionName}">Competition title</p>
-        <h1 class="heading-xlarge">Research category</h1>
-    </div>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
 
-    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'form-group-error'">
             <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
                 <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>

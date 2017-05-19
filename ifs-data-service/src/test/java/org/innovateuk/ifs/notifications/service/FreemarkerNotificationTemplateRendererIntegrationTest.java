@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +19,7 @@ import static java.io.File.separator;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -51,40 +49,25 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     }
 
     @Test
-    public void testFundedApplicationEmail() throws URISyntaxException, IOException {
+    public void testApplicationSubmittedEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
+                "applicationId", "1",
                 "competitionName", "Competition 123",
-                "feedbackDate", ZonedDateTime.of(2017, 6, 3, 14, 29, 0, 0, TimeZoneUtil.UK_TIME_ZONE).toLocalDateTime(),
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
+                "webBaseUrl", "http://webbaseurl.com"
         );
 
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_subject.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_text_plain.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_text_html.html", templateArguments);
-    }
-
-    @Test
-    public void testUnfundedApplicationEmail() throws URISyntaxException, IOException {
-
-        Map<String, Object> templateArguments = asMap(
-                "applicationName", "My Application",
-                "competitionName", "Competition 123",
-                "feedbackDate", ZonedDateTime.of(2017, 6, 3, 14, 29, 0, 0, TimeZoneUtil.UK_TIME_ZONE).toLocalDateTime(),
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
-        );
-
-        assertRenderedEmailTemplateContainsExpectedLines("application_not_funded_subject.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_not_funded_text_plain.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_not_funded_text_html.html", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("application_submitted_text_html.html", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("application_submitted_text_plain.txt", templateArguments);
     }
 
     @Test
     public void testFundingApplicationEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "subject", "Subject of message",
+                "applicationName", "My Application",
+                "applicationNumber", "999",
                 "message", "Body of message."
         );
 
@@ -179,7 +162,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testInviteProjectManagerEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "projectName", "My Project",
+                "projectName", "My Project<>\"&",
                 "leadOrganisation", "Lead Organisation 123",
                 "inviteUrl", "https://ifs-local-dev/invite"
         );

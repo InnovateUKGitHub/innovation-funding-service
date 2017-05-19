@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.mapper;
 
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
@@ -10,9 +9,9 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 

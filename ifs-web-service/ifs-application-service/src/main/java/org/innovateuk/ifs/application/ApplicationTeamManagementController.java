@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.application.form.ApplicantInviteForm;
-import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamManagementModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementViewModel;
+import org.innovateuk.ifs.application.viewmodel.team.ApplicationTeamManagementApplicantRowViewModel;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -14,7 +14,9 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,7 +33,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -59,70 +60,80 @@ public class ApplicationTeamManagementController {
     private ApplicationService applicationService;
 
     @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
 
     @GetMapping(params = {"organisation"})
     public String getUpdateOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
                                         @RequestParam(name = "organisation") long organisationId,
-                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                        @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByOrganisationId(
-                applicationId, organisationId, loggedInUser.getId());
-        model.addAttribute("model", viewModel);
-        addExistingApplicantsToForm(viewModel, form);
-        return "application-team/edit-org";
+                                        UserResource loggedInUser,
+                                        @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+            ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByOrganisationId(
+                    applicationId, organisationId, loggedInUser.getId());
+            model.addAttribute("model", viewModel);
+            addExistingApplicantsToForm(viewModel, form);
+            return "application-team/edit-org";
+        });
     }
 
     @GetMapping(params = {"inviteOrganisation"})
     public String getUpdateOrganisationByInviteOrganisation(Model model,
                                                             @PathVariable("applicationId") long applicationId,
                                                             @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                                            @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
-                applicationId, inviteOrganisationId, loggedInUser.getId());
-        model.addAttribute("model", viewModel);
-        addExistingApplicantsToForm(viewModel, form);
-        return "application-team/edit-org";
+                                                            UserResource loggedInUser,
+                                                            @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
+        return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
+            ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
+                    applicationId, inviteOrganisationId, loggedInUser.getId());
+            model.addAttribute("model", viewModel);
+            addExistingApplicantsToForm(viewModel, form);
+            return "application-team/edit-org";
+        });
     }
 
     @PostMapping(params = {"updateOrganisation", "organisation"})
     public String submitUpdateOrganisation(Model model,
                                            @PathVariable("applicationId") Long applicationId,
                                            @RequestParam(name = "organisation") long organisationId,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                           UserResource loggedInUser,
                                            @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+            validateUniqueEmails(form, bindingResult);
+            Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
 
-        validateUniqueEmails(form, bindingResult);
-        Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                ServiceResult<InviteResultsResource> updateResult = updateInvitesByOrganisation(organisationId, form, applicationId);
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<InviteResultsResource> updateResult = updateInvitesByOrganisation(organisationId, form, applicationId);
-
-            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%s/team", applicationId));
-        });
+                return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                        .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%s/team", applicationId));
+            });
+        }) ;
     }
 
     @PostMapping(params = {"updateOrganisation", "inviteOrganisation"})
     public String submitUpdateOrganisationByInviteOrganisation(Model model,
                                                                @PathVariable("applicationId") Long applicationId,
                                                                @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                               UserResource loggedInUser,
                                                                @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                                                @SuppressWarnings("unused") BindingResult bindingResult,
                                                                ValidationHandler validationHandler) {
-        validateUniqueEmails(form, bindingResult);
-        Supplier<String> failureView = () -> getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+        return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
+            validateUniqueEmails(form, bindingResult);
+            Supplier<String> failureView = () -> getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<InviteResultsResource> updateResult = updateInvitesByInviteOrganisation(inviteOrganisationId, form, applicationId);
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                ServiceResult<InviteResultsResource> updateResult = updateInvitesByInviteOrganisation(inviteOrganisationId, form, applicationId);
 
-            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%s/team", applicationId));
+                return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                        .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%s/team", applicationId));
+            });
         });
     }
 
@@ -130,133 +141,157 @@ public class ApplicationTeamManagementController {
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
                                @RequestParam(name = "organisation") long organisationId,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        form.getApplicants().add(new ApplicantInviteForm());
-        return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+            form.getApplicants().add(new ApplicantInviteForm());
+            return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
+        });
     }
 
     @PostMapping(params = {"addApplicant", "inviteOrganisation"})
     public String addApplicantByInviteOrganisation(Model model,
                                                    @PathVariable("applicationId") long applicationId,
                                                    @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                   UserResource loggedInUser,
                                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        form.getApplicants().add(new ApplicantInviteForm());
-        return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+        return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
+            form.getApplicants().add(new ApplicantInviteForm());
+            return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+        });
     }
 
     @PostMapping(params = {"removeApplicant", "organisation"})
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
                                   @RequestParam(name = "organisation") long organisationId,
-                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                  UserResource loggedInUser,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
-        form.getApplicants().remove(position.intValue());
-        return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
+
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+            form.getApplicants().remove(position.intValue());
+            return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
+        });
     }
 
     @PostMapping(params = {"removeApplicant", "inviteOrganisation"})
     public String removeApplicantByInviteOrganisation(Model model,
                                                       @PathVariable("applicationId") long applicationId,
                                                       @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                      @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                      UserResource loggedInUser,
                                                       @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                                       @RequestParam(name = "removeApplicant") Integer position) {
-        form.getApplicants().remove(position.intValue());
-        return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+        return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
+            form.getApplicants().remove(position.intValue());
+            return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+        });
     }
 
     @PostMapping(params = {"markForRemoval", "organisation"})
     public String markForRemoval(Model model,
                                  @PathVariable("applicationId") long applicationId,
                                  @RequestParam(name = "organisation") long organisationId,
-                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                 UserResource loggedInUser,
                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                  @RequestParam(name = "markForRemoval") long applicationInviteId) {
-        form.getMarkedForRemoval().add(applicationInviteId);
-        return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
+
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+            form.getMarkedForRemoval().add(applicationInviteId);
+            return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
+        });
     }
 
     @PostMapping(params = {"markForRemoval", "inviteOrganisation"})
     public String markForRemovalByInviteOrganisation(Model model,
                                                      @PathVariable("applicationId") long applicationId,
                                                      @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
-                                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                     UserResource loggedInUser,
                                                      @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                                      @RequestParam(name = "markForRemoval") long applicationInviteId) {
-        form.getMarkedForRemoval().add(applicationInviteId);
-        return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+        return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
+            form.getMarkedForRemoval().add(applicationInviteId);
+            return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
+        });
     }
 
     @GetMapping(params = {"deleteOrganisation", "organisation"})
     public String confirmDeleteOrganisation(Model model,
                                             @PathVariable("applicationId") long applicationId,
                                             @RequestParam("organisation") long organisationId,
-                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByOrganisationId(
-                applicationId,
-                organisationId,
-                loggedInUser.getId()
-        ));
+                                            UserResource loggedInUser) {
 
-        return "application-team/delete-org";
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+            model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByOrganisationId(
+                    applicationId,
+                    organisationId,
+                    loggedInUser.getId()
+            ));
+
+            return "application-team/delete-org";
+        });
     }
 
     @GetMapping(params = {"deleteOrganisation", "inviteOrganisation"})
     public String confirmDeleteInviteOrganisation(Model model,
                                                   @PathVariable("applicationId") long applicationId,
                                                   @RequestParam("inviteOrganisation") long inviteOrganisationId,
-                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
-                applicationId,
-                inviteOrganisationId,
-                loggedInUser.getId()
-        ));
+                                                  UserResource loggedInUser) {
+        return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
+            model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
+                    applicationId,
+                    inviteOrganisationId,
+                    loggedInUser.getId()
+            ));
 
-        return "application-team/delete-org";
+            return "application-team/delete-org";
+        });
     }
 
     @PostMapping(params = {"deleteOrganisation", "organisation"})
     public String deleteOrganisation(Model model,
                                      @PathVariable("applicationId") Long applicationId,
                                      @RequestParam("organisation") long organisationId,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                     UserResource loggedInUser,
                                      @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        List<Long> existingApplicantIds = inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)
-                .toOptionalIfNotFound()
-                .getSuccessObjectOrThrowException()
-                .map(organisation -> organisation.getInviteResources().stream()
-                        .map(ApplicationInviteResource::getId)
-                        .collect(Collectors.toList())
-                )
-                .orElse(Collections.emptyList());
 
-        return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, applicationService::removeCollaborator))
-                .handleSuccessOrFailure(
-                        failure -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form),
-                        success -> format("redirect:/application/%s/team", applicationId)
-                );
+        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+            List<Long> existingApplicantIds = inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)
+                    .toOptionalIfNotFound()
+                    .getSuccessObjectOrThrowException()
+                    .map(organisation -> organisation.getInviteResources().stream()
+                            .map(ApplicationInviteResource::getId)
+                            .collect(Collectors.toList())
+                    )
+                    .orElse(Collections.emptyList());
+
+            return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, applicationService::removeCollaborator))
+                    .handleSuccessOrFailure(
+                            failure -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form),
+                            success -> format("redirect:/application/%s/team", applicationId)
+                    );
+        });
     }
 
     @PostMapping(params = {"deleteOrganisation", "inviteOrganisation"})
     public String deleteInviteOrganisation(Model model,
                                            @PathVariable("applicationId") Long applicationId,
                                            @RequestParam("inviteOrganisation") long inviteOrganisationId,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                           UserResource loggedInUser,
                                            @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        List<Long> existingApplicantIds = inviteOrganisationRestService.getById(inviteOrganisationId)
-                .getSuccessObjectOrThrowException()
-                .getInviteResources().stream()
-                .map(ApplicationInviteResource::getId)
-                .collect(Collectors.toList());
+        return validateOrganisationInviteAndApplicationId(applicationId, inviteOrganisationId, () -> {
+            List<Long> existingApplicantIds = inviteOrganisationRestService.getById(inviteOrganisationId)
+                    .getSuccessObjectOrThrowException()
+                    .getInviteResources().stream()
+                    .map(ApplicationInviteResource::getId)
+                    .collect(Collectors.toList());
 
-        return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, applicationService::removeCollaborator))
-                .handleSuccessOrFailure(
-                        failure -> getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form),
-                        success -> format("redirect:/application/%s/team", applicationId)
-                );
+            return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, applicationService::removeCollaborator))
+                    .handleSuccessOrFailure(
+                            failure -> getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form),
+                            success -> format("redirect:/application/%s/team", applicationId)
+                    );
+        });
     }
 
     private ServiceResult<InviteResultsResource> updateInvitesByOrganisation(long organisationId,
@@ -325,5 +360,22 @@ public class ApplicationTeamManagementController {
     private void addExistingApplicantsToForm(ApplicationTeamManagementViewModel viewModel, ApplicationTeamUpdateForm form) {
         List<ApplicationTeamManagementApplicantRowViewModel> applicants = viewModel.getApplicants();
         form.setExistingApplicants(simpleMap(applicants, row -> row.getEmail()));
+    }
+
+
+    private String validateOrganisationAndApplicationIds(Long applicationId, Long organisationId, Supplier<String> supplier) {
+        List<ProcessRoleResource> processRoles = processRoleService.getByApplicationId(applicationId);
+        if (processRoles.stream().anyMatch(processRoleResource -> organisationId.equals(processRoleResource.getOrganisationId()))) {
+            return supplier.get();
+        }
+        throw new ObjectNotFoundException("Organisation id not found in application id provided.", Collections.emptyList());
+    }
+
+    private String validateOrganisationInviteAndApplicationId(Long applicationId, Long organisationInviteId, Supplier<String> supplier) {
+        InviteOrganisationResource organisation = inviteOrganisationRestService.getById(organisationInviteId).getSuccessObjectOrThrowException();
+        if(organisation.getInviteResources().stream().anyMatch(applicationInviteResource -> applicationInviteResource.getApplication().equals(applicationId))) {
+            return supplier.get();
+        }
+        throw new ObjectNotFoundException("Organisation invite id not found in application id provided.", Collections.emptyList());
     }
 }

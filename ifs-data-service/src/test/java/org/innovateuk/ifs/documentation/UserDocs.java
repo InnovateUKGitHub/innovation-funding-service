@@ -25,7 +25,8 @@ public class UserDocs {
             fieldWithPath("gender").description("gender of the user"),
             fieldWithPath("disability").description("disability of the user"),
             fieldWithPath("ethnicity").description("ethnic group of the user"),
-            fieldWithPath("profileId").description("profile ID of the user")
+            fieldWithPath("profileId").description("profile ID of the user"),
+            fieldWithPath("allowMarketingEmails").description("allow marketing emails")
     };
 
 }

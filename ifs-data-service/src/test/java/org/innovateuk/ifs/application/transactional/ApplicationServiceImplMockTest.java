@@ -2,17 +2,14 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatus;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.email.resource.EmailAddress;
@@ -20,6 +17,7 @@ import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
+import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -27,34 +25,43 @@ import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
+import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.application.transactional.ApplicationServiceImpl.Notifications.APPLICATION_SUBMITTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -63,11 +70,16 @@ import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
@@ -80,6 +92,11 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
  */
 public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationService> {
 
+    private static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED), ApplicationState::getBackingState);
+    private static final String WEB_BASE_URL = "www.baseUrl.com" ;
+
     private Application openApplication;
 
     @Override
@@ -88,7 +105,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Mock
-    private SystemNotificationSource systemNotificationSourceMock;
+    private ApplicationFinanceHandler applicationFinanceHandlerMock;
 
     private FormInput formInput;
     private FormInputType formInputType;
@@ -100,6 +117,19 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
     private Long organisationId = 456L;
+
+    private Question multiAnswerQuestion;
+    private Question leadAnswerQuestion;
+
+    private OrganisationType orgType;
+    private Organisation org1;
+    private Organisation org2;
+    private Organisation org3;
+
+    private ProcessRole[] roles;
+    private Section section;
+    private Competition comp;
+    private Application app;
 
     @Before
     public void setUp() throws Exception {
@@ -123,6 +153,49 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         openApplication = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
+
+        multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
+        leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
+
+        orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        org1 = newOrganisation().withOrganisationType(orgType).withId(234L).build();
+        org2 = newOrganisation().withId(345L).build();
+        org3 = newOrganisation().withId(456L).build();
+
+        roles = newProcessRole().withRole(UserRoleType.LEADAPPLICANT, UserRoleType.APPLICANT, UserRoleType.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
+        section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
+        comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
+        app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
+
+        when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
+        when(organisationRepositoryMock.findOne(234L)).thenReturn(org1);
+        when(organisationRepositoryMock.findOne(345L)).thenReturn(org2);
+        when(organisationRepositoryMock.findOne(456L)).thenReturn(org3);
+        ReflectionTestUtils.setField(service, "webBaseUrl", WEB_BASE_URL);
+    }
+
+    @Test
+    public void testSendNotificationApplicationSubmitted() {
+        User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
+        Role leadRole = newRole().withType(LEADAPPLICANT).build();
+        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(leadRole).build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+
+        ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
+
+        verify(notificationServiceMock).sendNotification(createLambdaMatcher(notification -> {
+            assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
+            assertEquals(application.getId(), notification.getGlobalArguments().get("applicationId"));
+            assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
+            assertEquals(1, notification.getTo().size());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
+            assertEquals(APPLICATION_SUBMITTED, notification.getMessageKey());
+        }), eq(EMAIL));
+        assertTrue(result.isSuccess());
     }
 
     @Test
@@ -133,12 +206,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
-        ApplicationStatus applicationStatus = ApplicationStatus.CREATED;
+        ApplicationState applicationState = ApplicationState.CREATED;
 
-        Application application = ApplicationBuilder.newApplication().
+        Application application = newApplication().
                 withId(1L).
                 withName("testApplication").
-                withApplicationStatus(applicationStatus).
+                withApplicationState(applicationState).
                 withDurationInMonths(3L).
                 withCompetition(competition).
                 build();
@@ -155,7 +228,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
-            assertEquals(applicationStatus, created.getApplicationStatus());
+            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
             assertNull(created.getStartDate());
@@ -172,6 +245,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(applicationResource);
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created =
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
@@ -587,9 +661,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "testToken123abc", "my-uid");
         User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", "my-uid");
 
-        Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
-        Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
-        Application testApplication3 = new Application(null, "testApplication3Name", null, null, 3L);
+        Application testApplication1 = new Application(null, "testApplication1Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        testApplication1.setId(1L);
+        Application testApplication2 = new Application(null, "testApplication2Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        testApplication2.setId(2L);
+        Application testApplication3 = new Application(null, "testApplication3Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        testApplication3.setId(3L);
 
         ApplicationResource testApplication1Resource = newApplicationResource().with(id(1L)).withName("testApplication1Name").build();
         ApplicationResource testApplication2Resource = newApplicationResource().with(id(2L)).withName("testApplication2Name").build();
@@ -640,19 +717,19 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Long competitionId = 1L;
         Long organisationId = 2L;
         Long userId = 3L;
-        String roleName = UserRoleType.LEADAPPLICANT.getName();
-        Competition competition = CompetitionBuilder.newCompetition().with(id(1L)).build();
+        String roleName = LEADAPPLICANT.getName();
+        Competition competition = newCompetition().with(id(1L)).build();
         Role role = newRole().with(name(roleName)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         User user = newUser().with(id(userId)).build();
-        ApplicationStatus applicationStatus = ApplicationStatus.CREATED;
+        ApplicationState applicationState = ApplicationState.CREATED;
 
         String applicationName = "testApplication";
 
-        Application application = ApplicationBuilder.newApplication().
+        Application application = newApplication().
                 withId(1L).
                 withName(applicationName).
-                withApplicationStatus(applicationStatus).
+                withApplicationState(applicationState).
                 withCompetition(competition).
                 build();
 
@@ -670,12 +747,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
-            assertEquals(applicationStatus, created.getApplicationStatus());
+            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
             assertEquals(competitionId, created.getCompetition().getId());
             return true;
         }));
 
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
         ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccessObject();
         assertEquals(newApplication, created);
@@ -728,35 +806,35 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         List<Notification> notifications = asList(
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(0)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(1)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(2)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -791,7 +869,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -860,35 +938,35 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         List<Notification> notifications = asList(
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(0)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(1)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(2)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -922,7 +1000,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -994,35 +1072,35 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         List<Notification> notifications = asList(
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(0)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(0).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(1)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(1).getRole().getUrl())
                 ),
                 new Notification(
-                        null,
+                        systemNotificationSourceMock,
                         singletonList(notificationTargets.get(2)),
                         ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
                                 "competitionName", competition.getName(),
-                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                                "dashboardUrl", WEB_BASE_URL + "/" + processRoles.get(2).getRole().getUrl())
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED))).thenReturn(applications);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
         when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
         when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
@@ -1054,7 +1132,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusNotIn(competitionId, Arrays.asList(ApplicationStatus.CREATED));
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
@@ -1115,5 +1193,205 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void getApplicationReadyToSubmit() throws Exception {
+
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        when(questionServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(applicationFinanceHandlerMock.getResearchParticipationPercentage(app.getId())).thenReturn(new BigDecimal("29"));
+
+        ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject() == Boolean.TRUE);
+    }
+
+    @Test
+    public void applicationNotReadyToSubmitResearchParticipationTooHigh() throws Exception {
+
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        when(questionServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(applicationFinanceHandlerMock.getResearchParticipationPercentage(app.getId())).thenReturn(new BigDecimal("31"));
+
+        ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void applicationNotReadyToSubmitProgressNotComplete() throws Exception {
+
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+
+        when(questionServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void applicationNotReadyToSubmitChildSectionsNotComplete() throws Exception {
+
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org1.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org2.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(questionServiceMock.isMarkedAsComplete(multiAnswerQuestion, app.getId(), org3.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        when(questionServiceMock.isMarkedAsComplete(leadAnswerQuestion, app.getId(), 0L)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(sectionServiceMock.childSectionsAreCompleteForAllOrganisations(null, app.getId(), null)).thenReturn(serviceSuccess(Boolean.FALSE));
+
+        ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void markAsIneligible() throws Exception {
+        long applicationId = 1L;
+        String reason = "reason";
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withId(applicationId)
+                .build();
+
+        IneligibleOutcome ineligibleOutcome = newIneligibleOutcome()
+                .withReason(reason)
+                .build();
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(true);
+        when(applicationRepositoryMock.save(application)).thenReturn(application);
+
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
+
+        assertTrue(result.isSuccess());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
+        verify(applicationRepositoryMock).save(application);
+    }
+
+    @Test
+    public void markAsIneligible_applicationNotSubmitted() throws Exception {
+        long applicationId = 1L;
+        String reason = "reason";
+
+        Application application = newApplication()
+                .withApplicationState(ApplicationState.OPEN)
+                .withId(applicationId)
+                .build();
+
+        IneligibleOutcome ineligibleOutcome = newIneligibleOutcome()
+                .withReason(reason)
+                .build();
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.markIneligible(application, ineligibleOutcome)).thenReturn(false);
+
+        ServiceResult<Void> result = service.markAsIneligible(applicationId, ineligibleOutcome);
+
+        assertTrue(result.isFailure());
+        assertEquals(APPLICATION_MUST_BE_SUBMITTED.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verify(applicationWorkflowHandlerMock).markIneligible(application, ineligibleOutcome);
+    }
+
+    @Test
+    public void informIneligible() throws Exception {
+        long applicationId = 1L;
+        String subject = "subject";
+        String content = "content";
+        String email = "email@address.com";
+        String firstName = "first";
+        String lastName = "last";
+        String fullName = String.format("%s %s", firstName, lastName);
+
+        ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
+                .withSubject(subject)
+                .withContent(content)
+                .build();
+
+        User[] users = newUser()
+                .withFirstName(firstName, "other")
+                .withLastName(lastName, "other")
+                .withEmailAddress(email, "other@email.com")
+                .buildArray(2, User.class);
+
+        ProcessRole[] processRoles = newProcessRole()
+                .withUser(users)
+                .withRole(LEADAPPLICANT, COLLABORATOR)
+                .buildArray(2, ProcessRole.class);
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .withProcessRoles(processRoles)
+                .build();
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "subject", subject,
+                "bodyPlain", content,
+                "bodyHtml", content
+        );
+
+        SystemNotificationSource from = systemNotificationSourceMock;
+        NotificationTarget to = new ExternalUserNotificationTarget(fullName, email);
+        Notification notification = new Notification(from, singletonList(to), ApplicationServiceImpl.Notifications.APPLICATION_INELIGIBLE, expectedNotificationArguments);
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(true);
+        when(notificationSender.sendNotification(notification)).thenReturn(serviceSuccess(notification));
+
+        ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
+        assertTrue(serviceResult.isSuccess());
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findOne(applicationId);
+        inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
+        inOrder.verify(applicationRepositoryMock).save(application);
+        inOrder.verify(notificationSender).sendNotification(notification);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void informIneligible_workflowError() throws Exception {
+        long applicationId = 1L;
+        String subject = "subject";
+        String content = "content";
+
+        ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
+                .withSubject(subject)
+                .withContent(content)
+                .build();
+
+        Application application = newApplication()
+                .withId(applicationId)
+                .build();
+
+
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(false);
+
+        ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
+        assertTrue(serviceResult.isFailure());
+        assertEquals(APPLICATION_MUST_BE_INELIGIBLE.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findOne(applicationId);
+        inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
+        inOrder.verifyNoMoreInteractions();
     }
 }

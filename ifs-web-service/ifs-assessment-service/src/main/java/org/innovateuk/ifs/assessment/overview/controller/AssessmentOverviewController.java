@@ -9,7 +9,7 @@ import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelP
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
+import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -50,7 +50,7 @@ public class AssessmentOverviewController {
     private AssessmentService assessmentService;
 
     @Autowired
-    private FormInputResponseService formInputResponseService;
+    private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -58,9 +58,8 @@ public class AssessmentOverviewController {
 
     @GetMapping
     public String getOverview(Model model,
-                              @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
-                              @PathVariable("assessmentId") Long assessmentId,
-                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessmentOverviewForm form,
+                              @PathVariable("assessmentId") Long assessmentId) {
 
         model.addAttribute("model", assessmentOverviewModelPopulator.populateModel(assessmentId));
         return "assessment/application-overview";
@@ -76,13 +75,13 @@ public class AssessmentOverviewController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
-            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+            UserResource loggedInUser) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
 
-        final ByteArrayResource resource = formInputResponseService
+        final ByteArrayResource resource = formInputResponseRestService
                 .getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
 
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseService
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService
                 .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
 
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
@@ -95,7 +94,7 @@ public class AssessmentOverviewController {
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             @PathVariable("assessmentId") Long assessmentId) {
-        Supplier<String> failureView = () -> doViewRejectInvitationConfirm(model, assessmentId);
+        Supplier<String> failureView = () -> getOverview(model, form, assessmentId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             AssessmentResource assessment = assessmentService.getRejectableById(assessmentId);
@@ -104,19 +103,6 @@ public class AssessmentOverviewController {
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> redirectToAssessorCompetitionDashboard(assessment.getCompetition()));
         });
-    }
-
-    @GetMapping("/reject/confirm")
-    public String rejectInvitationConfirm(
-            Model model,
-            @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
-            @PathVariable("assessmentId") Long assessmentId) {
-        return doViewRejectInvitationConfirm(model, assessmentId);
-    }
-
-    private String doViewRejectInvitationConfirm(Model model, Long assessmentId) {
-        model.addAttribute("model", rejectAssessmentModelPopulator.populateModel(assessmentId));
-        return "assessment/reject-invitation-confirm";
     }
 
     private String redirectToAssessorCompetitionDashboard(Long competitionId) {

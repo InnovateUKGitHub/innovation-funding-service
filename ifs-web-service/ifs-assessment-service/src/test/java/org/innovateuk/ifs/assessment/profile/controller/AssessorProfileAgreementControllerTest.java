@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileAgreementModelPopulator;
 import org.innovateuk.ifs.assessment.profile.controller.AssessorProfileAgreementController;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileAgreementViewModel;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.mockito.Spy;
 
 import java.time.ZonedDateTime;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
@@ -49,7 +51,7 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
                         .build())
                 .build();
 
-        when(userService.getProfileAgreement(user.getId())).thenReturn(profileAgreementResource);
+        when(profileRestService.getProfileAgreement(user.getId())).thenReturn(restSuccess(profileAgreementResource));
 
         AssessorProfileAgreementViewModel expectedViewModel = new AssessorProfileAgreementViewModel();
         expectedViewModel.setCurrentAgreement(true);
@@ -62,7 +64,7 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("profile/agreement"));
 
-        verify(userService, only()).getProfileAgreement(user.getId());
+        verify(profileRestService, only()).getProfileAgreement(user.getId());
     }
 
     @Test
@@ -70,7 +72,7 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
-        when(userService.updateProfileAgreement(user.getId())).thenReturn(serviceSuccess());
+        when(profileRestService.updateProfileAgreement(user.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/profile/agreement")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -78,6 +80,6 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard"));
 
-        verify(userService, only()).updateProfileAgreement(user.getId());
+        verify(profileRestService, only()).updateProfileAgreement(user.getId());
     }
 }

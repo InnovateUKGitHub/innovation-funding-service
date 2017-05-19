@@ -4,103 +4,86 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notes'"/>
     </head>
 
-    <body th:with="context='project-management'" class="note-form">
+    <body class="note-form">
         <th:block th:insert="fragments/layout :: body-start"/>
         <th:block th:insert="fragments/layout :: global-header"/>
 
         <main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
             <th:block th:insert="fragments/layout :: main-content-start"/>
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
-
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})"/>
-                <h1 class="heading-xlarge">
-                    <th:block th:text="${model.organisationName}" />
-                    <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
-                </h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
             <h2 class="heading-medium">Review notes</h2>
             <p>
                 Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
             </p>
-
             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                <fieldset>
-                    <legend class="heading-medium">New note</legend>
-                    <div th:class="${#fields.hasErrors('noteTitle')}? 'form-group form-group-error':'form-group'">
-                        <label for="noteTitle" class="form-label-bold">
-                            <span class="heading-small no-margin">Title</span>
-                            <th:block th:if="${#fields.hasErrors('noteTitle')}">
-                                <span>
-                                    <span class="error-message" th:each="err : ${#fields.errors('noteTitle')}" th:text="${err}" />
-                                </span>
-                            </th:block>
-                        </label>
-                        <input name="noteTitle"
-                               id="noteTitle"
-                               type="text"
-                               th:class="${#fields.hasErrors('noteTitle') ? 'form-control field-group-error width-full' : 'form-control width-full'}"
-                               required="required"
-                               th:field="*{noteTitle}"
-                               th:attr="maxlength=${model.maxTitleCharacters},
-                                        data-required-errormessage=#{validation.field.must.not.be.blank},
-                                        data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
-                    </div>
-                    <div th:class="${#fields.hasErrors('note')}? 'form-group form-group-error':'form-group'">
-                        <label for="note" class="form-label-bold">
-                            <span class="heading-small no-margin">Note</span>
-                            <th:block th:if="${#fields.hasErrors('note')}">
-                                <span>
-                                    <span class="error-message" th:each="err : ${#fields.errors('note')}" th:text="${err}" />
-                                </span>
-                            </th:block>
-                        </label>
-                        <div class="textarea-wrapped word-count">
-                            <textarea data-editor="md"
-                                      required = "required"
-                                      th:field="*{note}"
-                                      id="note"
-                                      name="note"
-                                      th:attr="maxlength=${model.maxNoteCharacters},
-                              data-max_words=${model.maxNoteWords},
-                              data-maxwordslength=${model.maxNoteWords},
-                              data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
-                              data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxNoteCharacters})},
-                              data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                      th:classappend="${#fields.hasErrors('note') ? 'form-control field-group-error' : 'form-control'}"></textarea>
-                            <div class="textarea-footer" th:with="note =*{note}">
-                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})"/>
-                            </div>
+                <h2 class="heading-medium">New note</h2>
+                <div class="form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'form-group-error'">
+                    <label for="noteTitle">
+                        <span class="form-label-bold">Title</span>
+                        <th:block th:if="${#fields.hasErrors('noteTitle')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('noteTitle')}" th:text="${err}" />
+                        </th:block>
+                    </label>
+                    <input name="noteTitle"
+                           id="noteTitle"
+                           type="text"
+                           class="form-control width-full"
+                           required="required"
+                           th:errorclass="field-group-error"
+                           th:field="*{noteTitle}"
+                           th:attr="maxlength=${model.maxTitleCharacters},
+                                    data-required-errormessage=#{validation.field.must.not.be.blank},
+                                    data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('note')} ? 'form-group-error'">
+                    <label for="note">
+                        <span class="form-label-bold">Note</span>
+                        <th:block th:if="${#fields.hasErrors('note')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('note')}" th:text="${err}" />
+                        </th:block>
+                    </label>
+                    <div class="textarea-wrapped word-count">
+                        <textarea data-editor="md"
+                                  required = "required"
+                                  th:field="*{note}"
+                                  class="form-control"
+                                  th:errorclass="field-group-error"
+                                  id="note"
+                                  name="note"
+                                  th:attr="maxlength=${model.maxNoteCharacters},
+                          data-max_words=${model.maxNoteWords},
+                          data-maxwordslength=${model.maxNoteWords},
+                          data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
+                          data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxNoteCharacters})},
+                          data-required-errormessage=#{validation.field.must.not.be.blank}"></textarea>
+                        <div class="textarea-footer" th:with="note=*{note}">
+                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})"/>
                         </div>
                     </div>
-
+                </div>
+                <div class="upload-section">
                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                        <h2 class="heading-small">Supporting documentation</h2>
+                        <h2 class="heading-small no-margin">Supporting documentation</h2>
                         <ul>
                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
-                                <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                                <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
                             </li>
                         </ul>
                     </th:block>
-
-                    <fieldset>
-                        <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Upload supporting documentation in pdf format</legend>
-                            <th:block th:if="${#fields.hasErrors('attachment')}">
-                                <span>
-                                    <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
-                                </span>
-                            </th:block>
-                            <input type="file" id="attachment" class="inputfile" name="attachment">
-                            <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
-                            <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
-                        </div>
-                    </fieldset>
-                </fieldset>
-
+                    <h2 class="heading-small">Upload supporting documentation in pdf format</h2>
+                    <div th:class="${#fields.hasErrors('attachment')} ? 'error' : ''">
+                        <th:block th:if="${#fields.hasErrors('attachment')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                        </th:block>
+                        <input type="file" id="attachment" class="inputfile" name="attachment">
+                        <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+                        <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                    </div>
+                </div>
                 <input type="hidden" id="action" value="postNote">
                 <div class="grid-row extra-margin">
                     <div class="column-half">

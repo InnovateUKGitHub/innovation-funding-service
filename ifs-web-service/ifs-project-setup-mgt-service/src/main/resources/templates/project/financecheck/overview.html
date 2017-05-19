@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks overview'" />
 </head>
-<body th:with="context='project-management'" class="finance-checks-overview">
+<body class="finance-checks-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -14,10 +14,7 @@
 
     <div class="grid-row">
         <div class="column-two-thirds">
-            <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id-and-name(${#numbers.formatInteger(model.overview.projectId,8)}, ${model.overview.projectName})" />
-                <h1 class="heading-xlarge">Finance overview</h1>
-            </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=|${model.overview.projectId} : ${model.overview.projectName}|,size='heading-xlarge'" />
         </div>
         <div class="column-third alignright extra-margin">
             <h2 class="bold-small blue-block">Finance checks</h2>
@@ -28,7 +25,7 @@
 
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
 
-    <h3 class="heading-medium">Finance summaries</h3>
+    <h3 class="heading-medium">Finances summary</h3>
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
 
     <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
@@ -39,5 +36,8 @@
 
 
 </main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

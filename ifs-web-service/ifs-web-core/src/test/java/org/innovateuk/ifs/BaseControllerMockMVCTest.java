@@ -1,17 +1,17 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.innovateuk.ifs.controller.ControllerModelAttributeAdvice;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.controller.CustomFormBindingControllerAdvice;
+import org.innovateuk.ifs.controller.LoggedInUserMethodArgumentResolver;
 import org.innovateuk.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.formatter.RejectionReasonFormatter;
 import org.innovateuk.ifs.user.formatter.EthnicityFormatter;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.springframework.context.MessageSource;
@@ -71,14 +71,15 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 .setConversionService(formattingConversionService)
                 .setControllerAdvice(
                         new ErrorControllerAdvice(),
-                        new CustomFormBindingControllerAdvice(),
-                        modelAttributeAdvice(loggedInUserSupplier)
+                        new CustomFormBindingControllerAdvice()
                 )
                 .addFilter(new CookieFlashMessageFilter())
                 .setLocaleResolver(localeResolver)
                 .setHandlerExceptionResolvers(createExceptionResolver(environment, messageSource))
                 .setCustomArgumentResolvers(
-                        new ValidationHandlerMethodArgumentResolver()
+                        new ValidationHandlerMethodArgumentResolver(),
+                        getLoggedInUserMethodArgumentResolver(loggedInUserSupplier)
+
                 )
                 .setViewResolvers(viewResolver())
                 .build();
@@ -86,11 +87,11 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         return mockMvc;
     }
 
-    private static ControllerModelAttributeAdvice modelAttributeAdvice(Supplier<UserResource> loggedInUserSupplier) {
+    private static LoggedInUserMethodArgumentResolver getLoggedInUserMethodArgumentResolver(Supplier<UserResource> loggedInUserSupplier) {
 
-        ControllerModelAttributeAdvice modelAttributeAdvice = new ControllerModelAttributeAdvice();
+        LoggedInUserMethodArgumentResolver argumentResolver = new LoggedInUserMethodArgumentResolver();
 
-        ReflectionTestUtils.setField(modelAttributeAdvice, "userAuthenticationService", new UserAuthenticationService() {
+        ReflectionTestUtils.setField(argumentResolver, "userAuthenticationService", new UserAuthenticationService() {
 
             @Override
             public Authentication getAuthentication(HttpServletRequest request) {
@@ -113,7 +114,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             }
         });
 
-        return modelAttributeAdvice;
+        return argumentResolver;
     }
 
     public static ExceptionHandlerExceptionResolver createExceptionResolver(Environment env, MessageSource messageSource) {
@@ -146,5 +147,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      */
     protected void setLoggedInUser(UserResource user) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
+    }
+
+    protected void logoutCurrentUser() {
+        setLoggedInUser(null);
     }
 }

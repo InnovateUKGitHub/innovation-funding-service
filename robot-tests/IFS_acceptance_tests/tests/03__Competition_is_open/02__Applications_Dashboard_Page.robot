@@ -24,7 +24,7 @@ Application Dashboard
     [Documentation]    INFUND-7369
     [Tags]    HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    When the user clicks the button/link    jQuery=a:contains("Applications: All, submitted")
+    When the user clicks the button/link    jQuery=a:contains("Applications: All, submitted, ineligible")
     Then The user should see the element    jQuery=a:contains("Submitted applications")
     And The user should see the element    link=All applications
 
@@ -62,7 +62,7 @@ The applications can be sorted by lead applicant
 Filter on application number
     [Documentation]    INFUND-8010
     [Tags]    HappyPath
-    Given the user enters text to a text field    id=filterSearch    105
+    Given the user enters text to a text field    id=filterSearch    146
     When the user clicks the button/link    jQuery=button:contains("Filter")
     Then the user should see the text in the page    Safeguarding pollinators and their values to human well-being
     And the user should not see the text in the page    Climate science the history of Greenland's ice
@@ -124,14 +124,13 @@ the user can see the option to upload a file on the page
     the user should see the text in the page    Upload
 
 the user can view this file without any errors
-    the user clicks the button/link    link=testing.pdf(10 KB)
-    the user should not see an error in the page
-    the user goes back to the previous page
+    The user opens the link in new window  ${valid_pdf}, 10 KB
+    the user goes back to the previous tab
 
 the user cannot see this file but gets a quarantined message
     [Documentation]    Currently not used. It was used in Comp admin can open the view mode of the application
-    the user clicks the button/link    link=test_quarantine.pdf(7 KB)
-    the user should not see an error in the page
+    The user opens the link in new window  test_quarantine.pdf, 7 KB
+    the user goes back to the previous tab
     the user should see the text in the page    ${quarantine_warning}
 
 the finance summary calculations should be correct
@@ -173,35 +172,6 @@ the user should see the correct finances change
     Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
-
-the application list is sorted by
-    [Arguments]    ${sorting_factor}
-    Select From List    name=sort    ${sorting_factor}
-
-the applications should be sorted by column
-    [Arguments]    ${column_number}
-    ${row_count}=    get matching xpath count    //*[td]
-    @{sorted_column_contents}=    Create List
-    : FOR    ${row}    IN RANGE    2    ${row_count}
-    \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    append to list    ${sorted_column_contents}    ${cell_contents}
-    ${test_sorting_list}=    Copy List    ${sorted_column_contents}
-    Sort List    ${test_sorting_list}
-    Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
-
-the applications should be sorted in reverse order by column
-    [Arguments]    ${column_number}
-    ${row_count}=    get matching xpath count    //*[td]
-    ${column_contents}=    Create List
-    ${also_column_contents}=    Create List
-    : FOR    ${row}    IN RANGE    2    ${row_count}
-    \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    ${cell_contents_number}=    convert to number    ${cell_contents}
-    \    append to list    ${column_contents}    ${cell_contents_number}
-    \    append to list    ${also_column_contents}    ${cell_contents_number}
-    Sort List    ${column_contents}
-    Reverse List    ${also_column_contents}
-    Lists Should Be Equal    ${column_contents}    ${also_column_contents}
 
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}

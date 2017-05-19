@@ -19,10 +19,9 @@
                 </ul>
             </div>
 
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
-                <h1 class="heading-xlarge">Add organisation</h1>
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add organisation',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <p>Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
 

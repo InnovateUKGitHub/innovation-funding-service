@@ -11,19 +11,13 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
-
-    <h1 class="heading-xlarge">
-        <span class="heading-secondary">Create your account</span>
-        Add operating address
-    </h1>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm operating address',subTitle='Create your account',size='heading-xlarge'" />
 
     <div class="message-alert">
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
-    <h2 class="heading-medium">Organisation</h2>
-
-    <th:block th:insert="fragments/addresses :: organisation-details" />
+    <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${model.showOrgType}"/>
 
     <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" class="extra-margin">
         <input type="hidden" th:field="*{searchOrganisationId}" />
@@ -47,7 +41,7 @@
         <th:block th:insert="fragments/addresses :: company-address-details"
                   th:with="form=${organisationForm},addressType=${'operating address'}" />
 
-        <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
+        <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Continue</button>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

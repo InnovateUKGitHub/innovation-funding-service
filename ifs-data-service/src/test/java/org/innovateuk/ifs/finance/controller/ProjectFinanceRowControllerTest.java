@@ -119,12 +119,12 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
     @Test
     public void deleteCostAPICallShouldRenderResponse() throws Exception {
 
-        when(projectFinanceRowServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
+        when(projectFinanceRowServiceMock.deleteCost(456L, 789L, 123L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/cost/project/delete/123"))
+        mockMvc.perform(delete("/cost/project/456/organisation/789/delete/123"))
                 .andExpect(status().isNoContent());
 
-        verify(projectFinanceRowServiceMock, times(1)).deleteCost(123L);
+        verify(projectFinanceRowServiceMock, times(1)).deleteCost(456L, 789L, 123L);
     }
 
     @Test

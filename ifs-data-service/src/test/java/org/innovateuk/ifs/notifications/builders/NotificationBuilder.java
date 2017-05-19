@@ -29,7 +29,7 @@ public class NotificationBuilder extends BaseBuilder<Notification, NotificationB
 
     @Override
     protected Notification createInitial() {
-        return new Notification();
+        return newInstance(Notification.class);
     }
 
     public NotificationBuilder withSource(NotificationSource source) {

@@ -34,8 +34,8 @@ Complete the org size section
     the user clicks the button/link    link=Robot test application
     the user clicks the button/link    link=Your finances
     the user clicks the button/link    link=Your organisation
-    ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit your organisation")
-    Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit your organisation")
+    ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit")
+    Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit")
     the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
     the user enters text to a text field    jQuery=label:contains("employees") + input    0
@@ -56,7 +56,7 @@ Mark application details as incomplete
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Robot test application
     the user clicks the button/link       link=Application details
-    the user clicks the button/link       jQuery=button:contains("Return and edit")
+    the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user should see the element       jQuery=li:contains("Application details") > .action-required
 
@@ -72,11 +72,6 @@ the applicant completes the application details
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=button:contains("innovation area")
-    the user should see the element       jQuery=a:contains("Project details")
-    the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
-    the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
-    the user clicks the button/link       jQuery=button:contains(Save)
     the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.
@@ -85,7 +80,7 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-startdate_month  11
     The user enters text to a text field  id=application_details-duration  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
-    the user should see the element       jQuery=button:contains("Return and edit")
+    the user should see the element       jQuery=button:contains("Edit")
     the user should not see the element     css=input
 
 the user marks the finances as complete
@@ -114,6 +109,7 @@ the user fills in the project costs
 
 the user has read only view once section is marked complete
     the user should not see the element   css=input
+    the user should see the element     jQuery=button:contains("Edit")
     the user clicks the button/link     jQuery=a:contains("Return to finances")
 
 the user fills in Labour
@@ -133,16 +129,18 @@ the user fills in Overhead costs
     run keyword if  '${status}'=='FAIL'  the user chooses 20% overheads option
 
 the user chooses Calculate overheads option
-    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    and the user clicks the button/link     jQuery=label:contains("Custom overhead costs")
-    then the user should see the element     jQuery=h3:contains("Custom overhead costs")
-    and the user enters text to a text field    jQuery=input[name^="overheads-customRate"]   40
+    the user clicks the button/link                         jQuery=button:contains("Overhead costs")
+    the user clicks the button/link                         jQuery=label:contains("Calculate overheads")
+    the user should see the element                         jQuery=h3:contains("Calculate overheads")
+    the user uploads the file                               css=#overheadfile   ${excel_file}
     wait for autosave
-    and the total overhead costs should reflect rate entered    jQuery=input[name^="overheads-totalCosts"]   £ 28,261
+    the user enters text to a text field                    css=input[name^="overheads-total"][id^="cost-overheads"]   40
+    wait for autosave
+    the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    the element should be disabled      jQuery=input[name^="overheads-totalCosts"]
+    the element should be disabled      css=#total-cost
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
 
 the user chooses 20% overheads option
@@ -167,8 +165,8 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
-    focus                                 jQuery=#section-total-192[readonly]
-    the user should see the element       jQuery=#section-total-192[readonly]
+    focus                                 jQuery=.section-total-summary > [data-mirror="#section-total-192"]
+    the user should see the element       jQuery=.section-total-summary > [data-mirror="#section-total-192"]
     textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
     the user clicks the button/link       jQuery=#form-input-1085 button:contains("Capital usage")
 
@@ -206,13 +204,14 @@ the user fills in the organisation information
     [Arguments]  ${Application}
     the user navigates to Your-finances page  ${Application}
     the user clicks the button/link    link=Your organisation
-    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit your organisation")
-    Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit your organisation")
+    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit")
+    Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit")
     the user selects the radio button  financePosition-organisationSize  ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
     the user enters text to a text field    jQuery=label:contains("employees") + input    0
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your organisation
+    the user should see the element       jQuery=button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user checks Your Funding section
@@ -235,6 +234,7 @@ the user fills in the funding information
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your funding
+    the user should see the element       jQuery=button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete

@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,19 +14,18 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static junit.framework.Assert.assertEquals;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
-import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
-import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
@@ -94,107 +96,6 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void getProfileSkills() throws Exception {
-        Long userId = 1L;
-        ProfileSkillsResource expected = newProfileSkillsResource().build();
-
-        when(userRestService.getProfileSkills(userId)).thenReturn(restSuccess(expected));
-
-        ProfileSkillsResource response = service.getProfileSkills(userId);
-        assertSame(expected, response);
-        verify(userRestService, only()).getProfileSkills(userId);
-    }
-
-    @Test
-    public void updateProfileSkills() throws Exception {
-        Long userId = 1L;
-        BusinessType businessType = BUSINESS;
-        String skillsAreas = "Skills";
-
-        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
-                .withBusinessType(businessType)
-                .withSkillsAreas(skillsAreas)
-                .build();
-
-        when(userRestService.updateProfileSkills(userId, profileSkillsEditResource)).thenReturn(restSuccess());
-
-        service.updateProfileSkills(userId, businessType, skillsAreas).getSuccessObjectOrThrowException();
-        verify(userRestService, only()).updateProfileSkills(userId, profileSkillsEditResource);
-    }
-
-    @Test
-    public void getProfileAgreement() throws Exception {
-        Long userId = 1L;
-        ProfileAgreementResource expected = newProfileAgreementResource().build();
-
-        when(userRestService.getProfileAgreement(userId)).thenReturn(restSuccess(expected));
-
-        ProfileAgreementResource response = service.getProfileAgreement(userId);
-        assertSame(expected, response);
-        verify(userRestService, only()).getProfileAgreement(userId);
-    }
-
-    @Test
-    public void updateProfileAgreement() throws Exception {
-        Long userId = 1L;
-
-        when(userRestService.updateProfileAgreement(userId)).thenReturn(restSuccess());
-
-        ServiceResult<Void> response = service.updateProfileAgreement(userId);
-        assertTrue(response.isSuccess());
-
-        verify(userRestService, only()).updateProfileAgreement(userId);
-    }
-
-    @Test
-    public void getUserAffilliations() throws Exception {
-        Long userId = 1L;
-        List<AffiliationResource> expected = newAffiliationResource().build(2);
-
-        when(userRestService.getUserAffiliations(userId)).thenReturn(restSuccess(expected));
-
-        List<AffiliationResource> response = service.getUserAffiliations(userId);
-        assertSame(expected, response);
-        verify(userRestService, only()).getUserAffiliations(userId);
-    }
-
-    @Test
-    public void updateUserAffiliations() throws Exception {
-        Long userId = 1L;
-        List<AffiliationResource> affiliations = newAffiliationResource().build(2);
-
-        when(userRestService.updateUserAffiliations(userId, affiliations)).thenReturn(restSuccess());
-
-        service.updateUserAffiliations(userId, affiliations).getSuccessObjectOrThrowException();
-        verify(userRestService, only()).updateUserAffiliations(userId, affiliations);
-    }
-
-    @Test
-    public void getProfileDetails() throws Exception {
-        Long userId = 1L;
-        UserProfileResource expected = newUserProfileResource().build();
-
-        when(userRestService.getUserProfile(userId)).thenReturn(restSuccess(expected));
-
-        UserProfileResource response = service.getUserProfile(userId);
-        assertSame(expected, response);
-        verify(userRestService, only()).getUserProfile(userId);
-    }
-
-    @Test
-    public void updateProfileDetails() throws Exception {
-        Long userId = 1L;
-
-        UserProfileResource profileDetails = newUserProfileResource().build();
-        when(userRestService.updateUserProfile(userId, profileDetails)).thenReturn(restSuccess());
-
-        ServiceResult<Void> response = service.updateUserProfile(userId, profileDetails);
-        assertTrue(response.isSuccess());
-
-        verify(userRestService, only()).updateUserProfile(userId, profileDetails);
-    }
-
-    @Test
     public void userHasApplicationForCompetition() throws Exception {
         Long userId = 1L;
         Long competitionId = 2L;
@@ -206,5 +107,47 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals(expected, response);
 
         verify(userRestService, only()).userHasApplicationForCompetition(userId, competitionId);
+    }
+
+    @Test
+    public void existsAndHasRole() {
+        Long userId = 1L;
+        RoleResource roleResource = newRoleResource()
+                .withType(COMP_ADMIN)
+                .build();
+        UserResource userResource = newUserResource()
+                .withId(userId)
+                .withRolesGlobal(singletonList(roleResource))
+                .build();
+
+        when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
+
+        assertTrue(service.existsAndHasRole(userId, COMP_ADMIN));
+    }
+
+    @Test
+    public void existsAndHasRole_wrongRole() {
+        Long userId = 1L;
+        RoleResource roleResource = newRoleResource()
+                .withType(FINANCE_CONTACT)
+                .build();
+        UserResource userResource = newUserResource()
+                .withId(userId)
+                .withRolesGlobal(singletonList(roleResource))
+                .build();
+
+        when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
+
+        assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
+    }
+
+    @Test
+    public void existsAndHasRole_userNotFound() {
+        Long userId = 1L;
+
+        Error error = CommonErrors.notFoundError(UserResource.class, userId);
+        when(userRestService.retrieveUserById(userId)).thenReturn(restFailure(error));
+
+        assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
     }
 }

@@ -58,7 +58,7 @@ public class OrganisationTypeCreationController {
     @GetMapping("/new-account-organisation-type")
     public String chooseOrganisationType(HttpServletRequest request,
                                          Model model,
-                                         @ModelAttribute(name = "form") OrganisationTypeForm form,
+                                         @ModelAttribute(name = "form", binding = false) OrganisationTypeForm form,
                                          BindingResult bindingResult,
                                          HttpServletResponse response,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,

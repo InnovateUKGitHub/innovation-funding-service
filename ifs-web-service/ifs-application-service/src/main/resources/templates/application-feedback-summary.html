@@ -10,16 +10,11 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-
-            <th:block th:include="fragments/layout :: header-sub"
-                      th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
-
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
-
-            <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
-                <h1 class="heading-xlarge no-margin">Feedback overview</h1>
-            </div>
+            <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${applicationName},size='heading-xlarge'" />
+            </th:block>
 
             <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
@@ -65,10 +60,13 @@
                                         <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
                                     </div>
                                     <div class="column-third">
-                                        <p th:unless=${question.shortName.equals('Scope')} class="form-hint no-margin">No feedback provided</p>
-                                        <p th:if=${question.shortName.equals('Scope')}>
-                                            In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span> Yes
-                                        </p>
+                                        <p th:unless="${question.shortName.equals('Scope')}" class="form-hint no-margin">No feedback provided</p>
+                                        <th:block th:if="${question.shortName.equals('Scope')}">
+                                            <p th:unless="${scores.scopeAssessed}" class="form-hint no-margin">No feedback provided</p>
+                                            <p th:if="${scores.scopeAssessed}">
+                                                In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span>
+                                            </p>
+                                        </th:block>
                                     </div>
                                 </div>
                             </li>
@@ -108,9 +106,9 @@
             <section th:if="${hasFinanceSection}">
                 <h2 class="heading-medium">Finance</h2>
                 <div class="collapsible">
-                    <h3>Finances summaries</h3>
+                    <h3>Finances summary</h3>
                     <div class="question">
-                        <div th:replace="finance/finance-summary :: application_finances_summary"></div>
+                        <div th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></div>
 
                         <h2 class="heading-medium">Funding breakdown</h2>
                         <th:block th:insert="finance/finance-summary :: financial_summary_table" />

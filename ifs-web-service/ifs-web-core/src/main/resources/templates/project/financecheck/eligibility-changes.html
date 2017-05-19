@@ -10,28 +10,15 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start"/>
 
-    <div th:if="${model.internal}"
-         th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}"
-         th:remove="tag"></div>
-
-    <div th:unless="${model.internal}"
-         th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
-         th:remove="tag"></div>
-
-    <div class="page-title">
-        <th:block
-            th:insert="fragments/elements :: project-title (projectName=${model.projectName})"/>
-        <h1 class="heading-xlarge">Changes to finances</h1>
-    </div>
-
+    <th:block th:if="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}" />
+    <th:block th:unless="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"  />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Changes to finances',subTitle=${model.projectName},size='heading-xlarge'" />
     <hr/>
 
     <th:block th:fragment="summary" th:with="summaryModel=${model.financeCheckEligibility}">
         <h2 class="heading-medium">Project finances</h2>
         <div class="table-overflow">
-            <table class="table-overview">
+            <table class="table-overview" id="project-finance-changes-total">
                 <thead>
                 <tr>
                     <th scope="col">Total costs</th>
@@ -65,7 +52,7 @@
     <th:block th:fragment="section_changes" th:with="sectionDiffs=${model.sectionDifferences}">
         <h2 class="heading-medium">Section changes</h2>
         <div class="table-overflow">
-            <table class="table-overview">
+            <table class="table-overview" id="project-finance-changes-section">
                 <thead>
                 <tr>
                     <th:block th:each="rowType : ${sectionDiffs.keySet()}">
@@ -90,7 +77,7 @@
     <th:block th:fragment="row_changes">
         <h2 class="heading-medium">Changes from submitted finances</h2>
         <div class="table-overflow">
-            <table class="project-changes">
+            <table class="project-changes" id="project-finance-changes-submitted">
                 <thead>
                 <tr>
                     <th scope="col" style="width: 15%">Action</th>

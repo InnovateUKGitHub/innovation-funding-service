@@ -5,8 +5,6 @@
     </head>
 
     <body th:with="context='assessment'" class="reject-invitation-confirm">
-        <th:block th:insert="fragments/modals :: modal-overlay" />
-        <th:block th:insert="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${model.assessmentId})" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -14,9 +12,13 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})})" />
 
-            <div class="page-title">
-                <h1 class="heading-xlarge">Accept application</h1>
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                </ul>
             </div>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept application',size='heading-xlarge'" />
 
             <h2 class="visually-hidden">Application details</h2>
             <div class="boxed">
@@ -47,10 +49,72 @@
                 <li>you have time to assess this application</li>
             </ul>
 
-            <form th:action="@{/{assessmentId}/assignment/accept(assessmentId=${model.assessmentId})}" method="POST">
-                <h2 class="heading-medium">Are you able to assess this application?</h2>
-                <button class="button large extra-margin" type="submit">Accept</button>
-                <a class="button button-warning large extra-margin" th:href="@{/{assessmentId}/assignment/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assessment-modal">Reject</a>
+            <form th:action="@{/{assessmentId}/assignment/respond(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
+                <div class="form-group">
+                    <fieldset>
+                        <legend>
+                            <span class="heading-medium">Select your ability to assess this application</span>
+                            <th:block th:if="${#fields.hasErrors('assessmentAccept')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
+                            </th:block>
+                        </legend>
+
+                        <label class="block-label selection-button-radio" data-target="accept-application" for="acceptAssessment">
+                            <input id="acceptAssessment" value="true" th:field="*{assessmentAccept}" type="radio" required="required">
+                            Accept, I am able to assess this application
+                        </label>
+
+                        <div class="panel js-hidden" id="accept-application">
+                            <p>You will still have the option to reject after accepting and viewing the full application</p>
+                        </div>
+
+                        <label class="block-label selection-button-radio" data-target="reject-application" for="rejectAssessment">
+                            <input id="rejectAssessment" value="false" th:field="*{assessmentAccept}" type="radio" required="required">
+                            Reject, I am not able to assess this application
+                        </label>
+
+                        <div class="panel js-hidden" id="reject-application">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
+                                <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
+                                    Please select a reason for rejecting the competition
+                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
+                                    </th:block>
+                                </label>
+                                <select class="form-control" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+                                    <option value="">Select a reason</option>
+                                    <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
+                                            th:value="${reason}"
+                                            th:text="${reason.displayLabel}"
+                                            value="1">Not available</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+                                <label class="form-label" th:for="${#ids.next('rejectComment')}">
+                                    Use this space to provide more information
+                                    <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                                    </th:block>
+                                </label>
+                                <textarea class="form-control width-full"
+                                          maxlength="5000"
+                                          data-max_words="100"
+                                          data-maxwordslength="100"
+                                          data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                          th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                          th:errorclass="field-error"
+                                          rows="4"
+                                          th:field="*{rejectComment}"></textarea>
+                                <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button class="button" type="submit">Confirm</button>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

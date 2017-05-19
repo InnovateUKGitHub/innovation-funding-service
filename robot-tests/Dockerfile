@@ -9,19 +9,19 @@ RUN apt-get update && \
     apt-get install -y telnet && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install robotframework && \
-    pip install robotframework-selenium2library && \
-	pip install robotframework-imaplibrary && \
-	pip install robotframework-xvfb && \
-	pip install robotframework-excellibrary && \
-	pip install robotframework-ftplibrary && \
-	pip install openpyxl && \
-	pip install -U selenium && \
-	pip install simplejson requests && \
-	pip install robotframework-databaselibrary && \
-	pip install pymysql && \
-	pip install MySQL-python && \
-	pip install pdfminer
+RUN pip install -U selenium==3.3.1 && \
+    pip install robotframework \
+                robotframework-selenium2library \
+                robotframework-imaplibrary \
+                robotframework-xvfb \
+                robotframework-excellibrary \
+                robotframework-ftplibrary \
+                openpyxl \
+                simplejson \
+                requests \
+                robotframework-databaselibrary \
+                pymysql \
+                pdfminer
 
 WORKDIR robot-tests
 COPY ./ ./

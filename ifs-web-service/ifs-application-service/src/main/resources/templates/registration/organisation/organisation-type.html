@@ -10,12 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-
-    <div class="page-title">
-        <p class="subtitle">Create your account</p>
-        <h1 class="heading-xlarge no-margin" >Choose your organisation type</h1>
-    </div>
-
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Create your account',size='heading-xlarge'" />
     <p>You are participating in this competition as part of the organisation
         <strong>
             <span th:if="${model.inviteOrganisationNameConfirmed}" th:text="${model.inviteOrganisationNameConfirmed}"></span>
