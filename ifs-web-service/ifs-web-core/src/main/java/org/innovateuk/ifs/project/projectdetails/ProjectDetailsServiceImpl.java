@@ -2,35 +2,19 @@ package org.innovateuk.ifs.project.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
-import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-
-import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * A service for dealing with ProjectResources via the appropriate Rest services
+ * A service for dealing with Project Details Resources via the appropriate Rest services
  */
 @Service
 public class ProjectDetailsServiceImpl implements ProjectDetailsService {
@@ -40,12 +24,6 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
 
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
-
-    @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
 
     @Override
     public ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId) {

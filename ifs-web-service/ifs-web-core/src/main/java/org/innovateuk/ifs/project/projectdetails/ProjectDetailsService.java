@@ -5,14 +5,12 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * A service for dealing with ProjectResources via the appropriate Rest services
+ * A service for dealing with Project Details Resources via the appropriate Rest services
  */
 public interface ProjectDetailsService {
 
