@@ -40,7 +40,7 @@ public class ApplicationCreationAuthenticatedController {
     @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
-                       @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                       UserResource user,
                        HttpServletRequest request) {
 
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
@@ -55,7 +55,7 @@ public class ApplicationCreationAuthenticatedController {
     @PostMapping("/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
-                       @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                       UserResource user,
                        HttpServletRequest request) {
         String createNewApplication = request.getParameter(FORM_RADIO_NAME);
 

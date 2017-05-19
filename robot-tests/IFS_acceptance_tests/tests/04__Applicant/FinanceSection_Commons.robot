@@ -105,7 +105,6 @@ the user fills in the project costs
     the user selects the checkbox    agree-state-aid-page
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
-    the user should see the element       jQuery=button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user has read only view once section is marked complete
@@ -130,14 +129,14 @@ the user fills in Overhead costs
     run keyword if  '${status}'=='FAIL'  the user chooses 20% overheads option
 
 the user chooses Calculate overheads option
-    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    and the user clicks the button/link     jQuery=label:contains("Calculate overheads")
-    then the user should see the element     jQuery=h3:contains("Calculate overheads")
-    and the user uploads the file      css=#overheadfile   ${excel_file}
+    the user clicks the button/link                         jQuery=button:contains("Overhead costs")
+    the user clicks the button/link                         jQuery=label:contains("Calculate overheads")
+    the user should see the element                         jQuery=h3:contains("Calculate overheads")
+    the user uploads the file                               css=#overheadfile   ${excel_file}
     wait for autosave
-    and the user enters text to a text field    css=input[name^="overheads-total"][id^="cost-overheads"]   40
+    the user enters text to a text field                    css=input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
-    and the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
+    the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}

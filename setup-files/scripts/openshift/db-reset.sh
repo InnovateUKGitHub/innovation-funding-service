@@ -54,7 +54,7 @@ fi
 dbReset
 
 echo Waiting for container to start
-while [ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != 'Running' ]
+until [ "$(oc get po dbreset &> /dev/null; echo $?)" == 0 ] && [ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' ]
 do
   echo -n .
   sleep 5
