@@ -111,7 +111,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
 
         if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
             if (response == null) {
-                errors.add(new ObjectError("value", "validation.field.must.not.be.blank"));
+                errors.add(new ObjectError("value", "validation.application.jes.upload.required"));
             } else {
                 errors.addAll(validationUtil.validationJesForm(response).getAllErrors());
             }

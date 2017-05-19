@@ -183,7 +183,7 @@ the calculations should be correct and the totals rounded to the second decimal
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
-    Choose File    css=.upload-section label    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    css=.upload-section input    ${UPLOAD_FOLDER}/${file_name}
 
 
 the finance table should be correct

@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
@@ -29,17 +30,19 @@ public class AcademicJesValidator implements Validator {
 
         if (FormInputType.FINANCE_UPLOAD.equals(response.getFormInput().getType())) {
             if (responseIsEmpty(response) || financeFileIsEmpty(response)) {
-                reject(errors, "validation.field.must.not.be.blank");
+                reject(errors, "validation.application.jes.upload.required");
             }
         }
     }
 
     private boolean financeFileIsEmpty(FormInputResponse response) {
-        if(response.getApplication().getApplicationFinances() == null) {
+        List<ApplicationFinance> applicationFinances = response.getApplication().getApplicationFinances();
+
+        if(applicationFinances == null) {
             return true;
         }
 
-        Optional<ApplicationFinance> applicationFinanceOpt = response.getApplication().getApplicationFinances()
+        Optional<ApplicationFinance> applicationFinanceOpt = applicationFinances
                 .stream()
                 .filter(applicationFinance -> applicationFinance.getOrganisation().getId().equals(response.getUpdatedBy().getOrganisationId()))
                 .findAny();
