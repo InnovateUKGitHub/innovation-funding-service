@@ -62,6 +62,9 @@ done
 
 oc logs -f dbreset
 
+echo Waiting for container to terminate before checking its status
+sleep 5
+
 if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}')" != "Succeeded" ]]; then exit -1; fi
 
 exit 0
