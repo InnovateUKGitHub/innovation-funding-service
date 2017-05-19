@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.project.queries.viewmodel;
 
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * View model backing the internal Finance Team members view of the Finance Check Queries page
@@ -11,9 +13,7 @@ import java.util.Map;
 public class FinanceChecksQueriesViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
-    private String financeContactName;
-    private String financeContactEmail;
-    private String financeContactPhoneNumber;
+    private Optional<ProjectUserResource> financeContact;
     private String querySection;
     private Long projectId;
     private String projectName;
@@ -27,9 +27,7 @@ public class FinanceChecksQueriesViewModel {
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
-                                         String financeContactName,
-                                         String financeContactEmail,
-                                         String financeContactPhoneNumber,
+                                         Optional<ProjectUserResource> financeContact,
                                          String querySection,
                                          Long projectId,
                                          String projectName,
@@ -42,9 +40,7 @@ public class FinanceChecksQueriesViewModel {
                                          Long queryId) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
-        this.financeContactName = financeContactName;
-        this.financeContactEmail = financeContactEmail;
-        this.financeContactPhoneNumber = financeContactPhoneNumber;
+        this.financeContact= financeContact;
         this.querySection = querySection;
         this.projectId = projectId;
         this.projectName = projectName;
@@ -72,28 +68,12 @@ public class FinanceChecksQueriesViewModel {
     public void setLeadPartnerOrganisation(boolean leadPartnerOrganisation) {
         this.leadPartnerOrganisation = leadPartnerOrganisation;
     }
-    public String getFinanceContactName() {
-        return financeContactName;
+    public Optional<ProjectUserResource> getFinanceContact() {
+        return financeContact;
     }
 
-    public void setFinanceContactName(String financeContactName) {
-        this.financeContactName = financeContactName;
-    }
-
-    public String getFinanceContactEmail() {
-        return financeContactEmail;
-    }
-
-    public void setFinanceContactEmail(String financeContactEmail) {
-        this.financeContactEmail = financeContactEmail;
-    }
-
-    public String getFinanceContactPhoneNumber() {
-        return financeContactPhoneNumber;
-    }
-
-    public void setFinanceContactPhoneNumber(String financeContactPhoneNumber) {
-        this.financeContactPhoneNumber = financeContactPhoneNumber;
+    public void setFinanceContact(Optional<ProjectUserResource> financeContact) {
+        this.financeContact = financeContact;
     }
 
     public String getQuerySection() {
@@ -176,5 +156,4 @@ public class FinanceChecksQueriesViewModel {
     public void setNewAttachmentLinks(Map<Long, String> newAttachmentLinks) {
         this.newAttachmentLinks = newAttachmentLinks;
     }
-
 }
