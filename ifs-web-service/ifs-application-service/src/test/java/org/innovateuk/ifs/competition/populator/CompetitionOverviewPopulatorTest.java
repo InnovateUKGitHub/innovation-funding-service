@@ -184,15 +184,20 @@ public class CompetitionOverviewPopulatorTest {
                 .withShortDescription("Short description")
                 .build());
         publicContentItemResource.setNonIfs(true);
+        //Set close date to 5 days time, registration should be closed
+        publicContentItemResource.setCompetitionCloseDate(closeDate.plusDays(5));
 
         final CompetitionOverviewViewModel viewModel = populator.populateViewModel(publicContentItemResource, true);
 
         assertEquals(openDate, viewModel.getCompetitionOpenDate());
         assertEquals(closeDate, viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
+        assertTrue(viewModel.getRegistrationCloseDate().isBefore(ZonedDateTime.now()));
         assertTrue(viewModel.isCompetitionSetupComplete());
         assertTrue(viewModel.getNonIfs());
         assertFalse(viewModel.isShowNotOpenYetMessage());
+        assertFalse(viewModel.isShowClosedMessage());
+        assertTrue(viewModel.isShowRegistrationClosedMessage());
         assertEquals(1L, viewModel.getCompetitionId().longValue());
         assertEquals("Short description", viewModel.getShortDescription());
     }

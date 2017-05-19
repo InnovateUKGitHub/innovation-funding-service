@@ -65,7 +65,7 @@ Guest user can see the non ifs competition warnings
     [Tags]    MySQL
     [Setup]    Connect to Database    @{database}
     Given the user navigates to the page  ${frontDoor}
-    And Change the close date of the Competition in the database to tomorrow    Transforming big data
+    And Change the close date of the Competition in the database to tomorrow    ${NON_IFS_COMPETITION_NAME}
     And the user clicks the button/link    link=Transforming big data
     Then the user should see the text in the page       Registration has now closed.
     And execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2020-06-24 11:00:00' WHERE `${database_name}`.`competition`.`name`='Transforming big data' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
