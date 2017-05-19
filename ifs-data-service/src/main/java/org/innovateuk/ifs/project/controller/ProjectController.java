@@ -51,65 +51,16 @@ public class ProjectController {
         return projectService.findAll().toGetResponse();
     }
 
-   /* @PostMapping(value="/{id}/project-manager/{projectManagerId}")
-    public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
-        return projectService.setProjectManager(id, projectManagerId).toPostResponse();
-    }
-
-    @PostMapping("/{projectId}/startdate")
-    public RestResult<Void> updateProjectStartDate(@PathVariable("projectId") final Long projectId,
-                                                   @RequestParam("projectStartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate projectStartDate) {
-        return projectService.updateProjectStartDate(projectId, projectStartDate).toPostResponse();
-    }
-
-    @PostMapping("/{projectId}/address")
-    public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
-                                                 @RequestParam("leadOrganisationId") final Long leadOrganisationId,
-                                                 @RequestParam("addressType") final String addressType,
-                                                 @RequestBody AddressResource addressResource) {
-        return projectService.updateProjectAddress(leadOrganisationId, projectId, OrganisationAddressType.valueOf(addressType), addressResource).toPostResponse();
-    }*/
-
     @GetMapping(value = "/user/{userId}")
     public RestResult<List<ProjectResource>> findByUserId(@PathVariable("userId") final Long userId) {
         return projectService.findByUserId(userId).toGetResponse();
     }
-
-    /*@PostMapping("/{projectId}/organisation/{organisation}/finance-contact")
-    public RestResult<Void> updateFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @PathVariable("organisation") final Long organisationId,
-                                                 @RequestParam("financeContact") Long financeContactUserId) {
-        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
-    }
-
-    @PostMapping("/{projectId}/invite-finance-contact")
-    public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
-        return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
-    }
-
-    @PostMapping("/{projectId}/invite-project-manager")
-    public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
-                                                 @RequestBody @Valid final InviteProjectResource inviteResource) {
-        return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
-    }*/
 
     @GetMapping("/{projectId}/project-users")
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
     }
 
-    @PostMapping("/{projectId}/setApplicationDetailsSubmitted")
-    public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
-        return projectService.submitProjectDetails(projectId, ZonedDateTime.now()).toPostResponse();
-    }
-
-    /*@GetMapping("/{projectId}/isSubmitAllowed")
-    public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
-        return projectService.isSubmitAllowed(projectId).toGetResponse();
-    }
-*/
     @GetMapping("/{projectId}/getOrganisationByUser/{userId}")
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
                                                                             @PathVariable("userId") final Long userId){
