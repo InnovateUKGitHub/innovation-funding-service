@@ -280,7 +280,8 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadAttachmentFailsNoContent() throws Exception {
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/attachment/1?query_section=Eligibility"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isForbidden())
+                .andExpect(view().name("forbidden"))
                 .andReturn();
 
         MockHttpServletResponse response = result.getResponse();

@@ -4,8 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.core.io.ByteArrayResource;
 
-import java.util.Optional;
-
 public interface AttachmentRestService {
     RestResult<AttachmentResource> find(Long fileId);
 
@@ -14,5 +12,5 @@ public interface AttachmentRestService {
 
     RestResult<Void> delete(Long id);
 
-    RestResult<Optional<ByteArrayResource>> download(Long fileId);
+    RestResult<ByteArrayResource> download(Long fileId);
 }
