@@ -196,26 +196,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         PROJECT_LIVE
     }
 
-   /* @Override
-    public ServiceResult<ProjectResource> getProjectById(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<ProjectResource> getByApplicationId(Long applicationId) {
-        return getProjectByApplication(applicationId).andOnSuccessReturn(projectMapper::mapToResource);
-    }
-
-    @Override
-    public ServiceResult<List<ProjectResource>> findAll() {
-        return serviceSuccess(projectsToResources(projectRepository.findAll()));
-    }
-
-    @Override
-    public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-        return createSingletonProjectFromApplicationId(applicationId);
-    }*/
-
     @Override
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
@@ -268,24 +248,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
     }
 
-/*    @Override
-    public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createSingletonProjectFromApplicationId);
-        return serviceSuccess();
-    }
-
-    @Override
-    public ServiceResult<List<ProjectResource>> findByUserId(final Long userId) {
-        List<ProjectUser> projectUsers = projectUserRepository.findByUserId(userId);
-        List<Project> projects = simpleMap(projectUsers, ProjectUser::getProcess).parallelStream().distinct().collect(toList());     //Users may have multiple roles (e.g. partner and finance contact, in which case there will be multiple project_user entries, so this is flatting it).
-        return serviceSuccess(simpleMap(projects, projectMapper::mapToResource));
-    }
-
-    @Override
-    public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
-        return serviceSuccess(simpleMap(getProjectUsersByProjectId(projectId), projectUserMapper::mapToResource));
-    }*/
-
     @Override
     public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
 
@@ -308,49 +270,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private boolean doIsSubmissionAllowed(Project project) {
         return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
     }
-
-/*    @Override
-    public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
-        return find(getProject(projectId), getOrganisation(organisationId), getUser(userId)).
-                andOnSuccess((project, organisation, user) -> {
-                    if (project.getOrganisations(o -> organisationId.equals(o.getId())).isEmpty()) {
-                        return serviceFailure(badRequestError("project does not contain organisation"));
-                    }
-                    List<ProjectUser> partners = project.getProjectUsersWithRole(PROJECT_PARTNER);
-                    Optional<ProjectUser> projectUser = simpleFindFirst(partners, p -> p.getUser().getId().equals(userId));
-                    if (projectUser.isPresent()) {
-                        return serviceSuccess(projectUser.get()); // Already a partner
-                    } else {
-                        ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
-                        return serviceSuccess(pu);
-                    }
-                });
-    }*/
-
-/*    private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
-        String fullName = getProjectManagerFullName(projectManager);
-
-        return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
-    }*/
-
-/*    private String getProjectManagerFullName(User projectManager) {
-        // At this stage, validation has already been done to ensure that first name and last name are not empty
-        return projectManager.getFirstName() + " " + projectManager.getLastName();
-    }*/
-
-/*    @Override
-    public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
-        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
-        if (projectUser != null && projectUser.getOrganisation() != null) {
-            return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findOne(projectUser.getOrganisation().getId())));
-        } else {
-            return serviceFailure(new Error(CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER, NOT_FOUND));
-        }
-    }*/
-
-/*    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
-        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
-    }*/
 
     private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
 
@@ -376,70 +295,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 .andOnSuccess(this::validateIfProjectAlreadySubmitted)
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
     }
-
-/*    @Override
-    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
-        Project project = projectRepository.findOne(projectId);
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-
-        Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
-                userId -> simpleFindFirst(project.getProjectUsers(),
-                        pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
-
-        List<Organisation> partnerOrganisationsToInclude =
-                simpleFilter(project.getOrganisations(), partner ->
-                        partner.getId().equals(leadOrganisation.getId()) ||
-                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId()))
-                                        .orElse(true)));
-
-        List<Organisation> sortedOrganisationsToInclude
-                = new PrioritySorting<>(partnerOrganisationsToInclude, leadOrganisation, Organisation::getName).unwrap();
-
-        List<ProjectPartnerStatusResource> projectPartnerStatusResources =
-                simpleMap(sortedOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
-
-        ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
-        projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
-
-        return serviceSuccess(projectTeamStatusResource);
-    }*/
-
-/*    private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-        Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
-        Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
-        Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
-        OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
-
-        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccessObject();
-        boolean isLead = partnerOrganisation.equals(leadOrganisation);
-
-        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
-        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
-        ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
-        ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
-        ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
-        ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
-        ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
-
-        return new ProjectPartnerStatusResource(
-                partnerOrganisation.getId(),
-                partnerOrganisation.getName(),
-                organisationType,
-                projectDetailsStatus,
-                monitoringOfficerStatus,
-                bankDetailsStatus,
-                financeChecksStatus,
-                spendProfileStatus,
-                otherDocumentsStatus,
-                grantOfferLetterStatus,
-                financeContactStatus,
-                golWorkflowHandler.isAlreadySent(project),
-                isLead);
-    }*/
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 
@@ -564,143 +419,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
-/*    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
-
-        return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
-                failure -> createProjectFromApplicationId(applicationId),
-                success -> serviceSuccess(success)
-        );
-    }*/
-
-/*    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
-
-        return getApplication(applicationId).andOnSuccess(application -> {
-
-            Project project = new Project();
-            project.setApplication(application);
-            project.setDurationInMonths(application.getDurationInMonths());
-            project.setName(application.getName());
-            project.setTargetStartDate(application.getStartDate());
-
-            ProcessRole leadApplicantRole = simpleFindFirst(application.getProcessRoles(), ProcessRole::isLeadApplicant).get();
-            List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isCollaborator);
-            List<ProcessRole> allRoles = combineLists(leadApplicantRole, collaborativeRoles);
-
-            List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(allRoles,
-                    role -> {
-                        Organisation organisation = organisationRepository.findOne(role.getOrganisationId());
-                        return createPartnerProjectUser(project, role.getUser(), organisation);
-                    });
-
-            ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
-
-            ServiceResult<Project> saveProjectResult = projectUserCollection.andOnSuccessReturn(projectUsers -> {
-
-                List<Organisation> uniqueOrganisations =
-                        removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
-
-                List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
-                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId())));
-
-                project.setProjectUsers(projectUsers);
-                project.setPartnerOrganisations(partnerOrganisations);
-                return projectRepository.save(project);
-            });
-
-            return saveProjectResult.
-                    andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
-                            andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
-                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
-        });
-    }*/
-
-/*    private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {
-        return getByApplicationId(applicationId);
-    }*/
-
-/*    private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
-
-        ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
-
-        ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
-        ServiceResult<Void> viabilityProcesses = createViabilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
-        ServiceResult<Void> eligibilityProcesses = createEligibilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
-        ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
-        ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
-
-        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, golProcess, projectProcess);
-    }*/
-
-/*    private ServiceResult<Void> createViabilityProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
-
-        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
-                viabilityWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
-                        serviceSuccess() :
-                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
-
-        return aggregate(results).andOnSuccessReturnVoid();
-    }*/
-
-/*    private ServiceResult<Void> createEligibilityProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
-
-        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
-                eligibilityWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
-                        serviceSuccess() :
-                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
-
-        return aggregate(results).andOnSuccessReturnVoid();
-    }*/
-
-/*    private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
-        if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
-        }
-    }*/
-
-    /*private ServiceResult<Void> createGOLProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
-        if (golWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
-        }
-    }
-
-    private ServiceResult<Void> createProjectProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
-        if (projectWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
-        }
-    }*/
-
-    /*private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
-        List<Organisation> organisations = newProject.getOrganisations();
-
-        List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
-                financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
-                        costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
-                                financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
-
-        return processAnyFailuresOrSucceed(financeCheckResults);
-    }
-
-    private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
-        return createProjectUserForRole(project, user, organisation, PROJECT_PARTNER);
-    }*/
-
     private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
         return serviceSuccess(new ProjectUser(user, project, role, organisation));
     }
-
-    /*private List<ProjectResource> projectsToResources(List<Project> filtered) {
-        return simpleMap(filtered, project -> projectMapper.mapToResource(project));
-    }
-
-    private ServiceResult<Project> getProjectByApplication(long applicationId) {
-        return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
-    }*/
 
     private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
 
@@ -728,33 +449,4 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
     }
-
-
-/*    private List<NotificationTarget> getLiveProjectNotificationTarget(Project project) {
-        List<NotificationTarget> notificationTargets = new ArrayList<>();
-        User projectManager = getExistingProjectManager(project).get().getUser();
-        NotificationTarget projectManagerTarget = createProjectManagerNotificationTarget(projectManager);
-        List<NotificationTarget> financeTargets = simpleMap(simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()), pu -> new UserNotificationTarget(pu.getUser()));
-        List<NotificationTarget> uniqueFinanceTargets = simpleFilterNot(financeTargets, target -> target.getEmailAddress().equals(projectManager.getEmail()));
-        notificationTargets.add(projectManagerTarget);
-        notificationTargets.addAll(uniqueFinanceTargets);
-
-        return notificationTargets;
-    }*/
-
-/*    private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
-
-        Project project = projectRepository.findOne(projectId);
-        List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
-
-        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, emptyMap(), org.innovateuk.ifs.project.transactional.ProjectServiceImpl.Notifications.PROJECT_LIVE);
-
-        return processAnyFailuresOrSucceed(sendEmailResult);
-    }*/
-
-/*    @Override
-    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
-        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
-                notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
-    }*/
 }

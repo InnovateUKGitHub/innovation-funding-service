@@ -45,35 +45,11 @@ public interface ProjectService {
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a projects (by making decisions)" )
     ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions);
 
-    /*@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-	ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId);
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource addressResource);*/
-
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProjectResource>> findByUserId(Long userId);
 
-    /*@PreAuthorize("hasPermission(#composite, 'UPDATE_FINANCE_CONTACT')")
-    ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);
-
-    @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
-    ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
-
-    @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
-    ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource);*/
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
-
-   /* @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> submitProjectDetails(Long projectId, ZonedDateTime date);
-
-    @PreAuthorize("hasPermission(#projectId, 'UPDATE_FINANCE_CONTACT')")
-    ServiceResult<Boolean> isSubmitAllowed(Long projectId);*/
 
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
