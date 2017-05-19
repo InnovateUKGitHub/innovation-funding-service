@@ -159,7 +159,7 @@ Queries section contains finance contact name, email and telephone
     [Tags]
     When the user should see the text in the page    Sarah Peacock
     And the user should see the text in the page    74373688727
-    And the user should see the text in the page    ${test_mailbox_one}+fundsuccess@gmail.com
+    And the user should see the text in the page    &{successful_applicant_credentials}
 
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840
@@ -290,7 +290,7 @@ Queries raised column updates to 'awaiting response'
 Finance contact receives an email when new query is posted
     [Documentation]    INFUND-4841
     [Tags]    Email
-    Then the user reads his email    ${test_mailbox_one}+fundsuccess@gmail.com    Query regarding your finances    We have raised a query around your project finances.
+    Then the user reads his email    &{successful_applicant_credentials["email”]}    Query regarding your finances    We have raised a query around your project finances.
 
 Project finance user can add another query
     [Documentation]    INFUND-4840
@@ -346,7 +346,7 @@ External users can view finance checks status on dashboard
     Then check finance checks status on dashboard   waiting  Awaiting review
     When log in as a different user        &{collaborator1_credentials}   #Non Lead Partner
     Then check finance checks status on dashboard   waiting  Awaiting review
-    When log in as a different user        ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}  #finance contact
+    When log in as a different user        &{successful_applicant_credentials}  #finance contact
     Then check finance checks status on dashboard  require-action  To be completed
 
 Finance contact can view query
@@ -504,12 +504,12 @@ Project finance user can continue the conversation
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753
     [Tags]    Email
-    Then the user reads his email    ${test_mailbox_one}+fundsuccess@gmail.com    You have a reply to your query    We have replied to a query regarding your finances
+    Then the user reads his email    &{successful_applicant_credentials["email”]}    You have a reply to your query    We have replied to a query regarding your finances
 
 Finance contact can view the new response
     [Documentation]    INFUND-7752
     [Tags]
-    Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
+    Given log in as a different user    &{successful_applicant_credentials}
     When the user clicks the button/link   jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user clicks the button/link    link=Finance checks
     Then the user should see the text in the page    this is a response to a response
@@ -820,11 +820,11 @@ Project finance user can view finances summary for the consortium
     #Check total
     When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
     And The Total Calculation For Finances Summary Are Verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
-    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
     [Tags]
+    Given the user navigates to the page            ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link               link=Project finance overview
     #Check finances summary for lead partner
     Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
@@ -838,13 +838,13 @@ Project finance can see finance breakdown for different categories
     Then all the categories are verified  3   £ 200,903 	£ 3,081   £ 0   £ 100,200  £ 552  £ 90,000   £ 5,970  £ 1,100
     #Check total
     And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 503,248
-    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance user can review Lead partner's finance changes page before the revisions made
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user clicks the button/link        css=a.eligibility-0
-    When the user clicks the button/link         link=Review all changes to project finances
+    Given the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    When the user clicks the button/link        css=a.eligibility-0
+    And the user clicks the button/link         link=Review all changes to project finances
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     Then the categories are verified for Project finances section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
@@ -865,7 +865,6 @@ Project finance user can review partner's finances before the revisions made
     And the categories are verified for Section changes    1   £ 0     £ 0      £ 0    £ 0      £ 0       £ 0        £ 0
     And the user should see the text in the element   css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
     And the user should see the text in the element    css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
-    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Lead Partner can review the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -878,7 +877,6 @@ Lead Partner can review the external version of Finance Checks eligibility table
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 4,622    £ 0     £ 150,300    £ 828    £ 135,000    £ 8,955     £ 1,650
     Then the user should see the element    css=input[id="total-cost"][value="£ 301,355"]
     And the user clicks the button/link     link=Finance checks
-    [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
 Partner can review only the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -891,14 +889,13 @@ Partner can review only the external version of Finance Checks eligibility table
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £ 3,081    £ 0     £ 100,200    £ 552    £ 90,000    £ 5,970     £ 1,100
     Then the user should see the element    css=input[id="total-cost"][value="£ 200,903"]
     And the user clicks the button/link     link=Finance checks
-    [Teardown]    the user navigates to the page       ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
 
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095, INFUND-8778
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    Review
+    Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(3)    Not set
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2)    N/A
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    N/A
@@ -1140,10 +1137,8 @@ Project Finance user can Edit and Save Lead Partner's no overhead costs option
     And the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
-    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("Save")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
-    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("£ 0")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%") + span:contains("£ 0")
 
 Project Finance user can edit and save Lead Partner's calculate overheads option
     [Documentation]     INFUND-7577
@@ -1151,8 +1146,7 @@ Project Finance user can edit and save Lead Partner's calculate overheads option
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
-    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%") + span:contains("£ 0")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
     And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1292,8 +1286,7 @@ Project Finance user can edit and save Partner's no overhead costs option
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
-    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("£ 0")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%") + span:contains("£ 0")
 
 Project Finance user can edit and save in Partner's calculate overheads option
     [Documentation]     INFUND-7577
@@ -1301,8 +1294,7 @@ Project Finance user can edit and save in Partner's calculate overheads option
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
-    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%") + span:contains("£ 0")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
     And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1457,7 +1449,7 @@ Project finance user can view Lead partner's changes for Materials
     # the below figures are listed as:     RowNumber      Action      Section
     Given the user verifies the action and section for revised finances      16  Change  Materials
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    Then the revised categories are verified for specified Section      18      Cost per item       5010        100
+    Then the revised categories are verified for specified Section  18  Cost per item  5010  100
     # the below figures are listed as:      RowNumber       Cost
     And the revised cost is verified for the specified section     19  -49,100
 
@@ -1496,11 +1488,11 @@ Project finance user can view Lead partner's changes for other costs
     [Tags]
     Given the user moves focus to the element                            jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(79) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
-    When the user verifies the action and section for revised finances   79     Change     Other costs
+    When the user verifies the action and section for revised finances   79  Change  Other costs
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    Then the revised categories are verified for specified Section        80      Total     550     5000
+    Then the revised categories are verified for specified Section        80  Total  550  5000
     # the below figures are listed as:      RowNumber       Cost
-    And the revised cost is verified for the specified section          81      4,450
+    And the revised cost is verified for the specified section          81  4,450
 
 #5.Travel and subsistence section
 Project finance user can view Lead partner's changes for Travel and subsistence
@@ -1510,12 +1502,12 @@ Project finance user can view Lead partner's changes for Travel and subsistence
     When the user clicks the button/link                                link=View changes to finances
     And the user moves focus to the element                           jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(67) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
-    Then the user verifies the action and section for revised finances   67      Change      Travel and subsistence
+    Then the user verifies the action and section for revised finances   67  Change  Travel and subsistence
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    And the revised categories are verified for specified Section       68      Number of times     15      10
-    And the revised categories are verified for specified Section       69      Cost each       199     100
+    And the revised categories are verified for specified Section       68  Number of times  15  10
+    And the revised categories are verified for specified Section       69  Cost each  199  100
     # the below figures are listed as:      RowNumber       Cost
-    And the revised cost is verified for the specified section         70      -1,985
+    And the revised cost is verified for the specified section         70  -1,985
 
 #6.Subcontracting section
 Project finance user can view Lead partner's changes for Subcontracting
@@ -1523,12 +1515,12 @@ Project finance user can view Lead partner's changes for Subcontracting
     [Tags]
     # the below figures are listed as:     RowNumber      Action      Section
     Given the user moves focus to the element                               jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(52) td:nth-of-type(1)
-    When the user verifies the action and section for revised finances      52      Change      Subcontracting
+    When the user verifies the action and section for revised finances      52  Change  Subcontracting
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    Then the revised categories are verified for specified Section           54      Role      To develop stuff      Develop
-    And the revised categories are verified for specified Section           55      Cost      45000     10600
+    Then the revised categories are verified for specified Section           54  Role  To develop stuff  Develop
+    And the revised categories are verified for specified Section           55  Cost  45000  10600
     # the below figures are listed as:      RowNumber       Cost
-    And the revised cost is verified for the specified section             56      -34,400
+    And the revised cost is verified for the specified section             56  -34,400
 
 #7. Labour section
 Project finance user can view Lead partner's changes for Labour
@@ -1538,11 +1530,11 @@ Project finance user can view Lead partner's changes for Labour
     When the user clicks the button/link                                    link=View changes to finances
     And the user moves focus to the element                                jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(1) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
-    Then the user verifies the action and section for revised finances       1    Change    Labour
+    Then the user verifies the action and section for revised finances      1  Change  Labour
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    And the revised categories are verified for specified Section           2      Gross annual salary     100     120000
-    And the revised categories are verified for specified Section           3      Days to be spent        200     100
-    And the revised cost is verified for the specified section             4       52,087
+    And the revised categories are verified for specified Section           2  Gross annual salary  100  120000
+    And the revised categories are verified for specified Section           3  Days to be spent  200  100
+    And the revised cost is verified for the specified section              4  52,087
     And the user should see the text in the element                         css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
     And the user should see the text in the element                         css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   -94,488
     And the user clicks the button/link                                     jQuery=.button-secondary:contains("Return to eligibility")
@@ -1567,7 +1559,7 @@ Project finance user can view partner's changes for Materials
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the action and section for revised finances       16  Change  Materials
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    And the revised categories are verified for specified Section      18      Cost per item       5010        100
+    And the revised categories are verified for specified Section      18  Cost per item  5010  100
     # the below figures are listed as:      RowNumber       Cost
     And the revised cost is verified for the specified section     19  -49,100
 
@@ -1606,11 +1598,11 @@ Project finance user can view partner's revised changes other costs
     [Tags]
     Given the user moves focus to the element       jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(79) td:nth-of-type(1)
     # the below figures are listed as:     RowNumber      Action      Section
-    When the user verifies the action and section for revised finances       79     Change     Other costs
+    When the user verifies the action and section for revised finances       79  Change  Other costs
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    Then the revised categories are verified for specified Section       80      Total     550     5000
+    Then the revised categories are verified for specified Section       80  Total  550  5000
     # the below figures are listed as:      RowNumber       Cost
-    And the revised cost is verified for the specified section     81      4,450
+    And the revised cost is verified for the specified section     81  4,450
 
 #5.Travel and subsistence section
 Project finance user can view partner's revised changes for travel and subsistence
@@ -1633,12 +1625,12 @@ Project finance user can view partner's revised changes for Subcontracting
     [Tags]
     # the below figures are listed as:     RowNumber      Action      Section
     Given the user moves focus to the element       jQuery=h2:contains("Changes from submitted finances") + * tbody tr:nth-of-type(52) td:nth-of-type(1)
-    When the user verifies the action and section for revised finances      52      Change      Subcontracting
+    When the user verifies the action and section for revised finances      52   Change  Subcontracting
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    Then the revised categories are verified for specified Section      54      Role      To develop stuff      Develop
-    And the revised categories are verified for specified Section       55      Cost      45000     10600
+    Then the revised categories are verified for specified Section      54  Role  To develop stuff  Develop
+    And the revised categories are verified for specified Section       55  Cost  45000  10600
     # the below figures are listed as:      RowNumber       Cost
-    And the revised cost is verified for the specified section     56      -34,400
+    And the revised cost is verified for the specified section     56  -34,400
 
 #7. Labour section
 Project finance user can view partner's revised changes for Labour
@@ -1650,9 +1642,9 @@ Project finance user can view partner's revised changes for Labour
     # the below figures are listed as:     RowNumber      Action      Section
     Then the user verifies the action and section for revised finances      1    Change    Labour
     # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
-    And the revised categories are verified for specified Section      2      Gross annual salary     100     120000
-    And the revised categories are verified for specified Section       3      Days to be spent        200     100
-    And the revised cost is verified for the specified section     4       52,087
+    And the revised categories are verified for specified Section      2  Gross annual salary  100  120000
+    And the revised categories are verified for specified Section       3  Days to be spent  200  100
+    And the revised cost is verified for the specified section     4  52,087
     And the user should see the text in the element    css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
     And the user should see the text in the element    css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   -86,647
     And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
@@ -1692,7 +1684,7 @@ Other internal users do not have access to Finance checks
 Finance contact can access the external view of the finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
-    [Setup]    Log in as a different user   ${test_mailbox_one}+fundsuccess@gmail.com  ${short_password}
+    [Setup]    Log in as a different user   &{successful_applicant_credentials}
     Given the user clicks the button/link   jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
