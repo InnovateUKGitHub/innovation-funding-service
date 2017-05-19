@@ -191,9 +191,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     enum Notifications {
         INVITE_FINANCE_CONTACT,
-        INVITE_PROJECT_MANAGER,
-        GRANT_OFFER_LETTER_PROJECT_MANAGER,
-        PROJECT_LIVE
+        INVITE_PROJECT_MANAGER
     }
 
     @Override
@@ -242,7 +240,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
             project.setAddress(newAddress);
         }
 
-
         return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(user ->
                 projectDetailsWorkflowHandler.projectAddressAdded(project, user)).andOnSuccess(workflowResult ->
                 workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
@@ -267,22 +264,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return getProject(projectId).andOnSuccessReturn(this::doIsSubmissionAllowed);
     }
 
-    private boolean doIsSubmissionAllowed(Project project) {
-        return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
-    }
-
-    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
-
-        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
-        existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
-        project.addProjectUser(newFinanceContact);
-        return serviceSuccess();
-    }
-
-    private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
-        return createProjectUserForRole(project, user, organisation, PROJECT_FINANCE_CONTACT);
-    }
-
     @Override
     public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
         return inviteContact(projectId, inviteResource, Notifications.INVITE_FINANCE_CONTACT);
@@ -296,47 +277,63 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
     }
 
-    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
+    private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
 
-        ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
-        ServiceResult<Void> inviteContactEmailSendResult = projectEmailService.sendEmail(singletonList(createInviteContactNotificationTarget(projectInvite)), createGlobalArgsForInviteContactEmail(projectId, projectResource), kindOfNotification);
-        inviteContactEmailSendResult.handleSuccessOrFailure(
-                failure -> handleInviteError(projectInvite, failure),
-                success -> handleInviteSuccess(projectInvite)
-        );
-        return inviteContactEmailSendResult;
+        if (projectDetailsWorkflowHandler.isSubmitted(project)) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
+        }
+
+        return serviceSuccess(project);
     }
 
-    private boolean handleInviteSuccess(ProjectInvite projectInvite) {
-        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
-        return true;
+    private ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
+
+        List<ProjectUser> leadPartners = getLeadPartners(project);
+        List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
+
+        if (!matchingProjectUsers.isEmpty()) {
+            return getOnlyElementOrFail(matchingProjectUsers);
+        } else {
+            return serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER);
+        }
     }
 
-    private ServiceResult<Boolean> handleInviteError(ProjectInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
-        List<Error> errors = failure.getErrors();
-        return serviceFailure(errors);
-    }
-
-    private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
-        return new ExternalUserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
-    }
-
-    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
-        Project project = projectRepository.findOne(projectId);
+    private List<ProjectUser> getLeadPartners(Project project) {
         ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-        String leadOrganisationName = leadOrganisation.getName();
-        Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("projectName", project.getName());
-        globalArguments.put("leadOrganisation", leadOrganisationName);
-        globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
-        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
-        return globalArguments;
+        Organisation leadPartnerOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
+                && pu.getRole().isPartner());
     }
 
-    private String getInviteUrl(String baseUrl, InviteProjectResource inviteResource) {
-        return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
+    private boolean organisationsEqual(Organisation leadPartnerOrganisation, ProjectUser pu) {
+        return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
+    }
+
+    private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
+
+        Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
+
+        ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
+            pm.setUser(leadPartnerUser.getUser());
+            pm.setOrganisation(leadPartnerUser.getOrganisation());
+            return serviceSuccess();
+
+        }).orElseGet(() -> {
+            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
+                    PROJECT_MANAGER, leadPartnerUser.getOrganisation());
+            project.addProjectUser(projectUser);
+            return serviceSuccess();
+        });
+
+        return setProjectManagerResult.andOnSuccessReturn(result ->
+                projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)).andOnSuccess(workflowResult ->
+                workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+    }
+
+    private Optional<ProjectUser> getExistingProjectManager(Project project) {
+        List<ProjectUser> projectUsers = project.getProjectUsers();
+        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
+        return getOnlyElementOrEmpty(projectManagers);
     }
 
     private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
@@ -355,15 +352,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
         if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
-        }
-
-        return serviceSuccess(project);
-    }
-
-    private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
-
-        if (projectDetailsWorkflowHandler.isSubmitted(project)) {
-            return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
         }
 
         return serviceSuccess(project);
@@ -396,57 +384,66 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return getOnlyElementOrFail(partnerUsers);
     }
 
-    private ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
-
-        List<ProjectUser> leadPartners = getLeadPartners(project);
-        List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
-
-        if (!matchingProjectUsers.isEmpty()) {
-            return getOnlyElementOrFail(matchingProjectUsers);
-        } else {
-            return serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER);
-        }
-    }
-
-    private List<ProjectUser> getLeadPartners(Project project) {
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadPartnerOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-        return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
-                && pu.getRole().isPartner());
-    }
-
-    private boolean organisationsEqual(Organisation leadPartnerOrganisation, ProjectUser pu) {
-        return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
+    private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
+        return createProjectUserForRole(project, user, organisation, PROJECT_FINANCE_CONTACT);
     }
 
     private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
         return serviceSuccess(new ProjectUser(user, project, role, organisation));
     }
 
-    private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
+    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
 
-        Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
-
-        ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
-            pm.setUser(leadPartnerUser.getUser());
-            pm.setOrganisation(leadPartnerUser.getOrganisation());
-            return serviceSuccess();
-
-        }).orElseGet(() -> {
-            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
-                    PROJECT_MANAGER, leadPartnerUser.getOrganisation());
-            project.addProjectUser(projectUser);
-            return serviceSuccess();
-        });
-
-        return setProjectManagerResult.andOnSuccessReturn(result ->
-                projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)).andOnSuccess(workflowResult ->
-                workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
+        existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
+        project.addProjectUser(newFinanceContact);
+        return serviceSuccess();
     }
 
-    private Optional<ProjectUser> getExistingProjectManager(Project project) {
-        List<ProjectUser> projectUsers = project.getProjectUsers();
-        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
-        return getOnlyElementOrEmpty(projectManagers);
+    private boolean doIsSubmissionAllowed(Project project) {
+        return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
+    }
+
+    private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
+
+        ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
+        ServiceResult<Void> inviteContactEmailSendResult = projectEmailService.sendEmail(singletonList(createInviteContactNotificationTarget(projectInvite)), createGlobalArgsForInviteContactEmail(projectId, projectResource), kindOfNotification);
+        inviteContactEmailSendResult.handleSuccessOrFailure(
+                failure -> handleInviteError(projectInvite, failure),
+                success -> handleInviteSuccess(projectInvite)
+        );
+        return inviteContactEmailSendResult;
+    }
+
+    private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
+        return new ExternalUserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
+    }
+
+    private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
+        Project project = projectRepository.findOne(projectId);
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        String leadOrganisationName = leadOrganisation.getName();
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("projectName", project.getName());
+        globalArguments.put("leadOrganisation", leadOrganisationName);
+        globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
+        return globalArguments;
+    }
+
+    private String getInviteUrl(String baseUrl, InviteProjectResource inviteResource) {
+        return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
+    }
+
+    private ServiceResult<Boolean> handleInviteError(ProjectInvite i, ServiceFailure failure) {
+        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
+        List<Error> errors = failure.getErrors();
+        return serviceFailure(errors);
+    }
+
+    private boolean handleInviteSuccess(ProjectInvite projectInvite) {
+        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
+        return true;
     }
 }
