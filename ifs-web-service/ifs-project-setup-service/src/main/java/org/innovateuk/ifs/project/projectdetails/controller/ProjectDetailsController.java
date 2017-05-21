@@ -88,7 +88,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                     UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -116,7 +116,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/readonly")
     public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                     UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
@@ -140,7 +140,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/confirm-project-details")
     public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
-                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
 
@@ -162,7 +162,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                      @RequestParam(value="organisation",required=false) Long organisation,
                                      Model model,
                                      @ModelAttribute(name = FORM_ATTR_NAME, binding = false) FinanceContactForm financeContactForm,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                     UserResource loggedInUser) {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
     }
 
@@ -172,7 +172,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                       UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, financeContactForm.getOrganisation(), loggedInUser, financeContactForm, false, false);
 
@@ -190,7 +190,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @RequestParam(value="organisation") Long organisation,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser
+                                       UserResource loggedInUser
                                        ) {
 
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, false, true);
@@ -207,7 +207,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                        @PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                       UserResource loggedInUser) {
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
 
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, true);
@@ -263,7 +263,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @GetMapping("/{projectId}/details/project-manager")
     public String viewProjectManager(@PathVariable("projectId") final Long projectId, Model model,
                                      @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectManagerForm projectManagerForm,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                     UserResource loggedInUser) {
 
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
         return doViewProjectManager(model, projectId, loggedInUser, false);
@@ -274,7 +274,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String updateProjectManager(@PathVariable("projectId") final Long projectId, Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                       @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                       UserResource loggedInUser) {
         Supplier<String> failureView = () -> doViewProjectManager(model, projectId, loggedInUser, false);
         
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -290,7 +290,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @GetMapping("/{projectId}/details/start-date")
     public String viewStartDate(@PathVariable("projectId") final Long projectId, Model model,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
-                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
@@ -305,7 +305,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                   Model model,
-                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                  UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {

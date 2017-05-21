@@ -13,19 +13,18 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${counts})" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${model.counts})" />
 
     <section>
         <h2 class="heading-medium"
-            th:text="'Non-IFS competitions ('+${competitions.size()}+')'"></h2>
+            th:text="'Non-IFS competitions ('+${model.competitions.size()}+')'"></h2>
         <ul class="list-overview">
-            <li class="grid-row" th:each="competition : ${competitions}">
+            <li class="grid-row" th:each="competition : ${model.competitions}">
                 <th:block
                     th:include="competition/dashboard :: dashboard-row(nonIfs=${true})"
                     th:with="competition=${competition},
-                    cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
-                    cell4=${competition.publishDate == null ? '' : 'Last published ' + #temporals.format(competition.publishDate, 'd MMMM yyyy')}">
-                </th:block>
+                        innovationAreas=competition.innovationAreaNames,
+                        cell4=${competition.publishDate == null ? '' : 'Last published ' + #temporals.format(competition.publishDate, 'd MMMM yyyy')}"/>
             </li>
         </ul>
     </section>

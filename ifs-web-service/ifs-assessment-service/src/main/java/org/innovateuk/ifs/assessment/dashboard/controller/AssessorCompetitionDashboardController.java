@@ -36,7 +36,7 @@ public class AssessorCompetitionDashboardController {
 
     @GetMapping("/dashboard/competition/{competitionId}")
     public String competitionDashboard(final Model model,
-                                       @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                       UserResource loggedInUser,
                                        @PathVariable("competitionId") final Long competitionId,
                                        @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorCompetitionDashboardAssessmentForm form) {
 
@@ -47,7 +47,7 @@ public class AssessorCompetitionDashboardController {
     @PostMapping("/dashboard/competition/{competitionId}")
     public String submitAssessments(Model model,
                                     @PathVariable("competitionId") Long competitionId,
-                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                    UserResource loggedInUser,
                                     @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
                                     @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
@@ -68,7 +68,7 @@ public class AssessorCompetitionDashboardController {
     @PostMapping("/dashboard/confirm-competition/{competitionId}")
     public String confirmSubmitAssessments(Model model,
                                            @PathVariable("competitionId") final Long competitionId,
-                                           @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                           UserResource loggedInUser,
                                            @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {

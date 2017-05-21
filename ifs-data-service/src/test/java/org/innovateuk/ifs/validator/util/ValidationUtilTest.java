@@ -6,6 +6,8 @@ import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.validator.transactional.ValidatorService;
 import org.junit.Test;
@@ -14,9 +16,12 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
 
+import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -48,6 +53,16 @@ public class ValidationUtilTest extends BaseUnitTestMocksTest {
         validationUtil.validateSpendProfileTableResource(tableResource);
 
         Mockito.verify(spendProfileCostValidator).validate(Matchers.eq(tableResource), Matchers.anyObject());
+    }
+
+    @Test
+    public void testValidationJesForm() {
+        FormInputResponse formInputResponse = newFormInputResponse().withFormInputs(
+                newFormInput().withType(FormInputType.FILEUPLOAD).build()).build();
+
+        BindingResult result = validationUtil.validationJesForm(formInputResponse);
+
+        assertEquals(formInputResponse, result.getTarget());
     }
 
 

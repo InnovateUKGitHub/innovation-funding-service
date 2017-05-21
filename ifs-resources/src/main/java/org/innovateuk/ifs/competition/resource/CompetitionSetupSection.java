@@ -26,8 +26,6 @@ public enum CompetitionSetupSection {
 	private String name;
 	private List<CompetitionSetupSubsection> subsections;
 
-
-
 	private Boolean editableAfterSetupAndLive;
 	
 	private static Map<String, CompetitionSetupSection> PATH_MAP;

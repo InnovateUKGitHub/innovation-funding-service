@@ -30,11 +30,11 @@ public interface FinanceCheckService {
 
     ServiceResult<Void> deleteFile(Long fileId);
 
-    ServiceResult<Optional<ByteArrayResource>> downloadFile(Long fileId);
+    ByteArrayResource downloadFile(Long fileId);
 
     ServiceResult<AttachmentResource> getAttachment(Long attachmentId);
 
-    ServiceResult<FileEntryResource> getAttachmentInfo(Long attachmentId);
+    FileEntryResource getAttachmentInfo(Long attachmentId);
 
     ServiceResult<Long> saveQuery(QueryResource query);
 
