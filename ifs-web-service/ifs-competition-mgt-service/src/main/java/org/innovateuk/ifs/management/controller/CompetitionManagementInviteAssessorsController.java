@@ -1,20 +1,18 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
-import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
-import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
-import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
+import org.innovateuk.ifs.management.form.*;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.AvailableAssessorRowViewModel;
+import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,13 +22,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -43,6 +49,7 @@ public class CompetitionManagementInviteAssessorsController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String FORM_ATTR_NAME = "form";
+    private static final String SELECTION_FORM = "selectionForm";
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -56,6 +63,9 @@ public class CompetitionManagementInviteAssessorsController {
     @Autowired
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
+    @Autowired
+    private CookieUtil cookieUtil;
+
     @GetMapping
     public String assessors(@PathVariable("competitionId") long competitionId) {
         return format("redirect:/competition/%s/assessors/find", competitionId);
@@ -65,6 +75,7 @@ public class CompetitionManagementInviteAssessorsController {
     public String find(Model model,
                        @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) FindAssessorsFilterForm filterForm,
                        @SuppressWarnings("unused") BindingResult bindingResult,
+                       @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
                        @RequestParam MultiValueMap<String, String> queryParams) {
@@ -77,36 +88,101 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     @PostMapping(value = "/find", params = {"add"})
-    public String addInviteFromFindView(Model model,
+    public String addAssessorToInviteList(Model model,
                                         @PathVariable("competitionId") long competitionId,
                                         @RequestParam("add") String email,
                                         @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam Optional<Long> innovationArea) {
-        inviteUser(email, competitionId).getSuccessObjectOrThrowException();
+                                        @RequestParam Optional<Long> innovationArea,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
 
+        AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
+        selectionForm.getAssessorEmails().add(email);
+        cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
         return redirectToFind(competitionId, page, innovationArea);
     }
 
-    @PostMapping(value = "/find/addSelected")
-    public String addSelectedToInviteList(Model model,
+    @PostMapping(value = "/find", params = {"addAll"})
+    public String addAllAssessorsToInviteList(Model model,
                                         @PathVariable("competitionId") long competitionId,
+                                        @RequestParam("add") String email,
                                         @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam Optional<Long> innovationArea) {
-       // inviteUser(email, competitionId).getSuccessObjectOrThrowException();
+                                        @RequestParam Optional<Long> innovationArea,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
 
+        AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
+        AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competitionId, page, innovationArea)
+                .getSuccessObjectOrThrowException();
+
+        List<String> assessorEmails = simpleMap(pageResource.getContent(), AvailableAssessorResource::getEmail);
+        selectionForm.setAssessorEmails(assessorEmails);
+        cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
         return redirectToFind(competitionId, page, innovationArea);
     }
 
     @PostMapping(value = "/find", params = {"remove"})
-    public String removeInviteFromFindView(Model model,
+    public String removeAssessorFromInviteList(Model model,
                                            @PathVariable("competitionId") long competitionId,
                                            @RequestParam("remove") String email,
                                            @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam Optional<Long> innovationArea) {
-        deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+                                           @RequestParam Optional<Long> innovationArea,
+                                           HttpServletRequest request,
+                                           HttpServletResponse response) {
 
+        AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
+        selectionForm.getAssessorEmails().remove(email);
+        cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
         return redirectToFind(competitionId, page, innovationArea);
     }
+
+    @PostMapping(value = "/find", params = {"removeAll"})
+    public String removeAllAssessorsFromInviteList(Model model,
+                                             @PathVariable("competitionId") long competitionId,
+                                             @RequestParam("remove") String email,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam Optional<Long> innovationArea,
+                                             HttpServletRequest request,
+                                             HttpServletResponse response) {
+
+        AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
+        selectionForm.getAssessorEmails().clear();
+        cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
+        return redirectToFind(competitionId, page, innovationArea);
+    }
+
+    @PostMapping(value = "/find/addSelected")
+    public String addSelectedAssessorsToInviteList(Model model,
+                                          @PathVariable("competitionId") long competitionId,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam Optional<Long> innovationArea,
+                                          @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
+                                          ValidationHandler validationHandler,
+                                          HttpServletRequest request) {
+
+        AssessorSelectionForm storedSelectionForm = getAssessorSelectionFormFromCookie(request).orElse(selectionForm);
+        Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            storedSelectionForm.getAssessorEmails().stream().forEach(email -> {
+                ServiceResult<CompetitionInviteResource> updateResult = competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).toServiceResult();
+                validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors());
+            });
+
+            return validationHandler.
+                    failNowOrSucceedWith(failureView, () -> redirectToInvite(competitionId, 0));
+        });
+    }
+
+    private Optional<AssessorSelectionForm> getAssessorSelectionFormFromCookie(HttpServletRequest request) {
+        String organisationFormJson = cookieUtil.getCookieValue(request, SELECTION_FORM);
+        if (isNotBlank(organisationFormJson)) {
+            return Optional.ofNullable(getObjectFromJson(organisationFormJson, AssessorSelectionForm.class));
+        } else {
+            return Optional.empty();
+        }
+    }
+
 
     private String redirectToFind(long competitionId, int page, Optional<Long> innovationArea) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/find")

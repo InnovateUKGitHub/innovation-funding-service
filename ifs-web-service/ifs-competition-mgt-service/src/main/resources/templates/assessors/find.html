@@ -95,7 +95,7 @@
         </div>
     </form>
 
-    <form method="POST" th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}">
+    <form method="POST" th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}" th:object="${selectionForm}">
         <div class="grid-row sorting">
             <div class="column-half">
                 <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
@@ -105,9 +105,7 @@
                 <button class="button" name="addSelected" data-enable-button-when="one-checked">Add selected to invite list</button>
             </div>
         </div>
-    </form>
 
-    <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <table>
             <thead>
             <tr>
@@ -115,7 +113,7 @@
                     <label class="block-label selection-button-checkbox">
                         <input type="checkbox"
                                data-switches-button-status="[name=addToInviteList]"
-                               id="select-all-check" />
+                               id="select-all-check" th:field="*{allSelected}"/>
                         <span>Add all to invite list</span>
                     </label>
                 </th>
@@ -131,7 +129,7 @@
                     <label class="block-label selection-button-checkbox">
                         <input type="checkbox"
                                data-switches-button-status="[name=addToInviteList]"
-                               th:id="${assessor.id}" />
+                               th:id="${assessor.id}" th:field="*{assessorEmails}" th:value="${assessor.email}"/>
                         <span>Add</span>
                     </label>
                 </td>
