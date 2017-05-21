@@ -21,16 +21,18 @@ Registration for a user who is in the list
     [Documentation]    INFUND-2129
     [Tags]    HappyPath    Email
     [Setup]    Delete the emails from both default test mailboxes
-    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    Given the user navigates to the page                     ${COMPETITION_OVERVIEW_URL}}
     And User creates new account verifies email and login    ${test_mailbox_one}+admin1@gmail.com
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
 
 *** Keywords ***
 User creates new account verifies email and login
     [Arguments]    ${CREATE_ACCOUNT_EMAIL}
-    the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    the user clicks the button/link    jQuery=.button:contains("Create account")
-    the user clicks the button/link    jQuery=.button:contains("Create")
+    the user clicks the button/link                      jQuery=a:contains("Start new application")
+    And the user clicks the button/link                 jQuery=.a:contains("Sign in")
+    # the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    # the user clicks the button/link    jQuery=.button:contains("Create account")
+    # the user clicks the button/link    jQuery=.button:contains("Create")
     the user enters text to a text field    id=organisationSearchName    Innovate
     the user clicks the button/link         id=org-search
     the user clicks the button/link         LINK=INNOVATE LTD

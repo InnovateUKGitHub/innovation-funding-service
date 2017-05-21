@@ -16,9 +16,12 @@ Invite the same partner under the lead organisation
 *** Keywords ***
 Create a new application
     [Arguments]    ${NAME}    ${EMAIL}    ${APPLICATION NAME}
-    the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    the user clicks the button/link    jQuery=.button:contains("Apply now")
-    the user clicks the button/link    jQuery=.button:contains("Apply now")
+    #the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    the user navigates to the page                       ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link                      jQuery=a:contains("Start new application")
+    the user clicks the button/link                        jQuery=.button:contains("Sign in”)
+    #the user clicks the button/link    jQuery=.button:contains("Apply now")
+    #the user clicks the button/link    jQuery=.button:contains("Apply now")
     the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
     the user clicks the button/link    jQuery=.button:contains("Continue")
     the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")

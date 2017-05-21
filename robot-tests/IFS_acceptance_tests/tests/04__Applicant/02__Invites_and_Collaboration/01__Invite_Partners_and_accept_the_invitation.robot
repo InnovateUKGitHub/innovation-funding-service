@@ -304,9 +304,11 @@ the applicant's inputs should be visible
 
 Login and create a new application
     Given Guest user log-in    &{lead_applicant_credentials}
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
+    When the user navigates to the page    ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link                      jQuery=a:contains("Start new application")
+    And the user clicks the button/link                 jQuery=.button:contains("Create account")
+  #  And the user clicks the button/link    jQuery=.button:contains("Apply now")
+  #  And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user selects the radio button    create-application    true
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jquery=a:contains("Begin application")
