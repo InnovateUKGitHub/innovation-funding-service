@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
 public class CompetitionManagementApplicationController {
 
     @Autowired

@@ -14,7 +14,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
@@ -24,7 +23,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/applications")
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
 public class CompetitionManagementApplicationsController {
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";

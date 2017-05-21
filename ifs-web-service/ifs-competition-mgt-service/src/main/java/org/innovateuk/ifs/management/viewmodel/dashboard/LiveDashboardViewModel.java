@@ -12,8 +12,10 @@ import java.util.Map;
  */
 public class LiveDashboardViewModel extends DashboardViewModel {
     public LiveDashboardViewModel(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions,
-                                  CompetitionCountResource counts) {
+                                  CompetitionCountResource counts,
+                                  Boolean bypassSummaryPage) {
         this.competitions = competitions;
         this.counts = counts;
+        this.bypassSummaryPage = bypassSummaryPage;
     }
 }

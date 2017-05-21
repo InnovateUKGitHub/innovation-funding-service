@@ -24,7 +24,8 @@
                     th:include="competition/dashboard :: dashboard-row"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.numberOfApplications + ' applicants'}"/>
+                        cell4=${competition.numberOfApplications + ' applicants'},
+                        bypassSummaryPage=${model.bypassSummaryPage}"/>
             </li>
         </ul>
     </section>

@@ -162,9 +162,9 @@ public class UserPermissionRules {
         return getFilteredProjectUsers(user, projectUserFilter).stream().filter(projectUser -> projectUser.getOrganisation().getId().equals(processRole.getOrganisationId())).findAny().isPresent();
     }
 
-    @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Project Finance can read the user's process role")
+    @PermissionRule(value = "READ", description = "The user, as well as internal users can read the user's process role")
     public boolean usersAndCompAdminAndProjectFinanceCanViewProcessRole(ProcessRoleResource processRole, UserResource user) {
-        return processRole.getUser().equals(user.getId()) || isCompAdmin(user) || isProjectFinanceUser(user);
+        return processRole.getUser().equals(user.getId()) || isInternal(user);
     }
 
     @PermissionRule(value = "READ", description = "Assessors can view the process roles of members of individual Consortiums on the various Applications that they are assessing")

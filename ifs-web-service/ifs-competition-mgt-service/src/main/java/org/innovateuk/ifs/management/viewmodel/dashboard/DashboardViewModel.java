@@ -13,6 +13,7 @@ import java.util.Map;
 public abstract class DashboardViewModel {
     protected Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions;
     protected CompetitionCountResource counts;
+    protected boolean bypassSummaryPage;
 
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getCompetitions() {
         return competitions;
@@ -20,5 +21,9 @@ public abstract class DashboardViewModel {
 
     public CompetitionCountResource getCounts() {
         return counts;
+    }
+
+    public boolean isBypassSummaryPage() {
+        return bypassSummaryPage;
     }
 }

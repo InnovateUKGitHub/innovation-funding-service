@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,7 +24,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.joining;
 
 @Controller
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
 public class CompetitionManagementDashboardController {
     public static final String TEMPLATE_PATH = "dashboard/";
     private static final String MODEL_ATTR = "model";
@@ -39,9 +41,10 @@ public class CompetitionManagementDashboardController {
     }
 
     @GetMapping("/dashboard/live")
-    public String live(Model model) {
+    public String live(Model model, UserResource user){
+        boolean bypassSummaryPage = user.hasRole(UserRoleType.SUPPORT);
         model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(competitionDashboardSearchService.getLiveCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts()));
+                competitionDashboardSearchService.getCompetitionCounts(), bypassSummaryPage));
 
         return TEMPLATE_PATH + "live";
     }
