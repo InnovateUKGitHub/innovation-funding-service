@@ -107,7 +107,7 @@
                                 <span class="invisible">Select application</span>
                             </label>
                             <th:block th:unless="${applicationSummary.applicationFundingDecisionIsChangeable()}">
-                                -
+                                <span class="empty-table-cell-select">-</span>
                             </th:block>
                         </td>
                         <td th:text="${applicationSummary.id}">194731</td>
