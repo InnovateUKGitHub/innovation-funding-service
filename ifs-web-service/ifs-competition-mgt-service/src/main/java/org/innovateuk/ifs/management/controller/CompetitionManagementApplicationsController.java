@@ -6,6 +6,7 @@ import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
 import org.innovateuk.ifs.management.model.IneligibleApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -52,9 +53,10 @@ public class CompetitionManagementApplicationsController {
                                   @RequestParam MultiValueMap<String, String> queryParams,
                                   @RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "sort", defaultValue = "") String sort,
-                                  @RequestParam(value = "filterSearch", defaultValue = "") String filter) {
+                                  @RequestParam(value = "filterSearch", defaultValue = "") String filter,
+                                  UserResource user) {
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.ALL_APPLICATIONS, queryParams);
-        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter));
+        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter, user));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/all-applications";
