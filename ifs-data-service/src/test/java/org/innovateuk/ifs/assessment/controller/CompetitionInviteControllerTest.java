@@ -606,6 +606,19 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     }
 
     @Test
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/competitioninvite/deleteAllInvites")
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent());
+
+        verify(competitionInviteServiceMock).deleteAllInvites(competitionId);
+    }
+
+    @Test
     public void sendInvite() throws Exception {
         long inviteId = 1L;
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()

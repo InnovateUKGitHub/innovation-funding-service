@@ -186,6 +186,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
+    @Test
+    public void deleteAllInvites() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
     public static class TestCompetitionInviteService implements CompetitionInviteService {
 
         @Override
@@ -265,6 +270,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Void> deleteInvite(String email, long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteAllInvites(long competitionId) {
             return null;
         }
     }

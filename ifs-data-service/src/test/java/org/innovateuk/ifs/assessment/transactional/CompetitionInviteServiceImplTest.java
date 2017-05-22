@@ -1493,6 +1493,28 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     }
 
     @Test
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(newCompetition().build());
+
+        assertTrue(service.deleteAllInvites(competitionId).isSuccess());
+
+        verify(competitionRepositoryMock).findOne(competitionId);
+    }
+
+    @Test
+    public void deleteAllInvites_noCompetition() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
+
+        assertFalse(service.deleteAllInvites(competitionId).isSuccess());
+
+        verify(competitionRepositoryMock).findOne(competitionId);
+    }
+
+    @Test
     public void acceptInvite_newAssessor() {
         InnovationArea innovationArea = newInnovationArea().build();
         CompetitionParticipant competitionParticipant = newCompetitionParticipant()

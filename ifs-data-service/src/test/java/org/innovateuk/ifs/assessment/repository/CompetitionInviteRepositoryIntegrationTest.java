@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.junit.Before;
@@ -16,9 +17,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableSet.of;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -157,5 +161,23 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
     public void save_duplicateHash() {
         repository.save(new CompetitionInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea));
         repository.save(new CompetitionInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea));
+    }
+
+    @Test
+    public void deleteByCompetitionIdAndStatus() throws Exception {
+        CompetitionInvite invite1 = new CompetitionInvite("Test Tester 1", "test2@test.com", "hash1", competition, innovationArea);
+        CompetitionInvite invite2 = new CompetitionInvite("Test Tester 2", "test1@test.com", "hash2", competition, innovationArea);
+
+        HashSet<InviteStatus> inviteStatuses = newHashSet(CREATED);
+
+        repository.save(asList(invite1, invite2));
+        flushAndClearSession();
+
+        assertEquals(2, repository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
+
+        repository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED);
+        flushAndClearSession();
+
+        assertEquals(0, repository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
     }
 }

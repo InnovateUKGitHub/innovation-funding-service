@@ -33,9 +33,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
@@ -1107,5 +1109,51 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals(2, content.size());
         assertEquals(felixWilson.getName(), content.get(0).getName());
         assertEquals(paulPlum.getName(), content.get(1).getName());
+    }
+
+    @Test
+    public void deleteInvite() throws Exception {
+        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+
+        CompetitionInvite savedCompetition = competitionInviteRepository.save(
+                new CompetitionInvite("Test Tester", "test@test.com", "hash1", competition, innovationArea)
+        );
+
+        flushAndClearSession();
+        loginCompAdmin();
+
+        RestResult<Void> restResult = controller.deleteInvite("test@test.com", competition.getId());
+
+        assertTrue(restResult.isSuccess());
+
+        flushAndClearSession();
+
+        assertNull(competitionInviteRepository.findOne(savedCompetition.getId()));
+    }
+
+
+    @Test
+    public void deleteAllInvites() throws Exception {
+        HashSet<InviteStatus> inviteStatuses = newHashSet(CREATED);
+
+        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+
+        competitionInviteRepository.save(asList(
+                new CompetitionInvite("Test Tester 1", "test1@test.com", "hash1", competition, innovationArea),
+                new CompetitionInvite("Test Tester 2", "test2@test.com", "hash2", competition, innovationArea)
+        ));
+
+        assertEquals(2, competitionInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
+
+        flushAndClearSession();
+        loginCompAdmin();
+
+        RestResult<Void> restResult = controller.deleteAllInvites(competition.getId());
+
+        assertTrue(restResult.isSuccess());
+
+        flushAndClearSession();
+
+        assertEquals(0, competitionInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
     }
 }

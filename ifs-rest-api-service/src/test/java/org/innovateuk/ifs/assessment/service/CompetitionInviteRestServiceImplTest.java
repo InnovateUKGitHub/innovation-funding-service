@@ -248,6 +248,16 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        setupDeleteWithRestResultExpectations(format("%s/%s?competitionId=%s", restUrl, "deleteAllInvites", competitionId));
+
+        RestResult<Void> resultResult = service.deleteAllInvites(competitionId);
+        assertTrue(resultResult.isSuccess());
+    }
+
+    @Test
     public void sendInvite() {
         long inviteId = 5L;
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
