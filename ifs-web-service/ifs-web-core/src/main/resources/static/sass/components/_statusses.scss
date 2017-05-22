@@ -355,3 +355,35 @@ span.status {
     background-size: 25px;
   }
 }
+
+
+ul.status {
+  li {
+    position: relative;
+  }
+  li[data-valid] {
+    list-style:none;
+  }
+  li[data-valid]:before{
+    position: absolute;
+    left:-20px;
+    top:5px;
+    background-size: 14px;
+    display: block;
+    width:14px;
+    height: 14px;
+    content:""
+  }
+  li[data-valid="true"]{
+    color: $button-colour;
+  }
+  li[data-valid="true"]:before{
+    @extend %icon-tick;
+  }
+  li[data-valid="false"]{
+    color: $error-colour;
+  }
+  li[data-valid="false"]:before{
+    @extend %icon-cross;
+  }
+}

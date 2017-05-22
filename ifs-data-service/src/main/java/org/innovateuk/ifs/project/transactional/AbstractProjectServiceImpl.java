@@ -107,10 +107,12 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
-        Optional<ProjectUser> financeContactForOrganisation = simpleFindFirst(project.getProjectUsers(), pu ->
-                pu.getRole().isFinanceContact() &&
-                        pu.getOrganisation().getId().equals(partnerOrganisation.getId()));
-        return financeContactForOrganisation.map(existing -> COMPLETE).orElse(ACTION_REQUIRED);
+        return getFinanceContact(project, partnerOrganisation).map(existing -> COMPLETE).orElse(ACTION_REQUIRED);
+    }
+
+    protected Optional<ProjectUser> getFinanceContact(final Project project, final Organisation organisation) {
+        return simpleFindFirst(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()
+                && pu.getOrganisation().getId().equals(organisation.getId()));
     }
 
     protected ProjectActivityStates createProjectDetailsStatus(Project project) {
