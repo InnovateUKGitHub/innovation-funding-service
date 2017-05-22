@@ -13,7 +13,7 @@ public interface PublicContentService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @SecuredBySpring(value = "GET_PUBLIC_CONTENT",
-            description = "The Competition Admin, or project finance user can get the public content for a competition.")
+            description = "All internal users can get the public content for a competition.")
     ServiceResult<PublicContentResource> findByCompetitionId(Long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

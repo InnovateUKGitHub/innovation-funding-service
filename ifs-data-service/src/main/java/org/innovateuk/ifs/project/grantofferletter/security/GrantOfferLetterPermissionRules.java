@@ -102,7 +102,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
             description = "Internal users can view the send status of Grant Offer Letter for a project")
-    public boolean internalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+    public boolean internalAdminUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
         return isInternalAdmin(user);
     }
 
