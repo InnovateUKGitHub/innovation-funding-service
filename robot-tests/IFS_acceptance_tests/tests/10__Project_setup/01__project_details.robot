@@ -477,7 +477,7 @@ Invited finance contact registration flow
     And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
@@ -703,7 +703,7 @@ the user creates the account
     the user enters text to a text field    id=firstName    ${first_name}
     the user enters text to a text field    id=lastName    ${last_name}
     the user enters text to a text field    id=phoneNumber    0987654321
-    the user enters text to a text field    id=password    Passw0rd123
+    the user enters text to a text field    id=password  ${correct_password}
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")
 
