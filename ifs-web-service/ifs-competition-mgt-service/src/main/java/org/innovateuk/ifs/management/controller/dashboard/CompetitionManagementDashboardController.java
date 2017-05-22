@@ -42,9 +42,9 @@ public class CompetitionManagementDashboardController {
 
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
-        boolean bypassSummaryPage = user.hasRole(UserRoleType.SUPPORT);
+        boolean supportView = user.hasRole(UserRoleType.SUPPORT);
         model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(competitionDashboardSearchService.getLiveCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts(), bypassSummaryPage));
+                competitionDashboardSearchService.getCompetitionCounts(), supportView));
 
         return TEMPLATE_PATH + "live";
     }

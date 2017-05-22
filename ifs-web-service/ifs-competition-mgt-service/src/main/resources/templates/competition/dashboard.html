@@ -17,25 +17,25 @@
     </div>
 </div>
 
-<div th:fragment="comp-dashboard-navigation(selectedTab, counts)">
+<div th:fragment="comp-dashboard-navigation(selectedTab, counts, supportView)">
     <ul class="inline-nav cf">
         <li id="section-1" th:class="${selectedTab == 'live' ? 'selected' : ''}">
             <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'"></a>
         </li>
 
-        <li id="section-2" th:class="${selectedTab == 'upcoming' ? 'selected' : ''}">
+        <li id="section-2" th:class="${selectedTab == 'upcoming' ? 'selected' : ''}" th:unless="${supportView}">
             <a th:href="@{'/dashboard/upcoming'}" th:text="'Upcoming ('+${counts.upcomingCount}+')'"></a>
         </li>
 
-        <li id="section-3" th:class="${selectedTab == 'non-ifs' ? 'selected' : ''}">
+        <li id="section-3" th:class="${selectedTab == 'non-ifs' ? 'selected' : ''}" th:unless="${supportView}">
             <a th:href="@{'/dashboard/non-ifs'}" th:text="'Non-IFS ('+${counts.nonIfsCount}+')'"></a>
         </li>
 
-        <li id="section-4" th:class="${selectedTab == 'projectSetup' ? 'selected' : ''}">
+        <li id="section-4" th:class="${selectedTab == 'projectSetup' ? 'selected' : ''}" th:unless="${supportView}">
             <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'"></a>
         </li>
 
-        <li id="section-5" th:class="${selectedTab == 'complete' ? 'selected' : ''}">
+        <li id="section-5" th:class="${selectedTab == 'complete' ? 'selected' : ''}" th:unless="${supportView}">
             <a th:href="@{'/dashboard/complete'}" th:text="'Complete ('+${counts.completedCount}+')'"></a>
         </li>
     </ul>
@@ -54,10 +54,10 @@
                     <th:block th:include="competition/dashboard :: competition-name" />
                 </a>
                 <th:block th:if="${competition.competitionStatus.inFlight}">
-                    <a th:href="@{/competition/{competitionId}/applications/all(competitionId=${competition.id})}" th:if="${bypassSummaryPage}">
+                    <a th:href="@{/competition/{competitionId}/applications/all(competitionId=${competition.id})}" th:if="${supportView}">
                         <th:block th:include="competition/dashboard :: competition-name" />
                     </a>
-                    <a th:href="@{/competition/{competitionId}(competitionId=${competition.id})}" th:unless="${bypassSummaryPage}">
+                    <a th:href="@{/competition/{competitionId}(competitionId=${competition.id})}" th:unless="${supportView}">
                         <th:block th:include="competition/dashboard :: competition-name" />
                     </a>
                 </th:block>
