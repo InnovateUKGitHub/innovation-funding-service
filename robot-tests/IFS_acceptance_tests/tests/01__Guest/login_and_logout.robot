@@ -91,6 +91,15 @@ Valid login as Comp Admin
     And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     [Teardown]    Logout as user
 
+Valid login as Support role
+    [Documentation]    IFS-188
+    [Tags]
+    Given the user is not logged-in
+    When the guest user enters the log in credentials    support@innovateuk.test    Passw0rd
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    [Teardown]    Logout as user
+
 Valid login as Project Finance role
     [Documentation]    INFUND-2609
     [Tags]
