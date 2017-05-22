@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -80,5 +82,31 @@ public class InitialDetailsFormPopulatorTest {
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
 		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());
 		assertEquals("name", form.getTitle());
+	}
+
+	@Test
+	public void testGetSectionFormDataInitialDetailsWithAllInnovationAreas() {
+		CompetitionResource competition = newCompetitionResource()
+				.withCompetitionType(4L)
+				.withExecutive(5L)
+				.withInnovationAreas(asSet(6L, 7L))
+				.withLeadTechnologist(7L)
+				.withStartDate(ZonedDateTime.of(2000, 1, 2, 3, 4, 0, 0, ZoneId.systemDefault()))
+				.withCompetitionCode("code")
+				.withPafCode("paf")
+				.withName("name")
+				.withBudgetCode("budgetcode")
+				.withId(8L).build();
+
+		List<InnovationAreaResource> innovationAreaCategories = newInnovationAreaResource().withId(6L, 7L).build(2);
+		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaCategories));
+
+		CompetitionSetupForm result = service.populateForm(competition);
+
+		assertTrue(result instanceof InitialDetailsForm);
+		InitialDetailsForm form = (InitialDetailsForm) result;
+		assertThat(form.getInnovationAreaCategoryIds(), hasItems(-1L));
+		assertThat(form.getInnovationAreaCategoryIds(), hasSize(1));
+		assertEquals("All", form.getInnovationAreaNamesFormatted());
 	}
 }
