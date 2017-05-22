@@ -55,22 +55,22 @@ Applicant can't access the assessor's dashboard page
     [Documentation]    INFUND-1683
     [Tags]
     [Setup]
-    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    You do not have the necessary permissions for your request
+    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    ${403_error_message}
 
 Applicant can't access the assessor's review application page
     [Documentation]    INFUND-1683
     [Tags]
-    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_ASSESSMENT_QUESTIONS}    You do not have the necessary permissions for your request
+    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_ASSESSMENT_QUESTIONS}    ${403_error_message}
 
 Applicant can't access the assessor's review application page (outside the question range)
     [Documentation]    INFUND-4568
     [Tags]
-    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_ASSESSMENT_QUESTIONS_48}    You do not have the necessary permissions for your request
+    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_ASSESSMENT_QUESTIONS_48}    ${403_error_message}
 
 Applicant can't access the review summary page
     [Documentation]    INFUND-1683
     [Tags]
-    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_REVIEW_SUMMARY}    You do not have the necessary permissions for your request
+    Then the user navigates to the page and gets a custom error message    ${ASSESSOR_REVIEW_SUMMARY}    ${403_error_message}
     [Teardown]    the user closes the browser
 
 First Assessor shouldn't be able to see second assessor's assessments

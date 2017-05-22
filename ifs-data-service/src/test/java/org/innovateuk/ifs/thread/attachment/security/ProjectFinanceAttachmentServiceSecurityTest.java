@@ -115,6 +115,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
         public ServiceResult<Void> delete(Long attachmentId) {
             return ServiceResult.serviceSuccess();
         }
+
     }
 
 

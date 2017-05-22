@@ -420,7 +420,7 @@ Non lead cannot see the signed GOL
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user should not see the text in the page   Signed grant offer letter
-    When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter    ${403_error_message}
 
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375

@@ -5,6 +5,8 @@ package org.innovateuk.ifs.competitionsetup.utils;
  */
 public class CompetitionUtils {
 
+    public final static Long ALL_INNOVATION_AREAS = -1L;
+
     public static boolean textToBoolean(String value) {
         return (value != null && (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("1"))) ? true : false;
     }

@@ -43,7 +43,7 @@ public class AssessorProfileSkillsController {
 
     @GetMapping
     public String getReadonlySkills(Model model,
-                                    @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                    UserResource loggedInUser) {
         ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccessObjectOrThrowException();
         model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(profileSkillsResource));
         return "profile/skills";
@@ -51,7 +51,7 @@ public class AssessorProfileSkillsController {
 
     @GetMapping("/edit")
     public String getSkills(Model model,
-                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                            UserResource loggedInUser,
                             @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorProfileSkillsForm form,
                             BindingResult bindingResult) {
         return doViewEditSkills(model, loggedInUser, form, bindingResult);
@@ -59,7 +59,7 @@ public class AssessorProfileSkillsController {
 
     @PostMapping("/edit")
     public String submitSkills(Model model,
-                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                               UserResource loggedInUser,
                                @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
                                BindingResult bindingResult,
                                ValidationHandler validationHandler) {
