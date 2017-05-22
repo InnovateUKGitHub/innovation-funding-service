@@ -163,7 +163,7 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as internal users can read the user's process role")
-    public boolean usersAndCompAdminAndProjectFinanceCanViewProcessRole(ProcessRoleResource processRole, UserResource user) {
+    public boolean usersAndInternalUsersCanViewProcessRole(ProcessRoleResource processRole, UserResource user) {
         return processRole.getUser().equals(user.getId()) || isInternal(user);
     }
 
