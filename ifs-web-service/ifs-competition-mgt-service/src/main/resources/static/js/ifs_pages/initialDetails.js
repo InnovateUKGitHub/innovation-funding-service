@@ -89,26 +89,17 @@ IFS.competitionManagement.initialDetails = (function () {
       var isSectorCompetition = jQuery(el).val() === '5'
       var innovationSector = jQuery('#innovationSectorCategoryId')
       var openInnovationSectorId = '0'
-      var multipleRowsButton = jQuery('[data-add-row="innovationArea"]')
 
       if (isSectorCompetition) {
         // enable the open innovation sector if it is a sector competition
         innovationSector.find('[value="' + openInnovationSectorId + '"]').removeAttr('disabled').attr({'aria-hidden': 'false'})
-        // enable the repeating rows when it is a sector competition
-        multipleRowsButton.attr('aria-hidden', 'false')
       } else {
-        // remove all the other sections and save
-        jQuery('[id*="innovation-row"]').not('#innovation-row-0').remove()
-        IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
-
         // deselect if the open innovation Sector is currently selected
         if (innovationSector.val() === openInnovationSectorId) {
           innovationSector.val('')
         }
         // disable the open innovation sector if it is not a sector competition
         innovationSector.find('[value="' + openInnovationSectorId + '"]').attr({'disabled': 'disabled', 'aria-hidden': 'true'})
-        // hide the repeating rows when it is a sector competition
-        multipleRowsButton.attr('aria-hidden', 'true')
       }
     },
     fillInnovationAreas: function (currentAreas) {
