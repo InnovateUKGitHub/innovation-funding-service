@@ -2,7 +2,7 @@
 <#import "layout/default.html" as layout>
     <@layout.default>
     <p style="margin: 0 0 1em 0;">
-        ${bodyHtml}
+        ${bodyHtml?no_esc}
     </p>
     <@layout.senderHTML />
 </@layout.default>
