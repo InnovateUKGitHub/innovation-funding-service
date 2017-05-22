@@ -173,7 +173,7 @@ Submission of bank details for academic user
     And the user clicks the button/link            link=Project setup status
     And the user clicks the button/link            link=Bank details
     When partner submits his bank details          ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
-    Then the user should see the element           jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
+    Then wait until element is not visible without screenshots  30  500ms  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
     When the user enters text to a text field      name=accountNumber   ${account_one}
     And the user enters text to a text field       name=sortCode  ${sortCode_one}
     When the user selects the radio button         addressType  ADD_NEW
@@ -217,7 +217,7 @@ User sees error response for invalid bank details for non-lead partner
     Then the user clicks the button/link           link=Bank details
     When partner submits his bank details  ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     # Stub is configured to return error response for these values
-    Then the user should see the element           jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
+    Then wait until element is not visible without screenshots  30  500ms  jQuery=.error-summary-list li:contains("Bank details cannot be validated.")
 
 Non lead partner submits bank details
     [Documentation]    INFUND-3010, INFUND-6018

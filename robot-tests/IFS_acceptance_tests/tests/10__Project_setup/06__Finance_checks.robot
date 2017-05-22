@@ -1161,7 +1161,7 @@ Project Finance user can enter overhead values for Lead Partner manually
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    And the user should see the element    	jQuery=section:nth-of-type(2) button span:contains("£ 1,954")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 1,954")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("3%")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     And the user should see the element     jQuery=input[id^="total-cost"][value="£ 206,867"]
