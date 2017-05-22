@@ -5,9 +5,15 @@ import org.junit.Test;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class CompetitionUtilsTest {
+
+    @Test
+    public void testAllInnovationAreas() {
+        assertTrue(CompetitionUtils.ALL_INNOVATION_AREAS.equals(-1L));
+    }
 
     @Test
     public void testTextToBoolean() {

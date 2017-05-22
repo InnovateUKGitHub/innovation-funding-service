@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
+import org.innovateuk.ifs.management.viewmodel.dashboard.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ import static java.util.stream.Collectors.joining;
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementDashboardController {
     public static final String TEMPLATE_PATH = "dashboard/";
+    private static final String MODEL_ATTR = "model";
 
     @Autowired
     private CompetitionDashboardSearchService competitionDashboardSearchService;
@@ -37,42 +40,50 @@ public class CompetitionManagementDashboardController {
 
     @GetMapping("/dashboard/live")
     public String live(Model model) {
-        model.addAttribute("competitions", competitionDashboardSearchService.getLiveCompetitions());
-        model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
+        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(competitionDashboardSearchService.getLiveCompetitions(),
+                competitionDashboardSearchService.getCompetitionCounts()));
+
         return TEMPLATE_PATH + "live";
     }
 
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
-        model.addAttribute("competitions", projectSetupCompetitions);
-        model.addAttribute("formattedInnovationAreas", formatInnovationAreaNames(projectSetupCompetitions));
-        model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
+
+        model.addAttribute(MODEL_ATTR, new ProjectSetupDashboardViewModel(projectSetupCompetitions,
+                competitionDashboardSearchService.getCompetitionCounts(),
+                formatInnovationAreaNames(projectSetupCompetitions)));
+
         return TEMPLATE_PATH + "projectSetup";
     }
 
     @GetMapping("/dashboard/upcoming")
     public String upcoming(Model model) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> upcomingCompetitions = competitionDashboardSearchService.getUpcomingCompetitions();
-        model.addAttribute("competitions", upcomingCompetitions);
-        model.addAttribute("formattedInnovationAreas", formatInnovationAreaNames(upcomingCompetitions));
-        model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
+
+        model.addAttribute(MODEL_ATTR, new UpcomingDashboardViewModel(upcomingCompetitions,
+                competitionDashboardSearchService.getCompetitionCounts(),
+                formatInnovationAreaNames(upcomingCompetitions)));
+
         return TEMPLATE_PATH + "upcoming";
     }
 
     @GetMapping("/dashboard/complete")
     public String complete(Model model) {
+
         //TODO INFUND-3833
-        model.addAttribute("competitions", new ArrayList<CompetitionResource>());
-        model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
+        model.addAttribute(MODEL_ATTR, new CompleteDashboardViewModel(Collections.emptyMap(),
+                competitionDashboardSearchService.getCompetitionCounts()));
+
         return TEMPLATE_PATH + "complete";
     }
 
 
     @GetMapping("/dashboard/non-ifs")
     public String nonIfs(Model model) {
-        model.addAttribute("competitions", competitionDashboardSearchService.getNonIfsCompetitions());
-        model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
+        model.addAttribute(MODEL_ATTR, new NonIFSDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(),
+                competitionDashboardSearchService.getCompetitionCounts()));
+
         return TEMPLATE_PATH + "non-ifs";
     }
 

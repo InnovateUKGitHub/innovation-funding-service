@@ -22,9 +22,11 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -63,7 +65,7 @@ public class InitialDetailsModelPopulatorTest {
 		when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(compExecs);
 		List<InnovationSectorResource> innovationSectors = new ArrayList<>();
 		when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
-		List<InnovationAreaResource> innovationAreas = new ArrayList<>();
+		List<InnovationAreaResource> innovationAreas = newInnovationAreaResource().build(2);
 		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreas));
 		List<CompetitionTypeResource> competitionTypes = new ArrayList<>();
 		when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypes);
@@ -75,7 +77,8 @@ public class InitialDetailsModelPopulatorTest {
 		assertEquals(5, model.asMap().size());
 		assertEquals(compExecs, model.asMap().get("competitionExecutiveUsers"));
 		assertEquals(innovationSectors, model.asMap().get("innovationSectors"));
-		assertEquals(innovationAreas, model.asMap().get("innovationAreas"));
+        List<InnovationAreaResource> resultAreas = (List<InnovationAreaResource>) model.asMap().get("innovationAreas");
+		assertTrue(resultAreas.containsAll(innovationAreas));
 		assertEquals(competitionTypes, model.asMap().get("competitionTypes"));
 		assertEquals(leadTechs, model.asMap().get("competitionLeadTechUsers"));
 	}
