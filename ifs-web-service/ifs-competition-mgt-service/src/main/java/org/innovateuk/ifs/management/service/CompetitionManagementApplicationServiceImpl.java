@@ -107,7 +107,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         ServiceResult<Void> result = applicationService.markAsIneligible(applicationId, ineligibleOutcomeResource);
 
         if (result != null && result.isSuccess()) {
-            return "redirect:/competition/" + competitionId + "/applications/submitted";
+            return "redirect:/competition/" + competitionId + "/applications/ineligible";
         } else {
             return displayApplicationOverview(user,
                     competitionId,

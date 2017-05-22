@@ -36,6 +36,6 @@ The user should see a field and summary error
 
 the user should not see an error in the page
     Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    ${500_error_message}
+    Page Should Not Contain    ${404_error_message}
+    Page Should Not Contain    ${403_error_message}
