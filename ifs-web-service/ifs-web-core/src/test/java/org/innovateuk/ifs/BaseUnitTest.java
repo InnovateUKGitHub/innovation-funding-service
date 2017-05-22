@@ -75,7 +75,6 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.Cookie;
@@ -292,8 +291,6 @@ public class BaseUnitTest {
     public List<OrganisationResource> application4Organisations;
     public List<OrganisationResource> application5Organisations;
 
-
-    private Random randomGenerator;
     public OrganisationTypeResource businessOrganisationTypeResource;
     public OrganisationTypeResource researchOrganisationTypeResource;
     public OrganisationTypeResource rtoOrganisationTypeResource;
@@ -308,21 +305,12 @@ public class BaseUnitTest {
     public static final String INVITE_HASH_EXISTING_USER = "cccccccccc630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
     public static final String INVALID_INVITE_HASH = "aaaaaaa7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
     public static final String ACCEPTED_INVITE_HASH = "BBBBBBBBB7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
-    ;
-
 
     public static InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/resources");
         viewResolver.setSuffix(".html");
         return viewResolver;
-    }
-
-    public <T> T attributeFromMvcResultModel(MvcResult result, String key) {
-        return (T) result.getModelAndView().getModel().entrySet().stream()
-                .filter(entry -> entry.getKey().equals(key))
-                .map(entry -> entry.getValue())
-                .findFirst().orElse(null);
     }
 
     @Before
@@ -405,12 +393,6 @@ public class BaseUnitTest {
     public void loginDefaultUser() {
         when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(loggedInUserAuthentication);
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(loggedInUser);
-    }
-
-    public void loginUser(UserResource user) {
-        UserAuthentication userAuthentication = new UserAuthentication(user);
-        when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(userAuthentication);
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
     }
 
     public void setupCompetition() {
@@ -575,8 +557,6 @@ public class BaseUnitTest {
                 newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
                         .withApplicationState(ApplicationState.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
         );
-
-        Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
 
         RoleResource role1 = newRoleResource().withId(1L).withName(UserApplicationRole.LEAD_APPLICANT.getRoleName()).build();
         RoleResource role2 = newRoleResource().withId(2L).withName(UserApplicationRole.COLLABORATOR.getRoleName()).build();

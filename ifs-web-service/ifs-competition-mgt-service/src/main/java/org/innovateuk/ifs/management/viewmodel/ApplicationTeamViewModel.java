@@ -8,6 +8,34 @@ import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 public class ApplicationTeamViewModel {
     String applicationName;
     ApplicationTeamResource team;
+    long applicationId;
+    long competitionId;
+
+    public String getQueryParams() {
+        return queryParams;
+    }
+
+    public void setQueryParams(String queryParams) {
+        this.queryParams = queryParams;
+    }
+
+    String queryParams;
+
+    public long getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(long competitionId) {
+        this.competitionId = competitionId;
+    }
+
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(long applicationId) {
+        this.applicationId = applicationId;
+    }
 
     public String getApplicationName() {
         return applicationName;

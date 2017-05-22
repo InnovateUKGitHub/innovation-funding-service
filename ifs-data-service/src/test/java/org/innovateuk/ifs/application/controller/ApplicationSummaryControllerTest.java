@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -282,7 +283,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
 
         when(applicationSummaryService.getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(informFilter))).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible",competitionId)
+        mockMvc.perform(get("/applicationSummary/findByCompetition/{compId}/ineligible", competitionId)
                 .param("page",Integer.toString(page))
                 .param("filter", strFilter)
                 .param("informFilter", informFilter.toString()))
@@ -290,5 +291,18 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
         verify(applicationSummaryService).getIneligibleApplicationSummariesByCompetitionId(competitionId, null, page, PAGE_SIZE, of(strFilter), of(informFilter));
+    }
+
+    @Test
+    public void getApplicationTeam() throws Exception {
+        long applicationId = 4L;
+
+        ApplicationTeamResource resource = new ApplicationTeamResource();
+        when(applicationSummaryService.getApplicationTeamByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
+        mockMvc.perform(get("/applicationSummary/applicationTeam/{applicationId}", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+        verify(applicationSummaryService).getApplicationTeamByApplicationId(applicationId);
     }
 }

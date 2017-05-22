@@ -10,13 +10,25 @@
             <th th:if="organisation.registeredAddress" class="width-30-percent">Registered Address</th>
             <th th:if="organisation.operatingAddress" class="width-30-percent">Operating Address</th>
         </tr>
-        <tr>
-
-        </tr><th th:if="organisation.registeredAddress" class="width-30-percent" th:text="${#strings.join(organisation.registeredAddress.getNonEmptyLines(), '&lt;br /&gt;')}"></th>
-        </tr><th th:if="organisation.operatingAddress" class="width-30-percent" th:text="${#strings.join(organisation.operatingAddress.getNonEmptyLines(), '&lt;br /&gt;')}"></th>
         </thead>
+        <tbody>
+        <tr>
+            <td th:if="organisation.registeredAddress">
+                <span th:each="addressLine : ${organisation.registeredAddress.getAddress().getNonEmptyLines()}" th:remove="tag">
+                    <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
+                </span>
+            </td>
+            <td th:unless="organisation.registeredAddress" />
+            <td th:if="organisation.operatingAddress">
+                <span th:each="addressLine : ${organisation.operatingAddress.getAddress().getNonEmptyLines()}" th:remove="tag">
+                    <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
+                </span>
+            </td>
+            <th th:unless="organisation.operatingAddress" />
+        </tr>
+        </tbody>
     </table>
-
+    <br />
     <table class="table-overflow">
         <thead>
         <tr>
@@ -27,9 +39,9 @@
         </thead>
         <tbody>
         <tr th:each="user : ${organisation.users}">
-            <td th:text="${user.roles.hasRole(T(org.innovateuk.ifs.user.resource.UserRoleType).LEADAPPLICANT)} ? ${user.name} + ' (Lead)' : user.roles.hasRole(T(org.innovateuk.ifs.user.resource.UserRoleType).FINANCE_CONTACT) ? ${user.name} + ' (Finance contact)' : ${user.name}">Steve Smith</td>
+            <td th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
             <td th:text="${user.email}">steve.smith@empire.com</td>
-            <td th:text="${user.phoneNumber} ">0800</td>
+            <td th:text="${user.phoneNumber}">0800</td>
         </tr>
         </tbody>
     </table>

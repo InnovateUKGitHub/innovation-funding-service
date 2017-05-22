@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.resource;
 
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ public class ApplicationTeamOrganisationResource {
     OrganisationAddressResource operatingAddress;
     OrganisationAddressResource registeredAddress;
     String organisationName;
-    List<UserResource> users;
+    List<ApplicationTeamUserResource> users;
 
     public OrganisationAddressResource getRegisteredAddress() {
         return registeredAddress;
@@ -38,11 +37,11 @@ public class ApplicationTeamOrganisationResource {
         this.organisationName = organisationName;
     }
 
-    public List<UserResource> getUsers() {
+    public List<ApplicationTeamUserResource>getUsers() {
         return users;
     }
 
-    public void setUsers(List<UserResource> users) {
+    public void setUsers(List<ApplicationTeamUserResource> users) {
         this.users = users;
     }
 }

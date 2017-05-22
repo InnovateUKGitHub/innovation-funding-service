@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
@@ -12,9 +13,7 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -190,51 +189,67 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         if (application != null) {
 
             // Order organisations by lead, followed by other partners in alphabetic order
-            application.getProcessRoles()
+            List<Long> leadOrganisationIds = application.getProcessRoles()
                     .stream()
-                    .sorted((pr1, pr2) -> {
-                        if (pr1.isLeadApplicant()) {
-                            return -1;
-                        } else {
-                            return organisationRepository.findOne(pr1.getOrganisationId()).getName().compareTo(organisationRepository.findOne(pr2.getOrganisationId()).getName());
-                        }
-                    })
-                    .forEach(pr -> {
-                        ApplicationTeamOrganisationResource teamOrg = getTeamOrganisation(pr);
-                        if (pr.isLeadApplicant()) {
-                            result.setLeadOrganisation(teamOrg);
-                        } else {
-                            partnerOrganisations.add(teamOrg);
-                        }
-                    });
+                    .filter(pr -> pr.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()))
+                    .map(u -> u.getOrganisationId())
+                    .distinct()
+                    .map(oId -> Pair.of(oId, organisationRepository.findOne(oId).getName()))
+                    .sorted(Comparator.comparing(Pair::getValue))
+                    .map(p -> p.getKey())
+                    .collect(toList());
+            leadOrganisationIds.forEach(organisationId -> result.setLeadOrganisation(getTeamOrganisation(organisationId, application)));
+
+            List<Long> organisationIds = application.getProcessRoles()
+                    .stream()
+                    .filter(pr -> pr.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                    .map(u -> u.getOrganisationId())
+                    .distinct()
+                    .map(oId -> Pair.of(oId, organisationRepository.findOne(oId).getName()))
+                    .sorted(Comparator.comparing(Pair::getValue))
+                    .map(p -> p.getKey())
+                    .collect(toList());
+            organisationIds.forEach(organisationId -> {
+                partnerOrganisations.add(getTeamOrganisation(organisationId, application));
+            });
+
             result.setPartnerOrganisations(partnerOrganisations);
         }
         return ServiceResult.serviceSuccess(result);
     }
 
-    private ApplicationTeamOrganisationResource getTeamOrganisation(ProcessRole processRole) {
+    private ApplicationTeamOrganisationResource getTeamOrganisation(long organisationId, Application application) {
         ApplicationTeamOrganisationResource teamOrg = new ApplicationTeamOrganisationResource();
-        Organisation organisation = organisationRepository.findOne(processRole.getOrganisationId());
+        Organisation organisation = organisationRepository.findOne(organisationId);
 
         teamOrg.setOrganisationName(organisation.getName());
 
         teamOrg.setRegisteredAddress(getAddressByType(organisation, OrganisationAddressType.REGISTERED));
 
         teamOrg.setOperatingAddress(getAddressByType(organisation, OrganisationAddressType.OPERATING));
-        List<UserResource> users = new LinkedList<>();
+
         // Order users by lead, followed by other users in alphabetic order
-        organisation.getUsers()
+        List<ApplicationTeamUserResource> users = application.getProcessRoles()
                 .stream()
-                .sorted((u1, u2) -> {
-                    if (u1.hasRole(UserRoleType.LEADAPPLICANT)) {
+                .filter(pr -> pr.getOrganisationId() == organisationId)
+                .sorted((pr1, pr2) -> {
+                    if (pr1.isLeadApplicant()) {
                         return -1;
-                    } else if (u2.hasRole(UserRoleType.LEADAPPLICANT)) {
+                    } else if (pr2.isLeadApplicant()) {
                         return 1;
                     } else {
-                        return u1.getName().compareTo(u2.getName());
+                        return pr1.getUser().getName().compareTo(pr2.getUser().getName());
                     }
                 })
-                .forEach(u -> users.add(userMapper.mapToResource(u)));
+                .map(pr -> {
+                    ApplicationTeamUserResource user = new ApplicationTeamUserResource();
+                    user.setLead(pr.isLeadApplicant());
+                    user.setName(pr.getUser().getName());
+                    user.setEmail(pr.getUser().getEmail());
+                    user.setPhoneNumber(pr.getUser().getPhoneNumber());
+                    return user;
+                })
+                .collect(toList());
         teamOrg.setUsers(users);
         return teamOrg;
     }

@@ -34,4 +34,5 @@ public interface CompetitionManagementApplicationService {
                                        ApplicationForm applicationForm,
                                        UserResource user,
                                        Model model);
+
 }

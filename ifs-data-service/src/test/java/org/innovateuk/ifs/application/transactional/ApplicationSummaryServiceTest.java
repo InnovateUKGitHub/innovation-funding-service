@@ -513,17 +513,18 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getApplicationTeamSuccess() {
-        ProcessRole lead = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisationId(234L).build();
-        ProcessRole collaborator1 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(345L).withUser().build();
-        ProcessRole collaborator2 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(456L).withUser().build();
-        Application app = newApplication().withProcessRoles(lead, collaborator1, collaborator2).build();
-
         Role leadRole = newRole().withType(UserRoleType.LEADAPPLICANT).build();
         User leadOrgLeadUser = newUser().withFirstName("Lee").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
         User leadOrgNonLeadUser1 = newUser().withFirstName("A").withLastName("Bee").build();
         User leadOrgNonLeadUser2 = newUser().withFirstName("Cee").withLastName("Dee").build();
         User partnerOrgLeadUser1 = newUser().withFirstName("Zee").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
         User partnerOrgLeadUser2 = newUser().withFirstName("Ay").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
+
+
+        ProcessRole lead = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisationId(234L).withUser(leadOrgLeadUser).build();
+        ProcessRole collaborator1 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(345L).withUser(partnerOrgLeadUser1).build();
+        ProcessRole collaborator2 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(456L).withUser(partnerOrgLeadUser2).build();
+        Application app = newApplication().withProcessRoles(lead, collaborator1, collaborator2).build();
 
         AddressType registeredAddressType = newAddressType().withName("REGISTERED").build();
         AddressType operatingAddressType = newAddressType().withName("OPERATING").build();
@@ -566,18 +567,16 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.getSuccessObject().getLeadOrganisation().getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
         assertTrue(result.getSuccessObject().getLeadOrganisation().getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
         assertTrue(result.getSuccessObject().getLeadOrganisation().getUsers().get(0).getName().equals("Lee Der"));
-        assertTrue(result.getSuccessObject().getLeadOrganisation().getUsers().get(1).getName().equals("A Bee"));
-        assertTrue(result.getSuccessObject().getLeadOrganisation().getUsers().get(2).getName().equals("Cee Dee"));
 
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getOrganisationName().equals("A"));
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getOperatingAddress() == null);
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getUsers().get(0).getName().equals("Zee Der"));
+        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(0).getUsers().get(0).getName().equals("Ay Der"));
 
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getOrganisationName().equals("B"));
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getRegisteredAddress() == null);
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
-        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getUsers().get(0).getName().equals("Ay Der"));
+        assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getUsers().get(0).getName().equals("Zee Der"));
 
     }
 

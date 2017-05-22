@@ -46,6 +46,10 @@
         </div>
     </th:block>
 
+    <div class="align-right">
+        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}+${queryParams}">View application team details.</a>
+    </div>
+
     <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
                   method="post" enctype="multipart/form-data"
                   th:object="${form}" class="form-serialize-js section-overview">

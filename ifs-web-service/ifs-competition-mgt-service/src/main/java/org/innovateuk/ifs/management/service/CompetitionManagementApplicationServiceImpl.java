@@ -82,6 +82,13 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application));
 
         model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, queryParams));
+        String params = UriComponentsBuilder.newInstance()
+                .queryParam("origin", origin)
+                .queryParams(queryParams)
+                .build()
+                .encode()
+                .toUriString();
+        model.addAttribute("queryParams", params);
 
         return "competition-mgt-application-overview";
     }
