@@ -280,6 +280,7 @@ Lead applicant can see all innovation areas
     When the user selects the radio button       innovationAreaChoice  19  # Bio
     And the user clicks the button/link          css=button[name="save-innovation-area"]
     Then the user should see the element         jQuery=label[for="researchArea"] + *:contains("Biosciences")
+    And the user should see the element          jQuery=label[for="researchArea"] + *:contains("Marine transport")
     [Teardown]  the user clicks the button/link  jQuery=button:contains("Save and return to application overview")
 
 Applicant can view and edit project growth table
