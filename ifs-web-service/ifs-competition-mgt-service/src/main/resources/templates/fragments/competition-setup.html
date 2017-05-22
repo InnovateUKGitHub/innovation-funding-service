@@ -71,3 +71,17 @@
     <p>If you remove this application from the assessor then any work they may have started will be permanently deleted. This action cannot be undone.</p>
     <hr/>
 </div>
+
+<!-- ======== Comp admin - send email to all applicants modal ======= -->
+<div th:fragment="comp-setup-send-to-all-applicants-modal">
+    <div class="send-to-all-applicants-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Send email to all applicants</h2>
+        <p>This will inform all applicants of the funding decision. If applicants are successful you cannot retract this decision.</p>
+        <hr />
+        <div>
+            <button name="send-emails" class="button">Send email to all applicants</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
+        </div>
+    </div>
+</div>

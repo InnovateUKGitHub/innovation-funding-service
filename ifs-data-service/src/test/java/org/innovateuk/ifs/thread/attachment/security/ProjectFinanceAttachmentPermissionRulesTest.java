@@ -75,12 +75,20 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
     }
 
     @Test
-    public void testThatProjectFinanceUsersCanFetchAnyAttachment() throws Exception {
+    public void testThatProjectFinanceUsersCanFetchOrphanAttachmentTheyHaveUploaded() throws Exception {
+        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
     }
 
     @Test
-    public void testThatFinanceContactUsersCanAlwaysFetchTheAttachmentsTheyHaveUploaded() throws Exception {
+    public void testThatProjectFinanceUsersCanFetchAnySavedAttachment() throws Exception {
+        final Query query = query();
+        when(queryRepositoryMock.findDistinctThreadByPostsAttachmentsId(attachmentResource.id)).thenReturn(singletonList(query));
+        assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
+    }
+
+    @Test
+    public void testThatFinanceContactUsersCanAlwaysFetchTheOrphanAttachmentsTheyHaveUploaded() throws Exception {
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectPartnerUser.getId()));
         assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, projectPartnerUser));
     }

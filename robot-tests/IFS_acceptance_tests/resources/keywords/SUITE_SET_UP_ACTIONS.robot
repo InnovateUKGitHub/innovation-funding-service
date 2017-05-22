@@ -184,8 +184,8 @@ The user redirects to the page
     Wait Until Keyword Succeeds Without Screenshots    10    500ms    Page Should Contain    ${TEXT1}
     Page Should Contain    ${TEXT2}
     Page Should Not Contain    error
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    ${404_error_message}
+    Page Should Not Contain    ${403_error_message}
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
