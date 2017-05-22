@@ -521,21 +521,21 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource user2 = newUserResource().withId(2L).build();
 
         ProcessRoleResource anotherUsersprocessRoleResource = newProcessRoleResource().withUser(user2).build();
-        assertFalse(rules.usersAndCompAdminAndProjectFinanceCanViewProcessRole(anotherUsersprocessRoleResource, user1));
+        assertFalse(rules.usersAndInternalUsersCanViewProcessRole(anotherUsersprocessRoleResource, user1));
     }
 
     @Test
     public void testCompAdminCanViewUserProcessRole() {
         UserResource user = newUserResource().build();
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
-        assertTrue(rules.usersAndCompAdminAndProjectFinanceCanViewProcessRole(processRoleResource, compAdminUser()));
+        assertTrue(rules.usersAndInternalUsersCanViewProcessRole(processRoleResource, compAdminUser()));
     }
 
     @Test
     public void testProjectFinanceCanViewUserProcessRole() {
         UserResource user = newUserResource().build();
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
-        assertTrue(rules.usersAndCompAdminAndProjectFinanceCanViewProcessRole(processRoleResource, projectFinanceUser()));
+        assertTrue(rules.usersAndInternalUsersCanViewProcessRole(processRoleResource, projectFinanceUser()));
     }
 
     @Test
