@@ -8,6 +8,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...               INFUND-6895 As an Lead Applicant I will be advised that changing my Research category after completing Funding level will reset the 'Funding level'
 ...
 ...               INFUND-9151 Update 'Application details' where a single 'Innovation area' set in 'Initial details'
+...
+...               IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Applicant    CompAdmin
@@ -18,7 +20,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 *** Variables ***
 ${compWithoutGrowth}    From new Competition to New Application
 ${applicationTitle}    New Application from the New Competition
-${compWITHGrowth}    Competition with growth table
+${compWITHGrowth}    All-Innov-Areas & With GrowthT
 
 *** Test Cases ***
 Comp Admin starts a new Competition
@@ -110,12 +112,13 @@ Turnover and Staff count fields
     And the user should see the text in the page    Number of full time employees at your organisation.
 
 Once the project growth table is selected
-    [Documentation]    INFUND-6393
+    [Documentation]    INFUND-6393 IFS-40
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details    Competition with growth table    ${tomorrowday}    ${month}    ${nextyear}
+    # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
+    Then the user fills in the Open-All Initial details  ${compWITHGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
     And the user fills in the CS Milestones    ${tomorrowday}    ${dayAfterTomorrow}    ${twoDaysAfterTomorrow}    ${month}    ${nextyear}
@@ -266,6 +269,19 @@ The Lead Applicant is able to edit and re-submit when yes
     [Tags]
     Given the user can edit resubmit and read only of the organisation
 
+Lead applicant can see all innovation areas
+    [Documentation]  IFS-40
+    [Tags]
+    Given the user navigates to the page         ${DASHBOARD_URL}
+    And the user clicks the button/link          jQuery=a:contains('Untitled application'):last
+    And the user clicks the button/link          link=Application details
+    #The fact that the link is present means that the innovation area is not pre-defined
+    When the user clicks the button/link         css=#researchArea
+    When the user selects the radio button       innovationAreaChoice  19  # Bio
+    And the user clicks the button/link          css=button[name="save-innovation-area"]
+    Then the user should see the element         jQuery=label[for="researchArea"] + *:contains("Biosciences")
+    [Teardown]  the user clicks the button/link  jQuery=button:contains("Save and return to application overview")
+
 Applicant can view and edit project growth table
     [Documentation]    INFUND-6395
     [Tags]
@@ -367,12 +383,10 @@ the user decides about the growth table
     the user clicks the button/link    link=Application
     the user clicks the button/link    link=Finances
     the user clicks the button/link    jQuery=a:contains("Edit this question")
-    the user clicks the button/link    jQuery=label[for="include-growth-table-${edit}"]
-    capture page screenshot
+    the user clicks the button twice   jQuery=label[for="include-growth-table-${edit}"]
     the user clicks the button/link    jQuery=button:contains("Save and close")
     the user clicks the button/link    link=Finances
     the user should see the element    jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
-    capture page screenshot
     the user clicks the button/link    link=Application
     the user clicks the button/link    link=Competition setup
 
@@ -512,3 +526,19 @@ the user completes the new account creation
     the user enters text to a text field    jQuery=input[id="username"]    liam@innovate.com
     the user enters text to a text field    jQuery=input[id="password"]    ${correct_password}
     the user clicks the button/link    jQuery=button:contains("Sign in")
+
+the user fills in the Open-All Initial details
+    [Arguments]  ${compTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user clicks the button/link                      link=Initial details
+    the user enters text to a text field                 css=#title  ${compTitle}
+    the user selects the option from the drop-down menu  Sector  id=competitionTypeId
+    the user selects the option from the drop-down menu  Open  id=innovationSectorCategoryId
+    the user selects the option from the drop-down menu  All  css=select[id^=innovationAreaCategory]
+    the user enters text to a text field                 css=#openingDateDay  ${tomorrowday}
+    the user enters text to a text field                 css=#openingDateMonth  ${month}
+    the user enters text to a text field                 css=#openingDateYear  ${nextyear}
+    the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
+    the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
+    the user clicks the button/link                      jQuery=button:contains("Done")
+    the user clicks the button/link                      link=Competition setup
+    the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
