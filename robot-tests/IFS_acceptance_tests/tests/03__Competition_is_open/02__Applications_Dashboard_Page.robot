@@ -74,6 +74,39 @@ All Applications page: Key Statistics
     [Tags]
     Then the totals in the Key statistics should be correct
 
+Application has team limk
+    [Documentation]  IFS-43
+    [Tags]  HappyPath
+    Given the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
+    Then the user should see the element  link=View application team details.
+    And the user should see the text in the page  ${OPEN_COMPETITION_APPLICATION_NAME}
+    When the user clicks the button/link  link=View application team details.
+    Then the user should see the text in the page  Application team
+    And the user should see the text in the page  View the participants in the application within the lead organisation and collaborating organisations.
+    And the user should see the element    jQuery=h2:nth-of-type(1):contains("Empire Ltd (Lead)")
+    And the user should see the element    jQuery=table:nth-of-type(1) tbody tr:nth-of-type(1) td:nth-of-type(1) span:nth-of-type(1):contains("1")
+    And the user should see the element    jQuery=table:nth-of-type(1) tbody tr:nth-of-type(1) td:nth-of-type(1) span:nth-of-type(2):contains("Empire Road")
+    And the user should see the element    jQuery=table:nth-of-type(2) td:contains("Steve Smith (Lead)")
+    And the user should see the element    jQuery=table:nth-of-type(2) td:contains("steve.smith@empire.com")
+    And the user should see the element    jQuery=table:nth-of-type(2) td:contains("46439359578")
+    And the user should see the element    jQuery=h2:nth-of-type(2):contains("EGGS")
+    And the user should see the element    jQuery=table:nth-of-type(3) tbody tr:nth-of-type(1) td:nth-of-type(1) span:nth-of-type(1):contains("43")
+    And the user should see the element    jQuery=table:nth-of-type(3) tbody tr:nth-of-type(1) td:nth-of-type(1) span:nth-of-type(2):contains("Deer Rise")
+    And the user should see the element    jQuery=table:nth-of-type(4) td:contains("Pete Tom")
+    And the user should see the element    jQuery=table:nth-of-type(4) td:contains("pete.tom@egg.com")
+    And the user should see the element    jQuery=table:nth-of-type(4) td:contains("81877706440")
+    And the user should see the element    jQuery=h2:nth-of-type(3):contains("HIVE IT LIMITED")
+    And the user should see the element    jQuery=table:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1) span:nth-of-type(1):contains("Electric Works, Sheffield Digital Campus")
+    And the user should see the element    jQuery=table:nth-of-type(6) td:contains("Ewan Cormack")
+    And the user should see the element    jQuery=table:nth-of-type(6) td:contains("ewan+1@hiveit.co.uk")
+    And the user should see the element    jQuery=table:nth-of-type(6) td:contains("36267829240")
+    And the user should see the element    jQuery=h2:nth-of-type(4):contains("Ludlow")
+    And the user should see the element    jQuery=table:nth-of-type(7) tbody tr:nth-of-type(1) td:nth-of-type(1) span:nth-of-type(1):contains("20")
+    And the user should see the element    jQuery=table:nth-of-type(7) tbody tr:nth-of-type(1) td:nth-of-type(1) span:nth-of-type(2):contains("Fallow Lane")
+    And the user should see the element    jQuery=table:nth-of-type(8) td:contains("Jessica Doe")
+    And the user should see the element    jQuery=table:nth-of-type(8) td:contains("jessica.doe@ludlow.co.uk")
+    And the user should see the element    jQuery=table:nth-of-type(8) td:contains("15247172589")
+
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
