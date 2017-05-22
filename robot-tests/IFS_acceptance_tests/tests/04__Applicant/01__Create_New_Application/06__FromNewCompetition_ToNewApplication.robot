@@ -277,10 +277,14 @@ Lead applicant can see all innovation areas
     And the user clicks the button/link          link=Application details
     #The fact that the link is present means that the innovation area is not pre-defined
     When the user clicks the button/link         css=#researchArea
+    Then the user should see the element         jQuery=label[for^="innovationAreaChoice"]:contains("Biosciences")           # from sector Health and life sciences
+    And the user should see the element          jQuery=label[for^="innovationAreaChoice"]:contains("Forming technologies")  # from sector Materials and manufacturing
+    And the user should see the element          jQuery=label[for^="innovationAreaChoice"]:contains("Space technology")      # from sector Emerging and enabling
+    And the user should see the element          jQuery=label[for^="innovationAreaChoice"]:contains("Offshore wind")         # from sector Infrastructure systems
+    And the user should see the element          jQuery=label[for^="innovationAreaChoice"]:contains("Marine transport")      # from sector Transport
     When the user selects the radio button       innovationAreaChoice  19  # Bio
     And the user clicks the button/link          css=button[name="save-innovation-area"]
     Then the user should see the element         jQuery=label[for="researchArea"] + *:contains("Biosciences")
-    And the user should see the element          jQuery=label[for="researchArea"] + *:contains("Marine transport")
     [Teardown]  the user clicks the button/link  jQuery=button:contains("Save and return to application overview")
 
 Applicant can view and edit project growth table
