@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,12 +21,17 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -83,7 +87,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
 
         InnovationAreaResource innovationArea = newInnovationAreaResource().withId(innovationAreaId).build();
-        competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationAreaId, 1L, 2L, 3L));
+        competitionSetupForm.setInnovationAreaCategoryIds(asList(innovationAreaId));
 
         List<MilestoneResource> milestones = new ArrayList<>();
         milestones.add(getMilestone());
@@ -97,6 +101,7 @@ public class InitialDetailsSectionSaverTest {
         competition.setSetupComplete(false);
 
         when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(milestones));
+        when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(asList(innovationArea)));
         when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(innovationArea)));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
@@ -112,7 +117,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(competition.getLeadTechnologist(), leadTechnologistId);
         // We don't care about the order of the innovation area ids, so compare as a set
-        Set<Long> expectedInnovationAreaIds = CollectionFunctions.asLinkedSet(innovationAreaId, 1L, 2L, 3L);
+        Set<Long> expectedInnovationAreaIds = asSet(innovationAreaId);
         Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
         assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);
@@ -242,7 +247,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
 
-        competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationAreaId, 1L, 2L, 3L));
+        competitionSetupForm.setInnovationAreaCategoryIds(asList(innovationAreaId, 1L, 2L, 3L));
 
         List<Long> milestonesIds = new ArrayList<>();
         milestonesIds.add(10L);
@@ -283,7 +288,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
 
-        competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationAreaId, 1L, 2L, 3L));
+        competitionSetupForm.setInnovationAreaCategoryIds(asList(innovationAreaId, 1L, 2L, 3L));
 
         List<Long> milestonesIds = new ArrayList<>();
         milestonesIds.add(10L);

@@ -60,7 +60,8 @@ public class AcceptProjectInviteController {
             HttpServletResponse response,
             Model model,
             UserResource loggedInUser) {
-        return find(inviteByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, userExists) -> {
+
+        RestResult<String> result = find(inviteByHash(hash), checkUserExistsByHash(hash)).andOnSuccess((invite, userExists) -> {
             ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
                 return populateModelWithErrorsAndReturnErrorView(errors, model);
@@ -73,7 +74,13 @@ public class AcceptProjectInviteController {
             } else {
                 return restSuccess("redirect:" + ACCEPT_INVITE_USER_DOES_NOT_YET_EXIST_SHOW_PROJECT_MAPPING);
             }
-        }).getSuccessObject();
+        });
+
+        if (result.isFailure()) {
+            return ACCEPT_INVITE_FAILURE;
+        } else {
+            return result.getSuccessObject();
+        }
     }
 
     //==================================
