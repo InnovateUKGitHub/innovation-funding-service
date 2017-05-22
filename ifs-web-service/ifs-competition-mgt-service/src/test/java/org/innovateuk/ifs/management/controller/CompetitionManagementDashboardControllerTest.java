@@ -220,7 +220,11 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Test
     public void testLiveDashBoardSupportView() throws Exception {
+
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+
+        Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
+
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/live"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/live"))
