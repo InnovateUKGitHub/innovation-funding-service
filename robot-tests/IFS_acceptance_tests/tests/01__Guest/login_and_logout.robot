@@ -8,6 +8,8 @@ Documentation     INFUND-399 As a client, I would like to demo the system with r
 ...               INFUND-2130 As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 ...
 ...               INFUND-1479 As an assessor with an existing Applicant AND Assessor account I want to be able to choose the correct profile when I log in, so that I don't access the wrong profile information
+...
+...               IFS-188 Stakeholder views – Support team
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Guest
 Resource          ../../resources/defaultResources.robot
