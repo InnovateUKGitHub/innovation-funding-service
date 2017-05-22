@@ -314,10 +314,20 @@
                     <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
                 </th:block>
 
-                <dl class="readonly-data">
-                    <dt>Application title</dt>
-                    <dd th:text="${currentApplication.name}"></dd>
-                </dl>
+                <div class="grid-row">
+                    <div class="column-half">
+                        <dl class="readonly-data">
+                            <dt>Application title</dt>
+                            <dd th:text="${currentApplication.name}"></dd>
+                        </dl>
+                    </div>
+                    <div class="column-half">
+                        <ul class="list list-bullet">
+                            <li><a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}+${queryParams}">view team members, collaborators and addresses</a></li>
+                        </ul>
+                    </div>
+                </div>
+
                 <h2 class="heading-medium">Estimated timescales</h2>
                 <dl class="readonly-data">
                     <dt>When do you wish to start your project?</dt>

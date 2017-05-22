@@ -3,45 +3,43 @@
     <h2 class="heading-medium">
         <th:block th:text="${isLead} ? ${organisation.organisationName} + ' (Lead)' : ${organisation.organisationName}">Organisation name</th:block>
     </h2>
-    <table>
-        <thead>
-        <tr>
-            <th th:if="organisation.registeredAddress" class="width-30-percent">Registered Address</th>
-            <th th:if="organisation.operatingAddress" class="width-30-percent">Operating Address</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td th:if="organisation.registeredAddress">
+
+    <div class="grid-row">
+        <div class="column-half">
+            <h3 class="heading-small">Registered Address</h3>
+            <p th:if="organisation.registeredAddress">
                 <th:block th:each="addressLine : ${organisation.registeredAddress.getAddress().getNonEmptyLines()}">
                     <span th:text="${addressLine}">An address line</span><br />
                 </th:block>
-            </td>
-            <td th:unless="organisation.registeredAddress" />
-            <td th:if="organisation.operatingAddress">
+            </p>
+
+        </div>
+        <div class="column-half">
+            <h3 class="heading-small">Operating Address</h3>
+            <p th:if="organisation.operatingAddress">
                 <th:block th:each="addressLine : ${organisation.operatingAddress.getAddress().getNonEmptyLines()}">
                     <span th:text="${addressLine}">An address line</span><br />
                 </th:block>
-            </td>
-            <th th:unless="organisation.operatingAddress" />
-        </tr>
-        </tbody>
-    </table>
-    <br />
-    <table class="table-overflow">
-        <thead>
-        <tr>
-            <th class="width-30-percent" scope="col">Full name</th>
-            <th class="width-30-percent" scope="col">Email</th>
-            <th class="width-30-percent" scope="col">Telephone</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${organisation.users}">
-            <td th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
-            <td th:text="${user.email}">steve.smith@empire.com</td>
-            <td th:text="${user.phoneNumber}">0800</td>
-        </tr>
-        </tbody>
-    </table>
+            </p>
+        </div>
+    </div>
+
+    <div class="table-overflow extra-margin">
+        <table>
+            <thead>
+            <tr>
+                <th class="width-30-percent" scope="col">Full name</th>
+                <th class="width-30-percent" scope="col">Email</th>
+                <th class="width-30-percent" scope="col">Telephone</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${organisation.users}">
+                <td th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
+                <td th:text="${user.email}">steve.smith@empire.com</td>
+                <td th:text="${user.phoneNumber}">0800</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </th:block>
