@@ -3,7 +3,6 @@ package org.innovateuk.ifs.nonifs.controller;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.innovateuk.ifs.nonifs.formpopulator.NonIfsDetailsFormPopulator;
 import org.innovateuk.ifs.nonifs.modelpopulator.NonIfsDetailsViewModelPopulator;
@@ -68,7 +67,6 @@ public class NonIfsCompetitionController {
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> nonIfsDetailsFormSaver.save(form, competition));
-
     }
 
     private String getDetailsPage(Model model, CompetitionResource competition, Optional<NonIfsDetailsForm> form) {

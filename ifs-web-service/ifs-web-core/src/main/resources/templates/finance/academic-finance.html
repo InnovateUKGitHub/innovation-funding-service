@@ -283,8 +283,8 @@
      th:with="viewmode=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))) ? 'readonly' : 'edit'},
          downloadUrl='/application/'+ ${model.application.currentApplication.id} + '/form/' + ${model.financeViewModel.applicationFinanceId} + '/finance-download',
          filename=${filename},
-         inputField='jes-upload',
-         validationField='formInput[jes-upload]',
+         inputField=${formInput.id},
+         validationField=${'formInput[' + formInput.id + ']'},
          mayRemove=true,
          removeName='remove_finance_document',
          saveName='upload_file'">

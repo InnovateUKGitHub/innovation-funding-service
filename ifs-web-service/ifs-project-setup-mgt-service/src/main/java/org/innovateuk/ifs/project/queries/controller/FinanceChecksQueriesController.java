@@ -2,17 +2,16 @@ package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
-import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -29,7 +28,6 @@ import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -97,22 +95,8 @@ public class FinanceChecksQueriesController {
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
-                                                         @PathVariable Long attachmentId,
-                                                         @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                                         HttpServletRequest request) {
-        Optional<ByteArrayResource> content = Optional.empty();
-        Optional<FileEntryResource> fileDetails = Optional.empty();
-
-        ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
-        if (fileContent.isSuccess()) {
-            content = fileContent.getSuccessObject();
-        }
-        ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-        if (fileInfo.isSuccess()) {
-            fileDetails = Optional.of(fileInfo.getSuccessObject());
-        }
-
-        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+                                                         @PathVariable Long attachmentId) {
+        return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -123,9 +107,7 @@ public class FinanceChecksQueriesController {
                                   @RequestParam(value = "query_section", required = false) String querySection,
                                   Model model,
                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
-                                  HttpServletRequest request,
-                                  HttpServletResponse response) {
-
+                                  HttpServletRequest request) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
@@ -142,7 +124,7 @@ public class FinanceChecksQueriesController {
                                @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksQueriesAddResponseForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                ValidationHandler validationHandler,
-                               @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                               UserResource loggedInUser,
                                HttpServletRequest request,
                                HttpServletResponse response) {
         Supplier<String> failureView = () -> {
@@ -199,7 +181,6 @@ public class FinanceChecksQueriesController {
                                             @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddResponseForm form,
                                             @SuppressWarnings("unused") BindingResult bindingResult,
                                             ValidationHandler validationHandler,
-                                            @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -234,23 +215,14 @@ public class FinanceChecksQueriesController {
                                                                  @PathVariable Long organisationId,
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
-                                                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                                                  HttpServletRequest request) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-        Optional<ByteArrayResource> content = Optional.empty();
-        Optional<FileEntryResource> fileDetails = Optional.empty();
 
         if (attachments.contains(attachmentId)) {
-            ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
-            if (fileContent.isSuccess()) {
-                content = fileContent.getSuccessObject();
-            }
-            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-            if (fileInfo.isSuccess()) {
-                fileDetails = Optional.of(fileInfo.getSuccessObject());
-            }
+            return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
+        } else {
+            throw new ForbiddenActionException();
         }
-        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -261,12 +233,8 @@ public class FinanceChecksQueriesController {
                                    @RequestParam(value = "query_section", required = false) final String querySection,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddResponseForm form,
-                                   @SuppressWarnings("unused") BindingResult bindingResult,
-                                   ValidationHandler validationHandler,
-                                   @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                    HttpServletRequest request,
-                                   HttpServletResponse response,
-                                   Model model) {
+                                   HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         if (attachments.contains(attachmentId)) {
             financeCheckService.deleteFile(attachmentId).andOnSuccess(() ->
@@ -284,8 +252,6 @@ public class FinanceChecksQueriesController {
                                 @PathVariable Long organisationId,
                                 @PathVariable Long queryId,
                                 @RequestParam(value = "query_section", required = false) String querySection,
-                                Model model,
-                                @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         loadAttachmentsFromCookie(request, projectId, organisationId, queryId).forEach(financeCheckService::deleteFile);
@@ -298,10 +264,9 @@ public class FinanceChecksQueriesController {
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<QueryResource>> queries = financeCheckService.getQueries(projectFinance.getId());
-        if (queries.isSuccess()) {
+        financeCheckService.getQueries(projectFinance.getId()).ifSuccessful( queries -> {
             // order queries by most recent post
-            List<QueryResource> sortedQueries = queries.getSuccessObject().stream().
+            List<QueryResource> sortedQueries = queries.stream().
                     flatMap(t -> t.posts.stream()
                             .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
                     .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
@@ -329,7 +294,7 @@ public class FinanceChecksQueriesController {
                 detail.setOrganisationId(organisationId);
                 queryModel.add(detail);
             }
-        }
+        });
         return queryModel;
     }
 
@@ -347,9 +312,7 @@ public class FinanceChecksQueriesController {
         return new FinanceChecksQueriesViewModel(
                 organisation.getName(),
                 leadPartnerOrganisation,
-                financeContact.isPresent() ? financeContact.get().getUserName() : UNKNOWN_FIELD,
-                financeContact.isPresent() ? financeContact.get().getEmail() : UNKNOWN_FIELD,
-                financeContact.isPresent() ? financeContact.get().getPhoneNumber() : UNKNOWN_FIELD,
+                financeContact,
                 querySection == null ? UNKNOWN_FIELD : querySection,
                 project.getId(),
                 project.getName(),
@@ -376,14 +339,6 @@ public class FinanceChecksQueriesController {
         return url + (querySection != null ? "?query_section=" + querySection : "");
     }
 
-    private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
-        if (content.isPresent() && fileDetails.isPresent()) {
-            return getFileResponseEntity(content.get(), fileDetails.get());
-        } else {
-            return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
-        }
-    }
-
     private String getCookieName(Long projectId, Long organisationId, Long queryId) {
         return ATTACHMENT_COOKIE + "_" + projectId + "_" + organisationId + "_" + queryId;
     }
@@ -398,7 +353,6 @@ public class FinanceChecksQueriesController {
         return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId, queryId),
                 new TypeReference<List<Long>>() {});
     }
-
 
     private String getFormCookieName(Long projectId, Long organisationId, Long queryId) {
         return FORM_COOKIE + "_" + projectId + "_" + organisationId + "_" + queryId;

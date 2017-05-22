@@ -54,7 +54,7 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
-import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
@@ -207,7 +207,7 @@ public class BaseUnitTest {
     @Mock
     public ProjectService projectService;
     @Mock
-    public ProjectMonitoringOfficerService projectMonitoringOfficerService;
+    public MonitoringOfficerService monitoringOfficerService;
     @Mock
     public OtherDocumentsService otherDocumentsService;
     @Mock
