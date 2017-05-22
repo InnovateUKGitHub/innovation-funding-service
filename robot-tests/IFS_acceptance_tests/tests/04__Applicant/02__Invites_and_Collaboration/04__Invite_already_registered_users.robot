@@ -74,17 +74,13 @@ the user should see the change in the view team members page
 
 Existing user creates a new application and invites a user from the same organisation
     the user navigates to the page      ${COMPETITION_OVERVIEW_URL}
-    #the user clicks the button/link    jQuery=.button:contains("Apply now")
-   # the user clicks the button/link    jQuery=.button:contains("Apply now")
     the user clicks the button/link     jQuery=a:contains("Start new application")
-    the user clicks the button/link                 jQuery=.button:contains("Sign in")
     the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
     the user clicks the button/link    jQuery=.button:contains("Continue")
     the user clicks the button/link    jQuery=a:contains("Update INNOVATE LTD")
     The user clicks the button/link    jQuery=button:contains("Add new applicant")
     The user enters text to a text field    name=applicants[0].name    Olivier Giroud
     The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+invite2@gmail.com
-    #the user clicks the button/link    jQuery=a:contains("Update organisation")
     the user clicks the button/link    jQuery=button:contains("Update organisation")
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user clicks the button/link    link=Application details
