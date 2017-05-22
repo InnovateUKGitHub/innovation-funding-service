@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternalAdmin;
 
 @PermissionRules
 @Component
@@ -102,7 +103,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
             description = "Internal users can view the send status of Grant Offer Letter for a project")
     public boolean internalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
+        return isInternalAdmin(user);
     }
 
     @PermissionRule(
