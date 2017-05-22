@@ -17,6 +17,13 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
             </th:block>
 
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+                <h2 class="heading-medium error-summary-heading">Unable to mark application as ineligible</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
             <th:block th:if="${ineligibility.ineligible}">
         <h2 class="heading-small">Removed by</h2>
         <p th:text="|${ineligibility.removedBy}, ${#temporals.format(ineligibility.removedOn, 'dd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
