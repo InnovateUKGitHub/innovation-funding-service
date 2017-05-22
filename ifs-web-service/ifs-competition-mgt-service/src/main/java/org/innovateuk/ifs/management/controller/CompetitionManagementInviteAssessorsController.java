@@ -171,13 +171,13 @@ public class CompetitionManagementInviteAssessorsController {
     }
 
     @PostMapping(value = "/invite", params = {"inviteNewUsers"})
-    public String inviteNewsUsersFromInviteView(Model model,
-                                                @PathVariable("competitionId") long competitionId,
-                                                @RequestParam(defaultValue = "0") int page,
-                                                @RequestParam MultiValueMap<String, String> queryParams,
-                                                @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                                                @SuppressWarnings("unused") BindingResult bindingResult,
-                                                ValidationHandler validationHandler) {
+    public String inviteNewUsersFromInviteView(Model model,
+                                               @PathVariable("competitionId") long competitionId,
+                                               @RequestParam(defaultValue = "0") int page,
+                                               @RequestParam MultiValueMap<String, String> queryParams,
+                                               @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                                               @SuppressWarnings("unused") BindingResult bindingResult,
+                                               ValidationHandler validationHandler) {
         form.setVisible(true);
 
         return validationHandler.failNowOrSucceedWith(
@@ -202,6 +202,7 @@ public class CompetitionManagementInviteAssessorsController {
                 .buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();
     }
+
 
     @GetMapping("/overview")
     public String overview(Model model,

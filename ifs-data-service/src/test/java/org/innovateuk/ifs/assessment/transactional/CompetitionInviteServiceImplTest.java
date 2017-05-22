@@ -178,18 +178,18 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget(name, email);
 
-        String templatePath = "invite_assessor_editable_text.txt";
+        String templatePath = "invite_assessor_preview_text.txt";
 
         when(competitionInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
         when(assessorInviteToSendMapperMock.mapToResource(invite)).thenReturn(newAssessorInviteToSendResource().build());
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
                 expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
 
-        AssessorInviteToSendResource expectedAssessorInviteToSendResource = newAssessorInviteToSendResource()
+        AssessorInvitesToSendResource expectedAssessorInviteToSendResource = newAssessorInviteToSendResource()
                 .withContent("content")
                 .build();
 
-        AssessorInviteToSendResource result = service.getCreatedInvite(invite.getId()).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource result = service.getCreatedInvite(invite.getId()).getSuccessObjectOrThrowException();
         assertEquals(expectedAssessorInviteToSendResource, result);
 
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, notificationTemplateRendererMock, assessorInviteToSendMapperMock);
@@ -206,7 +206,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         when(competitionInviteRepositoryMock.findOne(competitionInvite.getId())).thenReturn(competitionInvite);
 
-        ServiceResult<AssessorInviteToSendResource> inviteServiceResult = service.getCreatedInvite(competitionInvite.getId());
+        ServiceResult<AssessorInvitesToSendResource> inviteServiceResult = service.getCreatedInvite(competitionInvite.getId());
 
         assertTrue(inviteServiceResult.isFailure());
         assertTrue(inviteServiceResult.getFailure().is(new Error(COMPETITION_INVITE_ALREADY_SENT, "my competition")));

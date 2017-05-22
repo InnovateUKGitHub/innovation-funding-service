@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,6 +17,8 @@ import java.util.Set;
 public interface CompetitionInviteRepository extends PagingAndSortingRepository<CompetitionInvite, Long> {
 
     CompetitionInvite getByEmailAndCompetitionId(String email, long competitionId);
+
+    List<CompetitionInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status);
 
     Page<CompetitionInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status, Pageable pageable);
 

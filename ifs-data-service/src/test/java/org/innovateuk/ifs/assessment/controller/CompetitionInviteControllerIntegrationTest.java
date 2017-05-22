@@ -146,13 +146,13 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         loginCompAdmin();
 
-        RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInvite(createdId);
+        RestResult<AssessorInvitesToSendResource> serviceResult = controller.getCreatedInvite(createdId);
         assertTrue(serviceResult.isSuccess());
 
-        AssessorInviteToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
         assertEquals(1L, inviteResource.getCompetitionId());
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
-        assertEquals("tom poly", inviteResource.getRecipient());
+        assertEquals("tom poly", inviteResource.getRecipients());
         assertTrue(inviteResource.getContent().startsWith("Dear tom poly\n\nWe are inviting you to assess "));
     }
 

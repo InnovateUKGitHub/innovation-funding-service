@@ -13,11 +13,9 @@ import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
@@ -44,9 +42,9 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getCreatedInvite() throws Exception {
         long inviteId = 1L;
-        AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreated", inviteId), AssessorInviteToSendResource.class, expected);
-        AssessorInviteToSendResource actual = service.getCreated(inviteId).getSuccessObject();
+        AssessorInvitesToSendResource expected = newAssessorInviteToSendResource().build();
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreated", inviteId), AssessorInvitesToSendResource.class, expected);
+        AssessorInvitesToSendResource actual = service.getInviteToSend(inviteId).getSuccessObject();
         assertEquals(expected, actual);
     }
 

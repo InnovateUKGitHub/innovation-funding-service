@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -99,9 +98,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
-    private AssessorInviteToSendMapper toSendMapper;
-
-    @Autowired
     private ParticipantStatusMapper participantStatusMapper;
 
     @Autowired
@@ -133,23 +129,47 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId) {
+    public ServiceResult<AssessorInvitesToSendResource> getCreatedInvite(long inviteId) {
         return getById(inviteId).andOnSuccess(invite -> {
             if (invite.getStatus() != CREATED) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
             }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
-            NotificationTarget notificationTarget = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
-            AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
-            resource.setContent(getInviteContent(notificationTarget, asMap("name", invite.getName(),
-                    "competitionName", invite.getTarget().getName(),
-                    "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                    "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
-                    "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()))));
-
-            return serviceSuccess(resource);
+            return serviceSuccess(new AssessorInvitesToSendResource(
+                    singletonList(invite.getName()),
+                    invite.getTarget().getId(),
+                    invite.getTarget().getName(),
+                    getInvitePreviewContent(invite.getTarget())
+            ));
         });
+    }
+
+    @Override
+    public ServiceResult<AssessorInvitesToSendResource> getAllCreatedInvites(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(competition -> {
+            List<CompetitionInvite> invites = competitionInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+
+            List<String> recipients = simpleMap(invites, CompetitionInvite::getName);
+            recipients.sort(String::compareTo);
+
+            return serviceSuccess(new AssessorInvitesToSendResource(
+                    recipients,
+                    competition.getId(),
+                    competition.getName(),
+                    getInvitePreviewContent(competition)
+            ));
+        });
+    }
+
+    private String getInvitePreviewContent(Competition competition) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+
+        return getInviteContent(notificationTarget, asMap(
+                "competitionName", competition.getName(),
+                "acceptsDate", competition.getAssessorAcceptsDate().format(formatter),
+                "deadlineDate", competition.getAssessorDeadlineDate().format(formatter)
+        ));
     }
 
     @Override
@@ -477,7 +497,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_editable_text.txt",
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_preview_text.txt",
                 arguments).getSuccessObject();
     }
 

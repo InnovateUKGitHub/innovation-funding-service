@@ -26,8 +26,13 @@ public class CompetitionInviteController {
     private CompetitionInviteService competitionInviteService;
 
     @GetMapping("/getCreated/{inviteId}")
-    public RestResult<AssessorInviteToSendResource> getCreatedInvite(@PathVariable long inviteId) {
+    public RestResult<AssessorInvitesToSendResource> getCreatedInvite(@PathVariable long inviteId) {
         return competitionInviteService.getCreatedInvite(inviteId).toGetResponse();
+    }
+
+    @GetMapping("/getAllCreated/{competitionId}")
+    public RestResult<AssessorInvitesToSendResource> getAllCreatedInvites(@PathVariable long competitionId) {
+        return competitionInviteService.getAllCreatedInvites(competitionId).toGetResponse();
     }
 
     @GetMapping("/getInvite/{inviteHash}")

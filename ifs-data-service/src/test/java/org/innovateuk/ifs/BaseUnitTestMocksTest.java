@@ -313,9 +313,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionMapper competitionMapperMock;
 
     @Mock
-    protected AssessorInviteToSendMapper assessorInviteToSendMapperMock;
-
-    @Mock
     protected CompetitionInviteService competitionInviteServiceMock;
 
     @Mock

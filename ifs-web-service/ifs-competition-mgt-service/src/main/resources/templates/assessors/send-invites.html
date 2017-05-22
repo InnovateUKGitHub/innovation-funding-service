@@ -15,16 +15,16 @@
 
             <h2 class="heading-medium no-margin">Recipients</h2>
 
-            <p th:text="${model.recipient}">NAMES SHOULD APPEAR COMMA SEPERATED LIST</p>
+            <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
 
-            <form th:action="@{/competition/assessors/invite/{inviteId}/send(inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+            <form th:action="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
                 <div class="form-group extra-margin-bottom">
                     <label class="form-label-bold" for="subject">Subject</label>
                     <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
                 </div>
 
                 <h3 class="heading-small">Message</h3>
-                <p th:utext="*{content}" class="form-hint" style="white-space: pre-wrap">DEFAULT EMAIL TEXT THAT CAN'T BE EDITED</p>
+                <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
 
                 <div class="form-group extra-margin">
                     <label class="form-label-bold" for="message">Append custom text</label>
@@ -32,7 +32,7 @@
                 </div>
 
                 <p class="form-hint">
-                    Yours sincerley,
+                    Yours sincerely,
                 </p>
 
                 <p class="form-hint extra-margin">

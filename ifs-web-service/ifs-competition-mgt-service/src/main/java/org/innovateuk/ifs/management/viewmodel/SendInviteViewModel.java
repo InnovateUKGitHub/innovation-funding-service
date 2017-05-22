@@ -3,36 +3,39 @@ package org.innovateuk.ifs.management.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.List;
+
 /**
  * Holder of model attributes for the Send Invites view.
  */
 public class SendInviteViewModel {
-    private long competitionId;
-    private long inviteId;
-    private String competitionName;
-    private String recipient;
 
-    public SendInviteViewModel(long competitionId, long inviteId, String competitionName, String recipient) {
+    private long competitionId;
+    private String competitionName;
+    private List<String> recipients;
+    private String content;
+
+    public SendInviteViewModel(long competitionId, String competitionName, List<String> recipients, String content) {
         this.competitionId = competitionId;
-        this.inviteId = inviteId;
         this.competitionName = competitionName;
-        this.recipient = recipient;
+        this.recipients = recipients;
+        this.content = content;
     }
 
     public long getCompetitionId() {
         return competitionId;
     }
 
-    public long getInviteId() {
-        return inviteId;
-    }
-
     public String getCompetitionName() {
         return competitionName;
     }
 
-    public String getRecipient() {
-        return recipient;
+    public List<String> getRecipients() {
+        return recipients;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     @Override
@@ -49,9 +52,8 @@ public class SendInviteViewModel {
 
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
-                .append(inviteId, that.inviteId)
                 .append(competitionName, that.competitionName)
-                .append(recipient, that.recipient)
+                .append(recipients, that.recipients)
                 .isEquals();
     }
 
@@ -59,9 +61,8 @@ public class SendInviteViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
-                .append(inviteId)
                 .append(competitionName)
-                .append(recipient)
+                .append(recipients)
                 .toHashCode();
     }
 }

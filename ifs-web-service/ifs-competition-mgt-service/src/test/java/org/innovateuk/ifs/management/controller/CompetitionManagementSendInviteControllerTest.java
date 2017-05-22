@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
+import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.model.SendInviteModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.SendInviteViewModel;
@@ -49,14 +49,14 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
     @Test
     public void getSendInvites() throws Exception {
         long inviteId = 4L;
-        AssessorInviteToSendResource invite = newAssessorInviteToSendResource()
+        AssessorInvitesToSendResource invite = newAssessorInviteToSendResource()
                 .withRecipient("Jessica Doe")
                 .withCompetitionId(1L)
                 .withCompetitionName("Photonics for health")
                 .withContent("Editable content...")
                 .build();
 
-        when(competitionInviteRestService.getCreated(inviteId)).thenReturn(restSuccess(invite));
+        when(competitionInviteRestService.getInviteToSend(inviteId)).thenReturn(restSuccess(invite));
 
         SendInviteForm expectedForm = new SendInviteForm();
         expectedForm.setSubject("Invitation to assess 'Photonics for health'");
@@ -70,7 +70,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessors/send-invites"));
 
-        verify(competitionInviteRestService, only()).getCreated(inviteId);
+        verify(competitionInviteRestService, only()).getInviteToSend(inviteId);
     }
 
     @Test
@@ -78,14 +78,14 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
         long inviteId = 4L;
         long competitionId = 5L;
 
-        AssessorInviteToSendResource invite = newAssessorInviteToSendResource().withCompetitionId(competitionId).build();
+        AssessorInvitesToSendResource invite = newAssessorInviteToSendResource().withCompetitionId(competitionId).build();
 
         AssessorInviteSendResource expectedAssessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("Subject...")
                 .withContent("Editable content...")
                 .build();
 
-        when(competitionInviteRestService.getCreated(inviteId)).thenReturn(restSuccess(invite));
+        when(competitionInviteRestService.getInviteToSend(inviteId)).thenReturn(restSuccess(invite));
         when(competitionInviteRestService.sendInvite(inviteId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/assessors/invite/{inviteId}/send", inviteId)
@@ -96,7 +96,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
                 .andExpect(redirectedUrl(format("/competition/%s/assessors/invite", competitionId)));
 
         InOrder inOrder = inOrder(competitionInviteRestService);
-        inOrder.verify(competitionInviteRestService).getCreated(inviteId);
+        inOrder.verify(competitionInviteRestService).getInviteToSend(inviteId);
         inOrder.verify(competitionInviteRestService).sendInvite(inviteId, expectedAssessorInviteSendResource);
         inOrder.verifyNoMoreInteractions();
     }

@@ -56,7 +56,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     @Test
     public void getCreatedInvite() throws Exception {
         long inviteId = 1L;
-        AssessorInviteToSendResource resource = assessorInviteToSendResourceBuilder.build();
+        AssessorInvitesToSendResource resource = assessorInviteToSendResourceBuilder.build();
 
         when(competitionInviteServiceMock.getCreatedInvite(inviteId)).thenReturn(serviceSuccess(resource));
 

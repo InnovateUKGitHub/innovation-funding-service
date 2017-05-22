@@ -4,7 +4,7 @@ import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
+import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.model.SendInviteModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * This controller will handle all Competition Management requests related to sending competition invites to assessors
  */
 @Controller
-@RequestMapping("/competition/assessors/invite/{inviteId}")
+@RequestMapping("/competition/{competitionId}/assessors/invite")
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementSendInviteController {
 
@@ -35,28 +35,30 @@ public class CompetitionManagementSendInviteController {
     @Autowired
     private SendInviteModelPopulator sendInviteModelPopulator;
 
-    @GetMapping
-    public String getSendInvites(Model model,
-                                 @PathVariable("inviteId") long inviteId,
-                                 @ModelAttribute(name = "form", binding = false) SendInviteForm form,
-                                 BindingResult bindingResult) {
-        AssessorInviteToSendResource invite = competitionInviteRestService.getCreated(inviteId).getSuccessObjectOrThrowException();
-        model.addAttribute("model", sendInviteModelPopulator.populateModel(inviteId, invite));
+    @GetMapping("/send")
+    public String getInvitesToSend(Model model,
+                                   @PathVariable("competitionId") long competitionId,
+                                   @ModelAttribute(name = "form", binding = false) SendInviteForm form,
+                                   BindingResult bindingResult) {
+        AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccessObjectOrThrowException();
+        model.addAttribute("model", sendInviteModelPopulator.populateModel(invites));
+
         if (!bindingResult.hasErrors()) {
-            populateFormWithExistingValues(form, invite);
+            populateFormWithExistingValues(form, invites);
         }
+
         return "assessors/send-invites";
     }
 
-    @PostMapping("/send")
+    @PostMapping("/{inviteId}/send")
     public String sendEmail(Model model,
                             @PathVariable("inviteId") long inviteId,
                             @ModelAttribute("form") @Valid SendInviteForm form,
                             BindingResult bindingResult,
                             ValidationHandler validationHandler) {
-        AssessorInviteToSendResource invite = competitionInviteRestService.getCreated(inviteId).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource invite = competitionInviteRestService.getInviteToSend(inviteId).getSuccessObjectOrThrowException();
 
-        Supplier<String> failureView = () -> getSendInvites(model, inviteId, form, bindingResult);
+        Supplier<String> failureView = () -> getInvitesToSend(model, inviteId, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> sendResult = competitionInviteRestService.sendInvite(inviteId, new AssessorInviteSendResource(
@@ -66,7 +68,7 @@ public class CompetitionManagementSendInviteController {
         });
     }
 
-    private void populateFormWithExistingValues(SendInviteForm form, AssessorInviteToSendResource assessorInviteToSendResource) {
+    private void populateFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
         form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
         form.setContent(assessorInviteToSendResource.getContent());
     }

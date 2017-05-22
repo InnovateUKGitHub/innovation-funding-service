@@ -10,7 +10,9 @@ import java.util.Optional;
  */
 public interface CompetitionInviteRestService {
 
-    RestResult<AssessorInviteToSendResource> getCreated(long inviteId);
+    RestResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId);
+
+    RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
 

@@ -186,7 +186,17 @@
             </details>
 
             <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
-                <table class="extra-margin">
+
+                <div class="grid-row">
+                    <div class="column-half">
+                        <h2 class="heading-small">Invite list</h2>
+                    </div>
+                    <div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
+                        <a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                    </div>
+                </div>
+
+                <table>
                     <thead>
                     <tr>
                         <th scope="col">Assessor name</th>
@@ -215,8 +225,6 @@
                                 <span class="no" th:unless="${assessor.compliant}">No</span>
                             </td>
                             <td class="alignright">
-                                <a class="button no-margin-right" th:href="@{/competition/assessors/invite/{inviteId}(inviteId=${assessor.inviteId})}">Invite individual</a>
-                                <br />
                                 <button class="button button-clear no-margin-right" name="remove" th:value="${assessor.email}">
                                     <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
                                 </button>
