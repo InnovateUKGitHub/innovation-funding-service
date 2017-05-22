@@ -13,22 +13,41 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Invite assessor',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite to be an assessor',subTitle=${model.competitionName},size='heading-xlarge'" />
 
-            <p class="heading-medium" th:text="|Recipient: ${model.recipient}|">Dave smith</p>
+            <h2 class="heading-medium no-margin">Recipients</h2>
+
+            <p th:text="${model.recipient}">NAMES SHOULD APPEAR COMMA SEPERATED LIST</p>
 
             <form th:action="@{/competition/assessors/invite/{inviteId}/send(inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
-                <div class="form-group">
+                <div class="form-group extra-margin-bottom">
                     <label class="form-label-bold" for="subject">Subject</label>
                     <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label-bold" for="message">Message</label>
-                    <textarea id="message" rows="16" class="form-control width-full" th:field="*{content}"></textarea>
+                <h3 class="heading-small">Message</h3>
+                <p th:utext="*{content}" class="form-hint" style="white-space: pre-wrap">DEFAULT EMAIL TEXT THAT CAN'T BE EDITED</p>
+
+                <div class="form-group extra-margin">
+                    <label class="form-label-bold" for="message">Append custom text</label>
+                    <textarea id="message" rows="8" class="form-control width-full"></textarea>
                 </div>
 
-                <div class="alignright">
-                    <button type="submit" class="button button-large">Send invite</button>
+                <p class="form-hint">
+                    Yours sincerley,
+                </p>
+
+                <p class="form-hint extra-margin">
+                    Competitions Team <br />
+                    Innovate UK <br />
+                    Tel: 0300 321 4357 <br />
+                    Email: competitions@innovateuk.gov.uk
+                </p>
+
+                <div class="extra-margin">
+                    <button type="submit" class="button">Send invite</button>
+                    <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}"
+                       class="button button-clear">Cancel</a>
                 </div>
+
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
