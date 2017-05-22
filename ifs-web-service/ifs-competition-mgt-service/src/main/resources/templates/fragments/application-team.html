@@ -1,8 +1,7 @@
 
 <th:block th:fragment="organisation(organisation, isLead)" xmlns:th="http://www.w3.org/1999/html">
     <h2 class="heading-medium">
-        <th:block th:text="${organisation.organisationName}">Organisation name</th:block>
-        <th:block th:if="${isLead}"> (Lead)</th:block>
+        <th:block th:text="${isLead} ? ${organisation.organisationName} + ' (Lead)' : ${organisation.organisationName}">Organisation name</th:block>
     </h2>
     <table>
         <thead>
@@ -14,15 +13,15 @@
         <tbody>
         <tr>
             <td th:if="organisation.registeredAddress">
-                <span th:each="addressLine : ${organisation.registeredAddress.getAddress().getNonEmptyLines()}" th:remove="tag">
-                    <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-                </span>
+                <th:block th:each="addressLine : ${organisation.registeredAddress.getAddress().getNonEmptyLines()}">
+                    <span th:text="${addressLine}">An address line</span><br />
+                </th:block>
             </td>
             <td th:unless="organisation.registeredAddress" />
             <td th:if="organisation.operatingAddress">
-                <span th:each="addressLine : ${organisation.operatingAddress.getAddress().getNonEmptyLines()}" th:remove="tag">
-                    <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-                </span>
+                <th:block th:each="addressLine : ${organisation.operatingAddress.getAddress().getNonEmptyLines()}">
+                    <span th:text="${addressLine}">An address line</span><br />
+                </th:block>
             </td>
             <th th:unless="organisation.operatingAddress" />
         </tr>
