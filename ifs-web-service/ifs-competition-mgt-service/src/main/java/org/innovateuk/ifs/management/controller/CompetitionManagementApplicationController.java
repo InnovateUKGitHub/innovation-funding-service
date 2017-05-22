@@ -83,6 +83,7 @@ public class CompetitionManagementApplicationController {
         // This is nasty, but we have to map the query parameters manually as Spring
         // will try to automatically map the POST request body to MultiValueMap
         // (causing issues with back links).
+        // TODO: IFS-253 bind query parameters to maps properly
         MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
 
         return competitionManagementApplicationService
