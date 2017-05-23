@@ -20,11 +20,10 @@
 
     <p>View the participants in the application within the lead organisation and collaborating organisations.</p>
 
-    <th:block th:insert="fragments/application-team :: organisation(${model.team.leadOrganisation}, true)"/>
-
-    <th:block th:each="organisation : ${model.team.partnerOrganisations}">
-        <th:block th:insert="fragments/application-team :: organisation(${organisation}, false)"/>
-        <br />
+    <th:block th:insert="fragments/application-team :: organisation(${model.team.leadOrganisation}, true, '0')" />
+    <br />
+    <th:block th:each="organisation,status : ${model.team.partnerOrganisations}">
+        <th:block th:insert="fragments/application-team :: organisation(${organisation}, false, ${status.index + 1})"/>
         <br />
     </th:block>
 
