@@ -5,12 +5,14 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link CompetitionResource}.
@@ -63,6 +65,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<CompetitionResource> getCompetitionById(long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
+    }
+
+    @Override
+    public RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long competitionId) {
+        return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId + "/getOrganisationTypes", organisationTypeResourceListType());
     }
 
     @Override

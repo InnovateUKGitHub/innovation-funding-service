@@ -604,6 +604,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationMapper organisationMapperMock;
 
     @Mock
+    protected OrganisationTypeMapper organisationTypeMapperMock;
+
+    @Mock
     protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
 
     @Mock

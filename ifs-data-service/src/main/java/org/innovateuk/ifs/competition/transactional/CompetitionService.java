@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,4 +58,8 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "MANAGE_INFORM", description = "Comp Admins can manage the transition from Panel to Inform")
     ServiceResult<Void> manageInformState(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('system_registrar')")
+    @SecuredBySpring(value = "GET_COMPETITION_ORGANISATION_TYPES", description = "Anyone should be able to see what organisation types are allowed in a competition")
+    ServiceResult<List<OrganisationTypeResource>> getCompetitionOrganisationTypes(long competitionId);
 }

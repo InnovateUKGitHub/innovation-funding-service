@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -33,4 +34,5 @@ public interface CompetitionsRestService {
     RestResult<Void> notifyAssessors(long competitionId);
     RestResult<Void> releaseFeedback(long competitionId);
     RestResult<CompetitionResource> createNonIfs();
+    RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
 }

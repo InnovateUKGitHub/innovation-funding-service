@@ -13,6 +13,8 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
+import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CAN
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+
 /**
  * Service for operations around the usage and processing of Competitions
  */
@@ -43,6 +46,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private CompetitionMapper competitionMapper;
+
+    @Autowired
+    private OrganisationTypeMapper organisationTypeMapper;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -61,6 +67,16 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         }
 
         return serviceSuccess(competitionMapper.mapToResource(competition));
+    }
+
+    @Override
+    public ServiceResult<List<OrganisationTypeResource>> getCompetitionOrganisationTypes(long id) {
+        Competition competition = competitionRepository.findById(id);
+        if (competition == null) {
+            return serviceFailure(notFoundError(Competition.class, id));
+        }
+
+        return serviceSuccess((List) organisationTypeMapper.mapToResource(competition.getLeadApplicantTypes()));
     }
 
     @Override
