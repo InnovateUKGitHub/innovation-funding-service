@@ -5,6 +5,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Factory class for creating specific useful implementations of ErrorToObjectErrorConverter
@@ -45,7 +46,43 @@ public class ErrorToObjectErrorConverterFactory {
         return mappingErrorKeyToField(errorKey.name(), targetField);
     }
 
+    /**
+     * Given any error, map it to a target field name on the error holder.
+     *
+     * @param mappingFunction returning the target field name. If empty,
+     *                        no {@link FieldError} will be added to the error holder.
+     * @return converter function between {@link Error} and {@link FieldError}.
+     */
+    public static ErrorToObjectErrorConverter mappingErrorToField(Function<Error, String> mappingFunction) {
+        return e -> {
+            String targetField = mappingFunction.apply(e);
+
+            if (targetField == null || targetField.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(newFieldError(e, targetField, e.getFieldRejectedValue()));
+        };
+    }
+
+    /**
+     * Given a field error, map it to a target field name on the error holder.
+     *
+     * @param mappingFunction returning the non-empty target field name. If empty,
+     *                        no {@link FieldError} will be added to the error holder.
+     * @return converter function between {@link Error} and {@link FieldError}.
+     */
+    public static ErrorToObjectErrorConverter mappingFieldErrorToField(Function<Error, String> mappingFunction) {
+        return e -> {
+            if (e.isFieldError()) {
+                return mappingErrorToField(mappingFunction).apply(e);
+            }
+
+            return Optional.empty();
+        };
+    }
+
     private static FieldError newFieldError(Error e, String fieldName, Object rejectedValue) {
-        return new FieldError("", fieldName, rejectedValue, true, new String[] {e.getErrorKey()}, e.getArguments().toArray(), null);
+        return new FieldError("", fieldName, rejectedValue, true, new String[]{e.getErrorKey()}, e.getArguments().toArray(), null);
     }
 }
