@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -46,6 +47,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
@@ -62,6 +64,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -77,6 +80,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
@@ -1381,7 +1385,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 .withId(applicationId)
                 .build();
 
-
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(false);
 
@@ -1393,5 +1396,27 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void showApplicationTeam() {
+        Role compAdmin = newRole(COMP_ADMIN).build();
+        User user = newUser().withRoles(singleton(compAdmin)).build();
+        when(userRepositoryMock.findOne(234L)).thenReturn(user);
+
+        ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
+
+        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.getSuccessObject());
+    }
+
+    @Test
+    public void showApplicationTeamNoUser() {
+
+        when(userRepositoryMock.findOne(234L)).thenReturn(null);
+        ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
+
+        assertTrue(serviceResult.isFailure());
+        assertTrue(serviceResult.getErrors().get(0).getErrorKey().equals(GENERAL_NOT_FOUND.getErrorKey()));
     }
 }

@@ -104,4 +104,10 @@ public class ApplicationController {
                                              @RequestBody ApplicationIneligibleSendResource applicationIneligibleSendResource) {
         return applicationService.informIneligible(applicationId, applicationIneligibleSendResource).toPostResponse();
     }
+
+    @GetMapping("/showApplicationTeam/{applicationId}/{userId}")
+    public RestResult<Boolean> showApplicationTeam(@PathVariable("applicationId") final Long applicationId,
+                                                   @PathVariable("userId") final Long userId) {
+        return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
+    }
 }

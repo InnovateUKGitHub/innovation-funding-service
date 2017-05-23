@@ -26,4 +26,5 @@ public interface ApplicationRestService {
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
     RestResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
     RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource);
+    RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
 }

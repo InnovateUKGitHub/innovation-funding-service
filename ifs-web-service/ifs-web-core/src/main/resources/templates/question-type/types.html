@@ -322,9 +322,9 @@
                         </dl>
                     </div>
                     <div class="column-half">
-                        <ul class="list list-bullet">
-                            <li><a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}+${queryParams}">view team members, collaborators and addresses</a></li>
-                        </ul>
+                        <th:block th:if="${showApplicationTeamLink}">
+                            <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}+${queryParams}">View application team details.</a>
+                        </th:block>
                     </div>
                 </div>
 

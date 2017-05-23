@@ -127,7 +127,7 @@ Academic partner can upload file for field J-es PDF
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469
     [Tags]    HappyPath
-    # This will also check the auto-save as we hvaen't marked finances as complete yet
+    # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
     and the user clicks the button/link       jQuery=button:contains("Remove")
