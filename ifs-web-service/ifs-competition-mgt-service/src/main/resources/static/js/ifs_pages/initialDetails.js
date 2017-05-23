@@ -9,11 +9,6 @@ IFS.competitionManagement.initialDetails = (function () {
       jQuery('body.competition-management.competition-setup').on('change', '[name="innovationSectorCategoryId"]', function () {
         IFS.competitionManagement.initialDetails.handleInnovationSector(false)
       })
-      IFS.competitionManagement.initialDetails.enableDisableMultipleInnovationAreas('[name="competitionTypeId"]')
-      jQuery('.competition-management.competition-setup').on('change', '[name="competitionTypeId"]', function () {
-        IFS.competitionManagement.initialDetails.enableDisableMultipleInnovationAreas(this)
-      })
-
       IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
       IFS.competitionManagement.initialDetails.handleInnovationArea()
       IFS.competitionManagement.initialDetails.rebindInnovationAreas()
@@ -83,23 +78,6 @@ IFS.competitionManagement.initialDetails = (function () {
       jQuery('[name*="innovationAreaCategoryId"]').find('[disabled]:not([value=""])').removeAttr('disabled').removeAttr('aria-hidden')
       for (var section in disabledSections) {
         jQuery('[name*="innovationAreaCategoryId"]:not([name="' + section + '"]) option[value="' + disabledSections[section] + '"]').attr({'disabled': 'disabled', 'aria-hidden': 'true'})
-      }
-    },
-    enableDisableMultipleInnovationAreas: function (el) {
-      var isSectorCompetition = jQuery(el).val() === '5'
-      var innovationSector = jQuery('#innovationSectorCategoryId')
-      var openInnovationSectorId = '0'
-
-      if (isSectorCompetition) {
-        // enable the open innovation sector if it is a sector competition
-        innovationSector.find('[value="' + openInnovationSectorId + '"]').removeAttr('disabled').attr({'aria-hidden': 'false'})
-      } else {
-        // deselect if the open innovation Sector is currently selected
-        if (innovationSector.val() === openInnovationSectorId) {
-          innovationSector.val('')
-        }
-        // disable the open innovation sector if it is not a sector competition
-        innovationSector.find('[value="' + openInnovationSectorId + '"]').attr({'disabled': 'disabled', 'aria-hidden': 'true'})
       }
     },
     fillInnovationAreas: function (currentAreas) {

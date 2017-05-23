@@ -91,10 +91,12 @@ Initial details -Inovation sector of Open should be visible
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Initial details
     And the user should see the element    jQuery=button:contains("+ add another innovation area")
-    And the user selects the option from the drop-down menu    Sector    id=competitionTypeId
+    And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     When the user selects the option from the drop-down menu    Open    id=innovationSectorCategoryId
     And the user selects the option from the drop-down menu    Biosciences    id=innovationAreaCategoryId-0
     And the user clicks the button/link    jQuery=button:contains("+ add another innovation area")
+    Then the user selects the option from the drop-down menu    Sector    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Open    id=innovationSectorCategoryId
     The user should not see the selected option again
 
 Initial details - User enters valid values and marks as done
