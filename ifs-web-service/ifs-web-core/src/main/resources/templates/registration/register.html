@@ -77,7 +77,8 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                 </th:block>
             </label>
-            <input th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-control-error'"
+            <input class="form-control"
+                   th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-control-error'"
                    type="tel"
                    th:field="*{phoneNumber}"
                    minlength="8"

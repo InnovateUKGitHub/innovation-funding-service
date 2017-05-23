@@ -30,11 +30,10 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
                             </th:block>
                         </legend>
-                        <div class="multiple-choice">
+
+                        <div class="multiple-choice" th:each="role : ${model.ACCEPTED_ROLES}">
                             <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
-                            <label th:each="role : ${model.ACCEPTED_ROLES}">
-                                <th:block th:text="${role.displayName}" />
-                            </label>
+                            <label th:for="${#ids.prev('selectedRole')}" th:text="${role.displayName}"></label>
                         </div>
                     </fieldset>
                 </div>
