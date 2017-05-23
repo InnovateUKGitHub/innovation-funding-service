@@ -63,10 +63,10 @@ public class ApplicationModelPopulator {
                                                          Optional<SectionResource> section,
                                                          Optional<Long> currentQuestionId,
                                                          Model model,
-                                                         ApplicationForm form) {
+                                                         ApplicationForm form, Optional<Boolean> markAsCompleteEnabled) {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
+        application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
 
         model.addAttribute("completedQuestionsPercentage", application.getCompletion());
         applicationSectionAndQuestionModelPopulator.addSectionDetails(model, section);
@@ -75,13 +75,14 @@ public class ApplicationModelPopulator {
     }
 
     public ApplicationResource addApplicationDetails(ApplicationResource application,
-                                                        CompetitionResource competition,
-                                                        Long userId,
-                                                        Optional<SectionResource> section,
-                                                        Optional<Long> currentQuestionId,
-                                                        Model model,
-                                                        ApplicationForm form,
-                                                        List<ProcessRoleResource> userApplicationRoles) {
+                                                     CompetitionResource competition,
+                                                     Long userId,
+                                                     Optional<SectionResource> section,
+                                                     Optional<Long> currentQuestionId,
+                                                     Model model,
+                                                     ApplicationForm form,
+                                                     List<ProcessRoleResource> userApplicationRoles,
+                                                     Optional<Boolean> markAsCompleteEnabled) {
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
 
@@ -96,7 +97,7 @@ public class ApplicationModelPopulator {
         applicationSectionAndQuestionModelPopulator.addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
-        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, section, userOrganisation, markAsCompleteEnabled);
 
         applicationSectionAndQuestionModelPopulator.addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section, currentQuestionId);
         applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation);

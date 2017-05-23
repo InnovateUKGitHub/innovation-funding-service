@@ -8,11 +8,11 @@
             <h3>
                 <th:block th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
                 <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
-                    <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">
+                    <div class="section-status section-complete" th:if="${markedAsComplete.contains(question.id)}">
                         Complete
                     </div>
                     <div class="section-status section-incomplete"
-                         th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete
+                         th:unless="${markedAsComplete.contains(question.id)}">Incomplete
                     </div>
                 </th:block>
             </h3>
@@ -21,7 +21,7 @@
                  th:id="'form-input-'+${formInput.getId()}">
 
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
+                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" th:with="" />
                 </th:block>
 
             </div>

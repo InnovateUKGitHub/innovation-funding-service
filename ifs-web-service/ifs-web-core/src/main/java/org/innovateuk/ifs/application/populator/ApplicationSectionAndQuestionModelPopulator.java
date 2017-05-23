@@ -65,7 +65,8 @@ public class ApplicationSectionAndQuestionModelPopulator {
 
     public void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                          Optional<SectionResource> currentSection,
-                                         Optional<OrganisationResource> userOrganisation) {
+                                         Optional<OrganisationResource> userOrganisation,
+                                         Optional<Boolean> markAsCompleteEnabled) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
@@ -76,6 +77,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
+        markAsCompleteEnabled.ifPresent(markAsCompleteEnabledBoolean -> {
+            questions.forEach(questionResource -> questionResource.setMarkAsCompletedEnabled(markAsCompleteEnabledBoolean));
+        });
 
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
@@ -100,7 +104,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("currentSection", currentSection.orElse(null));
         if (currentSection.isPresent()) {
             List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
-            questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
+            questions.sort(Comparator.comparing(QuestionResource::getPriority));
             Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
             Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
