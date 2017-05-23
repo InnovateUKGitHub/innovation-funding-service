@@ -85,10 +85,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
                     publicContentDate.setContent("Applicants notified");
                     break;
             }
-
-            if (!(nonIfs && SUBMISSION_DATE.equals(milestoneResource.getType()))) {
-                publicContentDates.add(publicContentDate);
-            }
+            publicContentDates.add(publicContentDate);
         });
 
         return publicContentDates;
