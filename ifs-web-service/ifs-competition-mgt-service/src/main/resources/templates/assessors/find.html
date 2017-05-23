@@ -165,7 +165,6 @@
 	// <![CDATA[
            jQuery(document).ready(function(){
 
-               // var formValues = JSON.parse(localStorage.getItem('formValues')) || {};
                 var $checkboxes = $("td :checkbox");
                 var $button = $("#select-all-check");
                 var competitionId = jQuery('#competition_id').val();
@@ -181,9 +180,9 @@
 
                   $button.prop("checked", allChecked()? true : false)
 
-                  if(allChecked()){
+                  if (allChecked()) {
                     $button.addClass('selected')
-                  }else{
+                  } else {
                     $button.parent().removeClass('selected')
                   }
                 }
@@ -191,20 +190,11 @@
                 function handleButtonClick(){
                   $checkboxes.prop("checked", allChecked()? false : true)
 
-                  if(allChecked()){
+                  if (allChecked()) {
                     $checkboxes.parent().addClass('selected')
-                  }else{
+                  } else {
                     $checkboxes.parent().removeClass('selected')
                   }
-                }
-
-                function updateStorage(){
-                  $checkboxes.each(function(){
-                    formValues[this.id] = this.checked;
-                  });
-
-                  formValues["buttonText"] = $button.text();
-                  localStorage.setItem("formValues", JSON.stringify(formValues));
                 }
 
                 function updateController() {
@@ -215,10 +205,10 @@
                     data: data
                     })
                     .done(function (data) {
-                        alert("done");
+                        //alert("done");
                     })
                     .fail(function (jqXHR, data) {
-                        alert("error");
+                        //alert("error");
                     })
                 }
 
@@ -229,7 +219,6 @@
                   handleButtonClick();
                   updateButtonStatus();
                   updateController();
-                  //updateStorage();
                 });
 
                 $checkboxes.on("change", function(){
@@ -242,22 +231,8 @@
                   data = addAssessor + isSelected;
                   updateButtonStatus();
                   updateController()
-                  //updateStorage();
                 });
 
-                // On page load
-              //  $.each(formValues, function(key, value) {
-              //    $("#" + key).prop('checked', value);
-
-              //    if($("#" + key).is(':checked')){
-              //      $("#" + key).parent().addClass('selected');
-              //    }else{
-              //      $("#" + key).parent().removeClass('selected');
-              //    }
-
-              //  });
-
-                $button.text(formValues["buttonText"]);
            });
 	// ]]>
 </script>

@@ -44,6 +44,7 @@ import static java.util.Optional.of;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -318,28 +319,18 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @Test
     public void addAssessorSelectionFromFindView() throws Exception {
         String email = "firstname.lastname@example.com";
-
-/*
-        ExistingUserStagedInviteResource expectedExistingUserStagedInviteResource = new ExistingUserStagedInviteResource(email, competition.getId());
-
-        when(competitionInviteRestService.inviteUser(expectedExistingUserStagedInviteResource))
-                .thenReturn(restSuccess(newCompetitionInviteResource().build()));
-*/
-
-        Cookie formCookie;
-        AssessorSelectionForm form = new AssessorSelectionForm();
-        formCookie = createFormCookie(form);
+        Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("add", email)
+                .param("assessor", email)
+                .param("isSelected", "true")
                 .param("page", "1")
                 .param("innovationArea", "4")
                 .cookie(formCookie))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/find?page=1&innovationArea=4", competition.getId())))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-//        verify(competitionInviteRestService, only()).inviteUser(expectedExistingUserStagedInviteResource);
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
         assertTrue(resultForm.get().getAssessorEmails().contains(email));
 
@@ -348,15 +339,14 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @Test
     public void addAssessorSelectionFromFindView_defaultParams() throws Exception {
         String email = "firstname.lastname@example.com";
-
-        AssessorSelectionForm form = new AssessorSelectionForm();
-        Cookie formCookie = createFormCookie(form);
+        Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("add", email)
+                .param("assessor", email)
+                .param("isSelected", "true")
                 .cookie(formCookie))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/find?page=0", competition.getId())))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
@@ -365,20 +355,20 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Test
     public void addAllAssessorsFromFindView_defaultParams() throws Exception {
-        AssessorSelectionForm form = new AssessorSelectionForm();
-        Cookie formCookie = createFormCookie(form);
+        Cookie formCookie = createFormCookie(new AssessorSelectionForm());
 
         AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
+                .withTotalPages(1)
                 .withContent(setUpAvailableAssessorResources())
                 .build();
 
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), 0, Optional.empty())).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("addAll", "")
+                .param("addAll", "true")
                 .cookie(formCookie))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/find?page=0", competition.getId())))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
@@ -389,19 +379,18 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @Test
     public void removeAssessorSelectionFromFindView() throws Exception {
         String email = "firstname.lastname@example.com";
-
-        Cookie formCookie;
         AssessorSelectionForm form = new AssessorSelectionForm();
         form.getAssessorEmails().add(email);
-        formCookie = createFormCookie(form);
+        Cookie formCookie = createFormCookie(form);
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("remove", email)
+                .param("assessor", email)
+                .param("isSelected", "false")
                 .param("page", "1")
                 .param("innovationArea", "4")
                 .cookie(formCookie))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/find?page=1&innovationArea=4", competition.getId())))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
@@ -418,10 +407,11 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         formCookie = createFormCookie(form);
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("remove", email)
+                .param("assessor", email)
+                .param("isSelected", "false")
                 .cookie(formCookie))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/find?page=0", competition.getId())))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");

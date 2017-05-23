@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class AssessorSelectionForm extends BaseBindingResultTarget {
 
-    private boolean allSelected = true;
+    private boolean allSelected;
 
     private List<String> assessorEmails;
 
