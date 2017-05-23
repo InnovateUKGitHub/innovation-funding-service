@@ -56,6 +56,7 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
+import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStatusRestService;
@@ -205,6 +206,8 @@ public class BaseUnitTest {
     public FinanceFormHandler financeFormHandler;
     @Mock
     public ProjectService projectService;
+    @Mock
+    public ProjectDetailsService projectDetailsService;
     @Mock
     public MonitoringOfficerService monitoringOfficerService;
     @Mock

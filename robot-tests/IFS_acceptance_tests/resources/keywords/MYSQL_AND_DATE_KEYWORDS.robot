@@ -79,6 +79,11 @@ get today
     # This format is like: 4 February 2017
     [Return]    ${today}
 
+get tomorrow
+    ${today} =    Get Time
+    ${tomorrow} =     Add time To Date    ${today}    1 day
+    [Return]    ${tomorrow}
+
 get tomorrow full
     ${today}=    get time
     ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%-d %B %Y    exclude_millis=true

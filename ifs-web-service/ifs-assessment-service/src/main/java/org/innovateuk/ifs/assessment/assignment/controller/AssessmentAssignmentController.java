@@ -2,9 +2,8 @@ package org.innovateuk.ifs.assessment.assignment.controller;
 
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
-import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static java.lang.String.format;
 
 /**
  * Controller to manage assignment of Applications
@@ -31,9 +30,6 @@ public class AssessmentAssignmentController {
 
     @Autowired
     private AssessmentAssignmentModelPopulator assessmentAssignmentModelPopulator;
-
-    @Autowired
-    private RejectAssessmentModelPopulator rejectAssessmentModelPopulator;
 
     @Autowired
     private AssessmentService assessmentService;
@@ -51,11 +47,11 @@ public class AssessmentAssignmentController {
     public String respondToAssignment(Model model,
                                       @PathVariable("assessmentId") long assessmentId,
                                       @Valid @ModelAttribute("form") AssessmentAssignmentForm form,
-                                      BindingResult bindingResult,
+                                      @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                       ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> viewAssignment(assessmentId, form, model);
 
-        return validationHandler.failNowOrSucceedWith(failureView,  () -> {
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
             AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
             ServiceResult<Void> updateResult;
             if (form.getAssessmentAccept()) {

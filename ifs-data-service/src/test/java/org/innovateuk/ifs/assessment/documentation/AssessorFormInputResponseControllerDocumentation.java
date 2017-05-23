@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.documentation;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessorFormInputResponseController;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,8 +15,9 @@ import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseRes
 import static org.innovateuk.ifs.assessment.documentation.AssessmentAggregateScoreDocs.applicationAssessmentAggregateResourceFields;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentFeedbackAggregateDocs.assessmentFeedbackAggregateResourceFields;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseFields;
 import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseResourceBuilder;
+import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponsesFields;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -72,25 +73,24 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
     }
 
     @Test
-    public void updateAssessorFormInputResponse() throws Exception {
-        Long assessmentId = 1L;
-        Long formInputId = 2L;
-        String value = RandomStringUtils.random(5000);
+    public void updateAssessorFormInputResponses() throws Exception {
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .withId(1L, 2L)
+                        .withAssessment(1L)
+                        .withFormInput(1L, 2L)
+                        .withQuestion(4L)
+                        .withValue("Response 1", "Response 2")
+                        .build(2));
 
-        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource()
-                .withAssessment(assessmentId)
-                .withFormInput(formInputId)
-                .withValue(value)
-                .build();
-
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseServiceMock.updateFormInputResponses(responses)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(response)))
+                .content(toJson(responses)))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("assessorFormInputResponse/{method-name}",
-                        requestFields(assessorFormInputResponseFields)
+                        requestFields(assessorFormInputResponsesFields)
                 ));
     }
 

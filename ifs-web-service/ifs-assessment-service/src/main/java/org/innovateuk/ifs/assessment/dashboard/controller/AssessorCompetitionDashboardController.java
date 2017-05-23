@@ -49,7 +49,7 @@ public class AssessorCompetitionDashboardController {
                                     @PathVariable("competitionId") Long competitionId,
                                     UserResource loggedInUser,
                                     @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
-                                    BindingResult bindingResult,
+                                    @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
         Supplier<String> renderDashboard = () -> competitionDashboard(model, loggedInUser, competitionId, form);
@@ -70,7 +70,7 @@ public class AssessorCompetitionDashboardController {
                                            @PathVariable("competitionId") final Long competitionId,
                                            UserResource loggedInUser,
                                            @ModelAttribute(FORM_ATTR_NAME) @Valid AssessorCompetitionDashboardAssessmentForm form,
-                                           BindingResult bindingResult,
+                                           @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
 
 
