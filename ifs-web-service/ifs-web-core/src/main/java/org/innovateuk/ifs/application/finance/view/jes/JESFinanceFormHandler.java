@@ -47,6 +47,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     private QuestionService questionService;
 
     private static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
+    private static final String UPLOAD_FINANCE_DOCUMENT = "upload_finance_document";
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
@@ -183,7 +184,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (params.containsKey(REMOVE_FINANCE_DOCUMENT)) {
             ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccessObjectOrThrowException();
-        } else {
+        } else if(params.containsKey(UPLOAD_FINANCE_DOCUMENT)) {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
             final String formInputJesId = getJesFormInputId(fileMap.keySet());
             final MultipartFile file = fileMap.get(formInputJesId);
