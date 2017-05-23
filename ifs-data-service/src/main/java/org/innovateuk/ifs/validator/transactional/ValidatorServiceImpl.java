@@ -12,18 +12,25 @@ import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Class to validate several objects
+ * TODO: INFUND-9548 adding unit tests for this class
  */
 @Service
 public class ValidatorServiceImpl extends BaseTransactionalService implements ValidatorService {
@@ -42,12 +49,15 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Autowired
     private ValidationUtil validationUtil;
 
+    @Autowired
+    private OrganisationService organisationService;
+
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {
         List<BindingResult> results = new ArrayList<>();
-        List<FormInputResponse> response = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId);
-        if (!response.isEmpty()) {
-            results.addAll(response.stream().map(formInputResponse -> validationUtil.validateResponse(formInputResponse, false)).collect(Collectors.toList()));
+        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId);
+        if (!responses.isEmpty()) {
+            results.addAll(responses.stream().map(formInputResponse -> validationUtil.validateResponse(formInputResponse, false)).collect(Collectors.toList()));
         } else {
             FormInputResponse emptyResponse = new FormInputResponse();
             emptyResponse.setFormInput(formInputRepository.findOne(formInputId));
@@ -55,7 +65,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         }
 
         FormInput formInput = formInputRepository.findOne(formInputId);
-        if (FormInputType.APPLICATION_DETAILS == formInput.getType()) {
+        if (formInput.getType().equals(FormInputType.APPLICATION_DETAILS)) {
             Application application = applicationRepository.findOne(applicationId);
             results.add(validationUtil.validationApplicationDetails(application));
         }
@@ -66,7 +76,11 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public BindingResult validateFormInputResponse(Long applicationId, Long formInputId, Long markedAsCompleteById) {
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, markedAsCompleteById, formInputId);
-        return validationUtil.validateResponse(response, false);
+        BindingResult result = validationUtil.validateResponse(response, false);
+
+        validateFileUploads(formInputId, response).forEach(objectError -> result.addError(objectError));
+
+        return result;
     }
 
 
@@ -89,5 +103,32 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public FinanceRowHandler getProjectCostHandler(FinanceRowItem costItem) {
         return projectFinanceRowService.getCostHandler(costItem);
+    }
+
+    private List<ObjectError> validateFileUploads(Long formInputId, FormInputResponse response) {
+        List<ObjectError> errors = new ArrayList<>();
+        FormInput formInput = formInputRepository.findOne(formInputId);
+
+        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
+            if (response == null) {
+                errors.add(new ObjectError("value", "validation.application.jes.upload.required"));
+            } else {
+                errors.addAll(validationUtil.validationJesForm(response).getAllErrors());
+            }
+        }
+
+        return errors;
+    }
+
+    private boolean isResearchUser() {
+        Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
+        if(userResult.isPresent()) {
+            Optional<OrganisationResource> organisationResult = organisationService.getPrimaryForUser(userResult.get().getId()).getOptionalSuccessObject();
+            if(organisationResult.isPresent()) {
+                return OrganisationTypeEnum.RESEARCH.getId().equals(organisationResult.get().getOrganisationType());
+            }
+        }
+
+        return false;
     }
 }

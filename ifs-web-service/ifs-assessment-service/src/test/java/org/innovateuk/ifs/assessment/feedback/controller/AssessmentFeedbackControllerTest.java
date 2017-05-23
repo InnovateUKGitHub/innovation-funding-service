@@ -7,15 +7,15 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
-import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
+import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -53,11 +53,11 @@ import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.new
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
@@ -78,9 +78,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
     @Mock
     private AssessmentService assessmentService;
-
-    @Mock
-    private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Spy
     @InjectMocks
@@ -155,11 +152,11 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-question"));
 
-        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseService, assessmentService,
-                competitionService, formInputResponseRestService, categoryRestServiceMock);
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService,
+                assessmentService, competitionService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
                 assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(competitionService).getById(competitionResource.getId());
@@ -229,11 +226,11 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-question"));
 
-        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseService, assessmentService,
-                competitionService, formInputResponseRestService, categoryRestServiceMock);
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService,
+                assessmentService, competitionService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
                 assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(competitionService).getById(competitionResource.getId());
@@ -359,7 +356,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         inOrder.verify(sectionService).getById(nextQuestionResource.getSection());
         inOrder.verifyNoMoreInteractions();
 
-        verifyZeroInteractions(formInputResponseService, assessorFormInputResponseService);
+        verifyZeroInteractions(formInputResponseService, assessorFormInputResponseRestService);
     }
 
     @Test
@@ -417,11 +414,11 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-question"));
 
-        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseService, assessmentService,
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService, assessmentService,
                 competitionService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(competitionService).getById(competitionResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
@@ -489,11 +486,11 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("navigation", expectedNavigation))
                 .andExpect(view().name("assessment/application-question"));
 
-        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseService, assessmentService,
-                competitionService, formInputResponseRestService, categoryRestServiceMock);
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService,
+                assessmentService, competitionService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
         inOrder.verify(competitionService).getById(competitionResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
@@ -509,7 +506,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         Long assessmentId = 1L;
         String value = "Feedback";
         Long formInputId = 1L;
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value)).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value)).thenReturn(
+                restSuccess());
 
         mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", assessmentId, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -518,7 +516,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(jsonPath("success", is("true")))
                 .andReturn();
 
-        verify(assessorFormInputResponseService, only()).updateFormInputResponse(assessmentId, formInputId, value);
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessmentId, formInputId, value);
     }
 
     @Test
@@ -527,23 +525,19 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String value = "This is the feedback";
         Long formInputId = 2L;
 
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value))
-                .thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
+        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value))
+                .thenReturn(restFailure(fieldError("fieldName", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
 
         when(messageSource.getMessage("validation.field.too.many.characters", new Object[]{"", "5000", "0"}, Locale.UK))
                 .thenReturn("This field cannot contain more than 5000 characters");
 
-        MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", assessmentId, formInputId)
+        mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", assessmentId, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("value", value))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("success", is("true")))
-                .andReturn();
+                .andExpect(jsonPath("success", is("false")));
 
-        verify(assessorFormInputResponseService, only()).updateFormInputResponse(assessmentId, formInputId, value);
-        String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        assertEquals(jsonExpectedContent, content);
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessmentId, formInputId, value);
     }
 
     @Test
@@ -552,23 +546,19 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String value = "This is the feedback";
         Long formInputId = 2L;
 
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputId, value))
-                .thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
+        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value))
+                .thenReturn(restFailure(fieldError("fieldName", "Feedback", "validation.field.max.word.count", "", 100)));
 
         when(messageSource.getMessage("validation.field.max.word.count", new Object[]{"", "100"}, Locale.UK))
                 .thenReturn("Maximum word count exceeded. Please reduce your word count to 100.");
 
-        MvcResult result = mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", assessmentId, formInputId)
+        mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", assessmentId, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("value", value))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("success", is("true")))
-                .andReturn();
+                .andExpect(jsonPath("success", is("false")));
 
-        verify(assessorFormInputResponseService, only()).updateFormInputResponse(assessmentId, formInputId, value);
-        String content = result.getResponse().getContentAsString();
-        String jsonExpectedContent = "{\"success\":\"true\"}";
-        assertEquals(jsonExpectedContent, content);
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessmentId, formInputId, value);
     }
 
     @Test
@@ -582,8 +572,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputScoreField = format("formInput[%s]", formInputIdScore);
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputIdScore, "10")).thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentId, formInputIdFeedback, "Feedback")).thenReturn(serviceSuccess());
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(assessmentId)
+                        .withFormInput(formInputIdScore, formInputIdFeedback)
+                        .withValue("10", "Feedback")
+                        .build(2));
+
+        when(assessorFormInputResponseRestService.updateFormInputResponses(responses))
+                .thenReturn(restSuccess());
 
         mockMvc.perform(post("/{assessmentId}/question/{questionId}", assessmentId, questionId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -593,8 +591,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(redirectedUrl(format("/%s", assessmentId)))
                 .andReturn();
 
-        verify(assessorFormInputResponseService).updateFormInputResponse(assessmentId, formInputIdScore, "10");
-        verify(assessorFormInputResponseService).updateFormInputResponse(assessmentId, formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponses(responses);
     }
 
     @Test
@@ -616,10 +613,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputScoreField = format("formInput[%s]", formInputIdScore);
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentResource.getId(), formInputIdScore, "10"))
-                .thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentResource.getId(), formInputIdFeedback, "Feedback"))
-                .thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(assessmentResource.getId())
+                        .withFormInput(formInputIdScore, formInputIdFeedback)
+                        .withValue("10", "Feedback")
+                        .build(2));
+
+        when(assessorFormInputResponseRestService.updateFormInputResponses(responses)).thenReturn(restFailure(
+                fieldError("responses[1].value", "Feedback", "validation.field.too.many.characters", "", "5000", "0")));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
@@ -636,8 +639,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
-        verify(assessorFormInputResponseService).updateFormInputResponse(assessmentResource.getId(), formInputIdScore, "10");
-        verify(assessorFormInputResponseService).updateFormInputResponse(assessmentResource.getId(), formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponses(responses);
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 
@@ -672,10 +674,16 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         String formInputScoreField = format("formInput[%s]", formInputIdScore);
         String formInputFeedbackField = format("formInput[%s]", formInputIdFeedback);
 
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentResource.getId(), formInputIdScore, "10"))
-                .thenReturn(serviceSuccess());
-        when(assessorFormInputResponseService.updateFormInputResponse(assessmentResource.getId(), formInputIdFeedback, "Feedback"))
-                .thenReturn(serviceFailure(fieldError("value", "Feedback", "validation.field.max.word.count", "", 100)));
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(assessmentResource.getId())
+                        .withFormInput(formInputIdScore, formInputIdFeedback)
+                        .withValue("10", "Feedback")
+                        .build(2));
+
+        when(assessorFormInputResponseRestService.updateFormInputResponses(responses))
+                .thenReturn(restFailure(fieldError("responses[1].value", "Feedback", "validation.field.max.word.count", "", 100)));
 
         // For re-display of question view following the invalid data entry
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
@@ -692,8 +700,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-question"))
                 .andReturn();
 
-        verify(assessorFormInputResponseService).updateFormInputResponse(assessmentResource.getId(), formInputIdScore, "10");
-        verify(assessorFormInputResponseService).updateFormInputResponse(assessmentResource.getId(), formInputIdFeedback, "Feedback");
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponses(responses);
 
         Form form = (Form) result.getModelAndView().getModel().get("form");
 
@@ -802,7 +809,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                         .withQuestion(questionId)
                         .build()
         ).collect(toList());
-        when(assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId)).thenReturn(assessorResponses);
+        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId,
+                questionId)).thenReturn(restSuccess(assessorResponses));
         return assessorResponses;
     }
 

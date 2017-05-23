@@ -160,4 +160,5 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=button:contains("Write and send email")
     the user enters text to a text field    jQuery=.editor    Text
     the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link    jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user clicks the button/link    jQuery=.link-back:contains("Competition")
