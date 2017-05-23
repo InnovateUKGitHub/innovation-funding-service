@@ -18,6 +18,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.form.FinanceContactForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
@@ -74,6 +75,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     private ProjectService projectService;
 
     @Autowired
+    private ProjectDetailsService projectDetailsService;
+
+    @Autowired
     private ApplicationService applicationService;
 
     @Autowired
@@ -98,7 +102,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> partnerOrganisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
-        boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+        boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
 
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectSetupSectionAccessibilityHelper statusAccessor = new ProjectSetupSectionAccessibilityHelper(teamStatus);
@@ -144,7 +148,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource project = projectService.getById(projectId);
 
-        Boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
+        Boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
         if (!isSubmissionAllowed) {
             return "redirect:/project/" + projectId + "/details";
         }
@@ -177,7 +181,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         Supplier<String> failureView = () -> doViewFinanceContact(model, projectId, financeContactForm.getOrganisation(), loggedInUser, financeContactForm, false, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> updateResult = projectService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, financeContactForm.getOrganisation()), financeContactForm.getFinanceContact());
+            ServiceResult<Void> updateResult = projectDetailsService.updateFinanceContact(new ProjectOrganisationCompositeId(projectId, financeContactForm.getOrganisation()), financeContactForm.getFinanceContact());
 
             return validationHandler.addAnyErrors(updateResult, toField("financeContact")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
@@ -198,7 +202,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         return sendInvite(financeContactForm.getName(), financeContactForm.getInviteEmail(), loggedInUser, validationHandler,
                 failureView, successView, projectId, organisation,
-                (project, inviteProjectResource) -> projectService.inviteFinanceContact(project, inviteProjectResource));
+                (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
@@ -217,7 +221,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         return sendInvite(projectManagerForm.getName(), projectManagerForm.getInviteEmail(), loggedInUser, validationHandler,
                 failureView, successView, projectId, organisation,
-                (project, inviteProjectResource) -> projectService.inviteProjectManager(project, inviteProjectResource));
+                (project, inviteProjectResource) -> projectDetailsService.inviteProjectManager(project, inviteProjectResource));
     }
 
     private String sendInvite(String inviteName, String inviteEmail, UserResource loggedInUser, ValidationHandler validationHandler,
@@ -230,7 +234,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
             InviteProjectResource invite = createProjectInviteResourceForNewContact (projectId, inviteName, inviteEmail, organisation);
 
-            ServiceResult<Void> saveResult = projectService.saveProjectInvite(invite);
+            ServiceResult<Void> saveResult = projectDetailsService.saveProjectInvite(invite);
 
             return validationHandler.addAnyErrors(saveResult, asGlobalErrors()).failNowOrSucceedWith(failureView, () -> {
 
@@ -255,7 +259,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private Optional<InviteProjectResource> getSavedInvite(Long projectId, InviteProjectResource invite) {
 
-        return projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+        return projectDetailsService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
                 .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
     }
 
@@ -279,7 +283,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = projectService.updateProjectManager(projectId, projectManagerForm.getProjectManager());
+            ServiceResult<Void> updateResult = projectDetailsService.updateProjectManager(projectId, projectManagerForm.getProjectManager());
 
             return validationHandler.addAnyErrors(updateResult, toField("projectManager")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
@@ -310,7 +314,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = projectService.updateProjectStartDate(projectId, form.getProjectStartDate());
+            ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
 
             return validationHandler.addAnyErrors(updateResult, toField("projectStartDate")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
@@ -381,7 +385,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         }
 
         projectResource.setAddress(newAddressResource);
-        ServiceResult<Void> updateResult = projectService.updateAddress(leadOrganisation.getId(), projectId, addressType, newAddressResource);
+        ServiceResult<Void> updateResult = projectDetailsService.updateAddress(leadOrganisation.getId(), projectId, addressType, newAddressResource);
 
         return updateResult.handleSuccessOrFailure(
                 failure -> {
@@ -430,7 +434,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @PostMapping("/{projectId}/details/submit")
     public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
-        projectService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
+        projectDetailsService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToProjectDetails(projectId);
     }
 
@@ -478,7 +482,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             .filter(user -> leadOrganisation.getId().equals(user.getOrganisation()))
             .map(user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser()))
             .collect(toList());
-        List<ProjectUserInviteModel> invitedUsers = projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+        List<ProjectUserInviteModel> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
             .filter(invite -> leadOrganisation.getId().equals(invite.getOrganisation()) && invite.getStatus() != InviteStatus.OPENED)
             .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
             .collect(toList());
@@ -521,7 +525,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 pu.getOrganisation().equals(financeContactForm.getOrganisation()));
 
         List<InviteProjectResource> inviteProjectResourceList =
-                projectService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
+                projectDetailsService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
 
         Function<ProjectUserResource, ProjectUserInviteModel> financeContactModelMappingFn =
                 user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());

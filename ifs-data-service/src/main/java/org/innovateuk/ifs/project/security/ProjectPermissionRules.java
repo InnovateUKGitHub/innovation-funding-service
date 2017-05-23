@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -22,28 +21,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Internal users can see project resources")
     public boolean internalUsersCanViewProjects(final ProjectResource project, final UserResource user) {
         return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
-            description = "The lead partners can update the basic project details, like start date, address, Project Manager")
-    public boolean leadPartnersCanUpdateTheBasicProjectDetails(ProjectResource project, UserResource user) {
-        return isLeadPartner(project.getId(), user.getId());
-    }
-
-
-    @PermissionRule(
-            value = "UPDATE_FINANCE_CONTACT",
-            description = "A partner can update the finance contact for their own organisation")
-    public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectOrganisationCompositeId composite, UserResource user) {
-        return isPartner(composite.getProjectId(), user.getId()) && partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
-    }
-
-    @PermissionRule(
-            value = "UPDATE_FINANCE_CONTACT",
-            description = "A partner can update the finance contact for their own organisation")
-    public boolean submitIsAllowed(Long projectId, UserResource user) {
-        return isPartner(projectId, user.getId());
     }
 
     @PermissionRule(
