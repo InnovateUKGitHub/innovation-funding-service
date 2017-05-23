@@ -42,9 +42,9 @@ cursor.execute("SELECT `id`,`name` FROM competition")
 competition_ids = {}
 for comp in cursor.fetchall():
     if comp[1] is None:
-        competition_ids['none'] = int(comp[0])
+        competition_ids['none'] = str(comp[0])
     else:
-        competition_ids[comp[1]] = int(comp[0])
+        competition_ids[comp[1]] = str(comp[0])
 
 # execute SQL query using execute() method, to fetch the Applications
 cursor.execute("SELECT `id`,`name` FROM application")
@@ -52,7 +52,7 @@ cursor.execute("SELECT `id`,`name` FROM application")
 # Fetch the application records
 application_ids = {}
 for app in cursor.fetchall():
-    application_ids[app[1]] = int(app[0])
+    application_ids[app[1]] = str(app[0])
 
 # execute SQL query using execute() method, to fetch the Application Assessments
 cursor.execute("select p.id, pa.email, a.name from application a join process p on p.target_id = a.id and p.process_type = 'Assessment' join process_role pr on pr.id = p.participant_id join user pa on pa.id = pr.user_id")
@@ -65,10 +65,10 @@ for ass in cursor.fetchall():
 
     if application_name in assessment_ids:
         existing_record = assessment_ids[application_name]
-        existing_record[ass[1]] = int(ass[0])
+        existing_record[ass[1]] = str(ass[0])
     else:
         first_record = {}
-        first_record[ass[1]] = int(ass[0])
+        first_record[ass[1]] = str(ass[0])
         assessment_ids[application_name] = first_record
 
 
@@ -78,7 +78,7 @@ cursor.execute("SELECT `id`,`name` FROM project")
 # Fetch the application records
 project_ids = {}
 for app in cursor.fetchall():
-    project_ids[app[1]] = int(app[0])
+    project_ids[app[1]] = str(app[0])
 
 
 # disconnect from server
@@ -90,7 +90,7 @@ def getProjectId(name):
     db, cursor = connectToDb()
 
     # execute SQL query using execute() method, to fetch the Applications
-    cursor.execute("SELECT `id` FROM project where `name` like '%" + name + "%'")
+    cursor.execute("SELECT `id` FROM project where `name` = '" + name + "'")
 
     id = cursor.fetchone()[0]
 
