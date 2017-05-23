@@ -1805,6 +1805,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button[1]
     the user enters text to a text field     css=[labelledby="message"]      testMessage
     the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user should see the text in the page    Manage funding applications
 
 lead partner selects project manager and address
