@@ -45,13 +45,20 @@
 <!-- ===========================Element: Header links =========================== -->
 <th:block th:fragment="header-links">
     <a href="/"  id="proposition-name">Innovation Funding Service</a>
-    <ul th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" id="proposition-links">
-        <li th:unless="${hideDashboardLink} == 'true'">
-            <a th:href="${userDashboardLink}" th:class="${#httpServletRequest.requestURI == userDashboardLink ? 'active' : ''}" >My dashboard</a>
-        </li>
-        <li>
-            <a th:href="${logoutUrl}">Sign out</a>
-        </li>
+    <ul id="proposition-links">
+        <th:block th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
+            <li th:unless="${hideDashboardLink} == 'true'">
+                <a th:href="${userDashboardLink}" th:class="${#httpServletRequest.requestURI == userDashboardLink ? 'active' : ''}">My dashboard</a>
+            </li>
+            <li>
+                <a th:href="${logoutUrl}">Sign out</a>
+            </li>
+        </th:block>
+        <th:block th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
+            <li>
+                <a href="/">Sign in</a>
+            </li>
+        </th:block>
     </ul>
 </th:block>
 <!-- =========================== Element: Competition Deadline =========================== -->
