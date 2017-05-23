@@ -24,17 +24,19 @@ IFS.core.collapsible = (function () {
       })
     },
     initCollapsibleHTML: function (el, stateless) {
-      var inst = jQuery(el).find('h2,h3')
-      var id = 'collapsible-' + index   // create unique id for a11y relationship
-       // don't save state if we've asked it not to
-      var loadstate = !stateless && IFS.core.collapsible.getLoadstateFromCookie(id)
+      jQuery(el).children('h2,h3').each(function () {
+        var inst = jQuery(this)
+        var id = 'collapsible-' + index   // create unique id for a11y relationship
+        // don't save state if we've asked it not to
+        var loadstate = !stateless && IFS.core.collapsible.getLoadstateFromCookie(id)
 
         // wrap the content and make it focusable
-      inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
+        inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
 
         // Add the button inside the <h2> so both the heading and button semantics are read
-      inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
-      index++
+        inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
+        index++
+      })
     },
     toggleCollapsible: function (el, stateless) {
       var inst = jQuery(el)
