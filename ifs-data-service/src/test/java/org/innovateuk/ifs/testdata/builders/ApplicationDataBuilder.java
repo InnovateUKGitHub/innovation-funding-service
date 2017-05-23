@@ -6,6 +6,8 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapperImpl;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -25,6 +27,7 @@ import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
@@ -298,11 +301,25 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
                         q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
 
-                List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, q -> baseBuilder.
-                        forQuestion(q.getName()).
-                        withAssignee(data.getLeadApplicant().getEmail()).
-                        withAnswer("This is the applicant response for " + q.getName().toLowerCase(), data.getLeadApplicant().getEmail()).
-                        markAsComplete());
+                List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
+
+                    QuestionResponseDataBuilder responseBuilder = baseBuilder.
+                            forQuestion(question.getName()).
+                            withAssignee(data.getLeadApplicant().getEmail()).
+                            withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", data.getLeadApplicant().getEmail());
+
+                    List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+
+                    if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
+
+                        String fileUploadName = (data.getApplication().getName() + "-" + question.getShortName().toLowerCase() + ".pdf")
+                                .toLowerCase().replace(' ', '-') ;
+
+                        responseBuilder = responseBuilder.withFileUploads(singletonList(fileUploadName), data.getLeadApplicant().getEmail());
+                    }
+
+                    return responseBuilder.markAsComplete();
+                });
 
                 responseBuilders.forEach(QuestionResponseDataBuilder::build);
             }
