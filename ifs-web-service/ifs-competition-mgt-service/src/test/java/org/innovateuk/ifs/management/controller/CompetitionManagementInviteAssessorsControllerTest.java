@@ -349,9 +349,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     public void addAssessorSelectionFromFindView_defaultParams() throws Exception {
         String email = "firstname.lastname@example.com";
 
-        Cookie formCookie;
         AssessorSelectionForm form = new AssessorSelectionForm();
-        formCookie = createFormCookie(form);
+        Cookie formCookie = createFormCookie(form);
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
                 .param("add", email)
@@ -363,6 +362,29 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
         assertTrue(resultForm.get().getAssessorEmails().contains(email));
     }
+
+    @Test
+    public void addAllAssessorsFromFindView_defaultParams() throws Exception {
+        AssessorSelectionForm form = new AssessorSelectionForm();
+        Cookie formCookie = createFormCookie(form);
+
+        AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
+                .withContent(setUpAvailableAssessorResources())
+                .build();
+
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), 0, Optional.empty())).thenReturn(restSuccess(availableAssessorPageResource));
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
+                .param("addAll", "")
+                .cookie(formCookie))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/assessors/find?page=0", competition.getId())))
+                .andReturn();
+
+        Optional<AssessorSelectionForm> resultForm = getAssessorSelectionFormFromCookie(result.getResponse(), "selectionForm");
+        assertEquals(2, resultForm.get().getAssessorEmails().size());
+    }
+
 
     @Test
     public void removeAssessorSelectionFromFindView() throws Exception {

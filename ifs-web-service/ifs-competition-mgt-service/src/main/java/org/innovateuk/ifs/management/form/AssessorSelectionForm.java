@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.management.form;
 
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Form for the selection of assessors on the Find assessors tab
  */
-public class AssessorSelectionForm {
+public class AssessorSelectionForm extends BaseBindingResultTarget {
 
-    private Boolean allSelected;
+    private boolean allSelected = true;
 
     private List<String> assessorEmails;
 
@@ -16,11 +18,11 @@ public class AssessorSelectionForm {
         this.assessorEmails = new ArrayList<>();
     }
 
-    public Boolean getAllSelected() {
+    public boolean getAllSelected() {
         return allSelected;
     }
 
-    public void setAllSelected(Boolean allSelected) {
+    public void setAllSelected(boolean allSelected) {
         this.allSelected = allSelected;
     }
 

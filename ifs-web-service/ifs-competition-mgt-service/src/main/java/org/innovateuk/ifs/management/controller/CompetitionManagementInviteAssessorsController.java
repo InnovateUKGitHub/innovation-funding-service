@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.management.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -11,6 +14,7 @@ import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.AvailableAssessorRowViewModel;
+import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,38 +78,59 @@ public class CompetitionManagementInviteAssessorsController {
     @GetMapping("/find")
     public String find(Model model,
                        @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) FindAssessorsFilterForm filterForm,
-                       @SuppressWarnings("unused") BindingResult bindingResult,
                        @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
+                       @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam MultiValueMap<String, String> queryParams) {
+                       @RequestParam MultiValueMap<String, String> queryParams,
+                       HttpServletRequest request,
+                       HttpServletResponse response) {
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
+        //selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
+        InviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery);
+        if (selectionForm.getAllSelected()) {
+            updateSelectionForm(selectionForm, inviteAssessorsFindViewModel.getAssessors(), response);
+        }
 
-        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery));
+        model.addAttribute("model", inviteAssessorsFindViewModel);
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/find";
     }
 
-    @PostMapping(value = "/find", params = {"add"})
-    public String addAssessorToInviteList(Model model,
-                                        @PathVariable("competitionId") long competitionId,
-                                        @RequestParam("add") String email,
-                                        @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam Optional<Long> innovationArea,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response) {
-
-        AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
-        selectionForm.getAssessorEmails().add(email);
+    private void updateSelectionForm(AssessorSelectionForm selectionForm, List<AvailableAssessorRowViewModel> availableAssessors, HttpServletResponse response) {
+        List<String> assessorEmails = simpleMap(availableAssessors, AvailableAssessorRowViewModel::getEmail);
+        selectionForm.getAssessorEmails().addAll(assessorEmails);
         cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
-        return redirectToFind(competitionId, page, innovationArea);
     }
 
-    @PostMapping(value = "/find", params = {"addAll"})
+    @PostMapping(value = "/find", params = {"assessor"})
+    public @ResponseBody JsonNode selectAssessorForInviteList(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam("assessor") String email,
+            @RequestParam("isSelected") boolean isSelected,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam Optional<Long> innovationArea,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        try {
+            AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
+            if (isSelected) {
+                selectionForm.getAssessorEmails().add(email);
+            } else {
+                selectionForm.getAssessorEmails().remove(email);
+            }
+            cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
+            return createJsonObjectNode(true);
+        } catch (Exception e) {
+            return createJsonObjectNode(false);
+        }
+    }
+
+/*    @PostMapping(value = "/find", params = {"addAll"})
     public String addAllAssessorsToInviteList(Model model,
                                         @PathVariable("competitionId") long competitionId,
-                                        @RequestParam("add") String email,
+                                        @RequestParam("addAll") boolean email,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam Optional<Long> innovationArea,
                                         HttpServletRequest request,
@@ -119,21 +144,36 @@ public class CompetitionManagementInviteAssessorsController {
         selectionForm.setAssessorEmails(assessorEmails);
         cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
         return redirectToFind(competitionId, page, innovationArea);
-    }
+    }*/
 
-    @PostMapping(value = "/find", params = {"remove"})
-    public String removeAssessorFromInviteList(Model model,
-                                           @PathVariable("competitionId") long competitionId,
-                                           @RequestParam("remove") String email,
-                                           @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam Optional<Long> innovationArea,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) {
+    @PostMapping(value = "/find", params = {"addAll"})
+    public @ResponseBody JsonNode addAllAssessorsToInviteList(Model model,
+                                              @PathVariable("competitionId") long competitionId,
+                                              @RequestParam("addAll") boolean addAll,
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam Optional<Long> innovationArea,
+                                              HttpServletRequest request,
+                                              HttpServletResponse response) {
 
-        AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
-        selectionForm.getAssessorEmails().remove(email);
-        cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
-        return redirectToFind(competitionId, page, innovationArea);
+        try {
+            AssessorSelectionForm selectionForm = getAssessorSelectionFormFromCookie(request).orElse(new AssessorSelectionForm());
+
+            if (addAll) {
+                AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competitionId, page, innovationArea)
+                        .getSuccessObjectOrThrowException();
+                List<String> assessorEmails = simpleMap(pageResource.getContent(), AvailableAssessorResource::getEmail);
+                selectionForm.setAssessorEmails(assessorEmails);
+                selectionForm.setAllSelected(true);
+            } else {
+                selectionForm.getAssessorEmails().clear();
+                selectionForm.setAllSelected(false);
+            }
+
+            cookieUtil.saveToCookie(response, SELECTION_FORM, JsonUtil.getSerializedObject(selectionForm));
+            return createJsonObjectNode(true);
+        } catch (Exception e) {
+            return createJsonObjectNode(false);
+        }
     }
 
     @PostMapping(value = "/find", params = {"removeAll"})
@@ -320,5 +360,13 @@ public class CompetitionManagementInviteAssessorsController {
                 .collect(Collectors.toList());
 
         return new NewUserStagedInviteListResource(invites);
+    }
+
+    private ObjectNode createJsonObjectNode(boolean success) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("success", success ? "true" : "false");
+
+        return node;
     }
 }

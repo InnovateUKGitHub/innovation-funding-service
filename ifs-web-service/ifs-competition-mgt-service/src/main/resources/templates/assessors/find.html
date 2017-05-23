@@ -66,7 +66,7 @@
 
     <div class="grid-row">
         <div class="column-three-quarters">
-            <h2 class="heading-small no-margin-top">Find registered assessors and add them to your invite list for this competition.</h2>
+            <h2 class="heading-small no-margin-top">Find registered assessors. Select them using the checkboxes and add them to your invite list.</h2>
         </div>
     </div>
 
@@ -113,7 +113,7 @@
                     <label class="block-label selection-button-checkbox">
                         <input type="checkbox"
                                data-switches-button-status="[name=addToInviteList]"
-                               id="select-all-check" th:field="*{allSelected}"/>
+                               id="select-all-check" th:field="*{allSelected}" />
                         <span>Add all to invite list</span>
                     </label>
                 </th>
@@ -129,7 +129,7 @@
                     <label class="block-label selection-button-checkbox">
                         <input type="checkbox"
                                data-switches-button-status="[name=addToInviteList]"
-                               th:id="${assessor.id}" th:field="*{assessorEmails}" th:value="${assessor.email}"/>
+                               th:id="${assessor.id}"  th:field="*{assessorEmails}" th:value="${assessor.email}"/>
                         <span>Add</span>
                     </label>
                 </td>
@@ -165,9 +165,12 @@
 	// <![CDATA[
            jQuery(document).ready(function(){
 
-                var formValues = JSON.parse(localStorage.getItem('formValues')) || {};
+               // var formValues = JSON.parse(localStorage.getItem('formValues')) || {};
                 var $checkboxes = $("td :checkbox");
                 var $button = $("#select-all-check");
+                var competitionId = jQuery('#competition_id').val();
+                var url = 'competition/' + competitionId + '/assessors/find';
+                var data;
 
                 function allChecked(){
                   return $checkboxes.length === $checkboxes.filter(":checked").length;
@@ -183,7 +186,6 @@
                   }else{
                     $button.parent().removeClass('selected')
                   }
-
                 }
 
                 function handleButtonClick(){
@@ -205,28 +207,55 @@
                   localStorage.setItem("formValues", JSON.stringify(formValues));
                 }
 
+                function updateController() {
+                    jQuery.ajaxProtected({
+                    url: window.location.href,
+                    method: 'POST',
+                    dataType: 'json', // for requests headers so that the back-end can give a version without 302 redirect
+                    data: data
+                    })
+                    .done(function (data) {
+                        alert("done");
+                    })
+                    .fail(function (jqXHR, data) {
+                        alert("error");
+                    })
+                }
+
                 $button.on("click", function(e) {
+                  var addAll = "addAll=" + this.checked;
+                  data = addAll;
+
                   handleButtonClick();
                   updateButtonStatus();
-                  updateStorage();
+                  updateController();
+                  //updateStorage();
                 });
 
                 $checkboxes.on("change", function(){
+                  var addAssessor = "assessor=";
+                  var isSelected = "&isSelected=";
+
+                  data = "";
+                  addAssessor = addAssessor + this.value;
+                  isSelected = isSelected + this.checked;
+                  data = addAssessor + isSelected;
                   updateButtonStatus();
-                  updateStorage();
+                  updateController()
+                  //updateStorage();
                 });
 
                 // On page load
-                $.each(formValues, function(key, value) {
-                  $("#" + key).prop('checked', value);
+              //  $.each(formValues, function(key, value) {
+              //    $("#" + key).prop('checked', value);
 
-                  if($("#" + key).is(':checked')){
-                    $("#" + key).parent().addClass('selected');
-                  }else{
-                    $("#" + key).parent().removeClass('selected');
-                  }
+              //    if($("#" + key).is(':checked')){
+              //      $("#" + key).parent().addClass('selected');
+              //    }else{
+              //      $("#" + key).parent().removeClass('selected');
+              //    }
 
-                });
+              //  });
 
                 $button.text(formValues["buttonText"]);
            });
