@@ -494,7 +494,8 @@ public class OrganisationCreationController {
                 Long competitionId = Long.valueOf(cookieUtil.getCookieValue(request, COMPETITION_ID));
                 List<OrganisationTypeResource> allowedOrganisationTypes = competitionService.getOrganisationTypes(competitionId);
 
-                if (organisationTypeShouldBeSelectedByDefault().test(allowedOrganisationTypes)) {
+                if (organisationTypeShouldBeSelectedByDefault(allowedOrganisationTypes)) {
+                    // Set the organisation type and skip the organisation type page
                     addCompetitionOrganisationTypeToFormCookies(organisationForm, allowedOrganisationTypes, request, response);
                     return "redirect:" + BASE_URL + "/" + CONFIRM_ORGANISATION;
                 }
@@ -515,11 +516,7 @@ public class OrganisationCreationController {
     }
 
     private void addCompetitionOrganisationTypeToFormCookies(OrganisationCreationForm organisationCreationForm, List<OrganisationTypeResource> organisationTypeResources, HttpServletRequest request, HttpServletResponse response) {
-        Long competitionId = Long.valueOf(cookieUtil.getCookieValue(request, COMPETITION_ID));
-
-        if(organisationTypeShouldBeSelectedByDefault().test(organisationTypeResources)) {
-            saveToTypeCookie(response, organisationTypeResources.get(0).getId());
-        }
+        saveToTypeCookie(response, organisationTypeResources.get(0).getId());
     }
 
     @GetMapping("/" + LEAD_ORGANISATION_TYPE)
@@ -672,7 +669,20 @@ public class OrganisationCreationController {
         return getOrRethrow(() -> encodeQueryParam(input, "UTF-8"));
     }
 
-    private static Predicate<List<OrganisationTypeResource>> organisationTypeShouldBeSelectedByDefault() {
-        return resource -> resource.size() == 1;
+    private boolean organisationTypeShouldBeSelectedByDefault(List<OrganisationTypeResource> organisationTypes) {
+        boolean onlyOneTypeAllowed = organisationTypes.size() == 1;
+        boolean typeListIsValid = organisationTypes.stream().allMatch(organisationTypeAllowed());
+
+        if(onlyOneTypeAllowed && typeListIsValid) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private static Predicate<OrganisationTypeResource> organisationTypeAllowed() {
+        return resource -> resource.getId().equals(OrganisationTypeEnum.BUSINESS.getId()) ||
+                resource.getId().equals(OrganisationTypeEnum.RTO.getId());
     }
 }
