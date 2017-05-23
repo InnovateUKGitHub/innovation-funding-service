@@ -14,7 +14,10 @@ import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -51,11 +54,9 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<String>>() {};
     }
 
-
     public static ParameterizedTypeReference<Map<Long, Set<Long>>> mapOfLongToLongsSetType() {
         return new ParameterizedTypeReference<Map<Long, Set<Long>>>() {};
     }
-
 
     /**
      * IFS types
@@ -67,14 +68,6 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<AlertResource>> alertResourceListType() {
         return new ParameterizedTypeReference<List<AlertResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<AssessorCreatedInviteResource>> assessorCreatedInviteResourceListType() {
-        return new ParameterizedTypeReference<List<AssessorCreatedInviteResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<AssessorInviteOverviewResource>> assessorInviteOverviewResourceListType() {
-        return new ParameterizedTypeReference<List<AssessorInviteOverviewResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
@@ -152,10 +145,6 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<InviteProjectResource>> inviteProjectResourceListType() {
         return new ParameterizedTypeReference<List<InviteProjectResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<FinanceRowResource>> costListType() {
-        return new ParameterizedTypeReference<List<FinanceRowResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<FinanceRowItem>> costItemListType() {
@@ -239,13 +228,5 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<SectionResource>> sectionResourceListType() {
         return new ParameterizedTypeReference<List<SectionResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<AvailableAssessorResource>> availableAssessorResourceListType() {
-        return new ParameterizedTypeReference<List<AvailableAssessorResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<ApplicationCountSummaryResource>> applicationCountSummaryResourceListType() {
-        return new ParameterizedTypeReference<List<ApplicationCountSummaryResource>>() {};
     }
 }
