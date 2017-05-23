@@ -5,10 +5,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -20,8 +18,6 @@ import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseRes
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -69,75 +65,69 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                 .andExpect(content().string(toJson(expected)));
 
         verify(assessorFormInputResponseServiceMock, only()).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
+        verifyNoMoreInteractions(assessorFormInputResponseServiceMock);
     }
 
     @Test
-    public void updateFormInputResponse() throws Exception {
-        Long assessmentId = 1L;
-        Long formInputId = 2L;
+    public void updateFormInputResponses() throws Exception {
         String value = RandomStringUtils.random(5000);
 
-        FormInput input = newFormInput().build();
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .withAssessment(1L)
+                        .withFormInput(1L, 2L)
+                        .withValue(value)
+                        .build(2));
 
-        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource()
-                .withAssessment(assessmentId)
-                .withFormInput(formInputId)
-                .withValue(value)
-                .build();
-
-        FormInputResponse mappedResponse = newFormInputResponse()
-                .withFormInputs(input)
-                .withValue(value)
-                .build();
-
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseServiceMock.updateFormInputResponses(responses)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(response)))
+                .content(toJson(responses)))
                 .andExpect(status().isOk());
 
-        verify(assessorFormInputResponseServiceMock).updateFormInputResponse(response);
+        verify(assessorFormInputResponseServiceMock, only()).updateFormInputResponses(responses);
     }
 
     @Test
-    public void updateFormInputResponse_exceedsCharacterSizeLimit() throws Exception {
-        Long assessmentId = 1L;
-        Long formInputId = 2L;
-        String value = RandomStringUtils.random(5001);
+    public void updateFormInputResponses_exceedsCharacterSizeLimit() throws Exception {
+        String value = RandomStringUtils.random(5000);
+        String valueInvalid = RandomStringUtils.random(5001);
 
-        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource()
-                .withAssessment(assessmentId)
-                .withFormInput(formInputId)
-                .withValue(value)
-                .build();
-
-        Error sizeError = fieldError("value", value, "validation.field.too.many.characters", "", "5000", "0");
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .withAssessment(1L)
+                        .withFormInput(1L, 2L)
+                        .withValue(value, valueInvalid)
+                        .build(2));
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(response)))
+                .content(toJson(responses)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(new RestErrorResponse(sizeError))))
-                .andReturn();
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("responses[1].value", valueInvalid,
+                        "validation.field.too.many.characters", "", "5000", "0")))));
 
-        verify(assessorFormInputResponseServiceMock, never()).updateFormInputResponse(isA(AssessorFormInputResponseResource.class));
+        verifyZeroInteractions(assessorFormInputResponseServiceMock);
     }
 
     @Test
-    public void updateFormInputResponse_exceedsWordLimit() throws Exception {
-        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource().build();
+    public void updateFormInputResponses_exceedsWordLimit() throws Exception {
+        long formInputId = 1L;
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource().build(2));
 
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceFailure(fieldError("value", "response", "validation.field.max.word.count", "", 100)));
+        when(assessorFormInputResponseServiceMock.updateFormInputResponses(responses)).thenReturn(serviceFailure(
+                fieldError(String.valueOf(formInputId), "response", "validation.field.max.word.count", "", 100)));
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
-                .content(toJson(response)))
+                .content(toJson(responses)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("value", "response", "validation.field.max.word.count", "", 100)))))
-                .andReturn();
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError(String.valueOf(formInputId), "response",
+                        "validation.field.max.word.count", "", 100)))));
 
-        verify(assessorFormInputResponseServiceMock).updateFormInputResponse(response);
+        verify(assessorFormInputResponseServiceMock, only()).updateFormInputResponses(responses);
     }
 
     @Test

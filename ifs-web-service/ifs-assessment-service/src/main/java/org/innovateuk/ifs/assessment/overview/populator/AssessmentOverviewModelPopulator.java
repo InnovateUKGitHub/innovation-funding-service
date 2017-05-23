@@ -7,13 +7,13 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewAppendixViewModel;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewQuestionViewModel;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewSectionViewModel;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -57,7 +57,7 @@ public class AssessmentOverviewModelPopulator {
     private AssessmentService assessmentService;
 
     @Autowired
-    private AssessorFormInputResponseService assessorFormInputResponseService;
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     @Autowired
     private FormInputRestService formInputRestService;
@@ -140,8 +140,9 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private Map<Long, AssessorFormInputResponseResource> getResponsesByFormInput(long assessmentId) {
-        return simpleToMap(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId),
-                AssessorFormInputResponseResource::getFormInput);
+        List<AssessorFormInputResponseResource> responses = assessorFormInputResponseRestService
+                .getAllAssessorFormInputResponses(assessmentId).getSuccessObjectOrThrowException();
+        return simpleToMap(responses, AssessorFormInputResponseResource::getFormInput);
     }
 
     private boolean isAssessed(List<FormInputResource> formInputs,
