@@ -499,7 +499,7 @@ public class ProjectFinanceChecksController {
     }
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form, markAsCompleteEnabled);
+        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form, Optional.empty());
     }
 
     private FinanceChecksEligibilityForm getEligibilityForm(EligibilityResource eligibility) {
