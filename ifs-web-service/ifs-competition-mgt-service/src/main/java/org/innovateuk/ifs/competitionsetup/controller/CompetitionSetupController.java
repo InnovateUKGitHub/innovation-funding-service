@@ -7,8 +7,6 @@ import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -50,7 +48,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 @RequestMapping("/competition/setup")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupController {
-
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
     public static final String COMPETITION_ID_KEY = "competitionId";
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
@@ -58,16 +55,12 @@ public class CompetitionSetupController {
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
     public static final String COMPETITION_NAME_KEY = "competitionName";
     public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
-    public static final Long OPEN_SECTOR_ID = 0L;
 
     @Autowired
     private CompetitionService competitionService;
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
-
-    @Autowired
-    private CategoryRestService categoryRestService;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -331,17 +324,6 @@ public class CompetitionSetupController {
     }
 
 
-    /* AJAX Function */
-    @GetMapping("/getInnovationArea/{innovationSectorId}")
-    @ResponseBody
-    public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
-
-        if (OPEN_SECTOR_ID.equals(innovationSectorId)) {
-            return categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
-        } else {
-            return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
-        }
-    }
 
     /* AJAX Function */
     @GetMapping("/{competitionId}/generateCompetitionCode")

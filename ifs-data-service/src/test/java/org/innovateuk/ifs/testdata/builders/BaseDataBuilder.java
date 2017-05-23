@@ -44,6 +44,7 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
@@ -116,6 +117,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationRepository applicationRepository;
     protected ApplicationFundingService applicationFundingService;
     protected ProjectService projectService;
+    protected ProjectDetailsService projectDetailsService;
     protected MonitoringOfficerService monitoringOfficerService;
     protected FinanceRowService financeRowService;
     protected SectionService sectionService;

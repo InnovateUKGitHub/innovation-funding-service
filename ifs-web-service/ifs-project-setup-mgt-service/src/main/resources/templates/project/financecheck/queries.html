@@ -15,20 +15,30 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
     <h2 class="heading-medium">Finance Contact</h2>
-    <p>
-        <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
-        <th:block th:text="${model.financeContactEmail}">example@example.com</th:block> <br />
-        <th:block th:text="${model.financeContactPhoneNumber}">0</th:block>
+    <p th:if="${model.financeContact.isPresent()}">
+        <th:block th:text="${model.financeContact.get().userName}">Finance Contact</th:block> <br />
+        <th:block th:text="${model.financeContact.get().email}">example@example.com</th:block> <br />
+        <th:block th:text="${model.financeContact.get().phoneNumber}">0</th:block>
+    </p>
+
+    <p th:unless="${model.financeContact.isPresent()}">
+        No assigned contact
     </p>
 
     <h2 class="heading-medium">Queries</h2>
     <p>
-        If you have a query with the finances, use this section to raise your query with the finance contact.
-        You must confirm any finance changes with the contact before you approve.
+        Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
     </p>
     <div class="grid-row extra-margin-top">
         <div class="column-half">
-            <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="button button-large" th:test="${baseUrl}">Post a new query</a>
+
+            <th:block th:if="${model.financeContact.isPresent()}">
+                <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="button button-large">Post a new query</a>
+            </th:block>
+
+            <th:block th:unless="${model.financeContact.isPresent()}">
+                <button disabled="disabled" class="button button-large">Post a new query</button>
+            </th:block>
         </div>
         <div class="column-half">
             <fieldset>

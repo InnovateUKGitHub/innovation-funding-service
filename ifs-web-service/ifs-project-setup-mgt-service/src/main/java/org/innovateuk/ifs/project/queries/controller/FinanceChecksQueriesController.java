@@ -95,9 +95,7 @@ public class FinanceChecksQueriesController {
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
-                                                         @PathVariable Long attachmentId,
-                                                         UserResource loggedInUser,
-                                                         HttpServletRequest request) {
+                                                         @PathVariable Long attachmentId) {
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
@@ -108,10 +106,8 @@ public class FinanceChecksQueriesController {
                                   @PathVariable Long queryId,
                                   @RequestParam(value = "query_section", required = false) String querySection,
                                   Model model,
-                                  UserResource loggedInUser,
-                                  HttpServletRequest request,
-                                  HttpServletResponse response) {
-
+                                  @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser,
+                                  HttpServletRequest request) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         model.addAttribute("model", populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments));
         model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId, queryId).orElse(new FinanceChecksQueriesAddResponseForm()));
@@ -185,7 +181,6 @@ public class FinanceChecksQueriesController {
                                             @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddResponseForm form,
                                             @SuppressWarnings("unused") BindingResult bindingResult,
                                             ValidationHandler validationHandler,
-                                            UserResource loggedInUser,
                                             HttpServletRequest request,
                                             HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
@@ -220,7 +215,6 @@ public class FinanceChecksQueriesController {
                                                                  @PathVariable Long organisationId,
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
-                                                                 UserResource loggedInUser,
                                                                  HttpServletRequest request) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
 
@@ -239,12 +233,8 @@ public class FinanceChecksQueriesController {
                                    @RequestParam(value = "query_section", required = false) final String querySection,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddResponseForm form,
-                                   @SuppressWarnings("unused") BindingResult bindingResult,
-                                   ValidationHandler validationHandler,
-                                   UserResource loggedInUser,
                                    HttpServletRequest request,
-                                   HttpServletResponse response,
-                                   Model model) {
+                                   HttpServletResponse response) {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         if (attachments.contains(attachmentId)) {
             financeCheckService.deleteFile(attachmentId).andOnSuccess(() ->
@@ -262,8 +252,6 @@ public class FinanceChecksQueriesController {
                                 @PathVariable Long organisationId,
                                 @PathVariable Long queryId,
                                 @RequestParam(value = "query_section", required = false) String querySection,
-                                Model model,
-                                UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
         loadAttachmentsFromCookie(request, projectId, organisationId, queryId).forEach(financeCheckService::deleteFile);
@@ -324,9 +312,7 @@ public class FinanceChecksQueriesController {
         return new FinanceChecksQueriesViewModel(
                 organisation.getName(),
                 leadPartnerOrganisation,
-                financeContact.isPresent() ? financeContact.get().getUserName() : UNKNOWN_FIELD,
-                financeContact.isPresent() ? financeContact.get().getEmail() : UNKNOWN_FIELD,
-                financeContact.isPresent() ? financeContact.get().getPhoneNumber() : UNKNOWN_FIELD,
+                financeContact,
                 querySection == null ? UNKNOWN_FIELD : querySection,
                 project.getId(),
                 project.getName(),
@@ -367,7 +353,6 @@ public class FinanceChecksQueriesController {
         return cookieUtil.getCookieAsList(request, getCookieName(projectId, organisationId, queryId),
                 new TypeReference<List<Long>>() {});
     }
-
 
     private String getFormCookieName(Long projectId, Long organisationId, Long queryId) {
         return FORM_COOKIE + "_" + projectId + "_" + organisationId + "_" + queryId;
