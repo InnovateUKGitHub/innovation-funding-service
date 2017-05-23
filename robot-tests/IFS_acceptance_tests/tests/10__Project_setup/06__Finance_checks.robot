@@ -86,6 +86,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-9517 I can view and save the viability page in project setup management
 ...
 ...               INFUND-8501 As partner I want to be able to view all originally submitted application finance details against the revisions made during the Finance Checks eligibility section so that I can make a clear comparison
+...
+...               IFS-236 Queries - do not post until the Finance contact can view and respond to it within the service.
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    Custom Suite Teardown
@@ -111,7 +113,6 @@ Project Finance user can see the finance check summary page
     And the user should see the element    link=Projects in setup
 
 
-
 Project finance user cannot view viability section if this is not applicable for the org in question
     [Documentation]    INFUND-9517
     [Tags]
@@ -127,6 +128,17 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should see the text in the page    Notes
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
+
+Query section is disabled before finance contacts have been selected
+    [Documentation]    IFS-236
+    [Tags]
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    And the user clicks the button/link    jQuery=.button:contains("Queries")
+    Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/40/eligibility
+    And the user clicks the button/link    jQuery=.button:contains("Queries")
+    Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
+    [Teardown]    finance contacts are selected and bank details are approved
 
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
@@ -1765,8 +1777,12 @@ the table row has expected values
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     lead partner selects project manager and address
+
+
+finance contacts are selected and bank details are approved
     partners submit their finance contacts
     bank details are approved for all businesses
+
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in  &{lead_applicant_credentials}
@@ -1804,11 +1820,15 @@ lead partner selects project manager and address
     the user clicks the button/link      jQuery=button:contains("Submit")
 
 partners submit their finance contacts
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  financeContact1
-    log in as a different user         &{collaborator1_credentials}
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  financeContact1
-    log in as a different user         &{collaborator2_credentials}
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  financeContact1
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    &{lead_applicant_credentials}
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}    &{collaborator1_credentials}
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}    &{collaborator2_credentials}
+
+the partner submits their finance contact
+    [Arguments]    ${org_id}    &{credentials}
+    log in as a different user         &{credentials}
+    navigate to external finance contact page, choose finance contact and save  ${org_id}  financeContact1
+
 
 navigate to external finance contact page, choose finance contact and save
     [Arguments]  ${org_id}   ${financeContactSelector}
