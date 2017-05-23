@@ -77,6 +77,7 @@ public class CompetitionManagementApplicationController {
                                    @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
                                    @ModelAttribute("form") @Valid ApplicationForm applicationForm,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
                                    HttpServletRequest request,
                                    UserResource user,
                                    Model model) {
@@ -86,15 +87,18 @@ public class CompetitionManagementApplicationController {
         // TODO: IFS-253 bind query parameters to maps properly
         MultiValueMap<String, String> queryParams = getQueryStringParameters(request);
 
-        return competitionManagementApplicationService
-                .markApplicationAsIneligible(
-                        applicationId,
-                        competitionId,
-                        origin,
-                        queryParams,
-                        applicationForm,
-                        user,
-                        model);
+        return validationHandler.failNowOrSucceedWith(
+                () -> displayApplicationOverview(applicationId, competitionId, applicationForm, user, origin, queryParams, model),
+                () -> competitionManagementApplicationService
+                                .markApplicationAsIneligible(
+                                        applicationId,
+                                        competitionId,
+                                        origin,
+                                        queryParams,
+                                        applicationForm,
+                                        user,
+                                        model)
+        );
     }
 
     @PostMapping(value = "/{applicationId}/reinstateIneligibleApplication")
