@@ -105,12 +105,15 @@ public class CompetitionOverviewViewModel {
     }
 
     public boolean isShowClosedMessage() {
-        return nonIfs ? getRegistrationCloseDate().isBefore(ZonedDateTime.now()) :
-                competitionCloseDate.isBefore(ZonedDateTime.now());
+        return competitionCloseDate.isBefore(ZonedDateTime.now());
+    }
+
+    public boolean isShowRegistrationClosedMessage() {
+        return nonIfs && getRegistrationCloseDate().isBefore(ZonedDateTime.now()) && !isShowClosedMessage();
     }
 
     public boolean isDisableApplyButton() {
-        return isShowNotOpenYetMessage() || isShowClosedMessage();
+        return isShowNotOpenYetMessage() || isShowRegistrationClosedMessage() || isShowClosedMessage();
     }
 
     public String getApplyButtonUrl() {
