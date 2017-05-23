@@ -131,7 +131,7 @@ Status of the Eligibility column (workaround for private beta competition)
 
 Query section is disabled before finance contacts have been selected
     [Documentation]    IFS-236
-    [Tags]
+    [Tags]    HappyPath
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
