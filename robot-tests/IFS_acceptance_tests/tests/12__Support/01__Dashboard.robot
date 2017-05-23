@@ -23,8 +23,7 @@ Competition links go directly to all applications page
 
 Back navigation is to dashboard
     [Documentation]    IFS-188
-    [Tags]  Support  Failing
-    # TODO IFS-291
+    [Tags]  Support
     Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
     Then the user should see the element    jQuery=h1:contains("All competitions")
 
