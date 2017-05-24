@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
-import org.innovateuk.ifs.project.transactional.ProjectStatusService;
+import org.innovateuk.ifs.project.status.transactional.ProjectStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.transactional;
+package org.innovateuk.ifs.project.status.transactional;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantO
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -116,10 +117,6 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 golWorkflowHandler.isSent(project));
     }
 
-    private Integer getProjectPartnerCount(Long projectId) {
-        return projectUsersHelper.getPartnerOrganisations(projectId).size();
-    }
-
     private ProjectActivityStates getProjectDetailsStatus(Project project) {
         for (Organisation organisation : project.getOrganisations()) {
             Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
@@ -134,9 +131,19 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
     }
 
-    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
-        return result.map(Boolean::booleanValue).orElse(false);
+    private ProjectActivityStates getFinanceChecksStatus(Project project) {
+
+        List<SpendProfile> spendProfile = spendProfileRepository.findByProjectId(project.getId());
+
+        if (spendProfile.isEmpty()) {
+            return ACTION_REQUIRED;
+        }
+
+        return COMPLETE;
+    }
+
+    private Integer getProjectPartnerCount(Long projectId) {
+        return projectUsersHelper.getPartnerOrganisations(projectId).size();
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project) {
@@ -168,15 +175,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         }
     }
 
-    private ProjectActivityStates getFinanceChecksStatus(Project project) {
-
-        List<SpendProfile> spendProfile = spendProfileRepository.findByProjectId(project.getId());
-
-        if (spendProfile.isEmpty()) {
-            return ACTION_REQUIRED;
-        }
-
-        return COMPLETE;
+    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
+        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+        return result.map(Boolean::booleanValue).orElse(false);
     }
 
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
