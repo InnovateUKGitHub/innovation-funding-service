@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;
@@ -8,7 +11,6 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
@@ -24,7 +26,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -33,6 +34,7 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
@@ -44,13 +46,13 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.ProjectMonitoringOfficerService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
 import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -61,10 +63,13 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -72,7 +77,8 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -82,76 +88,94 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
-    public static final String INNOVATE_UK_ORG_NAME = "Innovate UK";
     public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
 
-    protected ServiceLocator serviceLocator;
-    protected BaseUserService baseUserService;
-    protected UserService userService;
-    protected CompetitionService competitionService;
-    protected CompetitionTypeRepository competitionTypeRepository;
-    protected CategoryRepository categoryRepository;
-    protected InnovationAreaRepository innovationAreaRepository;
-    protected InnovationSectorRepository innovationSectorRepository;
-    protected ResearchCategoryRepository researchCategoryRepository;
-    protected CompetitionSetupService competitionSetupService;
-    protected PublicContentService publicContentService;
-    protected PublicContentRepository publicContentRepository;
-    protected ContentGroupRepository contentGroupRepository;
-    protected ContentEventRepository contentEventRepository;
-    protected OrganisationService organisationService;
-    protected UserRepository userRepository;
-    protected ProfileRepository profileRepository;
-    protected RegistrationService registrationService;
-    protected RoleRepository roleRepository;
-    protected OrganisationRepository organisationRepository;
-    protected TokenRepository tokenRepository;
-    protected TokenService tokenService;
-    protected InviteService inviteService;
-    protected CompAdminEmailRepository compAdminEmailRepository;
-    protected MilestoneService milestoneService;
-    protected ApplicationService applicationService;
-    protected QuestionService questionService;
-    protected FormInputService formInputService;
-    protected FormInputResponseRepository formInputResponseRepository;
-    protected ApplicationRepository applicationRepository;
-    protected ApplicationFundingService applicationFundingService;
-    protected ProjectService projectService;
-    protected ProjectMonitoringOfficerService projectMonitoringOfficerService;
-    protected FinanceRowService financeRowService;
-    protected SectionService sectionService;
-    protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
-    protected UsersRolesService usersRolesService;
-    protected ApplicationInviteRepository applicationInviteRepository;
-    protected EthnicityRepository ethnicityRepository;
-    protected RoleService roleService;
-    protected CompetitionInviteRepository competitionInviteRepository;
-    protected CompetitionRepository competitionRepository;
-    protected CompetitionFunderRepository competitionFunderRepository;
-    protected AssessorService assessorService;
-    protected CompetitionParticipantRepository competitionParticipantRepository;
-    protected CompetitionInviteService competitionInviteService;
-    protected TestService testService;
-    protected AssessmentRepository assessmentRepository;
-    protected AssessmentService assessmentService;
-    protected AssessmentWorkflowHandler assessmentWorkflowHandler;
-    protected ProcessRoleRepository processRoleRepository;
-    protected ActivityStateRepository activityStateRepository;
-    protected SectionRepository sectionRepository;
-    protected QuestionRepository questionRepository;
-    protected FormInputRepository formInputRepository;
-    protected FileEntryRepository fileEntryRepository;
-    protected ApplicationFinanceRepository applicationFinanceRepository;
-    protected ProjectUserRepository projectUserRepository;
-    protected BankDetailsService bankDetailsService;
-    protected SpendProfileService spendProfileService;
-    protected FinanceCheckService financeCheckService;
-    protected RejectionReasonService rejectionReasonService;
-    protected ProfileService profileService;
-    protected AffiliationService affiliationService;
-    protected ApplicationInnovationAreaService applicationInnovationAreaService;
-    protected AssessorFormInputResponseService assessorFormInputResponseService;
-    protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
+    protected static boolean initialisedServices = false;
+
+    protected static ServiceLocator serviceLocator;
+    protected static BaseUserService baseUserService;
+    protected static UserService userService;
+    protected static CompetitionService competitionService;
+    protected static CompetitionTypeRepository competitionTypeRepository;
+    protected static CategoryRepository categoryRepository;
+    protected static InnovationAreaRepository innovationAreaRepository;
+    protected static InnovationSectorRepository innovationSectorRepository;
+    protected static ResearchCategoryRepository researchCategoryRepository;
+    protected static CompetitionSetupService competitionSetupService;
+    protected static PublicContentService publicContentService;
+    protected static PublicContentRepository publicContentRepository;
+    protected static ContentGroupRepository contentGroupRepository;
+    protected static ContentGroupService contentGroupService;
+    protected static ContentEventRepository contentEventRepository;
+    protected static OrganisationService organisationService;
+    protected static OrganisationTypeService organisationTypeService;
+    protected static UserRepository userRepository;
+    protected static ProfileRepository profileRepository;
+    protected static RegistrationService registrationService;
+    protected static RoleRepository roleRepository;
+    protected static OrganisationRepository organisationRepository;
+    protected static TokenRepository tokenRepository;
+    protected static TokenService tokenService;
+    protected static InviteService inviteService;
+    protected static CompAdminEmailRepository compAdminEmailRepository;
+    protected static MilestoneService milestoneService;
+    protected static ApplicationService applicationService;
+    protected static QuestionService questionService;
+    protected static FormInputService formInputService;
+    protected static FormInputResponseRepository formInputResponseRepository;
+    protected static ApplicationRepository applicationRepository;
+    protected static ApplicationFundingService applicationFundingService;
+    protected static ProjectService projectService;
+    protected static FinanceRowService financeRowService;
+    protected static SectionService sectionService;
+    protected static ProjectFinanceEmailRepository projectFinanceEmailRepository;
+    protected static UsersRolesService usersRolesService;
+    protected static ApplicationInviteRepository applicationInviteRepository;
+    protected static EthnicityRepository ethnicityRepository;
+    protected static RoleService roleService;
+    protected static CompetitionInviteRepository competitionInviteRepository;
+    protected static CompetitionRepository competitionRepository;
+    protected static CompetitionFunderRepository competitionFunderRepository;
+    protected static AssessorService assessorService;
+    protected static CompetitionParticipantRepository competitionParticipantRepository;
+    protected static CompetitionInviteService competitionInviteService;
+    protected static TestService testService;
+    protected static AssessmentRepository assessmentRepository;
+    protected static AssessmentService assessmentService;
+    protected static AssessmentWorkflowHandler assessmentWorkflowHandler;
+    protected static ProcessRoleRepository processRoleRepository;
+    protected static ActivityStateRepository activityStateRepository;
+    protected static SectionRepository sectionRepository;
+    protected static QuestionRepository questionRepository;
+    protected static FormInputRepository formInputRepository;
+    protected static FileEntryRepository fileEntryRepository;
+    protected static ApplicationFinanceRepository applicationFinanceRepository;
+    protected static ProjectUserRepository projectUserRepository;
+    protected static BankDetailsService bankDetailsService;
+    protected static SpendProfileService spendProfileService;
+    protected static FinanceCheckService financeCheckService;
+    protected static RejectionReasonService rejectionReasonService;
+    protected static ProfileService profileService;
+    protected static AffiliationService affiliationService;
+    protected static ApplicationInnovationAreaService applicationInnovationAreaService;
+    protected static AssessorFormInputResponseService assessorFormInputResponseService;
+    protected static IneligibleOutcomeMapper ineligibleOutcomeMapper;
+
+    private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
+
+    private static Cache<Long, List<FormInputResource>> formInputsByQuestionId = CacheBuilder.newBuilder().build();
+
+    private static Cache<String, UserResource> usersByEmailAddress = CacheBuilder.newBuilder().build();
+
+    private static Cache<String, UserResource> usersByEmailAddressInternal = CacheBuilder.newBuilder().build();
+
+    private static Cache<Long, UserResource> usersById = CacheBuilder.newBuilder().build();
+
+    private static Cache<Pair<Long, String>, ProcessRoleResource> applicantsByApplicationIdAndEmail = CacheBuilder.newBuilder().build();
+
+    private static Cache<Long, ProcessRoleResource> leadApplicantsByApplicationId = CacheBuilder.newBuilder().build();
+
+    private static Cache<String, OrganisationResource> organisationsByName = CacheBuilder.newBuilder().build();
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
 
@@ -185,7 +209,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
             applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
             projectService = serviceLocator.getBean(ProjectService.class);
-            projectMonitoringOfficerService = serviceLocator.getBean(ProjectMonitoringOfficerService.class);
             financeRowService = serviceLocator.getBean(FinanceRowService.class);
             sectionService = serviceLocator.getBean(SectionService.class);
             projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
@@ -279,9 +302,14 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return simpleFindFirst(retrieveQuestionsByCompetitionId(competitionId), q -> questionName.equals(q.getName())).get();
     }
 
-    private List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
+    protected List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
         return fromCache(competitionId, questionsByCompetitionId, () ->
                 questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
+    }
+
+    protected List<FormInputResource> retrieveFormInputsByQuestionId(QuestionResource question) {
+        return fromCache(question.getId(), formInputsByQuestionId, () ->
+                formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException());
     }
 
     protected OrganisationResource retrieveOrganisationResourceByName(String organisationName) {

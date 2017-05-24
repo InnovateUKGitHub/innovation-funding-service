@@ -16,6 +16,8 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -305,7 +307,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                         withAssignee(data.getLeadApplicant().getEmail()).
                         withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", data.getLeadApplicant().getEmail());
 
-                List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+                List<FormInputResource> formInputs = retrieveFormInputsByQuestionId(question);
 
                 if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
 
