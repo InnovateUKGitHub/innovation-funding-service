@@ -287,42 +287,43 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    public ApplicationDataBuilder withDefaultQuestionResponses(boolean applicationSubmitted) {
+    /**
+     * Generate a default set of responses to the basic application questions (project summary, scope, etc) for
+     * applications that need responses but don't have any specific values in the application-questions.csv
+     */
+    public ApplicationDataBuilder withDefaultQuestionResponses() {
 
         return with(data -> {
 
-            if (applicationSubmitted) {
+            QuestionResponseDataBuilder baseBuilder =
+                    newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
 
-                QuestionResponseDataBuilder baseBuilder =
-                        newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
+            List<QuestionResource> competitionQuestions = retrieveQuestionsByCompetitionId(data.getCompetition().getId());
 
-                List<QuestionResource> competitionQuestions = retrieveQuestionsByCompetitionId(data.getCompetition().getId());
+            List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
+                    q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
 
-                List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
-                        q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
+            List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
 
-                List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
+                QuestionResponseDataBuilder responseBuilder = baseBuilder.
+                        forQuestion(question.getName()).
+                        withAssignee(data.getLeadApplicant().getEmail()).
+                        withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", data.getLeadApplicant().getEmail());
 
-                    QuestionResponseDataBuilder responseBuilder = baseBuilder.
-                            forQuestion(question.getName()).
-                            withAssignee(data.getLeadApplicant().getEmail()).
-                            withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", data.getLeadApplicant().getEmail());
+                List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
 
-                    List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+                if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
 
-                    if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
+                    String fileUploadName = (data.getApplication().getName() + "-" + question.getShortName().toLowerCase() + ".pdf")
+                            .toLowerCase().replace(' ', '-') ;
 
-                        String fileUploadName = (data.getApplication().getName() + "-" + question.getShortName().toLowerCase() + ".pdf")
-                                .toLowerCase().replace(' ', '-') ;
+                    responseBuilder = responseBuilder.withFileUploads(singletonList(fileUploadName), data.getLeadApplicant().getEmail());
+                }
 
-                        responseBuilder = responseBuilder.withFileUploads(singletonList(fileUploadName), data.getLeadApplicant().getEmail());
-                    }
+                return responseBuilder.markAsComplete();
+            });
 
-                    return responseBuilder.markAsComplete();
-                });
-
-                responseBuilders.forEach(QuestionResponseDataBuilder::build);
-            }
+            responseBuilders.forEach(QuestionResponseDataBuilder::build);
         });
     }
 }

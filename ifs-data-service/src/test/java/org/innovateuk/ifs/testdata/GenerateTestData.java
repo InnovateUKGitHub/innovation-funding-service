@@ -618,10 +618,13 @@ public class GenerateTestData extends BaseIntegrationTest {
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r -> r.competitionName.equals(competitionLine.name) && r.applicationName.equals(applicationLine.title));
 
+        // if we have specific answers for questions in the application-questions.csv file, fill them in here now
         if (!responsesForApplication.isEmpty()) {
             baseBuilder = baseBuilder.withQuestionResponses(questionResponsesFromCsv(applicationLine.leadApplicant, responsesForApplication));
-        } else {
-            baseBuilder = baseBuilder.withDefaultQuestionResponses(applicationLine.submittedDate != null);
+        }
+        // otherwise provide a default set of marked as complete questions if the application is to be submitted
+        else if (applicationLine.submittedDate != null) {
+            baseBuilder = baseBuilder.withDefaultQuestionResponses();
         }
 
         baseBuilder = baseBuilder.withFinances(financeBuilders);

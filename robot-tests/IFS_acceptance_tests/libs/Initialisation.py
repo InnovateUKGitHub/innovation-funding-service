@@ -86,6 +86,8 @@ cursor.close()
 db.close()
 
 
+# different from the project_ids dictionary that we create during startup, this method can be used to look up
+# new project ids that were not present during the start of the test runs
 def getProjectId(name):
     db, cursor = connectToDb()
 
