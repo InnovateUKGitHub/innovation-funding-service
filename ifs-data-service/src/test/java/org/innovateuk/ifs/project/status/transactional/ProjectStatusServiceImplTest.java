@@ -17,8 +17,6 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.project.transactional.ProjectStatusService;
-import org.innovateuk.ifs.project.transactional.ProjectStatusServiceImpl;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
