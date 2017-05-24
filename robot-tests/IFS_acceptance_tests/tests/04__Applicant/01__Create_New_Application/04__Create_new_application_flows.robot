@@ -14,7 +14,7 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../10__Project_setup/PS_Common.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Non registered users CH route: User can choose RTO organisation

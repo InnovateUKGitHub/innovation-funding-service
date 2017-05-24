@@ -6,6 +6,7 @@ Suite Setup       Applicant goes to the create organisation page
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Not in Companies House: Enter details manually link

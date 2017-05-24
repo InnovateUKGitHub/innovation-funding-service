@@ -14,7 +14,7 @@ Suite Setup       Applicant goes to the registration form
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../10__Project_setup/PS_Common.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Your details: Server-side validations
