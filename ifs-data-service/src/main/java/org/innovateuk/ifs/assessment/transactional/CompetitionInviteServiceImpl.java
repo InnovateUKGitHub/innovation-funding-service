@@ -466,14 +466,15 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getCompetition(competitionId).andOnSuccessReturnVoid(competition -> {
+        return getCompetition(competitionId).andOnSuccess(competition -> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
             String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
             String customTextHtml = plainTextToHtml(customTextPlain);
 
-            competitionInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED).stream()
-                    .map(invite -> {
+            return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+                    competitionInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
+                    invite -> {
                         competitionParticipantRepository.save(
                                 new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
                         );
@@ -482,23 +483,23 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                             userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
                         }
 
-                        return invite;
-                    })
-                    .forEach(invite -> sendInviteNotification(
-                            assessorInviteSendResource.getSubject(),
-                            formatter,
-                            customTextPlain,
-                            customTextHtml,
-                            invite
-                    ));
+                        return sendInviteNotification(
+                                assessorInviteSendResource.getSubject(),
+                                formatter,
+                                customTextPlain,
+                                customTextHtml,
+                                invite
+                        );
+                    }
+            ));
         });
     }
 
-    private void sendInviteNotification(String subject,
-                                        DateTimeFormatter formatter,
-                                        String customTextPlain,
-                                        String customTextHtml,
-                                        CompetitionInvite invite) {
+    private ServiceResult<Void> sendInviteNotification(String subject,
+                                                       DateTimeFormatter formatter,
+                                                       String customTextPlain,
+                                                       String customTextHtml,
+                                                       CompetitionInvite invite) {
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
@@ -515,7 +516,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         "customTextHtml", customTextHtml
                 ));
 
-        notificationSender.sendNotification(notification);
+        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
     }
 
     private void addAssessorRoleToUser(User user) {
