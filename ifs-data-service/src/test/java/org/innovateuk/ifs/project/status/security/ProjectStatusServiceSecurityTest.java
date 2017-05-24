@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.security.ProjectPermissionRules;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.transactional.ProjectStatusService;
@@ -24,12 +23,12 @@ import static org.mockito.Mockito.when;
  */
 public class ProjectStatusServiceSecurityTest extends BaseServiceSecurityTest<ProjectStatusService> {
 
-    private ProjectPermissionRules projectPermissionRules;
+    private StatusPermissionRules statusPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        projectPermissionRules = getMockPermissionRulesBean(ProjectPermissionRules.class);
+        statusPermissionRules = getMockPermissionRulesBean(StatusPermissionRules.class);
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 
@@ -40,9 +39,9 @@ public class ProjectStatusServiceSecurityTest extends BaseServiceSecurityTest<Pr
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
-            verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
+            verify(statusPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
+            verify(statusPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
+            verifyNoMoreInteractions(statusPermissionRules);
         });
     }
 
