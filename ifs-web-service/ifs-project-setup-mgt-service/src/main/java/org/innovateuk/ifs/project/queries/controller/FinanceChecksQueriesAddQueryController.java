@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.queries.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -81,11 +82,15 @@ public class FinanceChecksQueriesAddQueryController {
                           UserResource loggedInUser,
                           HttpServletRequest request,
                           HttpServletResponse response) {
-        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-        FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
-        model.addAttribute("model", viewModel);
-        model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddQueryForm()));
-        return NEW_QUERY_VIEW;
+        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
+            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+            FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
+            model.addAttribute("model", viewModel);
+            model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddQueryForm()));
+            return NEW_QUERY_VIEW;
+        } else {
+            throw new ObjectNotFoundException();
+        }
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -183,12 +188,16 @@ public class FinanceChecksQueriesAddQueryController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
+            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
-        if (attachments.contains(attachmentId)) {
-            return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
+            if (attachments.contains(attachmentId)) {
+                return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
+            } else {
+                throw new ForbiddenActionException();
+            }
         } else {
-            throw new ForbiddenActionException();
+            throw new ObjectNotFoundException();
         }
     }
 
@@ -224,9 +233,13 @@ public class FinanceChecksQueriesAddQueryController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
-        deleteCookies(response, projectId, organisationId);
-        return redirectTo(queriesListView(projectId, organisationId, querySection));
+        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
+            loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
+            deleteCookies(response, projectId, organisationId);
+            return redirectTo(queriesListView(projectId, organisationId, querySection));
+        } else {
+            throw new ObjectNotFoundException();
+        }
     }
 
     private FinanceChecksQueriesAddQueryViewModel populateQueriesViewModel(Long projectId, Long organisationId, String querySection, List<Long> attachmentFileIds) {

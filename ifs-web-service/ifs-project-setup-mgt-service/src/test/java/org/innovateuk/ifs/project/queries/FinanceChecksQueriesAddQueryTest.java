@@ -30,10 +30,7 @@ import org.springframework.validation.BindingResult;
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -68,6 +65,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Before public void setup() {
         super.setUp();
         this.setupCookieUtil();
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
@@ -106,6 +104,17 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertTrue(queryViewModel.isLeadPartnerOrganisation());
         assertEquals(0, queryViewModel.getNewAttachmentLinks().size());
         assertEquals("Query", modelForm.getQuery());
+    }
+
+    @Test
+    public void testViewNewQueryProjectAndOrgInconsistent() throws Exception {
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404"));
+
     }
 
     @Test
@@ -293,6 +302,17 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void testDownloadAttachmentFailsProjectAndOrgInconsistent() throws Exception {
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/attachment/1?query_section=Eligibility"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404"));
+
+    }
+
+    @Test
     public void testCancelNewQuery() throws Exception {
 
         List<Long> attachmentIds = new ArrayList<>();
@@ -321,6 +341,17 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals(true, formCookieFound.get().getValue().isEmpty());
 
         verify(financeCheckServiceMock).deleteFile(1L);
+    }
+
+    @Test
+    public void testCancelNewQueryFailsProjectAndOrgInconsistent() throws Exception {
+
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404"));
+
     }
 
     @Test
