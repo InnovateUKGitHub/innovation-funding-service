@@ -10,6 +10,8 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
@@ -21,7 +23,9 @@ import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -35,8 +39,12 @@ import java.util.stream.Collectors;
 import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -277,5 +285,69 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
             roleSpecificGolStates.put(COMP_ADMIN, NOT_STARTED);
         }
         return roleSpecificGolStates;
+    }
+
+    @Override
+    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
+        Project project = projectRepository.findOne(projectId);
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+
+        Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
+                userId -> simpleFindFirst(project.getProjectUsers(),
+                        pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
+
+        List<Organisation> partnerOrganisationsToInclude =
+                simpleFilter(project.getOrganisations(), partner ->
+                        partner.getId().equals(leadOrganisation.getId()) ||
+                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId()))
+                                        .orElse(true)));
+
+        List<Organisation> sortedOrganisationsToInclude
+                = new PrioritySorting<>(partnerOrganisationsToInclude, leadOrganisation, Organisation::getName).unwrap();
+
+        List<ProjectPartnerStatusResource> projectPartnerStatusResources =
+                simpleMap(sortedOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
+
+        ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
+        projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
+
+        return serviceSuccess(projectTeamStatusResource);
+    }
+
+    private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
+        Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
+        Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
+        OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
+
+        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccessObject();
+        boolean isLead = partnerOrganisation.equals(leadOrganisation);
+
+        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
+        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
+        ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
+        ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
+        ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
+        ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
+        ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
+
+        return new ProjectPartnerStatusResource(
+                partnerOrganisation.getId(),
+                partnerOrganisation.getName(),
+                organisationType,
+                projectDetailsStatus,
+                monitoringOfficerStatus,
+                bankDetailsStatus,
+                financeChecksStatus,
+                spendProfileStatus,
+                otherDocumentsStatus,
+                grantOfferLetterStatus,
+                financeContactStatus,
+                golWorkflowHandler.isAlreadySent(project),
+                isLead);
     }
 }
