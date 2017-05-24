@@ -19,12 +19,12 @@ Companies House: Valid company name
     [Tags]    HappyPath
     When the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    id=org-search
-    Then the user should see the element    Link=HIVE IT LIMITED
+    Then the user should see the element    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     [Teardown]    The user goes back to the previous page
 
 Companies House: User can choose the organisation and same operating address
     [Tags]    HappyPath
-    When the user clicks the button/link    Link=HIVE IT LIMITED
+    When the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     Then the user should see the text in the page    Business
     And the user should see the text in the page    Registered name
     And the user should see the text in the page    Registered Address

@@ -136,9 +136,9 @@ the finance summary calculations should be correct
     the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£70,316")
 
 the finance Funding breakdown calculations should be correct
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("Empire Ltd") + td:contains("£147,153")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("Ludlow") + td:contains("£100,452")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("EGGS") + td:contains("£495")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£147,153")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}") + td:contains("£100,452")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}") + td:contains("£495")
     the user should see the element  jQuery=.project-cost-breakdown th:contains("Total") + td:contains("£248,100")
 
 the finance summary table in Your Finances has correct values for lead

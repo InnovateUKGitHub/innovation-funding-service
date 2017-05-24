@@ -15,6 +15,7 @@ Suite Teardown    the user closes the browser
 Force Tags        Applicant    CompAdmin
 Resource          ../../../resources/defaultResources.robot
 Resource          ../FinanceSection_Commons.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
@@ -448,7 +449,7 @@ the user can edit the project growth table
 
 the applicant enters valid inputs
     The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    The user enters text to a text field    name=organisations[1].organisationName    Ludlow
+    The user enters text to a text field    name=organisations[1].organisationName    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     The user enters text to a text field    name=organisations[1].invites[0].personName    Jessica Doe
     The user enters text to a text field    name=organisations[1].invites[0].email    ${collaborator1_credentials["email"]}
     focus    jquery=button:contains("Save changes")

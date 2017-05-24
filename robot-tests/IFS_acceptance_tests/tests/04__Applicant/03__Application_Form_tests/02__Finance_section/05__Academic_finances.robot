@@ -196,7 +196,7 @@ the finance table should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
-    guest user log-in    steve.smith@empire.com    Passw0rd
+    guest user log-in    ${lead_applicant}    Passw0rd
     the user clicks the button/link    link=Academic robot test application
     the applicant completes the application details    Application details
     the user navigates to the academic application finances
@@ -204,7 +204,7 @@ Lead applicant marks the finances as complete
 
 
 Lead applicant marks the finances as incomplete
-    log in as a different user    steve.smith@empire.com    Passw0rd
+    log in as a different user    ${lead_applicant}    Passw0rd
     the user navigates to the academic application finances
     the user clicks the button/link    link=Your funding
     the user clicks the button/link    jQuery=button:contains("Edit")

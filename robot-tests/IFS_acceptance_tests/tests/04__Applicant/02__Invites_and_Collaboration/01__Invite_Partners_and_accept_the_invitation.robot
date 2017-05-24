@@ -54,7 +54,7 @@ Lead Adds/Removes rows
     ...
     ...    INFUND-8590
     [Tags]    HappyPath
-    When The user clicks the button/link    jquery=a:contains("Update Empire Ltd")
+    When The user clicks the button/link    jquery=a:contains("Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
     And the user clicks the button/link    jQuery=button:contains("Add new applicant")
     And The user should not see the element    jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should see the element    jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
@@ -198,10 +198,10 @@ Parner can see the Application team
     Given the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=view team members and add collaborators
     Then the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
-    And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
+    And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
     And The user should see the element    link=Application overview
-    And The user should not see the element    link=Update Empire Ltd
+    And The user should not see the element    link=Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335
@@ -236,8 +236,8 @@ Lead applicant invites a non registered user in the same organisation
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
-    When the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")
-    Then the user should see the text in the page    Update Empire Ltd
+    When the user clicks the button/link    jQuery=a:contains("Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    Then the user should see the text in the page    Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user clicks the button/link    jQuery=button:contains("Add new applicant")
     When The user enters text to a text field    name= applicants[0].name    Roger Axe
     And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg2@gmail.com
@@ -262,9 +262,9 @@ Registered partner should not create new org but should follow the create accoun
 
 *** Keywords ***
 The lead applicant should have the correct status
-    the user should see the element    jQuery=h2:contains("Empire Ltd"):contains("(Lead)")
+    the user should see the element    jQuery=h2:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}"):contains("(Lead)")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
-    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
+    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 the applicant cannot assign to pending invitees

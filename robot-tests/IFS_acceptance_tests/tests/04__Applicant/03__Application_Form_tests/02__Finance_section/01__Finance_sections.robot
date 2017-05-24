@@ -61,8 +61,8 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
     When the user clicks the button/link             link=Your project costs
-    Then the user should see the text in the page    Provide the project costs for 'Empire Ltd'
-    And the user should see the text in the page     'Empire Ltd' Total project costs
+    Then the user should see the text in the page    Provide the project costs for '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}d'
+    And the user should see the text in the page     '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}' Total project costs
 
 Guidance in the your project costs
     [Documentation]    INFUND-192

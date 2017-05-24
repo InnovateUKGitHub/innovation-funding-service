@@ -536,9 +536,9 @@ CompAdmin approves other documents
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
-    And the user should see the text in the page    Empire Ltd
-    And the user should see the text in the page    Ludlow
-    And the user should see the text in the page    EGGS
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}
     Then the user should see the element    jQuery=button:contains("Accept documents")
     And the user should see the element    jQuery=button:contains("Reject documents")
