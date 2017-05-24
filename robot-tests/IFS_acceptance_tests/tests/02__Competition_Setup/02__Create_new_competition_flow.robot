@@ -85,38 +85,43 @@ New competition shows in Preparation section
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
-Initial details -Inovation sector of Open should be visible
-    [Documentation]    INFUND-9152
-    [Tags]    HappyPath
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    Given the user clicks the button/link    link=Initial details
-    And the user should see the element    jQuery=button:contains("+ add another innovation area")
-    And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
-    When the user selects the option from the drop-down menu    Open    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Biosciences    id=innovationAreaCategoryId-0
-    And the user clicks the button/link    jQuery=button:contains("+ add another innovation area")
-    Then the user selects the option from the drop-down menu    Sector    id=competitionTypeId
-    When the user selects the option from the drop-down menu    Open    id=innovationSectorCategoryId
-    The user should not see the selected option again
-
 Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    Given the user clicks the button/link                       link=Initial details
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
-    And the user clicks the button/link    jQuery=button:contains("+ add another innovation area")
-    And The user enters valid data in the initial details
+    And the user clicks the button/link                         jQuery=button:contains("+ add another innovation area")
+    And the user enters valid data in the initial details
     And the user moves focus and waits for autosave
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link             jQuery=.button:contains("Done")
     Then the user should see the text in the page    John Doe
-    And the user should see the text in the page    1/12/${nextyear}
-    And the user should see the text in the page    Ian Cooper
-    And the user should see the text in the page    Competition title
-    And the user should see the text in the page    Emerging and enabling
-    And the user should see the text in the page    Satellite applications
-    And the user should see the text in the page    Space technology
-    And the user should see the text in the page    Sector
-    And the user should see the text in the page    Yes
-    And the user should see the element             jQuery=.button:contains("Edit")
+    And the user should see the text in the page     1/12/${nextyear}
+    And the user should see the text in the page     Ian Cooper
+    And the user should see the text in the page     Competition title
+    And the user should see the text in the page     Emerging and enabling
+    And the user should see the text in the page     Satellite applications
+    And the user should see the text in the page     Space technology
+    And the user should see the text in the page     Sector
+    And the user should see the text in the page     Yes
+    And the user should see the element              jQuery=.button:contains("Edit")
+
+Initial details - Inovation sector of Open should be visible
+    [Documentation]    INFUND-9152
+    [Tags]    HappyPath
+    Given the user clicks the button/link                               jQuery=.button:contains("Edit")
+    Then the user should see the element                                jQuery=button:contains("+ add another innovation area")
+    When the user selects the option from the drop-down menu            Programme    id=competitionTypeId
+    And the user selects the option from the drop-down menu             Open    id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu             Biosciences    id=innovationAreaCategoryId-0
+    And the user clicks the button/link                                 jQuery=button:contains("+ add another innovation area")
+    Then the user selects the option from the drop-down menu            Sector    id=competitionTypeId
+    When the user selects the option from the drop-down menu            Open    id=innovationSectorCategoryId
+    Then the user should not see the selected option again
+    When the user clicks the button/link                                jQuery=.button:contains("Done")
+    Then the user should see the text in the page                       Open
+    And the user should see the text in the page                        Biosciences
+    And the user should see the element                                 jQuery=.button:contains("Edit")
 
 Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
@@ -152,9 +157,9 @@ Initial details - Comp Type and Date should not be editable
     Then the user should see the text in the page   1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
-    And the user should see the text in the page    Emerging and enabling
+    And the user should see the text in the page    Open
+    And the user should see the text in the page    Biosciences
     And the user should see the text in the page    Creative industries
-    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Yes
 
 
@@ -611,6 +616,8 @@ The user enters valid data in the initial details
     When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
     And the user selects the option from the drop-down menu   Infrastructure systems  id=innovationSectorCategoryId
     And the user selects the option from the drop-down menu   Offshore wind  id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu   Open  id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu   Biosciences     id=innovationAreaCategoryId-0
     And the user selects the option from the drop-down menu   Emerging and enabling  id=innovationSectorCategoryId
     And the user selects the option from the drop-down menu   Satellite applications  id=innovationAreaCategoryId-0
     And the user selects the option from the drop-down menu   Space technology  id=innovationAreaCategoryId-1
