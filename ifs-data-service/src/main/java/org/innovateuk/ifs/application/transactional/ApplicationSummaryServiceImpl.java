@@ -221,7 +221,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         // Order users by lead, followed by other users in alphabetic order
         List<ApplicationTeamUserResource> users = application.getProcessRoles()
                 .stream()
-                .filter(pr -> pr.getOrganisationId() == organisationId)
+                .filter(pr -> pr.getOrganisationId() != null && pr.getOrganisationId() == organisationId)
                 .sorted((pr1, pr2) -> {
                     if (pr1.isLeadApplicant()) {
                         return -1;
