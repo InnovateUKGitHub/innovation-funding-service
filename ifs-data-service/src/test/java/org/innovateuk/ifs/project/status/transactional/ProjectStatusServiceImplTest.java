@@ -1256,7 +1256,6 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertTrue(result.isSuccess() && PENDING.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
-
     @Test
     public void testSpendProfileCompleteRejected() {
         spendProfile.setApproval(ApprovalType.REJECTED);
