@@ -158,7 +158,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
         when(projectFinanceRowServiceMock.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
-        when(projectServiceMock.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
+        when(projectStatusServiceMock.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations[0].getId())).thenReturn(partnerOrganisations.get(0));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisations[1].getId())).thenReturn(partnerOrganisations.get(1));

@@ -164,19 +164,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectTeamStatus(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
-            verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
     public void testGetProjectManager(){
         ProjectResource project = newProjectResource().build();
 
@@ -240,11 +227,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         @Override
         public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
             return null;
         }
 

@@ -69,7 +69,7 @@ public class ProjectController {
     @GetMapping("/{projectId}/team-status")
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
                                                                @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
-        return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
+        return projectStatusService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 
     @GetMapping("/{projectId}/project-manager")

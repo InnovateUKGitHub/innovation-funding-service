@@ -116,7 +116,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void getTeamStatus() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
-        when(projectServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
+        when(projectStatusServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
         mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectTeamStatusResource))).
@@ -130,7 +130,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void getTeamStatusWithFilterByUserId() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
-        when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
+        when(projectStatusServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
         mockMvc.perform(get("/project/{projectId}/team-status", 123L).
                 param("filterByUserId", "456")).
                 andExpect(status().isOk()).

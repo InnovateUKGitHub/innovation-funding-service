@@ -27,8 +27,8 @@ import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.status.transactional.ProjectStatusService;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
-import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.GraphBuilderContext;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -77,7 +77,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
-    private ProjectService projectService;
+    private ProjectStatusService projectStatusService;
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
@@ -183,7 +183,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private boolean getBankDetailsApprovalStatus(Long projectId) {
-        ServiceResult<ProjectTeamStatusResource> teamStatusResult = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ServiceResult<ProjectTeamStatusResource> teamStatusResult = projectStatusService.getProjectTeamStatus(projectId, Optional.empty());
         return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getBankDetailsStatus())).isPresent();
     }
 
