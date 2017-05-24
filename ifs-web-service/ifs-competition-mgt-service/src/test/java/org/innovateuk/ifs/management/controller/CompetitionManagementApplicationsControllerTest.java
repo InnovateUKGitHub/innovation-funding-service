@@ -532,7 +532,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
         assertEquals("Dashboard", model.getBackTitle());
-        assertEquals("/", model.getBackURL());
+        assertEquals("/dashboard/live", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 }
