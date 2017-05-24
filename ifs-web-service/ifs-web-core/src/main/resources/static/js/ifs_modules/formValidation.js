@@ -39,11 +39,11 @@ IFS.core.formValidation = (function () {
         messageInvalid: 'Please enter a valid email address.'
       },
       required: {
-        fields: '[required]:not([data-date],[readonly])',
+        fields: '[required]:not([data-date],[readonly],[name="password"])',
         messageInvalid: 'This field cannot be left blank.'
       },
       minlength: {
-        fields: '[minlength]:not([readonly])',
+        fields: '[minlength]:not([readonly],[name="password"])',
         messageInvalid: 'This field should contain at least %minlength% characters.'
       },
       maxlength: {
@@ -88,7 +88,7 @@ IFS.core.formValidation = (function () {
       IFS.core.formValidation.initValidation()
     },
     initValidation: function () {
-      jQuery('body').on('change keyup paste ifsValidate', s.passwordPolicy.fields.password, function (e) {
+      jQuery('body').on('blur change keyup paste ifsValidate', s.passwordPolicy.fields.password, function (e) {
         var field = jQuery(this)
         switch (e.type) {
           case 'keyup':
@@ -134,8 +134,8 @@ IFS.core.formValidation = (function () {
       var isMinlength = IFS.core.formValidation.checkMinLength(field)
       var isFilledOut = IFS.core.formValidation.checkRequired(field)
       var formGroup = field.closest('.form-group')
-
       var confirmsToPasswordPolicy = hasUppercase && hasNumber && isMinlength && isFilledOut
+
       if (errorStyles) {
         if (confirmsToPasswordPolicy) {
           formGroup.removeClass('error')
