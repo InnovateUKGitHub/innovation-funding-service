@@ -46,6 +46,8 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -89,6 +91,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
     public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
+    public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
     protected static boolean initialisedServices = false;
 
@@ -126,6 +129,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected static ApplicationRepository applicationRepository;
     protected static ApplicationFundingService applicationFundingService;
     protected static ProjectService projectService;
+    protected static ProjectDetailsService projectDetailsService;
+    protected static MonitoringOfficerService monitoringOfficerService;
     protected static FinanceRowService financeRowService;
     protected static SectionService sectionService;
     protected static ProjectFinanceEmailRepository projectFinanceEmailRepository;
@@ -209,6 +214,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
             applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
             projectService = serviceLocator.getBean(ProjectService.class);
+            projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
+            monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
             financeRowService = serviceLocator.getBean(FinanceRowService.class);
             sectionService = serviceLocator.getBean(SectionService.class);
             projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
@@ -262,6 +269,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected UserResource systemRegistrar() {
         return retrieveUserByEmailInternal(IFS_SYSTEM_MAINTENANCE_USER_EMAIL, UserRoleType.SYSTEM_REGISTRATION_USER);
+    }
+
+    protected UserResource projectFinanceUser() {
+        return retrieveUserByEmail(PROJECT_FINANCE_EMAIL);
     }
 
     protected UserResource retrieveUserByEmail(String emailAddress) {

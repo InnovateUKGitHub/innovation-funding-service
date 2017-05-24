@@ -8,12 +8,10 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -202,15 +200,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             applicationFundingService.notifyLeadApplicantsOfFundingDecisions(fundingNotificationResource).
                     getSuccessObjectOrThrowException();
 
-            doAs(anyProjectFinanceUser(),
+            doAs(projectFinanceUser(),
                     () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccessObjectOrThrowException());
 
         });
-    }
-
-    private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findByRolesName(UserRoleType.PROJECT_FINANCE.getName());
-        return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 
     private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {
