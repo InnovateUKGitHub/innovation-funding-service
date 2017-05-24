@@ -16,20 +16,19 @@ Invite the same partner under the lead organisation
 *** Keywords ***
 Create a new application
     [Arguments]    ${NAME}    ${EMAIL}    ${APPLICATION NAME}
-    the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    the user clicks the button/link    jQuery=.button:contains("Apply now")
-    the user clicks the button/link    jQuery=.button:contains("Apply now")
-    the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
-    the user clicks the button/link    jQuery=.button:contains("Continue")
-    the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")
-    the user clicks the button/link    jQuery=button:contains("Add new applicant")
-    The user enters text to a text field    name=applicants[0].name    ${NAME}
-    The user enters text to a text field    name=applicants[0].email   ${EMAIL}
-    the user clicks the button/link    jQuery=button:contains("Update organisation")
-    the user clicks the button/link    jQuery=a:contains("Begin application")
-    the user clicks the button/link    link=Application details
-    the user enters text to a text field    id=application_details-title    ${APPLICATION NAME}
-    the user clicks the button/link    jQuery=button:contains("Save and return")
+    the user navigates to the page                       ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link                      jQuery=a:contains("Start new application")
+    the user clicks the button/link                      jQuery=Label:contains("Yes, I want to create a new application.")
+    the user clicks the button/link                      jQuery=.button:contains("Continue")
+    the user clicks the button/link                      jQuery=a:contains("Update ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    the user clicks the button/link                      jQuery=button:contains("Add new applicant")
+    The user enters text to a text field                 name=applicants[0].name    ${NAME}
+    The user enters text to a text field                 name=applicants[0].email   ${EMAIL}
+    the user clicks the button/link                      jQuery=button:contains("Update organisation")
+    the user clicks the button/link                      jQuery=a:contains("Begin application")
+    the user clicks the button/link                      link=Application details
+    the user enters text to a text field                 id=application_details-title    ${APPLICATION NAME}
+    the user clicks the button/link                      jQuery=button:contains("Save and return")
 
 the new application should show the correct partners
     the user navigates to the page    ${DASHBOARD_URL}

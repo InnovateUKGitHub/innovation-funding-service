@@ -63,7 +63,7 @@ The applications can be sorted by lead applicant
 Filter on application number
     [Documentation]    INFUND-8010
     [Tags]    HappyPath
-    Given the user enters text to a text field    id=filterSearch    146
+    Given the user enters text to a text field    id=filterSearch    ${application_ids["Safeguarding pollinators and their values to human well-being"]}
     When the user clicks the button/link    jQuery=button:contains("Filter")
     Then the user should see the text in the page    Safeguarding pollinators and their values to human well-being
     And the user should not see the text in the page    Climate science the history of Greenland's ice
