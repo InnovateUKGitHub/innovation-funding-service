@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -64,6 +65,18 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
     @Override
     public ServiceResult<List<InnovationAreaResource>> getInnovationAreasBySector(long sectorId) {
         return find(innovationSectorRepository.findOne(sectorId), notFoundError(InnovationSector.class, sectorId))
-                .andOnSuccessReturn(parent -> innovationAreaMapper.mapToResource(parent.getChildren()));
+                .andOnSuccess(parent -> getInnovationAreasFromParent(parent));
+    }
+
+    private ServiceResult<List<InnovationAreaResource>> getInnovationAreasFromParent(InnovationSector parent) {
+        List<InnovationAreaResource> childrenList = innovationAreaMapper.mapToResource(parent.getChildren());
+
+        ServiceResult<List<InnovationAreaResource>> innovationAreas;
+        if (childrenList.isEmpty()) {
+            innovationAreas = getInnovationAreas();
+        } else {
+            innovationAreas = serviceSuccess(childrenList);
+        }
+        return innovationAreas;
     }
 }
