@@ -4,6 +4,7 @@ Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../10__Project_setup/PS_Common.robot
 
 *** Test Cases ***
 Invite the same partner under the lead organisation
