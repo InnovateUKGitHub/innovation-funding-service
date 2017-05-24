@@ -68,7 +68,13 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private ProcessRoleService processRoleService;
 
     @Override
-    public String displayApplicationOverview(UserResource user, long competitionId, ApplicationForm form, String origin, MultiValueMap<String, String> queryParams, Model model, ApplicationResource application) {
+    public String displayApplicationOverview(UserResource user,
+                                             long competitionId,
+                                             ApplicationForm form,
+                                             String origin,
+                                             MultiValueMap<String, String> queryParams,
+                                             Model model,
+                                             ApplicationResource application) {
         form.setAdminMode(true);
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();

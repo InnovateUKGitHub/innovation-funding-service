@@ -23,6 +23,7 @@ public class DateViewModel {
     }
 
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM YYYY");
+    public static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("hh:mma");
 
     public ZonedDateTime getDateTime() {
         return dateTime;
@@ -33,7 +34,11 @@ public class DateViewModel {
             return "Unknown";
         }
 
-        return dateTime.format(DATE_FORMAT);
+        if (dateTime.getHour() != 0) {
+            return dateTime.format(DATE_FORMAT) + " " + dateTime.format(TIME_FORMAT).toLowerCase();
+        } else {
+            return dateTime.format(DATE_FORMAT);
+        }
     }
 
     public void setDateTime(ZonedDateTime dateTime) {
