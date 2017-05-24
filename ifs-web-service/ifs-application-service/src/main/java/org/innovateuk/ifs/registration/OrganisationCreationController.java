@@ -565,15 +565,6 @@ public class OrganisationCreationController {
         cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
     }
 
-    private void saveToFormCookie(HttpServletResponse response, Long organisationTypeId) {
-        //OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
-        //organisationTypeForm.setOrganisationType(OrganisationTypeEnum.getFromId(organisationTypeId).getId());
-        //organisationTypeForm.setLeadApplicant(true);
-        //String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
-
-        //cookieUtil.saveToCookie(response, ORGANISATION_FORM, orgTypeForm);
-    }
-
     private boolean isValidLeadOrganisationType(OrganisationCreationSelectTypeViewModel viewModel, Long organisationTypeId) {
         return viewModel.getTypes()
                 .stream()
