@@ -90,17 +90,20 @@ Initial details -Inovation sector of Open should be visible
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Initial details
-    And the user selects the option from the drop-down menu             Sector    id=competitionTypeId
-    When the user selects the option from the drop-down menu            Open    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu             Biosciences    id=innovationAreaCategoryId-0
-    And the user clicks the button/link                                 jQuery=button:contains("+ add another innovation area")
+    And the user should see the element    jQuery=button:contains("+ add another innovation area")
+    And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Open    id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu    Biosciences    id=innovationAreaCategoryId-0
+    And the user clicks the button/link    jQuery=button:contains("+ add another innovation area")
+    Then the user selects the option from the drop-down menu    Sector    id=competitionTypeId
+    When the user selects the option from the drop-down menu    Open    id=innovationSectorCategoryId
     The user should not see the selected option again
 
 Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
     When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
-    And the user should not see the element    jQuery=.buttonlink:contains("+ add another innovation area")
+    And the user clicks the button/link    jQuery=button:contains("+ add another innovation area")
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link    jQuery=.button:contains("Done")
@@ -108,13 +111,14 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page    1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
-    And the user should see the text in the page    Open
-    And the user should see the text in the page    Biosciences
+    And the user should see the text in the page    Emerging and enabling
+    And the user should see the text in the page    Satellite applications
+    And the user should see the text in the page    Space technology
     And the user should see the text in the page    Sector
     And the user should see the text in the page    Yes
     And the user should see the element             jQuery=.button:contains("Edit")
 
-Initial details - Sector competitions allow multiple innovation areas
+Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
     [Tags]    HappyPath
     Given the user clicks the button/link            jQuery=.button:contains("Edit")
@@ -609,11 +613,10 @@ The user enters valid data in the initial details
     And the user selects the option from the drop-down menu   Offshore wind  id=innovationAreaCategoryId-0
     And the user selects the option from the drop-down menu   Emerging and enabling  id=innovationSectorCategoryId
     And the user selects the option from the drop-down menu   Satellite applications  id=innovationAreaCategoryId-0
-    And the user selects the option from the drop-down menu   Open  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Biosciences     id=innovationAreaCategoryId-0
-    And the user enters text to a text field                  id=openingDateDay    01
-    And the user enters text to a text field                  id=openingDateMonth    12
-    And the user enters text to a text field                  id=openingDateYear  ${nextyear}
+    And the user selects the option from the drop-down menu   Space technology  id=innovationAreaCategoryId-1
+    And the user enters text to a text field    id=openingDateDay    01
+    And the user enters text to a text field    Id=openingDateMonth    12
+    And the user enters text to a text field    id=openingDateYear  ${nextyear}
     And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
     And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
 
@@ -673,6 +676,7 @@ the user enters multiple innovation areas
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
     the user selects the option from the drop-down menu    Space technology    id=innovationAreaCategoryId-1
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
+    List Should not Contain Value    id=innovationAreaCategoryId-2    Space technology
     the user selects the option from the drop-down menu    Creative industries    id=innovationAreaCategoryId-2
 
 The user should not see the selected option again

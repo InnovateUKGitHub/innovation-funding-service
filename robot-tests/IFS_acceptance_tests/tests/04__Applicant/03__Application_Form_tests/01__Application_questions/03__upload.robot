@@ -130,7 +130,8 @@ Collaborator can remove a file when the question is assigned
 
 Collaborators can upload a file when the question is assigned
     [Documentation]    INFUND_3007
-    [Tags]    SmokeTest
+    [Tags]    SmokeTest    Pending
+    #TODO IFS-277.
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=6. Innovation
