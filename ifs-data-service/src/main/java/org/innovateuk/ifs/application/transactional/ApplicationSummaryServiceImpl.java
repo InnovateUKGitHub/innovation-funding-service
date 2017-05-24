@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.resource.comparators.*;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.util.EntityLookupCallbacks;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -185,37 +187,25 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         ApplicationTeamResource result = new ApplicationTeamResource();
         List<ApplicationTeamOrganisationResource> partnerOrganisations = new LinkedList<>();
 
-        Application application = applicationRepository.findOne(applicationId);
-        if (application != null) {
+        return find(applicationRepository.findOne(applicationId), notFoundError(ApplicationTeamResource.class))
+                .andOnSuccess(application -> {
+                    // Order organisations by lead, followed by other partners in alphabetic order
+                    result.setLeadOrganisation(getTeamOrganisation(application.getLeadApplicantProcessRole().getOrganisationId(), application));
 
-            // Order organisations by lead, followed by other partners in alphabetic order
-            List<Long> leadOrganisationIds = application.getProcessRoles()
-                    .stream()
-                    .filter(pr -> pr.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()))
-                    .map(u -> u.getOrganisationId())
-                    .distinct()
-                    .map(oId -> Pair.of(oId, organisationRepository.findOne(oId).getName()))
-                    .sorted(Comparator.comparing(Pair::getValue))
-                    .map(p -> p.getKey())
-                    .collect(toList());
-            leadOrganisationIds.forEach(organisationId -> result.setLeadOrganisation(getTeamOrganisation(organisationId, application)));
+                    List<Long> organisationIds = application.getProcessRoles()
+                            .stream()
+                            .filter(pr -> pr.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                            .map(u -> u.getOrganisationId())
+                            .distinct()
+                            .map(oId -> Pair.of(oId, organisationRepository.findOne(oId).getName()))
+                            .sorted(Comparator.comparing(Pair::getValue))
+                            .map(p -> p.getKey())
+                            .collect(toList());
+                    organisationIds.forEach(organisationId -> partnerOrganisations.add(getTeamOrganisation(organisationId, application)));
 
-            List<Long> organisationIds = application.getProcessRoles()
-                    .stream()
-                    .filter(pr -> pr.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
-                    .map(u -> u.getOrganisationId())
-                    .distinct()
-                    .map(oId -> Pair.of(oId, organisationRepository.findOne(oId).getName()))
-                    .sorted(Comparator.comparing(Pair::getValue))
-                    .map(p -> p.getKey())
-                    .collect(toList());
-            organisationIds.forEach(organisationId -> {
-                partnerOrganisations.add(getTeamOrganisation(organisationId, application));
-            });
-
-            result.setPartnerOrganisations(partnerOrganisations);
-        }
-        return ServiceResult.serviceSuccess(result);
+                    result.setPartnerOrganisations(partnerOrganisations);
+                    return ServiceResult.serviceSuccess(result);
+                });
     }
 
     private ApplicationTeamOrganisationResource getTeamOrganisation(long organisationId, Application application) {

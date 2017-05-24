@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
@@ -577,7 +578,16 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getRegisteredAddress() == null);
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
         assertTrue(result.getSuccessObject().getPartnerOrganisations().get(1).getUsers().get(0).getName().equals("Zee Der"));
+    }
 
+    @Test
+    public void getApplicationTeamFailsNoApplication() {
+
+        when(applicationRepositoryMock.findOne(123L)).thenReturn(null);
+
+        ServiceResult<ApplicationTeamResource> result = applicationSummaryService.getApplicationTeamByApplicationId(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().getErrors().get(0).getErrorKey().equals(CommonFailureKeys.GENERAL_NOT_FOUND.getErrorKey()));
     }
 
     private ApplicationSummaryResource sumLead(String lead) {

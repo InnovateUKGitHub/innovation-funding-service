@@ -6,10 +6,10 @@ import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
  * Holder of model attributes for the Application Team view.
  */
 public class ApplicationTeamViewModel {
-    String applicationName;
-    ApplicationTeamResource team;
-    long applicationId;
-    long competitionId;
+    private String applicationName;
+    private ApplicationTeamResource team;
+    private long applicationId;
+    private long competitionId;
 
     public String getQueryParams() {
         return queryParams;

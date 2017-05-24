@@ -8,10 +8,10 @@ import java.util.List;
  * Application Team Organisation data transfer object
  */
 public class ApplicationTeamOrganisationResource {
-    OrganisationAddressResource operatingAddress;
-    OrganisationAddressResource registeredAddress;
-    String organisationName;
-    List<ApplicationTeamUserResource> users;
+    private OrganisationAddressResource operatingAddress;
+    private OrganisationAddressResource registeredAddress;
+    private String organisationName;
+    private List<ApplicationTeamUserResource> users;
 
     public OrganisationAddressResource getRegisteredAddress() {
         return registeredAddress;

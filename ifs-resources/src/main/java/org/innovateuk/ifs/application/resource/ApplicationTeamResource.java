@@ -6,8 +6,8 @@ import java.util.List;
  * Application Team data transfer object
  */
 public class ApplicationTeamResource {
-    ApplicationTeamOrganisationResource leadOrganisation;
-    List<ApplicationTeamOrganisationResource> partnerOrganisations;
+    private ApplicationTeamOrganisationResource leadOrganisation;
+    private List<ApplicationTeamOrganisationResource> partnerOrganisations;
 
     public ApplicationTeamOrganisationResource getLeadOrganisation() {
         return leadOrganisation;
