@@ -122,4 +122,9 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     public RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
         return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), assessorInviteSendResource, Void.class);
     }
+
+    @Override
+    public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendAllInvites", competitionId), assessorInviteSendResource, Void.class);
+    }
 }

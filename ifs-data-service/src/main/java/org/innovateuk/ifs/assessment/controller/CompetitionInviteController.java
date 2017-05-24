@@ -124,4 +124,10 @@ public class CompetitionInviteController {
     public RestResult<Void> sendInvite(@PathVariable long inviteId, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return competitionInviteService.sendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
     }
+
+    @PostMapping("/sendAllInvites/{competitionId}")
+    public RestResult<Void> sendAllInvites(@PathVariable long competitionId,
+                                           @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return competitionInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
+    }
 }

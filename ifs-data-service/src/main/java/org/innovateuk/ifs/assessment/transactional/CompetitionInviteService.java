@@ -103,6 +103,11 @@ public interface CompetitionInviteService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
+    @SecuredBySpring(value = "SEND_ALL_INVITES",
+            description = "The Competition Admins and Project Finance users can send all competition invites")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
+
     @SecuredBySpring(value = "DELETE_INVITE",
             description = "The Competition Admins and Project Finance users can delete a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

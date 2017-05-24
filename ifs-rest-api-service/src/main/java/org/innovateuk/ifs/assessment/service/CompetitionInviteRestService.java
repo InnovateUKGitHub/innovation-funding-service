@@ -45,4 +45,6 @@ public interface CompetitionInviteRestService {
     RestResult<Void> deleteAllInvites(long competitionId);
 
     RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
+
+    RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
 }

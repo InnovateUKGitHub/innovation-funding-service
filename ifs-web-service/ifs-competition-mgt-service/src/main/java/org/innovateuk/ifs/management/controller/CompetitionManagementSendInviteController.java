@@ -41,6 +41,11 @@ public class CompetitionManagementSendInviteController {
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
         AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccessObjectOrThrowException();
+
+        if (invites.getRecipients().isEmpty()) {
+            return redirectToInviteListView(competitionId);
+        }
+
         model.addAttribute("model", sendInviteModelPopulator.populateModel(invites));
 
         if (!bindingResult.hasErrors()) {
@@ -48,6 +53,26 @@ public class CompetitionManagementSendInviteController {
         }
 
         return "assessors/send-invites";
+    }
+
+    @PostMapping("/send")
+    public String sendInvites(Model model,
+                              @PathVariable("competitionId") long competitionId,
+                              @ModelAttribute("form") @Valid SendInviteForm form,
+                              BindingResult bindingResult,
+                              ValidationHandler validationHandler) {
+        Supplier<String> failureView = () -> getInvitesToSend(model, competitionId, form, bindingResult);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ServiceResult<Void> sendResult = competitionInviteRestService.sendAllInvites(
+                    competitionId,
+                    new AssessorInviteSendResource(form.getSubject(), form.getContent())
+            )
+                    .toServiceResult();
+
+            return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () -> redirectToInviteListView(competitionId));
+        });
     }
 
     @PostMapping("/{inviteId}/send")
@@ -68,8 +93,11 @@ public class CompetitionManagementSendInviteController {
         });
     }
 
+    private String redirectToInviteListView(long competitionId) {
+        return format("redirect:/competition/%s/assessors/invite", competitionId);
+    }
+
     private void populateFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
         form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
-        form.setContent(assessorInviteToSendResource.getContent());
     }
 }

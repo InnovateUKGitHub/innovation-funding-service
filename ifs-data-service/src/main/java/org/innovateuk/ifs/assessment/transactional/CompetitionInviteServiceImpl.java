@@ -446,29 +446,76 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getById(inviteId).andOnSuccess(invite -> {
+        return getById(inviteId).andOnSuccessReturnVoid(invite -> {
             competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now())));
 
             if (invite.isNewAssessorInvite()) {
                 userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
             }
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+
             // Strip any HTML that may have been added to the content by the user.
-            String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
-
+            String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
             // HTML'ify the plain content to add line breaks.
-            String bodyHtml = plainTextToHtml(bodyPlain);
+            String customTextHtml = plainTextToHtml(customTextPlain);
 
-            NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
-            Notification notification = new Notification(systemNotificationSource, singletonList(recipient),
-                    Notifications.INVITE_ASSESSOR, asMap(
-                    "subject", assessorInviteSendResource.getSubject(),
-                    "bodyPlain", bodyPlain,
-                    "bodyHtml", bodyHtml
-            ));
+            sendInviteNotification(assessorInviteSendResource.getSubject(), formatter, customTextPlain, customTextHtml, invite);
+        });
+    }
 
-            return notificationSender.sendNotification(notification);
-        }).andOnSuccessReturnVoid();
+    @Override
+    public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
+        return getCompetition(competitionId).andOnSuccessReturnVoid(competition -> {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+
+            String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
+            String customTextHtml = plainTextToHtml(customTextPlain);
+
+            competitionInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED).stream()
+                    .map(invite -> {
+                        competitionParticipantRepository.save(
+                                new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
+                        );
+
+                        if (invite.isNewAssessorInvite()) {
+                            userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
+                        }
+
+                        return invite;
+                    })
+                    .forEach(invite -> sendInviteNotification(
+                            assessorInviteSendResource.getSubject(),
+                            formatter,
+                            customTextPlain,
+                            customTextHtml,
+                            invite
+                    ));
+        });
+    }
+
+    private void sendInviteNotification(String subject,
+                                        DateTimeFormatter formatter,
+                                        String customTextPlain,
+                                        String customTextHtml,
+                                        CompetitionInvite invite) {
+        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        Notification notification = new Notification(
+                systemNotificationSource,
+                recipient,
+                Notifications.INVITE_ASSESSOR,
+                asMap(
+                        "subject", subject,
+                        "name", invite.getName(),
+                        "competitionName", invite.getTarget().getName(),
+                        "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
+                        "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
+                        "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
+                        "customTextPlain", customTextPlain,
+                        "customTextHtml", customTextHtml
+                ));
+
+        notificationSender.sendNotification(notification);
     }
 
     private void addAssessorRoleToUser(User user) {
