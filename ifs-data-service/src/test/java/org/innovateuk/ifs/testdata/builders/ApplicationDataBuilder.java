@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 
 /**
- * Generates an Application for a Competition.  Additionally generates finances for each Organisationn on the Application
+ * Generates an Application for a Competition.  Additionally generates finances for each Organisation on the Application
  */
 public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, ApplicationDataBuilder> {
 
