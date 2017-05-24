@@ -619,7 +619,6 @@ The user enters valid data in the initial details
     And the user selects the option from the drop-down menu   Open  id=innovationSectorCategoryId
     And the user selects the option from the drop-down menu   Biosciences     id=innovationAreaCategoryId-0
     And the user selects the option from the drop-down menu   Emerging and enabling  id=innovationSectorCategoryId
-
     And the user selects the option from the drop-down menu   Satellite applications  id=innovationAreaCategoryId-0
     And the user selects the option from the drop-down menu   Space technology  id=innovationAreaCategoryId-1
     And the user enters text to a text field    id=openingDateDay    01
