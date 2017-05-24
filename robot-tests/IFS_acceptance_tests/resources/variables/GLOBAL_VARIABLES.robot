@@ -152,6 +152,8 @@ ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
+${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight train routing
+${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
 ${CURRENTLY_WAITING_UNTIL}      false
