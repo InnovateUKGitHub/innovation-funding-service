@@ -186,7 +186,8 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('question.maxWords')}" th:text="${err}" ></span>
                     </th:block>
                 </label>
-                <input class="form-control width-medium" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'form-control-error'}"
+                <input class="form-control width-medium"
+                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'form-control-error'"
                        type="number"
                        id="question.maxWords"
                        min="1"
