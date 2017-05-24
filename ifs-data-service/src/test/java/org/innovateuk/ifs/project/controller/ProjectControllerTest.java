@@ -51,19 +51,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     }
 
     @Test
-    public void projectControllerShouldReturnStatusByProjectId() throws Exception {
-        Long projectId = 2L;
-
-        ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
-
-        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
-
-        mockMvc.perform(get("/project/{id}/status", projectId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(projectStatusResource)));
-    }
-
-    @Test
     public void projectControllerShouldReturnAllProjects() throws Exception {
         int projectNumber = 3;
         List<ProjectResource> projects = newProjectResource().build(projectNumber);

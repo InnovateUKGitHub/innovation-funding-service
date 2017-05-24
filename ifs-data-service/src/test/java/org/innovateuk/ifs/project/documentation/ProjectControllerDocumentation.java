@@ -65,22 +65,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void getStatus() throws Exception {
-        Long projectId = 1L;
-        ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
-
-        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
-
-        mockMvc.perform(get("/project/{id}/status", projectId))
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("id").description("Id of the project that is being requested")
-                        ),
-                        responseFields(projectStatusResourceFields)
-                ));
-    }
-
-    @Test
     public void projectFindAll() throws Exception {
         int projectNumber = 3;
         List<ProjectResource> projects = projectResourceBuilder.build(projectNumber);
@@ -111,86 +95,5 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         ),
                         responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
                 ));
-    }
-
-    @Test
-    public void getTeamStatus() throws Exception {
-        ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
-        when(projectStatusServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
-        mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectTeamStatusResource))).
-                andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        ),
-                        responseFields(projectTeamStatusResourceFields)));
-    }
-
-    @Test
-    public void getTeamStatusWithFilterByUserId() throws Exception {
-        ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
-        when(projectStatusServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
-        mockMvc.perform(get("/project/{projectId}/team-status", 123L).
-                param("filterByUserId", "456")).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectTeamStatusResource))).
-                andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        ),
-                        requestParameters(
-                                parameterWithName("filterByUserId").description("Optional id of a user with which the partner organisations " +
-                                        "will be filtered by, such that the non-lead partner organisations will only include organisations that " +
-                                        "this user is a partner in")
-                        ),
-                        responseFields(projectTeamStatusResourceFields)));
-    }
-
-    private ProjectTeamStatusResource buildTeamStatus(){
-        ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
-        List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);
-
-        projectLeadStatusResource.setName("Nomensa");
-        partnerStatuses.get(0).setName("Acme Corp");
-        partnerStatuses.get(1).setName("Hive IT");
-        partnerStatuses.get(2).setName("Worth IT Systems");
-
-        projectLeadStatusResource.setSpendProfileStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(0).setSpendProfileStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(1).setSpendProfileStatus(ProjectActivityStates.NOT_STARTED);
-        partnerStatuses.get(2).setSpendProfileStatus(PENDING);
-
-        projectLeadStatusResource.setBankDetailsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(0).setBankDetailsStatus(PENDING);
-        partnerStatuses.get(1).setBankDetailsStatus(ProjectActivityStates.NOT_REQUIRED);
-        partnerStatuses.get(2).setBankDetailsStatus(ProjectActivityStates.NOT_STARTED);
-
-        projectLeadStatusResource.setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(0).setOtherDocumentsStatus(PENDING);
-        partnerStatuses.get(1).setOtherDocumentsStatus(PENDING);
-        partnerStatuses.get(2).setOtherDocumentsStatus(ProjectActivityStates.COMPLETE);
-
-        projectLeadStatusResource.setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(0).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(1).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(2).setProjectDetailsStatus(ProjectActivityStates.COMPLETE);
-
-        projectLeadStatusResource.setFinanceChecksStatus(PENDING);
-        partnerStatuses.get(0).setFinanceChecksStatus(PENDING);
-        partnerStatuses.get(1).setFinanceChecksStatus(PENDING);
-        partnerStatuses.get(2).setFinanceChecksStatus(PENDING);
-
-        projectLeadStatusResource.setMonitoringOfficerStatus(PENDING);
-        partnerStatuses.get(0).setMonitoringOfficerStatus(ProjectActivityStates.COMPLETE);
-        partnerStatuses.get(1).setMonitoringOfficerStatus(PENDING);
-        partnerStatuses.get(2).setMonitoringOfficerStatus(ProjectActivityStates.COMPLETE);
-
-        projectLeadStatusResource.setGrantOfferLetterStatus(PENDING);
-        partnerStatuses.get(0).setGrantOfferLetterStatus(PENDING);
-        partnerStatuses.get(1).setGrantOfferLetterStatus(PENDING);
-        partnerStatuses.get(2).setGrantOfferLetterStatus(PENDING);
-
-        return newProjectTeamStatusResource().withPartnerStatuses(partnerStatuses).build();
     }
 }

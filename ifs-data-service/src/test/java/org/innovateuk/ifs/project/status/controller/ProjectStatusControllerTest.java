@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -32,6 +33,19 @@ public class ProjectStatusControllerTest extends BaseControllerMockMVCTest<Proje
                 andExpect(content().json(toJson(cpsr)));
 
         verify(projectStatusServiceMock).getCompetitionStatus(competitionId);
+    }
+
+    @Test
+    public void projectControllerShouldReturnStatusByProjectId() throws Exception {
+        Long projectId = 2L;
+
+        ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
+
+        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+
+        mockMvc.perform(get("/project/{id}/status", projectId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectStatusResource)));
     }
 
     @Override

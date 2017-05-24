@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.status.transactional.ProjectStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,11 +18,12 @@ import static java.util.Optional.ofNullable;
  * ProjectStatusController exposes status information about projects.
  */
 @RestController
+@RequestMapping("/project")
 public class ProjectStatusController {
     @Autowired
     private ProjectStatusService projectStatusService;
 
-    @GetMapping("/project/competition/{competitionId}")
+    @GetMapping("/competition/{competitionId}")
     public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(@PathVariable final Long competitionId){
         return projectStatusService.getCompetitionStatus(competitionId).toGetResponse();
     }
