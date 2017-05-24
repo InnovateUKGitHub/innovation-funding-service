@@ -31,7 +31,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
-${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3_NUMBER}/contributors/invite?newApplication
+
 
 *** Test Cases ***
 Application team page
@@ -145,8 +145,8 @@ Valid invitation submit
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
     [Tags]
-    When the user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}
     Then the user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
+
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
@@ -303,13 +303,6 @@ the applicant's inputs should be visible
     Should Be Equal As Strings    ${input_value}    Collaborator 3
 
 Login and create a new application
-    Given Guest user log-in    &{lead_applicant_credentials}
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user selects the radio button    create-application    true
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jquery=a:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Invitation page test
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
+    Guest user log-in                                    &{lead_applicant_credentials}
+    create new application with the same user            Invitation page test
+

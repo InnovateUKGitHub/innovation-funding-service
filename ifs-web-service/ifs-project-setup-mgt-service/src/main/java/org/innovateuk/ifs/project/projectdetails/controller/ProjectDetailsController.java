@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -45,7 +44,7 @@ public class ProjectDetailsController {
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource loggedInUser) {
+                                     UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());

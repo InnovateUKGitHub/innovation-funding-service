@@ -147,12 +147,11 @@ Calculations in the spend profile table
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
-    [Tags]    Failing
-    #TODO this test case needs to be moved, to another project where the PM != Lead partner. INFUND-9289
+    [Tags]
     Given the user navigates to the page            ${external_spendprofile_summary}/review
     And the user should see the text in the page    Project costs for financial year
     And the user moves focus to the element         jQuery=.grid-container table
-    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 10,957
+    Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
 
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148
@@ -372,15 +371,11 @@ Academic partner spend profile client side validations
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
     And the user moves focus to the element            link=Project setup status
     Then the user should not see the text in the page  This field should be 0 or higher
-    When the user makes all values zeros               2    ${project_duration}  # Travel
-    Then the user makes all values zeros               3    ${project_duration}  # Other - Directly incurred
-    And the user makes all values zeros                5    ${project_duration}  # Estates
     When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(2) input    0  # Other - Exceptions
     And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(3) input    0  # Other - Exceptions
     And the user should not see the text in the page   Your total costs are higher than your eligible costs
-    #TODO Replace keyword -the user makes all values zeros- ticket: INFUND-6851
 
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
@@ -388,7 +383,7 @@ Academic partner edits spend profile and this updates on the table
     When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
-    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    0
+    And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    1
 
 Academic partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852
@@ -440,9 +435,9 @@ Partners are not able to see the spend profile summary page
     [Documentation]    INFUND-3766
     [Tags]
     Given log in as a different user               ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
-    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    ${403_error_message}
     Given log in as a different user               ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
-    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${external_spendprofile_summary}    ${403_error_message}
 
 Project Manager can view combined spend profile
     [Documentation]    INFUND-3767
@@ -757,7 +752,7 @@ Project Finance still has a link to the spend profile after approval
 Project finance user cannot access external users' spend profile page
     [Documentation]    INFUND-5911
     [Tags]
-    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    ${403_error_message}
 
 
 *** Keywords ***
@@ -778,12 +773,6 @@ the sum of tds equals the total
     \    ${cell} =    convert to integer    ${formatted}
     \    ${sum} =    Evaluate    ${sum}+${cell}
     Should Be Equal As Integers    ${sum}    ${total}
-
-
-the user makes all values zeros
-    [Arguments]    ${row}    ${project_duration}
-    : FOR    ${i}    IN RANGE    1    ${project_duration}
-    \    the user enters text to a text field  css=.spend-profile-table tbody .form-group-row:nth-child(${row}) td:nth-of-type(${i}) input  0
 
 the text box should be editable
     [Arguments]    ${element}

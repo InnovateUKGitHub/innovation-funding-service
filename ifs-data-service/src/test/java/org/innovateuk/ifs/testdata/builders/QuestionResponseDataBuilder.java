@@ -28,6 +28,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static java.util.Collections.emptyList;
 
 /**
  * Handles applicant responses to Questions

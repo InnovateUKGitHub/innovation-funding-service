@@ -5,19 +5,19 @@ Resource          ../defaultResources.robot
 log in and create new application if there is not one already
     Given Guest user log-in    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Robot test application
-    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user
+    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Robot test application
 
 log in and create new application for collaboration if there is not one already
     Given Guest user log-in    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Invite robot test application
-    Run Keyword If    '${status}' == 'FAIL'    Create new invite application with the same user
+    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  Invite robot test application
 
 Login new application invite academic
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
     Given Guest user log-in    &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new academic application with the same user
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new application with the same user  Academic robot test application
     ...    AND    Delete the emails from both test mailboxes
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
     ...    AND    the user closes the browser
@@ -29,18 +29,17 @@ new account complete all but one
 
 create new account for submitting
     Given the guest user opens the browser
-    And the user navigates to the page    ${competition_details_url}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user clicks the button/link    jQuery=.button:contains("Create")
+    the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link             jQuery=a:contains("Start new application")
+    the user clicks the button/link             jQuery=a:contains("Create account")
     And the user enters text to a text field    id=organisationSearchName    Hive IT
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    And the user clicks the button/link    link=HIVE IT LIMITED
-    And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user selects the radio button  organisationTypeId  radio-1
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link         jQuery=.button:contains("Search")
+    And the user clicks the button/link         link=HIVE IT LIMITED
+    And the user selects the checkbox           address-same
+    And the user clicks the button/link         jQuery=.button:contains("Continue")
+    And the user selects the radio button       organisationTypeId  radio-1
+    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
     When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    Once verified you can sign into your account
@@ -99,51 +98,28 @@ the user marks the section as complete
     #the user clicks the button/link    css=.next
 
 Create new application with the same user
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Robot test application
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
+    [Arguments]  ${Application_title}
+    When the user navigates to the page         ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link             jQuery=a:contains("Start new application")
+    And the user clicks the button/link         jQuery=Label:contains("Yes, I want to create a new application.")
+    And the user clicks the button/link         jQuery=.button:contains("Continue")
+    And the user clicks the button/link         jQuery=a:contains("Begin application")
+    And the user clicks the button/link         link=Application details
+    And the user enters text to a text field    id=application_details-title    ${Application_title}
+    And the user clicks the button/link         jQuery=button:contains("Save and return")
 
 create new submit application
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Create account")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in")
+    When the user navigates to the page                 ${COMPETITION_OVERVIEW_URL}
+    the user clicks the button/link                     jQuery=a:contains("Start new application")
+    And the user clicks the button/link                 jQuery=a:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    ${application_name}
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
-
-Create new invite application with the same user
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Invite robot test application
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
-
-Create new academic application with the same user
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Academic robot test application
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
+    And the user clicks the button/link                 jQuery=Label:contains("Yes, I want to create a new application.")
+    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    And the user clicks the button/link                 jQuery=a:contains("Begin application")
+    And the user clicks the button/link                 link=Application details
+    And the user enters text to a text field            id=application_details-title    ${application_name}
+    And the user clicks the button/link                 jQuery=button:contains("Save and return")
 
 Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
@@ -184,8 +160,8 @@ The user redirects to the page
     Wait Until Keyword Succeeds Without Screenshots    10    500ms    Page Should Contain    ${TEXT1}
     Page Should Contain    ${TEXT2}
     Page Should Not Contain    error
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    ${404_error_message}
+    Page Should Not Contain    ${403_error_message}
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible Without Screenshots    id=global-header
     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
@@ -251,7 +227,7 @@ the user follows the flow to register their organisation
     [Arguments]     ${orgType}
     the user navigates to the page              ${COMPETITION_OVERVIEW_URL}
     the user clicks the button/link             jQuery=a:contains("Start new application")
-    the user clicks the button/link             jQuery=.button:contains("Create account")
+    the user clicks the button/link             jQuery=a:contains("Create account")
     the user enters text to a text field        id=organisationSearchName    Innovate
     the user clicks the button/link             id=org-search
     the user clicks the button/link             link=INNOVATE LTD

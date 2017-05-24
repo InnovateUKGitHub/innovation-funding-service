@@ -54,7 +54,7 @@ public class ApplicationController {
     @ProfileExecution
     @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user) {
+                                     UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
 
         if (form == null) {
@@ -72,7 +72,7 @@ public class ApplicationController {
     @ProfileExecution
     @PostMapping(value = "/{applicationId}")
     public String applicationDetails(@PathVariable("applicationId") long applicationId,
-                                     @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                     UserResource user,
                                      HttpServletRequest request) {
 
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
@@ -110,7 +110,7 @@ public class ApplicationController {
     @PostMapping("/{applicationId}/section/{sectionId}")
     public String assignQuestion(@PathVariable("applicationId") long applicationId,
                                  @PathVariable("sectionId") long sectionId,
-                                 @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
+                                 UserResource user,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
         doAssignQuestion(applicationId, user, request, response);

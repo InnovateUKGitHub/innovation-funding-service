@@ -11,9 +11,11 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.domain.FormValidator;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.validator.MinRowCountValidator;
+import org.innovateuk.ifs.validator.AcademicJesValidator;
 import org.innovateuk.ifs.validator.NotEmptyValidator;
 import org.innovateuk.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
@@ -138,6 +140,13 @@ public class ValidationUtil {
         return binder.getBindingResult();
     }
 
+    public BindingResult validationJesForm(FormInputResponse response) {
+        DataBinder binder = new DataBinder(response);
+        binder.addValidators(new AcademicJesValidator());
+        binder.validate();
+        return binder.getBindingResult();
+    }
+
     public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
         for (Question question : section.fetchAllQuestionsAndChildQuestions()) {
@@ -176,7 +185,7 @@ public class ValidationUtil {
 
     private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
-        if (formInput.getFormValidators().isEmpty()) {
+        if (formInput.getFormValidators().isEmpty() && !hasValidator(formInput)) {
             // no validator? question is valid!
         } else {
             BindingResult validationResult = validatorService.validateFormInputResponse(application.getId(), formInput.getId(), markedAsCompleteById);
@@ -188,6 +197,10 @@ public class ValidationUtil {
 
         validationCostItem(question, application, markedAsCompleteById, formInput, validationMessages);
         return validationMessages;
+    }
+
+    private boolean hasValidator(FormInput formInput) {
+        return formInput.getType().equals(FormInputType.FINANCE_UPLOAD);
     }
 
     private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {

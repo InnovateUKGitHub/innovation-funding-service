@@ -49,7 +49,7 @@ Project Finance should not be able to access bank details page
     [Documentation]    INFUND-7090, INFUND-7109
     [Tags]    HappyPath
     [Setup]    log in as a different user   &{internal_finance_credentials}
-    Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details    You do not have the necessary permissions for your request
+    Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details    ${403_error_message}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     Then the user should not see the element   jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.action
     And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.waiting
@@ -301,7 +301,7 @@ Other internal users do not have access to bank details export
     [Setup]  log in as a different user       &{Comp_admin1_credentials}
     When the user navigates to the page       ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     Then the user should not see the element  link=Export all bank details
-    And the user navigates to the page and gets a custom error message  ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export  You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message  ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status/bank-details/export  ${403_error_message}
 
 Project Finance user can export bank details
     [Documentation]  INFUND-5852
@@ -362,8 +362,8 @@ the project finance user downloads the bank details
 
 the user opens the excel and checks the content
     ${contents}=                    read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${vitruvius_details}=               get from list  ${contents}  7
-    ${vitruvius}=                       get from list  ${vitruvius_details}  0
+    ${vitruvius_details}=           get from list  ${contents}  7
+    ${vitruvius}=                   get from list  ${vitruvius_details}  0
     should be equal                 ${vitruvius}  ${Vitruvius_Name}
     ${Armstrong_Butler_details}=    get from list  ${contents}  8
     ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0

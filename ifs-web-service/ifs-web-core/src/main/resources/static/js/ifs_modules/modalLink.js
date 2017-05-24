@@ -77,7 +77,7 @@ IFS.core.modal = (function () {
 
           // Validate each required field in the form
           jQuery('[required="required"]', form).each(function () {
-            if (IFS.core.formValidation.checkRequired(jQuery(this), true) !== true) {
+            if (IFS.core.formValidation.checkRequired(jQuery(this)) !== true) {
               submitValid = false
             }
           })

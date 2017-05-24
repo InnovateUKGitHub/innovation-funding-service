@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.threads.domain;
 
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
