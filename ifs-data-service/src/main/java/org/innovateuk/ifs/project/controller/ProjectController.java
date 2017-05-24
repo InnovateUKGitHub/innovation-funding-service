@@ -2,18 +2,13 @@ package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.status.transactional.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -24,9 +19,6 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private ProjectStatusService projectStatusService;
 
     @GetMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
@@ -66,19 +58,8 @@ public class ProjectController {
         return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
     }
 
-    @GetMapping("/{projectId}/team-status")
-    public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
-                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
-        return projectStatusService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
-    }
-
     @GetMapping("/{projectId}/project-manager")
     public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
         return projectService.getProjectManager(projectId).toGetResponse();
-    }
-
-    @GetMapping("/{projectId}/status")
-    public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
-        return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
     }
 }
