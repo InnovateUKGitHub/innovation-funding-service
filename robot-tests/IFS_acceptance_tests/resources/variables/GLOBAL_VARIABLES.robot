@@ -81,7 +81,6 @@ ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
-${COMPETITION_DETAILS_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/details/
 ${COMPETITION_OVERVIEW_URL}     ${SERVER}/competition/${OPEN_COMPETITION}/overview/
 ${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/430
 ${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/436
