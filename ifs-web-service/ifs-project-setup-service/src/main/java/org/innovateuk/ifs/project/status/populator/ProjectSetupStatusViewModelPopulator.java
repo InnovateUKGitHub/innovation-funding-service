@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerRe
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.security.ProjectSetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
@@ -33,6 +34,9 @@ public class ProjectSetupStatusViewModelPopulator {
     private ProjectService projectService;
 
     @Autowired
+    private StatusService statusService;
+
+    @Autowired
     private MonitoringOfficerService monitoringOfficerService;
 
     @Autowired
@@ -48,7 +52,7 @@ public class ProjectSetupStatusViewModelPopulator {
 
         Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
         ProjectSetupSectionAccessibilityHelper statusAccessor = new ProjectSetupSectionAccessibilityHelper(teamStatus);
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();

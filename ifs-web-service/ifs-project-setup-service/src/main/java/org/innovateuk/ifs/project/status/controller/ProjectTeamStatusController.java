@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.status.controller;
 
-import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,11 +26,11 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE
 public class ProjectTeamStatusController {
 
     @Autowired
-    private ProjectService projectService;
+    private StatusService statusService;
 
     @GetMapping
     public String viewProjectTeamStatus(Model model, @PathVariable("projectId") final Long projectId) {
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         setLeadPartnerProjectDetailsTeamStatus(teamStatus);
 
         model.addAttribute("model", new ProjectConsortiumStatusViewModel(projectId, teamStatus));

@@ -265,7 +265,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
-        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
         ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -453,7 +453,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRoleName(FINANCE_CONTACT).build())));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
-        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
         ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -918,7 +918,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(pmUser));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResult);
-        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
     }
 
     private void assertStandardViewModelValuesCorrect(ProjectSetupStatusViewModel viewModel, boolean existingMonitoringOfficerExpected) {

@@ -61,6 +61,7 @@ import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStatusRestService;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
@@ -207,6 +208,8 @@ public class BaseUnitTest {
     public FinanceFormHandler financeFormHandler;
     @Mock
     public ProjectService projectService;
+    @Mock
+    public StatusService statusService;
     @Mock
     public ProjectDetailsService projectDetailsService;
     @Mock

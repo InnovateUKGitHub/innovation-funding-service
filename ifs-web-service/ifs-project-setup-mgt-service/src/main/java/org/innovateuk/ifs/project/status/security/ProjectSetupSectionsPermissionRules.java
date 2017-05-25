@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.sections.SectionAccess;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -27,7 +28,7 @@ public class ProjectSetupSectionsPermissionRules {
     private static final Log LOG = LogFactory.getLog(ProjectSetupSectionsPermissionRules.class);
 
     @Autowired
-    private ProjectService projectService;
+    private StatusService statusService;
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "An internal user can access the Project Details section when submitted by Partners (Individual)")
     public boolean internalCanAccessProjectDetailsSection(Long projectId, UserResource user) {
@@ -87,7 +88,7 @@ public class ProjectSetupSectionsPermissionRules {
         }
 
         try {
-            projectStatusResource = projectService.getProjectStatus(projectId);
+            projectStatusResource = statusService.getProjectStatus(projectId);
         } catch (ForbiddenActionException e) {
             LOG.error("Internal user is not allowed to access this project " + projectId);
             return false;

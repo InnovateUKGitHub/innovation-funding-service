@@ -44,7 +44,7 @@ public class ProjectTeamStatusControllerTest extends BaseControllerMockMVCTest<P
 
         ProjectTeamStatusResource expectedTeamStatus = buildTeamStatus();
 
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedTeamStatus);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedTeamStatus);
 
         ProjectConsortiumStatusViewModel expected = new ProjectConsortiumStatusViewModel(projectId, expectedTeamStatus);
 

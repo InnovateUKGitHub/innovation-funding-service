@@ -122,7 +122,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
 
@@ -152,7 +152,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
 
@@ -199,7 +199,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
 
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
@@ -293,7 +293,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
 
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(spendProfileService.markSpendProfileComplete(projectResource.getId(), organisationId)).thenReturn(serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE));
 
@@ -365,7 +365,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
@@ -421,7 +421,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         partnerOrganisationResource.setOrganisation(organisationId);
         partnerOrganisationResource.setLeadOrganisation(false);
 
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
         when(spendProfileService.markSpendProfileIncomplete(projectId, organisationId)).thenReturn(serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
 
         SpendProfileForm expectedForm = new SpendProfileForm();
@@ -472,7 +472,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUsers);
 
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
@@ -546,7 +546,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getLeadOrganisation(organisationId)).thenReturn(partnerOrganisations.get(0));
         when(projectService.getProjectUsersForProject(projectResource.getId())).thenReturn(projectUserResources);
         when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(partnerOrganisations);
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
 
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
@@ -586,7 +586,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
-        when(projectService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
 

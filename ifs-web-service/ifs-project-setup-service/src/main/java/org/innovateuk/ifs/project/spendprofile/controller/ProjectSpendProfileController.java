@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResourc
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -53,6 +54,9 @@ public class ProjectSpendProfileController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private StatusService statusService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -328,7 +332,7 @@ public class ProjectSpendProfileController {
     }
 
     private boolean isApproved(final Long projectId) {
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
     }
 
