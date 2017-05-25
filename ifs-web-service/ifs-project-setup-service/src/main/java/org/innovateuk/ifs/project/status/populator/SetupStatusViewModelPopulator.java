@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE
  * Populator for creating the {@link ProjectSetupStatusViewModel}
  */
 @Service
-public class ProjectSetupStatusViewModelPopulator {
+public class SetupStatusViewModelPopulator {
 
     @Autowired
     private ProjectService projectService;
@@ -55,7 +55,7 @@ public class ProjectSetupStatusViewModelPopulator {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
         ProjectSetupSectionAccessibilityHelper statusAccessor = new ProjectSetupSectionAccessibilityHelper(teamStatus);
-        ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
+        SetupSectionStatus sectionStatus = new SetupSectionStatus();
 
         boolean isLeadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
         boolean isProjectManager = projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false);

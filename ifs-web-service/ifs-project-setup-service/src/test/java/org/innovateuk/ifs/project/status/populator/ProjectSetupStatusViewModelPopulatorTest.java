@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
-    private ProjectSetupStatusViewModelPopulator populator;
+    private SetupStatusViewModelPopulator populator;
 
     private static final boolean monitoringOfficerExpected = true;
 

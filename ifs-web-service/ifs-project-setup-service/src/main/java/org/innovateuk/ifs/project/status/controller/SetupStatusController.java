@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
-import org.innovateuk.ifs.project.status.populator.ProjectSetupStatusViewModelPopulator;
+import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class SetupStatusController {
 
     @Autowired
-    private ProjectSetupStatusViewModelPopulator projectSetupStatusViewModelPopulator;
+    private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
 
     public static final String PROJECT_SETUP_PAGE = "project/setup-status";
 
@@ -37,7 +37,7 @@ public class SetupStatusController {
             ":" + request.getServerPort() +
             "/applicant/dashboard";
 
-        model.addAttribute("model", projectSetupStatusViewModelPopulator.populateViewModel(projectId, loggedInUser));
+        model.addAttribute("model", setupStatusViewModelPopulator.populateViewModel(projectId, loggedInUser));
         model.addAttribute("url", dashboardUrl);
         return PROJECT_SETUP_PAGE;
     }

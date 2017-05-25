@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.project.sections.SectionStatus.*;
 /**
  * This is a helper class for determining the status of a given Project Setup section
  */
-public class ProjectSetupSectionStatus {
+public class SetupSectionStatus {
 
     public SectionStatus projectDetailsSectionStatus(final boolean projectDetailsProcessCompleted,
                                                      final boolean awaitingProjectDetailsActionFromPartners,

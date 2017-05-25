@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.status.populator.ProjectSetupStatusViewModelPopulator;
+import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.viewmodel.ProjectSetupStatusViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,7 +19,7 @@ public class SetupStatusControllerTest extends BaseControllerMockMVCTest<SetupSt
     }
 
     @Mock
-    private ProjectSetupStatusViewModelPopulator populator;
+    private SetupStatusViewModelPopulator populator;
 
     @Test
     public void viewProjectSetupStatusSuccess() throws Exception {
