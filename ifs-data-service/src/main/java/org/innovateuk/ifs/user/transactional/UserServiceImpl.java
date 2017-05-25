@@ -15,6 +15,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,6 +72,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Autowired
     private PasswordPolicyValidator passwordPolicyValidator;
 
+    @Autowired
+    private RegistrationService registrationService;
+
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
         return find(userRepository.findByEmail(email), notFoundError(User.class, email)).andOnSuccessReturn(userMapper::mapToResource);
@@ -109,7 +113,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     public ServiceResult<Void> sendPasswordResetNotification(UserResource user) {
-        if (UserStatus.ACTIVE.equals(user.getStatus())){
+        if (UserStatus.ACTIVE.equals(user.getStatus())) {
             String hash = getAndSavePasswordResetToken(user);
 
             NotificationSource from = systemNotificationSource;
@@ -120,6 +124,10 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
+        } else if (UserStatus.INACTIVE.equals(user.getStatus())
+                && user.hasRole(UserRoleType.APPLICANT)
+                && tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId()).isPresent()) {
+            return registrationService.resendUserVerificationEmail(user);
         } else {
             return serviceFailure(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE));
         }
