@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ProjectStatusRestServiceImpl extends BaseRestService implements ProjectStatusRestService {
+public class StatusRestServiceImpl extends BaseRestService implements StatusRestService {
     private static final String competitionURL = "/project/competition";
     private static final String projectRestURL = "/project";
 

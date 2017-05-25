@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 
 import java.util.Optional;
 
-public interface ProjectStatusRestService {
+public interface StatusRestService {
 
     RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(final Long competitionId);
 

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.status.controller;
 import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
-import org.innovateuk.ifs.project.status.service.ProjectStatusRestService;
+import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,7 +30,7 @@ import java.time.format.DateTimeFormatter;
 public class CompetitionStatusController {
 
     @Autowired
-    private ProjectStatusRestService projectStatusRestService;
+    private StatusRestService statusRestService;
 
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
@@ -40,7 +40,7 @@ public class CompetitionStatusController {
     public String viewCompetitionStatus(Model model, UserResource loggedInUser,
                                         @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new PopulatedCompetitionStatusViewModel(projectStatusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(), loggedInUser).get());
+                new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(), loggedInUser).get());
         return "project/competition-status";
     }
 

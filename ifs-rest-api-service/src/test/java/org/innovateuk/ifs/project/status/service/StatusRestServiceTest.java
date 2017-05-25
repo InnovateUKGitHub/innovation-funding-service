@@ -13,14 +13,14 @@ import java.util.Optional;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
-public class ProjectStatusRestServiceTest extends BaseRestServiceUnitTest<ProjectStatusRestServiceImpl> {
+public class StatusRestServiceTest extends BaseRestServiceUnitTest<StatusRestServiceImpl> {
 
     private static final String competitionURL = "/project/competition";
     private static final String projectRestURL = "/project";
 
     @Override
-    protected ProjectStatusRestServiceImpl registerRestServiceUnderTest() {
-        return new ProjectStatusRestServiceImpl();
+    protected StatusRestServiceImpl registerRestServiceUnderTest() {
+        return new StatusRestServiceImpl();
     }
 
     @Test

@@ -25,7 +25,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
 
         CompetitionProjectsStatusResource competitionProjectsStatus = newCompetitionProjectsStatusResource().build();
 
-        when(projectStatusRestService.getCompetitionStatus(competitionId)).thenReturn(restSuccess(competitionProjectsStatus));
+        when(statusRestService.getCompetitionStatus(competitionId)).thenReturn(restSuccess(competitionProjectsStatus));
 
         mockMvc.perform(get("/competition/" + competitionId + "/status"))
                 .andExpect(view().name("project/competition-status"))

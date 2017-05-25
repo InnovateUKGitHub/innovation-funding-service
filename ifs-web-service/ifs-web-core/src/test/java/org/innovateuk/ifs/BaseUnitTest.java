@@ -59,7 +59,7 @@ import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.project.status.service.ProjectStatusRestService;
+import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
@@ -233,7 +233,7 @@ public class BaseUnitTest {
     @Mock
     protected FinanceUtil financeUtilMock;
     @Mock
-    protected ProjectStatusRestService projectStatusRestService;
+    protected StatusRestService statusRestService;
     @Mock
     private CookieUtil cookieUtil;
     @Mock
