@@ -25,12 +25,12 @@ public class CompetitionInviteController {
     @Autowired
     private CompetitionInviteService competitionInviteService;
 
-    @GetMapping("/getCreatedToSend/{inviteId}")
+    @GetMapping("/getCreatedInviteToSend/{inviteId}")
     public RestResult<AssessorInviteToSendResource> getCreatedInviteToSend(@PathVariable long inviteId) {
         return competitionInviteService.getCreatedInviteToSend(inviteId).toGetResponse();
     }
 
-    @GetMapping("/getToSend/{inviteId}")
+    @GetMapping("/getInviteToSend/{inviteId}")
     public RestResult<AssessorInviteToSendResource> getInviteToSend(@PathVariable long inviteId) {
         return competitionInviteService.getInviteToSend(inviteId).toGetResponse();
     }
