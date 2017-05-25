@@ -357,7 +357,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     private void resetMocks() {
-        reset(projectServiceMock, accessor);
+        reset(projectServiceMock, statusServiceMock, accessor);
     }
 
     @Override
