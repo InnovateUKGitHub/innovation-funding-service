@@ -4,8 +4,6 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.user.builder.OrganisationBuilder;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -20,6 +18,7 @@ import java.util.function.Function;
 import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
@@ -542,24 +541,21 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void testAllUsersWithProjectRolesCanAccessProcessRolesWithinConsortium(){
         final Long userId = 11L;
-        final Long organistationId = 1L;
+        final Long applicationId = 1L;
 
-        Organisation organisation = OrganisationBuilder.newOrganisation().withId(organistationId).build();
 
         Arrays.stream(ProjectParticipantRole.values())
                 .forEach(roleType -> {
 
                     UserResource userResource = newUserResource().withId(userId).build();
 
-                    User user = newUser().withId(userId).build();
-
-                    ProjectUser projectUser = newProjectUser().withUser(user).withRole(roleType).withOrganisation(organisation).build();
+                    ProjectUser projectUser = newProjectUser().withUser(newUser().withId(userId).build()).withRole(roleType).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build();
 
                     when(projectUserRepositoryMock.findByUserId(userId)).thenReturn(Collections.singletonList(projectUser));
 
-                    ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withOrganisation(organisation.getId()).build();
+                    ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(applicationId).build();
 
-                    assertTrue(rules.projectPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, userResource));
+                    assertTrue(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
 
                 });
     }
@@ -567,24 +563,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void testAllUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium(){
         final Long userId = 11L;
-        final Long organistationId = 1L;
-
-        Organisation organisation = OrganisationBuilder.newOrganisation().withId(organistationId).build();
+        final Long applicationId = 1L;
 
         Arrays.stream(ProjectParticipantRole.values())
                 .forEach(roleType -> {
 
                     UserResource userResource = newUserResource().withId(userId).build();
 
-                    User user = newUser().withId(userId).build();
-
-                    ProjectUser projectUser = newProjectUser().withUser(user).withRole(roleType).withOrganisation(organisation).build();
+                    ProjectUser projectUser = newProjectUser().withUser(newUser().withId(userId).build()).withRole(roleType).withProject(newProject().withApplication(newApplication().withId(applicationId).build()).build()).build();
 
                     when(projectUserRepositoryMock.findByUserId(userId)).thenReturn(Collections.singletonList(projectUser));
 
-                    ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withOrganisation(123L).build();
+                    ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withApplication(123L).build();
 
-                    assertFalse(rules.projectPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, userResource));
+                    assertFalse(rules.projectPartnersCanViewTheProcessRolesWithinSameApplication(processRoleResource, userResource));
 
                 });
     }

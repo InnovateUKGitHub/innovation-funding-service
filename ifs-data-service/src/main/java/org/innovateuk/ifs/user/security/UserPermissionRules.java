@@ -157,8 +157,8 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Project managers and partners can view the process role for the same organisation")
-    public boolean projectPartnersCanViewTheProcessRolesWithTheSameOrganisation(ProcessRoleResource processRole, UserResource user) {
-        return getFilteredProjectUsers(user, projectUserFilter).stream().anyMatch(projectUser -> projectUser.getOrganisation().getId().equals(processRole.getOrganisationId()));
+    public boolean projectPartnersCanViewTheProcessRolesWithinSameApplication(ProcessRoleResource processRole, UserResource user) {
+        return getFilteredProjectUsers(user, projectUserFilter).stream().anyMatch(projectUser -> projectUser.getProject().getApplication().getId().equals(processRole.getApplicationId()));
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Project Finance can read the user's process role")
