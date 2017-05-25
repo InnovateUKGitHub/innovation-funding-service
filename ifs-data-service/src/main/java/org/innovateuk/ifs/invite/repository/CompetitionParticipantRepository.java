@@ -18,13 +18,13 @@ import java.util.List;
  */
 public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionParticipant, Long> {
 
-    static final String BY_COMP_AND_STATUS = "SELECT competitionParticipant " +
+    String BY_COMP_AND_STATUS = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
             "AND (:status IS NULL OR competitionParticipant.status = :status)";
 
-    static final String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
+    String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
@@ -59,7 +59,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "   )" +
             "))";
 
-    static final String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT cp FROM CompetitionParticipant cp WHERE cp.competition.id = :compId " +
+    String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT cp FROM CompetitionParticipant cp WHERE cp.competition.id = :compId " +
             "AND cp.role = :role " +
             "AND cp.status = :status " +
             "AND NOT EXISTS " +
@@ -71,7 +71,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "p.id = cp.user.profileId " +
             "AND ia.category.id = :innovationAreaId ))";
 
-    static final String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT cp FROM CompetitionParticipant cp WHERE " +
+    String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT cp FROM CompetitionParticipant cp WHERE " +
             "cp.competition.id = :compId " +
             "AND cp.role = :role " +
             "AND cp.status = :status " +

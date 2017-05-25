@@ -420,7 +420,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         List<Competition> competitions = newCompetition()
                 .with(id(null))
                 .build(2);
-        competitions.forEach(competition -> competitionRepository.save(competition));
+        competitionRepository.save(competitions);
 
         List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newCompetitionInviteWithoutId()
@@ -436,6 +436,24 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         List<CompetitionParticipant> retrievedParticipants = repository.getByInviteEmail("test1@test.com");
         assertEqualParticipants(asList(savedParticipants.get(0), savedParticipants.get(1)), retrievedParticipants);
+    }
+
+    @Test
+    public void getByInviteId() {
+        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName("name1")
+                        .withEmail("test1@test.com")
+                        .withHash(generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build());
+
+        flushAndClearSession();
+
+        CompetitionParticipant retrievedParticipant = repository.getByInviteId(savedParticipant.getInvite().getId());
+        assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
@@ -468,8 +486,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     private void assertEqualParticipants(List<CompetitionParticipant> expected, List<CompetitionParticipant> actual) {
-        zip(expected, actual, (expectedCompetitionParticipant, actualCompetitionParticipant) ->
-                assertEqualParticipants(expectedCompetitionParticipant, actualCompetitionParticipant));
+        zip(expected, actual, this::assertEqualParticipants);
     }
 
     private void assertEqualParticipants(CompetitionParticipant expected, CompetitionParticipant actual) {
