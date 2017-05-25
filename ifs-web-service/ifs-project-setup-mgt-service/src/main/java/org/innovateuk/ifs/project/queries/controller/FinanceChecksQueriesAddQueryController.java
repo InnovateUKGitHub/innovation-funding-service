@@ -42,6 +42,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -91,7 +92,7 @@ public class FinanceChecksQueriesAddQueryController {
             model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddQueryForm()));
             return NEW_QUERY_VIEW;
         } else {
-            throw new ObjectNotFoundException("Cannot view query as organisation " + organisationId + " is not valid for project " + projectId, null);
+            throw new ObjectNotFoundException("Cannot view query as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
         }
     }
 
@@ -199,7 +200,7 @@ public class FinanceChecksQueriesAddQueryController {
                 throw new ForbiddenActionException();
             }
         } else {
-            throw new ObjectNotFoundException("Cannot view query attachment as organisation " + organisationId + " is not valid for project " + projectId, null);
+            throw new ObjectNotFoundException("Cannot view query attachment as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
         }
     }
 
@@ -240,7 +241,7 @@ public class FinanceChecksQueriesAddQueryController {
             deleteCookies(response, projectId, organisationId);
             return redirectTo(queriesListView(projectId, organisationId, querySection));
         } else {
-            throw new ObjectNotFoundException("Cannot cancel query as organisation " + organisationId + " is not valid for project " + projectId, null);
+            throw new ObjectNotFoundException("Cannot cancel query as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
         }
     }
 
