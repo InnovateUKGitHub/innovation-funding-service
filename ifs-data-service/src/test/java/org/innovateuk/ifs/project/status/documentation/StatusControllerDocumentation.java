@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.status.controller.ProjectStatusController;
+import org.innovateuk.ifs.project.status.controller.StatusController;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Before;
@@ -36,7 +36,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectStatusControllerDocumentation extends BaseControllerMockMVCTest<ProjectStatusController> {
+public class StatusControllerDocumentation extends BaseControllerMockMVCTest<StatusController> {
 
     private RestDocumentationResultHandler document;
 
@@ -175,7 +175,7 @@ public class ProjectStatusControllerDocumentation extends BaseControllerMockMVCT
     }
 
     @Override
-    protected ProjectStatusController supplyControllerUnderTest() {
-        return new ProjectStatusController();
+    protected StatusController supplyControllerUnderTest() {
+        return new StatusController();
     }
 }

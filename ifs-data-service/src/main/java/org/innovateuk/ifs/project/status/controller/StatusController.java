@@ -19,7 +19,7 @@ import static java.util.Optional.ofNullable;
  */
 @RestController
 @RequestMapping("/project")
-public class ProjectStatusController {
+public class StatusController {
     @Autowired
     private ProjectStatusService projectStatusService;
 

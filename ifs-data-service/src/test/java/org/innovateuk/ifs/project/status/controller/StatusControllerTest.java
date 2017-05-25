@@ -16,7 +16,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ProjectStatusControllerTest extends BaseControllerMockMVCTest<ProjectStatusController> {
+public class StatusControllerTest extends BaseControllerMockMVCTest<StatusController> {
 
     @Test
     public void testGetCompetitionStatus() throws Exception {
@@ -49,7 +49,7 @@ public class ProjectStatusControllerTest extends BaseControllerMockMVCTest<Proje
     }
 
     @Override
-    protected ProjectStatusController supplyControllerUnderTest() {
-        return new ProjectStatusController();
+    protected StatusController supplyControllerUnderTest() {
+        return new StatusController();
     }
 }
