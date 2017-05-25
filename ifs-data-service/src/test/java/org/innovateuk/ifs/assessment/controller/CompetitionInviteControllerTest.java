@@ -633,4 +633,23 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         verify(competitionInviteServiceMock, only()).sendInvite(inviteId, assessorInviteSendResource);
     }
+
+    @Test
+    public void sendAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        when(competitionInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competitioninvite/sendAllInvites/{competitionId}", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
+                .andExpect(status().isOk());
+
+        verify(competitionInviteServiceMock).sendAllInvites(competitionId, assessorInviteSendResource);
+    }
 }

@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.junit.Assert.assertEquals;
 
@@ -12,13 +13,13 @@ public class AssessorInviteToSendResourceBuilderTest {
 
     @Test
     public void buildOne() {
-        String expectedRecipient = "recipient";
+        List<String> expectedRecipient = singletonList("recipient");
         long expectedCompetitionId = 1L;
         String expectedCompetitionName = "comp-name";
         String expectedContent = "content";
 
         AssessorInvitesToSendResource assessorInviteToSendResource = newAssessorInviteToSendResource()
-                .withRecipient(expectedRecipient)
+                .withRecipients(expectedRecipient)
                 .withCompetitionId(expectedCompetitionId)
                 .withCompetitionName(expectedCompetitionName)
                 .withContent(expectedContent)
@@ -32,24 +33,25 @@ public class AssessorInviteToSendResourceBuilderTest {
 
     @Test
     public void buildMany() {
-        String[] expectedRecipients = {"recipient", "other"};
+        List<String> expectedRecipients1 = singletonList("recipient");
+        List<String> expectedRecipients2 = singletonList("other");
         Long[] expectedCompetitionIds = {1L, 2L};
         String[] expectedCompetitionNames = {"comp-name", "name-comp"};
         String[] expectedContent = {"content1", "content2"};
 
         List<AssessorInvitesToSendResource> resources = newAssessorInviteToSendResource()
-                .withRecipient(expectedRecipients)
+                .withRecipients(expectedRecipients1, expectedRecipients2)
                 .withCompetitionId(expectedCompetitionIds)
                 .withCompetitionName(expectedCompetitionNames)
                 .withContent(expectedContent)
                 .build(2);
 
-        assertEquals(expectedRecipients[0], resources.get(0).getRecipients());
+        assertEquals(expectedRecipients1, resources.get(0).getRecipients());
         assertEquals((long) expectedCompetitionIds[0], resources.get(0).getCompetitionId());
         assertEquals(expectedCompetitionNames[0], resources.get(0).getCompetitionName());
         assertEquals(expectedContent[0], resources.get(0).getContent());
 
-        assertEquals(expectedRecipients[1], resources.get(1).getRecipients());
+        assertEquals(expectedRecipients2, resources.get(1).getRecipients());
         assertEquals((long) expectedCompetitionIds[1], resources.get(1).getCompetitionId());
         assertEquals(expectedCompetitionNames[1], resources.get(1).getCompetitionName());
         assertEquals(expectedContent[1], resources.get(1).getContent());

@@ -7,6 +7,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
@@ -91,7 +92,7 @@ public class CompetitionInviteDocs {
             .withCompetitionId(1L)
             .withCompetitionName("Connected digital additive manufacturing")
             .withContent("E-mail body content which is editable")
-            .withRecipient("Paul Plum");
+            .withRecipients(singletonList("Paul Plum"));
 
     public static final ExistingUserStagedInviteResourceBuilder existingUserStagedInviteResourceBuilder = newExistingUserStagedInviteResource()
             .withEmail("paul.plum@gmail.com")

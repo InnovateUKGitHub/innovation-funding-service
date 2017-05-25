@@ -28,8 +28,8 @@ public class AssessorInviteToSendResourceBuilder extends BaseBuilder<AssessorInv
         return new AssessorInviteToSendResourceBuilder(emptyList());
     }
 
-    public AssessorInviteToSendResourceBuilder withRecipient(String... value) {
-        return withArraySetFieldByReflection("recipient", value);
+    public AssessorInviteToSendResourceBuilder withRecipients(List<String>... value) {
+        return withArraySetFieldByReflection("recipients", value);
     }
 
     public AssessorInviteToSendResourceBuilder withCompetitionId(Long... value) {
