@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
 import org.innovateuk.ifs.project.status.security.StatusPermission;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 
@@ -19,16 +19,16 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 public class PopulatedCompetitionStatusViewModel {
     private final UserResource user;
     private final CompetitionProjectsStatusResource competitionProjectsStatus;
-    private final CompetitionProjectStatusViewModel viewModel;
+    private final CompetitionStatusViewModel viewModel;
 
     public PopulatedCompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user) {
         this.user = user;
         this.competitionProjectsStatus = competitionProjectsStatus;
         final boolean canExportBankDetails = user.hasRole(PROJECT_FINANCE);
-        this.viewModel = new CompetitionProjectStatusViewModel(competitionProjectsStatus, canExportBankDetails, projectStatusPermissions());
+        this.viewModel = new CompetitionStatusViewModel(competitionProjectsStatus, canExportBankDetails, projectStatusPermissions());
     }
 
-    public CompetitionProjectStatusViewModel get() {
+    public CompetitionStatusViewModel get() {
         return viewModel;
     }
 

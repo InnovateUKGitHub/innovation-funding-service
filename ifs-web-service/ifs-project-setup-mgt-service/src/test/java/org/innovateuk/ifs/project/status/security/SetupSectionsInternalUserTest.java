@@ -26,7 +26,7 @@ import static java.util.Arrays.stream;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
+public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Mock
     private SetupProgressChecker setupProgressCheckerMock;

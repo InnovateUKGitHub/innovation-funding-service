@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
-import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -29,7 +29,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
 
         mockMvc.perform(get("/competition/" + competitionId + "/status"))
                 .andExpect(view().name("project/competition-status"))
-                .andExpect(model().attribute("model", any(CompetitionProjectStatusViewModel.class)))
+                .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
                 .andReturn();
     }
 

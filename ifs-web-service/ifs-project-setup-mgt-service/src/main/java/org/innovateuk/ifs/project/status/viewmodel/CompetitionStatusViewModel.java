@@ -8,13 +8,13 @@ import java.util.Map;
 /**
  * Interface that defines the minimal information necessary to drive a standard Project page with the standard header information about the project
  */
-public class CompetitionProjectStatusViewModel {
+public class CompetitionStatusViewModel {
 
     private CompetitionProjectsStatusResource competitionProjectsStatusResource;
     private Map<Long, StatusPermission> statusPermissions;
     private boolean canExportBankDetails;
 
-    public CompetitionProjectStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap) {
+    public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap) {
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
         this.canExportBankDetails = canExportBankDetails;
         this.statusPermissions = projectStatusPermissionsMap;

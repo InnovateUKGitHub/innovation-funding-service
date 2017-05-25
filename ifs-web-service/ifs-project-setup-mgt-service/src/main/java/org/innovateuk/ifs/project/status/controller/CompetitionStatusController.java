@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.status.service.ProjectStatusRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
-import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * This RestController exposes ways of fetching the current status of a competition projects in a view-friendly
- * format  using {@link CompetitionProjectStatusViewModel}
+ * format  using {@link CompetitionStatusViewModel}
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/status")
