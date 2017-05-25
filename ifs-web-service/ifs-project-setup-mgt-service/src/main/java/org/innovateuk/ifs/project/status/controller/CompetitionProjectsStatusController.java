@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.status.controller;
 import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
-import org.innovateuk.ifs.project.service.ProjectStatusRestService;
+import org.innovateuk.ifs.project.status.service.ProjectStatusRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionProjectsStatusViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;

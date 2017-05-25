@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.status;
 
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.service.ProjectStatusRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,31 +22,31 @@ public class StatusServiceImplTest {
     private StatusServiceImpl service;
 
     @Mock
-    private ProjectRestService projectRestService;
+    private ProjectStatusRestService projectStatusRestService;
 
     @Test
     public void testGetProjectTeamStatus() throws Exception {
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
 
-        when(projectRestService.getProjectTeamStatus(1L, Optional.empty())).thenReturn(restSuccess(expectedProjectTeamStatusResource));
+        when(projectStatusRestService.getProjectTeamStatus(1L, Optional.empty())).thenReturn(restSuccess(expectedProjectTeamStatusResource));
 
         ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L, Optional.empty());
 
         assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
 
-        verify(projectRestService).getProjectTeamStatus(1L, Optional.empty());
+        verify(projectStatusRestService).getProjectTeamStatus(1L, Optional.empty());
     }
 
     @Test
     public void testGetProjectTeamStatusWithFilterByUserId() throws Exception {
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
 
-        when(projectRestService.getProjectTeamStatus(1L, Optional.of(456L))).thenReturn(restSuccess(expectedProjectTeamStatusResource));
+        when(projectStatusRestService.getProjectTeamStatus(1L, Optional.of(456L))).thenReturn(restSuccess(expectedProjectTeamStatusResource));
 
         ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L, Optional.of(456L));
 
         assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
 
-        verify(projectRestService).getProjectTeamStatus(1L, Optional.of(456L));
+        verify(projectStatusRestService).getProjectTeamStatus(1L, Optional.of(456L));
     }
 }

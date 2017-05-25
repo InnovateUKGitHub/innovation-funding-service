@@ -10,6 +10,8 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.SectionAccess;
+import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class ProjectSetupSectionsPermissionRules {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private StatusService statusService;
 
     @Autowired
     private OtherDocumentsService otherDocumentsService;
@@ -153,7 +158,7 @@ public class ProjectSetupSectionsPermissionRules {
 
             ProjectTeamStatusResource teamStatus;
 
-            teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
+            teamStatus = statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(organisationId).get();
 

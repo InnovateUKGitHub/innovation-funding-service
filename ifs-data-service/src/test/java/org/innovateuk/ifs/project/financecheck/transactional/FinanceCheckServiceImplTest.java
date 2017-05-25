@@ -22,7 +22,7 @@ import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;

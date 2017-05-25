@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.status;
 
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.service.ProjectStatusRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +15,15 @@ import java.util.Optional;
 public class StatusServiceImpl implements StatusService {
 
     @Autowired
-    private ProjectRestService projectRestService;
+    private ProjectStatusRestService projectStatusRestService;
 
     @Override
     public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
-        return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
+        return projectStatusRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public ProjectStatusResource getProjectStatus(Long projectId) {
-        return projectRestService.getProjectStatus(projectId).getSuccessObjectOrThrowException();
+        return projectStatusRestService.getProjectStatus(projectId).getSuccessObjectOrThrowException();
     }
 }

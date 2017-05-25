@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.status.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.security.ProjectSetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.sections.SectionAccess;

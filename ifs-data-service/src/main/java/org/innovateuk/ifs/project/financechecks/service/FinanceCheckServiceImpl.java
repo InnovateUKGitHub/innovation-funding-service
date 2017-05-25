@@ -25,7 +25,7 @@ import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServi
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.status.transactional.ProjectStatusService;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;

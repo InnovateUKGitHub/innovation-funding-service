@@ -7,7 +7,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
