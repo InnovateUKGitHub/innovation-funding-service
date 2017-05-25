@@ -133,4 +133,8 @@ public class ProjectServiceImpl implements ProjectService {
         return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
     }
 
+    @Override
+    public Optional<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId) {
+        return projectRestService.getPartnerOrganisation(projectId, organisationId).toServiceResult().getOptionalSuccessObject();
+    }
 }

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -59,13 +60,16 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
     ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
 
+    PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
+
     @Captor
     ArgumentCaptor<QueryResource> saveQueryArgumentCaptor;
 
-    @Before public void setup() {
+    @Before
+    public void setup() {
         super.setUp();
         this.setupCookieUtil();
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.of(partnerOrg));
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
@@ -109,7 +113,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewQueryProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility"))
                 .andExpect(status().isNotFound())
@@ -304,7 +308,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadAttachmentFailsProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/attachment/1?query_section=Eligibility"))
                 .andExpect(status().isNotFound())
@@ -346,7 +350,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testCancelNewQueryFailsProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility"))
                 .andExpect(status().isNotFound())

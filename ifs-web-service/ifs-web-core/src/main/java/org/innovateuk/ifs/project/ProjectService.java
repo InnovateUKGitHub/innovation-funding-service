@@ -42,4 +42,6 @@ public interface ProjectService {
     Optional<ProjectUserResource> getProjectManager(Long projectId);
 
     Boolean isProjectManager(Long userId, Long projectId);
+
+    Optional<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
 }

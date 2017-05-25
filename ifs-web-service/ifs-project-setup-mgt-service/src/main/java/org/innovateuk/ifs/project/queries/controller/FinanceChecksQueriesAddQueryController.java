@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -41,6 +42,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
@@ -82,14 +84,14 @@ public class FinanceChecksQueriesAddQueryController {
                           UserResource loggedInUser,
                           HttpServletRequest request,
                           HttpServletResponse response) {
-        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
+        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
             FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
             model.addAttribute("model", viewModel);
             model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddQueryForm()));
             return NEW_QUERY_VIEW;
         } else {
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException("Cannot view query as organisation " + organisationId + " is not valid for project " + projectId, null);
         }
     }
 
@@ -188,7 +190,7 @@ public class FinanceChecksQueriesAddQueryController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
+        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
             if (attachments.contains(attachmentId)) {
@@ -197,7 +199,7 @@ public class FinanceChecksQueriesAddQueryController {
                 throw new ForbiddenActionException();
             }
         } else {
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException("Cannot view query attachment as organisation " + organisationId + " is not valid for project " + projectId, null);
         }
     }
 
@@ -233,12 +235,12 @@ public class FinanceChecksQueriesAddQueryController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        if (projectService.getPartnerOrganisationsForProject(projectId).stream().filter(o -> o.getId() == organisationId).count() > 0) {
+        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
             loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
             deleteCookies(response, projectId, organisationId);
             return redirectTo(queriesListView(projectId, organisationId, querySection));
         } else {
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException("Cannot cancel query as organisation " + organisationId + " is not valid for project " + projectId, null);
         }
     }
 

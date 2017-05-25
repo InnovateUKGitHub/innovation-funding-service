@@ -9,4 +9,7 @@ import java.util.List;
 public interface PartnerOrganisationService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
 }

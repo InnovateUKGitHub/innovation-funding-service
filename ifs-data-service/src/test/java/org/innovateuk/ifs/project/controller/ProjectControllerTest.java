@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Test;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -107,6 +110,17 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         mockMvc.perform(get("/project/{id}/project-manager", project1Id))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testGetProjectPartner() throws Exception {
+        Long projectId = 123L;
+        Long organisationId = 234L;
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
+        when(partnerOrganisationServiceMock.getPartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess(partnerOrg));
+        mockMvc.perform(get("/project/{projectId}/partner/{organisationId}", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(partnerOrg)));
     }
 }
 

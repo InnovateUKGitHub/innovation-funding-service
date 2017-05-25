@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -27,6 +29,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectStatusService projectStatusService;
+
+    @Autowired
+    private PartnerOrganisationService partnerOrganisationService;
 
     @GetMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
@@ -80,5 +85,11 @@ public class ProjectController {
     @GetMapping("/{projectId}/status")
     public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
+    }
+
+    @GetMapping("/{projectId}/partner/{organisationId}")
+    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(@PathVariable(value = "projectId") Long projectId,
+                                                                          @PathVariable(value = "organisationId") Long organisationId) {
+        return partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).toGetResponse();
     }
 }

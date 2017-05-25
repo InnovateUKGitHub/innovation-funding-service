@@ -30,4 +30,6 @@ public interface ProjectRestService {
 
     RestResult<ProjectUserResource> getProjectManager(Long projectId);
 
+    RestResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
+
 }

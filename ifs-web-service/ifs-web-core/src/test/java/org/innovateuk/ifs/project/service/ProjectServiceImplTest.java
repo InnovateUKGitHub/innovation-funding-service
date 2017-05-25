@@ -7,7 +7,6 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.ProjectServiceImpl;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
@@ -19,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -159,7 +159,6 @@ public class ProjectServiceImplTest {
     @Test
     public void testGetProjectManagerWhenNotFound() {
         Long projectId = 123L;
-        final Long projectManagerId = 987L;
         when(projectRestService.getProjectManager(projectId))
                 .thenReturn(restSuccess(null, HttpStatus.NOT_FOUND));
         assertFalse(service.getProjectManager(projectId).isPresent());
@@ -182,7 +181,6 @@ public class ProjectServiceImplTest {
 
         when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(null, HttpStatus.NOT_FOUND));
 
-        final Optional<ProjectUserResource> projectManager = service.getProjectManager(projectId);
         assertFalse(service.isProjectManager(projectManagerId, projectId));
     }
 
@@ -196,5 +194,18 @@ public class ProjectServiceImplTest {
                 .thenReturn(restSuccess(newProjectUserResource().withUser(projectManagerId).build()));
 
         assertFalse(service.isProjectManager(loggedInUserId, projectId));
+    }
+
+    @Test
+    public void testGetPartnerOrganisation() {
+        PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
+        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenReturn(restSuccess(partnerOrg));
+        assertTrue(service.getPartnerOrganisation(123L, 234L).isPresent());
+    }
+
+    @Test
+    public void testGetPartnerOrganisationNotFound() {
+        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenReturn(restSuccess(null, HttpStatus.NOT_FOUND));
+        assertFalse(service.getPartnerOrganisation(123L, 234L).isPresent());
     }
 }

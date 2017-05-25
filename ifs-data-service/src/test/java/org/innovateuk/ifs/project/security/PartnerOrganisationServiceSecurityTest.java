@@ -56,6 +56,10 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
         public ServiceResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId) {
             return serviceSuccess(partnerOrganisations);
         }
+        @Override
+        public ServiceResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId) {
+            return serviceSuccess(partnerOrganisations.get(0));
+        }
     }
 }
 
