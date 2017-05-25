@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.bankdetails.controller;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ public class BankDetailsManagementControllerSecurityTest extends BaseProjectSetu
     }
 
     @Override
-    protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
+    protected Consumer<SetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.internalCanAccessBankDetailsSection(eq(123L), isA(UserResource.class));
     }
 }

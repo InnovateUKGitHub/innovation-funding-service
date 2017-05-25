@@ -4,7 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.status.service.ProjectStatusRestService;
-import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionProjectsStatusViewModel;
+import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/status")
-public class CompetitionProjectsStatusController {
+public class CompetitionStatusController {
 
     @Autowired
     private ProjectStatusRestService projectStatusRestService;
@@ -40,7 +40,7 @@ public class CompetitionProjectsStatusController {
     public String viewCompetitionStatus(Model model, UserResource loggedInUser,
                                         @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new PopulatedCompetitionProjectsStatusViewModel(projectStatusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(), loggedInUser).get());
+                new PopulatedCompetitionStatusViewModel(projectStatusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(), loggedInUser).get());
         return "project/competition-status";
     }
 

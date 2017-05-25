@@ -13,11 +13,11 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
  * Component to check the progress of Project Setup.  This is used by the {@link ProjectSetupSectionInternalUser} to
  * determine which sections are available at a given time
  */
-class ProjectSetupProgressChecker {
+class SetupProgressChecker {
 
     private ProjectStatusResource projectStatus;
 
-    public ProjectSetupProgressChecker(ProjectStatusResource projectStatusResource) {
+    public SetupProgressChecker(ProjectStatusResource projectStatusResource) {
         this.projectStatus = projectStatusResource;
     }
 

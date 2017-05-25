@@ -15,14 +15,14 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
  */
-public class ProjectSetupSectionInternalUser {
+public class SetupSectionInternalUser {
 
-    private static final Log LOG = LogFactory.getLog(ProjectSetupSectionInternalUser.class);
+    private static final Log LOG = LogFactory.getLog(SetupSectionInternalUser.class);
 
-    private ProjectSetupProgressChecker projectSetupProgressChecker;
+    private SetupProgressChecker projectSetupProgressChecker;
 
-    public ProjectSetupSectionInternalUser(ProjectStatusResource projectStatusResource) {
-        this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectStatusResource);
+    public SetupSectionInternalUser(ProjectStatusResource projectStatusResource) {
+        this.projectSetupProgressChecker = new SetupProgressChecker(projectStatusResource);
     }
 
     public SectionAccess canAccessCompaniesHouseSection(UserResource userResource) {

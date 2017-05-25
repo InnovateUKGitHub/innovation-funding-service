@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupCon
     }
 
     @Override
-    protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
+    protected Consumer<SetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.internalCanAccessMonitoringOfficerSection(eq(123L), isA(UserResource.class));
     }
 }

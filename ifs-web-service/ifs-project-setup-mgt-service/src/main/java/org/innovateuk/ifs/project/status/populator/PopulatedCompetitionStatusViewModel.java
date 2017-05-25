@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.status.populator;
 
-import org.innovateuk.ifs.project.status.security.ProjectSetupSectionInternalUser;
-import org.innovateuk.ifs.project.status.security.ProjectStatusPermission;
+import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
+import org.innovateuk.ifs.project.status.security.StatusPermission;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
@@ -16,12 +16,12 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 /**
  * This class represents a populated CompetitionProjectStatusViewModel.
  */
-public class PopulatedCompetitionProjectsStatusViewModel {
+public class PopulatedCompetitionStatusViewModel {
     private final UserResource user;
     private final CompetitionProjectsStatusResource competitionProjectsStatus;
     private final CompetitionProjectStatusViewModel viewModel;
 
-    public PopulatedCompetitionProjectsStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user) {
+    public PopulatedCompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user) {
         this.user = user;
         this.competitionProjectsStatus = competitionProjectsStatus;
         final boolean canExportBankDetails = user.hasRole(PROJECT_FINANCE);
@@ -32,18 +32,18 @@ public class PopulatedCompetitionProjectsStatusViewModel {
         return viewModel;
     }
 
-    private Map<Long, ProjectStatusPermission> projectStatusPermissions() {
+    private Map<Long, StatusPermission> projectStatusPermissions() {
         return projectStatusPermissions(user, competitionProjectsStatus.getProjectStatusResources());
     }
 
-    private Map<Long, ProjectStatusPermission> projectStatusPermissions(UserResource user, List<ProjectStatusResource> projectStatuses) {
+    private Map<Long, StatusPermission> projectStatusPermissions(UserResource user, List<ProjectStatusResource> projectStatuses) {
         return CollectionFunctions.simpleToLinkedMap(projectStatuses,
                 ProjectStatusResource::getApplicationNumber,
-                projectStatus -> projectStatusPermission(new ProjectSetupSectionInternalUser(projectStatus), user));
+                projectStatus -> projectStatusPermission(new SetupSectionInternalUser(projectStatus), user));
     }
 
-    private ProjectStatusPermission projectStatusPermission(ProjectSetupSectionInternalUser internalUser, UserResource userResource) {
-        return new ProjectStatusPermission(
+    private StatusPermission projectStatusPermission(SetupSectionInternalUser internalUser, UserResource userResource) {
+        return new StatusPermission(
                 internalUser.canAccessCompaniesHouseSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.canAccessProjectDetailsSection(userResource).isAccessibleOrNotRequired(),
                 internalUser.canAccessMonitoringOfficerSection(userResource).isAccessibleOrNotRequired(),

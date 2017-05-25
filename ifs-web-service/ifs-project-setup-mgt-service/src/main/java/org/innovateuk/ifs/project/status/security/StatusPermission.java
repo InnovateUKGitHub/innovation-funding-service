@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 /**
  * Class for checking the access permissions
  */
-public class ProjectStatusPermission {
+public class StatusPermission {
     private Boolean canAccessCompaniesHouse;
     private Boolean canAccessProjectDetails;
     private Boolean canAccessMonitoringOfficer;
@@ -17,7 +17,7 @@ public class ProjectStatusPermission {
     private Boolean canAccessGrantOfferLetterSend;
     private ProjectActivityStates grantOfferLetterActivityState;
 
-    public ProjectStatusPermission(Boolean canAccessCompaniesHouse, Boolean canAccessProjectDetails,
+    public StatusPermission(Boolean canAccessCompaniesHouse, Boolean canAccessProjectDetails,
                                    Boolean canAccessMonitoringOfficer, Boolean canAccessBankDetails,
                                    Boolean canAccessFinanceChecks, Boolean canAccessSpendProfile,
                                    Boolean canAccessOtherDocuments, Boolean canAccessGrantOfferLetter,

@@ -29,14 +29,14 @@ import static org.mockito.Mockito.*;
 public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Mock
-    private ProjectSetupProgressChecker projectSetupProgressCheckerMock;
+    private SetupProgressChecker setupProgressCheckerMock;
 
     @InjectMocks
-    private ProjectSetupSectionInternalUser internalUser;
+    private SetupSectionInternalUser internalUser;
 
     @Test
     public void testCheckAccessToProjectDetailsSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessProjectDetailsSection(null));
 
         verifyInteractions(
@@ -46,13 +46,13 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToProjectDetailsSectionButProjectDetailsSectionIncomplete() {
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessProjectDetailsSection(null));
     }
 
     @Test
     public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
+        when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(null));
 
         verifyInteractions(
@@ -62,14 +62,14 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToMonitoringOfficerSectionButProjectDetailsSectionIncomplete() {
-        when(projectSetupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(false);
+        when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(null));
     }
 
     @Test
     public void testCheckAccessToBankDetailsSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
+        when(setupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(true);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
     }
 
@@ -83,8 +83,8 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
                 assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(nonFinanceTeam));
 
-                verify(projectSetupProgressCheckerMock, never()).isBankDetailsApproved();
-                verify(projectSetupProgressCheckerMock, never()).isBankDetailsActionRequired();
+                verify(setupProgressCheckerMock, never()).isBankDetailsApproved();
+                verify(setupProgressCheckerMock, never()).isBankDetailsActionRequired();
             }
         });
 
@@ -92,8 +92,8 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToBankDetailsSectionButBankDetailsNotApproved() {
-        when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBankDetailsAccessible()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
+        when(setupProgressCheckerMock.isBankDetailsAccessible()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
     }
 
@@ -115,7 +115,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToSpendProfileSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(null));
 
         verifyInteractions(
@@ -126,7 +126,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToSpendProfileSectionButSpendProfileSectionIsNotSubmitted() {
-        when(projectSetupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(false);
+        when(setupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessSpendProfileSection(getFinanceTeamMember()));
     }
 
@@ -137,9 +137,9 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToOtherDocumentsSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(false);
+        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        when(setupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(false);
         assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
 
         verifyInteractions(
@@ -149,8 +149,8 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToOtherDocumentsSectionDocsApproved() {
-        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
 
         verifyInteractions(
@@ -160,9 +160,9 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToOtherDocumentsSectionDocsRejected() {
-        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(true);
+        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        when(setupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
 
         verifyInteractions(
@@ -172,13 +172,13 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToOtherDocumentsSectionButSpendProfileSectionIsNotSubmitted() {
-        when(projectSetupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(false);
+        when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
     }
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
+        when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
 
@@ -187,17 +187,17 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionButOtherSectionsAreIncomplete() {
-        when(projectSetupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(false);
+        when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(null));
     }
     @Test
     public void testCheckAccessToGrantOfferLetterSendSectionHappyPath() {
-        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
+        when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(true);
 
         Map<UserRoleType, ProjectActivityStates> roleSpecificActivityStates = new HashMap<UserRoleType, ProjectActivityStates>();
         roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
-        when(projectSetupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+        when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
 
         List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(COMP_ADMIN).build(1);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
@@ -213,7 +213,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckFinanceUserGetsCompAdminActivityStates() {
         Map<UserRoleType, ProjectActivityStates> roleSpecificActivityStates = new HashMap<UserRoleType, ProjectActivityStates>();
         roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
-        when(projectSetupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
+        when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
 
         List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(PROJECT_FINANCE).build(1);
         UserResource financeUser = newUserResource().withRolesGlobal(roles).build();
@@ -226,13 +226,13 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckAccessToGrantOfferLetterSectionSendButOtherSectionsAreIncomplete() {
         List<RoleResource> roles = RoleResourceBuilder.newRoleResource().withType(COMP_ADMIN).build(1);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
-        when(projectSetupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
+        when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
     }
 
     @SafeVarargs
-    private final void verifyInteractions(Consumer<ProjectSetupProgressChecker>... verifiers) {
-        asList(verifiers).forEach(verifier -> verifier.accept(verify(projectSetupProgressCheckerMock)));
-        verifyNoMoreInteractions(projectSetupProgressCheckerMock);
+    private final void verifyInteractions(Consumer<SetupProgressChecker>... verifiers) {
+        asList(verifiers).forEach(verifier -> verifier.accept(verify(setupProgressCheckerMock)));
+        verifyNoMoreInteractions(setupProgressCheckerMock);
     }
 }

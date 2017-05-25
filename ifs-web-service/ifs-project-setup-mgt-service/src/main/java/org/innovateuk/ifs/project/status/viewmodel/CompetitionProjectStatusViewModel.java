@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
-import org.innovateuk.ifs.project.status.security.ProjectStatusPermission;
+import org.innovateuk.ifs.project.status.security.StatusPermission;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 
 import java.util.Map;
@@ -11,21 +11,21 @@ import java.util.Map;
 public class CompetitionProjectStatusViewModel {
 
     private CompetitionProjectsStatusResource competitionProjectsStatusResource;
-    private Map<Long, ProjectStatusPermission> projectStatusPermissions;
+    private Map<Long, StatusPermission> statusPermissions;
     private boolean canExportBankDetails;
 
-    public CompetitionProjectStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean canExportBankDetails, Map<Long, ProjectStatusPermission> projectStatusPermissionsMap) {
+    public CompetitionProjectStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap) {
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
         this.canExportBankDetails = canExportBankDetails;
-        this.projectStatusPermissions = projectStatusPermissionsMap;
+        this.statusPermissions = projectStatusPermissionsMap;
     }
 
     public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
         return competitionProjectsStatusResource;
     }
 
-    public Map<Long, ProjectStatusPermission> getProjectStatusPermissions() {
-        return projectStatusPermissions;
+    public Map<Long, StatusPermission> getStatusPermissions() {
+        return statusPermissions;
     }
 
     public boolean isCanExportBankDetails() {

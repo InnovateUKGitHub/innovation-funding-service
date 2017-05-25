@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class CompetitionProjectsStatusControllerTest extends BaseControllerMockMVCTest<CompetitionProjectsStatusController> {
+public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<CompetitionStatusController> {
 
     @Test
     public void testViewCompetitionStatusPage() throws Exception {
@@ -55,7 +55,7 @@ public class CompetitionProjectsStatusControllerTest extends BaseControllerMockM
     }
 
     @Override
-    protected CompetitionProjectsStatusController supplyControllerUnderTest() {
-        return new CompetitionProjectsStatusController();
+    protected CompetitionStatusController supplyControllerUnderTest() {
+        return new CompetitionStatusController();
     }
 }
