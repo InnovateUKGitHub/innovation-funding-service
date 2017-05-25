@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.spendprofile.validation.controller;
+package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
@@ -9,8 +9,6 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryYearModel;
 import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.spendprofile.controller.OrganisationReviewDetails;
-import org.innovateuk.ifs.project.spendprofile.controller.ProjectSpendProfileController;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
@@ -35,7 +33,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;

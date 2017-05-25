@@ -1,7 +1,9 @@
-package org.innovateuk.ifs.project.sections;
+package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.sections.SectionAccess;
+import org.innovateuk.ifs.project.sections.SectionStatus;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;

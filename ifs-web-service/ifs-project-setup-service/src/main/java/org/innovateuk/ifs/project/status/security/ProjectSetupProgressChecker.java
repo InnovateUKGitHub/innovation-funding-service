@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.sections;
+package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
