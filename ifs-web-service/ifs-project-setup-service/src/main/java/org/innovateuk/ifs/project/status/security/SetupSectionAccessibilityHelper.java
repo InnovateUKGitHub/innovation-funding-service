@@ -11,19 +11,19 @@ import static org.innovateuk.ifs.project.sections.SectionAccess.*;
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
  */
-public class ProjectSetupSectionAccessibilityHelper {
+public class SetupSectionAccessibilityHelper {
 
-    private static final Log LOG = LogFactory.getLog(ProjectSetupSectionAccessibilityHelper.class);
+    private static final Log LOG = LogFactory.getLog(SetupSectionAccessibilityHelper.class);
 
-    private ProjectSetupProgressChecker projectSetupProgressChecker;
+    private SetupProgressChecker setupProgressChecker;
 
-    public ProjectSetupSectionAccessibilityHelper(ProjectTeamStatusResource projectTeamStatus) {
-        this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatus);
+    public SetupSectionAccessibilityHelper(ProjectTeamStatusResource projectTeamStatus) {
+        this.setupProgressChecker = new SetupProgressChecker(projectTeamStatus);
     }
 
     public SectionAccess canAccessCompaniesHouseSection(OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
+        if (setupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
             return ACCESSIBLE;
         }
 
@@ -73,8 +73,8 @@ public class ProjectSetupSectionAccessibilityHelper {
         return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access until Companies House details are complete for Organisation")
 
-                || projectSetupProgressChecker.isProjectDetailsSubmitted()
-                || !projectSetupProgressChecker.isLeadPartnerOrganisation(organisation);
+                || setupProgressChecker.isProjectDetailsSubmitted()
+                || !setupProgressChecker.isLeadPartnerOrganisation(organisation);
 
     }
 
@@ -85,7 +85,7 @@ public class ProjectSetupSectionAccessibilityHelper {
             return NOT_ACCESSIBLE;
         }
 
-        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+        if (!setupProgressChecker.isProjectDetailsSubmitted()) {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
@@ -99,11 +99,11 @@ public class ProjectSetupSectionAccessibilityHelper {
             return NOT_ACCESSIBLE;
         }
 
-        if(!projectSetupProgressChecker.isOrganisationRequiringFunding(organisation)){
+        if(!setupProgressChecker.isOrganisationRequiringFunding(organisation)){
             return NOT_ACCESSIBLE;
         }
 
-        if (!projectSetupProgressChecker.isFinanceContactSubmitted(organisation)) {
+        if (!setupProgressChecker.isFinanceContactSubmitted(organisation)) {
 
             return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +
                     "its Finance Contact");
@@ -119,11 +119,11 @@ public class ProjectSetupSectionAccessibilityHelper {
             return NOT_ACCESSIBLE;
         }
 
-        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+        if (!setupProgressChecker.isProjectDetailsSubmitted()) {
             return fail("Unable to access Finance Checks section until the Project Details section is complete");
         }
 
-        if (!projectSetupProgressChecker.isFinanceContactSubmitted(organisation)) {
+        if (!setupProgressChecker.isFinanceContactSubmitted(organisation)) {
 
             return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +
                     "its Finance Contact");
@@ -139,7 +139,7 @@ public class ProjectSetupSectionAccessibilityHelper {
             return NOT_ACCESSIBLE;
         }
 
-        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+        if (!setupProgressChecker.isProjectDetailsSubmitted()) {
 
             return fail("Unable to access Spend Profile section until the Project Details section is complete");
         }
@@ -150,7 +150,7 @@ public class ProjectSetupSectionAccessibilityHelper {
                     "approved or queried");
         }
 
-        if (!projectSetupProgressChecker.isSpendProfileGenerated()) {
+        if (!setupProgressChecker.isSpendProfileGenerated()) {
 
             return fail("Unable to access Spend Profile section until this Partner Organisation has had its " +
                     "Spend Profile generated");
@@ -161,7 +161,7 @@ public class ProjectSetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isLeadPartnerOrganisation(organisation)) {
+        if (setupProgressChecker.isLeadPartnerOrganisation(organisation)) {
             return ACCESSIBLE;
         }
 
@@ -176,8 +176,8 @@ public class ProjectSetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
 
-        if (projectSetupProgressChecker.isSpendProfileApproved() && projectSetupProgressChecker.isOtherDocumentsApproved()
-                && projectSetupProgressChecker.isGrantOfferLetterAvailable() && projectSetupProgressChecker.isGrantOfferLetterSent()) {
+        if (setupProgressChecker.isSpendProfileApproved() && setupProgressChecker.isOtherDocumentsApproved()
+                && setupProgressChecker.isGrantOfferLetterAvailable() && setupProgressChecker.isGrantOfferLetterSent()) {
             return ACCESSIBLE;
         }
 
@@ -185,15 +185,15 @@ public class ProjectSetupSectionAccessibilityHelper {
     }
 
     public boolean isProjectDetailsSubmitted() {
-        return projectSetupProgressChecker.isProjectDetailsSubmitted();
+        return setupProgressChecker.isProjectDetailsSubmitted();
     }
 
     public boolean isFinanceContactSubmitted(OrganisationResource organisationResource) {
-        return projectSetupProgressChecker.isFinanceContactSubmitted(organisationResource);
+        return setupProgressChecker.isFinanceContactSubmitted(organisationResource);
     }
 
     private boolean isBankDetailsApproved(OrganisationResource organisation) {
-        return projectSetupProgressChecker.isBankDetailsApproved(organisation);
+        return setupProgressChecker.isBankDetailsApproved(organisation);
     }
 
     private SectionAccess fail(String message) {
@@ -203,11 +203,11 @@ public class ProjectSetupSectionAccessibilityHelper {
 
     private boolean isCompaniesHouseSectionIsUnnecessaryOrComplete(OrganisationResource organisation, String failureMessage) {
 
-        if (!projectSetupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
+        if (!setupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
             return true;
         }
 
-        if (projectSetupProgressChecker.isCompaniesHouseDetailsComplete(organisation)) {
+        if (setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)) {
             return true;
         }
 

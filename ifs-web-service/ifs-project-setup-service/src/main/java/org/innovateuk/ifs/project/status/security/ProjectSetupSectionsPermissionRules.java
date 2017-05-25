@@ -50,63 +50,63 @@ public class ProjectSetupSectionsPermissionRules {
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
     public boolean partnerCanAccessProjectDetailsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_MANAGER_PAGE", description = "A lead can access the Project Manager " +
             "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
     public boolean leadCanAccessProjectManagerPage(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_START_DATE_PAGE", description = "A lead can access the Project Start Date " +
             "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
     public boolean leadCanAccessProjectStartDatePage(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_ADDRESS_PAGE", description = "A lead can access the Project Address " +
             "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
     public boolean leadCanAccessProjectAddressPage(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
     }
 
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A partner can access the Monitoring Officer " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessMonitoringOfficerSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection);
     }
 
     @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "A partner can access the Bank Details " +
             "section when their Companies House details are complete or not required, and they have a Finance Contact " +
             "available for their Organisation")
     public boolean partnerCanAccessBankDetailsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessBankDetailsSection);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessBankDetailsSection);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the finance details " +
             " when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(Long projectId, UserResource user) {
-            return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
+            return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
             "and the Organisation's Bank Details have been approved or queried")
     public boolean partnerCanAccessSpendProfileSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessSpendProfileSection);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @PermissionRule(value = "ACCESS_COMPANIES_HOUSE_SECTION", description = "A partner can access the Companies House " +
             "section if their Organisation is a business type (i.e. if Companies House details are required)")
     public boolean partnerCanAccessCompaniesHouseSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessCompaniesHouseSection);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessCompaniesHouseSection);
     }
 
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A partner can access the Other Documents " +
             "section if their Organisation is a business type (i.e. if Companies House details are required)")
     public boolean partnerCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessOtherDocumentsSection);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessOtherDocumentsSection);
     }
 
     @PermissionRule(value = "SUBMIT_OTHER_DOCUMENTS_SECTION", description = "A project manager can submit uploaded Other Documents " +
@@ -118,7 +118,7 @@ public class ProjectSetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SECTION", description = "A lead partner can access the Grant Offer Letter " +
             "section when all other sections are complete and a Grant Offer Letter has been generated by the internal team")
     public boolean partnerCanAccessGrantOfferLetterSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection);
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection);
     }
 
     @PermissionRule(value = "ACCESS_SIGNED_GRANT_OFFER_LETTER", description = "A lead partner can view and download signed grant offer letter document")
@@ -152,7 +152,7 @@ public class ProjectSetupSectionsPermissionRules {
         return !organisation.getId().equals(organisationId);
     }
 
-    private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
+    private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
         try {
             Long organisationId = organisationService.getOrganisationIdFromUser(projectId, user);
 
@@ -162,7 +162,7 @@ public class ProjectSetupSectionsPermissionRules {
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(organisationId).get();
 
-            ProjectSetupSectionAccessibilityHelper sectionAccessor = accessorSupplier.apply(teamStatus);
+            SetupSectionAccessibilityHelper sectionAccessor = accessorSupplier.apply(teamStatus);
             OrganisationResource organisation = new OrganisationResource();
             organisation.setId(partnerStatusForUser.getOrganisationId());
             organisation.setOrganisationType(partnerStatusForUser.getOrganisationType().getId());
@@ -174,10 +174,10 @@ public class ProjectSetupSectionsPermissionRules {
         }
     }
 
-    public class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, ProjectSetupSectionAccessibilityHelper> {
+    public class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, SetupSectionAccessibilityHelper> {
         @Override
-        public ProjectSetupSectionAccessibilityHelper apply(ProjectTeamStatusResource teamStatus) {
-            return new ProjectSetupSectionAccessibilityHelper(teamStatus);
+        public SetupSectionAccessibilityHelper apply(ProjectTeamStatusResource teamStatus) {
+            return new SetupSectionAccessibilityHelper(teamStatus);
         }
     }
 }

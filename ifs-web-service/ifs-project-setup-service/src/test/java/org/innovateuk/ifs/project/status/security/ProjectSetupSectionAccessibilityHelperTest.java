@@ -17,10 +17,10 @@ import static org.mockito.Mockito.when;
 public class ProjectSetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     @Mock
-    private ProjectSetupProgressChecker projectSetupProgressCheckerMock;
+    private SetupProgressChecker setupProgressCheckerMock;
 
     @InjectMocks
-    private ProjectSetupSectionAccessibilityHelper helper;
+    private SetupSectionAccessibilityHelper helper;
 
     private OrganisationResource organisation = newOrganisationResource().build();
 
@@ -84,45 +84,45 @@ public class ProjectSetupSectionAccessibilityHelperTest extends BaseUnitTest {
         whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
     }
 
-    private void whenCompaniesHouseDetailsNotComplete(BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+    private void whenCompaniesHouseDetailsNotComplete(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
-
-        SectionAccess access = methodToCall.apply(helper, organisation);
-        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
-
-    }
-
-    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsComplete(BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
-
-        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
 
     }
 
-    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead(BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsComplete(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
 
     }
 
-    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead(BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
+        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
+        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.ACCESSIBLE == access);
