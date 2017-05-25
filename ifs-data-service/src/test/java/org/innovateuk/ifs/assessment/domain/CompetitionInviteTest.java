@@ -61,7 +61,7 @@ public class CompetitionInviteTest {
     public void resend() {
         invite
                 .send(newUser().build(), ZonedDateTime.now())
-                .send(newUser().build(), ZonedDateTime.now());
+                .sendOrResend(newUser().build(), ZonedDateTime.now());
         assertEquals(SENT, invite.getStatus());
     }
 

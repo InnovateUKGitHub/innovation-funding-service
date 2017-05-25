@@ -66,7 +66,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         long inviteId = 1L;
 
         when(competitionInviteServiceMock.getCreatedInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
-        mockMvc.perform(get("/competitioninvite/getCreatedToSend/{inviteId}", inviteId)).andExpect(status().isOk());
+        mockMvc.perform(get("/competitioninvite/getCreatedInviteToSend/{inviteId}", inviteId)).andExpect(status().isOk());
 
         verify(competitionInviteServiceMock, only()).getCreatedInviteToSend(inviteId);
     }
@@ -77,7 +77,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         long inviteId = 1L;
 
         when(competitionInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
-        mockMvc.perform(get("/competitioninvite/getToSend/{inviteId}", inviteId)).andExpect(status().isOk());
+        mockMvc.perform(get("/competitioninvite/getInviteToSend/{inviteId}", inviteId)).andExpect(status().isOk());
 
         verify(competitionInviteServiceMock, only()).getInviteToSend(inviteId);
     }
