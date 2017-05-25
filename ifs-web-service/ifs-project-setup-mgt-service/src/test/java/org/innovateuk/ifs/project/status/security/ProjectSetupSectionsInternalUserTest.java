@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.sections;
+package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;

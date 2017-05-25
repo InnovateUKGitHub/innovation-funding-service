@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.security;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.project.spendprofile.controller.ProjectSpendProfileApprovalController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;

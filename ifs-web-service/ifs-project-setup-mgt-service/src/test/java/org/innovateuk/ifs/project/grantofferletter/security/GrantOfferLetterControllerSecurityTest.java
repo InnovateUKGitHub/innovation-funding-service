@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.project.grantofferletter.controller.GrantOfferLetterController;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.resource.UserResource;
