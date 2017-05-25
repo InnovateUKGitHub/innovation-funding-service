@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
-public class StatusRestServiceTest extends BaseRestServiceUnitTest<StatusRestServiceImpl> {
+public class StatusRestServiceImplTest extends BaseRestServiceUnitTest<StatusRestServiceImpl> {
 
     private static final String competitionURL = "/project/competition";
     private static final String projectRestURL = "/project";
