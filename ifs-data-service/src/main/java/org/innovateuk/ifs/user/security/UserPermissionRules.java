@@ -45,7 +45,7 @@ public class UserPermissionRules {
 
     private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> role.getRole().getName().equals(ASSESSOR.getName());
 
-    private static List<String> PROJECT_ROLES = asList(ProjectParticipantRole.PROJECT_MANAGER.getName(), ProjectParticipantRole.PROJECT_PARTNER.getName());
+    private static List<String> PROJECT_ROLES = asList(ProjectParticipantRole.PROJECT_MANAGER.getName(), ProjectParticipantRole.PROJECT_FINANCE_CONTACT.getName(), ProjectParticipantRole.PROJECT_PARTNER.getName());
 
     private static Predicate<ProjectUser> projectUserFilter = projectUser -> PROJECT_ROLES.contains(projectUser.getRole().getName());
 
@@ -157,9 +157,8 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Project managers and partners can view the process role for the same organisation")
-    public boolean projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(ProcessRoleResource processRole, UserResource user) {
-
-        return getFilteredProjectUsers(user, projectUserFilter).stream().filter(projectUser -> projectUser.getOrganisation().getId().equals(processRole.getOrganisationId())).findAny().isPresent();
+    public boolean projectPartnersCanViewTheProcessRolesWithTheSameOrganisation(ProcessRoleResource processRole, UserResource user) {
+        return getFilteredProjectUsers(user, projectUserFilter).stream().anyMatch(projectUser -> projectUser.getOrganisation().getId().equals(processRole.getOrganisationId()));
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Project Finance can read the user's process role")
@@ -180,9 +179,7 @@ public class UserPermissionRules {
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
-        return simpleMap(applicableProcessRoles, processRole -> {
-            return applicationRepository.findOne(processRole.getApplicationId());
-        });
+        return simpleMap(applicableProcessRoles, processRole -> applicationRepository.findOne(processRole.getApplicationId()));
     }
 
     private List<ProcessRole> getFilteredProcessRoles(UserResource user, Predicate<ProcessRole> filter) {

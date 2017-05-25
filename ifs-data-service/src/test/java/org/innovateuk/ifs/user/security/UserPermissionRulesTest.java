@@ -12,6 +12,8 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -35,7 +37,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 /**
@@ -539,55 +540,53 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testProjectManagersCanViewUserProcessRoleForTheirOrganisation() {
-        UserResource user = newUserResource().build();
-        Organisation organisation = OrganisationBuilder.newOrganisation().withId(1L).build();
+    public void testAllUsersWithProjectRolesCanAccessProcessRolesWithinConsortium(){
+        final Long userId = 11L;
+        final Long organistationId = 1L;
 
-        List<ProjectUser> projectUsers = newProjectUser().withOrganisation(organisation).withRole(ProjectParticipantRole.PROJECT_MANAGER).build(3);
+        Organisation organisation = OrganisationBuilder.newOrganisation().withId(organistationId).build();
 
-        when(projectUserRepositoryMock.findByUserId(anyLong())).thenReturn(projectUsers);
+        Arrays.stream(ProjectParticipantRole.values())
+                .forEach(roleType -> {
 
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).withOrganisation(1L).build();
-        assertTrue(rules.projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, projectFinanceUser()));
+                    UserResource userResource = newUserResource().withId(userId).build();
+
+                    User user = newUser().withId(userId).build();
+
+                    ProjectUser projectUser = newProjectUser().withUser(user).withRole(roleType).withOrganisation(organisation).build();
+
+                    when(projectUserRepositoryMock.findByUserId(userId)).thenReturn(Collections.singletonList(projectUser));
+
+                    ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withOrganisation(organisation.getId()).build();
+
+                    assertTrue(rules.projectPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, userResource));
+
+                });
     }
 
     @Test
-    public void testProjectPartnersCanViewUserProcessRoleForTheirOrganisation() {
-        UserResource user = newUserResource().build();
-        Organisation organisation = OrganisationBuilder.newOrganisation().withId(1L).build();
+    public void testAllUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium(){
+        final Long userId = 11L;
+        final Long organistationId = 1L;
 
-        List<ProjectUser> projectUsers = newProjectUser().withOrganisation(organisation).withRole(ProjectParticipantRole.PROJECT_PARTNER).build(3);
+        Organisation organisation = OrganisationBuilder.newOrganisation().withId(organistationId).build();
 
-        when(projectUserRepositoryMock.findByUserId(anyLong())).thenReturn(projectUsers);
+        Arrays.stream(ProjectParticipantRole.values())
+                .forEach(roleType -> {
 
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).withOrganisation(1L).build();
-        assertTrue(rules.projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, projectFinanceUser()));
-    }
+                    UserResource userResource = newUserResource().withId(userId).build();
 
-    @Test
-    public void testProjectManagersCannotViewUserProcessRoleForNotForTheirOrganisation() {
-        UserResource user = newUserResource().build();
-        Organisation organisation = OrganisationBuilder.newOrganisation().withId(2L).build();
+                    User user = newUser().withId(userId).build();
 
-        List<ProjectUser> projectUsers = newProjectUser().withOrganisation(organisation).withRole(ProjectParticipantRole.PROJECT_MANAGER).build(3);
+                    ProjectUser projectUser = newProjectUser().withUser(user).withRole(roleType).withOrganisation(organisation).build();
 
-        when(projectUserRepositoryMock.findByUserId(anyLong())).thenReturn(projectUsers);
+                    when(projectUserRepositoryMock.findByUserId(userId)).thenReturn(Collections.singletonList(projectUser));
 
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).withOrganisation(1L).build();
-        assertFalse(rules.projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, projectFinanceUser()));
-    }
+                    ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(userResource).withOrganisation(123L).build();
 
-    @Test
-    public void testProjectPartnersCannotViewUserProcessRoleNoteForTheirOrganisation() {
-        UserResource user = newUserResource().build();
-        Organisation organisation = OrganisationBuilder.newOrganisation().withId(2L).build();
+                    assertFalse(rules.projectPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, userResource));
 
-        List<ProjectUser> projectUsers = newProjectUser().withOrganisation(organisation).withRole(ProjectParticipantRole.PROJECT_PARTNER).build(3);
-
-        when(projectUserRepositoryMock.findByUserId(anyLong())).thenReturn(projectUsers);
-
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).withOrganisation(1L).build();
-        assertFalse(rules.projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, projectFinanceUser()));
+                });
     }
 
     @Test
@@ -610,8 +609,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     private Function<User, UserResource> userResourceForUser() {
-        return user -> {
-            return newUserResource().withId(user.getId()).build();
-        };
+        return user -> newUserResource().withId(user.getId()).build();
     }
 }
