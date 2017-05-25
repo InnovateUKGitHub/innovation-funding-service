@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -24,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectTeamStatusControllerTest extends BaseControllerMockMVCTest<ProjectTeamStatusController> {
+public class TeamStatusControllerTest extends BaseControllerMockMVCTest<TeamStatusController> {
 
     @Before
     public void setUp() {
@@ -34,8 +33,8 @@ public class ProjectTeamStatusControllerTest extends BaseControllerMockMVCTest<P
     }
 
     @Override
-    protected ProjectTeamStatusController supplyControllerUnderTest() {
-        return new ProjectTeamStatusController();
+    protected TeamStatusController supplyControllerUnderTest() {
+        return new TeamStatusController();
     }
 
     @Test

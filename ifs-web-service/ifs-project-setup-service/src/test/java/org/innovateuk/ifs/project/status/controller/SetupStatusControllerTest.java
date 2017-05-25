@@ -11,11 +11,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<ProjectSetupStatusController> {
+public class SetupStatusControllerTest extends BaseControllerMockMVCTest<SetupStatusController> {
 
     @Override
-    protected ProjectSetupStatusController supplyControllerUnderTest() {
-        return new ProjectSetupStatusController();
+    protected SetupStatusController supplyControllerUnderTest() {
+        return new SetupStatusController();
     }
 
     @Mock

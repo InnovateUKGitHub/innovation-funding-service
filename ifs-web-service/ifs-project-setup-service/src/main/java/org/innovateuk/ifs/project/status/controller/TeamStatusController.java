@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE
 @Controller
 @RequestMapping("/project/{projectId}/team-status")
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'comp_admin')")
-public class ProjectTeamStatusController {
+public class TeamStatusController {
 
     @Autowired
     private StatusService statusService;

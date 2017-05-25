@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/project")
 @PreAuthorize("hasAuthority('applicant')")
-public class ProjectSetupStatusController {
+public class SetupStatusController {
 
     @Autowired
     private ProjectSetupStatusViewModelPopulator projectSetupStatusViewModelPopulator;
