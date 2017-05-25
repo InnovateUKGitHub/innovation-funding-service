@@ -66,7 +66,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         build(3)).
                 build();
 
-        when(projectStatusServiceMock.getCompetitionStatus(competitionId)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
+        when(statusServiceMock.getCompetitionStatus(competitionId)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
 
         mockMvc.perform(get("/project/competition/{id}", competitionId))
                 .andDo(this.document.snippets(
@@ -80,7 +80,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     @Test
     public void getTeamStatus() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
-        when(projectStatusServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
+        when(statusServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
         mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectTeamStatusResource))).
@@ -94,7 +94,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
     @Test
     public void getTeamStatusWithFilterByUserId() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
-        when(projectStatusServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
+        when(statusServiceMock.getProjectTeamStatus(123L, Optional.of(456L))).thenReturn(serviceSuccess(projectTeamStatusResource));
         mockMvc.perform(get("/project/{projectId}/team-status", 123L).
                 param("filterByUserId", "456")).
                 andExpect(status().isOk()).
@@ -116,7 +116,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         Long projectId = 1L;
         ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
 
-        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
         mockMvc.perform(get("/project/{id}/status", projectId))
                 .andDo(this.document.snippets(

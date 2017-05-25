@@ -78,7 +78,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectStatusService> {
+public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     private Application application;
     private Role partnerRole;
@@ -187,8 +187,8 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     }
 
     @Override
-    protected ProjectStatusService supplyServiceUnderTest() {
-        return new ProjectStatusServiceImpl();
+    protected StatusService supplyServiceUnderTest() {
+        return new StatusServiceImpl();
     }
 
     @Test

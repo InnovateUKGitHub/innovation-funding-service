@@ -51,7 +51,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * This service wraps the business logic around the statuses of Project(s).
  */
 @Service
-public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl implements ProjectStatusService {
+public class StatusServiceImpl extends AbstractProjectServiceImpl implements StatusService {
 
     @Autowired
     private CompetitionRepository competitionRepository;

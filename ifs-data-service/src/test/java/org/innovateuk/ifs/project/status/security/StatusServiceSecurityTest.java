@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.project.status.transactional.ProjectStatusService;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testing how the secured methods in ProjectService interact with Spring Security
  */
-public class ProjectStatusServiceSecurityTest extends BaseServiceSecurityTest<ProjectStatusService> {
+public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusService> {
 
     private StatusPermissionRules statusPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -50,7 +50,7 @@ public class ProjectStatusServiceSecurityTest extends BaseServiceSecurityTest<Pr
         return TestProjectService.class;
     }
 
-    public static class TestProjectService implements ProjectStatusService {
+    public static class TestProjectService implements StatusService {
 
         @Override
         public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {

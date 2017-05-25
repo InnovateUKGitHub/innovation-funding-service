@@ -26,13 +26,13 @@ public class StatusControllerTest extends BaseControllerMockMVCTest<StatusContro
                 withCompetitionNumber(competitionId).
                 withProjectStatusResources(newProjectStatusResource().withProjectNumber().build(3)).build();
         ServiceResult<CompetitionProjectsStatusResource> expected = serviceSuccess(cpsr);
-        when(projectStatusServiceMock.getCompetitionStatus(competitionId)).thenReturn(expected);
+        when(statusServiceMock.getCompetitionStatus(competitionId)).thenReturn(expected);
 
         mockMvc.perform(get("/project/competition/{competitionId}", 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(cpsr)));
 
-        verify(projectStatusServiceMock).getCompetitionStatus(competitionId);
+        verify(statusServiceMock).getCompetitionStatus(competitionId);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class StatusControllerTest extends BaseControllerMockMVCTest<StatusContro
 
         ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
 
-        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
+        when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
         mockMvc.perform(get("/project/{id}/status", projectId))
                 .andExpect(status().isOk())
