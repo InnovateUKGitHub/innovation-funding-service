@@ -102,6 +102,8 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     List<CompetitionParticipant> getByInviteEmail(String email);
 
+    CompetitionParticipant getByInviteId(long id);
+
     int countByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);

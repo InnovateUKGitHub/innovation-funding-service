@@ -128,7 +128,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void getCreatedInvite() {
+    public void getCreatedInviteToSend() {
         InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
         long createdId = competitionInviteRepository.save(newCompetitionInvite()
                 .with(id(null))
@@ -144,7 +144,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         loginCompAdmin();
 
-        RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInvite(createdId);
+        RestResult<AssessorInviteToSendResource> serviceResult = controller.getCreatedInviteToSend(createdId);
         assertTrue(serviceResult.isSuccess());
 
         AssessorInviteToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();

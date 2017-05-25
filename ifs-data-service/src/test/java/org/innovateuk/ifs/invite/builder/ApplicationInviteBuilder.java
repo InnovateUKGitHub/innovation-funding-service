@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -17,10 +18,6 @@ public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, App
 
     private ApplicationInviteBuilder(List<BiConsumer<Integer, ApplicationInvite>> multiActions) {
         super(multiActions);
-    }
-
-    public static ApplicationInviteBuilder newInvite() {
-        return new ApplicationInviteBuilder(emptyList()).with(uniqueIds());
     }
 
     public static ApplicationInviteBuilder newApplicationInvite() {
@@ -58,6 +55,15 @@ public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, App
 
     public ApplicationInviteBuilder withInviteOrganisation(InviteOrganisation... organisations) {
         return withArray((organisation, invite) -> invite.setInviteOrganisation(organisation), organisations);
+    }
+
+    // TODO we can probably pull a lot of this into a superclass
+    public ApplicationInviteBuilder withHash(String... hashes) {
+        return withArray((hash, invite) -> invite.setHash(hash), hashes);
+    }
+
+    public ApplicationInviteBuilder withStatus(InviteStatus... inviteStatuses) {
+        return withArraySetFieldByReflection("status", inviteStatuses);
     }
 
     @Override
