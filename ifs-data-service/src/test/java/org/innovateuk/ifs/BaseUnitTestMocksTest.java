@@ -88,6 +88,7 @@ import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficer
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
+import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
@@ -428,6 +429,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectService projectServiceMock;
+
+    @Mock
+    protected ProjectDetailsService projectDetailsServiceMock;
 
     @Mock
     protected MonitoringOfficerService monitoringOfficerServiceMock;

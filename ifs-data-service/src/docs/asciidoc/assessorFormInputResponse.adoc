@@ -22,15 +22,15 @@ include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-respon
 ==== Curl Example
 include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses-by-assessment-and-question/curl-request.adoc[]
 
-=== Update Assessor Form Input Response
+=== Update Assessor Form Input Responses
 ==== Request
-include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/http-request.adoc[]
-include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/request-fields.adoc[]
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-responses/http-request.adoc[]
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-responses/request-fields.adoc[]
 ==== Response
-include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/http-response.adoc[]
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-responses/http-response.adoc[]
 
 ==== Curl Example
-include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/curl-request.adoc[]
+include::{snippets}/assessorFormInputResponse/update-assessor-form-input-responses/curl-request.adoc[]
 
 === Get Application Assessment Aggregate Scores by Application
 ==== Request

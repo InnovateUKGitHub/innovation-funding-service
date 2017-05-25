@@ -8,10 +8,7 @@ import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -37,6 +34,7 @@ import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
@@ -86,25 +84,8 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     }
 
     @Override
-    public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
-        AssessorFormInputResponseResource createdResponse = getOrCreateAssessorFormInputResponse(response.getAssessment(), response.getFormInput())
-                .getSuccessObjectOrThrowException();
-
-        String value = StringUtils.stripToNull(response.getValue());
-        boolean same = StringUtils.compare(value, createdResponse.getValue()) == 0;
-
-        if (!same) {
-            createdResponse.setUpdatedDate(now());
-        }
-        createdResponse.setValue(value);
-
-        BindingResult result = validationUtil.validateResponse(mapToFormInputResponse(createdResponse), true);
-
-        if (result.hasErrors()) {
-            return serviceFailure(new ValidationMessages(result).getErrors());
-        }
-
-        return saveAndNotifyWorkflowHandler(createdResponse);
+    public ServiceResult<Void> updateFormInputResponses(AssessorFormInputResponsesResource responses) {
+        return processAnyFailuresOrSucceed(simpleMap(responses.getResponses(), this::saveAssessorFormInputResponse));
     }
 
     @Override
@@ -165,8 +146,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         return serviceSuccess(new AssessmentFeedbackAggregateResource(avgScore, feedback));
     }
 
-    @Override
-    public FormInputResponse mapToFormInputResponse(AssessorFormInputResponseResource response) {
+    private FormInputResponse mapToFormInputResponse(AssessorFormInputResponseResource response) {
         FormInputResponse formInputResponse = new FormInputResponse();
 
         formInputResponse.setValue(response.getValue());
@@ -199,6 +179,27 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         return assessorResponses.stream().collect(groupingBy(AssessorFormInputResponseResource::getQuestion));
     }
 
+    private ServiceResult<Void> saveAssessorFormInputResponse(AssessorFormInputResponseResource response) {
+        AssessorFormInputResponseResource createdResponse = getOrCreateAssessorFormInputResponse(response.getAssessment(), response.getFormInput())
+                .getSuccessObjectOrThrowException();
+
+        String value = StringUtils.stripToNull(response.getValue());
+        boolean same = StringUtils.compare(value, createdResponse.getValue()) == 0;
+
+        if (!same) {
+            createdResponse.setUpdatedDate(now());
+        }
+        createdResponse.setValue(value);
+
+        BindingResult result = validationUtil.validateResponse(mapToFormInputResponse(createdResponse), true);
+
+        if (result.hasErrors()) {
+            return serviceFailure(new ValidationMessages(result).getErrors());
+        }
+
+        return saveAndNotifyWorkflowHandler(createdResponse);
+    }
+
     private ServiceResult<AssessorFormInputResponseResource> getOrCreateAssessorFormInputResponse(Long assessmentId, Long formInputId) {
         return find(assessorFormInputResponseRepository.findByAssessmentIdAndFormInputId(assessmentId, formInputId), notFoundError(AssessorFormInputResponseResource.class, assessmentId, formInputId)).handleSuccessOrFailure(failure -> {
                     AssessorFormInputResponseResource newAssessorFormInputResponseResource = new AssessorFormInputResponseResource();
@@ -206,7 +207,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                     newAssessorFormInputResponseResource.setFormInput(formInputId);
                     newAssessorFormInputResponseResource.setUpdatedDate(now());
                     return serviceSuccess(newAssessorFormInputResponseResource);
-                }, assessorFormInputResponseResource -> serviceSuccess(assessorFormInputResponseMapper.mapToResource(assessorFormInputResponseResource))
+                }, assessorFormInputResponse -> serviceSuccess(assessorFormInputResponseMapper.mapToResource(assessorFormInputResponse))
         );
     }
 
