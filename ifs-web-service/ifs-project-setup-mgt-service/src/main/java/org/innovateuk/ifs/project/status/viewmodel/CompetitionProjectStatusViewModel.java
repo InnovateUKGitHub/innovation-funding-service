@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
-import org.innovateuk.ifs.project.status.controller.ProjectStatusPermission;
+import org.innovateuk.ifs.project.status.security.ProjectStatusPermission;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 
 import java.util.Map;

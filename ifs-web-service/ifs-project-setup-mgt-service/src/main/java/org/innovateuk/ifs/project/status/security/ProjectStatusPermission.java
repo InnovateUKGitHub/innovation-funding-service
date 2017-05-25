@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.status.controller;
+package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 

@@ -1,10 +1,9 @@
-package org.innovateuk.ifs.project.sections.security;
+package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.sections.ProjectSetupSectionInternalUser;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
