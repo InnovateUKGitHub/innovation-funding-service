@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project;
 
-import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
 import org.junit.Before;
 import org.mockito.Mockito;
@@ -13,14 +13,14 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public abstract class BaseProjectSetupControllerSecurityTest<ControllerType> extends BaseControllerSecurityTest<ControllerType> {
 
-    private ProjectSetupSectionsPermissionRules permissionRules;
+    private SetupSectionsPermissionRules permissionRules;
 
     @Before
     public void lookupPermissionRules() {
-        permissionRules = getMockPermissionRulesBean(ProjectSetupSectionsPermissionRules.class);
+        permissionRules = getMockPermissionRulesBean(SetupSectionsPermissionRules.class);
     }
 
-    protected void assertSecured(Runnable invokeControllerFn, Consumer<ProjectSetupSectionsPermissionRules> verification) {
+    protected void assertSecured(Runnable invokeControllerFn, Consumer<SetupSectionsPermissionRules> verification) {
         assertAccessDenied(
                 invokeControllerFn::run,
                 () -> {

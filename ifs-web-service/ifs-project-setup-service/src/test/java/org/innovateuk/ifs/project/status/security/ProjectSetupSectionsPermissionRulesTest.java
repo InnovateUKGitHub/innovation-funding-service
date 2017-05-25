@@ -38,10 +38,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRulesTest<ProjectSetupSectionsPermissionRules> {
+public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRulesTest<SetupSectionsPermissionRules> {
 
     @Mock
-    private ProjectSetupSectionsPermissionRules.ProjectSetupSectionPartnerAccessorSupplier accessorSupplier;
+    private SetupSectionsPermissionRules.SetupSectionPartnerAccessorSupplier accessorSupplier;
 
     @Mock
     private SetupSectionAccessibilityHelper accessor;
@@ -361,7 +361,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Override
-    protected ProjectSetupSectionsPermissionRules supplyPermissionRulesUnderTest() {
-        return new ProjectSetupSectionsPermissionRules();
+    protected SetupSectionsPermissionRules supplyPermissionRulesUnderTest() {
+        return new SetupSectionsPermissionRules();
     }
 }

@@ -30,9 +30,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @PermissionRules
 @Component
-public class ProjectSetupSectionsPermissionRules {
+public class SetupSectionsPermissionRules {
 
-    private static final Log LOG = LogFactory.getLog(ProjectSetupSectionsPermissionRules.class);
+    private static final Log LOG = LogFactory.getLog(SetupSectionsPermissionRules.class);
 
     @Autowired
     private ProjectService projectService;
@@ -46,7 +46,7 @@ public class ProjectSetupSectionsPermissionRules {
     @Autowired
     private OrganisationService organisationService;
 
-    private ProjectSetupSectionPartnerAccessorSupplier accessorSupplier = new ProjectSetupSectionPartnerAccessorSupplier();
+    private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
     public boolean partnerCanAccessProjectDetailsSection(Long projectId, UserResource user) {
@@ -174,7 +174,7 @@ public class ProjectSetupSectionsPermissionRules {
         }
     }
 
-    public class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, SetupSectionAccessibilityHelper> {
+    public class SetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, SetupSectionAccessibilityHelper> {
         @Override
         public SetupSectionAccessibilityHelper apply(ProjectTeamStatusResource teamStatus) {
             return new SetupSectionAccessibilityHelper(teamStatus);
