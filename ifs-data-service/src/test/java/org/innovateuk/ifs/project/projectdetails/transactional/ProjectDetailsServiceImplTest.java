@@ -468,7 +468,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .build();
 
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmailAddress("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmail("a@b.com").withName("A B").build());
 
         when(projectRepositoryMock.findOne(projectId)).thenThrow(new IllegalArgumentException());
 
@@ -542,7 +542,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmailAddress("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmail("a@b.com").withName("A B").build());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -578,7 +578,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
         when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmailAddress("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmail("a@b.com").withName("A B").build());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -614,7 +614,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
         when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withName("A B").withEmailAddress("a@b.com").build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withName("A B").withEmail("a@b.com").build());
 
         ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
 
@@ -740,7 +740,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
         globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + invite.getHash());
         when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
-        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().withEmailAddress("a@b.com").withName("A B").build());
+        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().withEmail("a@b.com").withName("A B").build());
 
         ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
 
@@ -749,7 +749,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Override
     protected ProjectDetailsService supplyServiceUnderTest() {
-
         ProjectDetailsServiceImpl projectDetailsService =  new ProjectDetailsServiceImpl();
         ReflectionTestUtils.setField(projectDetailsService, "webBaseUrl", webBaseUrl);
         return projectDetailsService;

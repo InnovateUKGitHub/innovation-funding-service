@@ -56,7 +56,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         Organisation organisation = newOrganisation().build();
         User user = newUser().withEmailAddress("email@example.com").build();
         ProjectUser projectUser = newProjectUser().build();
-        ProjectInvite projectInvite = newInvite().withEmailAddress(user.getEmail()).withHash("hash").withProject(project).withOrganisation(organisation).build();
+        ProjectInvite projectInvite = newInvite().withEmail(user.getEmail()).withHash("hash").withProject(project).withOrganisation(organisation).build();
         when(inviteProjectRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(inviteProjectRepositoryMock.save(projectInvite)).thenReturn(projectInvite);
@@ -80,7 +80,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testAcceptProjectInviteUserDoesNotExist() throws Exception {
         Long userId = 1L;
-        ProjectInvite projectInvite = newInvite().withEmailAddress("email@example.com").withHash("hash").build();
+        ProjectInvite projectInvite = newInvite().withEmail("email@example.com").withHash("hash").build();
         when(inviteProjectRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findOne(userId)).thenReturn(null);
         ServiceResult<Void> result = inviteProjectService.acceptProjectInvite(projectInvite.getHash(), userId);
@@ -92,7 +92,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testCheckUserExistingByInviteHashSuccess() throws Exception {
         User user = newUser().withEmailAddress("email@example.com").build();
-        ProjectInvite projectInvite = newInvite().withEmailAddress(user.getEmail()).withHash("hash").build();
+        ProjectInvite projectInvite = newInvite().withEmail(user.getEmail()).withHash("hash").build();
         when(inviteProjectRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(of(user));
         ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
@@ -111,7 +111,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testCheckUserExistingByInviteHashNoUserFound() throws Exception {
-        ProjectInvite projectInvite = newInvite().withEmailAddress("email@example.com").withHash("hash").build();
+        ProjectInvite projectInvite = newInvite().withEmail("email@example.com").withHash("hash").build();
         when(inviteProjectRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(empty());
         ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
@@ -133,7 +133,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
                 withProject(project).
                 withOrganisation(organisation).
                 withName("project name").
-                withEmailAddress(user.getEmail()).
+                withEmail(user.getEmail()).
                 build();
         InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInvite);
         when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -149,7 +149,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         User user = newUser().withEmailAddress("email@example.com").build();
 
         {
-            ProjectInvite projectInviteNoName = newInvite().withProject(project).withOrganisation(organisation).withEmailAddress(user.getEmail()).build();
+            ProjectInvite projectInviteNoName = newInvite().withProject(project).withOrganisation(organisation).withEmail(user.getEmail()).build();
             InviteProjectResource projectInviteNoNameResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoName);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoNameResource)).thenReturn(projectInviteNoName);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoNameResource);
@@ -167,7 +167,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         }
 
         {
-            ProjectInvite projectInviteNoOrganisation = newInvite().withProject(project).withName("project name").withEmailAddress(user.getEmail()).build();
+            ProjectInvite projectInviteNoOrganisation = newInvite().withProject(project).withName("project name").withEmail(user.getEmail()).build();
             InviteProjectResource projectInviteNoOrganisationResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoOrganisation);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoOrganisationResource)).thenReturn(projectInviteNoOrganisation);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoOrganisationResource);
@@ -176,7 +176,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         }
 
         {
-            ProjectInvite projectInviteNoProject = newInvite().withOrganisation(organisation).withName("project name").withEmailAddress(user.getEmail()).build();
+            ProjectInvite projectInviteNoProject = newInvite().withOrganisation(organisation).withName("project name").withEmail(user.getEmail()).build();
             InviteProjectResource projectInviteNoProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoProject);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoProjectResource)).thenReturn(projectInviteNoProject);
             ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoProjectResource);
