@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
-import org.innovateuk.ifs.project.status.viewmodel.ProjectSetupStatusViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 
 /**
- * Populator for creating the {@link ProjectSetupStatusViewModel}
+ * Populator for creating the {@link SetupStatusViewModel}
  */
 @Service
 public class SetupStatusViewModelPopulator {
@@ -45,7 +45,7 @@ public class SetupStatusViewModelPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    public ProjectSetupStatusViewModel populateViewModel(Long projectId, UserResource loggedInUser) {
+    public SetupStatusViewModel populateViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
@@ -80,7 +80,7 @@ public class SetupStatusViewModelPopulator {
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), isLeadPartner);
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation, isLeadPartner,
+        return new SetupStatusViewModel(project, competition, monitoringOfficer, organisation, isLeadPartner,
                 companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
                 projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus);
     }

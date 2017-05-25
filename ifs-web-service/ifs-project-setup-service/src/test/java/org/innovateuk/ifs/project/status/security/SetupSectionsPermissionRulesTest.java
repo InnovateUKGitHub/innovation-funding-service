@@ -38,7 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRulesTest<SetupSectionsPermissionRules> {
+public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<SetupSectionsPermissionRules> {
 
     @Mock
     private SetupSectionsPermissionRules.SetupSectionPartnerAccessorSupplier accessorSupplier;

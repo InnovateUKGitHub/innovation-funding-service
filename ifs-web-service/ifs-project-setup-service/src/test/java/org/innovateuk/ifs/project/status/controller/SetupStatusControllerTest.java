@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
-import org.innovateuk.ifs.project.status.viewmodel.ProjectSetupStatusViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -26,7 +26,7 @@ public class SetupStatusControllerTest extends BaseControllerMockMVCTest<SetupSt
 
         Long projectId = 1L;
 
-        when(populator.populateViewModel(projectId, loggedInUser)).thenReturn(new ProjectSetupStatusViewModel());
+        when(populator.populateViewModel(projectId, loggedInUser)).thenReturn(new SetupStatusViewModel());
 
         mockMvc.perform(get("/project/{id}", projectId))
                 .andExpect(status().isOk())

@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.project.sections.SectionStatus.TICK;
 /**
  * A view model that backs the Project Status page
  */
-public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel {
+public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
     private String projectName;
@@ -44,9 +44,9 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private SectionStatus otherDocumentsStatus;
     private SectionStatus grantOfferLetterStatus;
 
-    public ProjectSetupStatusViewModel() {};
+    public SetupStatusViewModel() {}
 
-    public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
+    public SetupStatusViewModel(ProjectResource project, CompetitionResource competition,
                                        Optional<MonitoringOfficerResource> monitoringOfficerResource, OrganisationResource organisation, boolean leadPartner,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,

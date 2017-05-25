@@ -14,7 +14,7 @@ import java.util.function.BiFunction;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Mockito.when;
 
-public class ProjectSetupSectionAccessibilityHelperTest extends BaseUnitTest {
+public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     @Mock
     private SetupProgressChecker setupProgressCheckerMock;

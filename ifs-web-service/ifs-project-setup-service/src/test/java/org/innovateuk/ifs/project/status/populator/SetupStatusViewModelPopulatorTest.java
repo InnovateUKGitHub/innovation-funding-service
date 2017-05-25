@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
-import org.innovateuk.ifs.project.status.viewmodel.ProjectSetupStatusViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -43,7 +43,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
+public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private SetupStatusViewModelPopulator populator;
@@ -95,7 +95,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         assertStatuses(viewModel);
 
@@ -129,7 +129,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.FLAG));
@@ -156,7 +156,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
@@ -183,7 +183,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
@@ -211,7 +211,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
@@ -267,7 +267,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
@@ -297,7 +297,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
@@ -320,7 +320,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -346,7 +346,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -376,7 +376,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -406,7 +406,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -455,7 +455,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -485,7 +485,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -516,7 +516,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -548,7 +548,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -580,7 +580,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -612,7 +612,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -646,7 +646,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -681,7 +681,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -716,7 +716,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -751,7 +751,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser);
         assertStandardViewModelValuesCorrect(viewModel, monitoringOfficerExpected);
 
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -792,7 +792,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);*/
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
@@ -832,7 +832,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRoleName(PROJECT_MANAGER).build())));
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.FLAG));
@@ -859,7 +859,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
@@ -886,7 +886,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.TICK));
@@ -894,7 +894,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertFalse(viewModel.isProjectComplete());
     }
 
-    private ProjectSetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) throws Exception {
+    private SetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) throws Exception {
         return populator.populateViewModel(projectId, loggedInUser);
     }
 
@@ -921,7 +921,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
     }
 
-    private void assertStandardViewModelValuesCorrect(ProjectSetupStatusViewModel viewModel, boolean existingMonitoringOfficerExpected) {
+    private void assertStandardViewModelValuesCorrect(SetupStatusViewModel viewModel, boolean existingMonitoringOfficerExpected) {
         assertEquals(project.getId(), viewModel.getProjectId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertEquals(competition.getName(), viewModel.getCompetitionName());
@@ -935,14 +935,14 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
         }
     }
 
-    private final void assertPartnerStatusFlagsCorrect(ProjectSetupStatusViewModel viewModel, Pair<String, SectionStatus>... expectedTrueFlags) {
+    private final void assertPartnerStatusFlagsCorrect(SetupStatusViewModel viewModel, Pair<String, SectionStatus>... expectedTrueFlags) {
         for (Pair<String, SectionStatus> section : expectedTrueFlags) {
             partnerStatusFlagChecks.replace(section.getLeft(), section.getRight());
         }
         assertStatuses(viewModel);
     }
 
-    private void assertStatuses(ProjectSetupStatusViewModel viewModel) {
+    private void assertStatuses(SetupStatusViewModel viewModel) {
         assertTrue(partnerStatusFlagChecks.get("projectDetailsStatus") == viewModel.getProjectDetailsStatus());
         assertTrue(partnerStatusFlagChecks.get("monitoringOfficerStatus") == viewModel.getMonitoringOfficerStatus());
         assertTrue(partnerStatusFlagChecks.get("bankDetailsStatus") == viewModel.getBankDetailsStatus());
