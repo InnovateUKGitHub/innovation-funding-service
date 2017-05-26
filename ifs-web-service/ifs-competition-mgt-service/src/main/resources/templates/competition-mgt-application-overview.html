@@ -17,6 +17,13 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
             </th:block>
 
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+                <h2 class="heading-medium error-summary-heading">Unable to mark this application as ineligible</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
             <th:block th:if="${ineligibility.ineligible}">
         <h2 class="heading-small">Removed by</h2>
         <p th:text="|${ineligibility.removedBy}, ${#temporals.format(ineligibility.removedOn, 'dd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
@@ -78,23 +85,27 @@
                 </th:block>
             </th:block>
 
-            <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED}" class="extra-margin collapsible collapsible-eligibility collapsible-stateless">
+            <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED}"
+                 class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
+                 th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'">
                 <h2>Mark application as ineligible</h2>
                 <div>
-                    <form th:action="@{/competition/{competitionId}/application/{applicationId}/markIneligible(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" th:object="${form}">
+                    <form th:action="@{~__${#httpServletRequest.requestURI} + '?' + ${#httpServletRequest.queryString}__}"
+                          th:object="${form}"
+                          method="POST">
 
-                        <div class="form-group word-count">
+                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'error'">
                             <label class="form-label" th:for="ineligibleReason">
                                 Please enter the reason for removing this application from assessment
                                 <span th:if="${#fields.hasErrors('ineligibleReason')}" th:remove="tag">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}" />
+                                    <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}" />
                                 </span>
                             </label>
                             <textarea class="form-control width-full"
                                       maxlength="5000"
                                       data-max_words="400"
                                       data-maxwordslength="400"
-                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
+                                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
                                       th:errorclass="form-control-error"
                                       rows="10"
                                       th:field="*{ineligibleReason}"></textarea>
@@ -105,7 +116,7 @@
 
                         <div class="alignright">
                             <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button button-clear">Cancel</a>
-                            <button type="submit" class="button no-margin">Mark application as ineligible</button>
+                            <button type="submit" name="markAsIneligible" class="button no-margin">Mark application as ineligible</button>
                         </div>
                     </form>
                 </div>

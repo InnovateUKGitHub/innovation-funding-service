@@ -7,7 +7,7 @@
             <th:block th:unless="${readonly}">
                 <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +']}')}? 'form-group-error'">
                     <label class="form-label form-label-bold" for="cost-financegrantclaim">
-                        <div th:text="'Enter your funding level (maximum ' + ${maximumGrantClaimPercentage} + '%).'" />
+                        <div th:text="'Enter your funding level (maximum ' + ${maximumGrantClaimPercentage} + '%).'"></div>
                         <span class="form-hint" th:text="'The maximum funding level is ' + ${maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId+'-grantClaimPercentage'})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId})" />
@@ -50,10 +50,10 @@
                 <div class="form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? error">
                     <fieldset>
                         <legend>
-                            <span class="form-label form-label-bold" th:text="${question.name}" />
+                            <span class="form-label form-label-bold" th:text="${question.name}"></span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
                             <th:block th:if="${#fields.hasErrors('organisationSize')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}" />
+                                <span class="error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
                             </th:block>
                         </legend>
 
@@ -92,7 +92,7 @@
                 <!--/* edit */-->
                 <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? form-group-error : ''">
                     <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
-                        <span class="form-label form-label-bold" th:text="${formInput.description}"/>
+                        <span class="form-label form-label-bold" th:text="${formInput.description}"></span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
                     </label>
@@ -123,7 +123,7 @@
                 <!--/* edit */-->
                 <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? form-group-error : ''">
                     <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
-                        <span class="form-label form-label-bold" th:text="${formInput.description}" />
+                        <span class="form-label form-label-bold" th:text="${formInput.description}"></span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
                     </label>
@@ -198,7 +198,7 @@
     <!-- =========================== Form: Financial Staff Count =========================== -->
     <div th:fragment="financial_staff_count" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? form-group-error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
-            <span th:text="${formInput.description}"/>
+            <span th:text="${formInput.description}"></span>
             <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
@@ -217,13 +217,13 @@
     <!-- ===========================Form: your_finance =========================== -->
     <th:block th:fragment="your_finance">
         <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',
-        userOrganisation.name)}" />
-        <p ifs:utext="${question.description}" />
+        userOrganisation.name)}"></h2>
+        <p ifs:utext="${question.description}"></p>
 
         <section class="collapsible" th:each="subSection : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
             <h2>
                 <th:block th:text="${subSection.getName()}" />
-                <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
+                <span th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
             </h2>
             <div class="collapsible-content">
                 <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
@@ -277,18 +277,18 @@
                 <tbody>
                     <th:block th:each="cost, iteration : ${costCategory.costs}">
                         <tr>
-                            <td th:text="${cost.getRole()}" />
-                            <td class="numeric" th:text="${cost.grossAnnualSalary != null ? #numbers.formatDecimal(cost.grossAnnualSalary,0,0) : '0'}" />
-                            <td class="numeric" th:text="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}" />
-                            <td class="numeric" th:text="${cost.labourDays}" />
-                            <td class="numeric" th:text="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
+                            <td th:text="${cost.getRole()}"></td>
+                            <td class="numeric" th:text="${cost.grossAnnualSalary != null ? #numbers.formatDecimal(cost.grossAnnualSalary,0,0) : '0'}"></td>
+                            <td class="numeric" th:text="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"></td>
+                            <td class="numeric" th:text="${cost.labourDays}"></td>
+                            <td class="numeric" th:text="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}"></td>
                         </tr>
                     </th:block>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th colspan="4" scope="row">Total labour costs</th>
-                        <td th:id="${'section-total-'+subSection.id}" class="numeric" th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
+                        <td th:id="${'section-total-'+subSection.id}" class="numeric" th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -758,18 +758,18 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another materials cost', question=${question},rowcontainer='#material-costs-table tbody')" />
                     </p>
                 </div>
-                <h4 class="alignright section-total-summary">
-                    Total materials costs
-                    <span class="heading-small"
-                          th:attr="data-mirror='#section-total-'+${subSection.id}" />
-                </h4>
-                <input type="hidden"
-                       data-calculation-fields="[id*=materialTotal]"
-                       data-calculation-operations="+"
-                       th:id="${'section-total-'+subSection.id}"
-                       th:attr="data-calculation-rawvalue=${costCategory.total}"
-                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
             </div>
+            <h4 class="alignright section-total-summary">
+                Total materials costs
+                <span class="heading-small"
+                      th:attr="data-mirror='#section-total-'+${subSection.id}" />
+            </h4>
+            <input type="hidden"
+                   data-calculation-fields="[id*=materialTotal]"
+                   data-calculation-operations="+"
+                   th:id="${'section-total-'+subSection.id}"
+                   th:attr="data-calculation-rawvalue=${costCategory.total}"
+                   th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
         </th:block>
     </th:block>
     <!-- =========================== repeating rows - Materials  =========================== -->
@@ -1179,7 +1179,7 @@
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-control-error'"
                        />
             </div>
-            <th:block th:if="${(viewmode == 'edit')}">
+            <th:block  th:if="${viewmode == 'edit'}">
                 <button th:unless="${cost.id == null}"
                         type="submit"
                         name="remove_cost"
@@ -1431,7 +1431,7 @@
                        th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-control-error'"  />
             </td>
-            <td class="alignright" th:if="${viewmode == 'edit'}">
+            <td class="alignright"  th:if="${viewmode == 'edit'}">
                 <button th:unless="${cost.id == null}"
                         type="submit"
                         class="buttonlink js-remove-row"

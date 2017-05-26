@@ -5,8 +5,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
-import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -16,14 +14,10 @@ import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configura
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -31,8 +25,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +36,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -68,13 +59,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private OrganisationRepository organisationRepository;
 
     @Autowired
-    private MonitoringOfficerRepository monitoringOfficerRepository;
-
-    @Autowired
     private OrganisationMapper organisationMapper;
-
-    @Autowired
-    private SpendProfileRepository spendProfileRepository;
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
@@ -301,74 +286,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                                 financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
 
         return processAnyFailuresOrSucceed(financeCheckResults);
-    }
-
-    @Override
-    public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
-        Project project = projectRepository.findOne(projectId);
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-
-        Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
-                userId -> simpleFindFirst(project.getProjectUsers(),
-                        pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
-
-        List<Organisation> partnerOrganisationsToInclude =
-                simpleFilter(project.getOrganisations(), partner ->
-                        partner.getId().equals(leadOrganisation.getId()) ||
-                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId()))
-                                        .orElse(true)));
-
-        List<Organisation> sortedOrganisationsToInclude
-                = new PrioritySorting<>(partnerOrganisationsToInclude, leadOrganisation, Organisation::getName).unwrap();
-
-        List<ProjectPartnerStatusResource> projectPartnerStatusResources =
-                simpleMap(sortedOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
-
-        ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
-        projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
-
-        return serviceSuccess(projectTeamStatusResource);
-    }
-
-    private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-        Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
-        Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
-        Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
-        OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(partnerOrganisation.getOrganisationType().getId());
-
-        boolean isQueryActionRequired = financeCheckService.isQueryActionRequired(project.getId(),partnerOrganisation.getId()).getSuccessObject();
-        boolean isLead = partnerOrganisation.equals(leadOrganisation);
-
-        ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
-        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
-        ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
-        ProjectActivityStates monitoringOfficerStatus = isLead ? createMonitoringOfficerStatus(monitoringOfficer, projectDetailsStatus) : NOT_REQUIRED;
-        ProjectActivityStates spendProfileStatus = isLead ? createLeadSpendProfileStatus(project, financeChecksStatus, spendProfile) : createSpendProfileStatus(financeChecksStatus, spendProfile);
-        ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
-        ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
-
-        return new ProjectPartnerStatusResource(
-                partnerOrganisation.getId(),
-                partnerOrganisation.getName(),
-                organisationType,
-                projectDetailsStatus,
-                monitoringOfficerStatus,
-                bankDetailsStatus,
-                financeChecksStatus,
-                spendProfileStatus,
-                otherDocumentsStatus,
-                grantOfferLetterStatus,
-                financeContactStatus,
-                golWorkflowHandler.isAlreadySent(project),
-                isLead);
-    }
-
-    private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
-        return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
     private ServiceResult<Project> getProjectByApplication(long applicationId) {
