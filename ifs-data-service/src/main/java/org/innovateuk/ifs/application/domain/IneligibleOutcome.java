@@ -13,10 +13,10 @@ import javax.persistence.Entity;
 public class IneligibleOutcome extends ProcessOutcome<ApplicationProcess> {
 
     public String getReason() {
-        return outcome;
+        return description;
     }
 
     public void setReason(final String reason) {
-        this.outcome = reason;
+        this.description = reason;
     }
 }
