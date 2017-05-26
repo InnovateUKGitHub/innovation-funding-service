@@ -141,7 +141,7 @@ IFS.core.formValidation = (function () {
           formGroup.removeClass('error')
           field.removeClass('field-error')
           //  clear tooWeakPassword message as this is validated in the back end.
-          IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak'))
+          IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'))
         } else {
           formGroup.addClass('error')
           field.addClass('field-error')
@@ -636,7 +636,7 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
-      var formGroup = field.closest('.form-group.error,tr.form-group-row.error')
+      var formGroup = field.closest('.form-group ,tr.form-group-row')
       var errorSummary = jQuery('.error-summary-list')
       var name = IFS.core.formValidation.getIdentifier(field)
 
