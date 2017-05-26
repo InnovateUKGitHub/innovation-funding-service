@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesController;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddCommentForm;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -85,6 +86,8 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
     List<NoteResource> notes;
 
+    PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
+
     @Captor
     ArgumentCaptor<PostResource> savePostArgumentCaptor;
 
@@ -97,6 +100,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(userService.findById(applicantFinanceContactUserId)).thenReturn(projectManagerUser);
         when(organisationService.getOrganisationForUser(applicantFinanceContactUserId)).thenReturn(leadOrganisationResource);
         when(userService.findById(applicantFinanceContactUserId)).thenReturn(projectManagerUser);
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.of(partnerOrg));
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -126,7 +130,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testGetReadOnlyView() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
@@ -191,7 +194,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testGetReadOnlyViewInvalidOrganisationId() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note"))
                 .andExpect(view().name("404"))
@@ -200,8 +203,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void testDownloadAttachmentFailsNoContent() throws Exception {
-
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/attachment/1"))
@@ -220,7 +221,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadAttachmentFailsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1L)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -236,8 +237,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void testDownloadAttachmentFailsNoInfo() throws Exception {
-
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         ByteArrayResource bytes = new ByteArrayResource("File contents".getBytes());
 
@@ -263,8 +262,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         FinanceChecksNotesAddCommentForm form = new FinanceChecksNotesAddCommentForm();
         form.setComment("comment");
         formCookie = createFormCookie(form);
-
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
@@ -302,7 +299,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         form.setComment("comment");
         formCookie = createFormCookie(form);
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment")
                 .cookie(formCookie))
@@ -519,7 +516,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadCommentAttachmentFailsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -544,8 +541,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         Cookie formCookie = createFormCookie(formIn);
 
         Cookie originCookie = createOriginCookie();
-
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
@@ -578,7 +573,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testCancelNewCommentInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenReturn(Optional.empty());
 
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/cancel"))
@@ -590,8 +585,6 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     public void testViewNewCommentWithAttachments() throws Exception {
 
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
-
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
@@ -626,9 +619,9 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testViewNewCommentWithAttachmentsInalidOrganisation() throws Exception {
+    public void testViewNewCommentWithAttachmentsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.singletonList(leadOrganisationResource));
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment"))
                 .andExpect(status().isNotFound());
