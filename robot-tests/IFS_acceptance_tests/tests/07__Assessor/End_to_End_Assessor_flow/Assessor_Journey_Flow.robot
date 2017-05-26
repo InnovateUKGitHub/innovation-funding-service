@@ -3,7 +3,8 @@ Documentation     INFUND-8092 E2E for the Assessor Journey Flow
 ...
 ...               IFS-39 As a member of the competitions team I can resend a competition invite to an assessor so that assessor has a new invite
 Suite Setup       Delete the emails from both test mailboxes
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    Run keywords    TestTeardown User closes the browser
+...  AND          Delete the emails from both test mailboxes
 Force Tags        CompAdmin    Assessor    HappyPath    Email
 Resource          ../../../resources/defaultResources.robot
 
@@ -30,7 +31,8 @@ Invited User gets an email to assess the competition
     [Tags]
     [Setup]    The guest user opens the browser
     User reads the email and clicks the link to accept the assessment    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess 'Sustainable living models for the future'    Assessment period:
-    [Teardown]    Run keywords    Delete the emails from both test mailboxes    AND       The user closes the browser
+    [Teardown]    Run keywords    Delete the emails from both test mailboxes
+    ...    AND       The user closes the browser
 
 Resend the invite to the assessor again
     [Documentation]    IFS-39
@@ -48,7 +50,6 @@ Resent email can be red by the invited user
      [Tags]
      [Setup]    The guest user opens the browser
      User reads the email and clicks the link to accept the assessment    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess 'Sustainable living models for the future'    Assessment period:
-     [Teardown]    Delete the emails from both test mailboxes
 
 Invited user accepts the invitation and follows the registration flow
     [Documentation]    INFUND-8092
