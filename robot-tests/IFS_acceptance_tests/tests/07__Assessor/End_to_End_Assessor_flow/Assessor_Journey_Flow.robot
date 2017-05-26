@@ -1,7 +1,10 @@
 *** Settings ***
 Documentation     INFUND-8092 E2E for the Assessor Journey Flow
+...
+...               IFS-39 As a member of the competitions team I can resend a competition invite to an assessor so that assessor has a new invite
 Suite Setup       Delete the emails from both test mailboxes
-Suite Teardown    TestTeardown User closes the browser
+Suite Teardown    Run keywords    TestTeardown User closes the browser
+...  AND          Delete the emails from both test mailboxes
 Force Tags        CompAdmin    Assessor    HappyPath    Email
 Resource          ../../../resources/defaultResources.robot
 
@@ -28,7 +31,25 @@ Invited User gets an email to assess the competition
     [Tags]
     [Setup]    The guest user opens the browser
     User reads the email and clicks the link to accept the assessment    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess 'Sustainable living models for the future'    Assessment period:
-    [Teardown]    Delete the emails from both test mailboxes
+    [Teardown]    Run keywords    Delete the emails from both test mailboxes
+    ...    AND       The user closes the browser
+
+Resend the invite to the assessor again
+    [Documentation]    IFS-39
+    [Tags]
+    [Setup]     Guest user log-in    &{Comp_admin1_credentials}
+    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link    link=Overview
+    When the user clicks the button/link    jQuery=td:contains("E2E") ~ td:contains("Resend Invite") a
+    And the user clicks the button/link    jQuery=.button:contains("Send invite")
+    [Teardown]    The user closes the browser
+
+Resent email can be read by the invited user
+     [Documentation]    IFS-39
+     [Tags]
+     [Setup]    The guest user opens the browser
+     User reads the email and clicks the link to accept the assessment    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess 'Sustainable living models for the future'    Assessment period:
 
 Invited user accepts the invitation and follows the registration flow
     [Documentation]    INFUND-8092
