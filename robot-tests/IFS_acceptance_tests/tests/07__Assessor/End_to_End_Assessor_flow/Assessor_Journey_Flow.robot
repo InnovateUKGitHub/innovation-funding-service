@@ -45,7 +45,7 @@ Resend the invite to the assessor again
     And the user clicks the button/link    jQuery=.button:contains("Send invite")
     [Teardown]    The user closes the browser
 
-Resent email can be red by the invited user
+Resent email can be read by the invited user
      [Documentation]    IFS-39
      [Tags]
      [Setup]    The guest user opens the browser
