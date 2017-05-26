@@ -22,33 +22,4 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean internalUsersCanViewProjects(final ProjectResource project, final UserResource user) {
         return isInternal(user);
     }
-
-    @PermissionRule(
-            value = "VIEW_TEAM_STATUS",
-            description = "All partners can view team status")
-    public boolean partnersCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "VIEW_TEAM_STATUS",
-            description = "Internal users can see a team's status")
-    public boolean internalUsersCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_STATUS",
-            description = "All partners can view the project status")
-    public boolean partnersCanViewStatus(ProjectResource project, UserResource user) {
-        return isPartner(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "VIEW_STATUS",
-            description = "Internal users can see the project status")
-    public boolean internalUsersCanViewStatus(ProjectResource project, UserResource user) {
-        return isInternal(user);
-    }
-
 }
