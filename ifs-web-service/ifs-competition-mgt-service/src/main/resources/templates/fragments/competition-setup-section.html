@@ -212,8 +212,8 @@
                 <label class="form-label" for="executiveUserId">
                     <span class="form-label-bold">Competition Executive</span>
                     <th:block th:if="${#fields.hasErrors('executiveUserId')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}"></span>
-                    </th:block
+                        <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}"></span>
+                    </th:block>
                 </label>
                 <select class="form-control width-medium"
                         name="executiveUserId"
