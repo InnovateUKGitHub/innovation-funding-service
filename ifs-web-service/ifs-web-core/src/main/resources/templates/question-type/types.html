@@ -316,39 +316,42 @@
 
                 <div class="grid-row">
                     <div class="column-half">
-                        <dl class="readonly-data">
-                            <dt>Application title</dt>
-                            <dd th:text="${currentApplication.name}"></dd>
+                        <dl class="font-xsmall">
+                            <dt>Competition name</dt>
+                            <dd th:text="${currentCompetition.name}"></dd>
+                            <dt>When do you wish to start your project?</dt>
+                            <dd th:if="${currentApplication.startDate}" th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}"></dd>
+                            <dt>Duration in months</dt>
+                            <dd><th:block th:text="${currentApplication.durationInMonths}"/> months</dd>
+                            <dt>Research category</dt>
+                            <dd th:text="${currentApplication.researchCategory.name}"></dd>
+                            <dt>Innovation area</dt>
+                            <dd th:text="${currentApplication.innovationArea.name} ?: 'Not listed'"></dd>
+                            <th:block th:unless="${currentApplication.resubmission == null}">
+                                <dt>Is this application a resubmission?</dt>
+                                <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}"></dd>
+                                <th:block th:if="${currentApplication.resubmission == true}">
+                                    <dt>Previous application number</dt>
+                                    <dd th:text="${currentApplication.previousApplicationNumber}"></dd>
+                                    <dt>Previous application title</dt>
+                                    <dd th:text="${currentApplication.previousApplicationTitle}"></dd>
+                                </th:block>
+                            </th:block>
                         </dl>
                     </div>
                     <div class="column-half">
                         <th:block th:if="${showApplicationTeamLink}">
-                            <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}+${queryParams}">View application team details.</a>
+                            <ul class="list list-bullet">
+                                <li>
+                                    <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}+${queryParams}">
+                                        view team members, collaborators and addresses
+                                    </a>
+                                </li>
+                            </ul>
                         </th:block>
                     </div>
                 </div>
 
-                <h2 class="heading-medium">Estimated timescales</h2>
-                <dl class="readonly-data">
-                    <dt>When do you wish to start your project?</dt>
-                    <dd th:if="${currentApplication.startDate}" th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}"></dd>
-                    <dt>Duration in months</dt>
-                    <dd><th:block th:text="${currentApplication.durationInMonths}"/> months</dd>
-                    <dt>Research category</dt>
-                    <dd th:text="${currentApplication.researchCategory.name}"></dd>
-                    <dt>Innovation area</dt>
-                    <dd th:text="${currentApplication.innovationArea.name} ?: 'Not listed'"></dd>
-                    <th:block th:unless="${currentApplication.resubmission == null}">
-                        <dt>Is this application a resubmission?</dt>
-                        <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}"></dd>
-                        <th:block th:if="${currentApplication.resubmission == true}">
-                            <dt>Previous application number</dt>
-                            <dd th:text="${currentApplication.previousApplicationNumber}"></dd>
-                            <dt>Previous application title</dt>
-                            <dd th:text="${currentApplication.previousApplicationTitle}"></dd>
-                        </th:block>
-                    </th:block>
-                </dl>
             </th:block>
             <th:block th:unless="${(currentUser.id != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
                 <div class="form-footer" th:unless="${appIsClosed}">
