@@ -607,7 +607,7 @@
                         </th:block>
                     </legend>
 
-                    <div class="multiple-choice">
+                    <div class="multiple-choice" th:each="researchCategory : ${researchCategories}" >
                         <input th:value="${researchCategory.id}"
                                 type="checkbox"
                                 name="researchCategoryId"
@@ -615,9 +615,7 @@
                                 th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"
                                 required="required"
                                 th:attr="data-required-errormessage=#{validation.eligibilityform.researchcategoryid.required}" />
-                        <label th:each="researchCategory : ${researchCategories}" th:for="${'research-categories-' + researchCategory.id}">
-                            <th:block th:text="${researchCategory.name}" />
-                        </label>
+                        <label th:for="${'research-categories-' + researchCategory.id}" th:text="${researchCategory.name}"></label>
                     </div>
                 </fieldset>
             </div>
