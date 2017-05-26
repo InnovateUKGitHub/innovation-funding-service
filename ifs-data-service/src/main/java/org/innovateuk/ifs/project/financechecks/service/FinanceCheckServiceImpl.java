@@ -21,14 +21,14 @@ import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
-import org.innovateuk.ifs.project.queries.service.FinanceCheckQueriesService;
+import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
-import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.GraphBuilderContext;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -77,7 +77,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
-    private ProjectService projectService;
+    private StatusService statusService;
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
@@ -133,7 +133,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
 
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
-                spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, projectId), bankDetailsApproved,
+                spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, project), bankDetailsApproved,
                 spendProfileGeneratedBy, spendProfileGeneratedDate));
     }
 
@@ -183,11 +183,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private boolean getBankDetailsApprovalStatus(Long projectId) {
-        ServiceResult<ProjectTeamStatusResource> teamStatusResult = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        ServiceResult<ProjectTeamStatusResource> teamStatusResult = statusService.getProjectTeamStatus(projectId, Optional.empty());
         return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getBankDetailsStatus())).isPresent();
     }
 
-    private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations, Long projectId) {
+    private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations, Project project) {
 
         return mapWithIndex(partnerOrganisations, (i, org) -> {
 
@@ -195,11 +195,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             Pair<Viability, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
             Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
 
-            boolean anyQueryAwaitingResponse = isQueryActionRequired(projectId, org.getOrganisation().getId()).getSuccessObject();
+            boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccessObject();
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
-                    eligibility.getRight(), anyQueryAwaitingResponse);
+                    eligibility.getRight(), anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
         });
     }
 

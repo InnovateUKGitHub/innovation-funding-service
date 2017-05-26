@@ -2,9 +2,10 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +17,8 @@ import org.springframework.stereotype.Component;
 public class AssessorFormInputResponsePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "Only Assessors can update Assessor Form Input Responses")
-    public boolean userCanUpdateAssessorFormInputResponse(AssessorFormInputResponseResource response, UserResource user) {
-        return isAssessorForFormInputResponse(response, user);
+    public boolean userCanUpdateAssessorFormInputResponses(AssessorFormInputResponsesResource responses, UserResource user) {
+        return responses.getResponses().stream().allMatch(response -> isAssessorForFormInputResponse(response, user));
     }
 
     private boolean isAssessorForFormInputResponse(AssessorFormInputResponseResource response, UserResource user) {

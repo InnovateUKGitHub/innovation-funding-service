@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -19,11 +16,8 @@ import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.*;
 
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -122,59 +116,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testUpdateProjectStartDate() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.updateProjectStartDate(123L, LocalDate.now()), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testUpdateProjectAddress() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, OrganisationAddressType.ADD_NEW, newAddressResource().build()), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testUpdateFinanceContact() {
-
-        ProjectResource project = newProjectResource().build();
-        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.updateFinanceContact(composite, 789L), () -> {
-            verify(projectPermissionRules).partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
-    public void testSetProjectManager() {
-
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.setProjectManager(123L, 456L), () -> {
-            verify(projectPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
     public void testGetProjectUsers() {
 
         ProjectResource project = newProjectResource().build();
@@ -223,19 +164,6 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectTeamStatus(){
-        ProjectResource project = newProjectResource().build();
-
-        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-
-        assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
-            verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
-            verifyNoMoreInteractions(projectPermissionRules);
-        });
-    }
-
-    @Test
     public void testGetProjectManager(){
         ProjectResource project = newProjectResource().build();
 
@@ -250,15 +178,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         );
     }
 
-
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
     }
 
     public static class TestProjectService implements ProjectService {
-
-        static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
         public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
@@ -286,27 +211,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource projectAddress) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<List<ProjectResource>> findByUserId(Long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
             return null;
         }
 
@@ -316,37 +221,12 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> submitProjectDetails(Long id, ZonedDateTime date) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
             return null;
         }
 

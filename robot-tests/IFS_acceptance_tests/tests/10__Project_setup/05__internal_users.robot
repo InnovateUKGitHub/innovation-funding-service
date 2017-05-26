@@ -71,8 +71,8 @@ Other internal users cannot see Bank details or Finance checks
     Then the user should see the element          jQuery=h2:contains("Projects in setup")
     And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
     And the user should not see the element       jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    You do not have the necessary permissions for your request
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    ${403_error_message}
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    ${403_error_message}
 
 
 Comp Admin user can see the internal project summary page
@@ -127,18 +127,8 @@ navigate to external finance contact page, choose finance contact and save
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 partners submit bank details
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}
-
-partner submits his bank details
-    [Arguments]  ${email}
-    log in as a different user            ${email}    ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  ${account_number}
-    the user enters text to a text field  id=bank-sort-code  ${sort_code}
-    the user selects the radio button     addressType    REGISTERED
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
 
 project finance approves bank details
     log in as a different user                   &{internal_finance_credentials}

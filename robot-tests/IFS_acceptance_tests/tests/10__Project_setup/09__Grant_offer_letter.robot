@@ -420,7 +420,7 @@ Non lead cannot see the signed GOL
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user should not see the text in the page   Signed grant offer letter
-    When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter    ${403_error_message}
 
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375
@@ -519,15 +519,15 @@ the user approves project costs
     the user clicks the button/link    name=confirm-eligibility
 
 all partners submit their Spend Profile
-    log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Kazio_Id}/spend-profile
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
         And the user clicks the button/link    jQuery=.button:contains("Submit")
-    log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
+    log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Cogilith_Id}/spend-profile
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
         And the user clicks the button/link    jQuery=.button:contains("Submit")
-    log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
+    log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")

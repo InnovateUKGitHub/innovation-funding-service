@@ -54,12 +54,14 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
-import org.innovateuk.ifs.project.monitoringofficer.ProjectMonitoringOfficerService;
+import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
+import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.project.service.ProjectStatusRestService;
+import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
+import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
@@ -207,7 +209,11 @@ public class BaseUnitTest {
     @Mock
     public ProjectService projectService;
     @Mock
-    public ProjectMonitoringOfficerService projectMonitoringOfficerService;
+    public StatusService statusService;
+    @Mock
+    public ProjectDetailsService projectDetailsService;
+    @Mock
+    public MonitoringOfficerService monitoringOfficerService;
     @Mock
     public OtherDocumentsService otherDocumentsService;
     @Mock
@@ -227,7 +233,7 @@ public class BaseUnitTest {
     @Mock
     protected FinanceUtil financeUtilMock;
     @Mock
-    protected ProjectStatusRestService projectStatusRestService;
+    protected StatusRestService statusRestService;
     @Mock
     private CookieUtil cookieUtil;
     @Mock

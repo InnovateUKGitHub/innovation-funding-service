@@ -54,7 +54,7 @@ Project Finance can see the account number with status
     [Documentation]    INFUND-3763
     [Tags]
     Then the user should see the text in the page    Bank account number / Sort code
-    And the user should see the text in the page    ${account_number} / ${sort_code}
+    And the user should see the text in the page    ${account_one} / ${sortCode_one}
     And the user should see the element             jQuery=tr:nth-child(3) td:nth-child(3):contains("No Match")
 
 Project Finance can see the address with score
@@ -170,7 +170,7 @@ Lead partner can see that bank details has been approved
     [Documentation]    INFUND-7109
     [Tags]    HappyPath
     [Setup]    log in as a different user          ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
-    When the user clicks the button/link           link=${PS_EF_APPLICATION_HEADER}
+    When the user clicks the button/link           link=${PS_EF_APPLICATION_TITLE}
     Then the user should see the element           jQuery=ul li.complete:nth-child(4)
     When the user clicks the button/link           link=status of my partners
     And the user should see the text in the page   Project team status
@@ -180,13 +180,13 @@ Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 Project partners cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
     [Setup]    log in as a different user  ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
-    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  You do not have the necessary permissions for your request
+    the user navigates to the page and gets a custom error message  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
 
 
 *** Keywords ***
@@ -238,8 +238,8 @@ the user fills in his bank details
     [Arguments]  ${user}
     log in as a different user            ${user}  ${short_password}
     the user navigates to the page        ${server}/project-setup/project/${PS_EF_APPLICATION_PROJECT}/bank-details
-    the user enters text to a text field  name=accountNumber  ${account_number}
-    the user enters text to a text field  name=sortCode  ${sort_code}
+    the user enters text to a text field  name=accountNumber  ${account_one}
+    the user enters text to a text field  name=sortCode  ${sortCode_one}
     the user selects the radio button     addressType  address-use-org
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")

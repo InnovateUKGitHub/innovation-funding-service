@@ -1,17 +1,14 @@
 package org.innovateuk.ifs.assessment.service;
 
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorFormInputResponseResourceListType;
 
 /**
  * AssessorFormInputResponseRestServiceImpl is a utility for CRUD operations on {org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse}.
@@ -25,17 +22,23 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
 
     @Override
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {
-        return getWithRestResult(format("%s/assessment/%s", assessorFormInputResponseRestUrl, assessmentId), ParameterizedTypeReferences.assessorFormInputResponseResourceListType());
+        return getWithRestResult(format("%s/assessment/%s", assessorFormInputResponseRestUrl, assessmentId), assessorFormInputResponseResourceListType());
     }
 
     @Override
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
-        return getWithRestResult(format("%s/assessment/%s/question/%s", assessorFormInputResponseRestUrl, assessmentId, questionId), ParameterizedTypeReferences.assessorFormInputResponseResourceListType());
+        return getWithRestResult(format("%s/assessment/%s/question/%s", assessorFormInputResponseRestUrl, assessmentId, questionId), assessorFormInputResponseResourceListType());
     }
 
     @Override
-    public RestResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
-        return putWithRestResult(format("%s", assessorFormInputResponseRestUrl), response, Void.class);
+    public RestResult<Void> updateFormInputResponse(long assessmentId, long formInputId, String value) {
+        return updateFormInputResponses(new AssessorFormInputResponsesResource(
+                new AssessorFormInputResponseResource(assessmentId, formInputId, value)));
+    }
+
+    @Override
+    public RestResult<Void> updateFormInputResponses(AssessorFormInputResponsesResource assessorFormInputResponseResources) {
+        return putWithRestResult(format("%s", assessorFormInputResponseRestUrl), assessorFormInputResponseResources, Void.class);
     }
 
     @Override

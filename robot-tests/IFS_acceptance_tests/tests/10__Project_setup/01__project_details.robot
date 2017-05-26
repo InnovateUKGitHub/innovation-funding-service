@@ -99,7 +99,7 @@ Non-lead partner can see the project setup page
     [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{collaborator1_credentials}
-    When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
@@ -313,7 +313,7 @@ Invited project manager registration flow
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
     [Tags]  Email
-    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Project Manager
     Then the user should see the text in the page    Bob Jones
@@ -396,7 +396,7 @@ Non lead partner not eligible for funding
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user should see the element    jQuery=ul li.complete:nth-child(2)
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
-    When The user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details    You do not have the necessary permissions for your request
+    When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
     When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user clicks the button/link    link=status of my partners
     Then the user should be redirected to the correct page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
@@ -477,14 +477,14 @@ Invited finance contact registration flow
     And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
 Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]  Email
-    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
+    When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    link=Project details
     And the user clicks the button/link    link=Empire Ltd
     Then the user should see the text in the page    John Smith
@@ -618,8 +618,8 @@ Non-lead partner cannot change any project details
     And the user should see the text in the page    Project address
     And the user should see the text in the page    1, Sheffield, S1 2ED
     And the user should not see the element    link=Project address
-    When the user navigates to the page and gets a custom error message    ${project_start_date_page}    You do not have the necessary permissions for your request
-    When the user navigates to the page and gets a custom error message    ${project_address_page}    You do not have the necessary permissions for your request
+    When the user navigates to the page and gets a custom error message    ${project_start_date_page}    ${403_error_message}
+    When the user navigates to the page and gets a custom error message    ${project_address_page}    ${403_error_message}
 
 Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856
@@ -703,7 +703,7 @@ the user creates the account
     the user enters text to a text field    id=firstName    ${first_name}
     the user enters text to a text field    id=lastName    ${last_name}
     the user enters text to a text field    id=phoneNumber    0987654321
-    the user enters text to a text field    id=password    Passw0rd123
+    the user enters text to a text field    id=password  ${correct_password}
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=.button:contains("Create account")
 
