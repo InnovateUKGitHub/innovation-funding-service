@@ -348,7 +348,7 @@ the user opens the excel and checks the content
     ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0
     should be equal                 ${Armstrong_Butler}  ${Armstrong_Butler_Name}
     ${application_number}=          get from list  ${vitruvius_details}  1
-    should be equal                 ${application_number}  ${PS_BD_APPLICATION_NO}
+    should be equal                 ${application_number}  ${PS_BD_APPLICATION_NUMBER}
     ${postcode}=                    get from list  ${vitruvius_details}  8
     should be equal                 ${postcode}  CH64 3RU
     ${bank_account_name}=           get from list  ${vitruvius_details}  9
