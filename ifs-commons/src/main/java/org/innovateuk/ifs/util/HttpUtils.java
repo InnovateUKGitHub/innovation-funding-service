@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.util;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,6 +46,22 @@ public final class HttpUtils {
             return ofNullable(matchForMMYYYY);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Get a request's query parameters as a {@link MultiValueMap}.
+     * May be useful in specific situations where Spring cannot map these appropriately.
+     *
+     * @param request to extract query string parameters from
+     * @return a {@link MultiValueMap} containing the key-value pairs of the query string
+     */
+    public static MultiValueMap<String, String> getQueryStringParameters(HttpServletRequest request) {
+        return new LinkedMultiValueMap<>(
+                UriComponentsBuilder.newInstance()
+                        .query(request.getQueryString())
+                        .build()
+                        .getQueryParams()
+        );
     }
 
     /**

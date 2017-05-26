@@ -54,7 +54,7 @@ IFS.core.repeatableFinanceRows = (function () {
           jQuery(el).prev().remove()
           jQuery(target).append(data)
           jQuery('body').trigger('updateSerializedFormState')
-          var appendRow = jQuery(data).find('[type="number"][name],[type="text"][name],[type="email"][name]').first().attr('name')
+          var appendRow = jQuery(data).find('[type="number"][name],[type="text"][name],[type="email"][name],[type="radio"][name],textarea[name]').first().attr('name')
           if (typeof (appendRow) !== 'undefined') {
             jQuery('[name=' + appendRow + ']').focus()
           }
