@@ -1,42 +1,30 @@
 package org.innovateuk.ifs.project.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.projectdetails.controller.ProjectController;
+import org.innovateuk.ifs.project.controller.ProjectController;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectDocs.*;
 import static org.innovateuk.ifs.documentation.ProjectTeamStatusDocs.projectTeamStatusResourceFields;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -108,115 +96,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void updateStartDate() throws Exception {
-
-        when(projectServiceMock.updateProjectStartDate(123L, LocalDate.of(2017, 2, 1))).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{id}/startdate", 123L).
-                param("projectStartDate", "2017-02-01"))
-                .andExpect(status().isOk())
-                .andDo(this.document);
-
-        verify(projectServiceMock).updateProjectStartDate(123L, LocalDate.of(2017, 2, 1));
-    }
-
-    @Test
-    public void updateStartDateButDateInPast() throws Exception {
-
-        when(projectServiceMock.updateProjectStartDate(123L, LocalDate.of(2015, 1, 1))).thenReturn(serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE));
-
-        mockMvc.perform(post("/project/{id}/startdate", 123L).
-                param("projectStartDate", "2015-01-01"))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document);
-    }
-
-    @Test
-    public void updateStartDateButDateNotFirstOfMonth() throws Exception {
-
-        when(projectServiceMock.updateProjectStartDate(123L, LocalDate.of(2015, 1, 5))).thenReturn(serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH));
-
-        mockMvc.perform(post("/project/{id}/startdate", 123L).
-                param("projectStartDate", "2015-01-05"))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document);
-    }
-
-    @Test
-    public void setProjectManager() throws Exception {
-        Long project1Id = 1L;
-        Long projectManagerId = 8L;
-
-        when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("id").description("Id of the project"),
-                                parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
-                        )
-                ));
-    }
-
-    @Test
-    public void setProjectManagerButInvalidProjectManager() throws Exception {
-        Long project1Id = 1L;
-        Long projectManagerId = 8L;
-
-        when(projectServiceMock.setProjectManager(project1Id, projectManagerId)).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
-
-        mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("id").description("Id of the project"),
-                                parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
-                        )
-                ));
-    }
-
-    @Test
-    public void updateFinanceContact() throws Exception {
-        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
-        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the Project that is having a Finance Contact applied to"),
-                                parameterWithName("organisationId").description("Id of the Organisation that is having its Finance Contact set")
-                        ),
-                        requestParameters(
-                                parameterWithName("financeContact").description("Id of the user who is to be the Finance Contact for the given Project and Organisation")
-                        ))
-                );
-    }
-
-    @Test
-    public void updateFinanceContactButUserIsNotOnProjectForOrganisation() throws Exception {
-        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
-
-        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
-
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document);
-    }
-
-    @Test
-    public void updateFinanceContactButUserIsNotPartnerOnProjectForOrganisation() throws Exception {
-        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
-
-        when(projectServiceMock.updateFinanceContact(composite, 789L)).thenReturn(serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION));
-
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document);
-    }
-
-    @Test
     public void getProjectUsers() throws Exception {
 
         List<ProjectUserResource> projectUsers = newProjectUserResource().build(3);
@@ -235,54 +114,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void setApplicationDetailsSubmittedDateButDetailsNotFilledIn() throws Exception {
-        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
-        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        )));
-    }
-
-    @Test
-    public void setApplicationDetailsSubmittedDate() throws Exception {
-        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        )));
-    }
-
-    @Test
-    public void isSubmitAllowedReturnsFalseWhenDetailsNotProvided() throws Exception {
-        when(projectServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(false));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
-    }
-
-    @Test
-    public void isSubmitAllowed() throws Exception {
-        when(projectServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
-    }
-
-    @Test
     public void getTeamStatus() throws Exception {
         ProjectTeamStatusResource projectTeamStatusResource = buildTeamStatus();
         when(projectServiceMock.getProjectTeamStatus(123L, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatusResource));
@@ -294,38 +125,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
                         responseFields(projectTeamStatusResourceFields)));
-    }
-
-    @Test
-    public void inviteProjectManager() throws Exception {
-        Long projectId = 123L;
-        InviteProjectResource invite = newInviteProjectResource().build();
-        when(projectServiceMock.inviteProjectManager(projectId, invite)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/invite-project-manager", projectId)
-                .contentType(APPLICATION_JSON)
-                .content(toJson(invite)))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
-                        )
-                ));
-    }
-
-    @Test
-    public void inviteFinanceContact() throws Exception {
-        Long projectId = 123L;
-        InviteProjectResource invite = newInviteProjectResource().build();
-        when(projectServiceMock.inviteFinanceContact(projectId, invite)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/invite-finance-contact", projectId)
-                .contentType(APPLICATION_JSON)
-                .content(toJson(invite)))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
-                        )
-                ));
     }
 
     @Test

@@ -27,24 +27,24 @@ import static java.util.Collections.emptyList;
 /**
  * Handles applicant responses to Questions
  */
-public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResponseData, ResponseDataBuilder> {
+public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResponseData, QuestionResponseDataBuilder> {
 
-    public ResponseDataBuilder withApplication(ApplicationResource application) {
+    public QuestionResponseDataBuilder withApplication(ApplicationResource application) {
         return with(data -> data.setApplication(application));
     }
 
-    public ResponseDataBuilder forQuestion(String questionName) {
+    public QuestionResponseDataBuilder forQuestion(String questionName) {
         return with(data -> data.setQuestionName(questionName));
     }
 
-    public ResponseDataBuilder withAnswer(String value, String updatedBy) {
+    public QuestionResponseDataBuilder withAnswer(String value, String updatedBy) {
         return with(data -> {
             UserResource updateUser = retrieveUserByEmail(updatedBy);
             doAs(updateUser, () -> doAnswerQuestion(data.getQuestionName(), value, updateUser, data));
         });
     }
 
-    public ResponseDataBuilder withFileUploads(List<String> fileUploads, String uploadedBy) {
+    public QuestionResponseDataBuilder withFileUploads(List<String> fileUploads, String uploadedBy) {
         return with(data -> {
             UserResource updateUser = retrieveUserByEmail(uploadedBy);
             doAs(updateUser, () -> {
@@ -76,7 +76,7 @@ public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResp
         });
     }
 
-    public ResponseDataBuilder withAssignee(String assignee) {
+    public QuestionResponseDataBuilder withAssignee(String assignee) {
         return with(data -> {
 
             QuestionResource question = retrieveQuestionByCompetitionAndName(data.getQuestionName(), data.getApplication().getCompetition());
@@ -91,7 +91,7 @@ public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResp
         });
     }
 
-    public ResponseDataBuilder markAsComplete() {
+    public QuestionResponseDataBuilder markAsComplete() {
         return with(data -> {
             QuestionResource question = retrieveQuestionByCompetitionAndName(data.getQuestionName(), data.getApplication().getCompetition());
             ProcessRoleResource lead = retrieveLeadApplicant(data.getApplication().getId());
@@ -119,19 +119,19 @@ public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResp
         return formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
     }
 
-    public static ResponseDataBuilder newApplicationQuestionResponseData(ServiceLocator serviceLocator) {
+    public static QuestionResponseDataBuilder newApplicationQuestionResponseData(ServiceLocator serviceLocator) {
 
-        return new ResponseDataBuilder(emptyList(), serviceLocator);
+        return new QuestionResponseDataBuilder(emptyList(), serviceLocator);
     }
 
-    private ResponseDataBuilder(List<BiConsumer<Integer, ApplicationQuestionResponseData>> multiActions,
-                                ServiceLocator serviceLocator) {
+    private QuestionResponseDataBuilder(List<BiConsumer<Integer, ApplicationQuestionResponseData>> multiActions,
+                                        ServiceLocator serviceLocator) {
         super(multiActions, serviceLocator);
     }
 
     @Override
-    protected ResponseDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationQuestionResponseData>> actions) {
-        return new ResponseDataBuilder(actions, serviceLocator);
+    protected QuestionResponseDataBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ApplicationQuestionResponseData>> actions) {
+        return new QuestionResponseDataBuilder(actions, serviceLocator);
     }
 
     @Override

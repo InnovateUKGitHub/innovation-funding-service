@@ -303,13 +303,6 @@ the applicant's inputs should be visible
     Should Be Equal As Strings    ${input_value}    Collaborator 3
 
 Login and create a new application
-    Given Guest user log-in    &{lead_applicant_credentials}
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user selects the radio button    create-application    true
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jquery=a:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Invitation page test
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
+    Guest user log-in                                    &{lead_applicant_credentials}
+    create new application with the same user            Invitation page test
+
