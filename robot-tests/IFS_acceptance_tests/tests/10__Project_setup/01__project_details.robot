@@ -428,7 +428,7 @@ Inviting finance contact server side validations
     Then the user should see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter an email address.
     When the user enters text to a text field    id=name-finance-contact    Steve Smith
-    And the user enters text to a text field     id=email-finance-contact    steve.smith@empire.com
+    And the user enters text to a text field     id=email-finance-contact  ${lead_applicant_credentials["email"]}
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should see the text in the page    You cannot invite yourself to the project.
 
@@ -506,7 +506,7 @@ Internal user should see project details are incomplete
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page     ${internal_project_summary}
     When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting
-    Then the user should see the text in the page  	Not yet completed
+    Then the user should see the text in the page  Not yet completed
 
 Academic Partner nominates Finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-6781
