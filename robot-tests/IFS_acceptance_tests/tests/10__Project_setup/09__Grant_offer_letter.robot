@@ -519,15 +519,15 @@ the user approves project costs
     the user clicks the button/link    name=confirm-eligibility
 
 all partners submit their Spend Profile
-    log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
+    log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Kazio_Id}/spend-profile
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
         And the user clicks the button/link    jQuery=.button:contains("Submit")
-    log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
+    log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Cogilith_Id}/spend-profile
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
         And the user clicks the button/link    jQuery=.button:contains("Submit")
-    log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
+    log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")

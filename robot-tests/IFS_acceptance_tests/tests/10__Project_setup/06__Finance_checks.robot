@@ -1173,7 +1173,7 @@ Project Finance user can enter overhead values for Lead Partner manually
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    And the user should see the element    	jQuery=section:nth-of-type(2) button span:contains("£ 1,954")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 1,954")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("3%")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     And the user should see the element     jQuery=input[id^="total-cost"][value="£ 206,867"]
@@ -1855,21 +1855,9 @@ bank details are approved for all businesses
     the project finance user has approved bank details
 
 partners submit bank details
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}
-
-partner submits his bank details
-    [Arguments]  ${email}
-    log in as a different user            ${email}    ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  ${account_number}
-    the user enters text to a text field  id=bank-sort-code  ${sort_code}
-    the user selects the radio button     addressType    REGISTERED
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
-    wait until element is visible         jQuery=dt:contains("Account number") + dd:contains("*****795")
-    # Added this readonly check to verify that the bank details are indeed marked as done
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
 
 the project finance user has approved bank details
     log in as a different user                            &{internal_finance_credentials}
