@@ -63,7 +63,18 @@ public class ApplicationModelPopulator {
                                                          Optional<SectionResource> section,
                                                          Optional<Long> currentQuestionId,
                                                          Model model,
-                                                         ApplicationForm form, Optional<Boolean> markAsCompleteEnabled) {
+                                                         ApplicationForm form) {
+        return addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form, Optional.empty());
+    }
+
+    public ApplicationResource addApplicationAndSections(ApplicationResource application,
+                                                         CompetitionResource competition,
+                                                         Long userId,
+                                                         Optional<SectionResource> section,
+                                                         Optional<Long> currentQuestionId,
+                                                         Model model,
+                                                         ApplicationForm form,
+                                                         Optional<Boolean> markAsCompleteEnabled) {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);

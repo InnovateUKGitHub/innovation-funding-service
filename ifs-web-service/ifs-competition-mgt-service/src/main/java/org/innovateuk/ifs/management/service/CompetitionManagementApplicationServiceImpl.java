@@ -75,7 +75,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form, Optional.empty());
+        applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         organisationDetailsModelPopulator.populateModel(model, application.getId());
 
         // Having to pass getImpersonateOrganisationId here because look at the horrible code inside addOrganisationAndUserFinanceDetails with impersonation org id :(
