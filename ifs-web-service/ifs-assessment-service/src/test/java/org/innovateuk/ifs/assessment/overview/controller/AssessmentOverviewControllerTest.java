@@ -7,9 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.assessment.assignment.populator.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.common.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
@@ -52,7 +50,6 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -94,9 +91,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private AssessmentService assessmentService;
 
-    @Mock
-    private AssessorFormInputResponseService assessorFormInputResponseService;
-
     @Spy
     @InjectMocks
     private AssessmentOverviewModelPopulator assessmentOverviewModelPopulator;
@@ -104,10 +98,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Spy
     @InjectMocks
     private AssessmentFinancesSummaryModelPopulator assessmentFinancesSummaryModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private RejectAssessmentModelPopulator rejectAssessmentModelPopulator;
 
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
@@ -149,12 +139,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         List<QuestionResource> questions = asList(questionApplicationDetails, questionScope, questionBusinessOpportunity, questionPotentialMarket);
 
+        @SuppressWarnings("unchecked") List<Long>[] questionIds = new List[] { asList(questionApplicationDetails.getId(), questionScope.getId()),
+                asList(questionBusinessOpportunity.getId(), questionPotentialMarket.getId()),
+                emptyList() };
+
         sections = newSectionResource()
                 .withName("Project details", "Application questions", "Finances")
-                .withQuestions(
-                        asList(questionApplicationDetails.getId(), questionScope.getId()),
-                        asList(questionBusinessOpportunity.getId(), questionPotentialMarket.getId()),
-                        emptyList())
+                .withQuestions(questionIds)
                 .withAssessorGuidanceDescription("These do not need scoring.",
                         "Each question should be given a score.",
                         "Each partner is required to submit their own finances.")
@@ -219,7 +210,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(sectionRestService.getByCompetitionIdVisibleForAssessment(competition.getId())).thenReturn(restSuccess(sections));
         when(questionService.findByCompetition(competition.getId())).thenReturn(questions);
         when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), ASSESSMENT)).thenReturn(restSuccess(assessorFormInputs));
-        when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
+        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(restSuccess(assessorResponses));
         when(formInputResponseRestService.getResponsesByApplicationId(APPLICATION_ID)).thenReturn(restSuccess(applicantResponses));
 
 
@@ -313,13 +304,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/application-overview"));
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
         inOrder.verifyNoMoreInteractions();
     }
@@ -397,12 +388,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void rejectInvitation_noReason() throws Exception {
-        Long applicationId = 2L;
         String comment = String.join(" ", nCopies(100, "comment"));
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
-
-        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectComment(comment);
@@ -427,36 +415,27 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void rejectInvitation_exceedsCharacterSizeLimit() throws Exception {
-        Long applicationId = 2L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = RandomStringUtils.random(5001);
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
 
-        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
-
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
-
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessment.getId(),
-                applicationId,
-                "application name",
-                ACCEPTED
-        );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessment.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -479,36 +458,27 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void rejectInvitation_exceedsWordLimit() throws Exception {
-        Long applicationId = 2L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(101, "comment"));
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
 
-        // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
-
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
-
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessment.getId(),
-                applicationId,
-                "application name",
-                ACCEPTED
-        );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessment.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -531,37 +501,28 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getById(assessment.getId());
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void rejectInvitation_eventNotAccepted() throws Exception {
-        Long applicationId = 2L;
         AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(100, "comment"));
 
         when(assessmentService.getRejectableById(assessment.getId())).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessment.getId(), reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
-        // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
-
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
-
-        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessment.getId(),
-                applicationId,
-                "application name",
-                ACCEPTED
-        );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessment.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -582,7 +543,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
         InOrder inOrder = inOrder(assessmentService, competitionService, sectionRestService, questionService,
-                formInputRestService, assessorFormInputResponseService, formInputResponseRestService);
+                formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
         inOrder.verify(assessmentService).getRejectableById(assessment.getId());
         inOrder.verify(assessmentService).rejectInvitation(assessment.getId(), reason, comment);
         inOrder.verify(assessmentService).getById(assessment.getId());
@@ -590,7 +551,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         inOrder.verify(questionService).findByCompetition(competition.getId());
         inOrder.verify(sectionRestService).getByCompetitionIdVisibleForAssessment(competition.getId());
         inOrder.verify(formInputRestService).getByCompetitionIdAndScope(competition.getId(), ASSESSMENT);
-        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponses(assessment.getId());
         inOrder.verify(formInputResponseRestService).getResponsesByApplicationId(APPLICATION_ID);
     }
 

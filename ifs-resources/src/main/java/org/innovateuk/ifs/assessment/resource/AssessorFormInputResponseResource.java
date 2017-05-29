@@ -24,6 +24,12 @@ public class AssessorFormInputResponseResource {
     public AssessorFormInputResponseResource() {
     }
 
+    public AssessorFormInputResponseResource(Long assessment, Long formInput, String value) {
+        this.assessment = assessment;
+        this.formInput = formInput;
+        this.value = value;
+    }
+
     public AssessorFormInputResponseResource(Long id, Long assessment, Long question, Long formInput, String value, Integer formInputMaxWordCount, ZonedDateTime updatedDate) {
         this.id = id;
         this.assessment = assessment;

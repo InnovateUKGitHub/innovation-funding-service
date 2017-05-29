@@ -407,7 +407,7 @@ public class ApplicationFormController {
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
-        return String.format("finance/finance :: %s_row", costType.getType());
+        return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
     }
 
     @GetMapping("/remove_cost/{costId}")

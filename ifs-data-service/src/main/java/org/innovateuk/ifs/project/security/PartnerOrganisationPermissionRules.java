@@ -6,9 +6,7 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @PermissionRules
 public class PartnerOrganisationPermissionRules extends BasePermissionRules {

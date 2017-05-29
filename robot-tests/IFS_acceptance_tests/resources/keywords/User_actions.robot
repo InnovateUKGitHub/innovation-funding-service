@@ -9,6 +9,10 @@ The user clicks the button/link
     wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
 
+the user clicks the button twice
+    [Arguments]    ${element}
+    the user clicks the button/link  ${element}
+    the user clicks the button/link  ${element}
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
@@ -51,11 +55,6 @@ the user assigns the question to the collaborator
     The user clicks the button/link    css=.assign-button > button
     The user clicks the button/link    jQuery=button:contains("${NAME}")
     Reload Page
-
-the user clicks the button twice
-    [Arguments]    ${element}
-    the user clicks the button/link  ${element}
-    the user clicks the button/link  ${element}
 
 The element should be disabled
     [Arguments]    ${ELEMENT}
