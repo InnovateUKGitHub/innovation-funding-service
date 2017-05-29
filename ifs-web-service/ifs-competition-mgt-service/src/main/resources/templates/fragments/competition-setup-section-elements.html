@@ -149,7 +149,7 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('question.guidanceTitle')}" th:text="${err}" ></span>
                     </th:block>
                 </label>
-                <input th:class="${#fields.hasErrors('question.guidanceTitle')} ? 'field-control-error'"
+                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'field-control-error'"
                        class="form-control width-x-large"
                        type="text"
                        id="question.guidanceTitle"
@@ -319,13 +319,13 @@
                                     <span class="error-message"  th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}" th:text="${err}" ></span>
                                 </th:block>
                             </label>
-                            <input class="form-group width-x-large"
+                            <input class="form-control width-x-large"
                                    th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'form-control-error'"
                                    type="text"
                                    id="question.assessmentGuidanceTitle"
                                    th:name="question.assessmentGuidanceTitle"
                                    th:value="${question.assessmentGuidanceTitle}"
-                                   required="required"/>
+                                   required="required" />
                         </div>
 
                         <div class="form-group" th:class="${#fields.hasErrors('question.assessmentGuidance')} ? 'form-group-error'">
