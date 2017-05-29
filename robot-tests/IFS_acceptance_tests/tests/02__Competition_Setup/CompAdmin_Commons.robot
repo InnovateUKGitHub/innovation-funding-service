@@ -75,7 +75,7 @@ the user fills in the CS Eligibility
     #Elements in this page need double clicking
 
 the user fills in the CS Milestones
-    [Arguments]  ${tomorrowday}  ${dayaftertomorrow}  ${twoDaysForward}  ${month}  ${nextyear}
+    [Arguments]  ${tomorrowday}  ${dayaftertomorrow}  ${twoDaysForward}  ${month}  ${nextMonth}  ${nextyear}
     the user clicks the button/link       link=Milestones
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${tomorrowday}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
@@ -97,22 +97,22 @@ the user fills in the CS Milestones
     the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.day input  ${twoDaysForward}
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${nextMonth}
     the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.year input  ${nextyear}
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
@@ -125,39 +125,40 @@ the user marks the Application as done
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Assessors
-    the user clicks the button/link  link=Assessors
-    the user clicks the button/link  jQuery=label[for="assessors-62"]
-    the user should see the element  css=#assessorPay[value="100"]
-    the user clicks the button/link  jQuery=button:contains("Done")
-    the user clicks the button/link  link=Competition setup
-    the user should see the element  jQuery=div:contains("Assessors") ~ .task-status-complete
+    the user clicks the button/link   link=Assessors
+    the user selects the radio button  assessorCount  3
+    the user should see the element   css=#assessorPay[value="100"]
+    the user clicks the button/link   jQuery=button:contains("Done")
+    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
+    the user clicks the button/link   link=Competition setup
+    the user should see the element   jQuery=div:contains("Assessors") ~ .task-status-complete
 
 the user fills in the Public content and publishes
     # Fill in the Competition information and search
-    the user clicks the button/link             link=Competition information and search
-    the user enters text to a text field        id=short-description        Short public description
-    the user enters text to a text field        id=funding-range            Up to £1million
-    the user enters text to a text field        css=[labelledby="eligibility-summary"]      Summary of eligiblity
-    the user enters text to a text field        id=keywords  Search, Testing, Robot
-    the user clicks the button/link             jQuery=button:contains("Save and return")
-    the user should see the element             jQuery=div:contains("Competition information and search") ~ .task-status-complete
+    the user clicks the button/link         link=Competition information and search
+    the user enters text to a text field    id=short-description  Short public description
+    the user enters text to a text field    id=funding-range  Up to £1million
+    the user enters text to a text field    css=[labelledby="eligibility-summary"]  Summary of eligiblity
+    the user enters text to a text field    id=keywords  Search, Testing, Robot
+    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user should see the element         jQuery=div:contains("Competition information and search") ~ .task-status-complete
     # Fill in the Summary
     the user clicks the button/link         link=Summary
     the user enters text to a text field    css=.editor  This is a Summary description
-    the user selects the radio button       fundingType    Grant
+    the user selects the radio button       fundingType  Grant
     the user enters text to a text field    id=project-size   10 millions
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         jQuery=div:contains("Summary") ~ .task-status-complete
     # Fill in the Eligibility
     the user clicks the button/link         link=Eligibility
-    the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
+    the user enters text to a text field    id=heading-0  Heading 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         jQuery=div:contains("Eligibility") ~ .task-status-complete
     # Fill in the Scope
     the user clicks the button/link         link=Scope
-    the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
+    the user enters text to a text field    id=heading-0  Heading 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         jQuery=div:contains("Scope") ~ .task-status-complete
     # Save the dates
@@ -167,13 +168,13 @@ the user fills in the Public content and publishes
     # Fill in the How to apply
     the user clicks the button/link         link=How to apply
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         jQuery=div:contains("How to apply") ~ .task-status-complete
     # Fill in the Supporting information
     the user clicks the button/link         link=Supporting information
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete
     # Publish and return
@@ -183,6 +184,11 @@ Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${yesterday}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
+
+Change the close date of the Competition in the database to tomorrow
+    [Arguments]  ${competition}
+    ${tomorrow} =  get tomorrow
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
 
 the internal user navigates to public content
     [Arguments]  ${comp}

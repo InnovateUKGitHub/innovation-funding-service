@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,7 +23,6 @@ import static org.mockito.Mockito.when;
 public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSecurityTest<AssessorFormInputResponseService> {
 
     private AssessorFormInputResponsePermissionRules assessorFormInputResponsePermissionRules;
-    private AssessorFormInputResponseLookupStrategy assessorFormInputResponseLookupStrategy;
     private AssessmentLookupStrategy assessmentLookupStrategy;
     private AssessmentPermissionRules assessmentPermissionRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
@@ -38,7 +36,6 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     @Before
     public void setUp() throws Exception {
         assessorFormInputResponsePermissionRules = getMockPermissionRulesBean(AssessorFormInputResponsePermissionRules.class);
-        assessorFormInputResponseLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessorFormInputResponseLookupStrategy.class);
         assessmentLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentLookupStrategy.class);
         assessmentPermissionRules = getMockPermissionRulesBean(AssessmentPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
@@ -69,14 +66,13 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     }
 
     @Test
-    public void updateFormInputResponse() {
-        Long assessorFormInputResponseId = 2L;
-        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource().build();
+    public void updateFormInputResponses() {
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource();
 
-        when(assessorFormInputResponseLookupStrategy.getAssessorFormInputResponseResource(assessorFormInputResponseId)).thenReturn(newAssessorFormInputResponseResource().withId(assessorFormInputResponseId).build());
         assertAccessDenied(
-                () -> classUnderTest.updateFormInputResponse(response),
-                () -> verify(assessorFormInputResponsePermissionRules).userCanUpdateAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
+                () -> classUnderTest.updateFormInputResponses(responses),
+                () -> verify(assessorFormInputResponsePermissionRules).userCanUpdateAssessorFormInputResponses(
+                        eq(responses), isA(UserResource.class))
         );
     }
 
@@ -102,18 +98,6 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         );
     }
 
-    @Test
-    public void mapToFormInput() {
-        Long assessorFormInputResponseId = 2L;
-        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource().build();
-
-        when(assessorFormInputResponseLookupStrategy.getAssessorFormInputResponseResource(assessorFormInputResponseId)).thenReturn(newAssessorFormInputResponseResource().withId(assessorFormInputResponseId).build());
-        assertAccessDenied(
-                () -> classUnderTest.mapToFormInputResponse(response),
-                () -> verify(assessorFormInputResponsePermissionRules).userCanUpdateAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
-        );
-    }
-
     public static class TestAssessorFormInputResponseService implements AssessorFormInputResponseService {
         @Override
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {
@@ -126,7 +110,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
-        public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
+        public ServiceResult<Void> updateFormInputResponses(AssessorFormInputResponsesResource responses) {
             return null;
         }
 
@@ -137,11 +121,6 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         @Override
         public ServiceResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId) {
-            return null;
-        }
-
-        @Override
-        public FormInputResponse mapToFormInputResponse(AssessorFormInputResponseResource response) {
             return null;
         }
 

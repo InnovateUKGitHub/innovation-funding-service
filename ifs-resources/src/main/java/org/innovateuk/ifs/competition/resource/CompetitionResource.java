@@ -110,7 +110,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
-        return Boolean.TRUE.equals(setupComplete) && fundersPanelDate.isBefore(ZonedDateTime.now());
+        return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(ZonedDateTime.now()));
     }
 
     @JsonIgnore

@@ -9,16 +9,40 @@ IFS.competitionManagement.initialDetails = (function () {
       jQuery('body.competition-management.competition-setup').on('change', '[name="innovationSectorCategoryId"]', function () {
         IFS.competitionManagement.initialDetails.handleInnovationSector(false)
       })
-      IFS.competitionManagement.initialDetails.enableDisableMultipleInnovationAreas('[name="competitionTypeId"]')
-      jQuery('.competition-management.competition-setup').on('change', '[name="competitionTypeId"]', function () {
-        IFS.competitionManagement.initialDetails.enableDisableMultipleInnovationAreas(this)
-      })
-
       IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
+      IFS.competitionManagement.initialDetails.handleInnovationArea()
+      IFS.competitionManagement.initialDetails.rebindInnovationAreas()
+    },
+    rebindInnovationAreas: function () {
+      jQuery('.competition-management.competition-setup [name^="innovationAreaCategoryIds"]').unbind('change')
       jQuery('.competition-management.competition-setup').on('change', '[name^="innovationAreaCategoryIds"]', function () {
+        IFS.competitionManagement.initialDetails.handleInnovationArea()
         IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
         IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
       })
+    },
+    handleInnovationArea: function () {
+      var multipleRowsButton = jQuery('[data-add-row="innovationArea"]')
+      var isShowingAll = IFS.competitionManagement.initialDetails.hasAllInnovationArea()
+
+      multipleRowsButton.attr('aria-hidden', isShowingAll)
+      if (isShowingAll) {
+        jQuery('[id*="innovation-row"]').not('#innovation-row-0').remove()
+        IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
+        jQuery('#innovation-row-0 select').val('-1')
+        IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
+      }
+    },
+    hasAllInnovationArea: function () {
+      var hasAllInnovationArea = false
+      jQuery('[name^="innovationAreaCategoryIds"]').each(function (index, el) {
+        if (jQuery(el).val() === '-1') {
+          hasAllInnovationArea = true
+          return false
+        }
+      })
+
+      return hasAllInnovationArea
     },
     handleInnovationSector: function (pageLoad) {
       var sector = jQuery('[name="innovationSectorCategoryId"]').val()
@@ -54,32 +78,6 @@ IFS.competitionManagement.initialDetails = (function () {
       jQuery('[name*="innovationAreaCategoryId"]').find('[disabled]:not([value=""])').removeAttr('disabled').removeAttr('aria-hidden')
       for (var section in disabledSections) {
         jQuery('[name*="innovationAreaCategoryId"]:not([name="' + section + '"]) option[value="' + disabledSections[section] + '"]').attr({'disabled': 'disabled', 'aria-hidden': 'true'})
-      }
-    },
-    enableDisableMultipleInnovationAreas: function (el) {
-      var isSectorCompetition = jQuery(el).val() === '5'
-      var innovationSector = jQuery('#innovationSectorCategoryId')
-      var openInnovationSectorId = '0'
-      var multipleRowsButton = jQuery('[data-add-row="innovationArea"]')
-
-      if (isSectorCompetition) {
-        // enable the open innovation sector if it is a sector competition
-        innovationSector.find('[value="' + openInnovationSectorId + '"]').removeAttr('disabled').attr({'aria-hidden': 'false'})
-        // enable the repeating rows when it is a sector competition
-        multipleRowsButton.attr('aria-hidden', 'false')
-      } else {
-        // remove all the other sections and save
-        jQuery('[id*="innovation-row"]').not('#innovation-row-0').remove()
-        IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
-
-        // deselect if the open innovation Sector is currently selected
-        if (innovationSector.val() === openInnovationSectorId) {
-          innovationSector.val('')
-        }
-        // disable the open innovation sector if it is not a sector competition
-        innovationSector.find('[value="' + openInnovationSectorId + '"]').attr({'disabled': 'disabled', 'aria-hidden': 'true'})
-        // hide the repeating rows when it is a sector competition
-        multipleRowsButton.attr('aria-hidden', 'true')
       }
     },
     fillInnovationAreas: function (currentAreas) {

@@ -12,6 +12,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
@@ -359,6 +360,8 @@ public class ApplicationFormController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
+                request.getParameter(JESFinanceFormHandler.REMOVE_FINANCE_DOCUMENT) != null ||
+                request.getParameter(JESFinanceFormHandler.UPLOAD_FINANCE_DOCUMENT) != null ||
                 request.getParameter(EDIT_QUESTION) != null ||
                 request.getParameter(REQUESTING_FUNDING) != null ||
                 request.getParameter(NOT_REQUESTING_FUNDING) != null ||
@@ -396,7 +399,7 @@ public class ApplicationFormController {
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
-        return String.format("finance/finance :: %s_row", costType.getType());
+        return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
     }
 
     @GetMapping("/remove_cost/{costId}")

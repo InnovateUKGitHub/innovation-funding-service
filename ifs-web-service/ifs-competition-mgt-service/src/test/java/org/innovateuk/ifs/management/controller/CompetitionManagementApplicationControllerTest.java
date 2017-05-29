@@ -373,7 +373,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/markIneligible", competitionResource.getId(), applications.get(0).getId()))
+        mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
+                .param("markAsIneligible", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/applications/ineligible"));
 
@@ -400,9 +401,41 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
 
-        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/markIneligible"))
+        mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "")
+                .param("markAsIneligible", ""))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition-mgt-application-overview"));
+
+        verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
+    }
+
+    @Test
+    public void markAsIneligible_correctBackUrlAfterSubmission() throws Exception {
+        String reason = "Test reason";
+
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().withReason(reason).build();
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
+
+        when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
+        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+        when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
+
+        mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "?origin=SUBMITTED_APPLICATIONS&page=2&sort=name")
+                .param("markAsIneligible", "")
+                .param("ineligibleReason", reason))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/submitted?page=2&sort=name"));
 
         verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
     }

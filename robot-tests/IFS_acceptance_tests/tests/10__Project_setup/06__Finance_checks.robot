@@ -86,6 +86,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-9517 I can view and save the viability page in project setup management
 ...
 ...               INFUND-8501 As partner I want to be able to view all originally submitted application finance details against the revisions made during the Finance Checks eligibility section so that I can make a clear comparison
+...
+...               IFS-236 Queries - do not post until the Finance contact can view and respond to it within the service.
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    Custom Suite Teardown
@@ -94,7 +96,7 @@ Resource          PS_Common.robot
 Resource          ../04__Applicant/FinanceSection_Commons.robot
 
 *** Variables ***
-${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+${ELBOW_GREASE_PROJECT}    ${getProjectId("Elbow grease")}
 ${opens_in_new_window}    (opens in a new window)
 
 *** Test Cases ***
@@ -109,7 +111,6 @@ Project Finance user can see the finance check summary page
     And the user should see the text in the page    ${funders_panel_application_1_title}
     And the table row has expected values
     And the user should see the element    link=Projects in setup
-
 
 
 Project finance user cannot view viability section if this is not applicable for the org in question
@@ -127,6 +128,17 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should see the text in the page    Notes
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
+
+Query section is disabled before finance contacts have been selected
+    [Documentation]    IFS-236
+    [Tags]    HappyPath
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    And the user clicks the button/link    jQuery=.button:contains("Queries")
+    Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/40/eligibility
+    And the user clicks the button/link    jQuery=.button:contains("Queries")
+    Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
+    [Teardown]    finance contacts are selected and bank details are approved
 
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
@@ -759,7 +771,7 @@ Project Finance user can view academic Jes form
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    css=a.eligibility-1
     Then the user should see the text in the page    Download Je-S form
-    When the user opens the link in new window   jes-form122.pdf
+    When the user opens the link in new window   jes-form121.pdf
     Then the user goes back to the previous tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
@@ -778,17 +790,17 @@ Project finance can see the within limit research participation level
 Proj finance can see the maximum research participation level
     [Documentation]    INFUND-7579
     [Tags]
-    When the user navigates to the page                ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT_ID}/finance-check
+    When the user navigates to the page                ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT}/finance-check
     Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
     And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
     And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
-    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    66.71 %
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
     And the user should see the text in the page       Maximum research participation exceeded
     When the user clicks the button/link               link=Project finance overview
     Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
     And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
     And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
-    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    66.71 %
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
     And the user should see the text in the page       Maximum research participation exceeded
     And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
     When the user clicks the button/link               link=Finance checks
@@ -1161,7 +1173,7 @@ Project Finance user can enter overhead values for Lead Partner manually
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
-    And the user should see the element    	jQuery=section:nth-of-type(2) button span:contains("£ 1,954")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 1,954")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("3%")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     And the user should see the element     jQuery=input[id^="total-cost"][value="£ 206,867"]
@@ -1765,13 +1777,18 @@ the table row has expected values
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     lead partner selects project manager and address
+
+
+finance contacts are selected and bank details are approved
     partners submit their finance contacts
     bank details are approved for all businesses
+
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in  &{lead_applicant_credentials}
     ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    Set Suite Variable    ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user    &{internal_finance_credentials}
@@ -1789,6 +1806,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button[1]
     the user enters text to a text field     css=[labelledby="message"]      testMessage
     the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     the user should see the text in the page    Manage funding applications
 
 lead partner selects project manager and address
@@ -1804,11 +1822,15 @@ lead partner selects project manager and address
     the user clicks the button/link      jQuery=button:contains("Submit")
 
 partners submit their finance contacts
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  financeContact1
-    log in as a different user         &{collaborator1_credentials}
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  financeContact1
-    log in as a different user         &{collaborator2_credentials}
-    navigate to external finance contact page, choose finance contact and save  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  financeContact1
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    &{lead_applicant_credentials}
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}    &{collaborator1_credentials}
+    the partner submits their finance contact    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}    &{collaborator2_credentials}
+
+the partner submits their finance contact
+    [Arguments]    ${org_id}    &{credentials}
+    log in as a different user         &{credentials}
+    navigate to external finance contact page, choose finance contact and save  ${org_id}  financeContact1
+
 
 navigate to external finance contact page, choose finance contact and save
     [Arguments]  ${org_id}   ${financeContactSelector}
@@ -1833,21 +1855,9 @@ bank details are approved for all businesses
     the project finance user has approved bank details
 
 partners submit bank details
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}
-    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}
-
-partner submits his bank details
-    [Arguments]  ${email}
-    log in as a different user            ${email}    ${short_password}
-    the user navigates to the page        ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/bank-details
-    the user enters text to a text field  id=bank-acc-number  ${account_number}
-    the user enters text to a text field  id=bank-sort-code  ${sort_code}
-    the user selects the radio button     addressType    REGISTERED
-    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
-    the user clicks the button/link       jQuery=.button:contains("Submit")
-    wait until element is visible         jQuery=dt:contains("Account number") + dd:contains("*****795")
-    # Added this readonly check to verify that the bank details are indeed marked as done
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
 
 the project finance user has approved bank details
     log in as a different user                            &{internal_finance_credentials}
