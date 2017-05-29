@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
@@ -21,7 +22,6 @@ import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.AutosaveElementException;
@@ -370,6 +370,8 @@ public class ApplicationFormController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
+                request.getParameter(JESFinanceFormHandler.REMOVE_FINANCE_DOCUMENT) != null ||
+                request.getParameter(JESFinanceFormHandler.UPLOAD_FINANCE_DOCUMENT) != null ||
                 request.getParameter(EDIT_QUESTION) != null ||
                 request.getParameter(REQUESTING_FUNDING) != null ||
                 request.getParameter(NOT_REQUESTING_FUNDING) != null ||
