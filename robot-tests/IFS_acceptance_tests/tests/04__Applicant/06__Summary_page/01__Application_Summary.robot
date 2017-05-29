@@ -38,9 +38,7 @@ Edit link navigates to the application form
     [Teardown]    The user clicks the button/link    jQuery=Button:contains(Save and return to application overview)
 
 Application overview button
-    [Documentation]    INFUND-1075
-    ...
-    ...    INFUND-841
+    [Documentation]    INFUND-1075 INFUND-8139 INFUND-841
     [Tags]
     Given The user navigates to the summary page of the Robot test application
     And the user clicks the button/link    jQuery=button:contains("Technical approach")
