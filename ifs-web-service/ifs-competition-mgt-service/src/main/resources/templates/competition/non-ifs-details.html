@@ -22,7 +22,6 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Non-IFS competition details',size='heading-xlarge'" />
 
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" th:object="${form}" novalidate="novalidate">
-        <fieldset>
             <div th:class="${#fields.hasErrors('title')}? 'form-group form-group-error':'form-group'">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
@@ -88,12 +87,10 @@
                         <input type="hidden"
                                th:field="${form.openDate.milestoneType}" />
                         <div class="day">
-                            <label class="form-label" for="openDate-day">
-                                <div>Day</div>
-                            </label>
+                            <label class="form-label" for="openDate-day">Day</label>
                             <input id="openDate-day"
                                    th:errorclass="form-control-error"
-                                   class="form-control"
+                                   class="form-control width-extra-small"
                                    type="number"
                                    placeholder="DD"
                                    required="required"
@@ -104,7 +101,7 @@
                         </div>
                         <div class="month">
                             <label class="form-label" for="openDate-month">
-                                <span>Month</span>
+                                Month
                             </label>
                             <input th:errorclass="form-control-error"
                                    class="form-control width-extra-small"
@@ -119,9 +116,9 @@
                         </div>
                         <div class="year">
                             <label class="form-label" for="openDate-year">
-                                <span>Year</span>
+                                    Year
                             </label>
-                            <input th:class="form-control  width-extra-small"
+                            <input class="form-control width-extra-small"
                                    th:errorclass="form-control-error"
                                    id="openDate-year"
                                    type="number"
@@ -151,7 +148,7 @@
                                th:field="${form.closeDate.milestoneType}" />
                         <div class="day">
                             <label class="form-label" for="closeDate-day">
-                                <div>Day</div>
+                                Day
                             </label>
                             <input id="closeDate-day"
                                    th:errorclass="form-control-error"
@@ -166,7 +163,7 @@
                         </div>
                         <div class="month">
                             <label class="form-label" for="closeDate-month">
-                                <span>Month</span>
+                                Month
                             </label>
                             <input class="form-control width-extra-small"
                                    th:errorclass="form-control-error"
@@ -181,7 +178,7 @@
                         </div>
                         <div class="year">
                             <label class="form-label" for="closeDate-year">
-                                <span>Year</span>
+                                Year
                             </label>
                             <input class="form-control width-extra-small"
                                    th:errorclass="form-control-error"
@@ -226,7 +223,7 @@
                                th:field="${form.applicantNotifiedDate.milestoneType}" />
                         <div class="day">
                             <label class="form-label" for="applicantNotifiedDate-day">
-                                <div>Day</div>
+                                Day
                             </label>
                             <input id="applicantNotifiedDate-day"
                                    class="form-control width-extra-small"
@@ -241,7 +238,7 @@
                         </div>
                         <div class="month">
                             <label class="form-label" for="applicantNotifiedDate-month">
-                                <span>Month</span>
+                                Month
                             </label>
                             <input th:errorclass="form-control-error"
                                    class="form-control width-extra-small"
@@ -256,7 +253,7 @@
                         </div>
                         <div class="year">
                             <label class="form-label" for="openDate-year">
-                                <span>Year</span>
+                                Year
                             </label>
                             <input th:errorclass="form-control-error"
                                    class="form-control width-extra-small"
@@ -288,7 +285,6 @@
                        required="required"
                        th:attr="data-required-errormessage=#{validation.nonifs.detailsform.url.required}" />
             </div>
-        </fieldset>
         <div class="extra-margin">
             <button class="button">Save and continue</button>
             <a th:href="@{/dashboard}">Cancel</a>
