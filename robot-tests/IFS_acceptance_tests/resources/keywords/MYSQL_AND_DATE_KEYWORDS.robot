@@ -117,6 +117,11 @@ get tomorrow month
     ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%m    exclude_millis=true
     [Return]    ${tomorrow}
 
+get next month
+    ${today}=  get time
+    ${month} =  Add time To Date  ${today}    31 days    result_format=%m    exclude_millis=true
+    [Return]    ${month}
+
 get tomorrow year
     ${today}=    get time
     ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%Y    exclude_millis=true
