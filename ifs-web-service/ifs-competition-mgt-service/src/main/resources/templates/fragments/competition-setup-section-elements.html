@@ -226,10 +226,8 @@
                                 <label for="research-category-yes">Yes</label>
                             </div>
                             <div class="multiple-choice">
-                                <input th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == false}" value="0" type="radio" />
-                                <label>
-                                    No
-                                </label>
+                                <input id="research-category-no" th:name="question.researchCategoryQuestion" th:checked="${question.researchCategoryQuestion == false}" value="0" type="radio" />
+                                <label for="research-category-no">No</label>
                             </div>
                         </fieldset>
                     </div>
@@ -242,12 +240,12 @@
                         <fieldset class="inline">
                             <legend class="form-label-bold">Scored</legend>
                             <div class="multiple-choice" data-target="score-total">
-                                <input th:name="question.scored" th:checked="${question.scored == true}" value="1" type="radio" />
-                                <label>Yes</label>
+                                <input id="scored-yes" th:name="question.scored" th:checked="${question.scored == true}" value="1" type="radio" />
+                                <label for="scored-yes">Yes</label>
                             </div>
                             <div class="multiple-choice">
-                                <input th:name="question.scored" th:checked="${question.scored == false}" value="0" type="radio" />
-                                <label>No</label>
+                                <input id="scored-no" th:name="question.scored" th:checked="${question.scored == false}" value="0" type="radio" />
+                                <label for="scored-no">No</label>
                             </div>
                         </fieldset>
                     </div>
@@ -278,16 +276,12 @@
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Scope 'Y/N' question</legend>
                                 <div class="multiple-choice">
-                                    <input th:name="question.scope" th:checked="${question.scope == true}" value="1" type="radio" />
-                                    <label>
-                                        Yes
-                                    </label>
+                                    <input id="scoped-yes" th:name="question.scope" th:checked="${question.scope == true}" value="1" type="radio" />
+                                    <label for="scoped-yes">Yes</label>
                                 </div>
                                 <div class="multiple-choice">
-                                    <input th:name="question.scope" th:checked="${question.scope == false}" value="0" type="radio" />
-                                    <label>
-                                        No
-                                    </label>
+                                    <input id="scoped-no" th:name="question.scope" th:checked="${question.scope == false}" value="0" type="radio" />
+                                    <label for="scoped-no">No</label>
                                 </div>
                             </fieldset>
                         </div>
@@ -300,12 +294,12 @@
                             <fieldset class="inline">
                                 <legend class="form-label-bold">Written feedback</legend>
                                 <div class="multiple-choice" data-target="scored-options">
-                                    <input th:name="question.writtenFeedback" th:checked="${question.writtenFeedback}" value="1" type="radio" />
-                                    <label>Yes</label>
+                                    <input id="writtenFeedback-yes" th:name="question.writtenFeedback" th:checked="${question.writtenFeedback}" value="1" type="radio" />
+                                    <label for="writtenFeedback-yes">Yes</label>
                                 </div>
                                 <div class="multiple-choice">
-                                    <input th:name="question.writtenFeedback" th:checked="${!question.writtenFeedback}" value="0" type="radio" />
-                                    <label>No</label>
+                                    <input id="writtenFeedback-no" th:name="question.writtenFeedback" th:checked="${!question.writtenFeedback}" value="0" type="radio" />
+                                    <label for="writtenFeedback-no">No</label>
                                 </div>
                             </fieldset>
                         </div>
