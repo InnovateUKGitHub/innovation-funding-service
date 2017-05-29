@@ -46,8 +46,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Autowired
     private QuestionService questionService;
 
-    private static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
-    private static final String UPLOAD_FINANCE_DOCUMENT = "upload_finance_document";
+    public static final String REMOVE_FINANCE_DOCUMENT = "remove_finance_document";
+    public static final String UPLOAD_FINANCE_DOCUMENT = "upload_finance_document";
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {

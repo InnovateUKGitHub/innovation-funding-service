@@ -21,7 +21,6 @@ import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.AutosaveElementException;
@@ -76,6 +75,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler.REMOVE_FINANCE_DOCUMENT;
+import static org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler.UPLOAD_FINANCE_DOCUMENT;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.toField;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
@@ -370,6 +371,8 @@ public class ApplicationFormController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
+                request.getParameter(REMOVE_FINANCE_DOCUMENT) != null ||
+                request.getParameter(UPLOAD_FINANCE_DOCUMENT) != null ||
                 request.getParameter(EDIT_QUESTION) != null ||
                 request.getParameter(REQUESTING_FUNDING) != null ||
                 request.getParameter(NOT_REQUESTING_FUNDING) != null ||
