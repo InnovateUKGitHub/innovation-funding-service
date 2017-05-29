@@ -16,8 +16,7 @@ public interface CompetitionManagementApplicationService {
 
     String validateApplicationAndCompetitionIds(Long applicationId,
                                                 Long competitionId,
-                                                Function<ApplicationResource,
-                                                        String> success);
+                                                Function<ApplicationResource, String> success);
 
     String displayApplicationOverview(UserResource user,
                                       long competitionId,

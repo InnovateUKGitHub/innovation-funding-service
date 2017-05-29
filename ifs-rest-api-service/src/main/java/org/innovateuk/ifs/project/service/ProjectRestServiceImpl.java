@@ -4,12 +4,10 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
@@ -52,18 +50,6 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<Void> addPartner(Long projectId, Long userId, Long organisationId) {
         return postWithRestResultAnonymous(projectRestURL + "/" + projectId + "/partners?userId=" + userId + "&organisationId=" + organisationId, Void.class);
-    }
-
-    @Override
-    public RestResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
-        return filterByUserId.
-                map(userId -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status?filterByUserId=" + userId, ProjectTeamStatusResource.class))
-                .orElseGet(() -> getWithRestResult(projectRestURL + "/" + projectId + "/team-status", ProjectTeamStatusResource.class));
-    }
-
-    @Override
-    public RestResult<ProjectStatusResource> getProjectStatus(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/status", ProjectStatusResource.class);
     }
 
     @Override
