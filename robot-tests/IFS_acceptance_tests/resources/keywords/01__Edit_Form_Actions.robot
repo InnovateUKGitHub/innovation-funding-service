@@ -97,7 +97,7 @@ the user should see the radio button in the page
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    Wait Until Element Is Visible Without Screenshots    css=[name="${RADIO_BUTTON}"][@value="${SELECTION}"]:checked ~ label, [id="${SELECTION}"]:checked ~ label
+    Wait Until Element Is Visible Without Screenshots    css=[name="${RADIO_BUTTON}"][value="${SELECTION}"]:checked ~ label, [id="${SELECTION}"]:checked ~ label
     #[contains(@class,"selected")]
     # Error checking
     the user should not see an error in the page
