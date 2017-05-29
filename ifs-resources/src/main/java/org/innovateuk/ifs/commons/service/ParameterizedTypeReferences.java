@@ -119,10 +119,6 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionTypeResource>>() {};
     }
 
-    public static ParameterizedTypeReference<Iterable<OrganisationTypeResource>> competitionTypeResourceIterableType() {
-        return new ParameterizedTypeReference<Iterable<OrganisationTypeResource>>() {};
-    }
-
     public static ParameterizedTypeReference<List<QuestionStatusResource>> questionStatusResourceListType() {
         return new ParameterizedTypeReference<List<QuestionStatusResource>>() {};
     }
