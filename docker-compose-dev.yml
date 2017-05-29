@@ -5,6 +5,7 @@ services:
     hostname: application-svc
     links:
       - admin
+      - zipkin
     ports:
       - "8081:8080"
       - "9001:8000"
@@ -58,6 +59,7 @@ services:
       - admin
       - mail
       - mysql:ifs-database
+      - zipkin
     volumes:
       - ./robot-tests/upload_files/:/tmp/ifs-local
     ports:
@@ -90,5 +92,13 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: ifs
     restart: on-failure
+    networks:
+      - ifs
+
+  zipkin:
+    hostname: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
     networks:
       - ifs
