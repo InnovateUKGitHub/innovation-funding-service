@@ -2,6 +2,7 @@ package org.innovateuk.ifs.util;
 
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Optional;
 
@@ -56,6 +57,19 @@ public class HttpUtilsTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "12");
         assertEquals(Optional.of("12-"), HttpUtils.requestParameterPresent("testParameter", request));
+    }
+
+    @Test
+    public void getQueryStringParameters() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setQueryString("first=a&second=b&second=c");
+
+        MultiValueMap<String, String> map = HttpUtils.getQueryStringParameters(request);
+        assertEquals(1, map.get("first").size());
+        assertEquals("a", map.get("first").get(0));
+        assertEquals(2, map.get("second").size());
+        assertEquals("b", map.get("second").get(0));
+        assertEquals("c", map.get("second").get(1));
     }
 
     @Test

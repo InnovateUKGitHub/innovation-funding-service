@@ -58,7 +58,6 @@ ${FUNDERS_PANEL_APPLICATION_1_TITLE}      Sensing & Control network using the li
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_1_TITLE}']}
 ${FUNDERS_PANEL_APPLICATION_2_TITLE}      Matter - Planning for Web
 ${FUNDERS_PANEL_APPLICATION_2_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_2_TITLE}']}
-${FUNDERS_PANEL_APPLICATION_1_PROJECT}    12
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    Empire Ltd
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}
@@ -74,14 +73,12 @@ ${IN_ASSESSMENT_APPLICATION_5_TITLE}      Products and Services Personalised
 ${IN_ASSESSMENT_APPLICATION_5_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_5_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
 ${INFORM_COMPETITION_NAME}                Integrated delivery programme - low carbon vehicles
-${INFORM_APPLICATION_1_PROJECT}    4
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
 ${STEVE_SMITH_ID}    55
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
-${COMPETITION_DETAILS_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/details/
 ${COMPETITION_OVERVIEW_URL}     ${SERVER}/competition/${OPEN_COMPETITION}/overview/
 ${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/430
 ${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/436
@@ -109,7 +106,6 @@ ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 
-
 ${application_name}    Submit test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
@@ -125,10 +121,10 @@ ${text_file}      testing.txt
 ${excel_file}     testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    236
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    237
-${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    238
-${WITHDRAWN_ASSESSMENT}     249
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor2_credentials["email"]}"]}
+${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    ${assessment_ids["${IN_ASSESSMENT_APPLICATION_5_TITLE}"]["${assessor2_credentials["email"]}"]}
+${WITHDRAWN_ASSESSMENT}     ${assessment_ids["Plastic reprocessing with zero waste"]["${assessor2_credentials["email"]}"]}
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
@@ -155,6 +151,8 @@ ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
+${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight train routing
+${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
 ${CURRENTLY_WAITING_UNTIL}      false
