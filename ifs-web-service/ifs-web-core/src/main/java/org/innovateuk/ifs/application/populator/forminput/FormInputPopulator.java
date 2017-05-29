@@ -16,7 +16,6 @@ public interface FormInputPopulator<M extends AbstractFormInputViewModel> {
                       ApplicantFormInputResource applicantFormInput,
                       ApplicantFormInputResponseResource applicantResponse);
 
-
     void addToForm(ApplicationForm form, M viewModel);
 
     FormInputType type();

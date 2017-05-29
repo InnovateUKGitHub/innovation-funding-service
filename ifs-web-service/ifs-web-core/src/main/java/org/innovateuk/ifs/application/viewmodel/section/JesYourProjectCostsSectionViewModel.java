@@ -15,8 +15,9 @@ public class JesYourProjectCostsSectionViewModel extends AbstractYourProjectCost
     private QuestionResource financeUploadQuestion;
     private FormInputResource financeUploadFormInput;
 
-
-    public JesYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
+    public JesYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource,
+                                               List<AbstractFormInputViewModel> formInputViewModels,
+                                               NavigationViewModel navigationViewModel, boolean allReadOnly) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
     }
 

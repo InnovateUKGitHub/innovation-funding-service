@@ -25,6 +25,5 @@ public class FinanceOverviewSectionViewModel extends AbstractSectionViewModel {
     public void setOpenSectionViewModel(OpenSectionViewModel openSectionViewModel) {
         this.openSectionViewModel = openSectionViewModel;
     }
-
 }
 

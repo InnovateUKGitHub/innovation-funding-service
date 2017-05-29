@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Populator for the {@link AssignButtonsViewModel}
+ */
 @Component
 public class AssignButtonsPopulator {
 

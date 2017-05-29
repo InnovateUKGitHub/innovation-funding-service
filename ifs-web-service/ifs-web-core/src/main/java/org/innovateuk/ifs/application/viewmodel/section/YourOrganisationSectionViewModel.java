@@ -54,6 +54,5 @@ public class YourOrganisationSectionViewModel extends AbstractSectionViewModel {
     public List<AbstractFormInputViewModel> getAllByNotType(FormInputType... types) {
         return getFormInputViewModels().stream().filter(viewModel -> !Arrays.asList(types).contains(viewModel.getFormInput().getType())).collect(Collectors.toList());
     }
-
 }
 

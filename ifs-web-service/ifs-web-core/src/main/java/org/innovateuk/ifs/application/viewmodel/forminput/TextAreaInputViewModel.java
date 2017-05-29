@@ -34,7 +34,6 @@ public class TextAreaInputViewModel extends AbstractFormInputViewModel {
         this.application = application;
     }
 
-    /* View logic methods. */
     public String getLastUpdatedText() {
         String userUpdated = isRespondedByCurrentUser() ? "you" : applicantResponse.getResponse().getUpdatedByUserName();
         return " by " + userUpdated;

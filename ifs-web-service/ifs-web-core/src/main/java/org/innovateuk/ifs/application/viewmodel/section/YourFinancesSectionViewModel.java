@@ -73,7 +73,6 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
         this.organisationFinance = organisationFinance;
     }
 
-    /* view model logic methods. */
     public boolean isCanNotRequestFunding() {
         return !applicantResource.getCurrentApplicant().isResearch() && getApplicationIsReadOnly();
     }

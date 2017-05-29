@@ -21,6 +21,9 @@ import java.util.Optional;
 import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
+/**
+ * Populator for the {@link OpenSectionViewModel} in the Finance part of the application
+ */
 @Component
 public class FinanceOverviewPopulator {
 

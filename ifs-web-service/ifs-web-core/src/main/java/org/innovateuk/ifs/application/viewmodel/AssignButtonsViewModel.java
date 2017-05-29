@@ -14,8 +14,8 @@ public class AssignButtonsViewModel {
     private ApplicantResource currentApplicant;
     private QuestionResource question;
     private List<ApplicantResource> assignableApplicants;
-    List<ApplicationInviteResource> pendingAssignableUsers;
-    boolean hideAssignButtons;
+    private List<ApplicationInviteResource> pendingAssignableUsers;
+    private boolean hideAssignButtons;
 
     public ApplicantResource getAssignedBy() {
         return assignedBy;

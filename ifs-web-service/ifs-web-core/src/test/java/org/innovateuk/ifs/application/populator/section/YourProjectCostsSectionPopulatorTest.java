@@ -44,6 +44,9 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Tests for {@link YourProjectCostsSectionPopulator}
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class YourProjectCostsSectionPopulatorTest {
 

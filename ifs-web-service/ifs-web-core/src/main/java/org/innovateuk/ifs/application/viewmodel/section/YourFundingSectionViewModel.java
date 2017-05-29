@@ -23,6 +23,5 @@ public class YourFundingSectionViewModel extends AbstractSectionViewModel {
     public void setComplete(boolean complete) {
         this.complete = complete;
     }
-
 }
 

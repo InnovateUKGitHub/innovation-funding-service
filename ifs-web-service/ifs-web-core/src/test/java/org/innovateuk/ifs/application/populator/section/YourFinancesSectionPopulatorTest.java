@@ -40,6 +40,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Tests for {@link YourFinancesSectionPopulator}
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class YourFinancesSectionPopulatorTest {
 

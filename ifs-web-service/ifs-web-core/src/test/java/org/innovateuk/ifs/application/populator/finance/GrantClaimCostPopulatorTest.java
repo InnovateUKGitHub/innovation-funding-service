@@ -35,6 +35,9 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Tests for {@link GrantClaimCostPopulator}
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class GrantClaimCostPopulatorTest {
     private static final Integer MAXIMUM_GRANT_CLAIM = 50;

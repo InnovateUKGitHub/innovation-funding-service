@@ -16,7 +16,6 @@ public abstract class AbstractYourProjectCostsSectionViewModel extends AbstractS
     private ApplicantQuestionResource applicantQuestion;
     private boolean complete;
 
-
     public AbstractYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly);
     }

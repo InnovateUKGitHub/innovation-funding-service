@@ -14,6 +14,9 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
+/**
+ * Testing {@link ApplicantService}
+ */
 @Rollback
 @Transactional
 public class ApplicantServiceIntegrationTest extends BaseAuthenticationAwareIntegrationTest {

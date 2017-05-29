@@ -35,6 +35,9 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
+/**
+ * Tests for {@link AssignButtonsPopulator}
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class AssignButtonsPopulatorTest {
 

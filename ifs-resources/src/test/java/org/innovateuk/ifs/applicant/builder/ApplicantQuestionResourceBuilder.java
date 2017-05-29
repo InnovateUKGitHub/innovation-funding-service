@@ -41,5 +41,4 @@ public class ApplicantQuestionResourceBuilder extends AbstractApplicantResourceB
     public ApplicantQuestionResourceBuilder withApplicantQuestionStatuses(List<ApplicantQuestionStatusResource>... applicantQuestionStatuses) {
         return withArraySetFieldByReflection("applicantQuestionStatuses", applicantQuestionStatuses);
     }
-
 }
