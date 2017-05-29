@@ -138,12 +138,12 @@ IFS.core.formValidation = (function () {
 
       if (errorStyles) {
         if (confirmsToPasswordPolicy) {
-          formGroup.removeClass('error')
+          formGroup.removeClass('form-group-error')
           field.removeClass('form-control-error')
           //  clear tooWeakPassword message as this is validated in the back end.
           IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'))
         } else {
-          formGroup.addClass('error')
+          formGroup.addClass('form-group-error')
           field.addClass('form-control-error')
         }
       }
@@ -613,7 +613,7 @@ IFS.core.formValidation = (function () {
       var visuallyhidden = displayValidationMessages === 'visuallyhidden'
       if (formGroup.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
-        if (visuallyhidden === false) { formGroup.addClass('error') }
+        if (visuallyhidden === false) { formGroup.addClass('form-group-error') }
 
         // if the message isn't in this formgroup yet we will add it, a form-group can have multiple errors.
         var errorEl = formGroup.find('[data-errorfield="' + name + '"]:contains("' + message + '"),.error-message:not([data-errorfield]):contains("' + message + '")')
@@ -648,7 +648,7 @@ IFS.core.formValidation = (function () {
 
         // if this was the last error we remove the error styling
         if (formGroup.find('[data-errorfield],.error-message:not([data-errorfield])').length === 0) {
-          formGroup.removeClass('error')
+          formGroup.removeClass('form-group-error')
         }
         if (formGroup.find('[data-errorfield="' + name + '"]').length === 0) {
           field.removeClass('form-control-error')

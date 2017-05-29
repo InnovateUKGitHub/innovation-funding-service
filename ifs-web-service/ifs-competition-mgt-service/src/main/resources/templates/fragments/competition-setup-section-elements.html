@@ -158,7 +158,7 @@
                        th:value="${question.guidanceTitle}"
                        maxlength="255"/>
             </div>
-            <div th:class="${#fields.hasErrors('question.guidance')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('question.guidance')} ? 'form-group-error'">
                 <label class="form-label" for="question.guidance">
                     <span class="form-label-bold">Question guidance</span>
                     <th:block th:if="${#fields.hasErrors('question.guidance')}">
@@ -169,7 +169,7 @@
                         <textarea data-max_words="500"
                                   data-editor="html"
                                   id="question.guidance"
-                                  th:class="${#fields.hasErrors('question.guidance')} ? 'form-control-error'"
+                                  th:classappend="${#fields.hasErrors('question.guidance')} ? 'form-control-error'"
                                   th:name="question.guidance"
                                   required="required"
                                   ifs:utext="${question.guidance}">
@@ -179,7 +179,7 @@
                     </div>
                 </div>
             </div>
-            <div th:class="${#fields.hasErrors('question.maxWords')}? 'form-group form-group-error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'form-group-error'">
                 <label class="form-label" for="question.maxWords">
                     <span class="form-label-bold">Max word count</span>
                     <th:block th:if="${#fields.hasErrors('question.maxWords')}">
@@ -252,7 +252,7 @@
                 </th:block>
 
                     <th:block th:if="${question.scored != null}">
-                        <div class="form-group " th:classappend="${#fields.hasErrors('question.scoreTotal')}? 'form-group-error':''" id="score-total">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'form-group-error'" id="score-total">
                             <label class="form-label" for="question.scoreTotal">
                                 <span class="form-label-bold">Out of</span>
                                 <th:block th:if="${#fields.hasErrors('question.scoreTotal')}">
@@ -322,7 +322,7 @@
                                    required="required" />
                         </div>
 
-                        <div class="form-group" th:class="${#fields.hasErrors('question.assessmentGuidance')} ? 'form-group-error'">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'form-group-error'">
                             <label class="form-label" for="question.assessmentGuidance">
                                 <span class="form-label-bold">Guidance</span>
                                 <th:block th:if="${#fields.hasErrors('question.assessmentGuidance')}">
@@ -467,7 +467,7 @@
                                 <button class="buttonlink" data-add-row="guidance" type="button">+Add guidance row</button>
                             </div>
 
-                            <div th:class="${#fields.hasErrors('question.assessmentMaxWords')}? 'form-group form-group-error':'form-group'">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'form-group-error'">
                                 <label class="form-label" for="question.assessmentMaxWords">
                                     <span class="form-label-bold">Max word count</span>
                                     <th:block th:if="${#fields.hasErrors('question.assessmentMaxWords')}">
