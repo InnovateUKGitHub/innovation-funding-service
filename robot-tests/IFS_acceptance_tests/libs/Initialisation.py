@@ -75,10 +75,10 @@ for ass in cursor.fetchall():
 # execute SQL query using execute() method, to fetch the Applications
 cursor.execute("SELECT `id`,`name` FROM project")
 
-# Fetch the application records
+# Fetch the project records
 project_ids = {}
-for app in cursor.fetchall():
-    project_ids[app[1]] = str(app[0])
+for proj in cursor.fetchall():
+    project_ids[proj[1]] = str(proj[0])
 
 
 # disconnect from server

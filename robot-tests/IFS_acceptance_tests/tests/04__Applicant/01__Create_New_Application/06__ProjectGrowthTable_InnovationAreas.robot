@@ -11,16 +11,17 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...
 ...               IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 Suite Setup       Custom Suite Setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom Suite Teardown
 Force Tags        Applicant    CompAdmin
 Resource          ../../../resources/defaultResources.robot
 Resource          ../FinanceSection_Commons.robot
 Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
-${compWithoutGrowth}    From new Competition to New Application
-${applicationTitle}    New Application from the New Competition
-${compWITHGrowth}    All-Innov-Areas & With GrowthT
+${compWithoutGrowth}    FromCompToNewAppl without GrowthT
+${applicationTitle}    NewApplFromNewComp without GrowthT
+${compWITHGrowth}    All-Innov-Areas With GrowthT
+${newUsersEmail}  liam@innovate.com
 
 *** Test Cases ***
 Comp Admin starts a new Competition
@@ -314,24 +315,21 @@ Newly created collaborator can view and edit project Growth table
     and the user should not see an error in the page
 
 Invite Collaborator in Application with Growth table
-    [Documentation]    INFUND-8518
-    [Tags]    Email    Failing
-    [Setup]    the user navigates to the page    ${dashboard_url}
-    # TODO INFUND-8561
-    Given the lead applicant invites an existing user    ${compWITHGrowth}    ${collaborator1_credentials["email"]}
-    When the user reads his email and clicks the link    ${collaborator1_credentials["email"]}    Invitation to collaborate in ${compWITHGrowth}    You will be joining as part of the organisation    3
-    Then the user should see the element    jQuery=h1:contains("We have found an account with the invited email address")
-    And the user clicks the button/link    link=Sign into the Innovation Funding Service.
-    When guest user log-in    &{collaborator1_credentials}
-    Then the user clicks the button/link    link=Continue to application
+    [Documentation]    INFUND-8518 INFUND-8561
+    [Tags]  Email  MySQL
+    [Setup]
+    Given the lead applicant invites an existing user  ${compWITHGrowth}  ${collaborator1_credentials["email"]}
+    When guest user log-in  &{collaborator1_credentials}
+    Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation  3
+    When the user should see the element  jQuery=h2:contains("We have found an account with the invited email address")
+    Then the user clicks the button/link  link=Continue or sign in
+    And the user clicks the button/link  link=Confirm and accept invitation
+
 
 Non-lead can mark Organisation as complete
-    [Documentation]    INFUND-8518
-    [Tags]    Failing
-    # TODO INFUND-8561
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${compWITHGrowth}
-    When the user clicks the button/link    link=Your finances
+    [Documentation]    INFUND-8518 INFUND-8561
+    [Tags]
+    Given the user navigates to Your-finances page  Untitled application (start here)
     And the user clicks the button/link    link=Your organisation
     Then the user selects medium organisation size
     And the user enters text to a text field    css=input[name$="month"]    12
@@ -342,9 +340,8 @@ Non-lead can mark Organisation as complete
     Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
 
 Non-lead can can edit and remark Organisation as Complete
-    [Documentation]    INFUND-8518
-    [Tags]    Failing
-    # TODO INFUND-8561
+    [Documentation]    INFUND-8518 INFUND-8561
+    [Tags]
     Given the user can edit resubmit and read only of the organisation
 
 *** Keywords ***
@@ -367,6 +364,10 @@ Custom Suite Setup
     Set suite variable    ${tomorrowfull}
     ${dateDayAfterNextYear} =    get the day after tomorrow full next year
     Set suite variable    ${dateDayAfterNextYear}
+    Delete the emails from both test mailboxes
+
+Custom Suite Teardown
+    close any open browsers
     Delete the emails from both test mailboxes
 
 the user should see the dates in full format
@@ -469,36 +470,33 @@ the user can edit resubmit and read only of the organisation
 
 the lead applicant invites an existing user
     [Arguments]    ${comp_title}    ${EMAIL_INVITED}
-    the user clicks the button/link    link=${comp_title}
-    the user clicks the button/link    link=view team members and add collaborators
-    the user clicks the button/link    link=Invite new contributors
-    the user clicks the button/link    jQuery=button:contains('Add additional partner organisation')
-    Input Text    name=organisations[1].organisationName    innovate
-    Input Text    name=organisations[1].invites[0].personName    Partner name
-    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
-    the user clicks the button/link    jQuery=.button:contains("Save changes")
-    the user logs out if they are logged in
+    log in as a different user  &{lead_applicant_credentials}
+    the user navigates to the page   ${dashboard_url}
+    the user clicks the button/link  jquery=.in-progress a:contains("Untitled application"):last
+    the user fills in the inviting steps  ${EMAIL_INVITED}
 
 the user navigates to the growth table finances
     the user navigates to the page    ${DASHBOARD_URL}
-    the user clicks the button/link    jQuery=a:contains('Untitled application'):last
+    the user clicks the button/link    jQuery=.in-progress a:contains("Untitled application"):last
     the user clicks the button/link    link=Your finances
 
 Invite a non-existing collaborator in Application with Growth table
     the user clicks the button/link    jQuery=a:contains("Application overview")
-    the user clicks the button/link    jQuery=a:contains("view team members and add collaborators")
-    the user clicks the button/link    jQuery=a:contains("Add partner organisation")
-    the user should see the element    jQuery=h1:contains(Add organisation)
-    the user enters text to a text field    id=organisationName    innovate
-    the user enters text to a text field    id=applicants0.name    liam
-    the user enters text to a text field    id=applicants0.email    liam@innovate.com
-    the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
-    the user should not see an error in the page
-    the user logs out if they are logged in
+    the user fills in the inviting steps  ${newUsersEmail}
     newly invited collaborator can create account and sign in
 
+the user fills in the inviting steps
+    [Arguments]  ${email}
+    the user clicks the button/link    link=view team members and add collaborators
+    the user clicks the button/link    link=Add partner organisation
+    Input Text  css=#organisationName  New Organisation's Name
+    Input Text  css=input[id="applicants0.name"]  Partner's name
+    Input Text  css=input[id="applicants0.email"]  ${email}
+    the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
+    logout as user
+
 Newly invited collaborator can create account and sign in
-    the user reads his email and clicks the link    liam@innovate.com    Invitation to collaborate in ${compWITHGrowth}    You will be joining as part of the organisation    3
+    the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation  3
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
@@ -526,12 +524,12 @@ the user completes the new account creation
     the user selects the checkbox    termsAndConditions
     the user clicks the button/link    jQuery=button:contains("Create account")
     the user should see the text in the page    Please verify your email address
-    the user reads his email and clicks the link    liam@innovate.com    Please verify your email address    Once verified you can sign into your account.
+    the user reads his email and clicks the link  ${newUsersEmail}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    link=Sign in
     then the user should see the text in the page    Sign in
-    the user enters text to a text field    jQuery=input[id="username"]    liam@innovate.com
-    the user enters text to a text field    jQuery=input[id="password"]    ${correct_password}
+    the user enters text to a text field    jQuery=input[id="username"]  ${newUsersEmail}
+    the user enters text to a text field    jQuery=input[id="password"]  ${correct_password}
     the user clicks the button/link    jQuery=button:contains("Sign in")
 
 the user fills in the Open-All Initial details
