@@ -22,7 +22,6 @@ Suite Setup       Guest user log-in  &{assessor2_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../../10__Project_setup/PS_Commons.robot
 
 *** Test Cases ***
 User cannot accept/reject an invite to an application that has been withdrawn
