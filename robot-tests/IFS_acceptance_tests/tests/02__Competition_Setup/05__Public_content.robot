@@ -203,7 +203,7 @@ Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
     [Tags]  HappyPath
     When the user clicks the button/link                         link=Dates
-    Then the user should see the text in the page                1 February ${nextyear}
+    Then the user should see the text in the page                ${nextMonthWord} ${nextyear}
     And the user should see the text in the page                 Competition opens
     And the user should see the text in the page                 Submission deadline, competition closed.
     And the user should see the text in the page                 Applicants notified
@@ -355,11 +355,11 @@ The guest user can see updated date information
    [Documentation]    INFUND-7489
    [Tags]
    Given the user clicks the button/link    link=Dates
-   And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition opens")
-   And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition closes")
-   And the user should see the element    jQuery=dt:contains("3 February ${nextyear}") + dd:contains("Applicants notified")
-   And the user should see the element    jQuery=dt:contains("12 December ${nextyear}") + dd:contains("Content 1")
-   And the user should see the element    jQuery=dt:contains("20 December ${nextyear}") + dd:contains("Content 2")
+   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Competition opens")
+   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Competition closes")
+   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Applicants notified")
+   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Content 1")
+   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Content 2")
 
 Guest user can see the updated How-to-apply information
     [Documentation]  INFUND-7490
@@ -376,24 +376,30 @@ Custom suite setup
     Guest user log-in    &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
-    User creates a new competition   ${public_content_competition_name}
-    ${competitionId}=  get comp id from comp title  ${public_content_competition_name}
-    set suite variable  ${competitionId}
-    ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/${competitionId}
-    Set suite variable  ${public_content_overview}
     ${today} =  get today
     set suite variable  ${today}
     ${day} =  get tomorrow day
     Set suite variable  ${day}
     ${month} =  get tomorrow month
     set suite variable  ${month}
+    ${nextMonth} =  get next month
+    set suite variable  ${nextMonth}
+    ${nextMonthWord} =  get next month as word
+    set suite variable  ${nextMonthWord}
+    ${nextyear} =  get next year
+    Set suite variable  ${nextyear}
+    User creates a new competition   ${public_content_competition_name}
+    ${competitionId}=  get comp id from comp title  ${public_content_competition_name}
+    set suite variable  ${competitionId}
+    ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/${competitionId}
+    Set suite variable  ${public_content_overview}
 
 User creates a new competition
     [Arguments]    ${competition_name}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    When the user fills in the CS Initial details      ${competition_name}  01  02  ${nextyear}
-    And the user fills in the CS Milestones    01  02  03  02  ${nextyear}
+    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}
+    And the user fills in the CS Milestones  ${month}  ${nextMonth}  ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
@@ -423,11 +429,12 @@ the user can add and remove multiple content groups
     And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
     When the user uploads the file              id=contentGroups-2.attachment  ${text_file}
     Then the user should see the element        jQuery=.error-summary-list:contains("Please upload a file in .pdf format only.")
-    #    And the user uploads the file               id=contentGroups-2.attachment  ${too_large_pdf}
-    #    Then the user should see the element        jQuery=h1:contains("Attempt to upload a large file")
-    #    and the user goes back to the previous page
-    #    And the user should not see an error in the page
-    # I comment those lines out due to TODO INFUND-8358
+    And the user uploads the file               id=contentGroups-2.attachment  ${too_large_pdf}
+    Then the user should see the element        jQuery=h1:contains("Attempt to upload a large file")
+    And the user goes back to the previous page
+    And the user reloads the page
+    # TODO this reload is required for now due to INFUND-8358
+    And the user should not see an error in the page
     And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
     Then the user should not see the element    id=heading-2
     And the user should not see the element     jQuery=.editor:eq(2)

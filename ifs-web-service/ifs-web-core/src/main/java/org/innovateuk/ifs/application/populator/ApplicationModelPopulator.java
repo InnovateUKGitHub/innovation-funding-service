@@ -17,7 +17,6 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,22 +57,33 @@ public class ApplicationModelPopulator {
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
-    @Autowired
-    protected UserRestService userRestService;
+    public ApplicationResource addApplicationAndSections(ApplicationResource application,
+                                                         CompetitionResource competition,
+                                                         UserResource user,
+                                                         Optional<SectionResource> section,
+                                                         Optional<Long> currentQuestionId,
+                                                         Model model,
+                                                         ApplicationForm form,
+                                                         List<ProcessRoleResource> userApplicationRoles) {
+        return addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, Optional.empty());
+    }
 
-    public void addApplicationAndSections(ApplicationResource application,
-                                          CompetitionResource competition,
-                                          UserResource user,
-                                          Optional<SectionResource> section,
-                                          Optional<Long> currentQuestionId,
-                                          Model model,
-                                          ApplicationForm form,
-                                          List<ProcessRoleResource> userApplicationRoles) {
+    public ApplicationResource addApplicationAndSections(ApplicationResource application,
+                                                         CompetitionResource competition,
+                                                         UserResource user,
+                                                         Optional<SectionResource> section,
+                                                         Optional<Long> currentQuestionId,
+                                                         Model model,
+                                                         ApplicationForm form,
+                                                         List<ProcessRoleResource> userApplicationRoles,
+                                                         Optional<Boolean> markAsCompleteEnabled) {
 
-        addApplicationDetails(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles);
+        application = addApplicationDetails(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
 
         model.addAttribute("completedQuestionsPercentage", application.getCompletion());
         applicationSectionAndQuestionModelPopulator.addSectionDetails(model, section);
+
+        return application;
     }
 
     public ApplicationResource addApplicationDetails(ApplicationResource application,
@@ -83,8 +93,8 @@ public class ApplicationModelPopulator {
                                                      Optional<Long> currentQuestionId,
                                                      Model model,
                                                      ApplicationForm form,
-                                                     List<ProcessRoleResource> userApplicationRoles) {
-
+                                                     List<ProcessRoleResource> userApplicationRoles,
+                                                     Optional<Boolean> markAsCompleteEnabled) {
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
 
@@ -101,7 +111,7 @@ public class ApplicationModelPopulator {
         applicationSectionAndQuestionModelPopulator.addQuestionsDetails(model, application, form);
         addUserDetails(model, user, userApplicationRoles);
         addApplicationFormDetailInputs(application, form);
-        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, competition, section, userOrganisation, completedSectionsByOrganisation);
+        applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, competition, section, userOrganisation, completedSectionsByOrganisation, markAsCompleteEnabled);
 
         applicationSectionAndQuestionModelPopulator.addAssignableDetails(model, application, userOrganisation.orElse(null), user, section, currentQuestionId);
         applicationSectionAndQuestionModelPopulator.addCompletedDetails(model, application, userOrganisation, completedSectionsByOrganisation);

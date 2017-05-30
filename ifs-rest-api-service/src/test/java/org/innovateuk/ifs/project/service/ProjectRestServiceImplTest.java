@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -35,14 +34,6 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         ProjectResource returnedResponse = new ProjectResource();
         setupGetWithRestResultExpectations(projectRestURL + "/123", ProjectResource.class, returnedResponse);
         ProjectResource result = service.getProjectById(123L).getSuccessObject();
-        Assert.assertEquals(returnedResponse, result);
-    }
-
-    @Test
-    public void testGetStatusByProjectId() {
-        ProjectStatusResource returnedResponse = new ProjectStatusResource();
-        setupGetWithRestResultExpectations(projectRestURL + "/123/status", ProjectStatusResource.class, returnedResponse);
-        ProjectStatusResource result = service.getProjectStatus(123L).getSuccessObject();
         Assert.assertEquals(returnedResponse, result);
     }
 
@@ -81,28 +72,6 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
 
         Assert.assertEquals(projectResource, result.getSuccessObject());
-    }
-
-    @Test
-    public void testGetProjectTeamStatus() {
-        String expectedUrl = projectRestURL + "/123/team-status";
-
-        setupGetWithRestResultExpectations(expectedUrl, ProjectTeamStatusResource.class, null, OK);
-
-        RestResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(123L, Optional.empty());
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testGetProjectTeamStatusWithFilterByUserId() {
-        String expectedUrl = projectRestURL + "/123/team-status?filterByUserId=456";
-
-        setupGetWithRestResultExpectations(expectedUrl, ProjectTeamStatusResource.class, null, OK);
-
-        RestResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(123L, Optional.of(456L));
-
-        assertTrue(result.isSuccess());
     }
 
     @Test

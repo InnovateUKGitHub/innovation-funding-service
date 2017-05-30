@@ -67,7 +67,8 @@ public class ApplicationSectionAndQuestionModelPopulator {
     public void addMappedSectionsDetails(Model model, CompetitionResource competition,
                                          Optional<SectionResource> currentSection,
                                          Optional<OrganisationResource> userOrganisation,
-                                         Map<Long, Set<Long>> completedSectionsByOrganisation) {
+                                         Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                         Optional<Boolean> markAsCompleteEnabled) {
 
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
@@ -82,6 +83,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
         });
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
+        markAsCompleteEnabled.ifPresent(markAsCompleteEnabledBoolean -> {
+            questions.forEach(questionResource -> questionResource.setMarkAsCompletedEnabled(markAsCompleteEnabledBoolean));
+        });
 
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccessObjectOrThrowException();

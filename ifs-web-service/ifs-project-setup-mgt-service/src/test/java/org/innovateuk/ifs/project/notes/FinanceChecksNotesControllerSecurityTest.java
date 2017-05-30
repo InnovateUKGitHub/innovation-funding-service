@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.notes;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -29,7 +29,7 @@ public class FinanceChecksNotesControllerSecurityTest extends BaseProjectSetupCo
     }
 
     @Override
-    protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
+    protected Consumer<SetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.internalCanAccessFinanceChecksNotesSection(eq(1L), isA(UserResource.class));
     }
 
