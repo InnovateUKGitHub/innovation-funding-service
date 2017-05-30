@@ -98,7 +98,7 @@ import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.transactional.ProjectStatusService;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
@@ -444,7 +444,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected GrantOfferLetterService grantOfferLetterServiceMock;
 
     @Mock
-    protected ProjectStatusService projectStatusServiceMock;
+    protected StatusService statusServiceMock;
 
     @Mock
     protected ProjectMapper projectMapperMock;

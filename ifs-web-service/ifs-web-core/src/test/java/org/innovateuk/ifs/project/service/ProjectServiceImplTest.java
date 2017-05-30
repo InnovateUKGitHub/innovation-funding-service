@@ -21,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static junit.framework.TestCase.assertEquals;
@@ -119,32 +118,6 @@ public class ProjectServiceImplTest {
         verify(projectRestService).getProjectById(projectResource.getId());
 
         verify(applicationService).getLeadOrganisation(projectResource.getApplication());
-    }
-
-    @Test
-    public void testGetProjectTeamStatus() throws Exception {
-        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
-
-        when(projectRestService.getProjectTeamStatus(1L, Optional.empty())).thenReturn(restSuccess(expectedProjectTeamStatusResource));
-
-        ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L, Optional.empty());
-
-        assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
-
-        verify(projectRestService).getProjectTeamStatus(1L, Optional.empty());
-    }
-
-    @Test
-    public void testGetProjectTeamStatusWithFilterByUserId() throws Exception {
-        ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().build();
-
-        when(projectRestService.getProjectTeamStatus(1L, Optional.of(456L))).thenReturn(restSuccess(expectedProjectTeamStatusResource));
-
-        ProjectTeamStatusResource projectTeamStatusResource = service.getProjectTeamStatus(1L, Optional.of(456L));
-
-        assertEquals(expectedProjectTeamStatusResource, projectTeamStatusResource);
-
-        verify(projectRestService).getProjectTeamStatus(1L, Optional.of(456L));
     }
 
     @Test

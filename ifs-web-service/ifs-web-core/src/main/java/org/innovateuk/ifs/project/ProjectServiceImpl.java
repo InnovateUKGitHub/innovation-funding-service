@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,16 +104,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public boolean isUserLeadPartner(Long projectId, Long userId) {
         return !simpleFilter(getLeadPartners(projectId), projectUser -> projectUser.getUser().equals(userId)).isEmpty();
-    }
-
-    @Override
-    public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
-        return projectRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ProjectStatusResource getProjectStatus(Long projectId) {
-        return projectRestService.getProjectStatus(projectId).getSuccessObjectOrThrowException();
     }
 
     @Override

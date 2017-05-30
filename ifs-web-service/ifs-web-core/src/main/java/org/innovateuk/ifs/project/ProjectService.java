@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.*;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
@@ -32,10 +31,6 @@ public interface ProjectService {
     List<ProjectUserResource> getLeadPartners(Long projectId);
 
     List<ProjectUserResource> getPartners(Long projectId);
-
-    ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
-
-    ProjectStatusResource getProjectStatus(Long projectId);
 
     List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId);
 
