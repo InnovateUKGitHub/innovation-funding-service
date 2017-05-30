@@ -1420,7 +1420,7 @@
 
 
     <!-- ===========================Form: Other funding=========================== -->
-    <th:block th:fragment="other_funding (costViewModel)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}, readonly=${costViewModel.readonly}">
+    <th:block th:fragment="other_funding (model)" th:with="question=${model.question}, costCategory=${model.costCategory}, viewmode=${model.viewmode}, subSection=${model.section}, readonly=${model.readonly}">
         <th:block th:if="${readonly}">
             <h2 class="heading-medium">Other funding for this project</h2>
             <th:block th:if="${costCategory.otherPublicFunding?.equals('No')}">
