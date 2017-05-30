@@ -31,7 +31,7 @@
             <th:block th:if="${model.readonly}">
                 <dl class="readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
                     <dt th:text="${question.name}">Your Funding level</dt>
-                    <dd th:text="${organisationGrantClaimPercentage+'%'}">50%</dd>
+                    <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
                 </dl>
             </th:block>
         </th:block>
