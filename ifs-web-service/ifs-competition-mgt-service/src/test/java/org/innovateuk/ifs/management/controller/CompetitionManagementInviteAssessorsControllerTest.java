@@ -164,7 +164,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verify(competitionInviteRestService, times(2)).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -199,7 +199,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InOrder inOrder = inOrder(competitionRestService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationSectors();
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verify(competitionInviteRestService, times(2)).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
