@@ -17,7 +17,6 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourc
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
@@ -37,15 +36,6 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     protected CompetitionInviteRestServiceImpl registerRestServiceUnderTest() {
         CompetitionInviteRestServiceImpl competitionInviteRestService = new CompetitionInviteRestServiceImpl();
         return competitionInviteRestService;
-    }
-
-    @Test
-    public void getCreatedInvite() throws Exception {
-        long inviteId = 1L;
-        AssessorInvitesToSendResource expected = newAssessorInviteToSendResource().build();
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreated", inviteId), AssessorInvitesToSendResource.class, expected);
-        AssessorInvitesToSendResource actual = service.getInviteToSend(inviteId).getSuccessObject();
-        assertEquals(expected, actual);
     }
 
     @Test
@@ -256,15 +246,15 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
-    public void sendInvite() {
-        long inviteId = 5L;
+    public void sendAllInvites() {
+        long competitionId = 1L;
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
                 .withContent("content")
                 .build();
 
-        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite", inviteId), assessorInviteSendResource, OK);
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendAllInvites", competitionId), assessorInviteSendResource, OK);
 
-        assertTrue(service.sendInvite(inviteId, assessorInviteSendResource).isSuccess());
+        assertTrue(service.sendAllInvites(competitionId, assessorInviteSendResource).isSuccess());
     }
 }

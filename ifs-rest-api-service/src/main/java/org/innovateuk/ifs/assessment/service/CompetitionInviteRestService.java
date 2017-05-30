@@ -10,8 +10,6 @@ import java.util.Optional;
  */
 public interface CompetitionInviteRestService {
 
-    RestResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId);
-
     RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
     RestResult<CompetitionInviteResource> getInvite(String inviteHash);
@@ -43,8 +41,6 @@ public interface CompetitionInviteRestService {
     RestResult<Void> deleteInvite(String email, long competitionId);
 
     RestResult<Void> deleteAllInvites(long competitionId);
-
-    RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
     RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
 }
