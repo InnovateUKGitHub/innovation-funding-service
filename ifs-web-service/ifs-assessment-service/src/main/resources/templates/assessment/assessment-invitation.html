@@ -74,7 +74,7 @@
                         </label>
 
                         <div class="panel js-hidden" id="reject-application">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')}? error">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
                                 <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
                                     Please select a reason for rejecting the competition
                                     <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
@@ -90,7 +90,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
                                 <label class="form-label" th:for="${#ids.next('rejectComment')}">
                                     Use this space to provide more information
                                     <th:block th:if="${#fields.hasErrors('rejectComment')}">

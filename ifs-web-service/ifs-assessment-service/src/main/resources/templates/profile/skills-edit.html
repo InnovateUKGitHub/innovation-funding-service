@@ -37,7 +37,7 @@
             </ul>
 
             <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin">
-                <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
                     <label class="form-label" th:for="skillAreas">
                         <span class="heading-medium">Skill areas</span>
                         <th:block th:if="${#fields.hasErrors('skillAreas')}">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Assessor type</span>

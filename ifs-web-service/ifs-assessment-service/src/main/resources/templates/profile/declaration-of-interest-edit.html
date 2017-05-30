@@ -29,7 +29,7 @@
             <form th:action="@{/profile/declaration/edit}" method="post" th:object="${form}" novalidate="novalidate">
                 <h3 class="heading-medium no-margin">Principal employer and role</h3>
 
-                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('principalEmployer')}? error">
+                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'form-group-error'">
                     <label class="form-label-bold" th:for="${#ids.next('principalEmployer')}">
                         Prinicipal employer
                         <th:block th:if="${#fields.hasErrors('principalEmployer')}">
@@ -41,7 +41,7 @@
                            th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.principalEmployer.required}" />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('role')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'form-group-error'">
                     <label class="form-label-bold" th:for="${#ids.next('role')}">
                         Role
                         <th:block th:if="${#fields.hasErrors('role')}">
@@ -53,7 +53,7 @@
                            th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.role.required}" />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')} ? 'form-group-error'">
                     <label class="form-label-bold"  th:for="${#ids.next('professionalAffiliations')}">
                         List any bodies you are currently a member of as part of your profession.
                         <th:block th:if="${#fields.hasErrors('professionalAffiliations')}">
@@ -63,7 +63,7 @@
                     <textarea class="form-control width-full" cols="30" rows="3" th:field="*{professionalAffiliations}" th:errorclass="form-control-error"></textarea>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('hasAppointments')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hasAppointments')} ? 'form-group-error'">
                     <fieldset class="inline">
                         <legend class="heading-small">
                             Do you hold any appointments or directorships?
@@ -102,7 +102,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="appointment,appointmentStat: *{appointments}">
-                                <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}? error">
+                                <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')} ? 'form-group-error'">
                                     <label>
                                         <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}">
                                             <span class="error-message"
@@ -117,7 +117,7 @@
                                            th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.organisation.required}" />
 
                                 </td>
-                                <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}? error">
+                                <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')} ? 'form-group-error'">
                                     <label>
                                             <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}">
                                                 <span class="error-message"
@@ -144,7 +144,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('hasFinancialInterests')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hasFinancialInterests')} ? 'form-group-error'">
                     <fieldset class="inline">
                         <legend class="heading-small">
                             Do you have any other financial interests?
@@ -174,7 +174,7 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group js-hidden" id="toggle-interest" th:classappend="${#fields.hasErrors('financialInterests')}? error">
+                <div class="form-group js-hidden" id="toggle-interest" th:classappend="${#fields.hasErrors('financialInterests')} ? 'form-group-error'">
                     <fieldset class="inline">
                         <label class="form-label-bold">
                             Please describe these interests
@@ -191,7 +191,7 @@
 
                 <h3 class="heading-medium">Family member affiliations</h3>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyAffiliations')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyAffiliations')} ? 'form-group-error'">
                     <fieldset class="inline">
                         <legend class="heading-small">
                             Do any of your immediate family members have any appointments or directorships?
@@ -234,7 +234,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}">
-                                <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}? error">
+                                <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'form-group-error'">
                                     <label>
                                             <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
                                                 <span class="error-message"
@@ -248,7 +248,7 @@
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
                                 </td>
-                                <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}? error">
+                                <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'form-group-error'">
                                     <label>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
                                             <span class="error-message"
@@ -262,7 +262,7 @@
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
                                 </td>
-                                <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}? error">
+                                <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'form-group-error'">
                                     <label>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
                                             <span class="error-message"
@@ -288,7 +288,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyFinancialInterests')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyFinancialInterests')} ? 'form-group-error'">
                     <fieldset class="inline">
                         <legend class="heading-small">
                             Do any of your immediate family members have any other financial interests?
@@ -315,7 +315,7 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')}? error">
+                <div class="form-group js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')} ? 'form-group-error'">
                     <fieldset class="inline">
                         <label class="form-label-bold">Please describe these interests
                             <th:block th:if="${#fields.hasErrors('familyFinancialInterests')}">
@@ -329,7 +329,7 @@
                     </fieldset>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('accurateAccount')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('accurateAccount')} ? 'form-group-error'">
                     <fieldset>
                         <legend>
                             <span class="visuallyhidden">Confirm declaration of interest</span>

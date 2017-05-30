@@ -131,7 +131,7 @@
             </ul>
         </div>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')}? error">
+        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'form-group-error'">
             <label class="form-label" th:for="rejectReason">
                 Please select a reason for rejecting the application
                 <th:block th:if="${#fields.hasErrors('rejectReason')}">
@@ -149,7 +149,7 @@
                         th:text="${reason.displayLabel}">Conflict of interest</option>
             </select>
         </div>
-        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
+        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
             <label class="form-label" th:for="rejectComment">
                 Use this space to provide more information
                 <th:block th:if="${#fields.hasErrors('rejectComment')}">

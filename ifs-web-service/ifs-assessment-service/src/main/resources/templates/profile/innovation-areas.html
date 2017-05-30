@@ -23,7 +23,7 @@
             <p>Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
 
             <form th:action="@{/profile/skills}" method="post" th:object="${form}" class="extra-margin">
-                <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
                     <label class="form-label" th:for="skillAreas">
                         <span class="heading-large">Skill areas</span>
                         <th:block th:if="${#fields.hasErrors('skillAreas')}">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')}? error">
+                <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
                     <fieldset class="inline">
                         <legend>
                             <span class="heading-large">Assessor type</span>

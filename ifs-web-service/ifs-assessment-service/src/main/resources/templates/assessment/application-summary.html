@@ -36,7 +36,7 @@
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <div class="question" th:id="form-input-fundingConfirmation">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')}? error">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')} ? 'form-group-error'">
                         <fieldset class="inline">
                             <legend>
                                 <span class="form-label-bold">Do you believe that this application is suitable for funding?</span>
@@ -75,7 +75,7 @@
                 <fieldset>
                     <legend class="visuallyhidden">Question feedback</legend>
                     <div class="question" th:id="form-input-feedback">
-                        <div class="form-group" th:classappend="${#fields.hasErrors('feedback')}? error">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('feedback')} ? 'form-group-error'">
                             <label class="form-label form-label-bold" th:for="feedback">
                                 Your feedback
                                 <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
@@ -103,7 +103,7 @@
                     </div>
 
                     <div class="question" th:id="form-input-comments">
-                        <div class="form-group" th:classappend="${#fields.hasErrors('comment')}? error">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('comment')} ? 'form-group-error'">
                             <label class="form-label form-label-bold" th:for="comment">
                                 Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                                 <th:block th:if="${#fields.hasErrors('comment')}">

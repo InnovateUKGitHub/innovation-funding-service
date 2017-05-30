@@ -23,7 +23,7 @@
 
             <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
                 <h2 class="heading-medium">Your details</h2>
-                <div th:class="${#fields.hasErrors('firstName')}? 'form-group form-group-error':'form-group'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
                     <label class="form-label" th:for="firstName">
                         <span class="form-label-bold">First name</span>
                         <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -43,7 +43,7 @@
                                     data-invalid-errormessage=#{validation.standard.firstname.invalid}" />
                 </div>
 
-                <div th:class="${#fields.hasErrors('lastName')}? 'form-group form-group-error':'form-group'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
                     <label class="form-label" for="lastName">
                         <span class="form-label-bold">Last name</span>
                         <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -67,7 +67,7 @@
 
                 <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
-                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
+                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
                     <label class="form-label" th:for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application.</span>

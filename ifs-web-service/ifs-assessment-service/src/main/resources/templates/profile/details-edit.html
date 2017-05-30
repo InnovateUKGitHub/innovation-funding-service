@@ -123,7 +123,7 @@
                     </div>
                 </fieldset>
 
-                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
+                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
                     <label class="form-label" th:for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application.</span>
