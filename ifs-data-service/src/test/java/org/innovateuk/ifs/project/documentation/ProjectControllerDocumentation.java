@@ -147,28 +147,6 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         responseFields(projectTeamStatusResourceFields)));
     }
 
-    @Test
-    public void getPartnerOrganisation() throws Exception {
-        PartnerOrganisationResource partnerOrgResource = new PartnerOrganisationResource();
-        when(partnerOrganisationServiceMock.getPartnerOrganisation(123L, 234L)).thenReturn(serviceSuccess(partnerOrgResource));
-
-        mockMvc.perform(get("/project/{projectId}/partner/{organisationId}", 123L, 234L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(partnerOrgResource))).
-                andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to get the partner organisation of"),
-                                parameterWithName("organisationId").description("Id of the organisation to get the partner organisation of")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").description("Id of partner organisation"),
-                                fieldWithPath("organisation").description("Organisation Id"),
-                                fieldWithPath("organisationName").description("Organisation name"),
-                                fieldWithPath("leadOrganisation").description("If the partner organisation is the lead partner"),
-                                fieldWithPath("project").description("Project id"))
-                ));
-    }
-
     private ProjectTeamStatusResource buildTeamStatus(){
         ProjectPartnerStatusResource projectLeadStatusResource = newProjectPartnerStatusResource().withIsLeadPartner(true).build();
         List<ProjectPartnerStatusResource> partnerStatuses = newProjectPartnerStatusResource().build(3);

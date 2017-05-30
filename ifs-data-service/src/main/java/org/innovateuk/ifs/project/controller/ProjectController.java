@@ -87,9 +87,4 @@ public class ProjectController {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
     }
 
-    @GetMapping("/{projectId}/partner/{organisationId}")
-    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(@PathVariable(value = "projectId") Long projectId,
-                                                                          @PathVariable(value = "organisationId") Long organisationId) {
-        return partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).toGetResponse();
-    }
 }

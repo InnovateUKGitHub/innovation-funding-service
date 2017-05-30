@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -18,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -200,12 +200,12 @@ public class ProjectServiceImplTest {
     public void testGetPartnerOrganisation() {
         PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
         when(projectRestService.getPartnerOrganisation(123L, 234L)).thenReturn(restSuccess(partnerOrg));
-        assertTrue(service.getPartnerOrganisation(123L, 234L).isPresent());
+        assertTrue(service.getPartnerOrganisationOrThrowException(123L, 234L).equals(partnerOrg));
     }
 
-    @Test
+    @Test(expected = ObjectNotFoundException.class)
     public void testGetPartnerOrganisationNotFound() {
-        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenReturn(restSuccess(null, HttpStatus.NOT_FOUND));
-        assertFalse(service.getPartnerOrganisation(123L, 234L).isPresent());
+        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenThrow(new ObjectNotFoundException());
+        service.getPartnerOrganisationOrThrowException(123L, 234L);
     }
 }

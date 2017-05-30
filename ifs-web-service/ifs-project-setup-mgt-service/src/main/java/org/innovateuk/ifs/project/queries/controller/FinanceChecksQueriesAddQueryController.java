@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.queries.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -41,7 +40,6 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
@@ -83,15 +81,12 @@ public class FinanceChecksQueriesAddQueryController {
                           UserResource loggedInUser,
                           HttpServletRequest request,
                           HttpServletResponse response) {
-        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
-            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
-            model.addAttribute("model", viewModel);
-            model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddQueryForm()));
-            return NEW_QUERY_VIEW;
-        } else {
-            throw new ObjectNotFoundException("Cannot view query as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
-        }
+        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
+        model.addAttribute("model", viewModel);
+        model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksQueriesAddQueryForm()));
+        return NEW_QUERY_VIEW;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -189,16 +184,13 @@ public class FinanceChecksQueriesAddQueryController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
-            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
-            if (attachments.contains(attachmentId)) {
-                return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
-            } else {
-                throw new ForbiddenActionException();
-            }
+        if (attachments.contains(attachmentId)) {
+            return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
         } else {
-            throw new ObjectNotFoundException("Cannot view query attachment as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
+            throw new ForbiddenActionException();
         }
     }
 
@@ -234,13 +226,10 @@ public class FinanceChecksQueriesAddQueryController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
-            loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
-            deleteCookies(response, projectId, organisationId);
-            return redirectTo(queriesListView(projectId, organisationId, querySection));
-        } else {
-            throw new ObjectNotFoundException("Cannot cancel query as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
-        }
+        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
+        deleteCookies(response, projectId, organisationId);
+        return redirectTo(queriesListView(projectId, organisationId, querySection));
     }
 
     private FinanceChecksQueriesAddQueryViewModel populateQueriesViewModel(Long projectId, Long organisationId, String querySection, List<Long> attachmentFileIds) {

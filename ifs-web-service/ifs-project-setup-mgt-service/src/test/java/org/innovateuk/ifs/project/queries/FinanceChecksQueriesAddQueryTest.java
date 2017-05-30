@@ -4,6 +4,7 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
@@ -69,7 +70,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     public void setup() {
         super.setUp();
         this.setupCookieUtil();
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.of(partnerOrg));
+        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
@@ -113,7 +114,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewQueryProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility"))
                 .andExpect(status().isNotFound())
@@ -308,7 +309,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadAttachmentFailsProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/attachment/1?query_section=Eligibility"))
                 .andExpect(status().isNotFound())
@@ -350,7 +351,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testCancelNewQueryFailsProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility"))
                 .andExpect(status().isNotFound())

@@ -43,5 +43,5 @@ public interface ProjectService {
 
     Boolean isProjectManager(Long userId, Long projectId);
 
-    Optional<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
+    PartnerOrganisationResource getPartnerOrganisationOrThrowException(Long projectId, Long organisationId);
 }

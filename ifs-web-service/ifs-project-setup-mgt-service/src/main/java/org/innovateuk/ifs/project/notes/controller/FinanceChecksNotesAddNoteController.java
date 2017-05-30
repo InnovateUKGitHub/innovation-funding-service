@@ -86,15 +86,12 @@ public class FinanceChecksNotesAddNoteController {
                               HttpServletRequest request,
                               HttpServletResponse response) {
 
-        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
-            saveOriginCookie(response, projectId, organisationId, loggedInUser.getId());
-            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
-            model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksNotesAddNoteForm()));
-            return NEW_NOTE_VIEW;
-        } else {
-            throw new ObjectNotFoundException("Cannot view note as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
-        }
+        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        saveOriginCookie(response, projectId, organisationId, loggedInUser.getId());
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
+        model.addAttribute(FORM_ATTR, loadForm(request, projectId, organisationId).orElse(new FinanceChecksNotesAddNoteForm()));
+        return NEW_NOTE_VIEW;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
@@ -193,17 +190,14 @@ public class FinanceChecksNotesAddNoteController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
-            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            if (attachments.contains(attachmentId)) {
-                ByteArrayResource fileContent = financeCheckService.downloadFile(attachmentId);
-                FileEntryResource fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
-                return getFileResponseEntity(fileContent, fileInfo);
-            } else {
-                throw new ObjectNotFoundException("Cannot find note attachment " + attachmentId + " for organisation " + organisationId + " and project project " + projectId, emptyList());
-            }
+        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        if (attachments.contains(attachmentId)) {
+            ByteArrayResource fileContent = financeCheckService.downloadFile(attachmentId);
+            FileEntryResource fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
+            return getFileResponseEntity(fileContent, fileInfo);
         } else {
-            throw new ObjectNotFoundException("Cannot view note attachment as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
+            throw new ObjectNotFoundException("Cannot find note attachment " + attachmentId + " for organisation " + organisationId + " and project project " + projectId, emptyList());
         }
     }
 
@@ -241,15 +235,12 @@ public class FinanceChecksNotesAddNoteController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        if (projectService.getPartnerOrganisation(projectId, organisationId).isPresent()) {
-            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
-            attachments.forEach(financeCheckService::deleteFile);
-            deleteCookies(response, projectId, organisationId);
-            return redirectToNotePage(projectId, organisationId);
-        } else {
-            throw new ObjectNotFoundException("Cannot cancel note as organisation " + organisationId + " is not valid for project " + projectId, emptyList());
+        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        attachments.forEach(financeCheckService::deleteFile);
+        deleteCookies(response, projectId, organisationId);
+        return redirectToNotePage(projectId, organisationId);
         }
-    }
 
     private FinanceChecksNotesAddNoteViewModel populateNoteViewModel(Long projectId, Long organisationId, List<Long> attachmentFileIds) {
 

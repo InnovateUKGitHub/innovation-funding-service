@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,18 +23,19 @@ import static org.mockito.Mockito.*;
 public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityTest<PartnerOrganisationService> {
 
     private PartnerOrganisationPermissionRules partnerOrganisationPermissionRules;
-    private static List<PartnerOrganisationResource> partnerOrganisations = newPartnerOrganisationResource().withProject(123L).build(3);;
+    private static List<PartnerOrganisationResource> partnerOrganisations;
 
     @Before
     public void lookupPermissionRules() {
         partnerOrganisationPermissionRules = getMockPermissionRulesBean(PartnerOrganisationPermissionRules.class);
+        partnerOrganisations = newPartnerOrganisationResource().withProject(123L).build(3);
     }
 
     @Test
     public void testGetProjectPartnerOrganisationsIsNotOpenToAll(){
         assertPostFilter(classUnderTest.getProjectPartnerOrganisations(123L).getSuccessObject(), () -> {
             verify(partnerOrganisationPermissionRules, times(3)).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
-            verify(partnerOrganisationPermissionRules, times(3)).internalUsersCanViewProjects(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+            verify(partnerOrganisationPermissionRules, times(3)).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
             verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         });
     }
@@ -42,8 +44,31 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     public void testCompAdminCanSeeAllPartnerOrganisationsForAnyProject(){
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
         ServiceResult<List<PartnerOrganisationResource>> result = classUnderTest.getProjectPartnerOrganisations(123L);
+        verify(partnerOrganisationPermissionRules, times(3)).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+        verify(partnerOrganisationPermissionRules, times(3)).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+        verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         assertTrue(result.isSuccess());
-        //assertEquals(3, result.getSuccessObject().size());
+    }
+
+    @Test
+    public void testGetPartnerOrganisationIsNotOpenToAll(){
+        assertAccessDenied(() -> classUnderTest.getPartnerOrganisation(123L, 234L),
+                () -> {
+                    verify(partnerOrganisationPermissionRules).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+                    verify(partnerOrganisationPermissionRules).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(partnerOrganisationPermissionRules);
+                });
+    }
+
+    @Test
+    @Ignore
+    public void testCompAdminCanSeePartnerOrganisation(){
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
+        ServiceResult<PartnerOrganisationResource> result = classUnderTest.getPartnerOrganisation(123L, 234L);
+        verify(partnerOrganisationPermissionRules).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+        verify(partnerOrganisationPermissionRules).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+        verifyNoMoreInteractions(partnerOrganisationPermissionRules);
+        assertTrue(result.isSuccess());
     }
 
     @Override

@@ -111,16 +111,5 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(get("/project/{id}/project-manager", project1Id))
                 .andExpect(status().isNotFound());
     }
-
-    @Test
-    public void testGetProjectPartner() throws Exception {
-        Long projectId = 123L;
-        Long organisationId = 234L;
-        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
-        when(partnerOrganisationServiceMock.getPartnerOrganisation(projectId, organisationId)).thenReturn(serviceSuccess(partnerOrg));
-        mockMvc.perform(get("/project/{projectId}/partner/{organisationId}", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(partnerOrg)));
-    }
 }
 
