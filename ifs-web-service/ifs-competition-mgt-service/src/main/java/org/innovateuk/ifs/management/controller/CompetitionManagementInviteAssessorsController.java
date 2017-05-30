@@ -212,20 +212,22 @@ public class CompetitionManagementInviteAssessorsController {
     // Invite all selected users
     @PostMapping(value = "/find/addSelected")
     public String addSelectedAssessorsToInviteList(Model model,
-                                          @PathVariable("competitionId") long competitionId,
-                                          @RequestParam(defaultValue = "0") int page,
-                                          @RequestParam Optional<Long> innovationArea,
-                                          @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
-                                          ValidationHandler validationHandler,
-                                          HttpServletRequest request,
+                                                   @PathVariable("competitionId") long competitionId,
+                                                   @RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam Optional<Long> innovationArea,
+                                                   @ModelAttribute(SELECTION_FORM) AssessorSelectionForm selectionForm,
+                                                   ValidationHandler validationHandler,
+                                                   HttpServletRequest request,
                                                    HttpServletResponse response) {
 
-        AssessorSelectionForm storedSelectionForm = getAssessorSelectionFormFromCookie(request).orElse(selectionForm);
+        AssessorSelectionForm submittedSelectionForm = getAssessorSelectionFormFromCookie(request)
+                .filter(form -> !form.getAssessorEmails().isEmpty())
+                .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             // Could be possibly be optimised in similar fashion to INFUND-4105
-            storedSelectionForm.getAssessorEmails().stream().forEach(email -> {
+            submittedSelectionForm.getAssessorEmails().stream().forEach(email -> {
                 ServiceResult<CompetitionInviteResource> updateResult = competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).toServiceResult();
                 validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors());
             });
