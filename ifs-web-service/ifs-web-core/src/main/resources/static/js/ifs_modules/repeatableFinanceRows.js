@@ -18,6 +18,9 @@ IFS.core.repeatableFinanceRows = (function () {
       jQuery('body').on('persistUnsavedRow', function (event, name, newFieldId) {
         IFS.core.repeatableFinanceRows.persistUnsavedRow(name, newFieldId)
       })
+      var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="">Remove</button>'
+      jQuery('[data-repeatable-row] .buttonplaceholder').replaceWith(buttonHtml)
+      jQuery('body').trigger('updateSerializedFormState')
     },
     getAjaxUrl: function (el) {
       var inst = jQuery(el)
@@ -40,21 +43,28 @@ IFS.core.repeatableFinanceRows = (function () {
       return url
     },
     addRow: function (el, event) {
+      var addRowButton = jQuery(el)
       var url = IFS.core.repeatableFinanceRows.getAjaxUrl(el)
       if (url.length) {
         event.preventDefault()
         jQuery.ajaxProtected({
           url: url,
           beforeSend: function () {
-            jQuery(el).before('<span class="form-hint">Adding a new row</span>')
+            addRowButton.before('<span class="form-hint">Adding a new row</span>')
           },
           cache: false
         }).done(function (data) {
-          var target = jQuery(el).attr('data-repeatable-rowcontainer')
-          jQuery(el).prev().remove()
-          jQuery(target).append(data)
+          var target = jQuery(addRowButton.attr('data-repeatable-rowcontainer'))
+          var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="">Remove</button>'
+          // find the .buttonplaceholder span and add empty valued remove_cost as it hasn't been persisted yet but can be removed client side
+          // (we don't do this on the server because of non-js situation)
+          addRowButton.prevAll('.form-hint').remove() // remove hint text
+          data = jQuery(data)
+          data.find('.buttonplaceholder').replaceWith(buttonHtml)
+          target.append(data)
+
           jQuery('body').trigger('updateSerializedFormState')
-          var appendRow = jQuery(data).find('[type="number"][name],[type="text"][name],[type="email"][name],[type="radio"][name],textarea[name]').first().attr('name')
+          var appendRow = data.find('[type="number"][name],[type="text"][name],[type="email"][name],[type="radio"][name],textarea[name]').first().attr('name')
           if (typeof (appendRow) !== 'undefined') {
             jQuery('[name=' + appendRow + ']').focus()
           }
@@ -62,18 +72,28 @@ IFS.core.repeatableFinanceRows = (function () {
       }
     },
     removeRow: function (el, event) {
-      var url = IFS.core.repeatableFinanceRows.getAjaxUrl(el)
-      if (url.length) {
-        event.preventDefault()
-        jQuery.ajaxProtected({
-          url: url
-        }).done(function (data) {
-          data = jQuery.parseJSON(data)
-          if (data.status === 'OK') {
-            jQuery('[data-repeatable-row=' + jQuery(el).val() + ']').remove()
-            jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState')
-          }
-        })
+      var removeButton = jQuery(el)
+      var rowValue = removeButton.val()
+      if (rowValue !== '') {
+        var url = IFS.core.repeatableFinanceRows.getAjaxUrl(el)
+        if (url.length) {
+          event.preventDefault()
+          jQuery.ajaxProtected({
+            url: url
+          }).done(function (data) {
+            data = jQuery.parseJSON(data)
+            if (data.status === 'OK') {
+              jQuery('[data-repeatable-row=' + rowValue + ']').remove()
+              jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState')
+            }
+          })
+        }
+      } else {
+        var closestRow = removeButton.closest('[data-repeatable-row]')
+        if (closestRow.length) {
+          jQuery('[data-repeatable-row=' + closestRow.attr('data-repeatable-row') + ']').remove()
+          jQuery('body').trigger('updateSerializedFormState')
+        }
       }
     },
     backForwardCacheReload: function () {
@@ -106,10 +126,9 @@ IFS.core.repeatableFinanceRows = (function () {
       })
       // add the button
       var row = jQuery('[data-repeatable-row="' + unsavedCostId + '"]')
-      var button = row.find('.buttonplaceholder')
+      var button = row.find('.js-remove-row')
       if (button.length) {
-        var buttonHtml = '<button type="submit" name="remove_cost" class="buttonlink js-remove-row" value="' + newFieldId + '">Remove</button>'
-        row.find('.buttonplaceholder').replaceWith(buttonHtml)
+        button.val(newFieldId)
         // set the repeatable row id for referencing the removal, leave the original id as that is used for the promise
         row.attr('data-repeatable-row', newFieldId)
       }
