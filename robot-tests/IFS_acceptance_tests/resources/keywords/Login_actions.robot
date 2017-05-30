@@ -80,8 +80,8 @@ Close any open browsers
 
 the guest user enters the log in credentials
     [Arguments]    ${email}    ${password}
-    Input Text    id=username    ${USER_NAME}
-    Input Password    id=password    ${PASSWORD}
+    Input Text    id=username    ${email}
+    Input Password    id=password    ${password}
 
 the user cannot login with their new details
     [Arguments]    ${email}    ${password}
