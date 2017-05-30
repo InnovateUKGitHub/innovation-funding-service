@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project;
 
-import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
 import org.junit.Before;
 
@@ -11,11 +11,11 @@ import static org.mockito.Mockito.verify;
 
 public abstract class BaseProjectSetupControllerSecurityTest<ControllerType> extends BaseControllerSecurityTest<ControllerType> {
 
-    private ProjectSetupSectionsPermissionRules permissionRules;
+    private SetupSectionsPermissionRules permissionRules;
 
     @Before
     public void lookupPermissionRules() {
-        permissionRules = getMockPermissionRulesBean(ProjectSetupSectionsPermissionRules.class);
+        permissionRules = getMockPermissionRulesBean(SetupSectionsPermissionRules.class);
     }
 
     protected void assertSecured(Runnable invokeControllerFn) {
@@ -25,5 +25,5 @@ public abstract class BaseProjectSetupControllerSecurityTest<ControllerType> ext
         );
     }
 
-    protected abstract Consumer<ProjectSetupSectionsPermissionRules> getVerification();
+    protected abstract Consumer<SetupSectionsPermissionRules> getVerification();
 }

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.junit.Test;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
@@ -48,19 +46,6 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         mockMvc.perform(get("/project/2"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(testProjectResource2)));
-    }
-
-    @Test
-    public void projectControllerShouldReturnStatusByProjectId() throws Exception {
-        Long projectId = 2L;
-
-        ProjectStatusResource projectStatusResource = newProjectStatusResource().build();
-
-        when(projectStatusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
-
-        mockMvc.perform(get("/project/{id}/status", projectId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(projectStatusResource)));
     }
 
     @Test

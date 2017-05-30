@@ -184,7 +184,7 @@
     <th:block th:unless="${hideAlerts}">
         <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}"/>
         <th:block th:insert="question-type/form-elements :: assign-buttons"
-                  th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+                  th:unless="${readonly} or ${question.isAssignEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
     </th:block>
 
     <div th:unless="${readonly} or ${hideAlerts}" class="textarea-header">
@@ -280,8 +280,7 @@
 <!-- ========================= Assign / reassign buttons =========================== -->
 <th:block th:fragment="ready-for-review">
   <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.id == questionAssignee?.assigneeUserId}">
-    <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
-            type="submit"
+    <button type="submit"
             name="assign_question"
             th:value="${question.id}+'_'+${questionAssignee?.assignedBy}"
             th:class="'buttonlink'">Assign to lead for review
@@ -425,13 +424,15 @@
 <th:block th:fragment="form-mark-as-complete-buttons">
     <th:block th:unless="${appIsClosed}">
         <button th:unless="${readonly}"
-                th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                th:if="${markedAsComplete?.contains(question.id)}"
                 type="submit"
                 name="mark_as_incomplete"
                 th:value="${question.getId()}"
                 th:class="${costCategory!=null} ? 'button' : 'buttonlink'">Edit
         </button>
-        <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
+        <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)
+                            and (questionAssignee?.assigneeUserId == currentUser?.getId()
+                            or (questionAssignee?.getAssignee() == null)))}"
             type="submit"
             name="mark_as_complete"
             class="buttonlink"

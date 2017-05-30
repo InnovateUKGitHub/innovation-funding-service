@@ -16,9 +16,9 @@ Search for applications
     [Documentation]    INFUND-8061
     Given The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
     And the user clicks the button/Link    jQuery=a:contains("Assessor management: Assignments")
-    When The user enters text to a text field    css=#filterSearch    136
+    When The user enters text to a text field    css=#filterSearch    ${CLOSED_COMPETITION_APPLICATION}
     and The user clicks the button/link    jQuery=button:contains(Filter)
-    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("136")
+    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("${CLOSED_COMPETITION_APPLICATION}")
     And The user clicks the button/link    link=Clear all filters
     then the user should not see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("137")
 

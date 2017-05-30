@@ -34,7 +34,7 @@ Comp Admin starts a new Competition
     Then the user fills in the CS Initial details    ${compWithoutGrowth}    ${tomorrowday}    ${month}    ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${tomorrowday}    ${dayAfterTomorrow}    ${twoDaysAfterTomorrow}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones  ${tomorrowday}  ${dayAfterTomorrow}  ${twoDaysAfterTomorrow}  ${month}  ${nextMonth}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -121,7 +121,7 @@ Once the project growth table is selected
     Then the user fills in the Open-All Initial details  ${compWITHGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${tomorrowday}    ${dayAfterTomorrow}    ${twoDaysAfterTomorrow}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones  ${tomorrowday}  ${dayAfterTomorrow}  ${twoDaysAfterTomorrow}  ${month}  ${nextMonth}  ${nextyear}
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
@@ -357,6 +357,8 @@ Custom Suite Setup
     Set suite variable    ${twoDaysAfterTomorrow}
     ${month} =    get tomorrow month
     set suite variable    ${month}
+    ${nextMonth} =  get next month
+    set suite variable  ${nextMonth}
     ${year} =    get tomorrow year
     Set suite variable    ${year}
     ${nextyear} =    get next year

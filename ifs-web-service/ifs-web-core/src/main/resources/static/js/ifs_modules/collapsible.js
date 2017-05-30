@@ -9,26 +9,31 @@ IFS.core.collapsible = (function () {
     settings: {
       collapsibleEl: '.collapsible',
       collapsibleTabs: '.tabs section',
-      statelessClass: 'collapsible-stateless'
+      statelessClass: 'collapsible-stateless',
+      expandedClass: 'collapsible-expanded'
     },
     init: function (type) {
       s = this.settings
       s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
       // if this has to be more dynamically updated in the future we can add a custom event
       jQuery(s.collapsible).each(function () {
-        var stateless = jQuery(this).hasClass(s.statelessClass)
-        IFS.core.collapsible.initCollapsibleHTML(this, stateless)
+        var $el = jQuery(this)
+        var stateless = $el.hasClass(s.statelessClass)
+        var expanded = $el.hasClass(s.expandedClass)
+
+        IFS.core.collapsible.initCollapsibleHTML(this, stateless, expanded)
+
         jQuery(this).on('click', 'h2 > [aria-controls], h3 > [aria-controls]', function () {
           IFS.core.collapsible.toggleCollapsible(this, stateless)
         })
       })
     },
-    initCollapsibleHTML: function (el, stateless) {
+    initCollapsibleHTML: function (el, stateless, expanded) {
       jQuery(el).children('h2,h3').each(function () {
         var inst = jQuery(this)
         var id = 'collapsible-' + index   // create unique id for a11y relationship
         // don't save state if we've asked it not to
-        var loadstate = !stateless && IFS.core.collapsible.getLoadstateFromCookie(id)
+        var loadstate = expanded || (!stateless && IFS.core.collapsible.getLoadstateFromCookie(id))
 
         // wrap the content and make it focusable
         inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')

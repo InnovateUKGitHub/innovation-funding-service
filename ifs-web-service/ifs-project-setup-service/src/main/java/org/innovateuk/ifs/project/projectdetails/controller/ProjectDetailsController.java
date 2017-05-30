@@ -26,9 +26,10 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelper;
+import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -75,6 +76,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     private ProjectService projectService;
 
     @Autowired
+    private StatusService statusService;
+
+    @Autowired
     private ProjectDetailsService projectDetailsService;
 
     @Autowired
@@ -104,8 +108,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
         boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
 
-        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
-        ProjectSetupSectionAccessibilityHelper statusAccessor = new ProjectSetupSectionAccessibilityHelper(teamStatus);
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
+        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
         boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
