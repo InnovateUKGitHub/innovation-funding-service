@@ -13,7 +13,7 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${model.counts})" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${model.counts}, supportView=false)" />
 
     <section>
         <h2 class="heading-medium"
