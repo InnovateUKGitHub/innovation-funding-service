@@ -3,6 +3,9 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.notifications.builders.NotificationBuilder;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -13,6 +16,7 @@ import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.junit.Test;
+import org.omg.PortableInterceptor.ACTIVE;
 
 import static java.util.Optional.of;
 import static org.junit.Assert.assertSame;
@@ -73,6 +77,20 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isSuccess());
         assertSame(userResource, result.getSuccessObject());
         verify(userRepositoryMock, only()).findByEmailAndStatus(email, UserStatus.INACTIVE);
+    }
+
+    @Test
+    public void testSendPasswordResetNotification() {
+        final UserResource user = UserResourceBuilder.newUserResource().withStatus(UserStatus.ACTIVE).build();
+        Notification notification = NotificationBuilder.newNotification().withMessageKey(UserServiceImpl.Notifications.RESET_PASSWORD).build();
+
+        when(notificationServiceMock.sendNotification(notification, NotificationMedium.EMAIL)).thenReturn(ServiceResult.serviceSuccess());
+
+        ServiceResult<Void> result = service.sendPasswordResetNotification(user);
+
+        verify(notificationServiceMock).sendNotification(any(), NotificationMedium.EMAIL);
+
+        assertTrue(result.isSuccess());
     }
 
     @Override
