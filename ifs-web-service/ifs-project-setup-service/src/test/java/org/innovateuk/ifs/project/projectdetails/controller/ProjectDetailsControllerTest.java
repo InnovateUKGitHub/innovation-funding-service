@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateFor
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -111,7 +111,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
@@ -163,7 +163,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(false));
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
@@ -816,7 +816,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
-        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));

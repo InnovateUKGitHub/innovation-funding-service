@@ -61,27 +61,4 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
             }
         });
     }
-
-    @Test
-    public void testPartnersCanViewTeamStatus() {
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-        setupUserAsPartner(project, user);
-        assertTrue(rules.partnersCanViewTeamStatus(project, user));
-    }
-
-    @Test
-    public void testNonPartnersCannotViewTeamStatus() {
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-        setupUserNotAsPartner(project, user);
-        assertFalse(rules.partnersCanViewTeamStatus(project, user));
-    }
-
-    @Test
-    public void testInternalUsersCanViewTeamStatus() {
-        ProjectResource project = newProjectResource().build();
-        assertTrue(rules.internalUsersCanViewTeamStatus(project, compAdminUser()));
-        assertTrue(rules.internalUsersCanViewTeamStatus(project, projectFinanceUser()));
-    }
 }
