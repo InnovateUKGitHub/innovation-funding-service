@@ -11,17 +11,6 @@ Resource            ../../../resources/defaultResources.robot
 
 
 *** Test Cases ***
-User can choose Business organisation type and receive the correct email when both organisation types are allowed
-    [Documentation]    INFUND-669 INFUND-1904 INFUND-1920 INFUND-1785 INFUND-9280
-    [Tags]    HappyPath    SmokeTest    Email
-    Given the user fills out the organisation form for a competition with choice for organisation types
-    And the user submits the organisation details form
-    And the user chooses the Business organisation type
-    And the user confirms the organisation details
-    When the user verifies email    Phil    Smith    ${test_mailbox_one}+business@gmail.com
-    Then the user directed to correct dashboard    ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    and the user reads his email and clicks the link    ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
-
 User can choose RTO organisation when both organisation types are allowed
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1785
     [Tags]    HappyPath    SmokeTest
@@ -91,10 +80,3 @@ the user opens a competition and fills out the organisation form
     the user clicks the button/link    Link=HIVE IT LIMITED
     the user selects the checkbox    address-same
 
-the user directed to correct dashboard
-    [Arguments]    ${Application_name}
-    the user should see the text in the page    Your dashboard
-    the user clicks the button/link    link=${Application_name}
-    the user clicks the button/link    jQuery=a:contains("Begin application")
-    the user should see the text in the page    Application overview
-    logout as user
