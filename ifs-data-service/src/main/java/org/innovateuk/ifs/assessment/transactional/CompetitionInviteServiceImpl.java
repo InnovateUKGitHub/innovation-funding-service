@@ -132,7 +132,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         INVITE_ASSESSOR
     }
 
-    // TODO possibly don't need this anymore as we can resend
+    // TODO remove as part of IFS-36
     @Override
     public ServiceResult<AssessorInviteToSendResource> getCreatedInviteToSend(long inviteId) {
         return getById(inviteId).andOnSuccess(invite -> {
@@ -169,7 +169,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             return serviceSuccess(resource);
         });
     }
-
 
     @Override
     public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {

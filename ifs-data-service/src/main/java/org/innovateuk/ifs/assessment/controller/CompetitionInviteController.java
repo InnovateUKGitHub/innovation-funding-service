@@ -25,11 +25,26 @@ public class CompetitionInviteController {
     @Autowired
     private CompetitionInviteService competitionInviteService;
 
+    // TODO we might be able to remove this as part of IFS-39
+    /**
+     * Gets the {@link AssessorInviteToSendResource} with the given {@code inviteId} only if it's in the
+     * {@link org.innovateuk.ifs.invite.constant.InviteStatus#CREATED} state.
+     *
+     * @param inviteId the id of the {@link AssessorInviteToSendResource} to get
+     * @return the {@link AssessorInviteToSendResource} with the given {@code inviteId} only if it's in the
+     * {@link org.innovateuk.ifs.invite.constant.InviteStatus#CREATED} state.
+     */
     @GetMapping("/getCreatedInviteToSend/{inviteId}")
     public RestResult<AssessorInviteToSendResource> getCreatedInviteToSend(@PathVariable long inviteId) {
         return competitionInviteService.getCreatedInviteToSend(inviteId).toGetResponse();
     }
 
+    /**
+     * Gets the {@link AssessorInviteToSendResource} with the given {@code inviteId} irrespective of it's state.
+     *
+     * @param inviteId the id of the {@link AssessorInviteToSendResource} to get
+     * @return the {@link AssessorInviteToSendResource} with the given {@code inviteId}
+     */
     @GetMapping("/getInviteToSend/{inviteId}")
     public RestResult<AssessorInviteToSendResource> getInviteToSend(@PathVariable long inviteId) {
         return competitionInviteService.getInviteToSend(inviteId).toGetResponse();
