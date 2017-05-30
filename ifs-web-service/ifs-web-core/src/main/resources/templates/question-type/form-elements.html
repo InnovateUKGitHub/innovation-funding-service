@@ -180,32 +180,8 @@
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <th:block th:fragment="form-textarea-wrapped(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-
-    <th:block th:unless="${hideAlerts}">
-        <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}"/>
-        <th:block th:insert="question-type/form-elements :: assign-buttons"
-                  th:unless="${readonly} or ${question.isAssignEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
-    </th:block>
-
-    <div th:unless="${readonly} or ${hideAlerts}" class="textarea-header">
-
-        <th:block th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-            <div class="success-alert assignee">This question is <strong>marked as complete</strong></div>
-        </th:block>
-
-    </div>
-
-    <div th:class="'textarea-wrapped ' +
-                   (${readonly} ? '' : (
-                            (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
-                                (${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))} ? 'assigned-to-me ' : '')
-                            )
-                       )
-                       + ' ' +
-                       (${formInput.getWordCount() == 0} ? '' : 'word-count')
-                   )
-                  "
-
+    <div class="textarea-wrapped"
+         th:classappend="${model.complete ? 'marked-as-complete' : ''} + ' ' + ${model.assignButtonsViewModel.assignedToCurrentUser ? 'assigned-to-me' : ''} + ' ' + ${formInput.getWordCount() == 0 ? '' : 'word-count'}"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
         <textarea th:id="'form-textarea-'+${formInput.id}"
