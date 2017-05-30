@@ -80,9 +80,7 @@
                                    type="radio"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.standard.assessortype.required}" />
-                            <label th:for="${#ids.next('assessorType')}">
-                                <th:block th:text="${type.displayName}" />
-                            </label>
+                            <label th:for="${#ids.prev('assessorType')}" th:text="${type.displayName}">Label</label>
                         </div>
                     </fieldset>
                 </div>

@@ -60,9 +60,7 @@
                         <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
                         <div class="multiple-choice" th:each="type : ${T(com.worth.ifs.user.resource.BusinessType).values()}">
                             <input th:field="*{assessorType}" th:value="${type}" type="radio" required="required" data-required-errormessage="Please select an assessor type" />
-                            <label>
-                                <th:block th:text="${type.displayName}" />
-                            </label>
+                            <label th:for="${#ids.prev('assessorType')}" th:text="${type.displayName}">Label</label>
                         </div>
                     </fieldset>
                 </div>

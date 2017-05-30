@@ -77,16 +77,14 @@
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
                                    data-conditionally-add-required="input.appointment-field" />
-                            <label>Yes</label>
+                            <label th:for="${#ids.prev('hasAppointments')}">Yes</label>
                         </div>
                         <div class="multiple-choice">
                             <input value="no" type="radio" th:field="*{hasAppointments}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
                                    data-conditionally-remove-required="input.appointment-field" />
-                            <label>
-                                No
-                            </label>
+                            <label th:for="${#ids.prev('hasAppointments')}">No</label>
                         </div>
                     </fieldset>
 
@@ -164,16 +162,14 @@
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
                                    data-conditionally-add-required="#financialInterests" />
-                            <label>Yes</label>
+                            <label th:for="${#ids.prev('hasFinancialInterests')}">Yes</label>
                         </div>
                         <div class="multiple-choice">
                             <input value="No" type="radio" th:field="*{hasFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
                                    data-conditionally-remove-required="#financialInterests" />
-                            <label>
-                                No
-                            </label>
+                            <label th:for="${#ids.prev('hasFinancialInterests')}">No</label>
                         </div>
                     </fieldset>
                 </div>
@@ -212,16 +208,14 @@
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
                                    data-conditionally-add-required="input.family-affiliation-field" />
-                            <label>Yes</label>
+                            <label th:for="${#ids.prev('hasFamilyAffiliations')}">Yes</label>
                         </div>
                         <div class="multiple-choice">
                             <input value="No" type="radio" th:field="*{hasFamilyAffiliations}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
                                    data-conditionally-remove-required="input.family-affiliation-field" />
-                            <label>
-                                No
-                            </label>
+                            <label th:for="${#ids.prev('hasFamilyAffiliations')}">No</label>
                         </div>
                     </fieldset>
 
@@ -309,16 +303,14 @@
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
                                    data-conditionally-add-required="#familyFinancialInterests" />
-                            <label>Yes</label>
+                            <label th:for="${#ids.prev('hasFamilyFinancialInterests')}">Yes</label>
                         </div>
                         <div class="multiple-choice">
                             <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
                                    data-conditionally-remove-required="#familyFinancialInterests" />
-                            <label>
-                                No
-                            </label>
+                            <label th:for="${#ids.prev('hasFamilyFinancialInterests')}">No</label>
                         </div>
                     </fieldset>
                 </div>
@@ -350,7 +342,7 @@
                             <input type="checkbox" th:field="*{accurateAccount}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
-                            <label th:for="accurateAccount1">
+                            <label th:for="${#ids.prev('accurateAccount')}">
                                 I confirm that the above is an accurate account, to the best of my knowledge, of my active financial interests.
                                 I agree to inform Innovate UK immediately of any changes which may affect this declaration.
                             </label>
