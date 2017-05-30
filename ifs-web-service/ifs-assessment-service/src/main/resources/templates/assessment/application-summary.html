@@ -52,9 +52,7 @@
                                 required="required"
                                 th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                 data-conditionally-remove-required="#feedback" />
-                                <label>
-                                    Yes
-                                </label>
+                                <label class="form-label" th:for="${#ids.prev('fundingConfirmation')}">Yes</label>
                             </div>
                             <div class="multiple-choice">
                                 <input
@@ -64,9 +62,7 @@
                                 required="required"
                                 th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                 data-conditionally-add-required="#feedback, .form-group input" />
-                                <label>
-                                    No
-                                </label>
+                                <label class="form-label" th:for="${#ids.prev('fundingConfirmation')}">no</label>
                             </div>
                         </fieldset>
                     </div>
