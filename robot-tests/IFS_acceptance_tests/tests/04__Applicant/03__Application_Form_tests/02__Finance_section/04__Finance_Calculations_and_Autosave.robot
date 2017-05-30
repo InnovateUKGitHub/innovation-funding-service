@@ -57,7 +57,7 @@ Materials
     [Tags]
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=.section-total-summary > [data-mirror="#section-total-191"]    £ 2,000    css=button > [data-mirror="#section-total-191"]    £ 2,000
-    And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button
+    And the user clicks the button/link    css=#material-costs-table tbody tr:nth-of-type(1) button
     And the user reloads the page
     Then Totals should be correct   css=.section-total-summary > [data-mirror="#section-total-191"]    £ 1,000    css=button > [data-mirror="#section-total-191"]    £ 1,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Materials")
