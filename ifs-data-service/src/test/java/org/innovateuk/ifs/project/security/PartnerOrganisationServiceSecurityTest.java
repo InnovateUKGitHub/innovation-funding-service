@@ -6,7 +6,6 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -35,7 +34,6 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     public void testGetProjectPartnerOrganisationsIsNotOpenToAll(){
         assertPostFilter(classUnderTest.getProjectPartnerOrganisations(123L).getSuccessObject(), () -> {
             verify(partnerOrganisationPermissionRules, times(3)).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
-            verify(partnerOrganisationPermissionRules, times(3)).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
             verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         });
     }
@@ -45,7 +43,6 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
         ServiceResult<List<PartnerOrganisationResource>> result = classUnderTest.getProjectPartnerOrganisations(123L);
         verify(partnerOrganisationPermissionRules, times(3)).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
-        verify(partnerOrganisationPermissionRules, times(3)).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
         verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         assertTrue(result.isSuccess());
     }
@@ -54,7 +51,6 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     public void testGetPartnerOrganisationIsNotOpenToAll(){
         assertAccessDenied(() -> classUnderTest.getPartnerOrganisation(123L, 234L),
                 () -> {
-                    verify(partnerOrganisationPermissionRules).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
                     verify(partnerOrganisationPermissionRules).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(partnerOrganisationPermissionRules);
                 });
@@ -62,9 +58,10 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void testCompAdminCanSeePartnerOrganisation(){
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
+        UserResource internalUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
+        setLoggedInUser(internalUser);
+        when(partnerOrganisationPermissionRules.internalUsersCanViewPartnerOrganisations(partnerOrganisations.get(0), internalUser)).thenReturn(true);
         ServiceResult<PartnerOrganisationResource> result = classUnderTest.getPartnerOrganisation(123L, 234L);
-        verify(partnerOrganisationPermissionRules).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
         verify(partnerOrganisationPermissionRules).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
         verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         assertTrue(result.isSuccess());

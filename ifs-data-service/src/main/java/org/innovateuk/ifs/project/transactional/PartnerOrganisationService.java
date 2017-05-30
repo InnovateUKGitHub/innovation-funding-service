@@ -11,6 +11,6 @@ public interface PartnerOrganisationService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'VIEW_PARTNER_ORGANISATION')")
     ServiceResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
 }
