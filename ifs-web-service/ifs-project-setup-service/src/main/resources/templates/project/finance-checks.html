@@ -115,7 +115,7 @@
                                 </ul>
                             </th:block>
                             <h3 class="heading-small">Upload supporting documentation in pdf format</h3>
-                            <div th:class="${#fields.hasErrors('attachment')} ? 'error' : ''">
+                            <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                                 <th:block th:if="${#fields.hasErrors('attachment')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                 </th:block>

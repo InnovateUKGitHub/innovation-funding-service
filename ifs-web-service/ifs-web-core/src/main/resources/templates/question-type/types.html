@@ -206,7 +206,7 @@
                     This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'form-group-error'">
                     <label for="researchCategory">
                         <span class="heading-medium">Research category</span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
@@ -225,7 +225,7 @@
 
                 <div class="form-group"
                      th:if="${#sets.size(model.questionApplicationViewModel.currentCompetition.innovationAreas) > 1}"
-                     th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'error'">
+                     th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'form-group-error'">
 
                     <label for="researchArea">
                         <span class="heading-medium">Innovation area</span>

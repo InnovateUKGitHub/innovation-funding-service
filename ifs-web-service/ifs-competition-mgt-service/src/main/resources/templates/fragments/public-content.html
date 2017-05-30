@@ -14,7 +14,7 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>This information is used for search results and the opening section of the competition page.</p>
-        <div class="form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'form-group-error'">
             <label for="short-description">
                 <span class="form-label-bold">Short description</span>
                 <span class="form-hint">Appears at the top of the competition page.</span>
@@ -31,7 +31,7 @@
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('projectFundingRange')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('projectFundingRange')} ? 'form-group-error'">
             <label for="funding-range">
                 <span class="form-label-bold">Project funding range</span>
                 <span class="form-hint">Appears against the competition search result.</span>
@@ -48,7 +48,7 @@
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('eligibilitySummary')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('eligibilitySummary')} ? 'form-group-error'">
             <label for="eligibility-summary">
                 <span class="form-label-bold">Eligibility summary</span>
                 <span class="form-hint">Appears against the competition search result.</span>
@@ -66,7 +66,7 @@
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}"></textarea>
             </div>
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('keywords')} ? 'error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('keywords')} ? 'form-group-error'">
             <label for="keywords">
                 <span class="form-label-bold">Keywords</span>
                 <span class="form-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
@@ -101,7 +101,7 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear in the summary tab.</p>
-            <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'form-group-error'">
                 <label for="description">
                     <span class="form-label-bold">Competition description</span>
                     <th:block th:if="${#fields.hasErrors('description')}">
@@ -143,7 +143,7 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('projectSize')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('projectSize')} ? 'form-group-error'">
                 <label for="project-size">
                     <span class="form-label-bold">Project size</span>
                     <th:block th:if="${#fields.hasErrors('projectSize')}">

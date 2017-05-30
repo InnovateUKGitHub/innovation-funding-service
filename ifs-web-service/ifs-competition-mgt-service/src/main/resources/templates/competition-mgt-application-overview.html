@@ -94,7 +94,7 @@
                           th:object="${form}"
                           method="POST">
 
-                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'error'">
+                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'form-group-error'">
                             <label class="form-label" th:for="ineligibleReason">
                                 Please enter the reason for removing this application from assessment
                                 <span th:if="${#fields.hasErrors('ineligibleReason')}" th:remove="tag">
