@@ -40,7 +40,7 @@ Non registered users non companies house route
 Non registered users sign-up companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920 INFUND-1785 INFUND-9280
     [Tags]    HappyPath    SmokeTest    Email
-    Given Applicant goes to the registration form
+    Given Applicant goes to the registration form  radio-1
     When the user verifies email    Phil    Smith    ${test_mailbox_one}+business@gmail.com
     Then the user directed to correct dashboard    ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     and the user reads his email and clicks the link    ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
