@@ -98,8 +98,10 @@ public class CompetitionManagementInviteAssessorsController {
         selectionForm.setAssessorEmails(storedSelectionForm.getAssessorEmails());
         if (selectionForm.getAllSelected()) {
             selectionForm.setAssessorEmails(getAllAssessorEmails(competitionId, page, filterForm.getInnovationArea()));
-            cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
+        } else {
+            selectionForm.getAssessorEmails().retainAll(getAllAssessorEmails(competitionId, page, filterForm.getInnovationArea()));
         }
+        cookieUtil.saveToCookie(response, SELECTION_FORM, getSerializedObject(selectionForm));
 
         return "assessors/find";
     }
