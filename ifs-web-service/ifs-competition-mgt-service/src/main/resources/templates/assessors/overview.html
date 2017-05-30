@@ -174,7 +174,7 @@
                             <span th:if="${assessor.status == T(org.innovateuk.ifs.invite.resource.ParticipantStatusResource).PENDING}" th:remove="tag">
                                 <span th:text="${assessor.details}">Invite sent: 22-May-2017</span>
                                 <br />
-                                <a th:href="@{/competition/assessors/invite/{inviteId}/resend(inviteId=${assessor.inviteId})}">Resend Invite</a>
+                                <a th:href="@{/competition/assessors/invite/{inviteId}/resend(inviteId=${assessor.inviteId})}">Resend invite</a>
                             </span>
                             <span th:unless="${assessor.status == T(org.innovateuk.ifs.invite.resource.ParticipantStatusResource).PENDING}" th:text="${assessor.details}">Invite declined as person is too busy</span>
                         </td>

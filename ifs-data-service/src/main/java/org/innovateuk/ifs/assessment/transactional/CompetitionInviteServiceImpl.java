@@ -403,7 +403,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         if (participant.getStatus() == REJECTED) {
             details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
         } else if (participant.getStatus() == PENDING) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
             if (participant.getInvite().getSentOn() != null) {
                 details = format("Invite sent: %s", participant.getInvite().getSentOn().format(formatter));
             }
