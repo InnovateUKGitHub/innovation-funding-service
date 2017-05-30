@@ -33,6 +33,9 @@ Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
 
+*** Variables ***
+${assessor_to_add}    Addison Shannon
+
 *** Test Cases ***
 Check the initial key statistics
     [Documentation]    INFUND-6388
@@ -78,9 +81,9 @@ The user can remove all people from the list
     Given the user clicks the button/link    jQuery=a:contains("1 to 20")
     And the user invites multiple assessors
     And The user clicks the button/link    link=Invite
-    And the user should see the element    jQuery=td:contains("Addison Shannon")
+    And the user should see the element    jQuery=td:contains("${assessor_to_add}")
     When the user clicks the button/link    jQuery=button:contains("Remove all from list")
-    Then the user should not see the element    jQuery=td:contains("Addison Shannon")
+    Then the user should not see the element    jQuery=td:contains("${assessor_to_add}")
     [Teardown]    The user clicks the button/link    link=Find
 
 Filter on innovation area
@@ -89,7 +92,7 @@ Filter on innovation area
     Given the user selects the option from the drop-down menu    Offshore wind    id=filterInnovationArea
     When the user clicks the button/link    jQuery=button:contains(Filter)
     Then the user should see the element    jQuery=td:contains("Laura Weaver")
-    And the user should not see the element    jQuery=td:contains("Addison Shannon")
+    And the user should not see the element    jQuery=td:contains("${assessor_to_add}")
     And the user clicks the button/link    jQuery=a:contains("Clear all filters")
     And the user should not see the element    jQuery=td:contains("Laura Weaver")
     And the user should see the element    jQuery=td:contains("Addison Shannon")
@@ -142,9 +145,9 @@ Invite multiple assessors
     And The user should see the text in the page    Please visit our new online Innovation Funding Service to respond to this request
     And The user enters text to a text field    css=#subject    Invitation to assess 'Sustainable living models for the future' @
     And the user clicks the button/link    jQuery=.button:contains("Send invite")
-    Then The user should not see the text in the page    Addison Shannon
+    Then The user should not see the text in the page    ${assessor_to_add}
     And The user clicks the button/link    link=Find
-    And the user should not see the text in the page    Addison Shannon
+    And the user should not see the text in the page    ${assessor_to_add}
 
 Invite non-registered assessors server side validations
     [Documentation]    INFUND-6411
@@ -191,8 +194,8 @@ Assessor overview information
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined as not available")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
     And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
-    And the user should see the element    jQuery=td:contains("Addison Shannon") ~ td:nth-of-type(5):contains("Awaiting response")
-    And the user should see the element    jQuery=td:contains("Addison Shannon") ~ td:nth-of-type(6):contains("Invite sent:")
+    And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(5):contains("Awaiting response")
+    And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Invite sent:")
 
 *** Keywords ***
 The key statistics are calculated

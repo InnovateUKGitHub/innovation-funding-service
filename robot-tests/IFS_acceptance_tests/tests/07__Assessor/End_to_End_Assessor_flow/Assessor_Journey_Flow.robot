@@ -28,7 +28,7 @@ Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
     [Tags]
     [Setup]    The guest user opens the browser
-    User reads the email and clicks the link to accept the assessment    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess 'Sustainable living models for the future'    This is custom text
+    User reads the email and clicks the link to accept the assessment    ${test_mailbox_one}+AJE2E@gmail.com  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text
     [Teardown]    Delete the emails from both test mailboxes
 
 Invited user accepts the invitation and follows the registration flow
