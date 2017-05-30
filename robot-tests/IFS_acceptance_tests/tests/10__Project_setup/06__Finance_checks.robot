@@ -113,10 +113,11 @@ Project Finance user can see the finance check summary page
     And the user should see the element    link=Projects in setup
 
 
+
 Project finance user cannot view viability section if this is not applicable for the org in question
     [Documentation]    INFUND-9517
     [Tags]
-    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/40/viability    ${404_error_message}
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/viability    ${404_error_message}
 
 
 Status of the Eligibility column (workaround for private beta competition)
@@ -132,10 +133,10 @@ Status of the Eligibility column (workaround for private beta competition)
 Query section is disabled before finance contacts have been selected
     [Documentation]    IFS-236
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/40/eligibility
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
     [Teardown]    finance contacts are selected and bank details are approved
@@ -143,7 +144,7 @@ Query section is disabled before finance contacts have been selected
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
     When the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the text in the page    Raise finance queries to the organisation in this section
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
@@ -539,7 +540,7 @@ Link to notes from viability section
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Notes")
     Then the user should see the text in the page    Use this section to make notes related to the finance checks
     And the user should see the element    jQuery=.button:contains("Create a new note")
@@ -1741,7 +1742,7 @@ Academic user can view Finance checks page
     When the user clicks the button/link    link=Finance checks
     Then the user should see the text in the page   The finance checks have been completed and your finances approved.
     And the user should not see the text in the page    View finances
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/40/finance-checks/eligibility    ${404_error_message}
+    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/finance-checks/eligibility    ${404_error_message}
     Then the user clicks the button/link    link=your dashboard
 
 Non Lead Partner can view finance checks page
