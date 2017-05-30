@@ -207,7 +207,7 @@
 
                 </th:block>
 
-                <th:block th:insert="question-type/form-elements :: ready-for-review (${model.assignButtonsViewModel})" th:unless="${model.currentUserIsLead}" th:with="displayBlock=${true}" />
+                <th:block th:insert="question-type/form-elements :: ready-for-review" th:unless="${model.assignButtonsViewModel.currentUserIsLead}" th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
             </div>
 
             <div class="form-footer__info">
@@ -250,14 +250,16 @@
 
 </th:block>
 <!-- ========================= Assign / reassign buttons =========================== -->
-<th:block th:fragment="ready-for-review(model)" th:with="question=${model.question}">
-  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${model.assignedToCurrentUser}">
-    <button type="submit"
-            name="assign_question"
-            th:value="${question.id}+'_'+${model.assignedBy.processRole.id}"
-            th:class="'buttonlink'">Assign to lead for review
-    </button>
-  </div>
+<th:block th:fragment="ready-for-review">
+    <th:block th:if="${model != null}" th:with="question=${model.question}">
+      <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${model.assignedToCurrentUser}">
+        <button type="submit"
+                name="assign_question"
+                th:value="${question.id}+'_'+${model.assignedBy.processRole.id}"
+                th:class="'buttonlink'">Assign to lead for review
+        </button>
+      </div>
+    </th:block>
 </th:block>
 
 <th:block th:fragment="assign-buttons-dialog(model)" th:with="question=${model.question}">
