@@ -86,7 +86,7 @@ public class FinanceChecksNotesAddNoteController {
                               HttpServletRequest request,
                               HttpServletResponse response) {
 
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         saveOriginCookie(response, projectId, organisationId, loggedInUser.getId());
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
@@ -190,7 +190,7 @@ public class FinanceChecksNotesAddNoteController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         if (attachments.contains(attachmentId)) {
             ByteArrayResource fileContent = financeCheckService.downloadFile(attachmentId);
@@ -235,7 +235,7 @@ public class FinanceChecksNotesAddNoteController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         attachments.forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);

@@ -75,7 +75,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testViewNewNoteInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1)+ "/note/new-note"))
                 .andExpect(status().isNotFound());
@@ -308,7 +308,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testDownloadAttachmentFailsNoContent() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId,applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId,applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -326,7 +326,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testDownloadAttachmentFailsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -379,7 +379,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testCancelNewNoteInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note/cancel"))
                 .andExpect(status().isNotFound());
@@ -422,7 +422,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testViewNewNoteWithAttachmentsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/new-note"))
                 .andExpect(status().isNotFound());

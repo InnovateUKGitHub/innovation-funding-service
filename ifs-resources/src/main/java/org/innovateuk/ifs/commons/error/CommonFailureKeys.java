@@ -206,8 +206,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     FINANCE_CHECKS_POST_ATTACH_NOT_UPLOADED(BAD_REQUEST),
 
     QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED(NOT_FOUND),
-
-
+    
     /**
      * Offer letter
      */

@@ -80,7 +80,7 @@ public class FinanceChecksNotesController {
     public String showPage(@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            Model model) {
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         FinanceChecksNotesViewModel viewModel = populateNoteViewModel(projectId, organisationId, null, null);
         model.addAttribute("model", viewModel);
         return NOTES_VIEW;
@@ -96,7 +96,7 @@ public class FinanceChecksNotesController {
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
 
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
@@ -110,7 +110,7 @@ public class FinanceChecksNotesController {
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
 
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         saveOriginCookie(response, projectId, organisationId, noteId, loggedInUser.getId());
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
         model.addAttribute("model", populateNoteViewModel(projectId, organisationId, noteId, attachments));
@@ -219,7 +219,7 @@ public class FinanceChecksNotesController {
                                                                  @PathVariable Long attachmentId,
                                                                  UserResource loggedInUser,
                                                                  HttpServletRequest request) {
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
         if (attachments.contains(attachmentId)) {
             return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
@@ -265,7 +265,7 @@ public class FinanceChecksNotesController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, noteId);
         attachments.forEach((id -> financeCheckService.deleteFile(id)));
         deleteCookies(response, projectId, organisationId, noteId);

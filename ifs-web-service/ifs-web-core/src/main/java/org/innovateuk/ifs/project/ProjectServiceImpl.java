@@ -123,7 +123,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public PartnerOrganisationResource getPartnerOrganisationOrThrowException(Long projectId, Long organisationId) {
+    public PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId) {
         return projectRestService.getPartnerOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 }

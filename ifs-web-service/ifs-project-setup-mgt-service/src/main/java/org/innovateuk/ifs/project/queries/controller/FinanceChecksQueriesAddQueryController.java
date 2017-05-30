@@ -81,7 +81,7 @@ public class FinanceChecksQueriesAddQueryController {
                           UserResource loggedInUser,
                           HttpServletRequest request,
                           HttpServletResponse response) {
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
         model.addAttribute("model", viewModel);
@@ -184,7 +184,7 @@ public class FinanceChecksQueriesAddQueryController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
 
         if (attachments.contains(attachmentId)) {
@@ -226,7 +226,7 @@ public class FinanceChecksQueriesAddQueryController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        projectService.getPartnerOrganisationOrThrowException(projectId, organisationId);
+        projectService.getPartnerOrganisation(projectId, organisationId);
         loadAttachmentsFromCookie(request, projectId, organisationId).forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);
         return redirectTo(queriesListView(projectId, organisationId, querySection));

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.project.resource.*;
@@ -173,12 +172,12 @@ public class ProjectServiceImplTest {
     public void testGetPartnerOrganisation() {
         PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
         when(projectRestService.getPartnerOrganisation(123L, 234L)).thenReturn(restSuccess(partnerOrg));
-        assertTrue(service.getPartnerOrganisationOrThrowException(123L, 234L).equals(partnerOrg));
+        assertTrue(service.getPartnerOrganisation(123L, 234L).equals(partnerOrg));
     }
 
     @Test(expected = ObjectNotFoundException.class)
     public void testGetPartnerOrganisationNotFound() {
         when(projectRestService.getPartnerOrganisation(123L, 234L)).thenThrow(new ObjectNotFoundException());
-        service.getPartnerOrganisationOrThrowException(123L, 234L);
+        service.getPartnerOrganisation(123L, 234L);
     }
 }

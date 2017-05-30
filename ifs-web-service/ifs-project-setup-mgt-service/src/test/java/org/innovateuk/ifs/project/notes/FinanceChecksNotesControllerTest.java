@@ -101,7 +101,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(userService.findById(applicantFinanceContactUserId)).thenReturn(projectManagerUser);
         when(organisationService.getOrganisationForUser(applicantFinanceContactUserId)).thenReturn(leadOrganisationResource);
         when(userService.findById(applicantFinanceContactUserId)).thenReturn(projectManagerUser);
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -195,7 +195,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testGetReadOnlyViewInvalidOrganisationId() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1L)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1L)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note"))
                 .andExpect(view().name("404"))
@@ -222,7 +222,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadAttachmentFailsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1L)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1L)).thenThrow(new ObjectNotFoundException());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -300,7 +300,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         form.setComment("comment");
         formCookie = createFormCookie(form);
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment")
                 .cookie(formCookie))
@@ -517,7 +517,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadCommentAttachmentFailsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -574,7 +574,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testCancelNewCommentInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/cancel"))
@@ -622,7 +622,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewCommentWithAttachmentsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisationOrThrowException(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment"))
                 .andExpect(status().isNotFound());

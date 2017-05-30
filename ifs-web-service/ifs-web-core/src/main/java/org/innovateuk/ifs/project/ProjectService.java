@@ -38,5 +38,5 @@ public interface ProjectService {
 
     Boolean isProjectManager(Long userId, Long projectId);
 
-    PartnerOrganisationResource getPartnerOrganisationOrThrowException(Long projectId, Long organisationId);
+    PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId);
 }
